@@ -14,6 +14,7 @@
 #include "game/hud.h"
 #include "game/initonce.h"
 #include "game/loaders.h"
+#include "game/main.h"
 #include "game/map.h"
 #include "game/memcard.h"
 #include "game/mission.h"
@@ -89,7 +90,7 @@ void idol_draw::DrawGalacticMapFrame(int param_1,int param_2,int param_3,int par
                     /* Some kind of overlay texture */
   uVar5 = GetIconFrameTex(0xe99a,0xf);
   Hud_DrawEffectTexQuadUV
-            (uVar5,0,0,param_2 - param_1,param_4 - param_3,DAT_0159c330 & 0xfff,0,0x80);
+            (uVar5,0,0,param_2 - param_1,param_4 - param_3,g_MainLoopFrames & 0xfff,0,0x80);
   uVar5 = FUN_00502f08(1,1,0,0,0,0);
   SetGSReg(6,uVar5);
   dVar16 = 22.5;
@@ -117,7 +118,7 @@ LAB_004d2ae8:
       else if (iVar6 == 2) {
         iVar6 = (int)((double)animationSpeed * dVar16);
         iVar7 = iVar6 + (int)((double)animationSpeed * dVar15);
-        if ((int)(DAT_0159c330 - ((int)DAT_0159c330 / iVar7) * iVar7) < iVar6) goto LAB_004d2ae8;
+        if ((int)(g_MainLoopFrames - ((int)g_MainLoopFrames / iVar7) * iVar7) < iVar6) goto LAB_004d2ae8;
       }
       if (iVar2 == g_SelectedLevel) {
         iVar7 = *(int *)(iVar3 + 0x73539c);
@@ -13455,18 +13456,18 @@ undefined4 * FUN_004eaddc(undefined8 param_1)
 {
   undefined4 *puVar1;
   
-  if (DAT_01111640 == (undefined4 *)0x0) {
+  if (g_pMsgDialog == (undefined4 *)0x0) {
     DAT_01111644 = (undefined4)param_1;
     puVar1 = (undefined4 *)FUN_004fe218(0x20,param_1);
-    DAT_01111640 = (undefined4 *)0x0;
+    g_pMsgDialog = (undefined4 *)0x0;
     if (puVar1 != (undefined4 *)0x0) {
       *(undefined1 *)(puVar1 + 1) = 0;
       puVar1[2] = 0;
       *puVar1 = &PTR_PTR_00661910;
-      DAT_01111640 = puVar1;
+      g_pMsgDialog = puVar1;
     }
   }
-  return DAT_01111640;
+  return g_pMsgDialog;
 }
 
 
@@ -13477,34 +13478,34 @@ void FUN_004eae64(int param_1)
 
 {
   print_tty2("In messageCallback\n");
-  *(undefined1 *)(DAT_01111640 + 4) = 0;
+  *(undefined1 *)(g_pMsgDialog + 4) = 0;
   if (param_1 < 2) {
     if (0 < param_1) {
-      if (*(undefined4 **)(DAT_01111640 + 0x10) == (undefined4 *)0x0) {
+      if (*(undefined4 **)(g_pMsgDialog + 0x10) == (undefined4 *)0x0) {
         return;
       }
-      (*(code *)**(undefined4 **)(DAT_01111640 + 0x10))(0);
+      (*(code *)**(undefined4 **)(g_pMsgDialog + 0x10))(0);
       return;
     }
   }
   else {
     if (param_1 < 3) {
-      if (*(undefined4 **)(DAT_01111640 + 0x10) == (undefined4 *)0x0) {
+      if (*(undefined4 **)(g_pMsgDialog + 0x10) == (undefined4 *)0x0) {
         return;
       }
-      (*(code *)**(undefined4 **)(DAT_01111640 + 0x10))(1);
+      (*(code *)**(undefined4 **)(g_pMsgDialog + 0x10))(1);
       return;
     }
     if (param_1 < 4) {
-      if (*(undefined4 **)(DAT_01111640 + 0x10) == (undefined4 *)0x0) {
+      if (*(undefined4 **)(g_pMsgDialog + 0x10) == (undefined4 *)0x0) {
         return;
       }
-      (*(code *)**(undefined4 **)(DAT_01111640 + 0x10))(4);
+      (*(code *)**(undefined4 **)(g_pMsgDialog + 0x10))(4);
       return;
     }
   }
-  if (*(undefined4 **)(DAT_01111640 + 0x10) != (undefined4 *)0x0) {
-    (*(code *)**(undefined4 **)(DAT_01111640 + 0x10))(3);
+  if (*(undefined4 **)(g_pMsgDialog + 0x10) != (undefined4 *)0x0) {
+    (*(code *)**(undefined4 **)(g_pMsgDialog + 0x10))(3);
   }
   return;
 }
@@ -14266,7 +14267,7 @@ void idol::Pad_PS_Update(int param_1,ulonglong param_2,int param_3)
         uVar7 = puVar4[5];
         iVar10 = *(int *)(param_1 + 4);
       }
-      piVar5 = DAT_01111640;
+      piVar5 = g_pMsgDialog;
       iVar14 = (int)uVar13 + 1;
       uVar13 = (ulonglong)iVar14;
     } while (iVar14 < 4);
@@ -14275,8 +14276,8 @@ void idol::Pad_PS_Update(int param_1,ulonglong param_2,int param_3)
     uVar7 = puVar4[5];
     if (*(int *)(param_1 + 4) == 0) {
       FUN_0050544c(&DAT_0159b38c,1,&DAT_0065aab0);
-      piVar5 = DAT_01111640;
-      iVar10 = *DAT_01111640;
+      piVar5 = g_pMsgDialog;
+      iVar10 = *g_pMsgDialog;
       puVar4[5] = uVar7;
       (*(code *)**(undefined4 **)(iVar10 + 0xc))
                 (0,piVar5,7,0,2,*(undefined4 **)(iVar10 + 0xc),1,0,&PTR_FUN_00710138);

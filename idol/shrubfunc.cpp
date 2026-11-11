@@ -5,7 +5,8 @@
 #include "game/boot.h"
 #include "game/draw.h"
 #include "game/hero.h"
-#include "game/hud.h"
+#include "game/main.h"
+#include "game/pause.h"
 #include "game/skyfunc.h"
 #include "game/vendor.h"
 #include "idol/fastfunc.h"
@@ -417,7 +418,7 @@ void DrawShrub(int param_1,ulonglong param_2)
             auVar34 = auVar34 | auVar34 << 0x20 | auVar34 << 0x40 | auVar34 << 0x60;
             auVar48 = vectorShiftLeftIntegerWord(auVar35,auVar35);
             auVar35 = vectorShiftLeftIntegerWord(auVar34,auVar34);
-            uVar28 = (ulonglong)DAT_0159c330 + uVar32 * 0x43;
+            uVar28 = (ulonglong)g_MainLoopFrames + uVar32 * 0x43;
             auVar34 = ZEXT416(0xffffffff);
             auVar49 = auVar34 | auVar34 << 0x20 | auVar34 << 0x40 | auVar34 << 0x60;
             auVar34 = ZEXT416(0xffffffff);
@@ -431,13 +432,13 @@ void DrawShrub(int param_1,ulonglong param_2)
             auVar34 = loadVectorLeftIndexed(8,0x508b80);
             auVar34 = auVar34 >> 0x60 & (GPiece<16>)0xffffffff;
             auVar38 = auVar34 | auVar34 << 0x20 | auVar34 << 0x40 | auVar34 << 0x60;
-            lVar31 = ((ulonglong)DAT_0159c330 & 0x7fffffff) * 2 + uVar32 * 0x7b;
+            lVar31 = ((ulonglong)g_MainLoopFrames & 0x7fffffff) * 2 + uVar32 * 0x7b;
             auVar36 = vectorMultiplyAddFloatingPoint(auVar36,auVar38,auVar48);
             auVar35 = vectorMultiplyAddFloatingPoint(auVar44,auVar38,auVar35);
             auVar34 = ZEXT416(0xffffffff);
             auVar34 = auVar34 | auVar34 << 0x20 | auVar34 << 0x40 | auVar34 << 0x60;
             lVar31 = lVar31 + (ZERO_MASK((*(ushort *)(iVar3 + 0x2a) & 4)) &
-                              ((ulonglong)DAT_0159c330 + uVar32 * 0x7b) - lVar31);
+                              ((ulonglong)g_MainLoopFrames + uVar32 * 0x7b) - lVar31);
             auVar44 = vectorShiftLeftIntegerWord(auVar34,auVar34);
             auVar34 = loadVectorLeftIndexed(0xc,0x508b80);
             auVar34 = auVar34 >> 0x60 & (GPiece<16>)0xffffffff;

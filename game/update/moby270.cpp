@@ -7,6 +7,7 @@
 #include "game/debug.h"
 #include "game/hero.h"
 #include "game/lights.h"
+#include "game/main.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
@@ -700,10 +701,10 @@ void UpdateMoby_270(MobyInstance *moby)
     return;
   }
   uVar11 = (int)g_PerfLoad >> 0x1f;
-  uVar20 = (int)DAT_00a10714 >> 0x1f;
+  uVar20 = (int)g_FrameLoad >> 0x1f;
   if (*(int *)((int)pvVar10 + 0x70) < 0) {
     if ((0x3f800000 < (int)((uVar11 >> 1 ^ (uint)g_PerfLoad) - uVar11)) ||
-       (0x3f800000 < (int)((uVar20 >> 1 ^ DAT_00a10714) - uVar20))) {
+       (0x3f800000 < (int)((uVar20 >> 1 ^ g_FrameLoad) - uVar20))) {
       if ((moby->enabled == '\0') && (iVar18 = MB_randInt(9), iVar18 == 0)) {
         uVar19 = 0;
       }
@@ -715,7 +716,7 @@ void UpdateMoby_270(MobyInstance *moby)
   }
   else {
     if (((0x3f666666 < (int)((uVar11 >> 1 ^ (uint)g_PerfLoad) - uVar11)) ||
-        (0x3f666666 < (int)((uVar20 >> 1 ^ DAT_00a10714) - uVar20))) &&
+        (0x3f666666 < (int)((uVar20 >> 1 ^ g_FrameLoad) - uVar20))) &&
        ((moby->enabled == '\0' && (*(int *)((int)pvVar10 + 0x70) != -1)))) {
       iVar18 = MB_randInt(199);
       if (iVar18 == 0) {
@@ -727,7 +728,7 @@ void UpdateMoby_270(MobyInstance *moby)
     }
     if ((1.0 < g_PerfLoad) ||
        (0x3f800000 <
-        (int)(FLOAT_ORDER(DAT_00a10714))
+        (int)(FLOAT_ORDER(g_FrameLoad))
        )) {
       if (moby->enabled == '\0') {
         iVar18 = MB_randInt(0x18);
@@ -822,7 +823,7 @@ void UpdateMoby_270(MobyInstance *moby)
                 (uVar31,uVar31,uVar31,lVar15,2,uVar36,uVar14,&DAT_00a14a00,uVar17,0,&DAT_00830000);
     }
     uVar20 = MB_randRange(5,8);
-    iVar18 = FLOAT_ORDER(DAT_00a10714);
+    iVar18 = FLOAT_ORDER(g_FrameLoad);
     uVar11 = (int)g_PerfLoad >> 0x1f;
     if ((0x3f59999a < iVar18) || (0x3f59999a < (int)((uVar11 >> 1 ^ (uint)g_PerfLoad) - uVar11)))
     {

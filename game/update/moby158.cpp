@@ -6,6 +6,7 @@
 #include "game/camera.h"
 #include "game/collproc.h"
 #include "game/hero.h"
+#include "game/main.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/partupd.h"
@@ -139,10 +140,10 @@ void M158_002a0108(int param_1,char param_2)
         iVar9 = iVar9 + 1;
       } while (iVar9 < iVar10);
     }
-    uVar4 = (int)DAT_00a10714 >> 0x1f;
+    uVar4 = (int)g_FrameLoad >> 0x1f;
     uVar14 = 0x4022000000000000;
     uVar17 = 0x4018000000000000;
-    if ((int)((uVar4 >> 1 ^ DAT_00a10714) - uVar4) < 0x3f733333) {
+    if ((int)((uVar4 >> 1 ^ g_FrameLoad) - uVar4) < 0x3f733333) {
       local_a0 = (longlong)(int)(animationSpeed * 15.5);
       FUN_001d4d88(0x4022000000000000,param_1,param_1 + 0x10,local_e0,uVar4,
                    (int)(animationSpeed * 15.5),0x7f,0x7f,0x7f);

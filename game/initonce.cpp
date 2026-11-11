@@ -216,7 +216,7 @@ void InitOnce(void)
   sceGsExecLoadImage(auStack_30,&g_CollMobyJointCache);
   sceGsSyncPath(0,0);
   LoadDebugFont();
-  puVar7 = DAT_00927200;
+  puVar7 = g_pFrameTicks;
   *DAT_00927204 = 0x82;
   *puVar7 = 0;
   STUB_001655a0();

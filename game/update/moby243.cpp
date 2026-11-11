@@ -5,6 +5,7 @@
 #include "game/camera.h"
 #include "game/collproc.h"
 #include "game/hero.h"
+#include "game/main.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
@@ -275,9 +276,9 @@ void UpdateMoby_243(MobyInstance *moby)
             iVar16 = iVar16 + 1;
           } while (iVar16 < iVar14);
         }
-        uVar7 = (int)DAT_00a10714 >> 0x1f;
+        uVar7 = (int)g_FrameLoad >> 0x1f;
         uVar12 = 0x4010000000000000;
-        if (((int)((uVar7 >> 1 ^ DAT_00a10714) - uVar7) < 0x3f733333) && (9.0 < dVar21)) {
+        if (((int)((uVar7 >> 1 ^ g_FrameLoad) - uVar7) < 0x3f733333) && (9.0 < dVar21)) {
           local_100 = (longlong)(int)(animationSpeed * 15.5);
           FUN_001d4d88(0x4010000000000000,lVar11,lVar15,local_1d0,uVar7,(int)(animationSpeed * 15.5)
                        ,0x7f,0x7f,0x7f);

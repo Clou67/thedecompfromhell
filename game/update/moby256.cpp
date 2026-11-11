@@ -6,6 +6,7 @@
 #include "game/collproc.h"
 #include "game/draw.h"
 #include "game/hero.h"
+#include "game/main.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
@@ -1198,8 +1199,8 @@ LAB_000edea4:
         SpawnPart_8(uVar27,lVar17,&local_350,uVar6,uVar7);
         iVar15 = iVar15 + 1;
       } while (iVar15 < 10);
-      uVar16 = (uint)((int)DAT_00a10714 >> 0x1f) >> 1;
-      if (((int)((uVar16 ^ DAT_00a10714) - ((int)DAT_00a10714 >> 0x1f)) < 0x3f733333) &&
+      uVar16 = (uint)((int)g_FrameLoad >> 0x1f) >> 1;
+      if (((int)((uVar16 ^ g_FrameLoad) - ((int)g_FrameLoad >> 0x1f)) < 0x3f733333) &&
          (9.0 < dVar24)) {
         uVar27 = 0x4010000000000000;
         local_110 = (longlong)(int)(animationSpeed * 15.5);

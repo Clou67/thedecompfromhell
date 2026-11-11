@@ -31,7 +31,6 @@ extern undefined4 DAT_00963678; /* 0x963678 */
 extern undefined4 DAT_0096367c; /* 0x96367c */
 extern undefined4 DAT_00963680; /* 0x963680 */
 extern undefined4 DAT_00963698; /* 0x963698 */
-extern undefined1 DAT_00964fa0; /* 0x964fa0 */
 extern undefined1 DAT_0096b2ef; /* 0x96b2ef */
 extern undefined4 DAT_0096b9e0; /* 0x96b9e0 */
 extern undefined4 DAT_0096b9f0; /* 0x96b9f0 */

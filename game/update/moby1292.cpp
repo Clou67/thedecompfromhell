@@ -5,6 +5,7 @@
 #include "game/collproc.h"
 #include "game/hero.h"
 #include "game/lights.h"
+#include "game/main.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
@@ -296,7 +297,7 @@ void UpdateMoby_1292(MobyInstance *moby)
         moby->state = '\x02';
       }
       if (((int)(FLOAT_ORDER(g_PerfLoad)) < 0x3f666666) &&
-         ((int)(FLOAT_ORDER(DAT_00a10714)) < 0x3f666666)) {
+         ((int)(FLOAT_ORDER(g_FrameLoad)) < 0x3f666666)) {
         MB_randRangeFloat(0.95,0.985);
         FastVecAddSelf(auStack_50,local_60,lVar7 + 0x10);
         iVar8 = MB_randRange(0xf,0x14);
@@ -330,7 +331,7 @@ void UpdateMoby_1292(MobyInstance *moby)
   }
   else if (bVar1 < 3) {
     if ((((int)(FLOAT_ORDER(g_PerfLoad)) < 0x3f59999a) &&
-        ((int)(FLOAT_ORDER(DAT_00a10714)
+        ((int)(FLOAT_ORDER(g_FrameLoad)
               ) < 0x3f59999a)) || (impact[0xb] == 1.4013e-45)) {
       MB_SpawnExplosionSparks
                 (0x3fd0000000000000,0x402a000000000000,lVar7,lVar7 + 0x10,&DAT_0023eb74,

@@ -2,24 +2,7 @@
 // common types: Ghidra primitives, Ghidra-isms (prelude.h), forward declarations, shared math types
 #include "prelude.h"
 
-typedef unsigned char   undefined;
-typedef unsigned char    byte;
-typedef unsigned int    dword;
-typedef int    int3;
-typedef long long    int5;
-typedef long long    int6;
-typedef long long    longlong;
-typedef unsigned long long    qword;
-typedef unsigned char    uchar;
-typedef unsigned int    uint;
-typedef unsigned long    ulong;
-typedef unsigned long long    ulonglong;
-typedef unsigned char    undefined1;
-typedef unsigned short    undefined2;
-typedef unsigned int    undefined4;
-typedef unsigned long long    undefined8;
-typedef unsigned short    ushort;
-typedef unsigned short    word;
+
 
 // forward declarations
 typedef struct _2legAnim _2legAnim, *P_2legAnim;
@@ -139,6 +122,52 @@ typedef struct WaterTileBuf WaterTileBuf, *PWaterTileBuf;
 typedef struct WaterTileBox WaterTileBox, *PWaterTileBox;
 typedef struct WaterTileConst WaterTileConst, *PWaterTileConst;
 
+typedef enum gameMode_t {
+    GAME_MODE_NONE=-2,
+    GAME_MODE_DEBUG=-1,
+    GAME_MODE_NORMAL=0,
+    GAME_MODE_MOVIE=1,
+    GAME_MODE_SCENE=2,
+    GAME_MODE_PAUSE=3,
+    GAME_MODE_FREEZE=4,
+    GAME_MODE_VENDOR=5,
+    GAME_MODE_SPACE=6,
+    GAME_MODE_PUZZLE=7,
+    GAME_MODE_CREDITS=8
+} gameMode_t;
+
+typedef unsigned char   undefined;
+
+typedef unsigned char    byte;
+
+typedef int    int3;
+
+typedef long long    int5;
+
+typedef long long    int6;
+
+typedef long long    longlong;
+
+typedef unsigned long long    qword;
+
+typedef unsigned char    uchar;
+
+typedef unsigned int    uint;
+
+typedef unsigned long    ulong;
+
+typedef unsigned long long    ulonglong;
+
+typedef unsigned char    undefined1;
+
+typedef unsigned short    undefined2;
+
+typedef unsigned int    undefined4;
+
+typedef unsigned long long    undefined8;
+
+typedef unsigned short    ushort;
+
 struct _2legAnim {
     int anim;
     float stride;
@@ -208,6 +237,10 @@ struct __mbstate_t {
     int __count;
     union _union_54 __value;
 };
+
+typedef uint __socklen_t;
+
+typedef int __ssize_t;
 
 typedef uchar u8;
 
@@ -330,30 +363,30 @@ typedef enum MOBY_OCLASSES {
     PURPLE_SHIP_0084=132,
     AMOEBOID=133,
     GOLD_DEVASTATOR_MISSILE=153,
-    DEVASTATOR=157,
-    VISIBOMB=163,
+    MOBY_OCLASSES__DEVASTATOR=157,
+    MOBY_OCLASSES__VISIBOMB=163,
     DRILL_00A4=164,
-    BLASTER=168,
+    MOBY_OCLASSES__BLASTER=168,
     FORCEFIELD_TOWER=170,
     VISIBOMB_MISSILE=172,
     MAGNETBOOTS_00AD=173,
     TAUNTER_00AF=175,
-    PYROCITOR=176,
-    TESLA_CLAW=177,
-    WALLOPER=180,
+    MOBY_OCLASSES__PYROCITOR=176,
+    MOBY_OCLASSES__TESLA_CLAW=177,
+    MOBY_OCLASSES__WALLOPER=180,
     DOOR_00B6=182,
     DOOR_00B7=183,
     MORPH_O_RAY_00B9=185,
     DOOM_BOT=186,
     BLARG_SHIP_00BB=187,
     TRESPASSER_00BC=188,
-    MINE_GLOVE=190,
-    BOMB_GLOVE=192,
+    MOBY_OCLASSES__MINE_GLOVE=190,
+    MOBY_OCLASSES__BOMB_GLOVE=192,
     CHOMPER_00C1=193,
     GRINDBOOT=195,
     DOOR_00C4=196,
     DOOR_00C5=197,
-    DECOY=203,
+    MOBY_OCLASSES__DECOY=203,
     DEVESTATOR_AMMO=204,
     SWINGSHOT_00D0=208,
     SWINGSHOT_HOOK=209,
@@ -369,7 +402,7 @@ typedef enum MOBY_OCLASSES {
     MINE_GLOVE_AMMO=225,
     BOMB_GLOVE_AMMO=226,
     JET_FIGHTER_HEALTH_CRATE_00E4=228,
-    GLOVE_OF_DOOM=229,
+    MOBY_OCLASSES__GLOVE_OF_DOOM=229,
     BOMB_00E6=230,
     HELICOPTER_00E9=233,
     PLATFORM_00F0=240,
@@ -452,7 +485,7 @@ typedef enum MOBY_OCLASSES {
     BLARG_TROOPER_01AB=427,
     FEATHER=428,
     EUDORA_BRIDGE=432,
-    SONIC_SUMMONER=433,
+    MOBY_OCLASSES__SONIC_SUMMONER=433,
     PLATFORM_BOOSTER=434,
     ROCKET_01B3=435,
     SAND_MOUSE=437,
@@ -533,7 +566,7 @@ typedef enum MOBY_OCLASSES {
     MAPPER=614,
     TRESSPASSER_PAD=615,
     ARMOR_MAGNETIZER=618,
-    PDA=619,
+    MOBY_OCLASSES__PDA=619,
     EXTERMIBOT=623,
     EXTERMITANK=625,
     MINE_0273=627,
@@ -557,7 +590,7 @@ typedef enum MOBY_OCLASSES {
     PLATFORM_0298=664,
     DOOR_HALF=665,
     STATIONARY_SHIP=666,
-    SANDSHARK_SPAWNER=668,
+    MOBY_OCLASSES__SANDSHARK_SPAWNER=668,
     GRAB_CRANE=675,
     SANDSHARK_02AA=682,
     ELEVATOR_02AD=685,
@@ -768,7 +801,7 @@ typedef enum MOBY_OCLASSES {
     MINE_0458=1112,
     PLATFORM_045D=1117,
     RED_BUTTON=1118,
-    SUCK_CANNON=1120,
+    MOBY_OCLASSES__SUCK_CANNON=1120,
     ELECTRIC_GATE_POLES=1123,
     GLASS=1125,
     MACHINEGUN_TURRET_0466=1126,
@@ -856,8 +889,8 @@ typedef enum MOBY_OCLASSES {
     BARRIER_0506=1286,
     BARRIER_0507=1287,
     BARRIER_0508=1288,
-    O2_MASK=1289,
-    PILOTS_HELMET=1290,
+    MOBY_OCLASSES__O2_MASK=1289,
+    MOBY_OCLASSES__PILOTS_HELMET=1290,
     ENERGY_SPHERE_0511=1297,
     DISPLAY_DAMAGED_0512=1298,
     DISPLAY_DAMAGED_0513=1299,
@@ -1033,84 +1066,6 @@ struct CollTri { /* Env/moby collision face: 3 vertex indices + collision type (
     char collType;
 };
 
-struct EffectTexHeader { /* Pre-baked RSX texture registers; words 0-6 go to methods 0x1A00+unit*0x20 (OFFSET,FORMAT,ADDRESS,CONTROL0,CONTROL1,FILTER,IMAGE_RECT), word 7 to 0x1840+unit*4 (CONTROL3) */
-    int offset;
-    int format;
-    int address;
-    int control0;
-    int control1;
-    int filter;
-    int imageRect;
-    int control3;
-    int unknown_20;
-};
-
-typedef enum enum_1 {
-    ANTI_CHICKEN_DEFAULT=0,
-    SANDSHARK=2000,
-    enum_1__SANDSHARK_SPAWNER=2001,
-    CHICKEN_METER=30003,
-    NANOTECH_ANIMATION=30006,
-    OXYGEN_METER=30015,
-    BUTTONS=30020,
-    BOLTS_ANIMATION=30031,
-    MEMORY_CARD=30045,
-    QUICK_SELECT=59700,
-    VENDOR_FONT=59701,
-    MAP_GRID=59801,
-    MAP_ICONS=59802,
-    COMPLETED_FILE_ICONS=59806,
-    ITEMS_NON_SELECTED=59900,
-    ITEMS_SELECTED=59901,
-    GADGET_ICONS=59902,
-    GADGET_ICONS_SELECTED=59903,
-    AMMO_ICONS=59904,
-    AMMO_PICKUP_ICONS=59905,
-    HELI_PACK=60002,
-    THRUSTER_PACK=60003,
-    HYDRO_PACK=60004,
-    enum_1__SONIC_SUMMONER=60005,
-    enum_1__O2_MASK=60006,
-    enum_1__PILOTS_HELMET=60007,
-    enum_1__SUCK_CANNON=60009,
-    enum_1__BOMB_GLOVE=60010,
-    enum_1__DEVASTATOR=60011,
-    SWINGSHOT=60012,
-    enum_1__VISIBOMB=60013,
-    TAUNTER=60014,
-    enum_1__BLASTER=60015,
-    enum_1__PYROCITOR=60016,
-    enum_1__MINE_GLOVE=60017,
-    enum_1__WALLOPER=60018,
-    enum_1__TESLA_CLAW=60019,
-    enum_1__GLOVE_OF_DOOM=60020,
-    MORPH_O_RAY=60021,
-    HYDRODISPLACER=60022,
-    RYNO=60023,
-    DRONE_DEVICE=60024,
-    enum_1__DECOY=60025,
-    TRESPASSER=60026,
-    METAL_DETECTOR=60027,
-    MAGNEBOOTS=60028,
-    GRINDBOOTS=60029,
-    HOVERBOARD=60030,
-    HOLOGUISE=60031,
-    enum_1__PDA=60032,
-    KEY_ITEMS=60104,
-    UPGRADE_ITEMS=60105
-} enum_1;
-
-typedef enum enum_1 gameMode_t;
-
-struct GameSettings {
-    dword CameraUpDown;
-    dword CameraLeftRight;
-    dword CameraSpeed;
-    dword Stereo;
-    dword MusicVolume;
-    dword SfxVolume;
-};
-
 struct GSMEM_UNUSED {
     int display;
     int draw;
@@ -1158,46 +1113,6 @@ struct Items {
     bool boltGrabber;
     bool persuader;
     bool field36_0x24;
-};
-
-struct Items32 {
-    uint field0_0x0;
-    uint field1_0x1;
-    dword heliPack;
-    dword thrusterPack;
-    dword hydroPack;
-    dword sonicSummoner;
-    dword o2Mask;
-    dword pilotsHelmet;
-    dword missingNo1;
-    dword suckCannon;
-    dword bombGlove;
-    dword devastator;
-    dword swingshot;
-    dword visibombGun;
-    dword taunter;
-    dword blaster;
-    dword pyrocitor;
-    dword mineGlove;
-    dword walloper;
-    dword teslaClaw;
-    dword gloveOfDoom;
-    dword morphORay;
-    dword hydrodisplacer;
-    dword ryno;
-    dword droneDevice;
-    dword decoyGlove;
-    dword trespasser;
-    dword metalDetector;
-    dword magneboots;
-    dword grindboots;
-    dword hoverboard;
-    dword hologuise;
-    dword pda;
-    dword mapOMatic;
-    dword boltGrabber;
-    dword persuader;
-    dword field36_0x24;
 };
 
 struct KickVars { /* DL struct KickVars (mobyutil.cpp) */
@@ -1300,28 +1215,6 @@ struct Planets {
     byte Fleet;
     byte VeldinRevisit;
     byte Unk;
-};
-
-struct Planets32 {
-    dword Veldin;
-    dword Novalis;
-    dword Aridia;
-    dword Kerwan;
-    dword Eudora;
-    dword Rilgar;
-    dword BlargStation;
-    dword Umbris;
-    dword Batalia;
-    dword Gaspar;
-    dword Orxon;
-    dword Pokitaru;
-    dword Hoven;
-    dword Gemlik;
-    dword Oltanis;
-    dword Quartu;
-    dword Kalebo;
-    dword Fleet;
-    dword VeldinRevisit;
 };
 
 typedef enum PlayerState {
@@ -3416,8 +3309,6 @@ struct ShipsKilledStruct {
     int Veldin2;
 };
 
-typedef uint __socklen_t;
-
 typedef ulonglong uint16;
 
 typedef uint undefined3;
@@ -3459,6 +3350,9 @@ struct UpdateCam { /* DL struct UpdateCam (RC1 size 0xa0); 48 of them at UpdateC
     undefined field29_0x9f;
 };
 
+extern undefined4 DAT_00a0fd24; /* no defined data */
+extern undefined4 DAT_00a0fd26; /* no defined data */
+extern undefined4 DAT_00a0fd28; /* no defined data */
 extern undefined4 DAT_00a1de40; /* 0xa1de40 */
 extern undefined4 DAT_00a1de44; /* 0xa1de44 */
 extern undefined4 DAT_00a1de48; /* 0xa1de48 */

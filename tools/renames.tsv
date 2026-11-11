@@ -27,3 +27,10 @@ DAT_00964b14	g_Pad.unk0d4
 DAT_00964b18	g_Pad.unk0d8
 DAT_00964b1c	g_Pad.unk0dc
 DAT_009655dc	g_PadPorts[0].connected
+DAT_00927200	g_pFrameTicks
+DAT_00a53500	g_TotalFrameTicks
+DAT_00a10714	g_FrameLoad
+DAT_00a52ce8	g_HideActivityIcon
+DAT_0159c330	g_MainLoopFrames
+DAT_01111640	g_pMsgDialog
+DAT_00964fa0	g_Pad.showReconnectPrompt

@@ -7,6 +7,7 @@
 #include "game/collproc.h"
 #include "game/draw.h"
 #include "game/hero.h"
+#include "game/main.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
@@ -556,8 +557,8 @@ void UpdateMoby_686(MobyInstance *moby)
         SpawnPart_8(uVar39,lVar17,local_1e0,uVar6,uVar7);
         iVar18 = iVar18 + 1;
       } while (iVar18 < 5);
-      uVar14 = (uint)((int)DAT_00a10714 >> 0x1f) >> 1;
-      if (((int)((uVar14 ^ DAT_00a10714) - ((int)DAT_00a10714 >> 0x1f)) < 0x3f733333) &&
+      uVar14 = (uint)((int)g_FrameLoad >> 0x1f) >> 1;
+      if (((int)((uVar14 ^ g_FrameLoad) - ((int)g_FrameLoad >> 0x1f)) < 0x3f733333) &&
          (9.0 < dVar23)) {
         dVar35 = (double)(float)(dVar37 * 4.0);
         local_128 = (longlong)(int)((double)animationSpeed * dVar20);
@@ -576,8 +577,8 @@ void UpdateMoby_686(MobyInstance *moby)
                    (int)(animationSpeed * 19.5),0xff,0xff,0xff);
       if (100.0 < dVar29) {
         uVar39 = 0x403e000000000000;
-        uVar14 = (uint)((int)DAT_00a10714 >> 0x1f) >> 1;
-        if (((int)((uVar14 ^ DAT_00a10714) - ((int)DAT_00a10714 >> 0x1f)) < 0x3f733333) &&
+        uVar14 = (uint)((int)g_FrameLoad >> 0x1f) >> 1;
+        if (((int)((uVar14 ^ g_FrameLoad) - ((int)g_FrameLoad >> 0x1f)) < 0x3f733333) &&
            (9.0 < dVar23)) {
           local_128 = (longlong)(int)((double)animationSpeed * dVar20);
           FUN_001d4d88(0x403e000000000000,lVar10,lVar17,pfVar19,uVar14,

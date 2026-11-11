@@ -1,7 +1,7 @@
 #pragma once
 // game/respawn.h
 #include "types.h"
-#include "game/camera.h"
+#include "game/path.h"
 
 // ---- globals
 extern undefined4 DAT_00731734; /* 0x731734 */

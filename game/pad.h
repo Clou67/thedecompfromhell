@@ -68,7 +68,9 @@ typedef struct PadState {
     u32 ringBits[PAD_RING_LEN];         /* 0x0e0  button bits per frame */
     u32 ring158[PAD_RING_LEN];          /* 0x158  another per-frame ring, not read in pad.cpp */
     float ringAng[PAD_RING_LEN];        /* 0x1d0  stick angle per frame */
-    char _pad248[0x564 - 0x248];
+    char _pad248[0x560 - 0x248];
+    u8 showReconnectPrompt;             /* 0x560  startLevel opens prompt 9 while this is set */
+    char _pad561[3];
 } PadState;
 typedef char PadState_size_check[sizeof(PadState) == 0x564 ? 1 : -1];
 typedef char PadState_ringBits_check[offsetof(PadState, ringBits) == 0xe0 ? 1 : -1];

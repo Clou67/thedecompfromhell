@@ -5,7 +5,7 @@
 #include "game/boot.h"
 #include "game/draw.h"
 #include "game/hero.h"
-#include "game/hud.h"
+#include "game/main.h"
 #include "game/skyfunc.h"
 #include "game/vendor.h"
 #include "idol/fastfunc.h"
@@ -755,7 +755,7 @@ void FUN_0050c020(int param_1,undefined4 *param_2)
               auVar30 = auVar26 | auVar26 << 0x20 | auVar26 << 0x40 | auVar26 << 0x60;
               auVar26 = ZEXT416(0xffffffff);
               auVar26 = auVar26 | auVar26 << 0x20 | auVar26 << 0x40 | auVar26 << 0x60;
-              uVar19 = (ulonglong)DAT_0159c330 + lVar22;
+              uVar19 = (ulonglong)g_MainLoopFrames + lVar22;
               auVar53 = vectorShiftLeftIntegerWord(auVar30,auVar30);
               auVar30 = vectorShiftLeftIntegerWord(auVar26,auVar26);
               auVar26 = ZEXT416(0xffffffff);
@@ -769,14 +769,14 @@ void FUN_0050c020(int param_1,undefined4 *param_2)
               auVar26 = loadVectorLeftIndexed(4,0x50c010);
               auVar26 = auVar26 >> 0x60 & (GPiece<16>)0xffffffff;
               auVar52 = auVar26 | auVar26 << 0x20 | auVar26 << 0x40 | auVar26 << 0x60;
-              lVar12 = ((ulonglong)DAT_0159c330 & 0x7fffffff) * 2 + lVar23;
+              lVar12 = ((ulonglong)g_MainLoopFrames & 0x7fffffff) * 2 + lVar23;
               auVar24 = vectorShiftLeftIntegerWord(auVar24,auVar24);
               auVar50 = vectorMultiplyAddFloatingPoint(auVar50,auVar52,auVar53);
               auVar30 = vectorMultiplyAddFloatingPoint(auVar51,auVar52,auVar30);
               auVar26 = ZEXT416(0xffffffff);
               auVar51 = auVar26 | auVar26 << 0x20 | auVar26 << 0x40 | auVar26 << 0x60;
               lVar12 = lVar12 + (ZERO_MASK((*(ushort *)(iVar3 + 0x2a) & 0xe)) &
-                                ((ulonglong)DAT_0159c330 + lVar23) - lVar12);
+                                ((ulonglong)g_MainLoopFrames + lVar23) - lVar12);
               auVar26 = loadVectorLeftIndexed(8,0x50c010);
               auVar51 = vectorShiftLeftIntegerWord(auVar51,auVar51);
               auVar26 = auVar26 >> 0x60 & (GPiece<16>)0xffffffff;

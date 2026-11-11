@@ -7,6 +7,7 @@
 #include "game/collproc.h"
 #include "game/hero.h"
 #include "game/loaders.h"
+#include "game/main.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
@@ -1076,8 +1077,8 @@ LAB_003a5778:
         iVar28 = iVar28 + 1;
       } while (iVar28 < iVar24);
     }
-    uVar17 = (uint)((int)DAT_00a10714 >> 0x1f) >> 1;
-    if (((int)((uVar17 ^ DAT_00a10714) - ((int)DAT_00a10714 >> 0x1f)) < 0x3f733333) &&
+    uVar17 = (uint)((int)g_FrameLoad >> 0x1f) >> 1;
+    if (((int)((uVar17 ^ g_FrameLoad) - ((int)g_FrameLoad >> 0x1f)) < 0x3f733333) &&
        (!bVar1 && 9.0 < dVar46)) {
       dVar40 = (double)animationSpeed;
       lVar31 = uVar18 - 0x180;

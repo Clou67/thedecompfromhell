@@ -18,6 +18,7 @@
 #include "game/lights.h"
 #include "game/loaders.h"
 #include "game/mUnk.h"
+#include "game/main.h"
 #include "game/mesh.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
@@ -192,7 +193,7 @@ ulonglong UpdateMobysDebug(void)
   
   if (((g_Pad.downButtons & (L1|R2|L2)) == (L1|R2|L2)) && ((g_Pad.buttonsPressedThisFrame & R1) != 0)) {
     printf("\n");
-    printf("*** frame %d ***\n",DAT_0159c330);
+    printf("*** frame %d ***\n",g_MainLoopFrames);
     printf("\n");
     *DAT_009271fc = 0x81;
     FastMemSet(&DAT_11004000,0,0x700);
@@ -12258,7 +12259,7 @@ void MB_genericExplosion
   uVar12 = (ulonglong)in_stack_000000bc & 0xff;
   local_140 = (ulonglong)in_stack_000000a4;
   if (in_stack_000000b4 == 0xffffffff) {
-    uVar23 = (ulonglong)(1.7 < g_PerfLoad + DAT_00a10714);
+    uVar23 = (ulonglong)(1.7 < g_PerfLoad + g_FrameLoad);
   }
   if ((int)param_10 == 0) {
     if ((int)param_8 == 0) {
@@ -12571,7 +12572,7 @@ void MB_genericExplosion
   if ((pMoby != (MobyInstance *)0x0) && (dVar35 < param_3)) {
     iVar14 = (int)local_178;
     uVar12 = ZERO_MASK(iVar14) & 0x50;
-    if (((int)(FLOAT_ORDER(DAT_00a10714)) < 0x3f733333) && (local_180 < dVar27)) {
+    if (((int)(FLOAT_ORDER(g_FrameLoad)) < 0x3f733333) && (local_180 < dVar27)) {
       local_130 = (longlong)(int)(animationSpeed * 16.5);
       FUN_001d4d88(param_3,local_160,param_10,local_280,uVar12,(int)(animationSpeed * 16.5),
                    uVar12 + 0x46,0x96);

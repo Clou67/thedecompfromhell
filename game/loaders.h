@@ -147,7 +147,7 @@ undefined8 STUB_000def38_RET_1(...);
 void ____Unused_IncCounter_a204ac(void);
 void AdvanceLoadingStage(void);
 undefined8 LoadLevelFiles(void);
-undefined8 LoadAllMobys(undefined8 param_1,undefined8 param_2);
+int LoadAllMobys(int param_1,int param_2);
 int LoadNpcMobys(int level_id,int scene_id);
 int LoadNpcSubtitles(void);
 int PreLoadNpcChunk(int chunk_id);

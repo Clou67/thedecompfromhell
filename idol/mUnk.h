@@ -1094,6 +1094,23 @@ struct SaveDataInfo {
     undefined4 field1087_0x460;
 };
 
+/* Idol singleton (*g_pMsgDialog, 0x20 bytes, made by FUN_004eaddc) that owns the system message
+   callback ("In messageCallback"); ticked once per frame from startLevel. Identification inferred. */
+typedef struct IdolMsgDialog IdolMsgDialog;
+typedef struct IdolMsgDialogFuncs {
+    void *unk00, *unk04;
+    void (*update)(IdolMsgDialog *self, float dt);   /* +0x08 */
+} IdolMsgDialogFuncs;
+struct IdolMsgDialog {
+    IdolMsgDialogFuncs *funcs;   /* 0x00 */
+    u8 busy;                     /* 0x04  cleared by the message callback */
+    char _pad05[3];
+    u32 unk08;
+    u32 unk0c;
+    void *callback;              /* 0x10  result callback, called with 0,1,3,4 */
+    char _pad14[0x0c];
+};
+
 // ---- globals
 extern undefined4 DAT_00041830; /* 0x41830 */
 extern undefined4 DAT_00041834; /* 0x41834 */
@@ -1364,7 +1381,6 @@ extern undefined4 DAT_01111630; /* 0x1111630 */
 extern undefined4 DAT_01111634; /* 0x1111634 */
 extern undefined4 DAT_01111638; /* 0x1111638 */
 extern undefined4 DAT_0111163c; /* 0x111163c */
-extern undefined4 DAT_01111640; /* 0x1111640 */
 extern undefined4 DAT_01111644; /* 0x1111644 */
 extern undefined4 DAT_01111680; /* no defined data */
 extern undefined4 DAT_01111688; /* no defined data */
@@ -1525,6 +1541,7 @@ extern undefined4 _DAT_011116b0; /* direct read */
 extern undefined4 _DAT_011116c0; /* direct read */
 extern void * g_pGame; /* 0x902ecc */
 extern void * g_pHWSystem; /* 0x902ed0 */
+extern IdolMsgDialog *g_pMsgDialog; /* 0x1111640 */ /* type set in global_types.tsv */
 
 // ---- functions
 namespace idol_draw { void DrawGalacticMapFrame(int param_1,int param_2,int param_3,int param_4); } 

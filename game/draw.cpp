@@ -16,6 +16,7 @@
 #include "game/lights.h"
 #include "game/loaders.h"
 #include "game/mUnk.h"
+#include "game/main.h"
 #include "game/memcard.h"
 #include "game/mesh.h"
 #include "game/mobyfunc.h"
@@ -1880,7 +1881,7 @@ void BuildOcclVisibility(void)
 
 
 // 0x00680e8 (0x6c bytes)
-void UpdateOcclusion(void)
+void UpdateOcclusion(int param_1)
 
 {
   if (OcclUpdate == 0) {
@@ -2016,7 +2017,7 @@ void STUB_000684a0(...)
 
 
 // 0x00684a4 (0xbc bytes)
-void UpdateOcclusion(char param_1)
+void UpdateOcclusion(int param_1)
 
 {
   int *piVar1;
@@ -4707,10 +4708,10 @@ void FadeToBlack(int param_1)
         }
         param_1 = param_1 + -1;
         auVar17 = vectorSubtractUnsignedWordModulo(auVar17,auVar18);
-        DAT_0159c330 = DAT_0159c330 + 1;
+        g_MainLoopFrames = g_MainLoopFrames + 1;
       } while (-1 < param_1);
     }
-    DAT_0159c330 = DAT_0159c330 + 1;
+    g_MainLoopFrames = g_MainLoopFrames + 1;
     (*(code *)**(undefined4 **)(*piVar5 + 0x10))(piVar5,DepthPass,piVar5[1],piVar5[2]);
     pRVar4 = DepthPass;
     *DepthPass->command = NV4097_SET_CONTEXT_DMA_COLOR_A_x1;

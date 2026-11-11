@@ -1,6 +1,7 @@
 #pragma once
 // game/skyfunc.h
 #include "types.h"
+#include "game/pause.h"
 
 // ---- types
 struct SKY {

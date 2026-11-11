@@ -3523,8 +3523,8 @@ void FUN_004f69b8(int param_1)
   GPiece<26> auStack_32;
   
   cellSysutilCheckCallback();
-  if (DAT_01111640 != (int *)0x0) {
-    (*(code *)**(undefined4 **)(*DAT_01111640 + 8))(0x3fc47ae140000000);
+  if (g_pMsgDialog != (int *)0x0) {
+    (*(code *)**(undefined4 **)(*g_pMsgDialog + 8))(0x3fc47ae140000000);
   }
   uVar1 = FUN_00582c08(1);
   if ((int)uVar1 != 0) {
@@ -4200,8 +4200,8 @@ void FUN_004f7b98(undefined8 param_1)
 {
   if ((int)param_1 < 0) {
     print_tty2("NPTicketCallback() error 0x%x\n",param_1);
-    (*(code *)**(undefined4 **)(*DAT_01111640 + 0xc))
-              (0,DAT_01111640,2,0,0,*(undefined4 **)(*DAT_01111640 + 0xc),1,&PTR_FUN_00710fa8,0);
+    (*(code *)**(undefined4 **)(*g_pMsgDialog + 0xc))
+              (0,g_pMsgDialog,2,0,0,*(undefined4 **)(*g_pMsgDialog + 0xc),1,&PTR_FUN_00710fa8,0);
   }
   else {
     *(undefined4 *)(DAT_015932d0 + 4) = 10;

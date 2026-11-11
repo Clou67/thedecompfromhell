@@ -15,6 +15,7 @@
 #include "game/hud.h"
 #include "game/initsky.h"
 #include "game/loaders.h"
+#include "game/main.h"
 #include "game/map.h"
 #include "game/mesh.h"
 #include "game/mobyfunc.h"
@@ -5159,7 +5160,7 @@ void Hero_UpdateGadgetSlots(void)
               ((((&DAT_0096ad8b)[iVar5] = (&DAT_0096ad8b)[iVar5] + '\x01',
                 *(int *)((int)&g_currentWeaponMoby + iVar5) == 0 ||
                 ((*(byte *)(iVar1 + 0x70) & 2) != 0)) || (slot < 2)))) {
-        Hero_KillGadget(slot,DAT_0159c330 + 2);
+        Hero_KillGadget(slot,g_MainLoopFrames + 2);
       }
       if (((iVar1 != 0) && (*(char *)(iVar1 + 0x20) != -2)) &&
          ((slot != 6 && *(char *)(iVar1 + 0x20) != -3 &&
@@ -11031,7 +11032,7 @@ void EquipItem(void)
   ITEM_ENUM IVar9;
   
   puVar6 = &g_heroMtx;
-  if (((g_currentWeaponMoby == (MobyInstance *)0x0) && (DAT_0096ad84 < DAT_0159c330)) &&
+  if (((g_currentWeaponMoby == (MobyInstance *)0x0) && (DAT_0096ad84 < g_MainLoopFrames)) &&
      ((DAT_0096bd98 == 0 || (DAT_0096bd98 == 0x24)))) {
     IVar9 = g_WeaponToSwapTo;
     if ((g_WeaponToSwapTo == UNK_00) &&

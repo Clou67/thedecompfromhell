@@ -29,7 +29,7 @@ undefined8 ____Unused_Respawn_IncCounter_a53504(void)
 
 {
   DAT_00a53504 = DAT_00a53504 + 1;
-  DAT_00a53508 = DAT_00a53500 + *DAT_00927200;
+  DAT_00a53508 = g_TotalFrameTicks + *g_pFrameTicks;
   return 0;
 }
 

@@ -8,6 +8,7 @@
 #include "game/help.h"
 #include "game/hero.h"
 #include "game/hud.h"
+#include "game/main.h"
 #include "game/memcard.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
@@ -237,7 +238,7 @@ void M786_0045aa28(int param_1)
       pfVar23 = pfVar21;
       do {
         iVar14 = FastDoubleToInt((double)(float)((double)*pfVar25 * dVar45));
-        dVar31 = (double)FastIntToDouble(DAT_0159c330 - (DAT_0159c330 / iVar14) * iVar14);
+        dVar31 = (double)FastIntToDouble(g_MainLoopFrames - (g_MainLoopFrames / iVar14) * iVar14);
         fVar3 = *pfVar23;
         dVar31 = (double)(float)((double)(float)(dVar31 / (double)*pfVar25) - dVar44);
         if (*piVar24 == 0) {

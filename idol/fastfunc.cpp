@@ -2938,7 +2938,7 @@ void FUN_00502cd0(void)
 
 {
   DAT_009271f8 = &DAT_0159b374;
-  DAT_00927200 = &DAT_0159b37c;
+  g_pFrameTicks = &DAT_0159b37c;
   DAT_00927204 = &DAT_0159b380;
   DAT_009271fc = &DAT_0159b378;
   DAT_0159b35c = &DAT_0159b384;
@@ -3285,7 +3285,7 @@ undefined8 FUN_00502f74_RET_0(void)
 
 
 // 0x0502f7c (0x1c bytes)
-uint idol_draw::Blend(uint param_1,int param_2,int param_3)
+uint idol_draw::Blend(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6,int param_7,int param_8)
 
 {
   return param_1 | param_2 << 1 | param_3 << 4;

@@ -3,6 +3,93 @@
 #include "types.h"
 
 // ---- types
+typedef unsigned int    dword;
+
+typedef unsigned short    word;
+
+struct EffectTexHeader { /* Pre-baked RSX texture registers; words 0-6 go to methods 0x1A00+unit*0x20 (OFFSET,FORMAT,ADDRESS,CONTROL0,CONTROL1,FILTER,IMAGE_RECT), word 7 to 0x1840+unit*4 (CONTROL3) */
+    int offset;
+    int format;
+    int address;
+    int control0;
+    int control1;
+    int filter;
+    int imageRect;
+    int control3;
+    int unknown_20;
+};
+
+struct GameSettings {
+    dword CameraUpDown;
+    dword CameraLeftRight;
+    dword CameraSpeed;
+    dword Stereo;
+    dword MusicVolume;
+    dword SfxVolume;
+};
+
+struct Items32 {
+    uint field0_0x0;
+    uint field1_0x1;
+    dword heliPack;
+    dword thrusterPack;
+    dword hydroPack;
+    dword sonicSummoner;
+    dword o2Mask;
+    dword pilotsHelmet;
+    dword missingNo1;
+    dword suckCannon;
+    dword bombGlove;
+    dword devastator;
+    dword swingshot;
+    dword visibombGun;
+    dword taunter;
+    dword blaster;
+    dword pyrocitor;
+    dword mineGlove;
+    dword walloper;
+    dword teslaClaw;
+    dword gloveOfDoom;
+    dword morphORay;
+    dword hydrodisplacer;
+    dword ryno;
+    dword droneDevice;
+    dword decoyGlove;
+    dword trespasser;
+    dword metalDetector;
+    dword magneboots;
+    dword grindboots;
+    dword hoverboard;
+    dword hologuise;
+    dword pda;
+    dword mapOMatic;
+    dword boltGrabber;
+    dword persuader;
+    dword field36_0x24;
+};
+
+struct Planets32 {
+    dword Veldin;
+    dword Novalis;
+    dword Aridia;
+    dword Kerwan;
+    dword Eudora;
+    dword Rilgar;
+    dword BlargStation;
+    dword Umbris;
+    dword Batalia;
+    dword Gaspar;
+    dword Orxon;
+    dword Pokitaru;
+    dword Hoven;
+    dword Gemlik;
+    dword Oltanis;
+    dword Quartu;
+    dword Kalebo;
+    dword Fleet;
+    dword VeldinRevisit;
+};
+
 struct PlanetsPage {
     uint nameId;
     uint subPlanetNameId;

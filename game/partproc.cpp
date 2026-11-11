@@ -7,6 +7,7 @@
 #include "game/boot.h"
 #include "game/draw.h"
 #include "game/hud.h"
+#include "game/main.h"
 #include "game/mobyutil.h"
 #include "game/pad.h"
 #include "game/partupd.h"
@@ -38,7 +39,7 @@ ulonglong UpdatePartsDebug(void)
   
   if (((g_Pad.downButtons & (R1|R2|L2)) == (R1|R2|L2)) && ((g_Pad.buttonsPressedThisFrame & L1) != 0)) {
     printf("\n");
-    printf("*** frame %d ***\n",DAT_0159c330);
+    printf("*** frame %d ***\n",g_MainLoopFrames);
     printf("\n");
     *DAT_009271fc = 0x81;
     UpdateParts_NotUsed();

@@ -10,6 +10,7 @@
 #include "game/hero.h"
 #include "game/hud.h"
 #include "game/loaders.h"
+#include "game/main.h"
 #include "game/map.h"
 #include "game/memcard.h"
 #include "game/mobyfunc.h"
@@ -380,7 +381,7 @@ void DrawDialogText(void)
     else if ((g_freezeDialogType != 5) && (g_freezeDialogType != 3)) {
       if (g_freezeDialogType == 2) {
         dVar21 = (double)FastIntToDouble(DAT_0071f368);
-        local_78 = (longlong)(DAT_0159c330 - (DAT_0159c330 / DAT_0071f368) * DAT_0071f368);
+        local_78 = (longlong)(g_MainLoopFrames - (g_MainLoopFrames / DAT_0071f368) * DAT_0071f368);
         fVar2 = (float)((double)local_78 / dVar21) * 6.28318 - 3.14159;
         fVar4 = 3.1415925 - fVar2;
         if (fVar2 - (3.1415925 - fVar2) < 0.0) {
@@ -403,7 +404,7 @@ void DrawDialogText(void)
       }
       else if (g_freezeDialogType == 0) {
         dVar21 = (double)FastIntToDouble(DAT_0071f368);
-        local_78 = (longlong)(DAT_0159c330 - (DAT_0159c330 / DAT_0071f368) * DAT_0071f368);
+        local_78 = (longlong)(g_MainLoopFrames - (g_MainLoopFrames / DAT_0071f368) * DAT_0071f368);
         fVar2 = (float)((double)local_78 / dVar21) * 6.28318 - 3.14159;
         fVar4 = 3.1415925 - fVar2;
         if (fVar2 - (3.1415925 - fVar2) < 0.0) {
@@ -602,7 +603,7 @@ void DrawDialogText(void)
       }
       else {
         dVar21 = (double)FastIntToDouble(DAT_0071f368);
-        local_78 = (longlong)(DAT_0159c330 - (DAT_0159c330 / DAT_0071f368) * DAT_0071f368);
+        local_78 = (longlong)(g_MainLoopFrames - (g_MainLoopFrames / DAT_0071f368) * DAT_0071f368);
         fVar2 = (float)((double)local_78 / dVar21) * 6.28318 - 3.14159;
         fVar4 = 3.1415925 - fVar2;
         if (fVar2 - (3.1415925 - fVar2) < 0.0) {
@@ -792,7 +793,7 @@ void UpdateFreeze(void)
           }
         }
       }
-      else if (DAT_00964fa0 == '\0') {
+      else if (g_Pad.showReconnectPrompt == '\0') {
         g_gameMode = g_freezePrevGameMode;
         DAT_00a23099 = '\0';
         g_memcardPollDone = '\0';
@@ -889,7 +890,7 @@ void UpdateFreeze(void)
       g_gameMode = g_freezePrevGameMode;
     }
   }
-  else if (((8 < g_freezeDialogType) && (g_freezeDialogType < 10)) && (DAT_00964fa0 == '\0')) {
+  else if (((8 < g_freezeDialogType) && (g_freezeDialogType < 10)) && (g_Pad.showReconnectPrompt == '\0')) {
     g_gameMode = g_freezePrevGameMode;
   }
 LAB_0007a2ec:

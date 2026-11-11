@@ -9,6 +9,7 @@
 #include "game/hero.h"
 #include "game/hud.h"
 #include "game/lights.h"
+#include "game/main.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/partupd.h"
@@ -159,7 +160,7 @@ void M671_0040c3f0(int param_1)
       uVar40 = uVar38 + lVar31;
       uVar39 = uVar40 & 0xffffffff;
       *(undefined8 *)((int)puVar30 + (int)lVar31) = *puVar30;
-      iVar51 = DAT_0159c330;
+      iVar51 = g_MainLoopFrames;
       puVar26[99] = (ulonglong)(double)(float)(dVar56 / dVar52);
       dVar52 = (double)FastIntToDouble(iVar51);
       iVar51 = 0;
@@ -203,7 +204,7 @@ void M671_0040c3f0(int param_1)
         uVar48 = (ulonglong)*(byte *)(pfVar24 + 3);
       }
       else {
-        iVar51 = DAT_0159c330 / (int)(*(byte *)((int)pfVar24 + 0xe) + 1);
+        iVar51 = g_MainLoopFrames / (int)(*(byte *)((int)pfVar24 + 0xe) + 1);
         uVar48 = (ulonglong)*(byte *)(pfVar24 + 3) +
                  ((longlong)iVar51 -
                  (longlong)(iVar51 / (int)(uint)bVar1) * (longlong)(int)(uint)bVar1);

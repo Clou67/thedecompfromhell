@@ -18,6 +18,7 @@
 #include "game/partproc.h"
 #include "game/partupd.h"
 #include "game/path.h"
+#include "game/pause.h"
 #include "game/respawn.h"
 #include "game/space.h"
 #include "game/update.h"

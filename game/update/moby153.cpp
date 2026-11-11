@@ -8,6 +8,7 @@
 #include "game/debug.h"
 #include "game/hero.h"
 #include "game/lights.h"
+#include "game/main.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
@@ -868,7 +869,7 @@ void UpdateMoby_153(MobyInstance *moby)
   dVar37 = 1.0;
   local_4b8 = 1.0;
   if ((0x3f666666 <
-       (int)(FLOAT_ORDER(DAT_00a10714)))
+       (int)(FLOAT_ORDER(g_FrameLoad)))
      || (0x3f666666 <
          (int)(FLOAT_ORDER(g_PerfLoad)
               ))) {
@@ -1332,8 +1333,8 @@ LAB_002941a8:
           iVar11 = iVar11 + 1;
         } while (iVar11 < (int)lVar17);
       }
-      uVar15 = (uint)((int)DAT_00a10714 >> 0x1f) >> 1;
-      if (((int)((uVar15 ^ DAT_00a10714) - ((int)DAT_00a10714 >> 0x1f)) < 0x3f733333) &&
+      uVar15 = (uint)((int)g_FrameLoad >> 0x1f) >> 1;
+      if (((int)((uVar15 ^ g_FrameLoad) - ((int)g_FrameLoad >> 0x1f)) < 0x3f733333) &&
          (9.0 < dVar25)) {
         dVar38 = (double)(float)(dVar42 * 4.0);
         local_150 = (longlong)(int)(animationSpeed * 15.5);

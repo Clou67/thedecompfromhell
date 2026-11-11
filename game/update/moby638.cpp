@@ -7,6 +7,7 @@
 #include "game/freeze.h"
 #include "game/hero.h"
 #include "game/initsky.h"
+#include "game/main.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/partupd.h"
@@ -669,8 +670,8 @@ void M638_003fac98(undefined8 param_1)
       iVar7 = iVar7 + 1;
     } while (iVar7 < iVar6);
   }
-  uVar4 = (uint)((int)DAT_00a10714 >> 0x1f) >> 1;
-  if (((int)((uVar4 ^ DAT_00a10714) - ((int)DAT_00a10714 >> 0x1f)) < 0x3f733333) && (9.0 < dVar17))
+  uVar4 = (uint)((int)g_FrameLoad >> 0x1f) >> 1;
+  if (((int)((uVar4 ^ g_FrameLoad) - ((int)g_FrameLoad >> 0x1f)) < 0x3f733333) && (9.0 < dVar17))
   {
     uVar12 = 0x4010000000000000;
     local_a0 = (longlong)(int)(animationSpeed * 15.5);

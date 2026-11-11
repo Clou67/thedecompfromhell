@@ -15,6 +15,7 @@
 #include "game/initsky.h"
 #include "game/lights.h"
 #include "game/loaders.h"
+#include "game/main.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
@@ -943,8 +944,8 @@ void Vendor_PlayDudeSpeech(int event)
       if (((-1 < event) &&
           (((*(char *)(DAT_00e5a674 + 0x20) == '\x02' || (*(char *)(DAT_00e5a674 + 0x20) == '\0'))
            && (iVar3 = MB_randInt(4), iVar3 == 0)))) &&
-         (DAT_00e5a680 + (int)(animationSpeed * 360.5) < DAT_0159c330)) {
-        DAT_00e5a680 = DAT_0159c330;
+         (DAT_00e5a680 + (int)(animationSpeed * 360.5) < g_MainLoopFrames)) {
+        DAT_00e5a680 = g_MainLoopFrames;
         lVar2 = MB_randInt(2);
         DAT_00e5a68c = (int)lVar2;
         g_PendingSpeech = DAT_00e5a68c * 2 + (int)(lVar2 << 4) + DAT_00e5a688 + 0x271c;
@@ -2256,7 +2257,7 @@ void DrawVendorHintFrame(double param_1,byte *param_2,int param_3,int param_4)
         bVar4 = false;
         bVar9 = false;
         iVar10 = (int)(animationSpeed * 30.5) + (int)(animationSpeed * 10.5);
-        if (DAT_0159c330 - (DAT_0159c330 / iVar10) * iVar10 < (int)(animationSpeed * 10.5)) {
+        if (g_MainLoopFrames - (g_MainLoopFrames / iVar10) * iVar10 < (int)(animationSpeed * 10.5)) {
           bVar9 = true;
           bVar4 = false;
         }
@@ -2288,7 +2289,7 @@ void Vendor_DrawScrollText(void)
   char *text;
   
   STUB_0007813c(0,0,0x200,0x80,0x200,0x80,0);
-  if ((g_JapaneseMode != false) && (DAT_0071efb4 = DAT_0073a578, (DAT_0159c330 & 0x1f) < 0x10)) {
+  if ((g_JapaneseMode != false) && (DAT_0071efb4 = DAT_0073a578, (g_MainLoopFrames & 0x1f) < 0x10)) {
     DAT_0071efb4 = DAT_0073a578 & 0xffffff;
   }
   sVar2 = strlen(DAT_00e5a67c);
@@ -3623,7 +3624,7 @@ void Vendor_HudUpdate(MobyInstance *moby)
     }
     else if (iVar12 == 0) {
       STUB_0007813c(0,0,0x200,0x80,0x200,0x80,0);
-      if ((g_JapaneseMode != false) && (DAT_0071efb4 = DAT_0073a578, (DAT_0159c330 & 0x1f) < 0x10))
+      if ((g_JapaneseMode != false) && (DAT_0071efb4 = DAT_0073a578, (g_MainLoopFrames & 0x1f) < 0x10))
       {
         DAT_0071efb4 = DAT_0073a578 & 0xffffff;
       }
@@ -3967,7 +3968,7 @@ void Vendor_PostUpdate(void)
     }
     DAT_00e5a65c = 0;
     DAT_00e5a658 = 1;
-    DAT_0159c330 = DAT_0159c330 + 1;
+    g_MainLoopFrames = g_MainLoopFrames + 1;
     DAT_00e5aa64 = 0x60000;
     Draw_FlushAndPresent();
     iVar6 = g_lastVendorWasPda;

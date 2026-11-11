@@ -12,6 +12,7 @@
 #include "game/help.h"
 #include "game/hero.h"
 #include "game/hud.h"
+#include "game/main.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
@@ -246,7 +247,7 @@ void M1379_0025e1a8(int param_1)
         do {
           iVar11 = FastDoubleToInt((double)(float)((double)*pfVar23 * dVar43));
           dVar29 = (double)FastIntToDouble
-                                     (DAT_0159c330 - (DAT_0159c330 / iVar11) * iVar11);
+                                     (g_MainLoopFrames - (g_MainLoopFrames / iVar11) * iVar11);
           fVar4 = *pfVar21;
           dVar29 = (double)(float)((double)(float)(dVar29 / (double)*pfVar23) - dVar42);
           if (*piVar22 == 0) {

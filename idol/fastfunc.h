@@ -160,7 +160,7 @@ undefined8 FUN_00502f5c(void);
 undefined8 FUN_00502f64(void);
 undefined8 STUB_00502f6c(...);
 undefined8 FUN_00502f74_RET_0(void);
-namespace idol_draw { uint Blend(uint param_1,int param_2,int param_3); } 
+namespace idol_draw { uint Blend(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6,int param_7,int param_8); } 
 uint FUN_00502f98(uint param_1,int param_2,int param_3);
 undefined8 FUN_00502fb4(void);
 undefined8 STUB_00502fbc_RET_0(...);

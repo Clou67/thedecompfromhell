@@ -9,10 +9,10 @@
 #include "game/freeze.h"
 #include "game/hero.h"
 #include "game/lights.h"
+#include "game/main.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
-#include "game/partupd.h"
 #include "game/path.h"
 #include "game/update/moby1292.h"
 #include "idol/fastfunc.h"
@@ -764,12 +764,12 @@ LAB_0018b5a8:
       else {
         iVar15 = FastDecTimerS32((int)pvVar9 + 0x1ec);
         if (iVar15 != 0) {
-          iVar15 = FastDoubleToInt((double)(g_PerfLoad * 1.3 + DAT_00a10714));
+          iVar15 = FastDoubleToInt((double)(g_PerfLoad * 1.3 + g_FrameLoad));
           *(int *)((int)pvVar9 + 0x1ec) =
                (int)(animationSpeed * ((float)(longlong)(DAT_0073f9b0 + iVar15) + 0.5));
           *(float *)((int)pvVar9 + 0x1e8) = *(float *)((int)pvVar9 + 0x1e8) + DAT_0073f9b4;
           if ((((int)(FLOAT_ORDER(g_PerfLoad)) < 0x3f4ccccd) &&
-              ((int)(FLOAT_ORDER(DAT_00a10714)) < 0x3f4ccccd)) ||
+              ((int)(FLOAT_ORDER(g_FrameLoad)) < 0x3f4ccccd)) ||
              ((*(ushort *)((int)pvVar9 + 0x20e) & 1) == 0)) {
             GetBonePosition(*(undefined4 *)((int)pvVar9 + 0x1f8),0,auStack_d0);
             iVar15 = FUN_0023e6e0(local_c0,auStack_d0,lVar14,pMVar10,(int)(animationSpeed * 180.5),

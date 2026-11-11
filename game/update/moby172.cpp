@@ -9,6 +9,7 @@
 #include "game/help.h"
 #include "game/hero.h"
 #include "game/hud.h"
+#include "game/main.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
@@ -402,10 +403,10 @@ void M172_002aed78(int param_1,char param_2)
         iVar10 = iVar10 + 1;
       } while (iVar10 < iVar9);
     }
-    uVar4 = (int)DAT_00a10714 >> 0x1f;
+    uVar4 = (int)g_FrameLoad >> 0x1f;
     uVar15 = 0x4008000000000000;
     uVar17 = 0x4000000000000000;
-    if ((int)((uVar4 >> 1 ^ DAT_00a10714) - uVar4) < 0x3f733333) {
+    if ((int)((uVar4 >> 1 ^ g_FrameLoad) - uVar4) < 0x3f733333) {
       local_a0 = (longlong)(int)(animationSpeed * 15.5);
       FUN_001d4d88(0x4008000000000000,param_1,param_1 + 0x10,local_e0,uVar4,
                    (int)(animationSpeed * 15.5),0x7f,0x7f,0x7f);

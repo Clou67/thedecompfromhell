@@ -705,7 +705,7 @@ void FUN_00504468(longlong param_1)
         iVar4 = FUN_0050e52c(uVar1);
         if (iVar4 == 0x2a) {
           uVar1 = FUN_0050e4c4(uVar1);
-          (*(code *)**(undefined4 **)(*DAT_01111640 + 0x18))(DAT_01111640,uVar1);
+          (*(code *)**(undefined4 **)(*g_pMsgDialog + 0x18))(g_pMsgDialog,uVar1);
         }
         else {
           print_tty("LoadDialogMessages() error\n");

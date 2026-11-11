@@ -981,7 +981,7 @@ void PrepareFrontbin(void)
     iVar7 = 0;
     do {
       cellSysutilCheckCallback();
-      (*(code *)**(undefined4 **)(*DAT_01111640 + 8))(0x3f90624de0000000);
+      (*(code *)**(undefined4 **)(*g_pMsgDialog + 8))(0x3f90624de0000000);
       STUB_00174cf0();
       VU1_swapChain();
       STUB_00078104();
@@ -1103,7 +1103,7 @@ LAB_0001267c:
         }
         STUB_00174cf4(1);
         STUB_00503078(0);
-        DAT_0159c330 = DAT_0159c330 + 1;
+        g_MainLoopFrames = g_MainLoopFrames + 1;
       }
     } while (g_loadingPlanet == 0);
   }
@@ -1422,7 +1422,7 @@ void GameStart(void)
   VU1_initChain();
   STUB_001754dc();
   ResetDebugEnables();
-  DAT_0159c330 = 0;
+  g_MainLoopFrames = 0;
   STUB_00503078(0);
   g_gameMode = GAME_MODE_NORMAL;
   STUB_0006849c();
@@ -1525,7 +1525,7 @@ LAB_00013344:
   STUB_00174cf4(1);
   STUB_00503078(0);
   g_MoviePlayState = -1;
-  DAT_0159c330 = DAT_0159c330 + 1;
+  g_MainLoopFrames = g_MainLoopFrames + 1;
   DAT_0090d714 = &DAT_00cd4000 + DAT_00cd4070;
   if (g_LogoMovieDone == 0) {
     uVar9 = ZEXT48(g_pBinkPlayer);

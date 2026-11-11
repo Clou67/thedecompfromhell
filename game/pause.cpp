@@ -229,7 +229,7 @@ void BeginMenu(int param_1)
       DAT_0072e220 = 0;
     }
     DAT_00a52cec = 0;
-    DAT_00a52ce8 = 1;
+    g_HideActivityIcon = 1;
   }
   else {
     DAT_00a15c78 = 1;
@@ -450,7 +450,7 @@ void OpenPauseMenu(void)
   ComposeCameraMatrix();
   STUB_00174cf4(1);
   STUB_00503078(0);
-  DAT_0159c330 = DAT_0159c330 + 1;
+  g_MainLoopFrames = g_MainLoopFrames + 1;
   if (bVar5) {
     DAT_00e5aa64 = 0x30000;
     DAT_00a52cb0 = g_NpcBuffer;
@@ -1383,7 +1383,7 @@ void FrontEnd_InitMenu(void)
   memset(&DAT_00a1dea0,0,0x10);
   STUB_00174cf4(1);
   STUB_00503078(0);
-  DAT_0159c330 = DAT_0159c330 + 1;
+  g_MainLoopFrames = g_MainLoopFrames + 1;
   DAT_00e5aa64 = 0xa0000;
   DAT_00a52bc0 = g_NpcBuffer + 0x100000;
   DAT_00a52cb4 = g_NpcBuffer + 0x30000;
@@ -2725,7 +2725,7 @@ undefined8 IconList_Draw(int param_1)
     do {
       puVar5 = (undefined2 *)(*(int *)(param_1 + 0x48) + iVar7);
       if (*(int *)(param_1 + 0x3c) == iVar6) {
-        iVar4 = FUN_005c4988(((ulonglong)DAT_0159c330 & 0x3f) - 0x20);
+        iVar4 = FUN_005c4988(((ulonglong)g_MainLoopFrames & 0x3f) - 0x20);
         DrawFlatOverlay
                   (iVar2 + -3,iVar9 + -3,iVar2 + 0x23,iVar9 + 0x23,
                    (iVar4 + 0x40) * 0x10202 | 0x80000000,1);
@@ -4989,7 +4989,7 @@ undefined8 MenuButton_Draw(int param_1)
           iVar10 = (int)dVar4 + iVar2;
           if ((iVar8 == param_1) &&
              (*(int *)(param_1 + 0x3c) == ((int)puVar16 - *(int *)(param_1 + 0x48)) / 10)) {
-            iVar12 = FUN_005c4988(((ulonglong)DAT_0159c330 & 0x3f) - 0x20);
+            iVar12 = FUN_005c4988(((ulonglong)g_MainLoopFrames & 0x3f) - 0x20);
             DrawFlatOverlay
                       (iVar1 + -3,iVar2 + -3,iVar9 + 3,iVar10 + 3,
                        (iVar12 + 0x40) * 0x10202 | 0x80000000,1);
@@ -7182,17 +7182,17 @@ undefined8 MapPage_DrawOverlay(void)
       Hud_DrawTexQuadF_v2(0,0,dVar8,dVar7,0,0,&DAT_00a20718);
       uVar2 = idol_draw::Blend(1,5,0x60,3,0,0,0,0);
       SetGSReg(0x16,uVar2);
-      if (DAT_0159c330 % 0x3c < 0x28) {
+      if (g_MainLoopFrames % 0x3c < 0x28) {
         Hud_DrawTexQuadF_v2(uVar6,uVar6,dVar8,dVar7,uVar6,uVar6,&DAT_00a2073c);
       }
-      if (DAT_0159c330 % 0x96 < 0x5a) {
+      if (g_MainLoopFrames % 0x96 < 0x5a) {
         Hud_DrawTexQuadF_v2(uVar6,uVar6,dVar8,dVar7,uVar6,uVar6,&DAT_00a20760);
       }
     }
     else {
       uVar1 = *(uint *)(&DAT_007354d4 + g_MapCurIndex * 4) & 0x7fffffff;
       lVar4 = (longlong)((int)((int)((longlong)DAT_00966b8e << 4) + uVar1 * -2) >> 4);
-      uVar3 = DAT_0159c330 + g_MapCurIndex * 0x2ab;
+      uVar3 = g_MainLoopFrames + g_MapCurIndex * 0x2ab;
       dVar8 = (double)(longlong)((int)((int)((longlong)DAT_00966b8c << 4) + uVar1 * -2) >> 4);
       lVar5 = (longlong)
               (int)(uVar3 + (((int)uVar3 >> 0xb) + (uint)((int)uVar3 < 0 && (uVar3 & 0x7ff) != 0)) *
@@ -7287,7 +7287,7 @@ undefined8 SlotConfig_Draw(int param_1)
                                                   (float)(dVar11 * dVar14) * 2.601887e-06) * dVar16)
                             );
     if (iVar10 == *(int *)(param_1 + 0x50)) {
-      iVar7 = FUN_005c4988(((ulonglong)DAT_0159c330 & 0x3f) - 0x20);
+      iVar7 = FUN_005c4988(((ulonglong)g_MainLoopFrames & 0x3f) - 0x20);
       iVar9 = (int)dVar15;
       iVar2 = (int)dVar11;
       DrawFlatOverlay
@@ -10246,12 +10246,12 @@ void MenuHero_MobyUpdateF(MobyInstance *param_1)
   dVar15 = (double)FastIntToDouble(200);
   dVar16 = 6.283180236816406;
   dVar17 = 3.141590118408203;
-  dVar20 = (double)((float)((double)(longlong)(DAT_0159c330 % 200) / dVar15) * 6.28318 - 3.14159);
+  dVar20 = (double)((float)((double)(longlong)(g_MainLoopFrames % 200) / dVar15) * 6.28318 - 3.14159);
   dVar15 = (double)FastIntToDouble(6);
   dVar19 = (double)(longlong)iVar14;
   dVar18 = (double)(float)((double)(float)((double)(float)(dVar19 * dVar16) / dVar15) - dVar17);
   dVar15 = (double)FastIntToDouble(0xaa);
-  dVar17 = (double)(float)((double)(float)((double)(float)((double)(longlong)(DAT_0159c330 % 0xaa) /
+  dVar17 = (double)(float)((double)(float)((double)(float)((double)(longlong)(g_MainLoopFrames % 0xaa) /
                                                           dVar15) * dVar16) - dVar17);
   dVar15 = (double)FastIntToDouble(6);
   fVar1 = (float)((double)(float)(dVar19 * 12.566360473632812) / dVar15);

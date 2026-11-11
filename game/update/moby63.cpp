@@ -9,6 +9,7 @@
 #include "game/freeze.h"
 #include "game/hero.h"
 #include "game/lights.h"
+#include "game/main.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/partproc.h"
@@ -1354,7 +1355,7 @@ LAB_003ef8b8:
             ((0x3f7ae148 <
               (int)(FLOAT_ORDER(g_PerfLoad)) ||
              (0x3f7ae148 <
-              (int)(FLOAT_ORDER(DAT_00a10714)))))) &&
+              (int)(FLOAT_ORDER(g_FrameLoad)))))) &&
            (iVar14 = MB_randInt(0x1d), iVar14 == 0)) && (moby->enabled == '\0')) {
     iVar17 = rand();
     iVar14 = iVar17 / 3 + (iVar17 >> 0x1f);

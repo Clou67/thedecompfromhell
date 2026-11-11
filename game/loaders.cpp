@@ -2400,7 +2400,7 @@ undefined8 LoadLevelFiles(void)
 // 0x00df408 (0xc30 bytes)
 // strings: 006524d4: 'internal level sound mismatch\n' | 006524f4: 'internal moby sound mismatch on moby %d\n' | 00652524: 'rc1/ps3data/global/spaceship%d.ps3' | 0065254c: 'rc1/ps3data/global/spaceship%d.vram'
 
-undefined8 LoadAllMobys(undefined8 param_1,undefined8 param_2)
+int LoadAllMobys(int param_1,int param_2)
 
 {
   bool bVar1;

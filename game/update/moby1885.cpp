@@ -7,10 +7,10 @@
 #include "game/collproc.h"
 #include "game/hero.h"
 #include "game/lights.h"
+#include "game/main.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
-#include "game/partupd.h"
 #include "game/space.h"
 #include "game/update.h"
 #include "game/update/moby1886.h"
@@ -378,7 +378,7 @@ void UpdateMoby_1885(MobyInstance *moby)
         if (((bVar20 < *(byte *)((int)pvVar5 + 0x90)) && ((int)uVar27 != -1)) &&
            ((bVar20 == 0 ||
             (((int)(FLOAT_ORDER(g_PerfLoad)) < 0x3f59999a &&
-             ((int)(FLOAT_ORDER(DAT_00a10714)) < 0x3f59999a)))))) {
+             ((int)(FLOAT_ORDER(g_FrameLoad)) < 0x3f59999a)))))) {
           pCVar25 = (Cuboid *)0x0;
           if (*(char *)((int)pvVar5 + 0x92) == '\0') {
             uVar18 = MB_randRange(0,3);

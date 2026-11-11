@@ -62,7 +62,6 @@ extern undefined4 DAT_007f7f7f; /* no defined data */
 extern undefined4 DAT_00806040; /* no defined data */
 extern undefined4 DAT_00810001; /* no defined data */
 extern undefined4 DAT_008fafff; /* no defined data */
-extern undefined4 DAT_00a10714; /* 0xa10714 */
 extern undefined4 DAT_00a52744; /* 0xa52744 */
 extern undefined4 DAT_00a52808; /* 0xa52808 */
 extern undefined4 DAT_00a52810; /* 0xa52810 */

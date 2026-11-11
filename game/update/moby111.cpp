@@ -7,6 +7,7 @@
 #include "game/camera.h"
 #include "game/hero.h"
 #include "game/lights.h"
+#include "game/main.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/partupd.h"
@@ -933,11 +934,11 @@ void UpdateMoby_111(MobyInstance *moby)
               }
               iVar32 = FastDecTimerS32(uVar36 + 0xa4);
               if (((iVar32 != 0) &&
-                  ((int)(FLOAT_ORDER(DAT_00a10714)) < 0x3f666666)) &&
+                  ((int)(FLOAT_ORDER(g_FrameLoad)) < 0x3f666666)) &&
                  ((int)(FLOAT_ORDER(g_PerfLoad)) < 0x3f666666)) {
                 fVar5 = animationSpeed * 6.5;
                 local_b0 = (longlong)(int)fVar5;
-                iVar32 = FastDoubleToInt((double)((g_PerfLoad + DAT_00a10714) * 1.3));
+                iVar32 = FastDoubleToInt((double)((g_PerfLoad + g_FrameLoad) * 1.3));
                 *(int *)((int)pvVar9 + 0xa4) = (int)fVar5 + iVar32;
                 if (iVar35 != 0) {
                   fVar5 = *(float *)(iVar35 + 0x10);

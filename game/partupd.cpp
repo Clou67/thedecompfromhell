@@ -9,6 +9,7 @@
 #include "game/debug.h"
 #include "game/hero.h"
 #include "game/lights.h"
+#include "game/main.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/partproc.h"
@@ -1976,13 +1977,13 @@ void SpawnPart_11
   undefined1 in_stack_0000007f;
   
   if ((((param_8 != 0) &&
-       ((((int)(FLOAT_ORDER(DAT_00a10714)) < 0x3f59999b &&
+       ((((int)(FLOAT_ORDER(g_FrameLoad)) < 0x3f59999b &&
          ((int)(FLOAT_ORDER(g_PerfLoad)) < 0x3f59999b)) ||
         (iVar3 = MB_randInt(3), iVar3 != 0)))) &&
-      (((DAT_00a10714 <= 0.9 &&
+      (((g_FrameLoad <= 0.9 &&
         ((int)(FLOAT_ORDER(g_PerfLoad)
               ) < 0x3f666667)) || (iVar3 = MB_randInt(2), iVar3 != 0)))) &&
-     ((((dVar14 = 1.0, DAT_00a10714 <= 1.0 &&
+     ((((dVar14 = 1.0, g_FrameLoad <= 1.0 &&
         ((int)(FLOAT_ORDER(g_PerfLoad)
               ) < 0x3f800001)) || (iVar3 = MB_randInt(1), iVar3 != 0)) &&
       (pPVar4 = CreatePart(0xb), pPVar4 != (PartInstance *)0x0)))) {
@@ -2256,7 +2257,7 @@ void UpdatePart_11(PartInstance *part)
                     part->color & 0xffffff;
     }
     if (0x3f800000 <
-        (int)(FLOAT_ORDER(DAT_00a10714))
+        (int)(FLOAT_ORDER(g_FrameLoad))
        ) {
       FastDecTimerS16(lVar15 + 10);
     }
@@ -2927,10 +2928,10 @@ SpawnPart_16
   if (param_7 == 0) {
     pPVar4 = (PartInstance *)0x0;
   }
-  else if (((int)(FLOAT_ORDER(DAT_00a10714)) < 0x3f666667) ||
+  else if (((int)(FLOAT_ORDER(g_FrameLoad)) < 0x3f666667) ||
           (iVar3 = MB_randInt(3), iVar3 != 0)) {
-    if ((DAT_00a10714 <= 0.95) || (iVar3 = MB_randInt(2), iVar3 != 0)) {
-      if ((DAT_00a10714 <= 1.0) || (iVar3 = MB_randInt(1), iVar3 != 0)) {
+    if ((g_FrameLoad <= 0.95) || (iVar3 = MB_randInt(2), iVar3 != 0)) {
+      if ((g_FrameLoad <= 1.0) || (iVar3 = MB_randInt(1), iVar3 != 0)) {
         pPVar4 = CreatePart(0x10);
         if (pPVar4 != (PartInstance *)0x0) {
           (pPVar4->pos).x = *param_2;
@@ -3016,7 +3017,7 @@ void UpdatePart_16(PartInstance *part)
   local_60[3] = DAT_0071f418 * -0.24;
   if (*(short *)((int)part->update + 0x1a) == 3) {
     if (0x3f733333 <
-        (int)(FLOAT_ORDER(DAT_00a10714))
+        (int)(FLOAT_ORDER(g_FrameLoad))
        ) {
       FastDecTimerS16(lVar11 + 10);
     }

@@ -7,6 +7,7 @@
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
+#include "game/pause.h"
 #include "game/update/moby58.h"
 #include "game/vendor.h"
 #include "idol/fastfunc.h"

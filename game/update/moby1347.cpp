@@ -9,6 +9,7 @@
 #include "game/map.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
+#include "game/pause.h"
 #include "game/update.h"
 #include "game/update/moby1118.h"
 #include "game/update/moby831.h"

@@ -1,8 +1,64 @@
 #pragma once
 // game/hud.h
 #include "types.h"
+#include "game/pause.h"
 
 // ---- types
+typedef enum UiTexCategory {
+    ANTI_CHICKEN_DEFAULT=0,
+    SANDSHARK=2000,
+    SANDSHARK_SPAWNER=2001,
+    CHICKEN_METER=30003,
+    NANOTECH_ANIMATION=30006,
+    OXYGEN_METER=30015,
+    BUTTONS=30020,
+    BOLTS_ANIMATION=30031,
+    MEMORY_CARD=30045,
+    QUICK_SELECT=59700,
+    VENDOR_FONT=59701,
+    MAP_GRID=59801,
+    MAP_ICONS=59802,
+    COMPLETED_FILE_ICONS=59806,
+    ITEMS_NON_SELECTED=59900,
+    ITEMS_SELECTED=59901,
+    GADGET_ICONS=59902,
+    GADGET_ICONS_SELECTED=59903,
+    AMMO_ICONS=59904,
+    AMMO_PICKUP_ICONS=59905,
+    HELI_PACK=60002,
+    THRUSTER_PACK=60003,
+    HYDRO_PACK=60004,
+    SONIC_SUMMONER=60005,
+    O2_MASK=60006,
+    PILOTS_HELMET=60007,
+    SUCK_CANNON=60009,
+    BOMB_GLOVE=60010,
+    DEVASTATOR=60011,
+    SWINGSHOT=60012,
+    VISIBOMB=60013,
+    TAUNTER=60014,
+    BLASTER=60015,
+    PYROCITOR=60016,
+    MINE_GLOVE=60017,
+    WALLOPER=60018,
+    TESLA_CLAW=60019,
+    GLOVE_OF_DOOM=60020,
+    MORPH_O_RAY=60021,
+    HYDRODISPLACER=60022,
+    RYNO=60023,
+    DRONE_DEVICE=60024,
+    DECOY=60025,
+    TRESPASSER=60026,
+    METAL_DETECTOR=60027,
+    MAGNEBOOTS=60028,
+    GRINDBOOTS=60029,
+    HOVERBOARD=60030,
+    HOLOGUISE=60031,
+    PDA=60032,
+    KEY_ITEMS=60104,
+    UPGRADE_ITEMS=60105
+} UiTexCategory;
+
 struct astruct {
     undefined field0_0x0;
     undefined field1_0x1;
@@ -125,8 +181,6 @@ struct IconTableEntries {
     ushort variantsCnt;
     ushort baseIdx;
 };
-
-typedef enum enum_1 UiTexCategory;
 
 // ---- globals
 extern undefined4 Cutscene; /* 0x966aec */
@@ -319,7 +373,6 @@ extern undefined4 DAT_00a1c814; /* 0xa1c814 */
 extern undefined4 DAT_00a1c818; /* 0xa1c818 */
 extern undefined4 DAT_00a390b0; /* 0xa390b0 */
 extern undefined4 DAT_010000ff; /* no defined data */
-extern undefined4 DAT_0159c330; /* 0x159c330 */
 extern undefined4 EffectTexHeaders; /* 0xa15f68 */
 extern RenderingStep * HUD_Pass; /* 0x8fa43c */
 extern astruct * HudBankMain; /* 0xa1bfec */
@@ -396,7 +449,7 @@ void PromptHud_Init(undefined8 param_1);
 void PromptHud_Update(void);
 void Hud_DrawTexQuad (longlong param_1,RsxCmd param_2,ulonglong param_3,int param_4,longlong param_5, int param_6);
 void Hud_DrawTexHeaderQuad (int param_1,RsxCmd param_2,ulonglong param_3,int param_4,longlong param_5, ulonglong param_6);
-void DrawSprite(longlong param_1);
+void DrawSprite(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6);
 void Hud_DrawTextBox (undefined8 param_1,undefined8 param_2,int param_3,undefined8 param_4, undefined8 param_5);
 void Hud_DrawTextBoxCentered (undefined8 param_1,undefined8 param_2,ulonglong param_3,undefined8 param_4);
 undefined4 Draw_PromptMsg(int param_1);
@@ -454,7 +507,7 @@ void Hud_DrawEffectTexHeaderQuadUV(int param_1);
 void Hud_DrawTexQuadUV_Fixed(undefined8 param_1,int param_2,int param_3);
 void Hud_DrawTexQuadF_v2 (double param_1,double param_2,double param_3,double param_4,double param_5, double param_6,undefined8 param_7,undefined8 param_8,undefined8 param_9, undefined4 param_10,undefined4 param_11);
 void Hud_DrawTexQuadF_v3 (double param_1,double param_2,double param_3,double param_4,double param_5);
-void Hud_DrawTexQuadF_v4 (double param_1,double param_2,double param_3,double param_4,double param_5);
+void Hud_DrawTexQuadF_v4(float param_1,float param_2,float param_3,float param_4,float param_5,int param_6,int param_7,int param_8);
 void Hud_DrawTexQuadF_v4_Fixed(double param_1,double param_2,double param_3,double param_4);
 void DrawSprite2(longlong param_1,RsxCmd param_2,ulonglong param_3,RsxCmd param_4, ulonglong param_5,RsxCmd param_6,ulonglong param_7,RsxCmd param_8);
 void STUB_000d8658(...);

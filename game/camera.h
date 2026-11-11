@@ -1,7 +1,6 @@
 #pragma once
 // game/camera.h
 #include "types.h"
-#include "game/path.h"
 
 // ---- types
 struct _2legData {
@@ -259,22 +258,6 @@ struct ScreenVBEffect {
     s32 bLines;
     u32 bColor;
     u64 bAlpha;
-};
-
-struct Spawnpoint {
-    struct Vec4 pos;
-    struct Vec4 rot;
-    struct ABGR colorReadOnly;
-    struct ABGR light;
-    undefined4 colorManipulator;
-    undefined4 field5_0x2c;
-    byte field6_0x30;
-    byte field7_0x31;
-    byte field8_0x32;
-    byte field9_0x33;
-    int heroType;
-    struct MobyInstance *heroMobyPtr;
-    int field12_0x3c;
 };
 
 struct Sphere {

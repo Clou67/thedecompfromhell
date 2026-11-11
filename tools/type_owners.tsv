@@ -8,3 +8,12 @@ CONTROLLER_INPUT	game/pad
 g_Pad	game/pad
 g_PadPorts	game/pad
 g_pPadDriver	game/pad
+LevelRecord	game/main
+IdolMsgDialog	idol/mUnk
+g_LevelRecords	game/main
+g_pMsgDialog	idol/mUnk
+g_pFrameTicks	game/main
+g_TotalFrameTicks	game/main
+g_FrameLoad	game/main
+g_MainLoopFrames	game/main
+g_HideActivityIcon	game/main

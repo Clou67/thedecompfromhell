@@ -13,6 +13,7 @@
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/pad.h"
+#include "game/pause.h"
 #include "game/sound.h"
 #include "game/space.h"
 #include "game/update.h"

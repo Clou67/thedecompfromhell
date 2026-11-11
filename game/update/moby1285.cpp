@@ -7,11 +7,11 @@
 #include "game/debug.h"
 #include "game/hero.h"
 #include "game/lights.h"
+#include "game/main.h"
 #include "game/map.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
-#include "game/partupd.h"
 #include "game/sound.h"
 #include "game/update/moby1118.h"
 #include "game/update/moby320.h"
@@ -157,7 +157,7 @@ void UpdateMoby_1285(MobyInstance *moby)
       iVar6 = 0x28;
       moby->damage = -1;
       if ((0x3f59999a <
-           (int)(FLOAT_ORDER(DAT_00a10714))) ||
+           (int)(FLOAT_ORDER(g_FrameLoad))) ||
          (0x3f59999a <
           (int)(FLOAT_ORDER(g_PerfLoad)))) {
         iVar6 = 0x1e;

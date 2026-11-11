@@ -18,6 +18,7 @@
 #include "game/initonce.h"
 #include "game/lights.h"
 #include "game/loaders.h"
+#include "game/main.h"
 #include "game/map.h"
 #include "game/memcard.h"
 #include "game/mobyfunc.h"
@@ -4117,7 +4118,7 @@ void DoSpaceTransition(void)
         FlowState_Update();
         STUB_00174cf4(1);
         STUB_00503078(0);
-        DAT_0159c330 = DAT_0159c330 + 1;
+        g_MainLoopFrames = g_MainLoopFrames + 1;
         SetFrameCount();
         if (iVar3 == 0) {
           iVar3 = LoadLevelFiles();

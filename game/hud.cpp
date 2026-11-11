@@ -12,6 +12,7 @@
 #include "game/help.h"
 #include "game/hero.h"
 #include "game/loaders.h"
+#include "game/main.h"
 #include "game/map.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
@@ -1196,8 +1197,8 @@ void OxygenHud_Update(void)
   fVar9 = DAT_00724328;
   fVar8 = DAT_00724324;
   fVar7 = DAT_00724320;
-  iVar10 = DAT_0159c330 +
-           (((int)DAT_0159c330 >> 1) + (uint)((int)DAT_0159c330 < 0 && (DAT_0159c330 & 1) != 0)) *
+  iVar10 = g_MainLoopFrames +
+           (((int)g_MainLoopFrames >> 1) + (uint)((int)g_MainLoopFrames < 0 && (g_MainLoopFrames & 1) != 0)) *
            -2;
   pfVar11 = (float *)(&DAT_00a1c1a0 + iVar10 * 4);
   for (; iVar10 < 100; iVar10 = iVar10 + 2) {
@@ -1577,14 +1578,14 @@ uint DrawOxygenMeter(uint *param_1)
   if ((int)(param_1[0x1d] * 3) < 0x2711) {
     iVar6 = (int)((float)(longlong)(animationSpeed * 1.5) * 60.0);
     uVar11 = (uint)((ulonglong)
-                    ((longlong)((DAT_0159c330 + -1) - ((DAT_0159c330 + -1) / iVar6) * iVar6) -
+                    ((longlong)((g_MainLoopFrames + -1) - ((g_MainLoopFrames + -1) / iVar6) * iVar6) -
                     (longlong)(int)(animationSpeed * 0.75 * 60.0)) >> 0x3f);
   }
   uVar15 = 0;
   if ((int)(param_1[0x1d] * 3) < 0x2711) {
     iVar6 = (int)((float)(longlong)(animationSpeed * 1.5) * 60.0);
     uVar15 = (ulonglong)
-             ((longlong)(DAT_0159c330 - (DAT_0159c330 / iVar6) * iVar6) -
+             ((longlong)(g_MainLoopFrames - (g_MainLoopFrames / iVar6) * iVar6) -
              (longlong)(int)(animationSpeed * 0.75 * 60.0)) >> 0x3f;
   }
   if (uVar11 == 0 && (uint)uVar15 == 1) {
@@ -1808,8 +1809,8 @@ void Moby185Hud_Update(void)
   fVar9 = DAT_00724328;
   fVar8 = DAT_00724324;
   fVar7 = DAT_00724320;
-  iVar10 = DAT_0159c330 +
-           (((int)DAT_0159c330 >> 1) + (uint)((int)DAT_0159c330 < 0 && (DAT_0159c330 & 1) != 0)) *
+  iVar10 = g_MainLoopFrames +
+           (((int)g_MainLoopFrames >> 1) + (uint)((int)g_MainLoopFrames < 0 && (g_MainLoopFrames & 1) != 0)) *
            -2;
   pfVar11 = (float *)(&DAT_00a1c1a0 + iVar10 * 4);
   for (; iVar10 < 100; iVar10 = iVar10 + 2) {
@@ -2167,7 +2168,7 @@ void Hud_DrawTexHeaderQuad
 
 
 // 0x00cc0f0 (0x58 bytes)
-void DrawSprite(longlong param_1)
+void DrawSprite(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6)
 
 {
   Hud_DrawTexHeaderQuad
@@ -3098,7 +3099,7 @@ LAB_000cdbc8:
       RegisterHUDCallback(uVar21,0xffff,(void *)0x0,(void *)0x0,(void *)0x0,(int *)0x0,0);
     }
     *(undefined4 *)(iVar9 + 0x6c) = 0xfffffffa;
-    DAT_00a1c088 = DAT_0159c330;
+    DAT_00a1c088 = g_MainLoopFrames;
   }
   return;
 }
@@ -3833,7 +3834,7 @@ LAB_000cf338:
       RegisterHUDCallback(uVar14,0xffff,(void *)0x0,(void *)0x0,(void *)0x0,(int *)0x0,0);
     }
     *(undefined4 *)(iVar9 + 0x6c) = 0xfffffffa;
-    DAT_00a1c088 = DAT_0159c330;
+    DAT_00a1c088 = g_MainLoopFrames;
   }
   return;
 }
@@ -7698,8 +7699,7 @@ void Hud_DrawTexQuadF_v3
 
 
 // 0x00d7f88 (0x39c bytes)
-void Hud_DrawTexQuadF_v4
-               (double param_1,double param_2,double param_3,double param_4,double param_5)
+void Hud_DrawTexQuadF_v4(float param_1,float param_2,float param_3,float param_4,float param_5,int param_6,int param_7,int param_8)
 
 {
   float fVar1;
