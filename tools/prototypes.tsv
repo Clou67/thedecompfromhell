@@ -1,0 +1,3 @@
+# c_name <TAB> prototype (no ';')
+FastMemSetZero	void FastMemSetZero(void *dst,int size)
+FastMemSetZero16	void FastMemSetZero16(void *dst,int size)

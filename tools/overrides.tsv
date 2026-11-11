@@ -1,0 +1,4 @@
+# <ghidra full name, or 'ns::' for a whole namespace> <TAB> <file under tree/>
+# first function of the sky asm section is skyproc.s, even though it is labelled skyfunc::
+skyfunc::SkySpriteProc	game/skyproc.cpp
+crt0::_init	game/boot.cpp

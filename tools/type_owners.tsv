@@ -1,0 +1,10 @@
+# type <TAB> module that owns it (its header defines it)
+PointLight	game/lights
+PL_Data	game/lights
+MobyInstance	game/mobyfunc
+PadState	game/pad
+PadDriver	game/pad
+CONTROLLER_INPUT	game/pad
+g_Pad	game/pad
+g_PadPorts	game/pad
+g_pPadDriver	game/pad

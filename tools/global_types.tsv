@@ -1,0 +1,10 @@
+# name <TAB> declaration with NAME placeholder
+ShrubInstanceEnd	ShrubInstance *NAME
+PointLightData	PL_Data NAME[8] /* 0xa1e100 */
+PointLightLists	short NAME[8][512] /* 0xa1e280: 0x400 bytes per light */
+g_PerfLoad	float NAME /* 0xa10718: guess - fraction of the frame budget in use (cf. 0xa10714 = ticks/9600); point lights are refused above 0.8 */
+g_CamLightColor	Vec4 NAME /* 0xa1de40 */
+g_CamLightDir	Vec4 NAME /* 0xa1de50: camera-relative directional light, rebuilt every frame */
+g_Pad	PadState NAME /* 0x964a40 */
+g_PadPorts	PadState NAME[4] /* 0x965540 */
+g_pPadDriver	PadDriver *NAME /* 0x902edc */

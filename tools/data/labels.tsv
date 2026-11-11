@@ -1,0 +1,798 @@
+000118a8	boot::LoadGameplay::skip_directionalLightCopy	
+00011b74	boot::Load_Front_End::Transition_LoadWad	
+000d9208	initonce::InitOnce::japanese_mode	
+00650994	cellHttp_func_nid_table	int[2]
+00650994	FNID_cellHttpInit	int[2]
+00650998	FNID_cellHttpsInit	
+0065099c	cellSsl_func_nid_table	int[3]
+0065099c	FNID_cellSslCertificateLoader	int[3]
+006509a0	FNID_cellSslInit	
+006509a4	FNID_cellSslEnd	
+006509a8	cellSysutilAvconfExt_func_nid_table	int[1]
+006509a8	FNID_cellVideoOutGetScreenSize	int[1]
+006509ac	sceNp_func_nid_table	int[27]
+006509ac	FNID_sceNpBasicGetFriendListEntry	int[27]
+006509b0	FNID_sceNpManagerGetTicket	
+006509b4	FNID_sceNpBasicAddBlockListEntry	
+006509b8	FNID_sceNpBasicGetFriendPresenceByNpId2	
+006509bc	FNID_sceNpBasicAddFriend	
+006509c0	FNID_sceNpScoreInit	
+006509c4	FNID_sceNpBasicRegisterContextSensitiveHandler	
+006509c8	FNID_sceNpManagerUnregisterCallback	
+006509cc	FNID_sceNpBasicSetPresenceDetails2	
+006509d0	FNID_sceNpLookupInit	
+006509d4	FNID_sceNpBasicGetBlockListEntryCount	
+006509d8	FNID_sceNpLookupPollAsync	
+006509dc	FNID_sceNpManagerRequestTicket2	
+006509e0	FNID_sceNpManagerGetStatus	
+006509e4	FNID_sceNpBasicUnregisterHandler	
+006509e8	FNID_sceNpBasicGetFriendListEntryCount	
+006509ec	FNID_sceNpScoreCreateTitleCtx	
+006509f0	FNID_sceNpInit	
+006509f4	FNID_sceNpLookupCreateTitleCtx	
+006509f8	FNID_sceNpLookupNpIdAsync	
+006509fc	FNID_sceNpBasicGetEvent	
+00650a00	FNID_sceNpManagerRegisterCallback	
+00650a04	FNID_sceNpLookupCreateTransactionCtx	
+00650a08	FNID_sceNpBasicGetBlockListEntry	
+00650a0c	FNID_sceNpLookupDestroyTransactionCtx	
+00650a10	FNID_sceNpManagerGetNpId	
+00650a14	FNID_sceNpDrmIsAvailable2	
+00650a18	sceNpClans_func_nid_table	int[1]
+00650a18	FNID_sceNpClansInit	int[1]
+00650a1c	sys_fs_func_nid_table	int[22]
+00650a1c	FNID_cellFsClose	int[22]
+00650a20	FNID_cellFsRead	
+00650a24	FNID_cellFsOpen	
+00650a28	FNID_cellFsFstat	
+00650a2c	FNID_cellFsRmdir	
+00650a30	FNID_cellFsOpendir	
+00650a34	FNID_cellFsAioWrite	
+00650a38	FNID_cellFsReaddir	
+00650a3c	FNID_cellFsSdataOpenByFd	
+00650a40	FNID_cellFsStat	
+00650a44	FNID_cellFsAioCancel	
+00650a48	FNID_cellFsUnlink	
+00650a4c	FNID_cellFsFsync	
+00650a50	FNID_cellFsAioFinish	
+00650a54	FNID_cellFsLseek	
+00650a58	FNID_cellFsGetFreeSize	
+00650a5c	FNID_cellFsSdataOpen	
+00650a60	FNID_cellFsMkdir	
+00650a64	FNID_cellFsAioRead	
+00650a68	FNID_cellFsAioInit	
+00650a6c	FNID_cellFsWrite	
+00650a70	FNID_cellFsClosedir	
+00650a74	cellGcmSys_func_nid_table	int[18]
+00650a74	FNID_cellGcmGetTiledPitchSize	int[18]
+00650a78	FNID__cellGcmInitBody	
+00650a7c	FNID__cellGcmSetFlipCommand	
+00650a80	FNID_cellGcmAddressToOffset	
+00650a84	FNID__cellGcmFunc15	
+00650a88	FNID_cellGcmBindTile	
+00650a8c	FNID_cellGcmSetFlipMode	
+00650a90	FNID_cellGcmMapEaIoAddress	
+00650a94	FNID_cellGcmSetDisplayBuffer	
+00650a98	FNID_cellGcmGetControlRegister	
+00650a9c	FNID_cellGcmSetVBlankHandler	
+00650aa0	FNID_cellGcmSetTileInfo	
+00650aa4	FNID_cellGcmSetTile	
+00650aa8	FNID_cellGcmSetZcull	
+00650aac	FNID__cellGcmSetFlipCommandWithWaitLabel	
+00650ab0	FNID_cellGcmUnbindTile	
+00650ab4	FNID_cellGcmGetConfiguration	
+00650ab8	FNID_cellGcmGetLabelAddress	
+00650abc	cellSysmodule_func_nid_table	int[3]
+00650abc	FNID_cellSysmoduleUnloadModule	int[3]
+00650ac0	FNID_cellSysmoduleLoadModule	
+00650ac4	FNID_cellSysmoduleInitialize	
+00650ac8	cellSysutil_func_nid_table	int[16]
+00650ac8	FNID_cellVideoOutConfigure	int[16]
+00650acc	FNID_cellSaveDataUserListSave	
+00650ad0	FNID_cellSysutilCheckCallback	
+00650ad4	FNID_cellVideoOutGetDeviceInfo	
+00650ad8	FNID_cellSaveDataListAutoLoad	
+00650adc	FNID_cellSaveDataUserListLoad	
+00650ae0	FNID_cellSysutilGetSystemParamInt	
+00650ae4	FNID_cellAudioOutConfigure	
+00650ae8	FNID_cellSaveDataUserAutoSave	
+00650aec	FNID_cellMsgDialogAbort	
+00650af0	FNID_cellMsgDialogOpen2	
+00650af4	FNID_cellVideoOutGetState	
+00650af8	FNID_cellSysutilRegisterCallback	
+00650afc	FNID_cellVideoOutGetResolutionAvailability	
+00650b00	FNID_cellAudioOutGetSoundAvailability	
+00650b04	FNID_cellVideoOutGetResolution	
+00650b08	cellGame_func_nid_table	int[8]
+00650b08	FNID_cellGameGetParamString	int[8]
+00650b0c	FNID_cellGameCreateGameData	
+00650b10	FNID_cellGameContentPermit	
+00650b14	FNID_cellGameContentErrorDialog	
+00650b18	FNID_cellGameGetParamInt	
+00650b1c	FNID_cellGameDataCheck	
+00650b20	FNID_cellGameGetSizeKB	
+00650b24	FNID_cellGameBootCheck	
+00650b28	sceNpTrophy_func_nid_table	int[10]
+00650b28	FNID_sceNpTrophyRegisterContext	int[10]
+00650b2c	FNID_sceNpTrophyCreateHandle	
+00650b30	FNID_sceNpTrophyGetRequiredDiskSpace	
+00650b34	FNID_sceNpTrophyDestroyContext	
+00650b38	FNID_sceNpTrophyInit	
+00650b3c	FNID_sceNpTrophyGetGameInfo	
+00650b40	FNID_sceNpTrophyDestroyHandle	
+00650b44	FNID_sceNpTrophyUnlockTrophy	
+00650b48	FNID_sceNpTrophyCreateContext	
+00650b4c	FNID_sceNpTrophyGetTrophyInfo	
+00650b50	sceNpTus_func_nid_table	int[2]
+00650b50	FNID_sceNpTusCreateTitleCtx	int[2]
+00650b54	FNID_sceNpTusInit	
+00650b58	sys_io_func_nid_table	int[5]
+00650b58	FNID_cellPadInit	int[5]
+00650b5c	FNID_cellPadEnd	
+00650b60	FNID_cellPadSetPortSetting	
+00650b64	FNID_cellPadGetData	
+00650b68	FNID_cellPadGetInfo2	
+00650b6c	cellSpurs_func_nid_table	int[31]
+00650b6c	FNID_cellSpursAttributeSetNamePrefix	int[31]
+00650b70	FNID__cellSpursTasksetAttributeInitialize	
+00650b74	FNID_cellSpursRequestIdleSpu	
+00650b78	FNID_cellSpursGetInfo	
+00650b7c	FNID_cellSpursEventFlagDetachLv2EventQueue	
+00650b80	FNID_cellSpursEventFlagWait	
+00650b84	FNID_cellSpursWorkloadAttributeSetName	
+00650b88	FNID_cellSpursEventFlagClear	
+00650b8c	FNID_cellSpursGetWorkloadInfo	
+00650b90	FNID_cellSpursRemoveWorkload	
+00650b94	FNID__cellSpursEventFlagInitialize	
+00650b98	FNID_cellSpursWaitForWorkloadShutdown	
+00650b9c	FNID_cellSpursTasksetAttributeSetName	
+00650ba0	FNID_cellSpursSetPriorities	
+00650ba4	FNID_cellSpursEventFlagAttachLv2EventQueue	
+00650ba8	FNID__cellSpursAttributeInitialize	
+00650bac	FNID_cellSpursShutdownWorkload	
+00650bb0	FNID_cellSpursJoinTaskset	
+00650bb4	FNID_cellSpursShutdownTaskset	
+00650bb8	FNID_cellSpursInitializeWithAttribute	
+00650bbc	FNID_cellSpursAddWorkloadWithAttribute	
+00650bc0	FNID_cellSpursCreateTasksetWithAttribute	
+00650bc4	FNID_cellSpursFinalize	
+00650bc8	FNID_cellSpursSetExceptionEventHandler	
+00650bcc	FNID__cellSpursWorkloadAttributeInitialize	
+00650bd0	FNID_cellSpursReadyCountStore	
+00650bd4	FNID__cellSpursLFQueueInitialize	
+00650bd8	FNID_cellSpursLFQueueAttachLv2EventQueue	
+00650bdc	FNID_cellSpursLFQueueDetachLv2EventQueue	
+00650be0	FNID__cellSpursLFQueuePushBody	
+00650be4	FNID_cellSpursCreateTask	
+00650be8	sys_net_func_nid_table	int[22]
+00650be8	FNID_sys_net_finalize_network	int[22]
+00650bec	FNID_socketpoll	
+00650bf0	FNID_sys_net_initialize_network_ex	
+00650bf4	FNID_getsockname	
+00650bf8	FNID_recvfrom	
+00650bfc	FNID_listen	
+00650c00	FNID_socketselect	
+00650c04	FNID_getsockopt	
+00650c08	FNID__sys_net_errno_loc	
+00650c0c	FNID_connect	
+00650c10	FNID_socketclose	
+00650c14	FNID_gethostbyname	
+00650c18	FNID_setsockopt	
+00650c1c	FNID_sendto	
+00650c20	FNID_socket	
+00650c24	FNID_shutdown	
+00650c28	FNID_inet_aton	
+00650c2c	FNID_bind	
+00650c30	FNID_accept	
+00650c34	FNID_send	
+00650c38	FNID_recv	
+00650c3c	FNID_sys_net_free_thread_context	
+00650c40	cellNetCtl_func_nid_table	int[6]
+00650c40	FNID_cellNetCtlNetStartDialogLoadAsync	int[6]
+00650c44	FNID_cellNetCtlNetStartDialogUnloadAsync	
+00650c48	FNID_cellNetCtlGetState	
+00650c4c	FNID_cellNetCtlInit	
+00650c50	FNID_cellNetCtlTerm	
+00650c54	FNID_cellNetCtlGetInfo	
+00650c58	cellAudio_func_nid_table	int[7]
+00650c58	FNID_cellAudioInit	int[7]
+00650c5c	FNID_cellAudioPortClose	
+00650c60	FNID_cellAudioGetPortConfig	
+00650c64	FNID_cellAudioPortStart	
+00650c68	FNID_cellAudioPortOpen	
+00650c6c	FNID_cellAudioPortStop	
+00650c70	FNID_cellAudioQuit	
+00650c74	cellL10n_func_nid_table	int[1]
+00650c74	FNID_L10nConvertStr	int[1]
+00650c78	sysPrxForUser_func_nid_table	int[29]
+00650c78	FNID_sys_lwmutex_lock	int[29]
+00650c7c	FNID_sys_lwmutex_unlock	
+00650c80	FNID_sys_lwcond_destroy	
+00650c84	FNID_sys_ppu_thread_create	
+00650c88	FNID_sys_prx_load_module	
+00650c8c	FNID_sys_lwcond_wait	
+00650c90	FNID__sys_process_atexitspawn	
+00650c94	FNID_sys_lwmutex_create	
+00650c98	FNID_sys_ppu_thread_get_id	
+00650c9c	FNID_sys_mmapper_free_memory	
+00650ca0	FNID_sys_prx_register_library	
+00650ca4	FNID_sys_mmapper_unmap_memory	
+00650ca8	FNID_sys_process_is_stack	
+00650cac	FNID_sys_initialize_tls	
+00650cb0	FNID_sys_time_get_system_time	
+00650cb4	FNID__sys_process_at_Exitspawn	
+00650cb8	FNID_sys_prx_exitspawn_with_level	
+00650cbc	FNID_sys_prx_load_module_on_memcontainer_by_fd	
+00650cc0	FNID_sys_prx_load_module_on_memcontainer	
+00650cc4	FNID_sys_lwmutex_trylock	
+00650cc8	FNID_sys_ppu_thread_exit	
+00650ccc	FNID_sys_mmapper_allocate_memory	
+00650cd0	FNID_sys_lwmutex_destroy	
+00650cd4	FNID_sys_lwcond_create	
+00650cd8	FNID_sys_mmapper_map_memory	
+00650cdc	FNID_sys_process_exit	
+00650ce0	FNID_sys_lwcond_signal_all	
+00650ce4	FNID_sys_prx_load_module_by_fd	
+00650ce8	FNID_sys_lwcond_signal	
+00650cf8	_scelibstub_ppu32	_scelibstub_ppu32[19]
+006fd580	sys_process_param_t	sys_process_param_t
+006fd5a8	sys_process_prx_info_t	sys_process_prx_info_t
+007018d4	cellAudio_func_address_table	pointer32[7]
+007018f0	cellGame_func_address_table	pointer32[8]
+00701910	cellGcmSys_func_address_table	pointer32[18]
+00701958	cellHttp_func_address_table	pointer32[2]
+00701960	cellL10n_func_address_table	pointer32[1]
+00701964	cellNetCtl_func_address_table	pointer32[6]
+0070197c	cellSpurs_func_address_table	pointer32[31]
+007019f8	cellSsl_func_address_table	pointer32[3]
+00701a04	cellSysmodule_func_address_table	pointer32[3]
+00701a10	cellSysutil_func_address_table	pointer32[16]
+00701a50	cellSysutilAvconfExt_func_address_table	pointer32[1]
+00701a54	sceNp_func_address_table	pointer32[27]
+00701ac0	sceNpClans_func_address_table	pointer32[1]
+00701ac4	sceNpTrophy_func_address_table	pointer32[10]
+00701aec	sceNpTus_func_address_table	pointer32[2]
+00701af4	sysPrxForUser_func_address_table	pointer32[29]
+00701b68	sys_fs_func_address_table	pointer32[22]
+00701bc0	sys_io_func_address_table	pointer32[5]
+00701bd4	sys_net_func_address_table	pointer32[22]
+00703548	tocPtr	pointer32
+0071cc6c	g_HasInited	undefined4
+0071cc70	boot::g_pNextMainFunc	void *
+0071d580	g_BaseCameraSpeed	float
+0071ea54	g_CameraSpeed	float
+0071eb38	debug::g_pDebugFontBufPos	pointer
+0071ecbc	debug::g_DebugFontCharWidths	int[96]
+0071ef30	draw::ScreenColorEffectNow	pointer
+0071f410	animationSpeed	float
+0071f414	mobyutil::g_FrameTime	float
+0071fb20	memcard::g_memcardGameSaved	int
+0071fb28	g_heroMaxNanotech	undefined4
+0071fb2c	g_purchasableVendorItems	char[12]
+0071fb38	g_GameSettings	GameSettings
+0071fb3c	gameSetting_CameraLeftRight	
+0071fb40	gameSetting_CameraSpeed	
+0071fb44	gameSetting_Stereo	
+0071fb48	gameSetting_musicVol	
+0071fb4c	gameSetting_EffectVol	
+0071fb5c	help::g_HelpLogCount	int
+0071fbd0	sound::g_CoreSoundCnt	int
+00720884	help::g_HelpState	int
+00720888	help::g_HelpStateTimer	int
+007208a4	help::g_HelpCurIndex	int
+007208a8	help::g_HelpCurId	int
+007208ac	help::g_HelpCurFlag	int
+007208b0	Help	undefined4
+007208bc	help::g_HelpSuspended	int
+007208cc	help::g_HelpIdPairs	undefined2
+0072105c	g_BackpackMobyClass	undefined4
+00721bd0	hero::g_heroTweakers	undefined
+00722328	TOC_BASE	undefined
+00723b10	HudEntries	HudElement[13]
+00724528	hud::g_HudHideCounter	int
+00724530	hud::g_HudAmmoEntryId	int
+007247f0	loaders::g_NpcChunkLoadHandle	undefined4
+00724af0	map::g_MapWorldBounds	float
+00724d50	map::g_MapWorldToMap	float
+00726558	memcard::g_CardStateNames	undefined *
+007265bc	memcard::g_CardStateFuncs	undefined *
+00726690	memcard::mc_gamedata	pointer
+007269a0	memcard::mc_leveldata	pointer
+007291a4	g_CurrentBlender	undefined4
+00729970	ptr_GalacticMap	pointer
+00729a80	mainPage	undefined
+00731c40	OCLASSES_SPACESHIP	int[3]
+00731c4c	OCLASSES_COCKPIT	int[3]
+007352b0	PlanetsPage	PlanetsPage[19]
+00735900	mobyutil::g_atanQuadrantTable	undefined
+007368b0	MediumWesternGlyphs	undefined
+00736c50	Glyphs	undefined
+00736ff0	draw::LargeWesternGlyphs	undefined
+00737390	JapaneseGlyphs	undefined
+00738608	g_MaxBoltsPerLevel	Planets32
+00738830	update::g_IdleFrames	int
+0073a964	WaterFog	RGBA
+0073a968	WaterFogFarDist	undefined4
+0073a96c	WaterFogNearIntensity	undefined4
+0073a970	WaterFogFarIntensity	undefined4
+0073aa00	WaterTileConsts	WaterTileConst
+0073aa04	TileSizeY	
+0073aa08	TileOffsetX	
+0073aa0c	TileOffsetY	
+0073aa10	TileGridSizeX	
+0073aa14	TileGridSizeY	
+0073aa18	texScale	
+0073aa1c	minHeight	
+0073aa20	waveinc	
+0073ab00	CONST_1.0f	float
+0083bb80	OCEAN_GASPAR	OceanPlane
+0083fa40	OCEAN_BATALIA	OceanPlane
+00842b30	OCEAN_UMBRIS	OceanPlane
+008cbd00	OCEAN_RILGAR	OceanPlane
+008fa410	boot::g_pBinkPlayer	void *
+008fa414	DepthPass	RenderingStep *
+008fa418	OceanForwardPass	RenderingStep *
+008fa41c	ForwardPass	RenderingStep *
+008fa420	M_Depth	RenderingStep *
+008fa424	M_Pass	RenderingStep *
+008fa428	ShadowPass	RenderingStep *
+008fa42c	MobyDepth	RenderingStep *
+008fa430	MobyPass	RenderingStep *
+008fa434	DL_DepthPass	RenderingStep *
+008fa438	DL_Pass	RenderingStep *
+008fa43c	HUD_Pass	RenderingStep *
+008fa440	FrameHeap	undefined4
+008fa564	g_viewMtxPtr	undefined4
+008fa640	GameSavePtr	undefined4
+008fa644	memcard::g_memcardSaveSysState	int
+008fabdc	TrophyMgr	undefined4
+00902ecc	boot::g_pGame	void *
+00902ed0	boot::g_pHWSystem	void *
+00902ed4	pad_ConfirmButtonMask	undefined4
+00902edc	pad::g_pPadDriver	undefined4
+00904520	989snd::g_sndNotePitchTable	undefined
+00904550	989snd::g_sndFinePitchTable	undefined
+0090d708	boot::g_FrontEndLogoAlpha	int
+0090d70c	boot::g_FrontEndPressStartAlpha	int
+0090d710	boot::g_FrontEndTimer	int
+0090d724	boot::g_JapanFontTex	undefined4
+0090d748	boot::g_JapanLogoTex	undefined4
+00927208	CameraVTable	CameraVTable[24]
+009273fc	MobyVTable	MobyVTable[2048]
+00927408	MobyVTable	
+0092d3fc	SoundVTable	SoundVTable[7]
+0092d440	Tfrags	Tfrag *
+0092d444	TfragsCnt	undefined4
+0092d470	TfragDrawDist	float
+009513c0	GameCamera	GAMECAMERA
+00951500	CameraPos	
+00951510	CameraRotation	
+00951710	CameraMtx	
+00951754	CamUnderWater	
+00951780	camera::Reticule	undefined4
+00951980	g_Crosshair	undefined4
+009519c0	camera::BackupCam	UpdateCam
+00951a60	camera::UpdateCams	UpdateCam[48]
+00953860	camera::CamControlCurrent	undefined
+00953ae0	camera::CamControlLast	undefined
+00953fe0	camera::UpdateCamsUsed	char[48]
+00954010	camera::CamPostUpdRoutines	void *[16]
+00954050	camera::CamPostUpdRoutineCnt	int
+00954054	camera::ImportCameras	undefined4
+00954058	camera::ImportCameraCnt	int
+00954080	camera::CamCollGrid	undefined4
+00954084	camera::CAMERA_COLL_FLAGS	int
+00954088	camera::CAMERA_COLL_SPHERE_FLAGS	int
+0095408c	camera::CAMERA_COLL_BUMP_FLAGS	int
+009540c0	collproc::g_CollMobyVertCache	CollMobyVertCacheEntry[8]
+0095a56c	debug::g_DebugEnables	int[20]
+0095a5a4	DrawParts	
+0095a5bc	debug::g_DebugFontStringBuf	char[2048]
+0095adbc	debug::g_DebugFontStrings	DebugFontString[384]
+0095c5bc	debug::g_DebugFontNumStrings	int
+0095c5c4	DrawMode	DebugDrawMode
+0095c5c8	DebugUpdate	DEBUG_OPTION
+0095c5cc	DebugSelectedCol	undefined4
+0095c5d0	DebugSelectedRow	undefined4
+0095c5d4	ControlMode	undefined4
+0095c5d8	Profile	undefined4
+0095c5dc	OcclUpdate	undefined4
+0095c5e0	Bookmark	undefined4
+0095c5e4	Invincibility	undefined4
+0095c5e8	DrawDistMode	undefined4
+0095c5ec	CollMode	undefined4
+0095c5f0	TvMode	undefined4
+0095c5f4	ScreenMode	undefined4
+0095c5f8	Scene	undefined4
+0095c5fc	Segment	undefined4
+0095c630	DebugCameraSpeed	DebugCameraSpeeds
+0095c664	g_debugLastGameMode	undefined4
+0095c6b0	BattleCam	undefined4
+0095c6b4	Actuator	undefined4
+0095c6b8	AddStart	undefined1
+0095c6b9	AddSample	undefined1
+0095cd44	g_RenderFlags	RENDER
+0095cd80	update::g_SceneId	int
+0095cd84	boot::g_SpaceSceneFrame	int
+0095cd88	g_cutsceneCameraFrame	undefined4
+0095cd8c	boot::g_SpaceSceneChunk	int
+0095cd90	boot::g_SpaceSceneNumFrames	int
+0095cd94	boot::g_SpaceSceneMobyCnt	int
+0095cd9b	update::g_SceneSavedCamUnderWater	char
+0095cd9c	draw::g_SubtitleTable	undefined4
+0095cda4	boot::g_SpaceSceneCameraFrames	void *
+0095cdac	loaders::g_SceneLoadBuffer	undefined4
+0095cdb0	loaders::g_SceneChunkPtrs	undefined4
+0095cf10	boot::SceneScreenFade	float
+0095cf18	draw::ScreenColorEffectEnabled	undefined1
+0095cf1c	draw::ScreenColorEffectLevel	undefined4
+0095cf30	draw::g_ScreenInsertEffect	undefined1
+0095cf40	draw::LetterBoxOn	int
+0095cf44	draw::LetterBoxPixels	int
+0095cf80	ViewContext	ViewContext
+0095d198	fogNearDist	
+0095d230	CameraCollPos	Vec4
+0095d2cc	loaders::g_PifLoadQueue	undefined
+0095d6cc	loaders::g_PifLoadQueueCnt	undefined4
+0095d6d0	loaders::g_EffectTexs	undefined
+0095ddd0	loaders::g_EffectTexCnt	undefined4
+0095ddd8	draw::g_MobyFuncList	undefined4
+0095ded8	draw::g_MobyFuncListArgs	undefined4
+0095dfd8	draw::g_MobyFuncListCount	int
+0095dfdc	CurrentOceanSubmitter	undefined4
+0095dfe0	SecondaryOceanSubmitter	undefined4
+0095e0dc	WaterMoby	MobyInstance *
+0095e1dc	draw::g_PreDrawCount	int
+0095e1e0	draw::g_PostPreDrawFuncs	undefined4
+0095e2e0	draw::g_PostPreDrawArgs	undefined4
+0095e3e0	draw::g_PostPreDrawCount	int
+0095e3e4	draw::g_PostDrawFuncs	undefined4
+0095e4e4	draw::g_PostDrawArgs	undefined4
+0095e5e4	draw::g_PostDrawCount	int
+0095e5e8	mobyutil::g_NumLameShadows	undefined4
+0095e5f0	mobyutil::g_LameShadows	undefined4
+0095e9fc	levelFog	RGBA
+0095ea00	LevelFogNearDist	undefined4
+0095ea04	LevelFogFarDist	float
+0095ea08	LevelFogNearIntensity	float
+0095ea0c	LevelFogFarIntensity	float
+0095ea10	LevelFogMode	undefined4
+0095ee14	draw::g_FontColorsEnabled	int
+00963670	freeze::g_freezeDialogType	int
+00963674	freeze::g_freezeTimer	int
+00963684	freeze::g_freezePrevGameMode	gameMode_t
+00963688	freeze::g_freezeArg	int
+0096368c	freeze::g_freezeState	int
+00963690	freeze::g_freezeOpenAnim	int
+00963694	freeze::g_freezeOpenAnim2	int
+0096369c	freeze::g_freezeDelay	int
+009636a0	freeze::g_freezeOption	int
+009636d0	Music	undefined2
+009636d3	g_FinishedLoading	undefined1
+009636e4	music::g_PendingSpeech	undefined4
+009636e8	music::g_TransitionState	undefined2
+009636ea	music::g_PendingTrack	undefined1
+009636eb	MusicId	undefined1
+009636ec	music::g_TransitionRemainStart	undefined4
+009636f0	music::g_TransitionFadeTime	undefined4
+009636f4	music::g_TransitionTimer	undefined4
+00963708	music::g_MusicPlaying	music_Playing
+00963724	music::g_SpeechPlaying	music_Playing
+00963740	music::g_TransitionPlaying	music_Playing
+009637a4	sound::g_SoundLoadBusy	int
+009637a8	soundGlobals	soundGlobals
+009637d0	sound::g_SoundChannels	SoundData[30]
+009644f0	g_SoundCnt	undefined4
+009644f4	sound::g_pSoundInstances	undefined4
+00964560	g_LoadingStage	undefined2
+00964570	g_SpaceshipPtr	MobyInstance *
+00964596	g_SpaceshipVariant	undefined2
+0096459c	space::g_spaceArrivalPending	int
+009645a0	g_shipSplinePath	undefined4
+009645a4	g_shipCameraStartCuboid	undefined4
+009645a8	g_shipCameraEndCuboid	undefined4
+009645c4	g_LoadScreenRelated	undefined4
+009645c8	g_currentLoadingScreen	undefined4
+009645cc	g_loadingCount	undefined4
+009645d0	g_heroSpawnPosition	Vec4
+009645e0	g_heroSpawnRot	Vec4
+00964a40	ANALOG_STICKS	Vec4
+00964ace	pad::g_PadRingIndex	undefined2
+00964ad0	pad::g_PadRingValidSize	undefined4
+00964ae0	g_downButtons	CONTROLLER_INPUT
+00964ae4	g_buttonsPressedThisFrame	CONTROLLER_INPUT
+00964af0	pad_DownButtons	undefined4
+00964af4	pad_Repeat	undefined4
+00964b04	pad_pressedButton	undefined4
+00964b20	pad::g_PadRingBits	undefined
+00964c10	pad::g_PadRingAng	undefined
+00965540	pad::g_PadPorts	undefined4
+00966ad0	loaders::g_GsRamAlloc	undefined4
+00966ad8	GSmem	GSMEM_UNUSED
+00966ae8	g_IsPal	undefined4
+00966aec	Cutscene	undefined4
+00966b00	draw::g_ScreenWidth	int
+00966b04	draw::g_ScreenHeight	int
+00966b08	draw::g_ScreenHalfWidth	int
+00966b0c	draw::g_ScreenHalfHeight	int
+00966b10	SCREEN_PROJECTION_MAP_X	undefined4
+00966b14	SCREEN_PROJECTION_MAP_Y	undefined4
+00966b7c	draw::g_FrameBufWidth	short
+00966b7e	draw::g_FrameBufHeight	short
+00967460	DebugFontTex0	undefined8
+00969c70	Level	LevelId
+00969c74	g_Language	undefined4
+00969c7c	g_equippedItem	ITEM_ENUM
+00969ca0	g_boltCount	undefined4
+00969ca8	g_goldWeaponsArray	Items
+00969cd0	g_goodiesMenuActive	undefined4
+00969cd4	boot::g_MoviePlayState	int
+00969cd8	boot::g_LogoMovieDone	int
+00969ce0	hero::g_heroMtx	undefined4
+00969d20	hero::g_heroGravityMtx	undefined4
+00969d60	g_heroPosition	Vec4
+00969d70	g_heroRotation	Vec4
+00969db0	hero::g_heroCGPos	undefined4
+00969dc0	hero::g_heroVelocity	undefined4
+00969e30	hero::g_heroExternalMomentum	undefined4
+00969e60	hero::g_heroIdealRotZ	undefined4
+00969e70	hero::g_heroIdealSpeed	undefined4
+00969e74	g_storedNeutralSpeed	undefined4
+00969e78	hero::g_heroStateTimer	undefined4
+00969eac	g_heroGhostFrames	undefined4
+00969ec6	g_SwingshotReleasedTimer	undefined2
+00969f00	hero::g_heroCollTop	undefined4
+00969f04	hero::g_heroCollBottom	undefined4
+00969f14	hero::g_heroCollRadius	undefined4
+00969f50	hero::g_heroGroundNormal	undefined4
+00969f70	hero::g_heroGravityDir	undefined4
+00969f80	hero::g_heroGroundPoint	undefined4
+00969fb8	hero::g_heroGroundZ	undefined4
+00969fbc	hero::g_heroGroundDist	undefined4
+00969fc0	hero::g_heroGroundSlope	undefined4
+00969fd0	hero::g_heroWaterZ	undefined4
+00969fdc	g_standingOnMoby	undefined4
+00969fe0	g_framesGroundedCnt	undefined4
+00969fe8	g_onMagnerail	undefined2
+00969fee	g_framesNotGrounded	undefined2
+0096a0f8	g_DustHoverState	undefined4
+0096a54c	hero::g_heroBoardMoby	undefined4
+0096a574	g_RaceTime	undefined4
+0096a588	g_RaceScore	undefined4
+0096a67e	g_HeroNearSwingshot	undefined2
+0096a768	hero::g_ratchetMoby	undefined4
+0096a770	hero::g_heroAnimSpeed	undefined4
+0096a788	hero::g_heroAnimFrame	undefined4
+0096ad70	g_currentWeaponMoby	MobyInstance *
+0096ad98	g_CurrentWeapon	undefined4
+0096afc0	hero::g_heroGroundType	undefined2
+0096b2dc	DAT_0096b2dc	undefined4
+0096b310	g_GiantClankHealth	undefined4
+0096b7e0	hero::g_heroPosHistory	undefined
+0096ba00	hero::g_heroPadStick	undefined4
+0096bab0	hero::g_heroGlowPos	undefined
+0096bb90	hero::g_heroGlowCount	undefined2
+0096bd28	g_MetalDetectorSpotIsClose	undefined1
+0096bd60	g_heroMobyPtr	MobyInstance *
+0096bd64	g_heroState	PlayerState
+0096bd6c	hero::g_heroStateType	undefined4
+0096bd84	g_heroType	undefined1
+0096bd85	hero::g_heroInvisible	undefined1
+0096bd91	g_HeroIsOutOfBounds	undefined1
+0096bd93	hero::g_heroGravityMode	undefined1
+0096bdb4	g_WeaponToSwapTo	undefined4
+0096be08	hero::g_heroRotZHistory	undefined
+0096be88	hero::g_heroRotZHistoryIdx	undefined4
+0096be8c	hero::g_heroRotZHistoryCount	undefined4
+0096be90	hero::g_heroPosHistoryIdx	undefined4
+0096be94	hero::g_heroPosHistoryCount	undefined4
+0096beb8	hero::g_heroQueuedSounds	undefined2
+0096bef8	hero::g_heroLoopSounds	undefined4
+0096bf18	hero::g_heroLoopSoundMobys	undefined4
+0096bf64	hero::g_HeroRequestedCamType	undefined4
+0096bf7c	hero::g_heroPadMagnitude	undefined4
+0096bf80	g_Oxygen	undefined4
+0096bf88	g_heroHealth	undefined4
+0096bf8c	g_clankMaxNanotech	undefined4
+0096bfb8	g_hasClank	undefined2
+0096bff0	MiscLevelFlags	MiscLevelFlags
+0096c074	Cheats	char[12]
+0096c07b	Manipulator	
+0096c08c	g_SkillPoints	char[32]
+0096c0ac	currentAmmoArray	Items32
+0096c140	UnlockableItems	Items
+0096c18c	GalacticMap	uint[20]
+0096c24c	g_KeyLevelFlags	char[1936]
+0096c9dc	ShipsKilledCounts	ShipsKilledStruct
+0096c9fc	g_ChallengeMode	undefined4
+0096ca00	g_FrameCount	undefined4
+0096ca04	g_totalBoltsCollected	undefined4
+0096ca0c	g_SeenPlanets	Planets
+0096ca20	VisitedPlanets	Planets
+00a0ca34	g_CollectedGoldBolts	char[72]
+00a0ca84	g_LevelFlags	char[20][16]
+00a0cd04	g_BoltsRewardedFromRacePB	int
+00a0f6d8	update::g_GameFrameCount	int
+00a0f6e0	g_deathCount	undefined4
+00a0fd14	g_boltMiningTimer	undefined4
+00a0fd18	g_boltsMined	undefined4
+00a0fd1c	memcard::g_CardState	undefined4
+00a0fd20	memcard::g_CardStateFlags	undefined4
+00a104ac	help::g_HelpLog	undefined1
+00a106c4	startLevel	undefined1
+00a10700	g_loadingPlanet	undefined4
+00a10704	g_newlevelnum	undefined4
+00a10708	g_gameMode	gameMode_t
+00a1070c	g_FramesSinceStateChange	undefined4
+00a10710	worldUpdateTime	undefined4
+00a1071c	g_CutscenePlaying	undefined4
+00a10730	sound::g_TotalSoundDefCnt	int
+00a10734	sound::g_pSoundDefs	undefined4
+00a107c0	OcclVisibility	undefined[128]
+00a10840	OcclVisibilityMerged	undefined[128]
+00a108c0	OcclGrid	void *
+00a108c4	OcclOct	void *
+00a108c8	OcclMode	undefined4
+00a108cc	OcclInvalidGridGp	undefined4
+00a108d0	OcclPreviousGrid	undefined4
+00a108f0	Gameplay	undefined4
+00a10918	loaders::g_NpcBuffer	undefined4
+00a1091c	MemSlots_IMSeqMem_descriptor	undefined4
+00a10928	SaveDataPtr	undefined4
+00a1092c	boot::g_pLocaleBuffer	int *
+00a10934	HeroDeathHeight	undefined4
+00a10940	CollOutput	CollOutput
+00a109c0	MobyClassRef	undefined
+00a10a00	collproc::g_CollMobyJointCache	undefined
+00a14c00	CollDamage	CollDamageOut[64]
+00a15c00	collproc::g_HeroCollision	HeroCollHeader *
+00a15c80	g_toastMsgTimer	int
+00a15c8c	g_toastMsgBuff	char
+00a15f28	mobyutil::g_HelpMsgOwner	undefined4
+00a15f2c	g_boltMiningActive	undefined4
+00a15f38	g_FrontEnd	undefined1
+00a15f3c	g_Batalia_TankKilledBySandmouse	int[4]
+00a15f4c	TEX_BASE	undefined4
+00a15f60	g_EngineData	undefined4
+00a15f68	EffectTexHeaders	undefined4
+00a18384	TieInstanceBase	undefined4
+00a18388	TieCntBase	undefined4
+00a1a794	ShrubInstanceBase	undefined4
+00a1a798	ShrubInstanceCnt	undefined4
+00a1a79c	Sky	SKY *
+00a1a7a0	TexInfo	undefined4
+00a1a800	help::HelpMsgs	undefined4
+00a1bfdc	IconTableEntry	IconTableEntries *
+00a1bfe0	TexturePointerArray	undefined4
+00a1bfec	HudBankMain	astruct *
+00a1c8c0	Blenders	Blender *
+00a1c8c4	BlenderCnt	undefined4
+00a1cb00	g_Blenders	Blender[32]
+00a1db00	DirectionalLights	DirectionalLight[12]
+00a1df00	PointLights	PointLight[8]
+00a1e100	PointLightData	PL_Data
+00a20498	mobyutil::g_byteGridStride	undefined4
+00a204a8	mobyutil::g_byteGridData	undefined4
+00a204cc	map::g_MapRevealMask	int
+00a204e0	map::g_MapIcons	int
+00a204e4	map::g_MapAvailable	int
+00a204e8	map::g_MapLoaded	int
+00a20574	map::g_MapZoom	float
+00a206e4	g_SelectedLevel	undefined4
+00a206e8	map::g_MapCurIndex	int
+00a206ec	map::g_MapFileId	int
+00a206f0	map::g_MapIsMapOMatic	int
+00a206f4	map::g_MapFileSize	int
+00a207a8	map::g_MapCacheBuf	int
+00a207bc	map::g_MapCacheId	int
+00a207d4	map::g_MapCacheSize	int
+00a20888	memcard::g_loaderr	int
+00a2088c	memcard::g_memcardPollDone	char
+00a23090	memcard::g_memcardRestoredBolts	int
+00a2309c	memcard::g_memcardWaitDialog	int
+00a230a0	memcard::g_memcardStrBufs	char[5120]
+00a244a0	memcard::g_memcardStrBufIdx	int
+00a244a8	memcard::g_memcardSaveString	char[256]
+00a24640	mobyfunc::g_AnimLayerJointBuf	undefined
+00a2c440	mobyfunc::g_AnimLayerPool	undefined
+00a345c0	AnimationCacheRegistry	undefined4
+00a34c00	MobyClasses	MobyClass *[240]
+00a35300	loaders::mClass_to_oClass	undefined2
+00a354c0	MobyClassLookup	undefined
+00a35cc0	oClass_to_mClass_lookup	int
+00a37b90	MobyMipDists	undefined
+00a38290	MobyTexLookup	undefined
+00a39098	mobyfunc::g_MobyDrawListEnd	undefined4
+00a3909c	mobyfunc::g_MobyDrawListStart	undefined4
+00a390a0	MobyInstance	MobyInstance *
+00a390a4	MobyInstancePermEnd	MobyInstance *
+00a390a8	MobyInstanceEnd	MobyInstance *
+00a390ac	MobyUpdateChainStart	undefined4
+00a39120	collproc::g_MobyGrid	MobyGridCell[4096]
+00a3d120	collproc::g_MobyGridLists	undefined4
+00a49120	MobyGridAlloc	undefined4
+00a49180	mobyutil::g_NumMobyGroups	undefined4
+00a49184	mobyutil::g_MobyGroups	undefined4
+00a4a0e0	???_oClassInstanceList	undefined2
+00a4dae4	maximumNumWeapons	undefined4
+00a4dae8	g_gadgetIdx	undefined4
+00a4daf0	numSpawnableMobys	undefined4
+00a51bc8	Spheres	Sphere *
+00a51bcc	SphereCnt	int
+00a51bd0	Cylinders	Cylinder *
+00a51bd4	CylinderCnt	int
+00a51bd8	Cuboids	Cuboid *
+00a51bdc	CuboidCnt	int
+00a51be0	Splines	Spline *[176]
+00a51ea0	SplineCnt	undefined4
+00a51ea4	SplineOfs	void *
+00a51ea8	mobyutil::g_mobyIdListCount	undefined2
+00a51fa8	mobyutil::g_GroupIterPtr	undefined4
+00a51fac	mobyutil::g_GroupIterIdx	undefined2
+00a51fb0	mobyutil::g_GroupIterMoby	undefined4
+00a51fc0	PartInstances	void *
+00a51fc0	Precipitation	void *
+00a51fc4	PartIndexNext	undefined4
+00a51fc8	PartIndexTop	undefined4
+00a51fcc	PartActiveCnt	undefined4
+00a51fd0	PartClipDist	undefined4
+00a52604	PartUpdates	PartInstance *[80]
+00a52804	partproc::g_PartTexFrames	undefined4
+00a52b38	partproc::g_PartTexBaseIndex	int
+00a52bb0	g_MenuScreen	undefined4
+00a52bb4	g_currentMenuPage	undefined4
+00a52bb8	g_nextMenuPage	undefined4
+00a52bbc	g_menuClosing	undefined4
+00a52c9c	resumePage	undefined4
+00a52ca0	resumeScreen	undefined4
+00a52cd0	g_unclosableMenu	undefined4
+00a52d60	g_menuMobys	Moby *[14]
+00a54170	g_CheckpointSet	undefined4
+00a54180	g_CheckpointPosition	Spawnpoint
+00a54190	g_CheckpointRotation	
+00a541a0	g_CheckpointColor	
+00a541a4	g_CheckpointLight	
+00a541b4	g_checkpointHeroType	
+00a54f10	ShrubInstance	ShrubInstance *
+00a54f14	ShrubInstanceEnd	undefined4
+00a54f18	ShrubInstanceCnt	undefined4
+00a54f1c	ShrubDrawDist	float
+00a56140	loaders::g_SkyData	undefined4
+00a56180	outMatrix	undefined4
+00a56ec4	map::g_IndexedBufferSlots	undefined4
+00e583f4	TieInstance	TieInstance *
+00e583f8	TieInstanceEnd	TieInstance *
+00e583fc	TieCnt	undefined4
+00e5a620	TieDrawDist	float
+00e5a630	update::g_MovieParam0	undefined4
+00e5a638	update::g_MovieLanguage	int
+00e5a650	g_OpenVendorState	undefined4
+00e5a690	g_lastVendorWasPda	undefined4
+00e5a69c	g_VendorCursor	undefined4
+00e5a6ac	g_VendorMenuState	undefined4
+00e5a720	g_VendorItems	undefined
+00e5a820	g_VendorItemsCnt	undefined4
+00e5aa80	WaterTiles	WaterTile *
+00e5aa84	WaterTileBoxes	WaterTileBox *
+00e5aa88	WaterTileCnt	int
+00e5aa8c	WaterPlaneActive	int
+00e5aaa0	WaterFogNearDist	undefined4
+00e5aeb8	OceanFogNearDist	undefined4
+00e5aebc	OceanFogFarDist	undefined4
+00e5aec0	OceanFogNearIntensity	undefined4
+00e5aec4	OceanFogFarIntensity	undefined4
+00e5aec8	OceanFogR	undefined4
+00e5aecc	OceanFogG	undefined4
+00e5aed0	OceanFogB	undefined4
+00e5efd0	blargBridgePlatform	Vec4
+00eef940	u_WaterTileCnt	undefined4
+00f089e8	u_WaterTileCnt	undefined4
+00fa2ec0	u_WaterTileCnt	undefined4
+00facc74	g_playDrekButtonCutscene	undefined4
+00facc78	g_deplanetizerUp	undefined4
+010b5004	u_WaterTileCnt	undefined4
+010e47c0	g_BoobsSize	undefined4
+010ea770	music::g_LevelMusicFileSizes	undefined
+010ee2e0	TexSamplerFlags	undefined8
+0111160c	memcard::g_memcardSaveBusy	int
+0159c351	g_JapaneseMode	bool

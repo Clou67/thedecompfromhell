@@ -1,0 +1,441 @@
+addr	lib	object	symbol	demangled	basis
+0014bc0	crt1.o	crt1.o	__finalize_libc	__finalize_libc	exact
+0014c0c	crt1.o	crt1.o	__exit_handler	__exit_handler	exact
+050e7f8	libgcm_cmd.a	flip_safe.ppu.o	cellGcmSetFlipWithWaitLabel	cellGcmSetFlipWithWaitLabel	fuzzy 0.982
+050e998	libgcm_cmd.a	marker.ppu.o	cellGcmSetPerfMonMarker	cellGcmSetPerfMonMarker	fuzzy 1.000
+050ecec	libgcm_cmd.a	marker.ppu.o	cellGcmSetPerfMonMarkerUnsafe	cellGcmSetPerfMonMarkerUnsafe	fuzzy 1.000
+050edbc	libgcm_cmd.a	marker.ppu.o	cellGcmSetPerfMonPushMarkerUnsafe	cellGcmSetPerfMonPushMarkerUnsafe	fuzzy 1.000
+050efcc	libgcm_cmd.a	gcminit.ppu.o	cellGcmCallbackForSnc	cellGcmCallbackForSnc	fuzzy 1.000
+050f034	libgcm_cmd.a	gcminit.ppu.o	cellGcmInit	cellGcmInit	fuzzy 0.929
+050f074	libgcm_cmd.a	SetWriteCommandLabel.safe.ppu.o	cellGcmSetWriteCommandLabel	cellGcmSetWriteCommandLabel	exact
+050f130	libcgb.a	cgb.ppu.o	cellCgbRead	cellCgbRead	fuzzy 1.000
+050f2b0	libcgb.a	cgb.ppu.o	cellCgbGetVertexConfiguration	cellCgbGetVertexConfiguration	fuzzy 1.000
+050f300	libcgb.a	cgb.ppu.o	cellCgbGetFragmentConfiguration	cellCgbGetFragmentConfiguration	fuzzy 1.000
+050f3c8	libcgb.a	cgb.ppu.o	cellCgbGetVertexConstantValues	cellCgbGetVertexConstantValues	fuzzy 1.000
+050f43c	libcgb.a	cgb.ppu.o	cellCgbMapGetVertexUniformRegister	cellCgbMapGetVertexUniformRegister	fuzzy 1.000
+050f500	libcgb.a	cgb.ppu.o	cellCgbMapGetFragmentUniformOffsets	cellCgbMapGetFragmentUniformOffsets	exact
+050f624	libcgb.a	cgb.ppu.o	cellCgbMapGetFragmentUniformRegister	cellCgbMapGetFragmentUniformRegister	fuzzy 1.000
+050f680	libcgb.a	cgb.ppu.o	cellCgbGetSize	cellCgbGetSize	fuzzy 1.000
+050f6e4	libcgb.a	cgb.ppu.o	cellCgbMapGetName	cellCgbMapGetName	exact
+050f93c	libcgb.a	cgb.ppu.o	cellCgbMapLookup	cellCgbMapLookup	exact
+0510704	libfios.a	fios_base.ppu.o	_ZN4cell4fios6objectdlEPvjj	cell::fios::object::operator delete(void*, unsigned int, unsigned int)	exact
+051080c	libfios.a	fios_base.ppu.o	_ZN4cell4fios6objectnwEjjj	cell::fios::object::operator new(unsigned int, unsigned int, unsigned int)	exact
+05108a0	libfios.a	fios_base.ppu.o	_ZN4cell4fios6objectdaEPvjj	cell::fios::object::operator delete[](void*, unsigned int, unsigned int)	exact
+051092c	libfios.a	fios_base.ppu.o	_ZN4cell4fios6objectnaEjjj	cell::fios::object::operator new[](unsigned int, unsigned int, unsigned int)	exact
+05109bc	libfios.a	fios_dearchive.ppu.o	_ZNK4cell4fios10dearchiver15getVariableNameEj	cell::fios::dearchiver::getVariableName(unsigned int) const	fuzzy 1.000
+0510a80	libfios.a	fios_dearchive.ppu.o	_ZN4cell4fios10dearchiver12speculateIOPEPNS0_13mediaioparamsE	cell::fios::dearchiver::speculateIOP(cell::fios::mediaioparams*)	fuzzy 1.000
+0510b8c	libfios.a	fios_dearchive.ppu.o	_ZN4cell4fios10dearchiver12bufferMallocEPhj	cell::fios::dearchiver::bufferMalloc(unsigned char*, unsigned int)	fuzzy 1.000
+0510cec	libfios.a	fios_dearchive.ppu.o	_ZN4cell4fios10dearchiver17manifestEntryPathEiPc	cell::fios::dearchiver::manifestEntryPath(int, char*)	fuzzy 1.000
+0510d54	libfios.a	fios_dearchive.ppu.o	_ZN4cell4fios10dearchiver21pathIsArchiveAsFolderEPKcPNS0_6stat_tE	cell::fios::dearchiver::pathIsArchiveAsFolder(char const*, cell::fios::stat_t*)	fuzzy 1.000
+0510e6c	libfios.a	fios_dearchive.ppu.o	_ZN4cell4fios10dearchiver29lengthWithoutArchiveExtensionEPKc	cell::fios::dearchiver::lengthWithoutArchiveExtension(char const*)	fuzzy 1.000
+0510f38	libfios.a	fios_dearchive.ppu.o	_ZN4cell4fios10dearchiver34manifestEntryIsDirectoryDescendantEiPKcPc	cell::fios::dearchiver::manifestEntryIsDirectoryDescendant(int, char const*, char*)	fuzzy 1.000
+05110d8	libfios.a	fios_dearchive.ppu.o	_ZN4cell4fios10dearchiver29manifestEntryIsDirectoryChildEiPKc	cell::fios::dearchiver::manifestEntryIsDirectoryChild(int, char const*)	fuzzy 1.000
+05111e4	libfios.a	fios_dearchive.ppu.o	_ZN4cell4fios10dearchiver23searchManifestPathTableEPKc	cell::fios::dearchiver::searchManifestPathTable(char const*)	fuzzy 1.000
+05113b4	libfios.a	fios_dearchive.ppu.o	_ZN4cell4fios10dearchiver16getSpecialOffsetEPNS0_12mediarequestEPKNS0_5PSArc8TOCEntryEPNS1_14ArchiveTrackerE	cell::fios::dearchiver::getSpecialOffset(cell::fios::mediarequest*, cell::fios::PSArc::TOCEntry const*, cell::fios::dearchiver::ArchiveTracker*)	exact
+0511524	libfios.a	fios_dearchive.ppu.o	_ZN4cell4fios10dearchiver4initEjPPNS0_11Compression17AsyncDecompressorEjPPKc	cell::fios::dearchiver::init(unsigned int, cell::fios::Compression::AsyncDecompressor**, unsigned int, char const**)	fuzzy 1.000
+05122c8	libfios.a	fios_dearchive.ppu.o	_ZN4cell4fios10dearchiver13pathIsArchiveEPKc	cell::fios::dearchiver::pathIsArchive(char const*)	fuzzy 1.000
+05123b8	libfios.a	fios_dearchive.ppu.o	_ZN4cell4fios10dearchiver24rebuildManifestPathTableEv	cell::fios::dearchiver::rebuildManifestPathTable()	fuzzy 1.000
+0512750	libfios.a	fios_dearchive.ppu.o	_ZNK4cell4fios10dearchiver23countOpenFilesInArchiveEPKc	cell::fios::dearchiver::countOpenFilesInArchive(char const*) const	fuzzy 1.000
+0512820	libfios.a	fios_dearchive.ppu.o	_ZN4cell4fios10dearchiver23bufferInvalidateArchiveEPNS1_14ArchiveTrackerE	cell::fios::dearchiver::bufferInvalidateArchive(cell::fios::dearchiver::ArchiveTracker*)	fuzzy 1.000
+05128f4	libfios.a	fios_dearchive.ppu.o	_ZN4cell4fios10dearchiver13bufferReleaseEPhb	cell::fios::dearchiver::bufferRelease(unsigned char*, bool)	fuzzy 1.000
+0512ab0	libfios.a	fios_dearchive.ppu.o	_ZN4cell4fios10dearchiver12bufferFilledEPh	cell::fios::dearchiver::bufferFilled(unsigned char*)	fuzzy 1.000
+0512ec0	libfios.a	fios_dearchive.ppu.o	_ZN4cell4fios10dearchiver15freeReadBuffersEv	cell::fios::dearchiver::freeReadBuffers()	fuzzy 1.000
+0512fb4	libfios.a	fios_dearchive.ppu.o	_ZN4cell4fios10dearchiver8freeTOCsEv	cell::fios::dearchiver::freeTOCs()	fuzzy 1.000
+0513220	libfios.a	fios_dearchive.ppu.o	_ZN4cell4fios10dearchiver13freeManifestsEv	cell::fios::dearchiver::freeManifests()	fuzzy 1.000
+0513598	libfios.a	fios_dearchive.ppu.o	_ZN4cell4fios10dearchiver29executeReadSpecialFromArchiveEPNS0_13mediaioparamsEPNS1_14ArchiveTrackerEj	cell::fios::dearchiver::executeReadSpecialFromArchive(cell::fios::mediaioparams*, cell::fios::dearchiver::ArchiveTracker*, unsigned int)	exact
+0513cc4	libfios.a	fios_dearchive.ppu.o	_ZN4cell4fios10dearchiver14loadArchiveTOCEPNS0_13mediaioparamsEPNS1_14ArchiveTrackerE	cell::fios::dearchiver::loadArchiveTOC(cell::fios::mediaioparams*, cell::fios::dearchiver::ArchiveTracker*)	exact
+0513fa8	libfios.a	fios_dearchive.ppu.o	_ZN4cell4fios10dearchiver13resolveEmbedsEPNS0_13mediaioparamsEPNS0_12mediarequestE	cell::fios::dearchiver::resolveEmbeds(cell::fios::mediaioparams*, cell::fios::mediarequest*)	exact
+051514c	libfios.a	fios_dearchive.ppu.o	_ZN4cell4fios10dearchiver19loadArchiveManifestEPNS0_13mediaioparamsEPNS1_14ArchiveTrackerE	cell::fios::dearchiver::loadArchiveManifest(cell::fios::mediaioparams*, cell::fios::dearchiver::ArchiveTracker*)	exact
+0517398	libfios.a	fios_dearchive.ppu.o	_ZN4cell4fios10dearchiver24fillDirEntryFromManifestEPNS0_13mediaioparamsEi	cell::fios::dearchiver::fillDirEntryFromManifest(cell::fios::mediaioparams*, int)	exact
+0517560	libfios.a	fios_dearchive.ppu.o	_ZN4cell4fios10dearchiver27executeReadArchiveDirectoryEPNS0_13mediaioparamsE	cell::fios::dearchiver::executeReadArchiveDirectory(cell::fios::mediaioparams*)	fuzzy 1.000
+05177d8	libfios.a	fios_dearchive.ppu.o	_ZN4cell4fios10dearchiver20executeReadDirectoryEPNS0_13mediaioparamsE	cell::fios::dearchiver::executeReadDirectory(cell::fios::mediaioparams*)	fuzzy 1.000
+0517d4c	libfios.a	fios_dearchive.ppu.o	_ZN4cell4fios10dearchiver18executeOpenArchiveEPNS0_13mediaioparamsE	cell::fios::dearchiver::executeOpenArchive(cell::fios::mediaioparams*)	fuzzy 1.000
+0518fec	libfios.a	fios_internal.ppu.o	_ZN4cell4fios11getDataHashEPKcj	cell::fios::getDataHash(char const*, unsigned int)	exact
+0519150	libfios.a	fios_internal.ppu.o	_ZN4cell4fios16getPrintableSizeExPfPPKc	cell::fios::getPrintableSize(long long, float*, char const**)	exact
+0519204	libfios.a	fios_internal.ppu.o	_ZN4cell4fios13getStringHashEPKc	cell::fios::getStringHash(char const*)	exact
+051923c	libfios.a	fios_internal.ppu.o	_ZN4cell4fios7strnstrEPKcS2_j	cell::fios::strnstr(char const*, char const*, unsigned int)	exact
+0519310	libfios.a	fios_internal.ppu.o	_ZN4cell4fios7strlcatEPcPKcj	cell::fios::strlcat(char*, char const*, unsigned int)	exact
+05193cc	libfios.a	fios_internal.ppu.o	_ZN4cell4fios7strlcpyEPcPKcj	cell::fios::strlcpy(char*, char const*, unsigned int)	exact
+05194f0	libfios.a	fios_internal.ppu.o	_ZN4cell4fios8FIOSInitEPKNS0_15fios_parametersE	cell::fios::FIOSInit(cell::fios::fios_parameters const*)	fuzzy 0.948
+05196b0	libfios.a	fios_internal.ppu.o	_ZN4cell4fios8FIOSInitEPNS0_9allocatorE	cell::fios::FIOSInit(cell::fios::allocator*)	fuzzy 1.000
+051970c	libfios.a	fios_internal.ppu.o	_ZN4cell4fios11strncasecmpEPKcS2_j	cell::fios::strncasecmp(char const*, char const*, unsigned int)	fuzzy 0.980
+05197dc	libfios.a	fios_internal.ppu.o	_ZN4cell4fios10strcasecmpEPKcS2_	cell::fios::strcasecmp(char const*, char const*)	exact
+05198dc	libfios.a	fios_media.ppu.o	_Z41__static_initialization_and_destruction_0ii	__static_initialization_and_destruction_0(int, int)	exact
+051993c	libfios.a	fios_media.ppu.o	_ZNK4cell4fios5media14getIdentifiersEPjPPKPKc	cell::fios::media::getIdentifiers(unsigned int*, char const* const**) const	exact
+05199ac	libfios.a	fios_media.ppu.o	_ZN4cell4fios5media19initializeClassLockEv	cell::fios::media::initializeClassLock()	exact
+0519f24	libfios.a	fios_media.ppu.o	_ZN4cell4fios5media13normalizePathEPKcPc	cell::fios::media::normalizePath(char const*, char*)	exact
+051a26c	libfios.a	fios_media.ppu.o	_ZN4cell4fios5media18terminateClassLockEv	cell::fios::media::terminateClassLock()	exact
+051a2f4	libfios.a	fios_media.ppu.o	_ZN4cell4fios5media13getFirstMediaEv	cell::fios::media::getFirstMedia()	exact
+051a35c	libfios.a	fios_media.ppu.o	_ZNK4cell4fios5media11getCallbackEPPv	cell::fios::media::getCallback(void**) const	exact
+051a3e4	libfios.a	fios_media.ppu.o	_ZN4cell4fios5media8callbackEhPv	cell::fios::media::callback(unsigned char, void*)	exact
+051a480	libfios.a	fios_media.ppu.o	_ZNK4cell4fios5media12getSchedulerEv	cell::fios::media::getScheduler() const	exact
+051a528	libfios.a	fios_media.ppu.o	_ZN4cell4fios5media21getMediaForIdentifierEPKc	cell::fios::media::getMediaForIdentifier(char const*)	exact
+051a670	libfios.a	fios_media.ppu.o	_ZN4cell4fios5media15getMediaForPathEPKcPS3_c	cell::fios::media::getMediaForPath(char const*, char const**, char)	exact
+051a754	libfios.a	fios_media.ppu.o	_ZN4cell4fios5media15unregisterMediaEv	cell::fios::media::unregisterMedia()	exact
+051a858	libfios.a	fios_media.ppu.o	_ZN4cell4fios5mediaD0Ev	cell::fios::media::~media()	exact
+051ace0	libfios.a	fios_media.ppu.o	_ZN4cell4fios11mediafilterD0Ev	cell::fios::mediafilter::~mediafilter()	exact
+051ad94	libfios.a	fios_media.ppu.o	_ZN4cell4fios5media13registerMediaEv	cell::fios::media::registerMedia()	exact
+051ae6c	libfios.a	fios_media.ppu.o	_ZNK4cell4fios5media20getPrimaryIdentifierEv	cell::fios::media::getPrimaryIdentifier() const	exact
+051aed4	libfios.a	fios_media.ppu.o	_ZNK4cell4fios5media19getCachedIdentifierEv	cell::fios::media::getCachedIdentifier() const	exact
+051af40	libfios.a	fios_media.ppu.o	_ZN4cell4fios5media19setCachedIdentifierEy	cell::fios::media::setCachedIdentifier(unsigned long long)	exact
+051afac	libfios.a	fios_media.ppu.o	_ZN4cell4fios5media11setCallbackEPFiPvPS1_hS2_ES2_PS5_PS2_	cell::fios::media::setCallback(int (*)(void*, cell::fios::media*, unsigned char, void*), void*, int (**)(void*, cell::fios::media*, unsigned char, void*), void**)	exact
+051b318	libfios.a	fios_media.ppu.o	_ZN4cell4fios5media12setSchedulerEPNS0_9schedulerE	cell::fios::media::setScheduler(cell::fios::scheduler*)	exact
+051b3cc	libfios.a	fios_media.ppu.o	_ZNK4cell4fios5media9nextMediaEv	cell::fios::media::nextMedia() const	exact
+051b440	libfios.a	fios_media.ppu.o	_ZN4cell4fios5media13addIdentifierEPKc	cell::fios::media::addIdentifier(char const*)	exact
+051b750	libfios.a	fios_op.ppu.o	_ZN4cell4fios2op17timeoutToDeadlineEx	cell::fios::op::timeoutToDeadline(long long)	exact
+051b784	libfios.a	fios_op.ppu.o	_ZN4cell4fios2op19addOrRemoveWaitDataEPKPS1_jPNS0_10opWaitDataEb	cell::fios::op::addOrRemoveWaitData(cell::fios::op* const*, unsigned int, cell::fios::opWaitData*, bool)	exact
+051b8c4	libfios.a	fios_op.ppu.o	_ZN4cell4fios2op16terminateStaticsEv	cell::fios::op::terminateStatics()	exact
+051ba44	libfios.a	fios_op.ppu.o	_ZN4cell4fios2op17initializeStaticsEPPNS0_8platform5mutexEPPNS2_4condE	cell::fios::op::initializeStatics(cell::fios::platform::mutex**, cell::fios::platform::cond**)	exact
+051bd64	libfios.a	fios_op.ppu.o	_ZN4cell4fios2op5resetEv	cell::fios::op::reset()	exact
+051be64	libfios.a	fios_op.ppu.o	_ZN4cell4fios2op16waitListDeadlineEjPKPS1_x	cell::fios::op::waitListDeadline(unsigned int, cell::fios::op* const*, long long)	exact
+051c030	libfios.a	fios_op.ppu.o	_ZN4cell4fios2op8syncWaitEPx	cell::fios::op::syncWait(long long*)	exact
+051c0ec	libfios.a	fios_op.ppu.o	_ZN4cell4fios2op21vwaitMultipleDeadlineExPS1_Pc	cell::fios::op::vwaitMultipleDeadline(long long, cell::fios::op*, char*)	exact
+051c20c	libfios.a	fios_op.ppu.o	_ZN4cell4fios2op12waitMultipleEPS1_z	cell::fios::op::waitMultiple(cell::fios::op*, ...)	exact
+051c260	libfios.a	fios_op.ppu.o	_ZN4cell4fios2op19waitMultipleTimeoutExPS1_z	cell::fios::op::waitMultipleTimeout(long long, cell::fios::op*, ...)	exact
+051c304	libfios.a	fios_op.ppu.o	_ZNK4cell4fios2op16getFulfilledSizeEv	cell::fios::op::getFulfilledSize() const	exact
+051c390	libfios.a	fios_op.ppu.o	_ZN4cell4fios2op8callbackEhPv	cell::fios::op::callback(unsigned char, void*)	exact
+051c554	libfios.a	fios_op.ppu.o	_ZN4cell4fios2op12copyDataFromEPS1_	cell::fios::op::copyDataFrom(cell::fios::op*)	exact
+051c858	libfios.a	fios_paths.ppu.o	_ZN4cell4fios7md5path6decodeEPKc	cell::fios::md5path::decode(char const*)	exact
+051c8d4	libfios.a	fios_paths.ppu.o	_ZN4cell4fios8pathhashEPKc	cell::fios::pathhash(char const*)	exact
+051c92c	libfios.a	fios_paths.ppu.o	_ZN4cell4fios7md5path6encodeEPc	cell::fios::md5path::encode(char*)	exact
+051c9a4	libfios.a	fios_paths.ppu.o	_ZN4cell4fios7md5path3setEPKc	cell::fios::md5path::set(char const*)	exact
+051ca84	libfios.a	fios_paths.ppu.o	_ZN4cell4fios10staticpath7setPathEPKc	cell::fios::staticpath::setPath(char const*)	exact
+051cab4	libfios.a	fios_paths.ppu.o	_ZN4cell4fios4path3setERKS1_	cell::fios::path::set(cell::fios::path const&)	exact
+051cb08	libfios.a	fios_paths.ppu.o	_ZN4cell4fios4path3setEPKc	cell::fios::path::set(char const*)	exact
+051cb74	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios12countBitsSetEj	cell::fios::countBitsSet(unsigned int)	exact
+051cba4	libfios.a	fios_scheduler.ppu.o	_ZNK4cell4fios9scheduler21getEffectiveAllocatorEv	cell::fios::scheduler::getEffectiveAllocator() const	exact
+051cbc8	libfios.a	fios_scheduler.ppu.o	_ZNK4cell4fios9scheduler6isIdleEv	cell::fios::scheduler::isIdle() const	exact
+051cbec	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler18schedulerShouldRunEv	cell::fios::scheduler::schedulerShouldRun()	exact
+051cc60	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler25accumulatePCECoefficientsEPKix	cell::fios::scheduler::accumulatePCECoefficients(int const*, long long)	exact
+051cda4	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler8cancelOpEPNS0_2opE	cell::fios::scheduler::cancelOp(cell::fios::op*)	exact
+051ce2c	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler14cancelOpActionEPvPNS0_2opE	cell::fios::scheduler::cancelOpAction(void*, cell::fios::op*)	exact
+051ce5c	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler7suspendEPKc	cell::fios::scheduler::suspend(char const*)	exact
+051ced4	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler19setDefaultSchedulerEPS1_	cell::fios::scheduler::setDefaultScheduler(cell::fios::scheduler*)	exact
+051cf28	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler12seekFileSyncEPKNS0_8opattr_tEPNS0_10filehandleExhPx	cell::fios::scheduler::seekFileSync(cell::fios::opattr_t const*, cell::fios::filehandle*, long long, unsigned char, long long*)	exact
+051cfd8	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler10allocateOpEPKNS0_8opattr_tE	cell::fios::scheduler::allocateOp(cell::fios::opattr_t const*)	exact
+051da34	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler15suspendPrefetchEPKc	cell::fios::scheduler::suspendPrefetch(char const*)	exact
+051e584	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler12deallocateOpEPNS0_2opE	cell::fios::scheduler::deallocateOp(cell::fios::op*)	exact
+051ef8c	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler23createSchedulerForMediaEPNS0_5mediaEPKNS0_14scheduler_attrE	cell::fios::scheduler::createSchedulerForMedia(cell::fios::media*, cell::fios::scheduler_attr const*)	exact
+051f1ac	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler23createSchedulerForMediaEPNS0_5mediaEPNS0_9allocatorEjjjj	cell::fios::scheduler::createSchedulerForMedia(cell::fios::media*, cell::fios::allocator*, unsigned int, unsigned int, unsigned int, unsigned int)	exact
+051fa5c	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler10allocateFHEjPKc	cell::fios::scheduler::allocateFH(unsigned int, char const*)	exact
+051fd24	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler8deleteOpEPNS0_2opE	cell::fios::scheduler::deleteOp(cell::fios::op*)	exact
+051fe9c	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler10completeOpEPNS0_2opE	cell::fios::scheduler::completeOp(cell::fios::op*)	exact
+05202c8	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler7loadPRXEPKNS0_8opattr_tEPKcjyP28sys_prx_load_module_option_tPi	cell::fios::scheduler::loadPRX(cell::fios::opattr_t const*, char const*, unsigned int, unsigned long long, sys_prx_load_module_option_t*, int*)	exact
+052046c	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler12loadSPUImageEPKNS0_8opattr_tEPKcP13sys_spu_image	cell::fios::scheduler::loadSPUImage(cell::fios::opattr_t const*, char const*, sys_spu_image*)	exact
+05205b4	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler8syncFileEPKNS0_8opattr_tEPNS0_10filehandleE	cell::fios::scheduler::syncFile(cell::fios::opattr_t const*, cell::fios::filehandle*)	exact
+05207a0	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler8openFileEPKNS0_8opattr_tEPKcjPPNS0_10filehandleE	cell::fios::scheduler::openFile(cell::fios::opattr_t const*, char const*, unsigned int, cell::fios::filehandle**)	exact
+0520a28	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler13readDirectoryEPKNS0_8opattr_tEPKcxPNS0_10direntry_tE	cell::fios::scheduler::readDirectory(cell::fios::opattr_t const*, char const*, long long, cell::fios::direntry_t*)	exact
+0520bd8	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler7resolveEPKNS0_8opattr_tEPNS0_11filerange_tEPNS0_5mediaE	cell::fios::scheduler::resolve(cell::fios::opattr_t const*, cell::fios::filerange_t*, cell::fios::media*)	exact
+0520e78	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler12prefetchFileEPKNS0_8opattr_tEPKcxx	cell::fios::scheduler::prefetchFile(cell::fios::opattr_t const*, char const*, long long, long long)	exact
+05210c4	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler6unlinkEPKNS0_8opattr_tEPKc	cell::fios::scheduler::unlink(cell::fios::opattr_t const*, char const*)	exact
+0521228	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler15createDirectoryEPKNS0_8opattr_tEPKc	cell::fios::scheduler::createDirectory(cell::fios::opattr_t const*, char const*)	exact
+052138c	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler9writeFileEPKNS0_8opattr_tEPKcPKvxx	cell::fios::scheduler::writeFile(cell::fios::opattr_t const*, char const*, void const*, long long, long long)	exact
+052157c	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler8readFileEPKNS0_8opattr_tEPKcPvxx	cell::fios::scheduler::readFile(cell::fios::opattr_t const*, char const*, void*, long long, long long)	exact
+0521794	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler10statCommonEPKNS0_8opattr_tEPKcPvNS0_2op10e_OPSTAGESE	cell::fios::scheduler::statCommon(cell::fios::opattr_t const*, char const*, void*, cell::fios::op::e_OPSTAGES)	exact
+0522b14	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler17cancelImmediatelyEPNS0_2opE	cell::fios::scheduler::cancelImmediately(cell::fios::op*)	exact
+0522e78	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler10iterateOpsEPFvPvPNS0_2opEES2_	cell::fios::scheduler::iterateOps(void (*)(void*, cell::fios::op*), void*)	exact
+05231cc	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler12cancelAllOpsEb	cell::fios::scheduler::cancelAllOps(bool)	exact
+05237dc	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler6resumeEPKc	cell::fios::scheduler::resume(char const*)	exact
+05240e4	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler13closeAllFilesEv	cell::fios::scheduler::closeAllFiles()	exact
+0525050	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler12rescheduleOpEPNS0_2opExa	cell::fios::scheduler::rescheduleOp(cell::fios::op*, long long, signed char)	exact
+0525184	libfios.a	fios_scheduler.ppu.o	_ZNK4cell4fios9scheduler22getEstimatedCompletionEPKNS0_2opE	cell::fios::scheduler::getEstimatedCompletion(cell::fios::op const*) const	exact
+0525524	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler9writeFileEPKNS0_8opattr_tEPNS0_10filehandleEPKvxx	cell::fios::scheduler::writeFile(cell::fios::opattr_t const*, cell::fios::filehandle*, void const*, long long, long long)	exact
+05257f8	libfios.a	fios_scheduler.ppu.o	_ZN4cell4fios9scheduler14resumePrefetchEPKc	cell::fios::scheduler::resumePrefetch(char const*)	exact
+05260ac	libfios.a	fios_watch.ppu.o	_ZN4cell4fios5watch21ReportEventCacheFlushEPKcxxiS3_	cell::fios::watch::ReportEventCacheFlush(char const*, long long, long long, int, char const*)	exact
+0526404	libfios.a	fios_watch.ppu.o	_ZN4cell4fios5watch22ReportEventMediaAccessEPKNS0_2opEPKcS6_	cell::fios::watch::ReportEventMediaAccess(cell::fios::op const*, char const*, char const*)	exact
+052651c	libfios.a	fios_watch.ppu.o	_ZN4cell4fios5watch18ReportEventOverlayEPKNS0_2opEPKcS6_S6_	cell::fios::watch::ReportEventOverlay(cell::fios::op const*, char const*, char const*, char const*)	exact
+0526b34	libfios.a	fios_watch.ppu.o	_ZN4cell4fios5watch21ReportEventMediaRetryEPKNS0_2opE	cell::fios::watch::ReportEventMediaRetry(cell::fios::op const*)	exact
+0526c44	libfios.a	fios_watch.ppu.o	_ZN4cell4fios5watch21ReportEventMediaCheckEPKNS0_2opEi	cell::fios::watch::ReportEventMediaCheck(cell::fios::op const*, int)	exact
+0526fa8	libfios.a	fios_watch.ppu.o	_ZN4cell4fios5watch22ReportEventOpCompletedEPKNS0_2opE	cell::fios::watch::ReportEventOpCompleted(cell::fios::op const*)	exact
+05272e4	libfios.a	fios_watch.ppu.o	_ZN4cell4fios5watch13ReportEventOpEPKNS0_2opEPKc	cell::fios::watch::ReportEventOp(cell::fios::op const*, char const*)	exact
+0527ccc	libfios.a	fios_watch.ppu.o	_ZN4cell4fios5watch20ReportEventCacheFillEPKNS0_2opEPKcxxi	cell::fios::watch::ReportEventCacheFill(cell::fios::op const*, char const*, long long, long long, int)	exact
+0527e54	libfios.a	fios_media_ps3ppu.ppu.o	_ZN4cell4fios23DefaultPS3MediaCallbackEPvPNS0_5mediaEhS1_	cell::fios::DefaultPS3MediaCallback(void*, cell::fios::media*, unsigned char, void*)	exact
+0527f58	libfios.a	fios_media_ps3ppu.ppu.o	_ZN4cell4fios8ps3media12getOpenFlagsEi	cell::fios::ps3media::getOpenFlags(int)	fuzzy 0.962
+0528140	libfios.a	fios_media_ps3ppu.ppu.o	_ZN4cell4fios8ps3media18allocateIndirectFDEv	cell::fios::ps3media::allocateIndirectFD()	exact
+05281b4	libfios.a	fios_media_ps3ppu.ppu.o	_ZN4cell4fios8ps3media11findMselfFDEi	cell::fios::ps3media::findMselfFD(int)	exact
+0528240	libfios.a	fios_media_ps3ppu.ppu.o	_Z41__static_initialization_and_destruction_0ii	__static_initialization_and_destruction_0(int, int)	exact
+05282f8	libfios.a	fios_media_ps3ppu.ppu.o	_ZN4cell4fios8ps3media20deallocateIndirectFDEPNS0_8platform5ps3fdE	cell::fios::ps3media::deallocateIndirectFD(cell::fios::platform::ps3fd*)	exact
+052835c	libfios.a	fios_media_ps3ppu.ppu.o	_ZN4cell4fios8ps3media7suspendEPKc	cell::fios::ps3media::suspend(char const*)	exact
+05283d4	libfios.a	fios_media_ps3ppu.ppu.o	_ZN4cell4fios8ps3media14readIdentifierEv	cell::fios::ps3media::readIdentifier()	fuzzy 0.963
+0528454	libfios.a	fios_media_ps3ppu.ppu.o	_ZNK4cell4fios8ps3media18mediaPathToPS3PathEPKcPc	cell::fios::ps3media::mediaPathToPS3Path(char const*, char*) const	exact
+0528598	libfios.a	fios_media_ps3ppu.ppu.o	_ZN4cell4fios8ps3media6reOpenEPNS0_8platform5ps3fdEPc	cell::fios::ps3media::reOpen(cell::fios::platform::ps3fd*, char*)	fuzzy 0.973
+0528b98	libfios.a	fios_media_ps3ppu.ppu.o	_ZN4cell4fios8ps3media24deallocateIndirectFDLockEv	cell::fios::ps3media::deallocateIndirectFDLock()	exact
+0528f00	libfios.a	fios_media_ps3ppu.ppu.o	_ZN4cell4fios8ps3media14closeReaddirFDEv	cell::fios::ps3media::closeReaddirFD()	fuzzy 0.976
+0528fc8	libfios.a	fios_media_ps3ppu.ppu.o	_ZN4cell4fios8ps3media16getDirEntriesImpEPNS0_13mediaioparamsEPc	cell::fios::ps3media::getDirEntriesImp(cell::fios::mediaioparams*, char*)	fuzzy 0.984
+0529580	libfios.a	fios_media_ps3ppu.ppu.o	_ZN4cell4fios8ps3mediaD0Ev	cell::fios::ps3media::~ps3media()	exact
+0529748	libfios.a	fios_media_ps3ppu.ppu.o	_ZN4cell4fios8ps3media6resumeEPKc	cell::fios::ps3media::resume(char const*)	exact
+052c8c4	libfios.a	fios_platform_ps3ppu.ppu.o	_ZN4cell4fios8platform11currentDateEv	cell::fios::platform::currentDate()	exact
+052c93c	libfios.a	fios_platform_ps3ppu.ppu.o	_ZN4cell4fios8platform16nativeDateToDateEPKSt2tmPy	cell::fios::platform::nativeDateToDate(std::tm const*, unsigned long long*)	fuzzy 1.000
+052ca3c	libfios.a	fios_platform_ps3ppu.ppu.o	_Z41__static_initialization_and_destruction_0ii	__static_initialization_and_destruction_0(int, int)	fuzzy 1.000
+052cb60	libfios.a	fios_platform_ps3ppu.ppu.o	_ZN4cell4fios8platform11FIOSvprintfEPKcPc	cell::fios::platform::FIOSvprintf(char const*, char*)	exact
+052cbd8	libfios.a	fios_platform_ps3ppu.ppu.o	_ZN4cell4fios8platform10FIOSprintfEPKcz	cell::fios::platform::FIOSprintf(char const*, ...)	exact
+052cc20	libfios.a	fios_platform_ps3ppu.ppu.o	_ZN4cell4fios8platform6rwlock11writeUnlockEv	cell::fios::platform::rwlock::writeUnlock()	exact
+052cccc	libfios.a	fios_platform_ps3ppu.ppu.o	_ZN4cell4fios8platform6rwlock9writeLockEv	cell::fios::platform::rwlock::writeLock()	exact
+052cd7c	libfios.a	fios_platform_ps3ppu.ppu.o	_ZN4cell4fios8platform6rwlock10readUnlockEv	cell::fios::platform::rwlock::readUnlock()	exact
+052ce28	libfios.a	fios_platform_ps3ppu.ppu.o	_ZN4cell4fios8platform6rwlock8readLockEv	cell::fios::platform::rwlock::readLock()	exact
+052ced8	libfios.a	fios_platform_ps3ppu.ppu.o	_ZN4cell4fios8platform6thread4joinEv	cell::fios::platform::thread::join()	exact
+052d580	libfios.a	fios_platform_ps3ppu.ppu.o	_ZN4cell4fios8platform6thread20getCurrentThreadTypeEv	cell::fios::platform::thread::getCurrentThreadType()	fuzzy 0.977
+052d654	libfios.a	fios_platform_ps3ppu.ppu.o	_ZN4cell4fios8platform6thread20setCurrentThreadTypeEi	cell::fios::platform::thread::setCurrentThreadType(int)	fuzzy 0.976
+052d728	libfios.a	fios_platform_ps3ppu.ppu.o	_ZN4cell4fios8platform6thread15currentThreadIDEv	cell::fios::platform::thread::currentThreadID()	fuzzy 0.958
+052d7c4	libfios.a	fios_platform_ps3ppu.ppu.o	_ZN4cell4fios8platform17thread_entrypointEy	cell::fios::platform::thread_entrypoint(unsigned long long)	fuzzy 0.947
+052d814	libfios.a	fios_platform_ps3ppu.ppu.o	_ZN4cell4fios8platform6thread5startEv	cell::fios::platform::thread::start()	fuzzy 0.981
+052da68	libfios.a	fios_platform_ps3ppu.ppu.o	_ZN4cell4fios8platform16dateToNativeDateEyPSt2tm	cell::fios::platform::dateToNativeDate(unsigned long long, std::tm*)	exact
+052e2d0	libfios.a	fios_platform_ps3ppu.ppu.o	_ZN4cell4fios8platform10dateToTimeEyPx	cell::fios::platform::dateToTime(unsigned long long, long long*)	fuzzy 1.000
+052e49c	libfios.a	fios_platform_ps3ppu.ppu.o	_ZN4cell4fios8platform4cond4waitERNS1_5mutexEx	cell::fios::platform::cond::wait(cell::fios::platform::mutex&, long long)	fuzzy 0.987
+052e69c	libfios.a	fios_platform_ps3ppu.ppu.o	_ZN4cell4fios8platform10timeToDateExPy	cell::fios::platform::timeToDate(long long, unsigned long long*)	fuzzy 1.000
+052e984	libfios.a	fios_platform_ps3ppu.ppu.o	_ZN4cell4fios8platform6thread5sleepEx	cell::fios::platform::thread::sleep(long long)	fuzzy 1.000
+052ea40	libfios.a	fios_ps3ppu.ppu.o	_ZN4cell4fios29FIOSPS3LoadModuleDependenciesEv	cell::fios::FIOSPS3LoadModuleDependencies()	fuzzy 0.965
+052eb40	libfios.a	psarclib_md5.ppu.o	_ZN4cell4fios5PSArc3MD56encodeEPhPjj	cell::fios::PSArc::MD5::encode(unsigned char*, unsigned int*, unsigned int)	exact
+052eb90	libfios.a	psarclib_md5.ppu.o	_ZN4cell4fios5PSArc3MD56decodeEPjPKhj	cell::fios::PSArc::MD5::decode(unsigned int*, unsigned char const*, unsigned int)	exact
+052ebe8	libfios.a	psarclib_md5.ppu.o	_ZN4cell4fios5PSArc3MD59transformEPKh	cell::fios::PSArc::MD5::transform(unsigned char const*)	exact
+052f734	libfios.a	psarclib_md5.ppu.o	_ZN4cell4fios5PSArc3MD54initEv	cell::fios::PSArc::MD5::init()	exact
+052f7c8	libfios.a	psarclib_md5.ppu.o	_ZN4cell4fios5PSArc3MD56updateEPKhj	cell::fios::PSArc::MD5::update(unsigned char const*, unsigned int)	exact
+052f938	libfios.a	psarclib_md5.ppu.o	_ZN4cell4fios5PSArc3MD58finalizeEv	cell::fios::PSArc::MD5::finalize()	exact
+052fa18	libfios.a	psarclib_md5.ppu.o	_ZN4cell4fios5PSArc3MD512updateStringEPKcb	cell::fios::PSArc::MD5::updateString(char const*, bool)	exact
+052fba8	libfios.a	psarclib_parser.ppu.o	_ZN4cell4fios5PSArc12readSizedIntEPKhi	cell::fios::PSArc::readSizedInt(unsigned char const*, int)	exact
+052fbd8	libfios.a	psarclib_parser.ppu.o	_ZN4cell4fios5PSArc14readBlockIndexEPKNS1_8TOCEntryE	cell::fios::PSArc::readBlockIndex(cell::fios::PSArc::TOCEntry const*)	exact
+052fc08	libfios.a	psarclib_parser.ppu.o	_ZNK4cell4fios5PSArc13ArchiveParser10isReadableEv	cell::fios::PSArc::ArchiveParser::isReadable() const	exact
+052fcbc	libfios.a	psarclib_parser.ppu.o	_ZNK4cell4fios5PSArc13ArchiveParser11getFileSizeEPKvPKNS1_8TOCEntryE	cell::fios::PSArc::ArchiveParser::getFileSize(void const*, cell::fios::PSArc::TOCEntry const*) const	exact
+052fcec	libfios.a	psarclib_parser.ppu.o	_ZNK4cell4fios5PSArc13ArchiveParser13getFileOffsetEPKvPKNS1_8TOCEntryE	cell::fios::PSArc::ArchiveParser::getFileOffset(void const*, cell::fios::PSArc::TOCEntry const*) const	exact
+052fd1c	libfios.a	psarclib_parser.ppu.o	_ZNK4cell4fios5PSArc13ArchiveParser18fileIsUncompressedEPKvPKNS1_8TOCEntryE	cell::fios::PSArc::ArchiveParser::fileIsUncompressed(void const*, cell::fios::PSArc::TOCEntry const*) const	exact
+05300ac	libfios.a	psarclib_parser.ppu.o	_ZNK4cell4fios5PSArc13ArchiveParser24fileRegionIsUncompressedEPKvPKNS1_8TOCEntryEyy	cell::fios::PSArc::ArchiveParser::fileRegionIsUncompressed(void const*, cell::fios::PSArc::TOCEntry const*, unsigned long long, unsigned long long) const	exact
+053022c	libfios.a	psarclib_parser.ppu.o	_ZNK4cell4fios5PSArc13ArchiveParser15lookupFileEntryEPKvPKh	cell::fios::PSArc::ArchiveParser::lookupFileEntry(void const*, unsigned char const*) const	exact
+05303c0	libfios.a	psarclib_parser.ppu.o	_ZNK4cell4fios5PSArc13ArchiveParser16getManifestEntryEPKv	cell::fios::PSArc::ArchiveParser::getManifestEntry(void const*) const	exact
+0530420	libfios.a	psarclib_parser.ppu.o	_ZNK4cell4fios5PSArc13ArchiveParser15lookupFileEntryEPKvPKc	cell::fios::PSArc::ArchiveParser::lookupFileEntry(void const*, char const*) const	exact
+053087c	libfios.a	psarclib_parser.ppu.o	_ZN4cell4fios5PSArc13ArchiveParser7sortTOCEPv	cell::fios::PSArc::ArchiveParser::sortTOC(void*)	exact
+05309c8	libfios.a	fios_caching.ppu.o	_ZN4cell4fios5cache20getNthBlockOfRequestEPKNS0_12mediarequestEiPNS1_12blockrequestE	cell::fios::cache::getNthBlockOfRequest(cell::fios::mediarequest const*, int, cell::fios::cache::blockrequest*)	exact
+0530b28	libfios.a	fios_caching.ppu.o	_ZN4cell4fios5cache20countBlocksInRequestEPKNS0_12mediarequestE	cell::fios::cache::countBlocksInRequest(cell::fios::mediarequest const*)	exact
+0530d30	libfios.a	fios_caching.ppu.o	_ZN4cell4fios5cache17getDatesFromCacheEPKcPyS4_	cell::fios::cache::getDatesFromCache(char const*, unsigned long long*, unsigned long long*)	exact
+0530efc	libfios.a	fios_caching.ppu.o	_ZN4cell4fios17compareDescriptorEPKvS2_	cell::fios::compareDescriptor(void const*, void const*)	exact
+0530f80	libfios.a	fios_caching.ppu.o	_ZN4cell4fios14schedulercache15resizeCacheFileEPNS0_10filehandleEx	cell::fios::schedulercache::resizeCacheFile(cell::fios::filehandle*, long long)	fuzzy 0.990
+053126c	libfios.a	fios_caching.ppu.o	_ZN4cell4fios5cacheD0Ev	cell::fios::cache::~cache()	exact
+0531658	libfios.a	fios_caching.ppu.o	_ZN4cell4fios14schedulercache13openCacheFileEPKc	cell::fios::schedulercache::openCacheFile(char const*)	exact
+0531798	libfios.a	fios_caching.ppu.o	_ZN4cell4fios14schedulercache17updateLookupTableEiNS0_7md5pathEx	cell::fios::schedulercache::updateLookupTable(int, cell::fios::md5path, long long)	exact
+0531a30	libfios.a	fios_caching.ppu.o	_ZN4cell4fios14schedulercache22removeLookupTableEntryEi	cell::fios::schedulercache::removeLookupTableEntry(int)	exact
+0531ce8	libfios.a	fios_caching.ppu.o	_ZN4cell4fios5cache15invalidateBlockEiPKc	cell::fios::cache::invalidateBlock(int, char const*)	fuzzy 1.000
+0531e64	libfios.a	fios_caching.ppu.o	_ZN4cell4fios14schedulercache6lookupEPNS0_5cache12blockrequestE	cell::fios::schedulercache::lookup(cell::fios::cache::blockrequest*)	exact
+0531f64	libfios.a	fios_caching.ppu.o	_ZN4cell4fios5cache6lookupEPNS1_12blockrequestE	cell::fios::cache::lookup(cell::fios::cache::blockrequest*)	exact
+05321e8	libfios.a	fios_caching.ppu.o	_ZN4cell4fios5cache12speculateIOPEPNS0_13mediaioparamsE	cell::fios::cache::speculateIOP(cell::fios::mediaioparams*)	exact
+0532468	libfios.a	fios_caching.ppu.o	_ZN4cell4fios5cache16flushFilePartialEPKcxx	cell::fios::cache::flushFilePartial(char const*, long long, long long)	fuzzy 1.000
+0532660	libfios.a	fios_caching.ppu.o	_ZN4cell4fios5cache16isRequestInCacheEPNS0_11filerange_tE	cell::fios::cache::isRequestInCache(cell::fios::filerange_t*)	fuzzy 1.000
+0532848	libfios.a	fios_caching.ppu.o	_ZN4cell4fios5cache16isRequestInCacheEPKcxx	cell::fios::cache::isRequestInCache(char const*, long long, long long)	exact
+05328c0	libfios.a	fios_caching.ppu.o	_ZN4cell4fios5cache5flushEv	cell::fios::cache::flush()	fuzzy 1.000
+053299c	libfios.a	fios_caching.ppu.o	_ZN4cell4fios14schedulercache17createDirectoriesEPNS0_9schedulerEPKc	cell::fios::schedulercache::createDirectories(cell::fios::scheduler*, char const*)	exact
+0532b9c	libfios.a	fios_caching.ppu.o	_ZN4cell4fios5cache12flushPartialEx	cell::fios::cache::flushPartial(long long)	fuzzy 1.000
+0532d1c	libfios.a	fios_caching.ppu.o	_ZN4cell4fios5cache14dumpCacheStatsEPKc	cell::fios::cache::dumpCacheStats(char const*)	exact
+0532e54	libfios.a	fios_caching.ppu.o	_ZN4cell4fios8ramcacheD0Ev	cell::fios::ramcache::~ramcache()	exact
+05330a8	libfios.a	fios_caching.ppu.o	_ZN4cell4fios8ramcache13setCacheBlockEPNS0_13mediaioparamsEiPKhPNS0_5cache12blockrequestE	cell::fios::ramcache::setCacheBlock(cell::fios::mediaioparams*, int, unsigned char const*, cell::fios::cache::blockrequest*)	exact
+05337e8	libfios.a	fios_caching.ppu.o	_ZN4cell4fios14schedulercache13setCacheBlockEPNS0_13mediaioparamsEiPKhPNS0_5cache12blockrequestE	cell::fios::schedulercache::setCacheBlock(cell::fios::mediaioparams*, int, unsigned char const*, cell::fios::cache::blockrequest*)	fuzzy 1.000
+05344e8	libfios.a	fios_caching.ppu.o	_ZN4cell4fios14schedulercache30deleteCacheFilesUnlessReusableEv	cell::fios::schedulercache::deleteCacheFilesUnlessReusable()	exact
+0535428	libfios.a	fios_caching.ppu.o	_ZN4cell4fios14schedulercacheD0Ev	cell::fios::schedulercache::~schedulercache()	exact
+053713c	libfios.a	fios_caching.ppu.o	_ZN4cell4fios8ramcache13getCacheBlockEPNS0_13mediaioparamsEiPhPNS0_5cache12blockrequestE	cell::fios::ramcache::getCacheBlock(cell::fios::mediaioparams*, int, unsigned char*, cell::fios::cache::blockrequest*)	fuzzy 0.996
+05392c4	libfios.a	fios_filehandle.ppu.o	_ZNK4cell4fios10filehandle9getOffsetEv	cell::fios::filehandle::getOffset() const	exact
+0539358	libfios.a	fios_filehandle.ppu.o	_ZN4cell4fios10filehandle4seekExhPx	cell::fios::filehandle::seek(long long, unsigned char, long long*)	exact
+053c1f0	libscream.a	loader.ppu.o	snd_MemAlloc	snd_MemAlloc	exact
+05c4800	libc.a	abort.o	hex2str	hex2str	fuzzy 1.000
+05c4840	libc.a	abort.o	abort	abort	fuzzy 0.986
+05c4b94	libc.a	atexit.o	reallocate_extended_buf	reallocate_extended_buf	fuzzy 1.000
+05c4c20	libc.a	atexit.o	__cxa_atexit	__cxa_atexit	fuzzy 1.000
+05c4d8c	libc.a	bsearch.o	bsearch	bsearch	fuzzy 1.000
+05c4ec8	libc.a	exit.o	exit	exit	fuzzy 1.000
+05c4f10	libc.a	fclose.o	fclose	fclose	fuzzy 1.000
+05c505c	libc.a	fclose.o	_close_all_FILE	_close_all_FILE	fuzzy 1.000
+05c50cc	libc.a	fflush.o	fflush	fflush	fuzzy 1.000
+05c52f0	libc.a	fopen.o	fopen	fopen	fuzzy 1.000
+05c5364	libc.a	fread.o	fread	fread	fuzzy 1.000
+05c5568	libc.a	fseek.o	fseek	fseek	fuzzy 1.000
+05c55dc	libc.a	ftell.o	ftell	ftell	fuzzy 1.000
+05c5638	libc.a	fwrite.o	fwrite	fwrite	fuzzy 1.000
+05c58b0	libc.a	gmtime.o	gmtime	gmtime	fuzzy 1.000
+05c5900	libc.a	localtim.o	localtime	localtime	fuzzy 1.000
+05c5984	libc.a	memchr.o	memchr	memchr	fuzzy 1.000
+05c5ad0	libc.a	memcpy.o	memcpy	memcpy	fuzzy 1.000
+05c6094	libc.a	memmove.o	memmove	memmove	fuzzy 1.000
+05c7368	libc.a	mktime.o	mktime	mktime	fuzzy 1.000
+05c756c	libc.a	puts.o	puts	puts	fuzzy 1.000
+05c7628	libc.a	qsort.o	rot3	rot3	fuzzy 1.000
+05c77b4	libc.a	qsort.o	swap	swap	fuzzy 1.000
+05c78f8	libc.a	qsort.o	adjust_heap	adjust_heap	fuzzy 1.000
+05c7ac8	libc.a	qsort.o	med3	med3	fuzzy 1.000
+05c7c20	libc.a	qsort.o	rotate	rotate	fuzzy 1.000
+05c7d1c	libc.a	qsort.o	intro_sort	intro_sort	fuzzy 1.000
+05c8318	libc.a	rand.o	rand	rand	fuzzy 1.000
+05c8440	libc.a	sscanf.o	scin	scin	fuzzy 1.000
+05c8480	libc.a	sscanf.o	sscanf	sscanf	fuzzy 1.000
+05c8510	libc.a	strlen.o	strlen	strlen	fuzzy 1.000
+05c85b4	libc.a	strrchr.o	strrchr	strrchr	fuzzy 1.000
+05c8700	libc.a	strstr.o	strstr	strstr	fuzzy 1.000
+05c87ac	libc.a	strtok.o	strtok	strtok	fuzzy 1.000
+05c8890	libc.a	strtol.o	_Stolx	_Stolx	fuzzy 1.000
+05c8a94	libc.a	vsnprint.o	vsnprintf	vsnprintf	fuzzy 1.000
+05c8bdc	libc.a	xfgpos.o	_Fgpos	_Fgpos	fuzzy 1.000
+05c8dcc	libc.a	xfofind.o	_Fofind	_Fofind	fuzzy 1.000
+05c8e64	libc.a	xfoprep.o	_filep_close_it	_filep_close_it	fuzzy 1.000
+05c8f4c	libc.a	xfoprep.o	_Foprep	_Foprep	fuzzy 1.000
+05c91f4	libc.a	xfrprep.o	_Frprep	_Frprep	fuzzy 1.000
+05c9568	libc.a	xfspos.o	_Fspos	_Fspos	fuzzy 1.000
+05c9998	libc.a	xfwprep.o	_Fwprep	_Fwprep	fuzzy 1.000
+05c9b38	libc.a	xscanf.o	_Scanf	_Scanf	fuzzy 1.000
+05ca4a0	libc.a	xstoflt.o	_Stoflt	_Stoflt	fuzzy 1.000
+05ca99c	libc.a	xstopfx.o	_Stopfx	_Stopfx	fuzzy 1.000
+05cac2c	libc.a	xstoul.o	_Stoulx	_Stoulx	fuzzy 1.000
+05caf7c	libc.a	xstoxflt.o	_Stoxflt	_Stoxflt	fuzzy 1.000
+05cbc68	libc.a	xsyslock.o	_Initlocks	_Initlocks	fuzzy 1.000
+05cbd60	libc.a	xsyslock.o	_Clearlocks	_Clearlocks	fuzzy 1.000
+05cbdbc	libc.a	xttotm.o	_Daysto	_Daysto	fuzzy 1.000
+05cbe4c	libc.a	xttotm.o	_Ttotm	_Ttotm	fuzzy 1.000
+05cc0d8	libc.a	xwctob.o	_Wctob	_Wctob	fuzzy 1.000
+05cc13c	libc.a	xwctomb.o	_Wctombx	_Wctombx	fuzzy 1.000
+05cc44c	libc.a	strcat.o	strcat	strcat	exact
+05cc578	libc.a	strchr.o	strchr	strchr	exact
+05cc784	libc.a	strcmp.o	strcmp	strcmp	exact
+05cc8d8	libc.a	strcpy.o	strcpy	strcpy	exact
+05cc9c4	libc.a	strncat.o	strncat	strncat	exact
+05ccb28	libc.a	strncmp.o	strncmp	strncmp	exact
+05ccf90	libc.a	fscanf.o	fscanf	fscanf	fuzzy 1.000
+05cd198	libc.a	snprintf.o	snprintf	snprintf	fuzzy 1.000
+05cd360	libc.a	vfscanf.o	vfscanf	vfscanf	fuzzy 1.000
+05cd444	libc.a	vscanf.o	vscanf	vscanf	fuzzy 1.000
+05cd52c	libc.a	vsprintf.o	vsprintf	vsprintf	fuzzy 1.000
+05cede8	libc.a	time.o	time	time	fuzzy 1.000
+05cee5c	libc.a	xassert.o	_Nonfatal_Assert	_Nonfatal_Assert	fuzzy 1.000
+05cef94	libc.a	fs_posix_api.o	copy_stat	copy_stat	fuzzy 1.000
+05cf074	libc.a	fs_posix_api.o	utime	utime	fuzzy 1.000
+05cf350	libc.a	fs_posix_api.o	fsync	fsync	fuzzy 1.000
+05cf4cc	libc.a	fs_posix_api.o	lseek64	lseek64	fuzzy 1.000
+05cf554	libc.a	fs_posix_api.o	close	close	fuzzy 1.000
+05cf5b8	libc.a	fs_posix_api.o	open	open	fuzzy 1.000
+05cf650	libc.a	fs_posix_api.o	readdir	readdir	fuzzy 1.000
+05cf7cc	libc.a	fs_posix_api.o	closedir	closedir	fuzzy 1.000
+05cf8d4	libc.a	fs_posix_api.o	opendir	opendir	fuzzy 1.000
+05cfb10	libc.a	fs_posix_api.o	lseek	lseek	fuzzy 1.000
+05cfc44	libc.a	fs_posix_api.o	read	read	fuzzy 1.000
+05cfe6c	libc.a	fs_posix_api.o	write	write	fuzzy 1.000
+05cffa8	libc.a	fs_init.o	_fs_initialize	_fs_initialize	fuzzy 1.000
+05d0010	libc.a	fs_init.o	_put_fd	_put_fd	fuzzy 1.000
+05d0070	libc.a	fs_init.o	_get_fd	_get_fd	fuzzy 1.000
+05d0140	libc.a	memset.o	memset	memset	fuzzy 1.000
+05d0218	libc.a	memcmp.o	memcmp	memcmp	fuzzy 0.977
+05d0370	libc.a	xlv2mtx.o	_Mtxunlock	_Mtxunlock	fuzzy 0.938
+05d03b4	libc.a	xlv2mtx.o	_Mtxlock	_Mtxlock	fuzzy 0.950
+05d04b0	libc.a	xlv2mtx.o	_Mtxinit	_Mtxinit	fuzzy 0.896
+05d0504	libc.a	xlv2mtx.o	_Once	_Once	fuzzy 0.929
+05d05f4	libc.a	xlv2tls.o	_Tlsfree	_Tlsfree	fuzzy 0.927
+05d06a4	libc.a	xlv2tls.o	TlsGetValue	TlsGetValue	fuzzy 0.906
+05d0764	libc.a	xlv2tls.o	_Destroytls	_Destroytls	fuzzy 1.000
+05d0948	libc.a	xlv2tls.o	TlsSetValue	TlsSetValue	fuzzy 0.929
+05d0a3c	libc.a	xlv2tls.o	_Tlsset	_Tlsset	fuzzy 0.947
+05d0b80	libc.a	xlv2tls.o	_Tlsalloc	_Tlsalloc	fuzzy 0.954
+05d0d68	libc.a	malloc_lv2.o	do_check_any_chunk	do_check_any_chunk	fuzzy 1.000
+05d0dbc	libc.a	malloc_lv2.o	do_check_top_chunk	do_check_top_chunk	fuzzy 1.000
+05d0ea4	libc.a	malloc_lv2.o	do_check_inuse_chunk	do_check_inuse_chunk	fuzzy 1.000
+05d0f54	libc.a	malloc_lv2.o	do_check_free_chunk	do_check_free_chunk	fuzzy 1.000
+05d1094	libc.a	malloc_lv2.o	do_check_malloced_chunk	do_check_malloced_chunk	fuzzy 1.000
+05d1130	libc.a	malloc_lv2.o	do_check_tree	do_check_tree	fuzzy 1.000
+05d1424	libc.a	malloc_lv2.o	bin_find	bin_find	fuzzy 1.000
+05d15ec	libc.a	malloc_lv2.o	init_top	init_top	fuzzy 1.000
+05d16bc	libc.a	malloc_lv2.o	init_mparams	init_mparams	fuzzy 0.964
+05d172c	libc.a	malloc_lv2.o	PREACTION	PREACTION	fuzzy 0.874
+05d1770	libc.a	malloc_lv2.o	POSTACTION	POSTACTION	fuzzy 0.984
+05d1a8c	libc.a	malloc_lv2.o	internal_is_heap_empty	internal_is_heap_empty	fuzzy 1.000
+05d1be8	libc.a	malloc_lv2.o	mspace_malloc_stats_fast	mspace_malloc_stats_fast	fuzzy 1.000
+05d1cac	libc.a	malloc_lv2.o	mspace_malloc_stats	mspace_malloc_stats	fuzzy 1.000
+05d2264	libc.a	malloc_lv2.o	mspace_free	mspace_free	fuzzy 0.999
+05d309c	libc.a	malloc_lv2.o	mspace_malloc	mspace_malloc	fuzzy 0.999
+05d4c0c	libc.a	malloc_lv2.o	internal_memalign	internal_memalign	fuzzy 1.000
+05d4f08	libc.a	malloc_lv2.o	internal_realloc	internal_realloc	fuzzy 0.994
+05d5178	libc.a	malloc_lv2.o	mspace_reallocalign	mspace_reallocalign	fuzzy 1.000
+05d52c8	libc.a	malloc_lv2.o	_malloc_stats_fast	_malloc_stats_fast	fuzzy 1.000
+05d531c	libc.a	malloc_lv2.o	mspace_calloc	mspace_calloc	fuzzy 1.000
+05d541c	libc.a	malloc_lv2.o	mspace_create	mspace_create	fuzzy 0.977
+05d5584	libc.a	malloc_lv2.o	_malloc_init_lv2	_malloc_init_lv2	fuzzy 0.974
+05d56f4	libc.a	malloc.o	reallocalign	reallocalign	fuzzy 1.000
+05d58bc	libc.a	asctime.o	asctime	asctime	fuzzy 1.000
+05d5914	libc.a	fputc.o	fputc	fputc	fuzzy 1.000
+05d5a08	libc.a	fputs.o	fputs	fputs	fuzzy 1.000
+05d5c2c	libc.a	strcspn.o	strcspn	strcspn	fuzzy 1.000
+05d5c9c	libc.a	strspn.o	strspn	strspn	fuzzy 1.000
+05d5d10	libc.a	xdscale.o	_Dscale	_Dscale	fuzzy 1.000
+05d5f5c	libc.a	xdtento.o	_Dtentox	_Dtentox	fuzzy 1.000
+05d600c	libc.a	xfemu.o	_Fd2rv	_Fd2rv	fuzzy 1.000
+05d60b0	libc.a	xfemu.o	_Ld2rv	_Ld2rv	fuzzy 1.000
+05d615c	libc.a	xfemu.o	_Emul	_Emul	fuzzy 1.000
+05d6278	libc.a	xfemu.o	_Esub	_Esub	fuzzy 1.000
+05d63b4	libc.a	xfemu.o	_Eadd	_Eadd	fuzzy 1.000
+05d6450	libc.a	xfemu.o	_Etentox	_Etentox	fuzzy 1.000
+05d6668	libc.a	xfemu.o	_Lrv2d	_Lrv2d	fuzzy 1.000
+05d6790	libc.a	xfemu.o	_Frv2d	_Frv2d	fuzzy 1.000
+05d68b0	libc.a	xfopen.o	_Fopen	_Fopen	fuzzy 1.000
+05d6d30	libc.a	xgetfloa.o	_Getfloat	_Getfloat	fuzzy 1.000
+05d8490	libc.a	xgetstr.o	ranmatch	ranmatch	fuzzy 1.000
+05d853c	libc.a	xgetstr.o	_Getstr	_Getstr	fuzzy 1.000
+05d8ba8	libc.a	xldtob.o	_Ldtob	_Ldtob	fuzzy 1.000
+05d9584	libc.a	xlitob.o	_Litob	_Litob	fuzzy 1.000
+05d9b44	libc.a	xputstr.o	_Putstr	_Putstr	fuzzy 1.000
+05d9d68	libc.a	xputtxt.o	_Puttxt	_Puttxt	fuzzy 1.000
+05da55c	libc.a	xstoll.o	_Stollx	_Stollx	fuzzy 1.000
+05da754	libc.a	xstoull.o	_Stoullx	_Stoullx	fuzzy 1.000
+05daab0	libc.a	xstrftim.o	_CStrftime	_CStrftime	fuzzy 1.000
+05dad7c	libc.a	xdnorm.o	_Dnorm	_Dnorm	fuzzy 1.000
+05daf40	libc.a	xdunscal.o	_Dunscale	_Dunscale	fuzzy 1.000
+05db060	libc.a	xgenld.o	_Genld	_Genld	fuzzy 1.000
+05db6ac	libc.a	xgentime.o	isleapyr	isleapyr	fuzzy 1.000
+05db720	libc.a	xgentime.o	wkyr	wkyr	fuzzy 1.000
+05db774	libc.a	xgentime.o	ISOwkyr	ISOwkyr	fuzzy 1.000
+05db888	libc.a	xgentime.o	ISOyear	ISOyear	fuzzy 1.000
+05db900	libc.a	xgentime.o	getval	getval	fuzzy 1.000
+05db9f0	libc.a	xgentime.o	cmp_era_date	cmp_era_date	fuzzy 1.000
+05dbb30	libc.a	xgentime.o	getera	getera	fuzzy 1.000
+05dc734	libc.a	xgettime.o	_Gettime	_Gettime	fuzzy 1.000
+05dc84c	libc.a	xldtento.o	_LDtentox	_LDtentox	fuzzy 1.000
+05dc924	libm.a	floorf.o	floorf	floorf	exact
+05dc9a4	libm.a	fmodf.o	fmodf	fmodf	exact
+05dcbd8	libm.a	powf.o	powf	powf	exact
+05dd1f4	libm.a	tanf.o	tanf	tanf	exact
+05dd378	libm.a	xfdint.o	_FDint	_FDint	exact
+05dd48c	libm.a	xfdtest.o	_FDtest	_FDtest	exact
+05dd4f8	libm.a	xferaise.o	_Feraise	_Feraise	exact
+05dd5a8	libm.a	xfexp.o	_FExp	_FExp	exact
+05dd718	libm.a	xflog.o	_FLog	_FLog	exact
+05dd914	libm.a	xfsin.o	_FSin	_FSin	exact
+05ddaec	libm.a	feraiseexcept.o	feraiseexcept	feraiseexcept	exact
+05ddbd8	libm.a	fesetenv.o	_Force_raise	_Force_raise	exact
+05ddc14	libm.a	fesetenv.o	fesetenv	fesetenv	exact
+05ddc68	libcgc.a	libcgc_cell_localize.o	_Z12read_uleb128PKhPy	read_uleb128(unsigned char const*, unsigned long long*)	exact
+05e1118	libcgc.a	libcgc_cell_localize.o	_Z12read_uleb128PKhPy	read_uleb128(unsigned char const*, unsigned long long*)	exact
+05e1450	libcgc.a	libcgc_cell_localize.o	_Z20emergency_mutex_initv	emergency_mutex_init()	exact
+05e3b94	libstdc++.a	throw.o	_ZSt6_ThrowRKSt9exception	std::_Throw(std::exception const&)	exact
+05e3d64	libcgc.a	libcgc_cell_localize.o	_ZNK10__cxxabiv117__class_type_info11__do_upcastEPKS0_PPv	__cxxabiv1::__class_type_info::__do_upcast(__cxxabiv1::__class_type_info const*, void**) const	exact
+05e3df0	libcgc.a	libcgc_cell_localize.o	_ZNK10__cxxabiv117__class_type_info20__do_find_public_srcEiPKvPKS0_S2_	__cxxabiv1::__class_type_info::__do_find_public_src(int, void const*, __cxxabiv1::__class_type_info const*, void const*) const	exact
+05e3e18	libcgc.a	libcgc_cell_localize.o	_ZNK10__cxxabiv117__class_type_info10__do_catchEPKSt9type_infoPPvj	__cxxabiv1::__class_type_info::__do_catch(std::type_info const*, void**, unsigned int) const	exact
+05e4088	libcgc.a	libcgc_cell_localize.o	__dynamic_cast	__dynamic_cast	exact
+05e4254	libcgc.a	libcgc_cell_localize.o	_ZNKSt9type_info10__do_catchEPKS_PPvj	std::type_info::__do_catch(std::type_info const*, void**, unsigned int) const	exact
+05e42a4	libcgc.a	libcgc_cell_localize.o	_ZNK10__cxxabiv117__class_type_info11__do_upcastEPKS0_PKvRNS0_15__upcast_resultE	__cxxabiv1::__class_type_info::__do_upcast(__cxxabiv1::__class_type_info const*, void const*, __cxxabiv1::__class_type_info::__upcast_result&) const	exact
+05e4318	libcgc.a	libcgc_cell_localize.o	_ZNK10__cxxabiv121__vmi_class_type_info11__do_upcastEPKNS_17__class_type_infoEPKvRNS1_15__upcast_resultE	__cxxabiv1::__vmi_class_type_info::__do_upcast(__cxxabiv1::__class_type_info const*, void const*, __cxxabiv1::__class_type_info::__upcast_result&) const	exact
+05e4614	libcgc.a	libcgc_cell_localize.o	_ZNK10__cxxabiv120__si_class_type_info11__do_upcastEPKNS_17__class_type_infoEPKvRNS1_15__upcast_resultE	__cxxabiv1::__si_class_type_info::__do_upcast(__cxxabiv1::__class_type_info const*, void const*, __cxxabiv1::__class_type_info::__upcast_result&) const	exact
+05e46b0	libcgc.a	libcgc_cell_localize.o	_ZNK10__cxxabiv121__vmi_class_type_info12__do_dyncastEiNS_17__class_type_info10__sub_kindEPKS1_PKvS4_S6_RNS1_16__dyncast_resultE	__cxxabiv1::__vmi_class_type_info::__do_dyncast(int, __cxxabiv1::__class_type_info::__sub_kind, __cxxabiv1::__class_type_info const*, void const*, __cxxabiv1::__class_type_info const*, void const*, __cxxabiv1::__class_type_info::__dyncast_result&) const	exact
+05e4cd8	libcgc.a	libcgc_cell_localize.o	_ZNK10__cxxabiv120__si_class_type_info12__do_dyncastEiNS_17__class_type_info10__sub_kindEPKS1_PKvS4_S6_RNS1_16__dyncast_resultE	__cxxabiv1::__si_class_type_info::__do_dyncast(int, __cxxabiv1::__class_type_info::__sub_kind, __cxxabiv1::__class_type_info const*, void const*, __cxxabiv1::__class_type_info const*, void const*, __cxxabiv1::__class_type_info::__dyncast_result&) const	exact
+05e4e88	libcgc.a	libcgc_cell_localize.o	_ZNK10__cxxabiv117__class_type_info12__do_dyncastEiNS0_10__sub_kindEPKS0_PKvS3_S5_RNS0_16__dyncast_resultE	__cxxabiv1::__class_type_info::__do_dyncast(int, __cxxabiv1::__class_type_info::__sub_kind, __cxxabiv1::__class_type_info const*, void const*, __cxxabiv1::__class_type_info const*, void const*, __cxxabiv1::__class_type_info::__dyncast_result&) const	exact
+05e4f78	libcgc.a	libcgc_cell_localize.o	_ZNK10__cxxabiv121__vmi_class_type_info20__do_find_public_srcEiPKvPKNS_17__class_type_infoES2_	__cxxabiv1::__vmi_class_type_info::__do_find_public_src(int, void const*, __cxxabiv1::__class_type_info const*, void const*) const	exact
+05e5164	libcgc.a	libcgc_cell_localize.o	_ZNK10__cxxabiv120__si_class_type_info20__do_find_public_srcEiPKvPKNS_17__class_type_infoES2_	__cxxabiv1::__si_class_type_info::__do_find_public_src(int, void const*, __cxxabiv1::__class_type_info const*, void const*) const	exact
+05e524c	libcgc.a	libcgc_cell_localize.o	_Z12read_uleb128PKhPy	read_uleb128(unsigned char const*, unsigned long long*)	exact
+05e52dc	libcgc.a	libcgc_cell_localize.o	_Z16get_adjusted_ptrPKSt9type_infoS1_PPv	get_adjusted_ptr(std::type_info const*, std::type_info const*, void**)	exact
+05e55bc	libcgc.a	libcgc_cell_localize.o	_Z15get_ttype_entryP16lsda_header_infoy	get_ttype_entry(lsda_header_info*, unsigned long long)	fuzzy 0.980
+05e5738	libcgc.a	libcgc_cell_localize.o	_Z17parse_lsda_headerP15_Unwind_ContextPKhP16lsda_header_info	parse_lsda_header(_Unwind_Context*, unsigned char const*, lsda_header_info*)	exact
+05e5e90	libcgc.a	libcgc_cell_localize.o	_ZSt18uncaught_exceptionv	std::uncaught_exception()	exact
+05e5ecc	libcgc.a	libcgc_cell_localize.o	__cxa_end_catch	__cxa_end_catch	fuzzy 0.984
+05e60a8	libcgc.a	libcgc_cell_localize.o	_Z15eh_globals_dtorPv	eh_globals_dtor(void*)	exact
+05e6118	libcgc.a	libcgc_cell_localize.o	_Z41__static_initialization_and_destruction_0ii	__static_initialization_and_destruction_0(int, int)	exact
+05e61fc	libcgc.a	libcgc_cell_localize.o	__eh_thread_cleanup	__eh_thread_cleanup	exact
+05e659c	libc.a	xfdscale.o	_FDscale	_FDscale	fuzzy 1.000
+05e6774	libc.a	xfdunsca.o	_FDunscale	_FDunscale	fuzzy 1.000
+05e687c	libc.a	xfdnorm.o	_FDnorm	_FDnorm	fuzzy 1.000
+060459c	libfios.a	fios_caching.ppu.o	_ZN4cell4fios11mediafilter14readIdentifierEv	cell::fios::mediafilter::readIdentifier()	fuzzy 1.000
+06045f8	libfios.a	fios_caching.ppu.o	_ZN4cell4fios11mediafilter13registerMediaEv	cell::fios::mediafilter::registerMedia()	fuzzy 1.000
+0604660	libfios.a	fios_media.ppu.o	_ZN4cell4fios5media12speculateIOPEPNS0_13mediaioparamsE	cell::fios::media::speculateIOP(cell::fios::mediaioparams*)	fuzzy 1.000
+06046b0	libfios.a	fios_caching.ppu.o	_ZNK4cell4fios11mediafilter15getVariableNameEj	cell::fios::mediafilter::getVariableName(unsigned int) const	fuzzy 1.000
+0604878	libfios.a	fios_caching.ppu.o	_ZN4cell4fios5cache9flushFileEPKc	cell::fios::cache::flushFile(char const*)	fuzzy 1.000
+06169e4	libscream.a	LFO.ppu.o	snd_LFO_TYPE_SQUARE	snd_LFO_TYPE_SQUARE	exact
+0616a08	libscream.a	LFO.ppu.o	snd_LFO_TYPE_TRIANGLE	snd_LFO_TYPE_TRIANGLE	exact
+0616a74	libscream.a	LFO.ppu.o	snd_LFO_TYPE_SAW	snd_LFO_TYPE_SAW	exact
+0617304	libscream.a	LFO.ppu.o	snd_LFO_TYPE_RAND	snd_LFO_TYPE_RAND	exact
