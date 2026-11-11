@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import os, os as _os
 TOOLS = _os.path.dirname(_os.path.abspath(__file__))
-DATA = _os.path.join(TOOLS, "data")
+DATA = _os.path.join(TOOLS, 'data')
 """Split the monolithic headers into per-module headers and give every .cpp real includes.
 
   types.h            Ghidra primitives + prelude + forward declarations + types used all over (vec4, ...)
@@ -16,7 +16,7 @@ usage: restructure.py TREE
 import os, re, sys, json, glob, collections
 
 T = sys.argv[1]
-HERE = os.path.dirname(os.path.abspath(__file__))
+HERE = TOOLS
 DATA = os.path.join(HERE, 'data') if os.path.isdir(os.path.join(HERE, 'data')) else HERE
 IDENT = re.compile(r'\b[A-Za-z_]\w*\b')
 COMMON_MIN_MODULES = 12          # a type used by this many modules lives in types.h
