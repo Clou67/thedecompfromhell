@@ -2617,6 +2617,8 @@ struct UpdateCam { /* DL struct UpdateCam (RC1 size 0xa0); 48 of them at UpdateC
 
 extern undefined4 DAT_0011eec0; /* 0x11eec0 */
 extern undefined4 DAT_0015aa20; /* 0x15aa20 */
+extern undefined4 DAT_001766c4; /* 0x1766c4 */
+extern undefined4 DAT_0017a1e8; /* 0x17a1e8 */
 extern undefined4 DAT_006517ac; /* no defined data */
 extern undefined4 DAT_006517dc; /* no defined data */
 extern undefined4 DAT_0065180c; /* no defined data */

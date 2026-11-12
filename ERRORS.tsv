@@ -25,7 +25,7 @@ errors	file
 0	game/mission.cpp
 0	game/mobyfunc.cpp
 480	game/mobyproc.cpp
-535	game/mobyutil.cpp
+536	game/mobyutil.cpp
 0	game/music.cpp
 0	game/pad.cpp
 0	game/partproc.cpp
@@ -730,7 +730,7 @@ errors	file
 8	game/update/moby557.cpp
 16	game/update/moby558.cpp
 33	game/update/moby562.cpp
-89	game/update/moby563.cpp
+100	game/update/moby563.cpp
 19	game/update/moby564.cpp
 2	game/update/moby566.cpp
 10	game/update/moby567.cpp
@@ -1021,7 +1021,7 @@ errors	file
 0	game/update/sound6.cpp
 485	game/vendor.cpp
 53	game/vuchain.cpp
-131	game/walk.cpp
+0	game/walk.cpp
 0	game/water.cpp
 23	idol/9Unk.cpp
 3	idol/fUnk.cpp

@@ -27,9 +27,6 @@ enum {
     PATH_MODE_ONCE = 2,
 };
 
-/* w_2legData.flags: measure node distances flat */
-#define WALK_FLAG_FLAT 0x2
-
 /* DrawPathDebug flags */
 enum {
     PATH_DRAW_MODE = 0x07,         /* 1, 2: a marker per node; 4: the node number */
@@ -223,7 +220,8 @@ void PathFollowUpdate(float arrive, MobyInstance *moby, PathFollower *follower, 
     Vec4 *node = &spline->points[idx];
 
     float dist;
-    if ((pLD->flags & WALK_FLAG_FLAT) == 0) {
+    /* measured flat while jumping */
+    if ((pLD->flags & WALK_FLAG_JUMPING) == 0) {
         float dx = moby->pos.x - node->x;
         float dy = moby->pos.y - node->y;
 

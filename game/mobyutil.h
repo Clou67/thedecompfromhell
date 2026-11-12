@@ -1931,7 +1931,7 @@ double MB_CosineInterpolate(double param_1,double param_2,double param_3);
 void MB_lerpRotCosine(double param_1,undefined8 param_2,double param_3);
 void MB_CosineInterpolateUnitVec (double param_1,float *param_2,float *param_3,float *param_4);
 void MB_CosineInterpolateAngVec (double param_1,float *param_2,float *param_3,float *param_4);
-void MB_DeltAngSpeed (double param_1,undefined8 param_2,double param_3,double param_4,double param_5, undefined8 param_6,undefined8 param_7,float *param_8);
+float MB_DeltAngSpeed(float param_1,float param_2,float param_3,float param_4,float param_5,float *param_8);
 void OrganicDeltAngSpeed (undefined8 param_1,double param_2,double param_3,double param_4,int param_5, undefined8 param_6,float *param_7);
 void MB_FaceDeltAngSpeed (undefined8 param_1,undefined8 param_2,undefined8 param_3,int param_4,int param_5, undefined8 param_6);
 double MB_Dist2D(MobyInstance *param_1,MobyInstance *param_2);
@@ -2006,7 +2006,7 @@ ulonglong MB_HandleDamage (MobyInstance *param_1,int param_2,ulonglong param_3,u
 void MB_AnimBoneCollLines(MobyInstance *param_1,uint *param_2,int param_3);
 void MB_DamageMobyList (double param_1,double param_2,double param_3,int param_4,undefined8 param_5, undefined8 param_6,undefined8 param_7,int *param_8,int param_9,int param_10, undefined4 param_11);
 void MB_VecAtan2Angles (ulonglong param_1,undefined8 param_2,float *param_3,float *param_4,float *param_5);
-double MB_computeLobVelocity (double param_1,double param_2,float *param_3,float *param_4,undefined8 param_5, undefined8 param_6,float *param_7);
+double MB_computeLobVelocity(double param_1,double param_2,float *param_3,float *param_4,float *param_7);
 longlong MB_randPrimPoints (double param_1,undefined8 param_2,undefined8 param_3,ulonglong param_4, ulonglong param_5,uint param_6);
 void MB_RandomizeAnimSpeed (double param_1,double param_2,int param_3,uint param_4,float *param_5);
 void MB_Update2LegIK(undefined8 param_1,int param_2);

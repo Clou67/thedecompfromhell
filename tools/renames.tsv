@@ -527,3 +527,6 @@ FUN_004d31b0	Dialog_Advance
 FUN_00502dfc	sceGsSetDefStoreImage
 FUN_00502df8	sceGsExecStoreImage
 ____Hero_AddPulsingMobyGlow	Hero_AddPulsingMobyGlow
+DAT_0073a850	g_WalkStateAnim
+DAT_0073a8a4	g_WalkAnimState
+Walk_ApplyLegQuatToEuler	Walk_ResetLegTwist

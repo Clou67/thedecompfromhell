@@ -87,3 +87,6 @@ PathFollower	game/path
 PosRing	game/path
 SceneCameraFrame	game/space
 CreditsState	game/update
+w_2legAnim	game/walk
+w_legData	game/walk
+w_2legData	game/walk

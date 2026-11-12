@@ -1093,25 +1093,6 @@ struct MobyVTable {
     void **exit;
 };
 
-struct w_legData {
-    char jiFoot;
-    char jiHeel;
-    char jiAnkle;
-    char jiHip;
-    short idle;
-    short _2mainIdle;
-    float frDest;
-    float arAct;
-    float arSpeed;
-    float hrAct;
-    float hrSpeed;
-    float twistLow;
-    float twistHigh;
-    int pad[3];
-    struct Manipulator MAnkle;
-    struct Manipulator MHip;
-};
-
 typedef long long s64;
 
 /* An extra animation playing on part of a moby's skeleton (MB_AllocAnimLayer; a pool of 6 at

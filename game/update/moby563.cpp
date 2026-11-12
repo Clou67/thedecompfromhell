@@ -242,7 +242,7 @@ LAB_003b8a0c:
             *(byte *)((int)this_ + 0xbc) = *(byte *)((int)this_ + 0xbc) | 5;
             uVar10 = idol::GetAnimDuration(3);
             MB_SetAnimation(lVar9,5,0,uVar10);
-            Walk_ApplyLegQuatToEuler(uVar22 + 0x160);
+            Walk_ResetLegTwist(uVar22 + 0x160);
             *(undefined1 *)((int)this_ + 0x20) = 9;
             sVar4 = *(short *)(*(int *)(iVar12 + 0x20) + 0xa6);
             if ((sVar4 == 0x131) || (sVar4 == 0xb0)) {
@@ -268,7 +268,7 @@ LAB_003b8a0c:
         if (5 < iVar13) goto LAB_003b8a0c;
         uVar10 = idol::GetAnimDuration(10);
         MB_SetAnimation(lVar9,6,0,uVar10);
-        Walk_ApplyLegQuatToEuler(uVar22 + 0x160);
+        Walk_ResetLegTwist(uVar22 + 0x160);
         *(undefined1 *)((int)this_ + 0x20) = 1;
         *(float *)(uVar5 + 0x3e4) = 2.0 / (animationSpeed * 15.0);
         MB_VecAtan2Angles
@@ -514,7 +514,7 @@ LAB_003b8a0c:
       else {
         local_b8 = (longlong)(int)(animationSpeed * 10.5);
         MB_SetAnimation(lVar9,4,0,(int)(animationSpeed * 10.5));
-        Walk_ApplyLegQuatToEuler(uVar22 + 0x160);
+        Walk_ResetLegTwist(uVar22 + 0x160);
         *(undefined1 *)((int)this_ + 0x20) = 8;
       }
     }
@@ -548,7 +548,7 @@ LAB_003b8a0c:
               *(undefined4 *)(uVar5 + 0x3d0) = 0;
               local_b8 = (longlong)(int)(animationSpeed * 10.5);
               MB_SetAnimation(lVar9,0x10,0,(int)(animationSpeed * 10.5));
-              Walk_ApplyLegQuatToEuler(uVar22 + 0x160);
+              Walk_ResetLegTwist(uVar22 + 0x160);
               *(undefined1 *)((int)this_ + 0x20) = 10;
               *(byte *)((int)this_ + 0xbc) = *(byte *)((int)this_ + 0xbc) | 0x10;
             }
@@ -569,7 +569,7 @@ LAB_003b8a0c:
       else {
         local_b8 = (longlong)(int)(animationSpeed * 10.5);
         MB_SetAnimation(lVar9,4,0,(int)(animationSpeed * 10.5));
-        Walk_ApplyLegQuatToEuler(uVar22 + 0x160);
+        Walk_ResetLegTwist(uVar22 + 0x160);
         *(undefined1 *)((int)this_ + 0x20) = 8;
       }
     }
@@ -607,7 +607,7 @@ LAB_003b8a0c:
               *(undefined4 *)(uVar5 + 0x3d0) = 0;
               local_b8 = (longlong)(int)(animationSpeed * 10.5);
               MB_SetAnimation(lVar9,0x10,0,(int)(animationSpeed * 10.5));
-              Walk_ApplyLegQuatToEuler(lVar21);
+              Walk_ResetLegTwist(lVar21);
               *(undefined1 *)((int)this_ + 0x20) = 10;
             }
           }
@@ -626,7 +626,7 @@ LAB_003b8a0c:
     else {
       local_b8 = (longlong)(int)(animationSpeed * 10.5);
       MB_SetAnimation(lVar9,4,0,(int)(animationSpeed * 10.5));
-      Walk_ApplyLegQuatToEuler(lVar21);
+      Walk_ResetLegTwist(lVar21);
       *(undefined1 *)((int)this_ + 0x20) = 8;
     }
     goto LAB_003ba494;
@@ -647,14 +647,14 @@ LAB_003b8a0c:
         *(undefined4 *)(uVar5 + 0x3d0) = 0;
         local_b8 = (longlong)(int)(animationSpeed * 10.5);
         MB_SetAnimation(lVar9,0x10,0,(int)(animationSpeed * 10.5));
-        Walk_ApplyLegQuatToEuler(uVar22 + 0x160);
+        Walk_ResetLegTwist(uVar22 + 0x160);
         *(undefined1 *)((int)this_ + 0x20) = 10;
       }
     }
     else {
       local_b8 = (longlong)(int)(animationSpeed * 10.5);
       MB_SetAnimation(lVar9,4,0,(int)(animationSpeed * 10.5));
-      Walk_ApplyLegQuatToEuler(uVar22 + 0x160);
+      Walk_ResetLegTwist(uVar22 + 0x160);
       *(undefined1 *)((int)this_ + 0x20) = 8;
     }
     goto LAB_003ba494;
@@ -708,7 +708,7 @@ LAB_003b8a0c:
             *(undefined4 *)(uVar5 + 0x3d0) = 0;
             local_b8 = (longlong)(int)(animationSpeed * 10.5);
             MB_SetAnimation(lVar9,0x10,0,(int)(animationSpeed * 10.5));
-            Walk_ApplyLegQuatToEuler(uVar22 + 0x160);
+            Walk_ResetLegTwist(uVar22 + 0x160);
             *(undefined1 *)((int)this_ + 0x20) = 10;
             *(byte *)((int)this_ + 0xbc) = *(byte *)((int)this_ + 0xbc) | 1;
           }
@@ -817,7 +817,7 @@ LAB_003b8a0c:
         *(undefined4 *)(uVar5 + 0x3d0) = 0;
         uVar10 = idol::GetAnimDuration(10);
         MB_SetAnimation(lVar9,0x10,0,uVar10);
-        Walk_ApplyLegQuatToEuler(uVar22 + 0x160);
+        Walk_ResetLegTwist(uVar22 + 0x160);
         *(undefined1 *)((int)this_ + 0x20) = 10;
         *(byte *)((int)this_ + 0xbc) = *(byte *)((int)this_ + 0xbc) | 1;
       }

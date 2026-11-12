@@ -415,3 +415,5 @@ g_MovieVramSave	u32 NAME /* 0xe5a640: where mode_movieUnInit stores GS memory */
 g_DialogMoby	u32 NAME /* 0xa15c0c: the moby whose dialog started the scene or movie playing */
 g_DialogLine	u32 NAME /* 0xa15c10: that dialog's state, Dialog_Advance's second argument */
 g_SceneHideMoby	u32 NAME /* 0xa52c98: a moby disabled while a scene plays (set by the pause menu) */
+g_WalkStateAnim	int NAME[21] /* 0x73a850: the w_2legData.anims[] index each WALK_STATE_* plays (-1 none) */
+g_WalkAnimState	int NAME[13] /* 0x73a8a4: the WALK_STATE_* for each anims[] index (Walk_ResetLegState) */
