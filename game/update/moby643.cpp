@@ -150,7 +150,7 @@ void UpdateMoby_643(MobyInstance *moby)
                                                              -0.16666656732559204 + dVar16))));
       iVar8 = FastDoubleToInt((double)(float)(dVar12 * 48.0));
       uVar11 = FastDoubleToInt((double)(float)(dVar12 * 32.0));
-      moby->field60_0x90 =
+      moby->glowRgba =
            (int)((uVar11 & 0xffffffff) << 8) + 0x3000U | iVar8 + 0xcfU |
            (int)((uVar11 & 0xffffffff) << 0x10) + 0x300000U | 0xff000000;
     }

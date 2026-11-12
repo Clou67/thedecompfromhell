@@ -1588,7 +1588,7 @@ void UpdateMoby_121(MobyInstance *moby)
         uVar7 = FastDoubleToInt(dVar27);
         uVar8 = FastDoubleToInt(dVar27);
         sVar22 = *(short *)(pfVar3 + 0x1a);
-        moby->field60_0x90 =
+        moby->glowRgba =
              (uint)((uVar7 & 0xffffffff) << 8) | uVar16 | (uint)((uVar8 & 0xffffffff) << 0x10) |
              0xff000000;
         if (((sVar22 == 0) &&
@@ -2171,7 +2171,7 @@ void UpdateMoby_121(MobyInstance *moby)
         fVar48 = MB_WrapRot((float)local_108 * 0.068);
         dVar38 = (double)FUN_005e8128((double)fVar48);
         uVar7 = FastDoubleToInt((double)(float)(dVar38 * 96.0));
-        moby->field60_0x90 =
+        moby->glowRgba =
              (int)((uVar7 & 0xffffffff) << 8) + 0x9f00U | (int)uVar7 + 0x9fU |
              (int)((uVar7 & 0xffffffff) << 0x10) + 0x9f0000U | 0xff000000;
       }

@@ -551,7 +551,7 @@ M1412_002f05c0
     pMVar6->enabled = '\x01';
     pMVar6->state = '\x02';
     pMVar6->setByGroup = '\0';
-    pMVar6->field45_0x72 = '\0';
+    pMVar6->unk72 = '\0';
     puVar4 = (undefined4 *)pMVar6->pVar;
     (pMVar6->pos).x = *param_3;
     auVar11 = ZEXT416(0xffffffff);
@@ -679,7 +679,7 @@ void M1412_002f0898(double param_1,MobyInstance *param_2,undefined8 param_3)
                0x4022000000000000,0x3ff0000000000000,(double)(float)(param_1 * 15.0),param_2,
                &DAT_007350c0,0,0,1,uVar6,uVar7,uVar8);
   }
-  param_2->field45_0x72 = '\0';
+  param_2->unk72 = '\0';
   if (*(short *)((int)pfVar5 + 0x4e) < 1) {
     if (pfVar5[0x10] == 0.0) {
       param_2->enabled = '\0';
@@ -881,7 +881,7 @@ void UpdateMoby_212(MobyInstance *moby)
     fVar4 = moby->pClass->gScale;
     uVar19 = (int)fVar4 >> 0x1f;
     if ((int)((uVar19 >> 1 ^ (uint)fVar4) - uVar19) < (int)((uVar15 >> 1 ^ (uint)fVar3) - uVar15)) {
-      moby->field45_0x72 = 'd';
+      moby->unk72 = 'd';
     }
     moby->state = '\x01';
   }
@@ -1025,7 +1025,7 @@ void UpdateMoby_212(MobyInstance *moby)
     uVar19 = (int)fVar3 >> 0x1f;
     if ((int)((uVar15 >> 1 ^ (uint)moby->scale) - uVar15) <
         (int)((uVar19 >> 1 ^ (uint)fVar3) - uVar19)) {
-      moby->field45_0x72 = '\0';
+      moby->unk72 = '\0';
     }
     moby->state = '\x03';
   }

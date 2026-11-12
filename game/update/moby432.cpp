@@ -55,7 +55,7 @@ void UpdateMoby_432(MobyInstance *moby)
         uVar8 = (uint)DAT_00a358dc;
         moby->mClass = DAT_00a358dc;
         pMVar7 = MobyClasses[uVar8];
-        moby->field44_0x71 = -1;
+        moby->unk71 = -1;
         moby->pClass = pMVar7;
         moby->scale = pMVar7->gScale;
         UpdateMobyFrameData(moby);
@@ -96,7 +96,7 @@ void UpdateMoby_432(MobyInstance *moby)
             uVar8 = (uint)DAT_00a35670;
             moby->mClass = DAT_00a35670;
             pMVar7 = MobyClasses[uVar8];
-            moby->field44_0x71 = -1;
+            moby->unk71 = -1;
             moby->pClass = pMVar7;
             moby->scale = pMVar7->gScale;
             UpdateMobyFrameData(moby);

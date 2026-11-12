@@ -40,7 +40,7 @@ void FUN_0047ebac(MobyInstance *param_1)
     }
     param_1->state = '\x02';
     param_1->setByGroup = '\x01';
-    param_1->field60_0x90 = 0x80208020;
+    param_1->glowRgba = 0x80208020;
     PlayMobySound(0,0,param_1);
     iVar4 = *piVar3;
     if ((iVar4 != -1) && (iVar6 = 0, 0 < Splines[iVar4]->cnt)) {

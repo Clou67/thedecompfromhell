@@ -169,7 +169,6 @@ extern undefined8 TexSamplerFlags; /* 0x10ee2e0 */
 extern undefined4 TieCnt; /* 0xe583fc */
 extern undefined4 TieCntBase; /* 0xa18388 */
 extern undefined4 TieInstanceBase; /* 0xa18384 */
-extern undefined g_AnimLayerPool; /* 0xa2c440 */
 extern undefined4 g_EngineData; /* 0xa15f60 */
 extern u8 *g_FontVram; /* 0xa10930: 0x100000 bytes, the Japanese font texture */ /* type set in global_types.tsv */
 extern int g_FrontEndLogoAlpha; /* 0x90d708 */

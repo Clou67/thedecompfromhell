@@ -255,17 +255,17 @@ void UpdateMoby_1138(MobyInstance *moby)
     moby->animationBlend = fVar3;
   }
   if (DAT_00a15f39 != '\0') {
-    if ((moby->field44_0x71 == '\x02') || (moby->field44_0x71 == '\x04')) {
+    if ((moby->unk71 == '\x02') || (moby->unk71 == '\x04')) {
       (moby->pos).x = 512.0;
     }
   }
   iVar8 = GetMenuScreen();
   if ((iVar8 == 0xf) || (iVar8 == 0x10)) {
-    if ((iVar8 == 0xf) && (moby->field44_0x71 == 'm')) {
+    if ((iVar8 == 0xf) && (moby->unk71 == 'm')) {
       (moby->pos).x = 512.0;
       DAT_00ef26f0 = 0xf;
     }
-    if (((iVar8 == 0x10) && (DAT_00ef26f0 == 0xf)) && (moby->field44_0x71 == 'm')) {
+    if (((iVar8 == 0x10) && (DAT_00ef26f0 == 0xf)) && (moby->unk71 == 'm')) {
       (moby->pos).x = 256.0;
       DAT_00ef26f0 = 0x10;
     }

@@ -2170,7 +2170,7 @@ void Vendor_PreUpdate(void)
           (pMVar23->pos).y = fVar9 + DAT_00e5a714;
           (pMVar23->pos).z = fVar11 + DAT_00e5a718;
           fVar8 = DAT_00e5a708;
-          pMVar23->field44_0x71 = -1;
+          pMVar23->unk71 = -1;
           (pMVar23->rotation).z = fVar8;
           UpdateMobyTransform(pMVar23);
           if (pMVar23->shadow != '\0') {

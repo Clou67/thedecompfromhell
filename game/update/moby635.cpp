@@ -706,10 +706,10 @@ LAB_003f6e14:
     uVar9 = uVar11;
   }
   uVar9 = FastLerpColor
-                    (0x3fb99999a0000000,param_1->field60_0x90,
+                    (0x3fb99999a0000000,param_1->glowRgba,
                      (uint)((uVar10 & 0xffffffff) << 8) | uVar9 |
                      (uint)((lVar7 + 0x14U & 0xffffffff) << 0x10) | 0x80000000);
-  param_1->field60_0x90 = uVar9;
+  param_1->glowRgba = uVar9;
   do {
     iVar14 = iVar14 + 1;
     GetBonePosition(param_1,iVar14,uVar13 + 0x200);

@@ -311,7 +311,7 @@ void M1907_002d74b8(int param_1)
     do {
       pMVar5 = g_MobyInstance + (*puVar4 & 0x7fff);
       if ((pMVar5->oClass == GADGEBOT_0772) && (pMVar5->state < 6 && pMVar5->state != 0)) {
-        uVar2 = pMVar5->field60_0x90;
+        uVar2 = pMVar5->glowRgba;
         iVar6 = 2;
         uVar3 = DAT_007d8910 << 0x18;
         do {

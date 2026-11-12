@@ -135,3 +135,18 @@ g_McStaticIco	char NAME[32] /* 0x71f9ba: ".../static.ico" */
 g_McMainFile	char NAME[41] /* 0x71f9da: ".../BASCUS-97199RATCHET" */
 g_McSaveFile	char NAME[32] /* 0x71fa03: ".../save%d.bin" */
 g_SaveMsgLocale	u8 NAME /* 0xa2088d: Locale_Load's buffer argument for SaveMsg_UTF8.dat */
+g_MobyClassUpdates	void *NAME[240] /* 0xa34f80: update function per mClass (follows MobyClasses) */
+g_pMobyVars	u8 *NAME /* 0xa390b0: pVar blocks, 0x80 per moby above MobyInstancePermEnd */
+g_AnimBuffers	u8 NAME[][0x800] /* 0xa2c5c0: built animation frames (updateId 0xff); also the debug font's load buffer */
+g_AnimLayerPool	AnimLayer NAME[6] /* 0xa2c440 */
+g_AnimLayerJointBuf	u8 NAME[6][0x1500] /* 0xa24640 */
+AnimationCacheRegistry	MobyInstance *NAME[16] /* 0xa345c0 */
+g_EnvSampleCount	int NAME /* 0xa4daf4 */
+g_EnvSamples	EnvSample *NAME /* 0xa4db00 */
+g_HeroLightDir	Vec4 NAME /* 0xa4c4e0: UpdateHeroLightAngle */
+g_MobyShadowCount	int NAME /* 0xa49f50 (guess) */
+g_pMobyShadowTag	u8 *NAME /* 0xa49f54: the shadow pass's packet tag */
+g_MobySkinCount	int NAME /* 0xa49b44 (guess: skinned mobys queued for STUB_000f5a7c) */
+g_MobyDrawListStart	u8 *NAME /* 0xa3909c: draw entries, 0xb0 bytes each */
+g_MobyDrawListEnd	u8 *NAME /* 0xa39098 */
+g_MobyShadowList	int NAME[] /* 0xa4a0e0: the shadow list DrawScreenEffect_152df8 draws (Ghidra label "____oClassInstanceList") */

@@ -3117,7 +3117,7 @@ LAB_00279dec:
   *(float *)((int)pvVar3 + 0x3b4) = (float)dVar21;
   dVar21 = (double)FUN_005e8128();
   uVar15 = FastLerpColor((double)(float)(dVar21 * 0.5 + 0.5),0x30c8c8c8,0x1c393939);
-  moby->field60_0x90 = uVar15;
+  moby->glowRgba = uVar15;
   *(uint *)((int)pvVar3 + 0x3b8) =
        (((int)uVar15 >> 0x10 & 0xffU) + 1) * 0x5500 & 0x7f0000 | uVar15 & 0xff000000 |
        ((int)uVar15 >> 8 & 0xffU) << 8 | ((uVar15 & 0xff) + 1) * 0x55 >> 8;

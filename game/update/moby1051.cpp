@@ -2652,7 +2652,7 @@ LAB_001a56f4:
                                                         (double)(float)((double)(float)(dVar27 * 
                                                   dVar28) * -0.16666656732559204 + dVar28))) + 1.0)
                                 * 0.5),uVar17,uVar12);
-    param_1->field60_0x90 = uVar20;
+    param_1->glowRgba = uVar20;
     pSVar10 = Splines[*(int *)((int)pvVar9 + 0xec)];
     MB_getTargetInArea
               (0x406fe00000000000,param_1,uVar25 + 0x70,pSVar10,0,0,pSVar10->points,pSVar10->cnt);

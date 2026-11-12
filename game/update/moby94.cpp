@@ -115,7 +115,7 @@ void UpdateMoby_94(MobyInstance *moby)
   else {
     uVar9 = FastLerpColor(dVar11,0xffffffff80208020,0xffffffff80202020);
   }
-  moby->field60_0x90 = uVar9;
+  moby->glowRgba = uVar9;
   return;
 }
 

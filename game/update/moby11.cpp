@@ -199,7 +199,7 @@ void UpdateMoby_11(MobyInstance *moby)
             0x60 & (GPiece<16>)0xffffffff;
   uVar21 = storeVectorElementWordIndexed
                      (auVar32 | auVar32 << 0x20 | auVar32 << 0x40 | auVar32 << 0x60,0x90,lVar15);
-  *(undefined4 *)((uint)&moby->field60_0x90 & 0xfffffffc) = uVar21;
+  *(undefined4 *)((uint)&moby->glowRgba & 0xfffffffc) = uVar21;
   if (bVar1 < 2) {
     if (-1 < (int)(uint)bVar1) {
       if (bVar1 == 0) {

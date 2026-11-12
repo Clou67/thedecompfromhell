@@ -167,7 +167,7 @@ void UpdateMoby_777(MobyInstance *moby)
   puVar12[0x2a] = unaff_r27;
   if (iVar19 == -1) {
     printf("ERROR!! Moby class %d maya instance %d has no path set; deleted\n",moby->oClass,
-                 (ulonglong)(uint)moby->field71_0xa8 & 0xffff);
+                 (ulonglong)(uint)moby->handle & 0xffff);
     DeleteMoby(moby);
   }
   else {

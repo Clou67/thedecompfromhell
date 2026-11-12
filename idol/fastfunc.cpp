@@ -979,7 +979,7 @@ void FastEulerToMtx(float *param_1,float *param_2)
 
 
 // 0x0500ca4 (0x164 bytes)
-void FastEulerToMtx1(float *param_1,float *param_2)
+void FastEulerToMtx1(Mtx4 *param_1,Vec4 *param_2)
 
 {
   undefined8 uVar1;
@@ -1075,7 +1075,7 @@ void FastEulerToMtx2(float *outMtx,float *eulerAngles)
 
 
 // 0x0500f6c (0x3c bytes)
-void FastMtxCopyNoTranslate(uint param_1,uint param_2)
+void FastMtxCopyNoTranslate(Mtx4 *param_1,Mtx4 *param_2)
 
 {
   undefined4 *puVar1;
@@ -1273,7 +1273,7 @@ void FastMtx4Transpose(undefined4 *param_1,undefined4 *param_2)
 
 
 // 0x05010c0 (0x70 bytes)
-void FastNormalizeRMtx4(undefined4 *param_1,undefined4 *param_2)
+void FastNormalizeRMtx4(Mtx4 *param_1,Mtx4 *param_2)
 
 {
   undefined4 uVar1;
@@ -1669,7 +1669,7 @@ void FastVecMtx4MultBatch3InPlace(uint param_1,undefined8 param_2,longlong param
 
 
 // 0x050162c (0xb4 bytes)
-void FastVecMtx4Mul(uint param_1,undefined8 param_2,longlong param_3)
+void FastVecMtx4Mul(Mtx4 *param_1,Mtx4 *param_2,Mtx4 *param_3)
 
 {
   undefined4 *puVar1;

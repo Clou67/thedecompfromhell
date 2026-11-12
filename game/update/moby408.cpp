@@ -205,7 +205,7 @@ void UpdateMoby_408(MobyInstance *moby)
                                      fVar6 * -0.0001980741 +
                                      fVar4 * 0.0083330255 + fVar11 * fVar5 * -0.16666657 + fVar5 +
                                     1.0) * 0.5),0xffffffff801414bc,0xffffffff801414dc);
-        moby->field60_0x90 = uVar8;
+        moby->glowRgba = uVar8;
         dVar10 = (double)FastWrapRot((float)piVar3[5],g_FrameTime * 6.2831855);
         piVar3[5] = (int)(float)dVar10;
         if ((piVar3[2] != 0) && (g_gameMode != GAME_MODE_SCENE)) {
@@ -324,7 +324,7 @@ void UpdateMoby_408(MobyInstance *moby)
                                  fVar6 * -0.0001980741 +
                                  fVar4 * 0.0083330255 + fVar11 * fVar5 * -0.16666657 + fVar5 + 1.0)
                                * 0.5),0xffffffff801414dc,0xffffffff8004048c);
-    moby->field60_0x90 = uVar8;
+    moby->glowRgba = uVar8;
     dVar10 = (double)FastWrapRot((float)piVar3[5],g_FrameTime * 12.566371);
     piVar3[5] = (int)(float)dVar10;
     iVar9 = FastDecTimerS32(piVar3 + 6);

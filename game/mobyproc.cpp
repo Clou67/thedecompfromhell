@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "game/mobyproc.h"
-#include "game/bloaders.h"
 #include "game/camera.h"
 #include "game/collproc.h"
 #include "game/draw.h"
@@ -40,8 +39,7 @@ void SECTION_HEADER_MOBYPROC(void)
 /* [p2_mobyutil] packs r,g,b,a into moby+0x38 (DL 'lights' u64)
    [p2_mobyutil] packs light indices/values into moby+0x38 (DL g_MobyInstance.lights u64) */
 
-void MB_SetLights
-               (int param_1,longlong param_2,ulonglong param_3,longlong param_4,longlong param_5)
+void MB_SetLights(MobyInstance *param_1,int param_2,int param_3,int param_4,int param_5)
 
 {
   *(ulonglong *)(param_1 + 0x38) =
@@ -87,7 +85,7 @@ void MB_GetLights(int param_1,uint *param_2,uint *param_3,uint *param_4)
 // 0x00f1f28 (0xe0 bytes)
 /* [p2_mobyutil] returns DirectionalLights[idx].direction1 (or blend) from moby lights */
 
-void MB_GetLightDirection(int param_1,float *param_2)
+void MB_GetLightDirection(MobyInstance *param_1,Vec4 *param_2)
 
 {
   float fVar1;
@@ -483,7 +481,7 @@ void UpdateMobyGrids(MobyInstance *moby,uint deletion_stamp)
             do {
               psVar6 = psVar2;
               psVar2 = psVar6 + 1;
-            } while ((int)*psVar6 != moby->field72_0xac);
+            } while ((int)*psVar6 != moby->index);
             *psVar6 = psVar5[bVar1 - 1];
             psVar5[bVar1 - 1] = 0;
             bVar1 = (&g_MobyGrid[uVar11 * 0x40].blocks)[iVar4];
@@ -537,7 +535,7 @@ void UpdateMobyGrids(MobyInstance *moby,uint deletion_stamp)
             }
             *(short *)((int)&g_MobyGridLists +
                       (uint)*(byte *)(psVar2 + 1) * 2 + (int)((longlong)*psVar2 << 5)) =
-                 (short)moby->field72_0xac;
+                 (short)moby->index;
             *(char *)(psVar2 + 1) = *(char *)(psVar2 + 1) + '\x01';
           }
           uVar10 = uVar10 + 1;
@@ -600,14 +598,14 @@ void PostUpdateMobyBsphere
   uVar20 = ZEXT48(&stack0x00000000);
   bVar1 = moby->updateId;
   if (bVar1 == moby->animationId) {
-    if (bVar1 == moby->field44_0x71) {
+    if (bVar1 == moby->unk71) {
       fVar2 = (moby->transform).v3.x;
       fVar3 = (moby->transform).v3.y;
       fVar4 = (moby->transform).v3.z;
       fVar5 = (moby->transform).v3.w;
     }
     else {
-      moby->field44_0x71 = bVar1;
+      moby->unk71 = bVar1;
       pfVar10 = *(float **)(&moby->pClass->type + (uint)bVar1 * 4);
       fVar2 = *pfVar10;
       fVar3 = pfVar10[1];
@@ -687,7 +685,7 @@ void PostUpdateMobyBsphere
   fVar9 = (moby->pos).z;
   fStack0000006c = (float)param_8;
   (moby->bSphere).rad = fVar5 * fVar6;
-  iVar11 = moby->field71_0xa8;
+  iVar11 = moby->handle;
   (moby->bSphere).x =
        fStack00000038 * fVar2 + fStack00000048 * fVar3 + fStack00000058 * fVar4 + fStack00000068 +
        fVar7 * 1024.0;
@@ -698,7 +696,7 @@ void PostUpdateMobyBsphere
   (moby->bSphere).z =
        fStack00000040 * fVar2 + fStack00000050 * fVar3 + fStack00000060 * fVar4 + in_stack_00000070
        + fVar9 * 1024.0;
-  moby->field71_0xa8 = iVar11 + 1;
+  moby->handle = iVar11 + 1;
   if (puVar12 != (ushort *)0x0) {
     auVar14 = auRam00000000 >> 0x60 & (GPiece<16>)0xffffffff;
     auVar15 = auRam00000000 >> 0x60 & (GPiece<16>)0xffffffff;
@@ -1933,7 +1931,7 @@ undefined8 ComputeAnimation(int param_1)
 
 
 // 0x00f595c (0x118 bytes)
-void Moby_BuildJointMatrices(int param_1,undefined8 param_2,undefined4 *param_3)
+void Moby_BuildJointMatrices(MobyInstance *param_1,int param_2,Vec4 *param_3)
 
 {
   byte bVar1;
@@ -3117,7 +3115,7 @@ void MB_DrawEntries(int param_1,uint param_2)
 
 
 // 0x00f7a44 (0x50 bytes)
-void MB_DrawEntryList(undefined8 param_1,undefined4 param_2)
+void MB_DrawEntryList(u8 *param_1,int param_2)
 
 {
   MB_DrawEntries();
@@ -3131,7 +3129,7 @@ void MB_DrawEntryList(undefined8 param_1,undefined4 param_2)
 /* WARNING: Restarted to delay deadcode elimination for space: stack */
 /* [p2_mobyutil] builds 0xb0-byte draw entry + RSX programs for one moby; returns new list end */
 
-ulonglong MB_BuildDrawEntry(float *param_1,ulonglong param_2,longlong param_3)
+u8 *MB_BuildDrawEntry(MobyInstance *param_1,u8 *param_2,int param_3,int param_4)
 
 {
   ushort uVar1;
@@ -3406,7 +3404,7 @@ ulonglong MB_BuildDrawEntry(float *param_1,ulonglong param_2,longlong param_3)
           } while ((uVar22 & 0xffffffff) < 7);
           if (bVar6) {
             bVar7 = true;
-            unaff_r17 = (ulonglong)(byte)g_heroMobyPtr->field82_0xbd;
+            unaff_r17 = (ulonglong)(byte)g_heroMobyPtr->unkbd;
             dVar36 = (double)(float)g_heroMobyPtr->unk84;
           }
         }
@@ -3481,7 +3479,7 @@ ulonglong MB_BuildDrawEntry(float *param_1,ulonglong param_2,longlong param_3)
             FUN_005e85b4(ShadowPass,3,4,4,0x1c,0);
             in_vs34 = local_200;
             FUN_004dfe70(dVar35,iVar17,unaff_r17,
-                         ZEXT48(&DAT_00a4c4e0) + unaff_r17 * 0x10 & 0xffffffff);
+                         ZEXT48(&g_HeroLightDir) + unaff_r17 * 0x10 & 0xffffffff);
           }
           *(undefined1 *)((int)param_1 + 0x31) = 1;
           puVar3 = (uint *)*piVar2;
@@ -3812,7 +3810,7 @@ ulonglong MB_BuildDrawEntry(float *param_1,ulonglong param_2,longlong param_3)
               pRVar31->command = pRVar31->command + 2;
               in_vs34 = local_200;
               FUN_004e1b80(dVar35,dVar36,iVar17,unaff_r17,
-                           ZEXT48(&DAT_00a4c4e0) + unaff_r17 * 0x10 & 0xffffffff);
+                           ZEXT48(&g_HeroLightDir) + unaff_r17 * 0x10 & 0xffffffff);
             }
           }
           else {
@@ -4169,7 +4167,7 @@ void UpdateMobyAnimFrame(MobyInstance *param_1)
       pfVar5 = (float *)param_1->pCurrentAnimationData;
       uVar11 = uVar9 + 1 & 0xff;
       if (bVar13 != bVar1) {
-        param_1->unk7e = *(char *)(iVar4 + 0x12);
+        param_1->trigsCnt = *(char *)(iVar4 + 0x12);
         bVar13 = bVar1;
       }
       fVar3 = *(float *)(iVar4 + 0x18);
@@ -4198,7 +4196,7 @@ LAB_000f9af0:
     param_1->animationBlend = (float)dVar16;
     param_1->field43_0x70 = bVar14;
   }
-  if (param_1->unk7e != '\0') {
+  if (param_1->trigsCnt != '\0') {
     dVar15 = 16.0;
     iVar7 = FastDoubleToInt((double)(param_1->animationBlend * 16.0));
     bVar13 = param_1->previousAnimationFrame;
@@ -4220,9 +4218,9 @@ LAB_000f9af0:
   }
 LAB_000f9bec:
   param_1->field43_0x70 = bVar14;
-  if ((param_1->unk7c != param_1->unk7d) &&
-     ((param_1->unk7d != -1 || (((uint)param_1 >> 8 & 3) == (worldUpdateTime & 3))))) {
-    MB_UpdateLoopSound(param_1);
+  if ((param_1->soundDesired != param_1->soundChannel) &&
+     ((param_1->soundChannel != -1 || (((uint)param_1 >> 8 & 3) == (worldUpdateTime & 3))))) {
+    MobyPlayDesiredSound(param_1);
   }
   return;
 }
@@ -4260,7 +4258,7 @@ void MB_ProcessJoints(int param_1,undefined8 param_2)
 // 0x00f9d18 (0x2a8 bytes)
 /* [p2_mobyutil] (moby, count, jointIdx[], outMtx) computes anim matrices for listed joints */
 
-void MB_ComputeSelectedJoints(int param_1,int param_2,int param_3,undefined4 *param_4)
+void MB_ComputeSelectedJoints(MobyInstance *param_1,int param_2,int *param_3,Mtx4 *param_4)
 
 {
   char cVar1;
@@ -4362,7 +4360,7 @@ void MB_ComputeSelectedJoints(int param_1,int param_2,int param_3,undefined4 *pa
 
 
 // 0x00f9fc0 (0x210 bytes)
-void MB_ComputeSelectedJointPos(int param_1,int param_2,int param_3,undefined4 *param_4)
+void MB_ComputeSelectedJointPos(MobyInstance *param_1,int param_2,int *param_3,Vec4 *param_4)
 
 {
   char cVar1;
@@ -4812,7 +4810,7 @@ void * InterpolateAnimation(int param_1,uint param_2)
   }
   iVar47 = *(int *)(param_1 + 0x68);
   lVar29 = ((ulonglong)param_2 & 0xff) * 0x800;
-  lVar43 = ZEXT48(&DAT_00a2c5c0) + lVar29;
+  lVar43 = ZEXT48(&g_AnimBuffers) + lVar29;
   bVar2 = *(byte *)(*(int *)(param_1 + 0x24) + 8);
   uVar22 = (ulonglong)*(uint *)(*(int *)(param_1 + 0x24) + 0x18);
   puVar18 = (undefined4 *)lVar43;
@@ -5226,7 +5224,7 @@ void * InterpolateAnimation(int param_1,uint param_2)
 
 
 // 0x00fbdac (0x194 bytes)
-void MB_AnimLayerBlend(int param_1)
+void MB_AnimLayerBlend(struct AnimLayer *param_1)
 
 {
   undefined1 uVar1;

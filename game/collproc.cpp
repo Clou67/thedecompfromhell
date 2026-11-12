@@ -2570,7 +2570,7 @@ CollSphere
                               uVar37 = 0;
                               do {
                                 if (*(int *)(&MobyClassRef + (int)((uVar37 & 0xffffffff) << 3)) ==
-                                    pMVar39->field71_0xa8) {
+                                    pMVar39->handle) {
                                   puVar36 = &g_CollMobyJointCache + (int)uVar37 * 0x7fc;
                                   goto LAB_0005b058;
                                 }
@@ -2583,7 +2583,7 @@ CollSphere
                                    uVar32 + (((int)uVar32 >> 3) +
                                             (uint)((int)uVar32 < 0 && (uVar32 & 7) != 0)) * -8;
                               puVar36 = &g_CollMobyJointCache + iVar41;
-                              *(int *)(&MobyClassRef + iVar38) = pMVar39->field71_0xa8;
+                              *(int *)(&MobyClassRef + iVar38) = pMVar39->handle;
                               *(int *)(iVar38 + 0xa109c4) = g_CollOutput.collCount;
                               Moby_BuildJointMatrices(uVar45,uVar29,puVar36);
                             }
@@ -3952,7 +3952,7 @@ CollPill(double param_1,double param_2,float *param_3,undefined8 param_4,
                           if (uVar49 == ((param_6 & 2) == 0)) goto LAB_0005e2dc;
                           uVar44 = 0;
                           do {
-                            iVar45 = pMVar46->field71_0xa8;
+                            iVar45 = pMVar46->handle;
                             if (*(int *)(&MobyClassRef + (int)((uVar44 & 0xffffffff) << 3)) ==
                                 iVar45) {
                               puVar43 = &g_CollMobyJointCache + (int)uVar44 * 0x7fc;
@@ -4554,7 +4554,7 @@ CollMobySphere
                       uVar18 = 0;
                       do {
                         if (*(int *)(&MobyClassRef + (int)((uVar18 & 0xffffffff) << 3)) ==
-                            pMVar32->field71_0xa8) {
+                            pMVar32->handle) {
                           puVar21 = &g_CollMobyJointCache + (int)uVar18 * 0x7fc;
                           goto LAB_0005ea60;
                         }
@@ -4566,7 +4566,7 @@ CollMobySphere
                       g_CollOutput.padding[2] =
                            uVar27 + (((int)uVar27 >> 3) +
                                     (uint)((int)uVar27 < 0 && (uVar27 & 7) != 0)) * -8;
-                      *(int *)(&MobyClassRef + iVar25) = pMVar32->field71_0xa8;
+                      *(int *)(&MobyClassRef + iVar25) = pMVar32->handle;
                       *(int *)(iVar25 + 0xa109c4) = g_CollOutput.collCount;
                       Moby_BuildJointMatrices(pMVar32,uVar28,puVar21);
                     }

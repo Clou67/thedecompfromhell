@@ -132,7 +132,7 @@ void UpdateMoby_Spaceship(MobyInstance *moby)
                0x96;
       uVar8 = (uint)((uVar13 & 0xffffff) << 8);
       uVar7 = (uint)uVar13 | uVar8;
-      moby->field60_0x90 =
+      moby->glowRgba =
            uVar7 + ((uint)(ZERO_MASK((0x215 - (uint)moby->oClass))) &
                    ((int)(uint)uVar13 >> 1 | uVar8) - uVar7) | (uint)((uVar13 & 0xffffffff) << 0x10)
       ;
@@ -1660,8 +1660,8 @@ void ChooseLoadingScreen(void)
         FastMemCopy
                   (ZEXT48(pMVar9->pCurrentAnimationData) + 0x10,(ulonglong)uVar11 + 0x10,0x20);
         pMVar9->drawDistance = 0x1ff;
-        pMVar9->field45_0x72 = -1;
-        pMVar9->field44_0x71 = -1;
+        pMVar9->unk72 = -1;
+        pMVar9->unk71 = -1;
         UpdateMobyTransform(pMVar9);
         pMVar9->updateId = pMVar9->pClass->seq_cnt + 0xff;
         pMVar9->animationId = pMVar9->pClass->seq_cnt + 0xff;
@@ -2441,13 +2441,13 @@ void UpdateSpace(void)
         pMVar12->animationBlend = 0.0;
         UpdateMobyFrameData(pMVar12);
         pMVar12 = g_SpaceshipPtr;
-        g_SpaceshipPtr->field45_0x72 = -1;
+        g_SpaceshipPtr->unk72 = -1;
         iVar31 = g_shipSplinePath;
         pMVar12->collision = (ushort *)0x0;
         if (-1 < iVar31) {
           pMVar21 = CreateMoby(RATCHET);
           DAT_00964580 = pMVar21;
-          pMVar21->field45_0x72 = -1;
+          pMVar21->unk72 = -1;
           pMVar21->collision = (ushort *)0x0;
           pMVar12 = g_heroMobyPtr;
           pMVar21->drawDistance = 0x1ff;
@@ -2457,7 +2457,7 @@ void UpdateSpace(void)
           pMVar21->light = uVar33;
           pMVar21 = CreateMoby(CLANK_000A);
           DAT_00964584 = pMVar21;
-          pMVar21->field45_0x72 = -1;
+          pMVar21->unk72 = -1;
           pMVar21->collision = (ushort *)0x0;
           pMVar12 = g_heroMobyPtr;
           pMVar21->drawDistance = 0x1ff;
@@ -3059,7 +3059,7 @@ LAB_00161ba8:
         (pMVar12->pos).y = (pMVar12->pos).y + (pMVar21->pos).y;
         (pMVar12->pos).z = (pMVar12->pos).z + (pMVar21->pos).z;
         fVar11 = (pMVar21->rotation).z;
-        pMVar12->field44_0x71 = -1;
+        pMVar12->unk71 = -1;
         (pMVar12->rotation).z = fVar11;
         UpdateMobyTransform(pMVar12);
         MVar29 = pMVar12->oClass;
@@ -3206,7 +3206,7 @@ LAB_00161ba8:
               uVar30 = (ulonglong)uVar33 + 0x78;
               uVar16 = (uint)((uVar30 & 0xffffff) << 8);
               uVar33 = (uint)uVar30 | uVar16;
-              pMVar12->field60_0x90 =
+              pMVar12->glowRgba =
                    uVar33 + ((uint)(ZERO_MASK((0x215 - (uint)pMVar12->oClass))) &
                             ((int)(uint)uVar30 >> 1 | uVar16) - uVar33) |
                    (uint)((uVar30 & 0xffffffff) << 0x10);
@@ -3246,7 +3246,7 @@ LAB_00161ba8:
                 uVar15 = storeVectorElementWordIndexed
                                    (auVar74 | auVar74 << 0x20 | auVar74 << 0x40 | auVar74 << 0x60,
                                     0x90,uVar30);
-                *(undefined4 *)((uint)&pMVar12->field60_0x90 & 0xfffffffc) = uVar15;
+                *(undefined4 *)((uint)&pMVar12->glowRgba & 0xfffffffc) = uVar15;
                 pMVar12 = g_SpaceshipPtr;
                 auVar74 = loadVectorLeftIndexed(0x34,0x95cd50);
                 if ((int)(dVar40 * (double)local_1f0) < g_SpaceSceneFrame) {
@@ -3283,7 +3283,7 @@ LAB_00161ba8:
               }
               else {
                 DAT_0095cf14 = (float)((double)DAT_0095cf14 - dVar45);
-                pMVar12->field60_0x90 = (uint)&DAT_00a0a0a0;
+                pMVar12->glowRgba = (uint)&DAT_00a0a0a0;
                 if (DAT_0095cf14 < local_1d8) {
                   DAT_0095cf14 = 0.0;
                 }
@@ -3326,7 +3326,7 @@ LAB_00161ba8:
               pMVar12->uid = 10;
               uVar16 = (uint)((uVar30 & 0xffffff) << 8);
               uVar33 = (uint)uVar30 | uVar16;
-              pMVar12->field60_0x90 =
+              pMVar12->glowRgba =
                    uVar33 + ((uint)(ZERO_MASK((0x215 - (uint)pMVar12->oClass))) &
                             ((int)(uint)uVar30 >> 1 | uVar16) - uVar33) |
                    (uint)((uVar30 & 0xffffffff) << 0x10);
@@ -3360,7 +3360,7 @@ LAB_00161ba8:
                 uVar30 = (ulonglong)uVar33 + 0x78;
                 uVar16 = (uint)((uVar30 & 0xffffff) << 8);
                 uVar33 = (uint)uVar30 | uVar16;
-                pMVar12->field60_0x90 =
+                pMVar12->glowRgba =
                      uVar33 + ((uint)(ZERO_MASK((0x215 - (uint)pMVar12->oClass))) &
                               ((int)(uint)uVar30 >> 1 | uVar16) - uVar33) |
                      (uint)((uVar30 & 0xffffffff) << 0x10);
@@ -3429,7 +3429,7 @@ LAB_00161ba8:
                 uVar15 = storeVectorElementWordIndexed
                                    (auVar74 | auVar74 << 0x20 | auVar74 << 0x40 | auVar74 << 0x60,
                                     0x90,uVar30);
-                *(undefined4 *)((uint)&pMVar12->field60_0x90 & 0xfffffffc) = uVar15;
+                *(undefined4 *)((uint)&pMVar12->glowRgba & 0xfffffffc) = uVar15;
               }
             }
           }
@@ -3719,7 +3719,7 @@ void SpaceTransition_LoadWad(void)
   FastMemCopy(DirectionalLights,&DAT_00731c00,0x40);
   g_MobyInstance = pMVar3;
   FastMemSet(pMVar3,0,0x4000);
-  DAT_00a390b0 = pMVar3 + 0x40;
+  g_pMobyVars = pMVar3 + 0x40;
   MobyInstancePermEnd = g_MobyInstance;
   g_MobyInstance->state = 0xff;
   PartInstances = pMVar3 + 0x60;

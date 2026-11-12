@@ -17,3 +17,35 @@ static inline float FastSinInline(float a)
     return x9 * 2.601887e-06f + x7 * -0.0001980741f + x5 * 0.0083330255f + x3 * -0.16666657f + x;
 }
 static inline float FastCosInline(float a) { return FastSinInline(a + FAST_HALF_PI); }
+
+/* atan2(y, x): the octant from the signs of x, y and |x| - |y| picks a scale and offset in
+   g_AtanQuadrants (@0x735900, pairs of floats); z = (min - max) / (min + max) goes through an odd
+   15th-order polynomial with g_AtanCoeffs (@0x7358e0), summed in this order */
+extern float g_AtanQuadrants[16];
+extern float g_AtanCoeffs[8];
+
+static inline float FastAtan2Inline(float y, float x)
+{
+    float ax = fabsf(x), ay = fabsf(y);
+    float d = ax - ay;
+    union { float f; unsigned int i; } bx, by, bd;
+    bx.f = x; by.f = y; bd.f = d;
+    int octant = ((bx.i >> 28) & 8) | ((by.i >> 29) & 4) | ((bd.i >> 30) & 2);
+    float maxv = (d - 0.0f < 0.0f) ? ay : ax;
+    float minv = (d - 0.0f < 0.0f) ? ax : ay;
+    float angle = 0.0f;
+    if (maxv > 0.0f) {
+        float z = (minv - maxv) / (minv + maxv);
+        float z2 = z * z, z4 = z2 * z2, z8 = z4 * z4;
+        float terms[8];
+        terms[0] = z;
+        terms[1] = z * z2;
+        terms[2] = z * z4;
+        terms[3] = z * z4 * z2;
+        for (int i = 0; i < 4; i++) terms[4 + i] = terms[i] * z8;
+        for (int i = 0; i < 8; i++) terms[i] *= g_AtanCoeffs[i];
+        for (int i = 0; i < 8; i++) angle += terms[i];
+        angle = (angle + 0.7853982f) * g_AtanQuadrants[octant] + g_AtanQuadrants[octant + 1];
+    }
+    return angle;
+}

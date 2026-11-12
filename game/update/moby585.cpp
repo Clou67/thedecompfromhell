@@ -576,7 +576,7 @@ void UpdateMoby_585(MobyInstance *moby)
       if (((g_Pad.downButtons & CIRCLE) == 0) ||
          (puVar14[0x4b] = (longlong)(int)(animationSpeed * 15.5),
          iVar24 <= *(int *)((int)puVar14 + 0x25c))) {
-        moby->field60_0x90 = 0x80808080;
+        moby->glowRgba = 0x80808080;
         iVar24 = *piVar12;
         if ((iVar24 != -1) &&
            ((g_SoundChannels[iVar24].pMoby == moby &&
@@ -618,7 +618,7 @@ void UpdateMoby_585(MobyInstance *moby)
                              ((double)(float)((double)(DAT_0096bd24 * 255.0) * dVar31));
           pMVar19 = DAT_0096bd20;
           bVar1 = DAT_0096bd20 != (MobyInstance *)0x0;
-          moby->field60_0x90 =
+          moby->glowRgba =
                (uint)((uVar22 & 0xffffffff) << 0x10) | 0xff000000 |
                (uint)((uVar22 & 0xffffffff) << 8) | 0xff;
           if ((((bVar1) && (pMVar19->oClass == METAL_DETECTOR_SPOT_MESHLESS)) &&
@@ -693,7 +693,7 @@ void UpdateMoby_585(MobyInstance *moby)
           }
         }
         else {
-          moby->field60_0x90 = 0x80808080;
+          moby->glowRgba = 0x80808080;
           iVar24 = *piVar12;
           if (((iVar24 != -1) && (g_SoundChannels[iVar24].pMoby == moby)) &&
              (g_SoundChannels[iVar24].state != '\0')) {

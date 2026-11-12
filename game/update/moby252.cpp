@@ -1053,8 +1053,8 @@ void UpdateMoby_252(MobyInstance *moby)
     if ((bVar3 == 4) || (bVar3 == 6)) {
       uVar20 = 0x7f2828a0;
     }
-    uVar22 = FastLerpColor(0x3fb99999a0000000,moby->field60_0x90,uVar20);
-    moby->field60_0x90 = uVar22;
+    uVar22 = FastLerpColor(0x3fb99999a0000000,moby->glowRgba,uVar20);
+    moby->glowRgba = uVar22;
     GetBonePosition(lVar16,3,(int)pvVar8 + 0x220);
     RegisterPostDraw(&PTR_M253_003196c0_0070bcf8,moby);
   }

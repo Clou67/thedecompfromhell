@@ -365,7 +365,7 @@ void UpdateMoby_1380(MobyInstance *moby)
       fVar3 = (moby->pos).y;
       lVar11 = lVar10 + (lVar10 + -0x20 >> 0x3f & 0x20U - lVar10);
       uVar12 = lVar11 + (0x80 - lVar10 >> 0x3f & 0x80U - lVar11);
-      moby->field60_0x90 =
+      moby->glowRgba =
            (uint)((uVar12 & 0xffffffff) << 8) | (uint)uVar12 | (uint)((uVar12 & 0xffffffff) << 0x10)
            | 0x80000000;
       if ((sVar7 != 0) || (*(int *)((int)pvVar4 + 0x7c) == 0)) {
@@ -403,8 +403,8 @@ void UpdateMoby_1380(MobyInstance *moby)
       goto LAB_00266674;
     }
   }
-  uVar13 = FastLerpColor(0x3fb99999a0000000,moby->field60_0x90,0xffffffff80808040);
-  moby->field60_0x90 = uVar13;
+  uVar13 = FastLerpColor(0x3fb99999a0000000,moby->glowRgba,0xffffffff80808040);
+  moby->glowRgba = uVar13;
   if ((moby->state == '\x02') && (g_standingOnMoby != moby)) {
     moby->state = '\x04';
   }

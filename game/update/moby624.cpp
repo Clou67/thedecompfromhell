@@ -213,7 +213,7 @@ void UpdateMoby_624(MobyInstance *moby)
                                                                             -0.16666656732559204 +
                                                                            dVar15))) + 1.0) * 0.5),
                             uVar6,uVar7);
-        moby->field60_0x90 = uVar13;
+        moby->glowRgba = uVar13;
         pfVar3[2] = -(DAT_0071f418 * 10.0 - pfVar3[2]);
         (moby->pos).x = (moby->pos).x + *pfVar3;
         (moby->pos).y = (moby->pos).y + pfVar3[1];
@@ -274,7 +274,7 @@ void UpdateMoby_624(MobyInstance *moby)
                                                                             -0.16666656732559204 +
                                                                            dVar15))) + 1.0) * 0.5),
                             uVar6,uVar7);
-        moby->field60_0x90 = uVar13;
+        moby->glowRgba = uVar13;
         iVar14 = FastDecTimerS32(ZEXT48(pfVar3) + 0x2c);
         if (iVar14 != 0) {
           sound_MobyPlay_oClass(0xf,0,moby,0x58e);

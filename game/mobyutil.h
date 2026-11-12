@@ -1894,6 +1894,7 @@ extern undefined4 g_boltMiningTimer; /* 0xa0fd14 */
 extern undefined4 g_goodiesMenuActive; /* 0x969cd0 */
 extern undefined2 g_mobyIdListCount; /* 0xa51ea8 */
 extern char g_toastMsgBuff; /* 0xa15c8c */
+extern undefined4 numSpawnableMobys; /* 0xa4daf0 */
 
 // ---- functions
 void SECTION_HEADER_MOBYUTIL(void);

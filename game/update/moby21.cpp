@@ -366,7 +366,7 @@ void UpdateMoby_21(MobyInstance *moby)
   lVar11 = lVar10 + (lVar10 + -0x20 >> 0x3f & 0x20U - lVar10);
   uVar12 = lVar11 + (0x80 - lVar10 >> 0x3f & 0x80U - lVar11);
   bVar1 = g_standingOnMoby != moby;
-  moby->field60_0x90 =
+  moby->glowRgba =
        (uint)((uVar12 & 0xffffffff) << 8) | (uint)uVar12 | (uint)((uVar12 & 0xffffffff) << 0x10) |
        0x80000000;
   if (((bVar1) || (g_framesNotGrounded != 0)) ||
@@ -381,7 +381,7 @@ LAB_003112bc:
        (SQRT((g_heroPosition.x - fVar4) * (g_heroPosition.x - fVar4) +
              (g_heroPosition.y - fVar5) * (g_heroPosition.y - fVar5)) < 0.5)) {
       bVar2 = moby->state;
-      moby->field60_0x90 = 0x80208020;
+      moby->glowRgba = 0x80208020;
       moby->state = '\x01';
       moby->setByGroup = (char)(ZERO_MASK((5 - (uint)bVar2))) + '\x03';
       TransitionMovement(0x72,1);

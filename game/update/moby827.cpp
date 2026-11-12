@@ -534,7 +534,7 @@ void M827_0047aa38(MobyInstance *param_1)
                                                   dVar21) * -0.16666656732559204 + dVar21))) + 1.0)
                               * 0.5),uVar6,uVar9);
   iVar12 = *(int *)((int)pvVar4 + 0x38);
-  param_1->field60_0x90 = uVar14;
+  param_1->glowRgba = uVar14;
   if (iVar12 != 0) {
     dVar19 = (double)MB_randRangeFloat(180.0,240.0);
     uVar15 = FastDoubleToInt((double)(float)(dVar19 * (double)animationSpeed));

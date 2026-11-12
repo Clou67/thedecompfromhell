@@ -337,7 +337,7 @@ void UpdateMoby_877(MobyInstance *moby)
       lVar17 = lVar14 + (lVar14 + -0x20 >> 0x3f & 0x20U - lVar14);
       uVar18 = lVar17 + (0x80 - lVar14 >> 0x3f & 0x80U - lVar17);
       bVar1 = g_standingOnMoby != moby;
-      moby->field60_0x90 =
+      moby->glowRgba =
            (uint)((uVar18 & 0xffffffff) << 8) | (uint)uVar18 | (uint)((uVar18 & 0xffffffff) << 0x10)
            | 0x80000000;
       if (((bVar1) || (g_framesNotGrounded != 0)) ||
@@ -367,7 +367,7 @@ void UpdateMoby_877(MobyInstance *moby)
           M877_0049eaa0(lVar13);
         }
         bVar2 = moby->state;
-        moby->field60_0x90 = 0x80208020;
+        moby->glowRgba = 0x80208020;
         moby->state = '\x01';
         moby->setByGroup = (char)(ZERO_MASK((5 - (uint)bVar2))) + '\x03';
         *(undefined4 *)((int)pvVar6 + 0x78) = 0;
@@ -420,14 +420,14 @@ void UpdateMoby_877(MobyInstance *moby)
         fVar5 = (moby->pos).y;
         bVar1 = g_standingOnMoby == moby;
         uVar18 = lVar17 + (0x80 - lVar14 >> 0x3f & 0x80U - lVar17);
-        moby->field60_0x90 =
+        moby->glowRgba =
              (uint)((uVar18 & 0xffffffff) << 8) | (uint)uVar18 |
              (uint)((uVar18 & 0xffffffff) << 0x10) | 0x80000000;
         if (((bVar1) && (sVar10 == 0)) &&
            (fVar9 = fVar9 - fVar5, fVar3 = fVar3 - fVar4, SQRT(fVar3 * fVar3 + fVar9 * fVar9) < 0.5)
            ) {
           PlayMobySound(1,0,moby);
-          moby->field60_0x90 = 0x80208020;
+          moby->glowRgba = 0x80208020;
           moby->state = (char)(ZERO_MASK((7 - (uint)moby->state))) + '\x03';
         }
       }

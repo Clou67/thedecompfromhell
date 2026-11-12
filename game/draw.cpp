@@ -3615,7 +3615,7 @@ void DefaultDraw(void)
   CleanAnimationCache();
   RebuildSharedWaveTables();
   idol_draw::InitFrameRenderState
-            (&DAT_01111700,DirectionalLights,0x10,PointLights,8,&DAT_00a4c4e0,4);
+            (&DAT_01111700,DirectionalLights,0x10,PointLights,8,&g_HeroLightDir,4);
   if ((g_RenderFlags & Tfrags) != 0) {
     FUN_0050b08c(&TEX_BASE,&local_38);
     FUN_004ec8a4(&DAT_01111700,local_34,local_38);
@@ -3865,7 +3865,7 @@ void InitLevelRenderState(void)
   if (g_CutscenePlaying == 0) {
     DAT_010ee2f0 = 0xffffffff;
     idol_draw::InitFrameRenderState
-              (&DAT_01111700,DirectionalLights,0x10,PointLights,8,&DAT_00a4c4e0,4);
+              (&DAT_01111700,DirectionalLights,0x10,PointLights,8,&g_HeroLightDir,4);
     DrawPauseMenu(0);
   }
   return;

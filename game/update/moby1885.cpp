@@ -66,15 +66,15 @@ MobyInstance * FUN_002ce020(int param_1,undefined8 param_2,undefined8 param_3,un
       local_40[0]->updateDistance = -1;
       local_40[0]->drawDistance = 0xff;
       local_40[0]->enabled = '\x01';
-      if (local_40[0]->pClass->unk_ptr != 0) {
+      if (local_40[0]->pClass->glow_rgba != 0) {
         local_40[0]->modeBits = local_40[0]->modeBits | HAS_GLOW;
       }
       if (local_40[0]->pClass->shadow != '\0') {
         local_40[0]->modeBits = local_40[0]->modeBits | DRAW_SHADOW;
       }
       local_40[0]->occlIndex = 0x7f80;
-      local_40[0]->field44_0x71 = -1;
-      local_40[0]->field45_0x72 = -1;
+      local_40[0]->unk71 = -1;
+      local_40[0]->unk72 = -1;
       local_40[0]->damage = -1;
       if (*(char *)(iVar5 + 0x93) != '\0') {
         local_40[0]->scale = local_40[0]->pClass->gScale * 0.1;

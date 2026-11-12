@@ -268,9 +268,9 @@ void UpdateMoby_611(MobyInstance *moby)
               local_38[0]->enabled = '\x01';
               UpdateMobyGrids(local_38[0],0x80807f7f);
               local_38[0]->occlIndex = 0x7f80;
-              local_38[0]->field45_0x72 = -1;
+              local_38[0]->unk72 = -1;
               local_38[0]->damage = -1;
-              local_38[0]->field44_0x71 = -1;
+              local_38[0]->unk71 = -1;
               local_38[0]->collision = local_38[0]->pClass->collision;
               MB_CopyHeroLights(local_38[0]);
               UpdateMobyTransform(local_38[0]);

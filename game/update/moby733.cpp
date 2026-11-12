@@ -140,7 +140,7 @@ undefined4 * UpdateMoby_733(MobyInstance *moby)
       dVar6 = 1.0;
     }
     uVar5 = FastLerpColor(dVar6,DAT_0085a200,DAT_0085a204);
-    moby->field60_0x90 = uVar5;
+    moby->glowRgba = uVar5;
     puVar3 = (undefined4 *)((byte)moby->field43_0x70 & 2);
     if ((moby->field43_0x70 & 2U) != 0) {
       if (moby->animationId != '\0') {

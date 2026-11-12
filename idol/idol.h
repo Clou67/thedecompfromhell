@@ -76,7 +76,7 @@ void FUN_005048f4(void);
 void FUN_005048f8(void);
 void FUN_0050493c(undefined8 param_1,int param_2);
 void FUN_00504988(int param_1,undefined8 param_2,char param_3);
-namespace idol { void CheckLicense(int *unk1,int unk_ptr,char *gameId,char *gameIdExt,bool isDisc,int param_6); } 
+namespace idol { void CheckLicense(int *unk1,int glow_rgba,char *gameId,char *gameIdExt,bool isDisc,int param_6); } 
 undefined4 FUN_00504c38(int param_1);
 undefined4 FUN_00504c58(int param_1);
 undefined4 FUN_00504c78(int param_1);

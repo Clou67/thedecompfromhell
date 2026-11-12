@@ -802,7 +802,7 @@ void M303_00338f90(MobyInstance *moby)
                                  fVar5 * -0.0001980741 +
                                  fVar3 * 0.0083330255 + fVar2 * fVar4 * -0.16666657 + fVar4 + 1.0) *
                                0.5),0xffffffff80464646,0xffffffff80828282);
-    moby->field60_0x90 = uVar8;
+    moby->glowRgba = uVar8;
     if ((int)uVar7 != 0) {
       M303_00338568(lVar6,uVar7);
     }
@@ -1256,7 +1256,7 @@ void UpdateMoby_303(MobyInstance *moby)
   uint uVar5;
   
   if ((moby->field80_0xb8 == (MobyInstance *)0x0) || (1 < moby->field80_0xb8->state)) {
-    uVar5 = FastLerpColor(0x3fb99999a0000000,moby->field60_0x90,0xffffffff80464646);
+    uVar5 = FastLerpColor(0x3fb99999a0000000,moby->glowRgba,0xffffffff80464646);
   }
   else {
     fVar1 = (float)(longlong)(worldUpdateTime % 0x96) * 0.006666667 * 2.0 * 3.1415927;
@@ -1280,7 +1280,7 @@ void UpdateMoby_303(MobyInstance *moby)
                                  fVar2 * 0.0083330255 + fVar1 * fVar3 * -0.16666657 + fVar3 + 1.0) *
                                0.5),0xffffffff80464646,0xffffffff80828282);
   }
-  moby->field60_0x90 = uVar5;
+  moby->glowRgba = uVar5;
   return;
 }
 

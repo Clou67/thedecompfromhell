@@ -3369,7 +3369,7 @@ void UpdateMoby_1106(MobyInstance *moby)
             }
             else if (iVar14 == 4) {
               iVar14 = (int)pvVar4 + 0x110;
-              puVar40 = &MStack_270.field60_0x90;
+              puVar40 = &MStack_270.glowRgba;
               FUN_005e81f0(puVar40,(int)pvVar4 + 0x120,iVar14);
               FUN_005e7f98((double)DAT_0071f408,puVar40,puVar40);
               FUN_005e7f54(iVar14,iVar14,puVar40);
@@ -3460,7 +3460,7 @@ void UpdateMoby_1106(MobyInstance *moby)
             FUN_005e7f98(dVar45,iVar14,iVar14);
             *(undefined4 *)((int)pvVar4 + 0x108) = 0x3f800000;
             FUN_005e7e98(&MStack_270.collCount,lVar32);
-            MStack_270.field71_0xa8 = (int)(float)((double)*(float *)((int)pvVar4 + 0x1b8) + dVar45)
+            MStack_270.handle = (int)(float)((double)*(float *)((int)pvVar4 + 0x1b8) + dVar45)
             ;
             MB_genericExplosion
                       (dVar46,dVar46,0x401c000000000000,0x4014000000000000,0x4024000000000000,dVar45

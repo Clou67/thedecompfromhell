@@ -63,3 +63,11 @@ g_HelpMenuList	game/memcard
 g_MapRevealMasks	game/memcard
 g_LevelFlags2	game/memcard
 s_DigitalNames	game/memcard
+MobySeq	game/mobyfunc
+MobyFrame	game/mobyfunc
+MobyClass	game/mobyfunc
+CollPrim	game/mobyfunc
+AnimLayer	game/mobyfunc
+EnvSample	game/mobyfunc
+g_AnimLayerPool	game/mobyfunc
+g_EnvSamples	game/mobyfunc

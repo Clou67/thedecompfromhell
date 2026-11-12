@@ -1,6 +1,7 @@
 #pragma once
 // game/walk.h
 #include "types.h"
+#include "game/mobyfunc.h"
 
 // ---- types
 struct w_2legAnim {

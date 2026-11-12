@@ -58,10 +58,10 @@ extern undefined4 g_MobyGridLists; /* 0xa3d120 */
 
 // ---- functions
 void SECTION_HEADER_MOBYPROC(void);
-void MB_SetLights (int param_1,longlong param_2,ulonglong param_3,longlong param_4,longlong param_5);
+void MB_SetLights(MobyInstance *param_1,int param_2,int param_3,int param_4,int param_5);
 void SetColorOfMoby (MobyInstance *param_1,longlong param_2,longlong param_3,longlong param_4);
 void MB_GetLights(int param_1,uint *param_2,uint *param_3,uint *param_4);
-void MB_GetLightDirection(int param_1,float *param_2);
+void MB_GetLightDirection(MobyInstance *param_1,Vec4 *param_2);
 void MB_GetLightColor(int param_1,float *param_2);
 double MB_BSphereGap(float *param_1,float *param_2);
 void MobyGrid_Free(int start,int count);
@@ -80,19 +80,19 @@ void ProcessAnimLayers(MobyAnimLayer *pAnimLayer,int param_2);
 undefined4 * MB_BlendJointFrames (double param_1,uint param_2,undefined8 param_3,int param_4,int param_5,int param_6);
 undefined8 MB_ComputeAnimDirect(MobyInstance *param_1,char param_2,char param_3);
 undefined8 ComputeAnimation(int param_1);
-void Moby_BuildJointMatrices(int param_1,undefined8 param_2,undefined4 *param_3);
+void Moby_BuildJointMatrices(MobyInstance *param_1,int param_2,Vec4 *param_3);
 undefined8 STUB_000f5a74(...);
 void STUB_000f5a7c(...);
 void MB_DrawEntries(int param_1,uint param_2);
-void MB_DrawEntryList(undefined8 param_1,undefined4 param_2);
-ulonglong MB_BuildDrawEntry(float *param_1,ulonglong param_2,longlong param_3);
+void MB_DrawEntryList(u8 *param_1,int param_2);
+u8 *MB_BuildDrawEntry(MobyInstance *param_1,u8 *param_2,int param_3,int param_4);
 int FindMobysCloseToUpdate(void);
 void UpdateMobyAnimFrame(MobyInstance *param_1);
 void MB_ProcessJoints(int param_1,undefined8 param_2);
-void MB_ComputeSelectedJoints(int param_1,int param_2,int param_3,undefined4 *param_4);
-void MB_ComputeSelectedJointPos(int param_1,int param_2,int param_3,undefined4 *param_4);
+void MB_ComputeSelectedJoints(MobyInstance *param_1,int param_2,int *param_3,Mtx4 *param_4);
+void MB_ComputeSelectedJointPos(MobyInstance *param_1,int param_2,int *param_3,Vec4 *param_4);
 undefined8 GetBlenderAtPnt(Vec4 *position,float *outBlend,int *outBlender);
 void SetMobyLightFromBlender(MobyInstance *moby);
 void STUB_000fa910(...);
 void * InterpolateAnimation(int param_1,uint param_2);
-void MB_AnimLayerBlend(int param_1);
+void MB_AnimLayerBlend(struct AnimLayer *param_1);

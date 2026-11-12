@@ -276,7 +276,7 @@ void UpdateMoby_1511(MobyInstance *moby)
   pvVar2 = moby->pVar;
   if (moby->state == '\0') {
     moby->state = '\x01';
-    moby->field60_0x90 =
+    moby->glowRgba =
          CONCAT12(*(undefined1 *)((int)pvVar2 + 0x66),
                   CONCAT11(*(undefined1 *)((int)pvVar2 + 0x65),*(undefined1 *)((int)pvVar2 + 100)))
          | 0x7f000000;

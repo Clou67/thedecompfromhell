@@ -41,9 +41,9 @@ void M871_0049dc90(MobyInstance *param_1)
   param_1->drawDistance = 0xff;
   param_1->enabled = '\x01';
   UpdateMobyGrids(param_1,0x80807f7f);
-  param_1->field45_0x72 = -1;
+  param_1->unk72 = -1;
   param_1->damage = -1;
-  param_1->field44_0x71 = -1;
+  param_1->unk71 = -1;
   param_1->occlIndex = 0x7f80;
   param_1->collision = param_1->pClass->collision;
   MB_CopyHeroLights(param_1);
@@ -280,10 +280,10 @@ void UpdateMoby_871(MobyInstance *moby)
                   local_50->drawDistance = 0xff;
                   local_50->enabled = '\x01';
                   UpdateMobyGrids(local_50,0x80807f7f);
-                  moby_00->field45_0x72 = -1;
+                  moby_00->unk72 = -1;
                   moby_00->damage = -1;
                   moby_00->occlIndex = 0x7f80;
-                  moby_00->field44_0x71 = -1;
+                  moby_00->unk71 = -1;
                   moby_00->collision = moby_00->pClass->collision;
                   MB_CopyHeroLights(moby_00);
                   UpdateMobyTransform(moby_00);

@@ -14,6 +14,7 @@
 #include "game/hud.h"
 #include "game/main.h"
 #include "game/mesh.h"
+#include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/pad.h"
 #include "game/partupd.h"

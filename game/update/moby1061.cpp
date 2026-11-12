@@ -386,7 +386,7 @@ LAB_001acf94:
   local_60.x = local_60.x + (moby->pos).x;
   local_60.y = local_60.y + (moby->pos).y;
   fVar2 = (moby->pos).z;
-  moby->field60_0x90 = uVar9;
+  moby->glowRgba = uVar9;
   local_60.z = local_60.z + fVar2;
   MB_GetOrientation
             ((MobyInstance *)((int)pvVar4 + 0x20),&local_60,ZEXT48(&stack0x00000000) - 0x50,

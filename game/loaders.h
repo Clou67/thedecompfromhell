@@ -71,7 +71,6 @@ extern undefined4 DAT_00a4d5a0; /* 0xa4d5a0 */
 extern undefined4 DAT_00a4d600; /* 0xa4d600 */
 extern undefined4 DAT_00a4d7e0; /* no defined data */
 extern undefined4 DAT_00a4dae0; /* 0xa4dae0 */
-extern undefined4 DAT_00a4daf4; /* 0xa4daf4 */
 extern undefined4 DAT_00a51bc0; /* 0xa51bc0 */
 extern undefined4 DAT_00a51bc4; /* 0xa51bc4 */
 extern undefined4 DAT_010bb478; /* 0x10bb478 */
@@ -100,6 +99,7 @@ extern undefined4 _DAT_007247c0; /* direct read */
 extern undefined4 _DAT_007247d0; /* direct read */
 extern undefined4 g_EffectTexCnt; /* 0x95ddd0 */
 extern undefined g_EffectTexs; /* 0x95d6d0 */
+extern int g_EnvSampleCount; /* 0xa4daf4 */ /* type set in global_types.tsv */
 extern int g_GsRamAlloc; /* 0x966ad0: next free GS memory, bytes */ /* type set in global_types.tsv */
 extern HeroCollHeader * g_HeroCollision; /* 0xa15c00 */
 extern undefined4 g_IsPal; /* 0x966ae8 */

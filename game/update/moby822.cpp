@@ -407,7 +407,7 @@ void M822_00476cb0(longlong param_1)
   dVar40 = (double)(moby->pos).y;
   dVar39 = (double)(moby->pos).z;
   pvVar13 = pMVar16->pVar;
-  moby->field45_0x72 = -1;
+  moby->unk72 = -1;
   fVar5 = (moby->rotation).y;
   *(f32 *)(puVar15 + 0xe) = fVar4;
   fVar4 = (moby->rotation).z;
@@ -661,7 +661,7 @@ void M822_00476cb0(longlong param_1)
       uVar22 = uVar23 & 0xffffffff;
       pMVar19 = (MobyInstance *)uVar23;
       pvVar13 = pMVar19->pVar;
-      pMVar19->field45_0x72 = -1;
+      pMVar19->unk72 = -1;
       GetBonePosition(uVar22,0,uVar20 - 0x160);
       fVar7 = *(float *)((int)puVar15 + 0x94);
       fVar2 = (float)((double)*(float *)((int)puVar15 + 0xa4) - (double)fVar7);
@@ -937,7 +937,7 @@ void M822_00477934(longlong param_1)
   
   moby = (MobyInstance *)param_1;
   pvVar1 = moby->pVar;
-  moby->field45_0x72 = '@';
+  moby->unk72 = '@';
   dVar6 = (double)(moby->pos).x;
   dVar8 = (double)(moby->pos).y;
   dVar10 = (double)(moby->pos).z;
@@ -1050,7 +1050,7 @@ void UpdateMoby_822(MobyInstance *moby)
   
   pvVar5 = moby->pVar;
   uVar27 = ZEXT48(pvVar5);
-  uVar9 = (ulonglong)(uint)moby->field71_0xa8 & 0xffff;
+  uVar9 = (ulonglong)(uint)moby->handle & 0xffff;
   *(int *)((int)pvVar5 + 0xb8) = (int)uVar9;
   if (*(int *)((int)pvVar5 + 0xa4) == -1) {
     *(undefined4 *)((int)pvVar5 + 0x20) = 0;

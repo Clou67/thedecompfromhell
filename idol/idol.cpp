@@ -891,14 +891,14 @@ void FUN_00504988(int param_1,undefined8 param_2,char param_3)
 
 
 // 0x0504c00 (0x38 bytes)
-void idol::CheckLicense(int *unk1,int unk_ptr,char *gameId,char *gameIdExt,bool isDisc,int param_6)
+void idol::CheckLicense(int *unk1,int glow_rgba,char *gameId,char *gameIdExt,bool isDisc,int param_6)
 
 {
   int iVar1;
   
   iVar1 = unk1[0x2e];
   unk1[0x2e] = iVar1 + 1;
-  unk1[iVar1 * 5 + 6] = unk_ptr;
+  unk1[iVar1 * 5 + 6] = glow_rgba;
   unk1[iVar1 * 5 + 7] = (int)gameId;
   unk1[iVar1 * 5 + 8] = (int)gameIdExt;
   *(bool *)(unk1 + iVar1 * 5 + 9) = isDisc;

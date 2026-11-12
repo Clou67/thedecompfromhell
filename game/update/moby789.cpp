@@ -103,7 +103,7 @@ void M79_0045dfb0(MobyInstance *param_1)
                                                                       * -0.16666656732559204 + dVar6
                                                                      )))) * 0.5 + 0.5),0x1e1eb4,
                        0x1eb41e);
-    param_1->field60_0x90 = uVar2;
+    param_1->glowRgba = uVar2;
     *(uint *)((int)pvVar1 + 0x360) =
          ((int)uVar2 >> 0x10 & 0xffU) << 0x10 | ((int)uVar2 >> 8 & 0xffU) << 8 | uVar2 & 0xff |
          0x30000000;

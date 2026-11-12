@@ -559,7 +559,7 @@ void M866_003be2b8(MobyInstance *param_1)
                                                         (double)(float)((double)(float)(dVar23 * 
                                                   dVar21) * -0.16666656732559204 + dVar21))) + 1.0)
                                 * 0.5),uVar18,uVar15);
-    param_1->field60_0x90 = uVar19;
+    param_1->glowRgba = uVar19;
   }
   else {
     M866_003bd6c0(param_1,local_60);

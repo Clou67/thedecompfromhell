@@ -319,8 +319,8 @@ void Hud_SwapMobyBank(int bank)
     DAT_00a1bff0 = pMVar3;
     MobyInstanceEnd = DAT_00a1bff4;
     DAT_00a1bff4 = pMVar4;
-    DAT_00a1bff8 = DAT_00a390b0;
-    DAT_00a390b0 = uVar2;
+    DAT_00a1bff8 = g_pMobyVars;
+    g_pMobyVars = uVar2;
   }
   return;
 }

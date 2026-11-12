@@ -1155,7 +1155,7 @@ MobyInstance * M511_003a6388(MobyInstance *param_1)
     }
     else {
       *(undefined4 *)((int)pvVar4 + 0xb0) = 0x3f800000;
-      *(short *)((int)pvVar4 + 0xc4) = (short)local_50->field71_0xa8;
+      *(short *)((int)pvVar4 + 0xc4) = (short)local_50->handle;
       *(uint *)((int)pvVar4 + 0xac) = *(uint *)((int)pvVar4 + 0xac) | 1;
       iVar9 = CollLine(local_90,local_80,2,0,0);
       fVar3 = g_CollOutput.ip.z;
@@ -1211,7 +1211,7 @@ MobyInstance * M511_003a6388(MobyInstance *param_1)
           }
           else {
             *(undefined4 *)((int)pvVar4 + 0xb0) = 0x3f800000;
-            *(short *)((int)pvVar4 + 0xc4) = (short)local_50->field71_0xa8;
+            *(short *)((int)pvVar4 + 0xc4) = (short)local_50->handle;
             *(uint *)((int)pvVar4 + 0xac) = *(uint *)((int)pvVar4 + 0xac) | 1;
             iVar9 = CollLine(local_90,local_80,2,0,0);
             fVar3 = g_CollOutput.ip.z;

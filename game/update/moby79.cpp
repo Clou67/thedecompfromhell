@@ -738,7 +738,7 @@ void UpdateMoby_79(MobyInstance *moby)
                                                           (double)(float)((double)(float)(dVar40 * 
                                                   dVar41) * -0.16666656732559204 + dVar41))) + 1.0)
                                   * 0.5),uVar18,uVar23);
-      moby->field60_0x90 = uVar29;
+      moby->glowRgba = uVar29;
       pvVar13 = moby->pVar;
       uVar27 = ZEXT48(pvVar13);
       auVar47 = ZEXT416(0xffffffff);

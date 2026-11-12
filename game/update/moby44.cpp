@@ -2216,10 +2216,10 @@ LAB_00380248:
     uVar15 = uVar10;
   }
   uVar15 = FastLerpColor
-                     (0x3fb99999a0000000,moby->field60_0x90,
+                     (0x3fb99999a0000000,moby->glowRgba,
                       (uint)((uVar16 & 0xffffffff) << 8) | uVar15 |
                       (uint)((lVar7 + 0x14U & 0xffffffff) << 0x10) | 0x80000000);
-  moby->field60_0x90 = uVar15;
+  moby->glowRgba = uVar15;
   do {
     GetBonePosition(lVar4,iVar12 + 4,(int)pvVar20 + 0x2a0);
     iVar12 = iVar12 + 1;

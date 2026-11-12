@@ -191,7 +191,7 @@ void UpdateMoby_933(MobyInstance *moby)
   uVar10 = FastDoubleToInt((double)(float)(dVar12 * 32.0));
   fVar4 = (moby->rotation).x;
   fVar5 = (float)piVar6[4];
-  moby->field60_0x90 =
+  moby->glowRgba =
        (int)((uVar10 & 0xffffffff) << 8) + 0x3000U | iVar11 + 0xcfU |
        (int)((uVar10 & 0xffffffff) << 0x10) + 0x300000U | 0xff000000;
   dVar12 = (double)FastWrapRot(fVar4,fVar5);

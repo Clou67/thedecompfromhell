@@ -253,13 +253,6 @@ struct Mtx4 {
 
 typedef float f32;
 
-struct BSphere {
-    f32 x;
-    f32 y;
-    f32 z;
-    f32 rad;
-};
-
 typedef short s16;
 
 struct CameraControlActivation { /* DL struct CameraControlActivation (UpdateCam+0x74) */
@@ -273,28 +266,6 @@ struct CameraControlActivation { /* DL struct CameraControlActivation (UpdateCam
 };
 
 typedef ushort u16;
-
-typedef char s8;
-
-typedef enum MobyModeBit {
-    NONE=0,
-    DISABLED=1,
-    NO_UPDATE=2,
-    NO_POST_UPDATE=4,
-    TRANSPARENT=8,
-    HAS_GLOW=16,
-    HAS_SPECIAL_VARS=32,
-    UNK_40=64,
-    NO_DRAW=128,
-    LOCK_ROTATION=256,
-    DRAW_TRANSPARENT_WEIRD=512,
-    DRAW_SHADOW=1024,
-    DISABLE_Z_WRITE=2048,
-    CAN_BE_AUTO_TARGETED=4096,
-    HIDE_BACKFACES=8192,
-    CAN_BE_DAMAGED=16384,
-    MIRROR=32768
-} MobyModeBit;
 
 struct CollOutput {
     void *grid;
@@ -602,25 +573,6 @@ typedef enum PlayerState {
     THRUSTER_PACK_HOVER=129,
     DEATH_WATER_LASER=130
 } PlayerState;
-
-struct w_legData {
-    char jiFoot;
-    char jiHeel;
-    char jiAnkle;
-    char jiHip;
-    short idle;
-    short _2mainIdle;
-    float frDest;
-    float arAct;
-    float arSpeed;
-    float hrAct;
-    float hrSpeed;
-    float twistLow;
-    float twistHigh;
-    int pad[3];
-    struct Manipulator MAnkle;
-    struct Manipulator MHip;
-};
 
 typedef enum RENDER {
     RENDER__Sky=1,
@@ -2643,6 +2595,7 @@ extern undefined4 DAT_00a1de5c; /* 0xa1de5c */
 extern undefined4 DAT_00a1e124; /* no defined data */
 extern undefined4 DAT_00a1e128; /* no defined data */
 extern undefined4 DAT_00a1e12c; /* no defined data */
+extern undefined1 DAT_00a2c444; /* 0xa2c444 */
 extern undefined4 DAT_00ec4080; /* no defined data */
 extern undefined4 g_Manipulator; /* 0x96c07b */
 extern pointer PTR_DAT_0071a328; /* 0x71a328 */

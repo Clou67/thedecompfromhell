@@ -65,7 +65,7 @@ void FUN_003e7fc8(double param_1,double param_2,f32 *param_3,float *param_4,unde
     pMVar12->state = '\0';
     fVar1 = DAT_00853e88;
     pMVar12->drawDistance = 0xff;
-    pMVar12->field60_0x90 = DAT_00853e8c;
+    pMVar12->glowRgba = DAT_00853e8c;
     pMVar12->modeBits = pMVar12->modeBits | HAS_GLOW;
     pMVar12->scale = pMVar12->scale * fVar1;
     (pMVar12->pos).x = *param_3;

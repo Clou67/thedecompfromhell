@@ -283,7 +283,7 @@ void M1906_002d5f48(MobyInstance *param_1)
                                                   dVar16) * -0.16666656732559204 + dVar16)))) * 0.5
                                + 0.5),uVar5,uVar6);
     fVar4 = (param_1->pos).z;
-    param_1->field60_0x90 = uVar8;
+    param_1->glowRgba = uVar8;
     uVar8 = (int)fVar4 >> 0x1f;
     uVar12 = param_1->state;
     fVar2 = param_1->pClass->gScale;

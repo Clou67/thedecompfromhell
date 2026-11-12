@@ -686,7 +686,7 @@ LAB_001a0050:
                                                       (double)(float)((double)(float)(dVar30 * 
                                                   dVar29) * -0.16666656732559204 + dVar29))) + 1.0)
                               * 0.5),uVar13,uVar11);
-  param_1->field60_0x90 = uVar16;
+  param_1->glowRgba = uVar16;
   if (*(int *)((int)pvVar6 + 0x1ac) == 0) {
     if (param_1->state == '\x01') {
       if ((param_1 == DAT_00969f20) || (param_1 == DAT_00969f1c)) {

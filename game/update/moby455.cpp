@@ -164,7 +164,7 @@ FUN_0038a248(int param_1,undefined8 param_2,undefined8 param_3,undefined8 param_
               moby->enabled = '\x01';
               moby->drawDistance = sVar3;
               uVar1 = pMVar5->shadow;
-              if (pMVar5->unk_ptr != 0) {
+              if (pMVar5->glow_rgba != 0) {
                 MVar10 = MVar10 | HAS_GLOW;
                 moby->modeBits = MVar10;
               }
@@ -172,8 +172,8 @@ FUN_0038a248(int param_1,undefined8 param_2,undefined8 param_3,undefined8 param_
                 moby->modeBits = MVar10 | DRAW_SHADOW;
               }
               moby->occlIndex = 0x7f80;
-              moby->field44_0x71 = -1;
-              moby->field45_0x72 = -1;
+              moby->unk71 = -1;
+              moby->unk72 = -1;
               moby->damage = -1;
               if ((*(byte *)(iVar4 + 0x83) & 2) != 0) {
                 moby->scale = (float)((double)fVar2 * dVar19);

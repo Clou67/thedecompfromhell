@@ -46,7 +46,7 @@ void DrawSceneShipEffect(MobyInstance *moby)
     q.st[0][0] = 0.0f; q.st[0][1] = 0.0f; q.st[0][2] = 1.0f; q.st[0][3] = 0.0f;
     q.st[1][0] = 0.0f; q.st[1][1] = 1.0f; q.st[1][2] = 1.0f; q.st[1][3] = 1.0f;
 
-    GetBoneTransformations((int)moby, 0, (int)&m);
+    GetBoneTransformations(moby, 0, &m);
     MB_RotateQuatAxisAngle(SHIP_TILT, (float *)&m, (float *)&m, (float *)&m.v1);
 
     /* rebuild the frame around the rotated x axis: v1 = v2 x v0 (normalized), v2 = v0 x v1 */
@@ -104,7 +104,7 @@ void SpawnSceneShipParticles(MobyInstance *moby)
     Vec4 pos;
     float vel[4];
 
-    GetBonePosition((int)moby, 0, (float *)&pos);
+    GetBonePosition(moby, 0, &pos);
     for (int i = 0; i < 4; i++) {
         float size = (float)MB_randRangeFloat(0.15f, 0.5f);
         int side = MB_randInt(2) == 0 ? -1 : 1;
@@ -149,7 +149,7 @@ void UpdateSpaceSceneEffects(void)
         for (i = 0; i < 4; i++) {
             Vec4 pos;
             float vel[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-            GetBonePosition((int)ship, i % 2, (float *)&pos);
+            GetBonePosition(ship, i % 2, &pos);
             float a = (float)MB_randRot();
             float b = (float)MB_randRot();
             float speed = (float)MB_randRangeFloat(g_FrameTime * 0.7f, g_FrameTime * 2.2f);

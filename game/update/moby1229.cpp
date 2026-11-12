@@ -223,7 +223,7 @@ void UpdateMoby_1229(MobyInstance *moby)
   DoManipulator(0x4004000000000000,moby,2,(Manipulator *)((int)pvVar6 + 0x1d0));
   if (*(int *)((int)pvVar6 + 0x140) == -1) {
     printf("ERROR!! Moby class %d maya instance %d has no path set; deleted\n",moby->oClass,
-                 (ulonglong)(uint)moby->field71_0xa8 & 0xffff);
+                 (ulonglong)(uint)moby->handle & 0xffff);
     DeleteMoby(moby);
   }
   else {

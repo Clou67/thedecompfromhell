@@ -370,7 +370,6 @@ extern undefined4 DAT_00a1c80c; /* 0xa1c80c */
 extern undefined4 DAT_00a1c810; /* 0xa1c810 */
 extern undefined4 DAT_00a1c814; /* 0xa1c814 */
 extern undefined4 DAT_00a1c818; /* 0xa1c818 */
-extern undefined4 DAT_00a390b0; /* 0xa390b0 */
 extern undefined4 DAT_010000ff; /* no defined data */
 extern undefined4 EffectTexHeaders; /* 0xa15f68 */
 extern RenderingStep * HUD_Pass; /* 0x8fa43c */
@@ -398,6 +397,7 @@ extern undefined4 TexturePointerArray; /* 0xa1bfe0 */
 extern int g_HudAmmoEntryId; /* 0x724530 */
 extern u8 *g_HudBuffer; /* 0xa108e4: 0x64000 bytes (guess: HUD) */ /* type set in global_types.tsv */
 extern int g_HudHideCounter; /* 0x724528 */
+extern u8 *g_pMobyVars; /* 0xa390b0: pVar blocks, 0x80 per moby above MobyInstancePermEnd */ /* type set in global_types.tsv */
 extern int g_toastMsgTimer; /* 0xa15c80 */
 
 // ---- functions

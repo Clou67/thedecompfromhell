@@ -330,7 +330,7 @@ void UpdateMoby_615(MobyInstance *moby)
         bVar8 = true;
         uVar12 = DAT_00853b00;
       }
-      moby->field60_0x90 = uVar12;
+      moby->glowRgba = uVar12;
       if ((bVar8) && (pMVar9->setByGroup != '\0')) {
         auVar19 = ZEXT416(0xffffffff);
         auVar19 = auVar19 | auVar19 << 0x20 | auVar19 << 0x40 | auVar19 << 0x60;
@@ -377,7 +377,7 @@ void UpdateMoby_615(MobyInstance *moby)
     }
     else {
       *(undefined2 *)((int)pvVar3 + 0x12) = 0;
-      moby->field60_0x90 = uVar12;
+      moby->glowRgba = uVar12;
     }
   }
   else if (bVar1 < 3) {

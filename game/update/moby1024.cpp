@@ -534,7 +534,7 @@ void UpdateMoby_1024(MobyInstance *moby)
                                  fVar4 * -0.0001980741 +
                                  fVar1 * 0.0083330255 + fVar6 * fVar5 * -0.16666657 + fVar5 + 1.0) *
                                0.5),0xffffffff80464646,0xffffffff80828282);
-    moby->field60_0x90 = uVar8;
+    moby->glowRgba = uVar8;
     bVar2 = moby->state;
     if (bVar2 == 0) {
       piVar12[5] = piVar12[4];

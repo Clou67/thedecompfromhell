@@ -8,7 +8,6 @@
 #include "game/help.h"
 #include "game/hero.h"
 #include "game/loaders.h"
-#include "game/mobyfunc.h"
 #include "game/pause.h"
 #include "game/space.h"
 #include "idol/fastfunc.h"

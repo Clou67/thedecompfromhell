@@ -1020,7 +1020,7 @@ void UpdateMoby_8(MobyInstance *moby)
       moby->setByGroup = '\0';
       goto LAB_00463dd8;
     }
-    moby->field60_0x90 = DAT_00873ebc << 8 | DAT_00873eb8 | DAT_00873ec0 << 0x10 | 0xff000000;
+    moby->glowRgba = DAT_00873ebc << 8 | DAT_00873eb8 | DAT_00873ec0 << 0x10 | 0xff000000;
     iVar13 = FUN_00338438(*(undefined4 *)((int)pvVar5 + 0x70));
     if (iVar13 != 0) {
       auVar36 = ZEXT416(0xffffffff);
@@ -1105,7 +1105,7 @@ void UpdateMoby_8(MobyInstance *moby)
   else if (2 < bVar17) {
     if (bVar17 < 4) {
       iVar13 = *(int *)((int)pvVar5 + 0x18c);
-      moby->field60_0x90 = DAT_00873ec8 << 8 | DAT_00873ec4 | DAT_010ccee0 << 0x10 | 0xff000000;
+      moby->glowRgba = DAT_00873ec8 << 8 | DAT_00873ec4 | DAT_010ccee0 << 0x10 | 0xff000000;
       if (iVar13 == 0) {
         *(undefined4 *)((int)pvVar5 + 0x80) = 0;
         *(undefined4 *)((int)pvVar5 + 0x8c) = 0;
@@ -1152,7 +1152,7 @@ void UpdateMoby_8(MobyInstance *moby)
         }
       }
     }
-    moby->field60_0x90 = DAT_00873ec8 << 8 | DAT_00873ec4 | DAT_010ccee0 << 0x10 | 0xff000000;
+    moby->glowRgba = DAT_00873ec8 << 8 | DAT_00873ec4 | DAT_010ccee0 << 0x10 | 0xff000000;
     FastIntToDouble(moby->drawDistance);
     iVar13 = FastCheckBsphereInView(uVar24 - 0xe0);
     dVar27 = extraout_f1_01;

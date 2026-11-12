@@ -1645,7 +1645,7 @@ LAB_000ddaa0:
   lVar38 = uVar14 + (local_d8 + lVar37 & 0xffffff) * 0x100;
   MobyInstancePermEnd->state = 0xff;
   MobyInstanceEnd = g_MobyInstance + (int)(local_d8 + lVar37) + -1;
-  DAT_00a390b0 = (undefined4)lVar38;
+  g_pMobyVars = (undefined4)lVar38;
   uVar5 = local_e8[0x16];
   uVar28 = lVar38 + (local_d8 & 0x1ffffff) * 0x80 + 0x3f & 0xffffffc0;
   uVar31 = uVar28;
@@ -1997,11 +1997,11 @@ LAB_000ddaa0:
   uVar28 = uVar31;
   if (puVar32[0x22] != 0) {
     puVar34 = (uint *)((int)puVar32 + puVar32[0x22]);
-    DAT_00a4daf4 = *puVar34;
-    DAT_00a4db00 = (undefined4)uVar31;
-    uVar28 = uVar31 + (ulonglong)DAT_00a4daf4 * 0x30 + 0x3f & 0xffffffc0;
-    if (DAT_00a4daf4 != 0) {
-      FastMemCopy32(uVar31,puVar34 + 4,(int)((ulonglong)DAT_00a4daf4 * 0x30));
+    g_EnvSampleCount = *puVar34;
+    g_EnvSamples = (undefined4)uVar31;
+    uVar28 = uVar31 + (ulonglong)g_EnvSampleCount * 0x30 + 0x3f & 0xffffffc0;
+    if (g_EnvSampleCount != 0) {
+      FastMemCopy32(uVar31,puVar34 + 4,(int)((ulonglong)g_EnvSampleCount * 0x30));
     }
   }
   PartInstances = (void *)uVar28;
@@ -2933,7 +2933,7 @@ void ParseNpcChunk(void)
           pMVar5->updateId = uVar1;
           pMVar5->animationId = uVar1;
           pMVar5->drawDistance = 0x1ff;
-          pMVar5->field45_0x72 = -1;
+          pMVar5->unk72 = -1;
           pMVar5->collision = (ushort *)0x0;
           pMVar5->modeBits = pMVar5->modeBits | (NO_POST_UPDATE|NO_UPDATE);
           uVar7 = 0x38383800000000;

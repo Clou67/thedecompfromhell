@@ -59,7 +59,7 @@ MobyInstance * UpdateMoby_1416(MobyInstance *moby)
     else {
       moby->setByGroup = '\x02';
       moby->state = '\x02';
-      moby->field60_0x90 = 0x80208020;
+      moby->glowRgba = 0x80208020;
       iVar10 = *piVar3;
       pMVar6 = (MobyInstance *)0x2;
       if ((iVar10 != -1) && (pMVar6 = (MobyInstance *)0x0, 0 < Splines[iVar10]->cnt)) {
@@ -101,7 +101,7 @@ MobyInstance * UpdateMoby_1416(MobyInstance *moby)
       lVar7 = lVar5 + (lVar5 + -0x20 >> 0x3f & 0x20U - lVar5);
       uVar8 = lVar7 + (0x80 - lVar5 >> 0x3f & 0x80U - lVar7);
       bVar1 = g_standingOnMoby == moby;
-      moby->field60_0x90 =
+      moby->glowRgba =
            (uint)((uVar8 & 0xffffffff) << 8) | (uint)uVar8 | (uint)((uVar8 & 0xffffffff) << 0x10) |
            0x80000000;
       pMVar6 = (MobyInstance *)&g_heroMtx;
@@ -116,7 +116,7 @@ MobyInstance * UpdateMoby_1416(MobyInstance *moby)
         *(uint *)(&g_CheckpointBits + iVar10) = uVar4 | 1 << (uVar2 & 0x1f);
         moby->state = '\x02';
         moby->setByGroup = '\x01';
-        moby->field60_0x90 = 0x80208020;
+        moby->glowRgba = 0x80208020;
         pMVar6 = (MobyInstance *)PlayMobySound(0,0,moby);
         iVar10 = *piVar3;
         if ((iVar10 != -1) && (pMVar6 = (MobyInstance *)0x0, 0 < Splines[iVar10]->cnt)) {

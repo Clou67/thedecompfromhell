@@ -1274,7 +1274,7 @@ void M1274_000199f0(MobyInstance *param_1)
       iVar2 = iVar2 + 0xb4;
       lVar1 = lVar1 + 0xb4;
       pMVar5->modeBits = pMVar5->modeBits | HAS_GLOW;
-      pMVar5->field60_0x90 =
+      pMVar5->glowRgba =
            (uint)((lVar1 + (0xff - (longlong)(int)lVar1 >> 0x3f & 0xffU - lVar1) & 0xffffffff) << 8)
            | iVar2 + ((uint)(0xff - (longlong)iVar2 >> 0x3f) & 0xffU - iVar2) |
            (iVar3 + 0x46) * 0x10000 | 0x80000000;

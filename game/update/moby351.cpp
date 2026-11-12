@@ -261,7 +261,7 @@ void UpdateMoby_351(MobyInstance *moby)
                                 fVar6 * -0.0001980741 +
                                 fVar4 * 0.0083330255 + fVar1 * fVar5 * -0.16666657 + fVar5 + 1.0) *
                               0.5),0xffffffff80464646,0xffffffff80828282);
-  moby->field60_0x90 = uVar10;
+  moby->glowRgba = uVar10;
   FastDecTimerS32(&DAT_00f155a4);
   if (DAT_00f155a4 != 0) {
     dVar21 = 0.0020000000949949026;

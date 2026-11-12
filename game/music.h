@@ -20,6 +20,7 @@ struct music_Playing { /* DL struct music_Playing (PS3 is 0x1c, no pMoby/channel
 // ---- globals
 extern undefined4 DAT_00729554; /* 0x729554 */
 extern undefined4 DAT_009636c4; /* 0x9636c4 */
+extern undefined4 DAT_009636c8; /* 0x9636c8 */
 extern undefined1 DAT_009636d2; /* 0x9636d2 */
 extern undefined4 DAT_009636d4; /* 0x9636d4 */
 extern undefined4 DAT_009636d8; /* 0x9636d8 */

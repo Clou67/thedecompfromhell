@@ -78,7 +78,7 @@ void M1973_00205900(MobyInstance *param_1)
       iVar3 = iVar3 + 1;
       pvVar4 = (void *)((int)pvVar4 + 0x10);
     } while (iVar3 < 6);
-    uVar2 = param_1->field60_0x90;
+    uVar2 = param_1->glowRgba;
     *(uint *)((int)pvVar1 + 0xe0) =
          ((int)uVar2 >> 8 & 0xffU) << 8 | uVar2 & 0xff |
          ((int)uVar2 >> 0x10 & 0xffU) << 0x10 | 0x30000000;
@@ -482,7 +482,7 @@ void UpdateMoby_1213(MobyInstance *moby)
       dVar22 = 0.0;
     }
     uVar17 = FastLerpColor(dVar22,DAT_0076680c,DAT_00766810);
-    moby->field60_0x90 = uVar17;
+    moby->glowRgba = uVar17;
     dVar22 = (double)FastWrapRot
                                (*(float *)((int)pvVar6 + 0x68),
                                 DAT_00766808 * 0.017453292 * g_FrameTime);

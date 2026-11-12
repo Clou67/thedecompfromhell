@@ -107,7 +107,7 @@ void UpdateMoby_1441(MobyInstance *moby)
                               fVar7 * -0.0001980741 +
                               fVar5 * 0.0083330255 + fVar4 * fVar6 * -0.16666657 + fVar6) * 0.5 +
                              0.5),DAT_007aa8ac,DAT_007aa8b0);
-  moby->field60_0x90 = uVar9;
+  moby->glowRgba = uVar9;
   bVar1 = moby->state;
   if (bVar1 == 0) {
     moby->updateDistance = -1;

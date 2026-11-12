@@ -452,12 +452,12 @@ void M857_00490cb8(MobyInstance *param_1)
     lVar5 = FastDoubleToInt
                       ((double)(float)((double)(longlong)(int)(uVar6 >> 0x10 & 0xff) * dVar11));
     uVar6 = FastLerpColor
-                      (0x3fb99999a0000000,param_1->field60_0x90,
+                      (0x3fb99999a0000000,param_1->glowRgba,
                        uVar6 & 0xff000000 |
                        (uint)((lVar5 + (0xff - lVar5 >> 0x3f & 0xffU - lVar5) & 0xffffffff) << 0x10)
                        | (uint)((lVar4 + (0xff - lVar4 >> 0x3f & 0xffU - lVar4) & 0xffffffff) << 8)
                          | (int)lVar3 + ((uint)(0xff - lVar3 >> 0x3f) & 0xffU - (int)lVar3));
-    param_1->field60_0x90 = uVar6;
+    param_1->glowRgba = uVar6;
     iVar7 = 0;
     pvVar8 = pvVar2;
     do {
@@ -465,7 +465,7 @@ void M857_00490cb8(MobyInstance *param_1)
       GetBonePosition(param_1,iVar7,(int)pvVar8 + 0x140);
       pvVar8 = (void *)((int)pvVar8 + 0x10);
     } while (iVar7 < 3);
-    *(uint *)((int)pvVar2 + 0x290) = param_1->field60_0x90;
+    *(uint *)((int)pvVar2 + 0x290) = param_1->glowRgba;
     if ((worldUpdateTime != 0) && (worldUpdateTime != **(int **)((int)pvVar2 + 0x294))) {
       **(int **)((int)pvVar2 + 0x294) = worldUpdateTime;
       RegisterFuncForMoby(&PTR_M859_00495620_0070f208,param_1);

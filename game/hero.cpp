@@ -1892,7 +1892,7 @@ double Hero_UpdateGlowAndBlink(void)
       lVar12 = (lVar12 - lVar5) - lVar6;
       dVar16 = extraout_f1_00;
     }
-    moby->field60_0x90 = (uint)(lVar12 << 8) | uVar14 | (uint)(lVar11 << 0x10) | 0x80000000;
+    moby->glowRgba = (uint)(lVar12 << 8) | uVar14 | (uint)(lVar11 << 0x10) | 0x80000000;
     if (g_heroType == '\0') {
       iVar8 = FastDecTimerS16(&DAT_0096acdc);
       dVar16 = extraout_f1_01;
@@ -2218,7 +2218,7 @@ void Hero_UpdateShadow(void)
   }
   else {
     pMVar10 = &g_heroMobyPtr->modeBits;
-    g_heroMobyPtr->field82_0xbd = '\x01';
+    g_heroMobyPtr->unkbd = '\x01';
     pMVar16->modeBits = *pMVar10 | DRAW_SHADOW;
     fVar2 = 0.97;
     if ((g_framesNotGrounded != 0) || (bVar1)) {
@@ -4561,7 +4561,7 @@ void Hero_TransAnim(float blend,int seq,int frame)
   }
   DAT_0096a790 = 0xffffffff;
   DAT_0096a798 = 0;
-  __src->unk7c = *(char *)(*(int *)(&__src->pClass->type + (int)(lVar3 << 2)) + 0x11);
+  __src->soundDesired = *(char *)(*(int *)(&__src->pClass->type + (int)(lVar3 << 2)) + 0x11);
   DAT_0096a77c = 1;
   if (dVar4 < dVar5) {
     dVar4 = (double)(longlong)*(int *)(DAT_0096a780 * 4 + 0x723484);
@@ -5819,7 +5819,7 @@ void Hero_UpdateTimers(void)
         pMVar9->enabled = '\x01';
         pMVar6 = g_heroMobyPtr;
         pMVar9->drawDistance = 0x40;
-        pMVar9->field60_0x90 = 0;
+        pMVar9->glowRgba = 0;
         uVar11 = pMVar6->light;
         pMVar9->color = pMVar6->color;
         pMVar9->light = uVar11;
@@ -7889,7 +7889,7 @@ void Hero_UpdateAnim(void)
       bVar18 = pMoby->animationId;
       if (pMoby->updateId != bVar18) {
         pMoby->updateId = bVar18;
-        pMoby->unk7e = *(char *)(*(int *)(&pMoby->pClass->type + (uint)bVar18 * 4) + 0x12);
+        pMoby->trigsCnt = *(char *)(*(int *)(&pMoby->pClass->type + (uint)bVar18 * 4) + 0x12);
       }
       uVar9 = DAT_0096a778;
       DAT_0096a778 = DAT_0096a778 | 1;
@@ -7953,7 +7953,7 @@ void Hero_UpdateAnim(void)
       }
     } while (dVar20 <= (double)pMoby->animationBlend);
   }
-  if ((uVar2 == uVar3) && (pMoby->unk7e != '\0')) {
+  if ((uVar2 == uVar3) && (pMoby->trigsCnt != '\0')) {
     dVar20 = 16.0;
     iVar13 = FastDoubleToInt((double)(pMoby->animationBlend * 16.0));
     bVar18 = pMoby->previousAnimationFrame;
@@ -7973,22 +7973,22 @@ void Hero_UpdateAnim(void)
       } while (iVar17 < (int)(uint)*(byte *)(iVar15 + 0x12));
     }
   }
-  bVar4 = pMoby->unk7d;
+  bVar4 = pMoby->soundChannel;
   if (bVar4 == 0xff) {
-    if ((((byte)pMoby->unk7c != 0xff) && (g_gameMode != GAME_MODE_SCENE)) &&
+    if ((((byte)pMoby->soundDesired != 0xff) && (g_gameMode != GAME_MODE_SCENE)) &&
        (g_gameMode != GAME_MODE_SPACE)) {
-      iVar15 = PlayMobySound((uint)(byte)pMoby->unk7c,4,pMoby);
-      pMoby->unk7d = (char)iVar15;
+      iVar15 = PlayMobySound((uint)(byte)pMoby->soundDesired,4,pMoby);
+      pMoby->soundChannel = (char)iVar15;
     }
   }
   else if (g_SoundChannels[bVar4].pMoby == pMoby) {
-    if (g_SoundChannels[bVar4].sound_index != (ushort)(byte)pMoby->unk7c) {
+    if (g_SoundChannels[bVar4].sound_index != (ushort)(byte)pMoby->soundDesired) {
       sound_Kill((uint)bVar4);
-      pMoby->unk7d = -1;
+      pMoby->soundChannel = -1;
     }
   }
   else {
-    pMoby->unk7d = -1;
+    pMoby->soundChannel = -1;
   }
   if (((g_heroType == '\0') && (DAT_0096ae84 == 2)) &&
      (iVar15 = Hero_GetBackpackAnim((ushort)g_heroMobyPtr->animationId,&iStack_80,aiStack_7c),
@@ -8149,7 +8149,7 @@ void HeroUpdateNonRatchet(void)
         if ((DAT_0096b304 == (MobyInstance *)0x0) &&
            (pMVar9 = CreateMoby(0x4b4), DAT_0096b304 = pMVar9,
            pMVar9 != (MobyInstance *)0x0)) {
-          pMVar9->field60_0x90 = 0x801432d7;
+          pMVar9->glowRgba = 0x801432d7;
           DAT_0096bfe0 = 0x301432d7;
           (pMVar9->pos).x = g_heroPosition.x;
           (pMVar9->pos).y = g_heroPosition.y;
@@ -8246,8 +8246,8 @@ void HeroUpdateNonRatchet(void)
                                     0.5),uVar15,uVar13);
         if (DAT_0096b304 != (MobyInstance *)0x0) {
           uVar11 = FastLerpColor
-                             ((double)(DAT_0071f408 * 0.1),DAT_0096b304->field60_0x90,uVar13);
-          DAT_0096b304->field60_0x90 = uVar11;
+                             ((double)(DAT_0071f408 * 0.1),DAT_0096b304->glowRgba,uVar13);
+          DAT_0096b304->glowRgba = uVar11;
         }
         DAT_0096bfe0 = FastLerpColor((double)(DAT_0071f408 * 0.1),DAT_0096bfe0,uVar13);
         if ((DAT_0096b300 == (MobyInstance *)0x0) &&
@@ -8369,16 +8369,16 @@ void HeroUpdateNonRatchet(void)
           uVar11 = (uint)(lVar7 << 8) | uVar11;
         }
         uVar11 = FastLerpColor
-                           (0x3fb99999a0000000,g_heroMobyPtr->field60_0x90,
+                           (0x3fb99999a0000000,g_heroMobyPtr->glowRgba,
                             uVar11 | (iVar12 + 0x14) * 0x10000 | 0x80000000);
         iVar10 = 0;
-        g_heroMobyPtr->field60_0x90 = uVar11;
+        g_heroMobyPtr->glowRgba = uVar11;
         do {
           GetBonePosition(g_heroMobyPtr,iVar10,&DAT_0096ba30 + iVar10 * 0x10);
           iVar10 = iVar10 + 1;
         } while (iVar10 < 3);
         lVar7 = 0x30;
-        uVar11 = g_heroMobyPtr->field60_0x90;
+        uVar11 = g_heroMobyPtr->glowRgba;
         if (DAT_0096bfbe != 0) {
           dVar17 = (double)FastIntToDouble(DAT_0096bfbe);
           dVar16 = (double)FastIntToDouble(0x12);
@@ -9642,7 +9642,7 @@ void Hero_UpdateGadgetGlows(void)
                        ((double)((fVar1 + fVar2 * fVar1 * -0.16666657 + fVar3 * 0.0083330255 +
                                   fVar4 * -0.0001980741 + fVar2 * fVar4 * 2.601887e-06) * 0.5 + 0.5)
                         ,uVar9,uVar15);
-    g_heroMobyPtr->field60_0x90 = uVar10;
+    g_heroMobyPtr->glowRgba = uVar10;
   }
   pMVar6 = g_currentWeaponMoby;
   if ((g_currentWeaponMoby != (MobyInstance *)0x0) &&
@@ -9655,8 +9655,8 @@ void Hero_UpdateGadgetGlows(void)
       if ((0.0 < dVar19) && (dVar19 < 2.4434609413146973)) {
         puVar14 = (undefined *)0xa0a0a;
       }
-      uVar10 = FastLerpColor(0x3fb1eb8520000000,pMVar6->field60_0x90,puVar14);
-      pMVar6->field60_0x90 = uVar10;
+      uVar10 = FastLerpColor(0x3fb1eb8520000000,pMVar6->glowRgba,puVar14);
+      pMVar6->glowRgba = uVar10;
       dVar19 = 0.20000000298023224;
       dVar27 = (double)((pMVar6->transform).v0.x * 0.01710421 +
                         (pMVar6->transform).v1.x * -0.09391942 +
@@ -9821,9 +9821,9 @@ void Hero_UpdateGadgetGlows(void)
         lVar17 = lVar17 + 0xaa;
       }
       uVar10 = FastLerpColor
-                         (0x3fc3333340000000,pMVar6->field60_0x90,
+                         (0x3fc3333340000000,pMVar6->glowRgba,
                           (uint)(lVar8 << 8) | uVar10 | (uint)(lVar17 << 0x10) | 0x80000000);
-      pMVar6->field60_0x90 = uVar10;
+      pMVar6->glowRgba = uVar10;
     }
     else if (g_CurrentWeapon == 0x11) {
       dVar19 = (double)FastWrapRot(DAT_0096ad9c,g_FrameTime * 4.363323);
@@ -9833,8 +9833,8 @@ void Hero_UpdateGadgetGlows(void)
       if ((0.0 < dVar19) && (dVar19 < 2.268928050994873)) {
         uVar9 = 0x280a0a0a;
       }
-      uVar10 = FastLerpColor(0x3fb1eb8520000000,pMVar6->field60_0x90,uVar9);
-      pMVar6->field60_0x90 = uVar10;
+      uVar10 = FastLerpColor(0x3fb1eb8520000000,pMVar6->glowRgba,uVar9);
+      pMVar6->glowRgba = uVar10;
       dVar19 = 0.20000000298023224;
       dVar27 = (double)((pMVar6->transform).v0.x * 0.01734525 +
                         (pMVar6->transform).v1.x * -0.03917729 +
@@ -9945,8 +9945,8 @@ void Hero_UpdateGadgetGlows(void)
         uVar11 = (iVar12 + 0x1e) * 0x10000;
         uVar10 = (uint)(lVar16 << 8) | uVar10;
         uVar13 = FastLerpColor
-                           (0x3fc0a3d700000000,pMVar6->field60_0x90,uVar10 | uVar11 | 0x20000000);
-        pMVar6->field60_0x90 = uVar13;
+                           (0x3fc0a3d700000000,pMVar6->glowRgba,uVar10 | uVar11 | 0x20000000);
+        pMVar6->glowRgba = uVar13;
         lVar8 = (ulonglong)DAT_0096ad90 - (ulonglong)(uint)(int)((double)animationSpeed * dVar19);
         if (0x20 < (int)lVar8) {
           lVar8 = 0x20;
@@ -9978,10 +9978,10 @@ void Hero_UpdateGadgetGlows(void)
       if ((0.0 < dVar19) && (dVar19 < 2.094395160675049)) {
         uVar9 = 0x281414d2;
       }
-      uVar10 = FastLerpColor((double)(DAT_0071f408 * 0.05),pMVar6->field60_0x90,uVar9);
-      pMVar6->field60_0x90 = uVar10;
+      uVar10 = FastLerpColor((double)(DAT_0071f408 * 0.05),pMVar6->glowRgba,uVar9);
+      pMVar6->glowRgba = uVar10;
       GetBonePosition(pMVar6,0,&local_90);
-      uVar10 = pMVar6->field60_0x90;
+      uVar10 = pMVar6->glowRgba;
       iVar12 = (int)((longlong)g_heroGlowCount << 4);
       *(undefined4 *)(&g_heroGlowPos + iVar12) = local_90;
       *(undefined4 *)(iVar12 + 0x96bab4) = local_8c;
@@ -10107,7 +10107,7 @@ void ____Hero_UpdateManipulatorSpin(void)
                                  (float)(dVar8 * -0.0001980741071747616) +
                                 (float)(dVar5 * dVar8) * 2.601887e-06) * 0.5 + 0.5),&DAT_00aac8aa,
                        &DAT_00965050);
-    moby->field60_0x90 = uVar4;
+    moby->glowRgba = uVar4;
     if (DAT_0096ba71 == '\0') {
       AttachManipulator(moby,0,&DAT_0096ba70);
     }
@@ -10939,7 +10939,7 @@ void Hero_UpdateGadgetMobys(void)
           if ((DAT_0096ae6c == (MobyInstance *)0x0) &&
              (pMVar18 = CreateMoby(0x4b4), DAT_0096ae6c = pMVar18,
              pMVar18 != (MobyInstance *)0x0)) {
-            pMVar18->field60_0x90 = 0x801432d7;
+            pMVar18->glowRgba = 0x801432d7;
             (pMVar18->pos).x = g_heroPosition.x;
             (pMVar18->pos).y = g_heroPosition.y;
             (pMVar18->pos).z = g_heroPosition.z;
@@ -11002,7 +11002,7 @@ void Hero_UpdateGadgetMobys(void)
               uVar22 = 0xff;
             }
             pMVar18->modeBits = pMVar18->modeBits | HAS_GLOW;
-            pMVar18->field60_0x90 =
+            pMVar18->glowRgba =
                  (iVar20 + 0x32) * 0x100 | uVar22 | (iVar21 + 0x14) * 0x10000 | 0x80000000;
           }
         }
@@ -12761,7 +12761,7 @@ void ____Hero_AddPulsingMobyGlow(MobyInstance *param_1)
   iVar6 = FastDoubleToInt(dVar11);
   iVar7 = FastDoubleToInt((double)(float)(dVar12 * 52.0));
   iVar8 = FastDoubleToInt(dVar11);
-  param_1->field60_0x90 =
+  param_1->glowRgba =
        (iVar7 + 0xa2) * 0x100 | iVar6 + 0x44U | (iVar8 + 0x4c) * 0x10000 | 0x80000000;
   if (param_1->oClass == GIANT_CLANK) {
     GetBonePosition(param_1,6,&local_60);
@@ -20829,7 +20829,7 @@ void Hero_HoverboardBoostPads(void)
       while (local_8c != (MobyInstance *)0x0) {
         if (local_8c->oClass == HOVERBOARD_BOOST_PAD) {
           local_8c->modeBits = local_8c->modeBits | HAS_GLOW;
-          local_8c->field60_0x90 =
+          local_8c->glowRgba =
                (uint)(lVar8 << 8) | iVar9 + 0x68U | (iVar10 + 0x3c) * 0x10000 | 0x80000000;
           iVar11 = FastDecTimerS8(&local_8c->setByGroup);
           if (iVar11 != 0) {
@@ -22865,7 +22865,7 @@ void Hero_UpdateInScene(MobyInstance *param_1)
                     ((double)((fVar3 + fVar4 * fVar3 * -0.16666657 + fVar5 * 0.0083330255 +
                                fVar6 * -0.0001980741 + fVar4 * fVar6 * 2.601887e-06) * 0.5 + 0.5),
                      uVar10,uVar9);
-  param_1->field60_0x90 = uVar8;
+  param_1->glowRgba = uVar8;
   Hero_UpdateGadgetsInScene(param_1);
   return;
 }

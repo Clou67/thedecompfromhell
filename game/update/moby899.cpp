@@ -187,7 +187,7 @@ void UpdateMoby_899(MobyInstance *moby)
   if (moby->state == '\0') {
     if (*piVar1 == -1) {
       printf("Bad path data on moby class 899, maya instance %d\n",
-                   (ulonglong)(uint)moby->field71_0xa8 & 0xffff);
+                   (ulonglong)(uint)moby->handle & 0xffff);
       DeleteMoby(moby);
       return;
     }

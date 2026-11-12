@@ -1210,7 +1210,7 @@ void M623_003e41c8(MobyInstance *param_1)
                                                       (double)(float)((double)(float)(dVar29 * 
                                                   dVar32) * -0.16666656732559204 + dVar32))) + 1.0)
                               * 0.5),uVar21,uVar15);
-  param_1->field60_0x90 = uVar22;
+  param_1->glowRgba = uVar22;
   fVar1 = (param_1->rotation).z;
   if (((3 < param_1->state) && (param_1->state < 10)) &&
      (pMVar10 = *(MobyInstance **)((int)pvVar8 + 0x160), pMVar10 == g_heroMobyPtr)) {

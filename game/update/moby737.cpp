@@ -114,7 +114,7 @@ void UpdateMoby_737(MobyInstance *moby)
     if (bVar1 == 0) {
       if (pos[9] == -NAN) {
         printf("cutscene moby class %d maya instance %d: cutsceneCameraInitPos INVALID\nDeleting Cutscene!\n"
-                     ,moby->oClass,(ulonglong)(uint)moby->field71_0xa8 & 0xffff);
+                     ,moby->oClass,(ulonglong)(uint)moby->handle & 0xffff);
         DeleteMoby(moby);
       }
       else {

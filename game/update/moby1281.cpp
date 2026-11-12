@@ -53,8 +53,8 @@ void M1281_00237660(MobyInstance *param_1)
   moby->drawDistance = 0xff;
   moby->enabled = '\x01';
   moby->occlIndex = 0x7f80;
-  moby->field44_0x71 = -1;
-  moby->field45_0x72 = -1;
+  moby->unk71 = -1;
+  moby->unk72 = -1;
   moby->damage = -1;
   puVar5 = pMVar4->collision;
   moby->color = uVar7;

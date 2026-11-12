@@ -831,7 +831,7 @@ void UpdateScene(void)
             fVar7 = pfVar15[1];
             fVar8 = pfVar15[2];
             (pMVar10->pos).w = pfVar14[3];
-            pMVar10->field44_0x71 = -1;
+            pMVar10->unk71 = -1;
             (pMVar10->pos).x = fVar3 * fVar12 + fVar6 * fVar2;
             (pMVar10->pos).y = fVar4 * fVar12 + fVar7 * fVar2;
             (pMVar10->pos).z = fVar5 * fVar12 + fVar8 * fVar2;

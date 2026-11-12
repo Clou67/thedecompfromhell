@@ -349,7 +349,7 @@ void UpdateMoby_1230(MobyInstance *moby)
                                  fVar6 * -0.0001980741 +
                                  fVar4 * 0.0083330255 + fVar2 * fVar5 * -0.16666657 + fVar5 + 1.0) *
                                0.5),0xffffffff8020ff20,0xffffffff80208020);
-    moby->field60_0x90 = uVar7;
+    moby->glowRgba = uVar7;
     dVar9 = (double)FastWrapRot(*pfVar3,g_FrameTime * 6.2831855);
     *pfVar3 = (float)dVar9;
   }
@@ -371,7 +371,7 @@ void UpdateMoby_1230(MobyInstance *moby)
                                  fVar6 * -0.0001980741 +
                                  fVar4 * 0.0083330255 + fVar2 * fVar5 * -0.16666657 + fVar5 + 1.0) *
                                0.5),0xffffffff802020ff,0xffffffff80202080);
-    moby->field60_0x90 = uVar7;
+    moby->glowRgba = uVar7;
     dVar9 = (double)FastWrapRot(*pfVar3,g_FrameTime * 12.566371);
     *pfVar3 = (float)dVar9;
     iVar8 = FastDecTimerS32(pfVar3 + 1);

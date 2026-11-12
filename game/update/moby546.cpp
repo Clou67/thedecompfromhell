@@ -81,14 +81,14 @@ void UpdateMoby_546(MobyInstance *moby)
                                 - 3.0) * 128.0));
     lVar10 = lVar9 + (lVar9 + -0x20 >> 0x3f & 0x20U - lVar9);
     uVar8 = lVar10 + (0x80 - lVar9 >> 0x3f & 0x80U - lVar10);
-    moby->field60_0x90 =
+    moby->glowRgba =
          (uint)((uVar8 & 0xffffffff) << 8) | (uint)uVar8 | (uint)((uVar8 & 0xffffffff) << 0x10) |
          0x80000000;
     iVar11 = MB_damage(moby,0x330000,0);
     if (iVar11 != 0) {
       moby->state = '\x02';
       moby->setByGroup = '\x01';
-      moby->field60_0x90 = 0x80208020;
+      moby->glowRgba = 0x80208020;
       *(undefined4 *)((int)pvVar3 + 0x68) = 0x3fc90fdb;
       PlayMobySound(0,0,moby);
       if (*(int *)((int)pvVar3 + 0x60) != -1) {
@@ -135,7 +135,7 @@ void UpdateMoby_546(MobyInstance *moby)
                                  fVar5 * 0.0083330255 + fVar2 * fVar6 * -0.16666657 + fVar6) * 0.5 +
                                 0.5) * 128.0));
     lVar10 = lVar9 + (lVar9 + -0x20 >> 0x3f & 0x20U - lVar9);
-    moby->field60_0x90 =
+    moby->glowRgba =
          (uint)((lVar10 + (0x80 - lVar9 >> 0x3f & 0x80U - lVar10) & 0xffffffff) << 8) | 0x80200020;
     if (0 < *(int *)((int)pvVar3 + 100)) {
       iVar11 = FastDecTimerS32(uVar12 + 0x6c);

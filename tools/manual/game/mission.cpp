@@ -168,8 +168,8 @@ void UpdateMissionDisplay(int level, bool showHero)
         if (Level == level) {
             if (g_MissionMobys[e->target]) {
                 MobyInstance *m = g_MissionMobys[e->target];
-                Map_WorldToMapCoords(m->pos.m.x, m->pos.m.y, &e->u, &e->v, level);
-                e->rot = g_MissionMobys[e->target]->rotation.m.z;
+                Map_WorldToMapCoords(m->pos.x, m->pos.y, &e->u, &e->v, level);
+                e->rot = g_MissionMobys[e->target]->rotation.z;
             }
         } else {
             MissionTarget *t = &g_MissionTargets[e->target];

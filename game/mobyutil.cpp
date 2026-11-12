@@ -1254,7 +1254,7 @@ void MB_SetAnimation
   param_1->frameSpeed = fVar1;
   param_1->animationBlend = 0.0;
   param_1->field43_0x70 = param_1->field43_0x70 & 0xfd;
-  param_1->unk7c = *(char *)(*(int *)(&param_1->pClass->type + iVar5) + 0x11);
+  param_1->soundDesired = *(char *)(*(int *)(&param_1->pClass->type + iVar5) + 0x11);
   return;
 }
 
@@ -1310,7 +1310,7 @@ void MB_SetAnimationFrame(MobyInstance *moby,int anim,int frame,int blendFrames,
   moby->frameSpeed = fVar1;
   moby->field43_0x70 = moby->field43_0x70 & 0xfd;
   moby->animationBlend = 0.0;
-  moby->unk7c = *(char *)(*(int *)(&moby->pClass->type + (int)((longlong)anim << 2)) + 0x11);
+  moby->soundDesired = *(char *)(*(int *)(&moby->pClass->type + (int)((longlong)anim << 2)) + 0x11);
   return;
 }
 
@@ -4542,9 +4542,9 @@ LAB_001023ac:
       pMVar43[1].pos.y = *(float *)&pMVar43[1].damage;
       dVar52 = dVar53;
     }
-    dVar53 = (double)(float)pMVar43[1].field71_0xa8;
+    dVar53 = (double)(float)pMVar43[1].handle;
     if (dVar53 < dVar52) {
-      pMVar43[1].pos.y = (f32)pMVar43[1].field71_0xa8;
+      pMVar43[1].pos.y = (f32)pMVar43[1].handle;
       dVar52 = dVar53;
     }
     dVar54 = (double)FastWrapRot((float)dVar52,(float)dVar54);
@@ -4893,8 +4893,8 @@ LAB_001023ac:
           param_5[1].bSphere.y = fVar32;
           if (3 < (int)fVar32) {
             uVar21.piece<0,1>() = param_5->field43_0x70;
-            uVar21.piece<1,1>() = param_5->field44_0x71;
-            uVar21.piece<2,1>() = param_5->field45_0x72;
+            uVar21.piece<1,1>() = param_5->unk71;
+            uVar21.piece<2,1>() = param_5->unk72;
             uVar21.piece<3,1>() = param_5->field46_0x73;
             MB_SetAnimation(param_4,param_5->pAnimationLayers,uVar21,10);
             iVar31 = 0;
@@ -16086,7 +16086,7 @@ void AddMotionBlurElem(int param_1,undefined4 param_2,int param_3)
       pMVar3->updateDistance = '\0';
       pMVar3->modeBits = DISABLE_Z_WRITE|TRANSPARENT|NO_UPDATE;
       if (pMVar3->oClass == RATCHET) {
-        pMVar3->field45_0x72 = '\0';
+        pMVar3->unk72 = '\0';
       }
       pMVar3->alpha = (s8)param_2;
       *(int *)(param_1 + iVar1 * 4 + 0x110) = param_3;

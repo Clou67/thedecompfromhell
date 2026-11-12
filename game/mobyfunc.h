@@ -3,6 +3,35 @@
 #include "types.h"
 
 // ---- types
+struct BSphere {
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 rad;
+};
+
+typedef char s8;
+
+typedef enum MobyModeBit {
+    NONE=0,
+    DISABLED=1,
+    NO_UPDATE=2,
+    NO_POST_UPDATE=4,
+    TRANSPARENT=8,
+    HAS_GLOW=16,
+    HAS_SPECIAL_VARS=32,
+    UNK_40=64,
+    NO_DRAW=128,
+    LOCK_ROTATION=256,
+    DRAW_TRANSPARENT_WEIRD=512,
+    DRAW_SHADOW=1024,
+    DISABLE_Z_WRITE=2048,
+    CAN_BE_AUTO_TARGETED=4096,
+    HIDE_BACKFACES=8192,
+    CAN_BE_DAMAGED=16384,
+    MIRROR=32768
+} MobyModeBit;
+
 typedef enum MOBY_OCLASSES {
     RATCHET=0,
     BLARG_HEAVY_INTERCEPTOR_0008=8,
@@ -753,7 +782,7 @@ typedef enum MOBY_OCLASSES {
    (modeBits, oClass) as u16 so the layout matches the binary */
 struct MobyInstance {
     struct BSphere bSphere;
-    struct vec4 pos;
+    struct Vec4 pos;
     u8 state;
     s8 group;
     u8 mClass;
@@ -766,9 +795,14 @@ struct MobyInstance {
     short drawDistance;
     u16 modeBits;                /* 0x34  MobyModeBit flags (16 bits in the binary; a C enum would be 32) */
     ushort occlIndex;
-    uint color;
-    uint light;
-    struct vec4 rotation;
+    union {
+        struct {
+            uint color;          /* 0x38 */
+            uint light;          /* 0x3c */
+        };
+        u64 freeTime;            /* 0x38  while the slot is free: worldUpdateTime it can be reused at */
+    };
+    struct Vec4 rotation;
     char previousAnimationFrame;
     char animationFrame;
     u8 updateId;
@@ -781,14 +815,14 @@ struct MobyInstance {
     void *pPreviousAnimationData;
     void *pCurrentAnimationData;
     char field43_0x70;
-    char field44_0x71;
-    char field45_0x72;
+    char unk71;
+    char unk72;
     char field46_0x73;
     void *pUpdate;
     void *pVar;
-    char unk7c;
-    char unk7d;
-    char unk7e;
+    char soundDesired;           /* 0x7c  the sound the current sequence loops, -1 none (DL name) */
+    char soundChannel;           /* 0x7d  its channel, -1 none (DL name) */
+    char trigsCnt;               /* 0x7e  the current sequence's trigsCnt */
     char shadow;
     int colorManipulator;
     int unk84;
@@ -797,16 +831,24 @@ struct MobyInstance {
     char field57_0x8d;
     char field58_0x8e;
     char field59_0x8f;
-    uint field60_0x90;
+    uint glowRgba;               /* 0x90  from MobyClass.glow_rgba */
     ushort *collision;
     float *collisionMesh;
     int collQueryStamp; /* = CollOutput.collCount of last coll query that tested this moby */
-    uint collCount;
+    union {
+        uint collCount;
+        struct {
+            s8 gridMinX;         /* 0xa0  the moby grid cells it is in (DL grid_min_x...) */
+            s8 gridMinY;
+            s8 gridMaxX;
+            s8 gridMaxY;
+        };
+    };
     s8 damage;
     char previousAnimationId;
     u16 oClass;                  /* 0xa6  MOBY_OCLASSES */
-    int field71_0xa8;
-    uint field72_0xac;
+    int handle;                  /* 0xa8  index << 16 (guess) */
+    uint index;                  /* 0xac  slot in g_MobyInstance */
     char levelFlagIdx;
     char field74_0xb1;
     ushort uid;
@@ -816,119 +858,98 @@ struct MobyInstance {
     char field79_0xb7;
     struct MobyInstance *field80_0xb8; /* Type 'Moby *' was deleted */
     char setByGroup;
-    char field82_0xbd;
+    char unkbd;
     char field83_0xbe;
     char field84_0xbf;
     struct Mtx4 transform;
 };
 typedef char MobyInstance_size_check[sizeof(struct MobyInstance) == 0x100 ? 1 : -1];
 
-struct MobySeq {
-    undefined field0_0x0;
-    undefined field1_0x1;
-    undefined field2_0x2;
-    undefined field3_0x3;
-    undefined field4_0x4;
-    undefined field5_0x5;
-    undefined field6_0x6;
-    undefined field7_0x7;
-    undefined field8_0x8;
-    undefined field9_0x9;
-    undefined field10_0xa;
-    undefined field11_0xb;
-    undefined field12_0xc;
-    undefined field13_0xd;
-    undefined field14_0xe;
-    undefined field15_0xf;
-    u8 frame_count;
-    u8 next_seq;
-    u8 trigsCnt;
-    u8 pad;
-    short *trigs;
-    void *animInfo;
-    void *frameData;
-};
+/* One frame of an animation sequence. The joint data follows the 16-byte header, 8 bytes per
+   joint (only the header fields this code touches are named). */
+typedef struct MobyFrame {
+    float length;            /* 0x00  frames of time this frame lasts (scales the blend step) */
+    s16 time;                /* 0x04  start time in 1/16 frames */
+    s16 qwords;              /* 0x06  size in 16-byte units */
+    s16 jointBytes;          /* 0x08 */
+    s16 unk0a;               /* 0x0a */
+    s16 unk0c;               /* 0x0c */
+    s16 unk0e;               /* 0x0e */
+} MobyFrame;
+typedef char MobyFrame_size_check[sizeof(MobyFrame) == 0x10 ? 1 : -1];
 
-struct MobyClass {
-    void *packets;
-    u8 pakcet_cnt_0;
-    u8 packet_cnt_1;
-    u8 metal_cnt;
-    u8 metal_ofs;
-    u8 joint_cnt;
-    u8 pad;
-    u8 packet_cnt_2;
-    u8 team_texs;
-    u8 seq_cnt;
-    u8 sound_cnt;
-    u8 lod_trans;
-    u8 shadow;
-    u16 *collision;
-    void *skeleton;
-    void *common_trans;
-    void *anim_joints;
-    void *gif_usage;
-    float gScale;
-    void *SoundDefs;
-    char bangles;
-    char mip_dist;
-    s16 corncob;
-    undefined field23_0x30;
-    undefined field24_0x31;
-    undefined field25_0x32;
-    undefined field26_0x33;
-    undefined field27_0x34;
-    undefined field28_0x35;
-    undefined field29_0x36;
-    undefined field30_0x37;
-    undefined field31_0x38;
-    undefined field32_0x39;
-    undefined field33_0x3a;
-    undefined field34_0x3b;
-    undefined field35_0x3c;
-    undefined field36_0x3d;
-    undefined field37_0x3e;
-    undefined field38_0x3f;
-    /* ignoring dynamic datatype inside composite: -BAD- */
-void * /*BAD*/ unk_ptr; /* Type 'Moby *' was deleted */
-    u32 mode_bits;
-    char type;
-    char mode_bits2;
-    struct MobySeq *seqs;
-};
+/* an animation sequence of a moby class (RC1's layout; DL's MobySeq has the same first 0x18) */
+typedef struct MobySeq {
+    BSphere bSphere;         /* 0x00 */
+    u8 frameCnt;             /* 0x10 */
+    s8 sound;                /* 0x11  looped while the sequence plays, -1 none */
+    u8 trigsCnt;             /* 0x12 */
+    u8 pad;                  /* 0x13 */
+    short *trigs;            /* 0x14 */
+    void *animInfo;          /* 0x18 */
+    MobyFrame *frames[];     /* 0x1c  frameCnt of them */
+} MobySeq;
 
-struct CollPrim { /* Moby collision primitive (32 bytes). type 0/1 = sphere/pill variants; flags bit0 = alt set, bit1 = normal set; joint = joint index (offset<<4 into joint cache). Rest are floats (offset/radius/height). Disabled per-prim by bitmask MobyInstance+0x98. */
-    char type;
-    undefined field1_0x1;
-    short flags;
-    short joint;
-    undefined field4_0x6;
-    undefined field5_0x7;
-    undefined field6_0x8;
-    undefined field7_0x9;
-    undefined field8_0xa;
-    undefined field9_0xb;
-    undefined field10_0xc;
-    undefined field11_0xd;
-    undefined field12_0xe;
-    undefined field13_0xf;
-    undefined field14_0x10;
-    undefined field15_0x11;
-    undefined field16_0x12;
-    undefined field17_0x13;
-    undefined field18_0x14;
-    undefined field19_0x15;
-    undefined field20_0x16;
-    undefined field21_0x17;
-    undefined field22_0x18;
-    undefined field23_0x19;
-    undefined field24_0x1a;
-    undefined field25_0x1b;
-    undefined field26_0x1c;
-    undefined field27_0x1d;
-    undefined field28_0x1e;
-    undefined field29_0x1f;
+/* a moby class (MobyClasses[mClass]); DL's MobyClass with RC1's sequence table at 0x48. Field
+   names are Ghidra's / DL's. */
+typedef struct MobyClass {
+    void *packets;           /* 0x00 */
+    u8 pakcet_cnt_0;         /* 0x04  (sic) */
+    u8 packet_cnt_1;         /* 0x05 */
+    u8 metal_cnt;            /* 0x06 */
+    u8 metal_ofs;            /* 0x07 */
+    u8 joint_cnt;            /* 0x08 */
+    u8 pad;                  /* 0x09 */
+    u8 packet_cnt_2;         /* 0x0a */
+    u8 team_texs;            /* 0x0b */
+    u8 seq_cnt;              /* 0x0c */
+    u8 sound_cnt;            /* 0x0d */
+    u8 lod_trans;            /* 0x0e */
+    u8 shadow;               /* 0x0f */
+    u16 *collision;          /* 0x10 */
+    void *skeleton;          /* 0x14 */
+    void *common_trans;      /* 0x18 */
+    void *anim_joints;       /* 0x1c  read as a table of joint data pointers (index joint + 1)
+                                    and, for an AnimLayer's animClass, as a byte map at +4 */
+    void *gif_usage;         /* 0x20 */
+    float gScale;            /* 0x24 */
+    void *SoundDefs;         /* 0x28 */
+    char bangles;            /* 0x2c */
+    char mip_dist;           /* 0x2d */
+    s16 corncob;             /* 0x2e */
+    BSphere bSphere;         /* 0x30 */
+    u32 glow_rgba;           /* 0x40 */
+    u16 mode_bits;           /* 0x44  MobyModeBit flags every instance starts with */
+    char type;               /* 0x46 */
+    char mode_bits2;         /* 0x47 */
+    MobySeq *seqs[];         /* 0x48  seq_cnt of them */
+} MobyClass;
+
+/* a moby collision primitive (32 bytes, after the 16-byte MobyCollHeader), in 1/1024 units of
+   the moby's scale */
+enum CollPrimType {
+    COLLPRIM_SPHERE   = 0,
+    COLLPRIM_SPHERE2  = 1,
+    COLLPRIM_JOINT    = 2,   /* a sphere that follows a joint */
+    COLLPRIM_PILL     = 3,   /* offset plus a vertical length */
+    COLLPRIM_CAPSULE  = 4,   /* between two joints */
 };
+typedef struct CollPrim {
+    u8 _pad00[3];
+    u8 type;                 /* 0x03  CollPrimType */
+    union {
+        float length;        /* 0x04  COLLPRIM_PILL */
+        int joint;           /* 0x04  COLLPRIM_JOINT */
+        struct {
+            s16 jointA;      /* 0x04  COLLPRIM_CAPSULE */
+            s16 jointB;      /* 0x06 */
+        } ends;
+    };
+    u8 _pad08[4];
+    float radius;            /* 0x0c  COLLPRIM_JOINT and COLLPRIM_CAPSULE */
+    Vec4 offset;             /* 0x10  xyz offset, w radius */
+} CollPrim;
+typedef char CollPrim_size_check[sizeof(CollPrim) == 0x20 ? 1 : -1];
 
 typedef double f64;
 
@@ -1072,65 +1093,130 @@ struct MobyVTable {
     void **exit;
 };
 
+struct w_legData {
+    char jiFoot;
+    char jiHeel;
+    char jiAnkle;
+    char jiHip;
+    short idle;
+    short _2mainIdle;
+    float frDest;
+    float arAct;
+    float arSpeed;
+    float hrAct;
+    float hrSpeed;
+    float twistLow;
+    float twistHigh;
+    int pad[3];
+    struct Manipulator MAnkle;
+    struct Manipulator MHip;
+};
+
 typedef long long s64;
 
+/* An extra animation playing on part of a moby's skeleton (MB_AllocAnimLayer; a pool of 6 at
+   0xa2c440, linked from MobyInstance.pAnimationLayers). The frame fields mirror the moby's own. */
+typedef struct AnimLayer {
+    s16 joint;               /* 0x00  the joint the layer starts at */
+    u16 jointCount;          /* 0x02 */
+    u8 inUse;                /* 0x04 */
+    u8 stepped;              /* 0x05  set by MB_UpdateAnimLayer: 1 moved a frame, 3 also wrapped */
+    u8 prevFromBuffer;       /* 0x06  build the previous frame into prevFrameData */
+    u8 curFromBuffer;        /* 0x07  build the current frame into curFrameData */
+    u8 _pad08[4];
+    u8 *jointMap;            /* 0x0c */
+    void *jointBuf;          /* 0x10  0x1500 bytes */
+    struct MobyClass *pClass;     /* 0x14  the moby's class */
+    struct MobyClass *animClass;  /* 0x18  the class the animation comes from (set by the caller) */
+    struct AnimLayer *next;  /* 0x1c */
+    u8 prevFrame;            /* 0x20 */
+    u8 curFrame;             /* 0x21 */
+    u8 prevSeq;              /* 0x22 */
+    u8 curSeq;               /* 0x23 */
+    float blend;             /* 0x24  0..1 from prevFrame to curFrame */
+    float speed;             /* 0x28 */
+    float frameScale;        /* 0x2c  blend per unit of speed */
+    u8 _pad30[8];
+    void *prevFrameData;     /* 0x38 */
+    void *curFrameData;      /* 0x3c */
+} AnimLayer;
+typedef char AnimLayer_size_check[sizeof(AnimLayer) == 0x40 ? 1 : -1];
+
+/* a level's environment sample point (the nearest one within 8 units lights a moby) */
+typedef struct EnvSample {
+    float x, y, z;           /* 0x00 */
+    u32 unk0c;               /* 0x0c */
+    int red;                 /* 0x10 */
+    int green;               /* 0x14 */
+    int blue;                /* 0x18 */
+    int light;               /* 0x1c  copied to MobyInstance.light */
+    u32 fogColor;            /* 0x20  guess: copied to 0x9637c4 with the next three bytes */
+    u8 fog0;                 /* 0x24 */
+    u8 fog1;                 /* 0x25 */
+    u8 fog2;                 /* 0x26 */
+    u8 setsFog;              /* 0x27 */
+    int musicTrack;          /* 0x28  -1 none */
+    u32 unk2c;               /* 0x2c */
+} EnvSample;
+typedef char EnvSample_size_check[sizeof(EnvSample) == 0x30 ? 1 : -1];
+
 // ---- globals
-extern undefined4 AnimationCacheRegistry; /* 0xa345c0 */
+extern MobyInstance *AnimationCacheRegistry[16]; /* 0xa345c0 */ /* type set in global_types.tsv */
 extern undefined4 DAT_00729040; /* 0x729040 */
-extern undefined4 DAT_009636c8; /* 0x9636c8 */
-extern undefined1 DAT_00a2c444; /* 0xa2c444 */
-extern undefined4 DAT_00a49b44; /* 0xa49b44 */
-extern undefined4 DAT_00a49f50; /* 0xa49f50 */
-extern undefined4 DAT_00a49f54; /* 0xa49f54 */
-extern undefined4 DAT_00a4c4e4; /* 0xa4c4e4 */
-extern undefined4 DAT_00a4c4e8; /* 0xa4c4e8 */
-extern undefined4 DAT_00a4db00; /* 0xa4db00 */
 extern MobyInstance * MobyInstancePermEnd; /* 0xa390a4 */
-extern undefined g_AnimLayerJointBuf; /* 0xa24640 */
-extern undefined4 g_MobyDrawListEnd; /* 0xa39098 */
-extern undefined4 g_MobyDrawListStart; /* 0xa3909c */
-extern undefined4 numSpawnableMobys; /* 0xa4daf0 */
+extern u8 g_AnimBuffers[][0x800]; /* 0xa2c5c0: built animation frames (updateId 0xff); also the debug font's load buffer */ /* type set in global_types.tsv */
+extern u8 g_AnimLayerJointBuf[6][0x1500]; /* 0xa24640 */ /* type set in global_types.tsv */
+extern AnimLayer g_AnimLayerPool[6]; /* 0xa2c440 */ /* type set in global_types.tsv */
+extern EnvSample *g_EnvSamples; /* 0xa4db00 */ /* type set in global_types.tsv */
+extern Vec4 g_HeroLightDir; /* 0xa4c4e0: UpdateHeroLightAngle */ /* type set in global_types.tsv */
+extern void *g_MobyClassUpdates[240]; /* 0xa34f80: update function per mClass (follows MobyClasses) */ /* type set in global_types.tsv */
+extern u8 *g_MobyDrawListEnd; /* 0xa39098 */ /* type set in global_types.tsv */
+extern u8 *g_MobyDrawListStart; /* 0xa3909c: draw entries, 0xb0 bytes each */ /* type set in global_types.tsv */
+extern int g_MobyShadowCount; /* 0xa49f50 (guess) */ /* type set in global_types.tsv */
+extern int g_MobyShadowList[]; /* 0xa4a0e0: the shadow list DrawScreenEffect_152df8 draws (Ghidra label "____oClassInstanceList") */ /* type set in global_types.tsv */
+extern int g_MobySkinCount; /* 0xa49b44 (guess: skinned mobys queued for STUB_000f5a7c) */ /* type set in global_types.tsv */
+extern u8 *g_pMobyShadowTag; /* 0xa49f54: the shadow pass's packet tag */ /* type set in global_types.tsv */
 
 // ---- functions
 void SECTION_HEADER_MOBYFUNC(void);
 void UpdateNumSpawnableMobys(void);
-void UpdateMobyFrameData(MobyInstance *param_1);
-void InitMobyInstance(MobyInstance *moby,int oClass);
-MobyInstance * CreateMoby(MOBY_OCLASSES oClass);
+void UpdateMobyFrameData(MobyInstance *moby);
+void InitMobyInstance(MobyInstance *moby, int oClass);
+MobyInstance *CreateMoby(int oClass);
 void DeleteMoby(MobyInstance *moby);
-void MB_UpdateLoopSound(MobyInstance *param_1);
-ulonglong MB_FindNearestAnimTrigger(double param_1,int param_2);
-int MB_FindAnimTriggerAfter(double param_1,int param_2,undefined8 param_3,float *param_4);
-double BlendAnimFrame(MobyInstance *param_1);
-float MB_GetAnimSeqLength(int oClass,int seq);
-float MB_GetAnimSeqTriggerLength(int oClass,int seq);
-undefined8 MB_GetCollPrimWorld (int param_1,int param_2,uint *param_3,float *param_4,float *param_5,float *param_6);
-void MB_SetCollPrimFromWorld (double param_1,double param_2,int param_3,ulonglong param_4,float *param_5);
-void MB_AddShortPairOffset(int param_1,short param_2,short param_3);
-short * MB_AllocAnimLayer(int param_1,short param_2);
-void MB_FreeAnimLayer(int param_1,int *param_2);
-void MB_InitAnimLayerBuffer(int param_1,longlong param_2,longlong param_3,int param_4);
-void MB_UpdateAnimLayer(undefined8 param_1,MobyInstance *param_2);
-void MB_SyncAnimLayer(MobyInstance *param_1,MobyInstance *param_2);
-void MB_StartAnimLayer (MobyInstance *param_1,undefined8 param_2,s8 param_3,s8 param_4,undefined4 param_5, int param_6);
-void AttachManipulator(MobyInstance *moby,uint32_t animJoint,Manipulator *manipulator);
-void DetachManipulator(MobyInstance *pMoby,Manipulator *pManipulator);
-int AnimCache_Register(int p);
+void MobyPlayDesiredSound(MobyInstance *moby);
+int MB_FindNearestAnimTrigger(MobySeq *seq, float t);
+int MB_FindAnimTriggerAfter(MobySeq *seq, float t, float *frac);
+float BlendAnimFrame(MobyInstance *moby);
+float MB_GetAnimSeqLength(int oClass, int seq);
+float MB_GetAnimSeqTriggerLength(int oClass, int seq);
+int MB_GetCollPrimWorld(MobyInstance *moby, int index, u32 *type, Vec4 *center, float *radius, float *length);
+void MB_SetCollPrimFromWorld(MobyInstance *moby, int index, Vec4 *pos, float radius, float length);
+void MB_AddShortPairOffset(short *pair, short x, short y);
+AnimLayer *MB_AllocAnimLayer(MobyInstance *moby, short joint);
+void MB_FreeAnimLayer(MobyInstance *moby, AnimLayer **pLayer);
+void MB_InitAnimLayerBuffer(AnimLayer *layer, int seq, int frame, MobyFrame *buf);
+void MB_UpdateAnimLayer(MobyInstance *moby, AnimLayer *layer);
+void MB_SyncAnimLayer(MobyInstance *moby, AnimLayer *layer);
+void MB_StartAnimLayer(MobyInstance *moby, AnimLayer *layer, s8 seq, s8 frame, int frames, int update);
+void AttachManipulator(MobyInstance *moby, uint32_t animJoint, Manipulator *manipulator);
+void DetachManipulator(MobyInstance *pMoby, Manipulator *pManipulator);
+int AnimCache_Register(MobyInstance *moby);
 void CleanAnimationCache(void);
-void GetBoneTransformations(int param_1,undefined8 param_2,int param_3);
-void GetBonePosition(int param_1,undefined8 param_2,float *param_3);
-void GetMobyJointsWorldPos(int param_1,int param_2,undefined8 param_3,float *param_4);
-void GetMobyJointsWorldMtx(int param_1,undefined8 param_2,undefined8 param_3,int param_4);
-void STUB_000f1444(...);
-void STUB_000f1448(...);
+void GetBoneTransformations(MobyInstance *moby, int joint, Mtx4 *out);
+void GetBonePosition(MobyInstance *moby, int joint, Vec4 *out);
+void GetMobyJointsWorldPos(MobyInstance *moby, int count, int *joints, Vec4 *out);
+void GetMobyJointsWorldMtx(MobyInstance *moby, int count, int *joints, Mtx4 *out);
+void STUB_000f1444(void);
+void STUB_000f1448(void);
 void UpdateHeroLightAngle(void);
 void DrawMobyShadows(void);
-void STUB_000f1844(...);
-void STUB_000f1848(...);
-void STUB_000f184c(...);
+void STUB_000f1844(void);
+void STUB_000f1848(void);
+void STUB_000f184c(void);
 void DrawMobyDepth(void);
-void MB_AddToDrawList(undefined4 param_1,undefined8 param_2);
+void MB_AddToDrawList(MobyInstance *moby, int flags);
 void DrawMobyList(void);
 void DrawMobys(void);
-float * MB_SetLightsFromEnvSample(MobyInstance *param_1);
+void MB_SetLightsFromEnvSample(MobyInstance *moby);
 void SetLevelFlag(int arg);

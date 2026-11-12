@@ -522,7 +522,7 @@ void FrontEnd_Update(void)
       fVar6 = pfVar10[1];
       fVar7 = pfVar10[2];
       (pMVar8->pos).w = pfVar10[3];
-      pMVar8->field44_0x71 = -1;
+      pMVar8->unk71 = -1;
       (pMVar8->pos).x = fVar5 * fVar1 + (float)((double)fVar2 * dVar16);
       (pMVar8->pos).y = fVar6 * fVar1 + (float)((double)fVar3 * dVar16);
       (pMVar8->pos).z = fVar7 * fVar1 + (float)((double)fVar4 * dVar16);
@@ -763,7 +763,7 @@ skip_directionalLightCopy:
   pMVar2 = (MobyInstance *)((int)gameplay + param_2 + 0x3f & 0xffffffc0);
   g_MobyInstance = pMVar2;
   FastMemSet(pMVar2,0,0x4000);
-  DAT_00a390b0 = pMVar2 + 0x40;
+  g_pMobyVars = pMVar2 + 0x40;
   PartInstances = pMVar2 + 0x60;
   MobyInstancePermEnd = g_MobyInstance;
   g_MobyInstance->state = 0xff;

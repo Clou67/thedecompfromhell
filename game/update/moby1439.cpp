@@ -67,7 +67,7 @@ undefined4 * UpdateMoby_1439(MobyInstance *moby)
                                fVar8 * -0.0001980741 +
                                fVar6 * 0.0083330255 + fVar5 * fVar7 * -0.16666657 + fVar7) * 0.5 +
                               0.5),DAT_007aa740,DAT_007aa744);
-  moby->field60_0x90 = uVar10;
+  moby->glowRgba = uVar10;
   bVar2 = moby->state;
   puVar11 = (undefined4 *)(uint)bVar2;
   if (bVar2 == 0) {

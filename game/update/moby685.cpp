@@ -624,8 +624,8 @@ void UpdateMoby_685(MobyInstance *moby)
         sound_SetVol(iVar8,iVar13);
       }
     }
-    uVar9 = FastLerpColor(0x3fb99999a0000000,moby->field60_0x90,0xffffffff80808040);
-    moby->field60_0x90 = uVar9;
+    uVar9 = FastLerpColor(0x3fb99999a0000000,moby->glowRgba,0xffffffff80808040);
+    moby->glowRgba = uVar9;
     iVar7 = M685_00413870(lVar6);
     if (iVar7 != 0) {
       moby->state = '\x03';
@@ -725,7 +725,7 @@ void UpdateMoby_685(MobyInstance *moby)
     *(undefined2 *)((int)pvVar3 + 0x124) = uVar10;
     moby->updateDistance = -1;
     *(undefined4 *)((int)pvVar3 + 0x138) = 0;
-    moby->field60_0x90 = 0x80303030;
+    moby->glowRgba = 0x80303030;
     *(undefined4 *)((int)pvVar3 + 300) = 0xffffffff;
     *(undefined4 *)((int)pvVar3 + 0x130) = 0xffffffff;
     *(undefined4 *)((int)pvVar3 + 0x134) = 0xffffffff;
