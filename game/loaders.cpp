@@ -821,7 +821,7 @@ enum GameplaySection {
     GP_MOBYS = 0x11,
     GP_MOBY_GROUPS = 0x12,
     GP_SHARED_DATA = 0x13,
-    GP_MOBY_LINKS = 0x14,    /* pVar fields holding a moby record index (Replanetizer: pvar scratchpad) */
+    GP_MOBY_LINKS = 0x14,    /* pVar fields holding a moby record index */
     GP_PVAR_TABLE = 0x15,    /* {offset, size} per pVar block */
     GP_PVAR_DATA = 0x16,
     GP_PVAR_POINTERS = 0x17, /* pVar fields holding an offset into their own block */
@@ -833,7 +833,7 @@ enum GameplaySection {
     GP_GRIND_PATHS = 0x1d,
     GP_POINT_LIGHT_GRID = 0x1e, /* a 0x4000-byte grid and its data */
     GP_POINT_LIGHTS = 0x1f,  /* 0x20-byte records */
-    GP_BLENDERS = 0x20,      /* the game's name ("Entering blender %d"); Replanetizer: env transitions */
+    GP_BLENDERS = 0x20,      /* the game's name ("Entering blender %d") */
     GP_CAM_COLL_GRID = 0x21,
     GP_ENV_SAMPLES = 0x22,
     GP_OCCLUSION = 0x23,
@@ -2017,8 +2017,7 @@ int LoadAllMobys(int reload, int restoreCheckpoint)
             LoadByteGrid((ByteGridHeader *)(base + engine[0x10]));
         }
 
-        /* occlusion octants: a centre, then a 0x80-byte visibility set per octant around it
-           (Replanetizer calls engine 0x08 "unk1, ship missions") */
+        /* occlusion octants: a centre, then a 0x80-byte visibility set per octant around it */
         OcclOct = engine[2] != 0 ? base + engine[2] : NULL;
         Loaders_RelocSpaceWadPtrs((int *)(base + engine[0x1c]));
 

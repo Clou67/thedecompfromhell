@@ -15,7 +15,6 @@
 #include "game/hud.h"
 #include "game/loaders.h"
 #include "game/main.h"
-#include "game/mcstate.h"
 #include "game/memcard.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"

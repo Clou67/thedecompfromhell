@@ -301,3 +301,17 @@ g_FootstepSoundBase	u8 NAME[] /* 0x731be8: per level, first footstep sound after
 g_pSoundInstances	SoundInstance *NAME /* 0x9644f4 */
 g_SoundCnt	int NAME /* 0x9644f0 */
 g_heroWaterZ	float NAME /* 0x969fd0 */
+g_CardWarning	int NAME /* 0x71fa40: show the memory card warning (copied from g_CardBootWarning) */
+g_CardBootWarning	int NAME /* 0x71fae8 */
+g_CardOp	int NAME /* 0x71fb08: pending memory card operation, -1 none */
+g_CardOpStep	int NAME /* 0x71fb0c */
+g_CardError	int NAME /* 0x71fb10: the last memory card operation failed */
+g_CardStateTimer	int NAME /* 0xa20880: frames in g_CardState */
+g_CardErrorSeen	int NAME /* 0xa20884 */
+g_CardMsgScale	int NAME /* 0x726534: 16.16 */
+g_CardMsgBgColor	u64 NAME /* 0xa20848 */
+g_CardMsgTextColor	u32 NAME /* 0xa20850 */
+g_CardMsgTextClear	u32 NAME /* 0xa20854 */
+g_CardState	int NAME /* 0xa0fd1c: CARD_STATE_* */
+g_CardStateFlags	u32 NAME /* 0xa0fd20: CARD_FLAG_* */
+g_CardStateFuncs	CardStateFunc NAME[25] /* 0x7265bc: one per CARD_STATE_* */

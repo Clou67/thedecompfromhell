@@ -159,7 +159,7 @@ u64 SCE_GS_SET_CLAMP(int param_1,int param_2,int param_3,int param_4,int param_5
 undefined8 FUN_00502f5c(void);
 undefined8 FUN_00502f64(void);
 u64 SCE_GS_SET_MIPTBP1(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6);
-undefined8 FUN_00502f74_RET_0(void);
+u64 FUN_00502f74_RET_0(int param_1,int param_2,int param_3,int param_4,int param_5);
 namespace idol_draw { uint Blend(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6,int param_7,int param_8); } 
 u64 FUN_00502f98(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6,int param_7,int param_8);
 undefined8 FUN_00502fb4(void);

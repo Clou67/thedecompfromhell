@@ -5,7 +5,7 @@ errors	file
 165	game/collproc.cpp
 0	game/crt0.cpp
 0	game/debug.cpp
-778	game/draw.cpp
+775	game/draw.cpp
 12	game/fUnk.cpp
 0	game/freeze.cpp
 0	game/help.cpp
@@ -18,8 +18,8 @@ errors	file
 0	game/loaders.cpp
 2196	game/mUnk.cpp
 0	game/main.cpp
-95	game/map.cpp
-5	game/mcstate.cpp
+94	game/map.cpp
+0	game/mcstate.cpp
 0	game/memcard.cpp
 0	game/mesh.cpp
 0	game/mission.cpp
@@ -32,14 +32,14 @@ errors	file
 445	game/partupd.cpp
 26	game/path.cpp
 629	game/pause.cpp
-5	game/rUnk.cpp
+4	game/rUnk.cpp
 0	game/respawn.cpp
 4	game/sUnk.cpp
 0	game/skyfunc.cpp
 0	game/skyproc.cpp
 0	game/sound.cpp
-203	game/space.cpp
-73	game/tieproc.cpp
+202	game/space.cpp
+61	game/tieproc.cpp
 124	game/update.cpp
 568	game/update/camera0.cpp
 13	game/update/camera1.cpp
@@ -169,7 +169,7 @@ errors	file
 1	game/update/moby1159.cpp
 163	game/update/moby1160.cpp
 7	game/update/moby1167.cpp
-10	game/update/moby1168.cpp
+8	game/update/moby1168.cpp
 22	game/update/moby1169.cpp
 10	game/update/moby1170.cpp
 10	game/update/moby1172.cpp
@@ -190,7 +190,7 @@ errors	file
 2	game/update/moby1206.cpp
 8	game/update/moby1208.cpp
 13	game/update/moby1209.cpp
-106	game/update/moby121.cpp
+105	game/update/moby121.cpp
 18	game/update/moby1212.cpp
 25	game/update/moby1213.cpp
 20	game/update/moby1214.cpp
@@ -400,7 +400,7 @@ errors	file
 0	game/update/moby1577.cpp
 20	game/update/moby158.cpp
 0	game/update/moby1584.cpp
-90	game/update/moby160.cpp
+89	game/update/moby160.cpp
 0	game/update/moby161.cpp
 2	game/update/moby1629.cpp
 3	game/update/moby163.cpp
@@ -454,7 +454,7 @@ errors	file
 0	game/update/moby1828.cpp
 4	game/update/moby1834.cpp
 0	game/update/moby1835.cpp
-14	game/update/moby184.cpp
+13	game/update/moby184.cpp
 24	game/update/moby1843.cpp
 7	game/update/moby1844.cpp
 0	game/update/moby1845.cpp
@@ -580,7 +580,7 @@ errors	file
 11	game/update/moby29.cpp
 45	game/update/moby291.cpp
 2	game/update/moby293.cpp
-52	game/update/moby294.cpp
+51	game/update/moby294.cpp
 14	game/update/moby295.cpp
 9	game/update/moby296.cpp
 23	game/update/moby298.cpp
@@ -588,7 +588,7 @@ errors	file
 20	game/update/moby30.cpp
 10	game/update/moby303.cpp
 3	game/update/moby304.cpp
-25	game/update/moby305.cpp
+24	game/update/moby305.cpp
 0	game/update/moby306.cpp
 0	game/update/moby308.cpp
 11	game/update/moby309.cpp
@@ -745,8 +745,8 @@ errors	file
 135	game/update/moby577.cpp
 30	game/update/moby578.cpp
 10	game/update/moby58.cpp
-138	game/update/moby580.cpp
-11	game/update/moby582.cpp
+136	game/update/moby580.cpp
+10	game/update/moby582.cpp
 15	game/update/moby583.cpp
 0	game/update/moby584.cpp
 26	game/update/moby585.cpp
@@ -754,7 +754,7 @@ errors	file
 12	game/update/moby587.cpp
 8	game/update/moby6.cpp
 29	game/update/moby600.cpp
-20	game/update/moby602.cpp
+17	game/update/moby602.cpp
 4	game/update/moby604.cpp
 2	game/update/moby605.cpp
 0	game/update/moby607.cpp
@@ -853,7 +853,7 @@ errors	file
 20	game/update/moby737.cpp
 29	game/update/moby738.cpp
 108	game/update/moby739.cpp
-168	game/update/moby74.cpp
+166	game/update/moby74.cpp
 44	game/update/moby740.cpp
 51	game/update/moby741.cpp
 2	game/update/moby743.cpp
@@ -891,7 +891,7 @@ errors	file
 8	game/update/moby792.cpp
 0	game/update/moby793.cpp
 18	game/update/moby794.cpp
-56	game/update/moby8.cpp
+55	game/update/moby8.cpp
 21	game/update/moby800.cpp
 0	game/update/moby804.cpp
 3	game/update/moby805.cpp

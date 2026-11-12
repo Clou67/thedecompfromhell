@@ -247,7 +247,6 @@ extern undefined4 DAT_00a20800; /* 0xa20800 */
 extern undefined4 DAT_00a20804; /* 0xa20804 */
 extern undefined4 DAT_00a20810; /* 0xa20810 */
 extern undefined4 DAT_00a20814; /* 0xa20814 */
-extern undefined4 DAT_00a20884; /* 0xa20884 */
 extern undefined4 DAT_00a35719; /* no defined data */
 extern undefined4 DAT_00a3592e; /* no defined data */
 extern undefined4 DAT_00a35932; /* no defined data */
@@ -428,6 +427,7 @@ extern pointer32 PTR_WeaponView_MobyUpdate_00707708; /* 0x707708 */
 extern PlanetsPage g_PlanetsPage[19]; /* 0x7352b0 */
 extern uint UINT_ARRAY_0096c1dc[2]; /* 0x96c1dc */
 extern undefined4 g_BackpackMobyClass; /* 0x72105c */
+extern int g_CardErrorSeen; /* 0xa20884 */ /* type set in global_types.tsv */
 extern undefined4 g_ChallengeMode; /* 0x96c9fc */
 extern char g_CollectedGoldBolts[72]; /* 0xa0ca34 */
 extern undefined4 g_FrameCount; /* 0x96ca00 */

@@ -21,6 +21,7 @@ typedef char FreezeState_size_check[sizeof(FreezeState) == 0x34 ? 1 : -1];
 
 // ---- globals
 extern undefined4 DAT_0071f30c; /* 0x71f30c */
+extern undefined4 DAT_0071fad4; /* 0x71fad4 */
 extern undefined1 DAT_0096b2ef; /* 0x96b2ef */
 extern undefined4 DAT_0096b9e0; /* 0x96b9e0 */
 extern undefined4 DAT_0096b9f0; /* 0x96b9f0 */

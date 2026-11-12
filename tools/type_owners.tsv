@@ -82,3 +82,4 @@ SeqFrameFix	game/loaders
 SKY	game/skyfunc
 SoundData	game/sound
 SoundInstance	game/sound
+CardStateFunc	game/mcstate

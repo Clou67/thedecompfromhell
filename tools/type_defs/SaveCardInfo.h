@@ -14,7 +14,8 @@ typedef char SaveFileInfo_size_check[sizeof(SaveFileInfo) == 0x1c ? 1 : -1];
    memcard_RestoreData; the 5 files and the rest of the layout are a guess. */
 typedef struct SaveCardInfo {
     SaveFileInfo files[5];   /* 0x00 */
-    u8 _pad8c[8];
+    u8 _pad8c[4];
+    int status;              /* 0x90  freeze.cpp sets 3; WARNING / NOCARD reset 2 to 0 */
     int loadErrors;          /* 0x94  set by memcard_RestoreData */
     u8 _pad98[0x28];
 } SaveCardInfo;

@@ -8789,7 +8789,7 @@ undefined8 SaveGame_Update(int param_1)
     DAT_0071fb18 = uVar1;
     memcard_Save(1,-1);
     DAT_00a52cd4 = 1;
-    DAT_00a20884 = 0;
+    g_CardErrorSeen = 0;
     DAT_00a52cd8 = 0x4fb5;
   }
   *(undefined4 *)(param_1 + 0x4c) = 2;
@@ -8802,7 +8802,7 @@ undefined8 SaveGame_Update(int param_1)
       return 0;
     }
     DAT_00a52cd4 = 0;
-    if (((DAT_0071fb10 != 0) || (DAT_0071fa40 != 0)) || (DAT_00a20884 != 0)) {
+    if (((g_CardError != 0) || (g_CardWarning != 0)) || (g_CardErrorSeen != 0)) {
       g_memcardGameSaved = 0;
       g_CardStateFlags = g_CardStateFlags | 0x80;
       DisplayPrompt(3,g_currentMenuPage,0);
@@ -8880,7 +8880,7 @@ undefined8 SaveLoad_Update2(int param_1)
       return 0;
     }
     DAT_00a52cd4 = 0;
-    if (((DAT_0071fb10 != 0) || (DAT_0071fa40 != 0)) || (DAT_00a20884 != 0)) {
+    if (((g_CardError != 0) || (g_CardWarning != 0)) || (g_CardErrorSeen != 0)) {
       g_memcardGameSaved = 0;
       g_CardStateFlags = g_CardStateFlags | 0x100;
       DisplayPrompt(3,g_currentMenuPage,0);
@@ -8917,12 +8917,12 @@ undefined8 SaveLoad_Update2(int param_1)
       PlayMobySound(0,0x11,*(MobyInstance **)(param_1 + 0x14));
       DAT_0071faec = 0;
       g_SaveCurFile = *(undefined4 *)(param_1 + 0x40);
-      if (DAT_0071fb08 < 0) {
-        DAT_0071fb08 = 0xd;
-        DAT_0071fb0c = 0;
+      if (g_CardOp < 0) {
+        g_CardOp = 0xd;
+        g_CardOpStep = 0;
       }
       DAT_00a52cd4 = 1;
-      DAT_00a20884 = 0;
+      g_CardErrorSeen = 0;
       DAT_00a52cd8 = 0x4fb6;
     }
     if (*(int *)(param_1 + 0x40) != iVar1) {
@@ -8979,7 +8979,7 @@ undefined8 LoadGame_Update(int param_1)
         PrepareChallengeModeSave(iVar1);
       }
       DAT_00a52cd4 = 1;
-      DAT_00a20884 = 0;
+      g_CardErrorSeen = 0;
       DAT_00a52cd8 = 0x4fb5;
     }
     *(undefined4 *)(param_1 + 0x4c) = 2;
@@ -9070,7 +9070,7 @@ undefined8 LoadGame_Update(int param_1)
       }
       else {
         DAT_00a52cd4 = 0;
-        if (((DAT_0071fb10 == 0) && (DAT_0071fa40 == 0)) && (DAT_00a20884 == 0)) {
+        if (((g_CardError == 0) && (g_CardWarning == 0)) && (g_CardErrorSeen == 0)) {
           g_memcardGameSaved = 1;
           (&DAT_0071fa48)[g_SaveCurFile * 7] = g_boltCount;
           uVar6 = g_FrameCount;

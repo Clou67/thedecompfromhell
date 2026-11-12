@@ -3276,7 +3276,7 @@ u64 SCE_GS_SET_MIPTBP1(int param_1,int param_2,int param_3,int param_4,int param
 
 
 // 0x0502f74 (0x8 bytes)
-undefined8 FUN_00502f74_RET_0(void)
+u64 FUN_00502f74_RET_0(int param_1,int param_2,int param_3,int param_4,int param_5)
 
 {
   return 0;

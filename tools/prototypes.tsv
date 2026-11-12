@@ -236,3 +236,4 @@ sound_Play	int sound_Play(SoundDef *def,int flags,MobyInstance *pMoby,float *pos
 sound_AmbientPlay	int sound_AmbientPlay(int sound,int flags,SoundInstance *pAmbient,int vol)
 sound_SetupAmbientFunctions	void sound_SetupAmbientFunctions(SoundInstance *sound)
 sound_SetReverb	void sound_SetReverb(SoundInstance *owner,int type,int depth,int delay,int feedback)
+FUN_00502f74_RET_0	u64 FUN_00502f74_RET_0(int param_1,int param_2,int param_3,int param_4,int param_5)

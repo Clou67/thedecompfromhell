@@ -1,354 +1,302 @@
-// game/mcstate.cpp -- reconstructed from NPEA00385 EBOOT
-// STATUS: NOT STARTED (raw Ghidra output)
-// 27 functions, 0xe64fc-0xe6b08
 #include "game/mcstate.h"
 #include "game/memcard.h"
 #include "game/pause.h"
 #include "idol/fastfunc.h"
 
-// 0x00e64fc (0x98 bytes)
+/* g_CardState: index into g_CardStateFuncs */
+enum {
+    CARD_STATE_INIT = 0,
+    CARD_STATE_GOOD_SAVE = 1,
+    CARD_STATE_WARNING = 2,
+    CARD_STATE_NOCARD = 3,
+    CARD_STATE_WAIT_FOR_CARD = 4,
+    CARD_STATE_UNFORMATTED = 5,
+    CARD_STATE_PROMPT_FORMAT = 6,
+    CARD_STATE_FORMAT_PENDING = 7,
+    CARD_STATE_FORMATTING = 8,
+    CARD_STATE_FORMATTED = 9,
+    CARD_STATE_CHECK_SAVE = 10,
+    CARD_STATE_CHECKING_SAVE = 11,
+    CARD_STATE_NOSAVE = 12,
+    CARD_STATE_PROMPT_CREATE_SAVE = 13,
+    CARD_STATE_CREATE_SAVE_PENDING = 14,
+    CARD_STATE_CREATING_SAVE = 15,
+    CARD_STATE_NEWCARD = 16,
+    CARD_STATE_FORMAT_FAILED = 17,
+    CARD_STATE_CREATE_FAILED = 18,
+    CARD_STATE_NO_ROOM = 19,
+    CARD_STATE_LOAD_FAILED = 20,
+    CARD_STATE_SAVE_FAILED = 21,
+    CARD_STATE_SAVING = 22,
+    CARD_STATE_PROMPT_BEGIN_UNFORMATTED = 23,
+    CARD_STATE_PROMPT_BEGIN_NOSAVE = 24,
+};
+
+/* g_CardStateFlags */
+enum {
+    CARD_FLAG_WARNING = 0x001,
+    CARD_FLAG_CREATE = 0x002,         /* NOSAVE: go on to PROMPT_CREATE_SAVE */
+    CARD_FLAG_GOOD_CLEAR = 0x006,     /* cleared by GOOD_SAVE */
+    CARD_FLAG_YES = 0x010,
+    CARD_FLAG_NO = 0x020,
+    CARD_FLAG_MESSAGE = 0x040,        /* a failure message is up */
+    CARD_FLAG_SAVE_FAILED = 0x080,
+    CARD_FLAG_LOAD_FAILED = 0x100,
+    CARD_FLAG_SAVE = 0x200,
+    CARD_FLAG_SAVE_ERROR = 0x400,
+};
+
+/* g_CardOp */
+enum {
+    CARD_OP_CHECK = 7,
+    CARD_OP_CREATE = 9,
+};
+
+#define CARD_STATUS_WARNED 2
+
 void MCSTATE_InitColors(void)
-
 {
-  DAT_00726534 = 0x10000;
-  DAT_00a20848 = FUN_00502f74_RET_0(0,0,0,0x80,0);
-  DAT_00a20850 = FUN_00502f74_RET_0(0xff,0xff,0xaf,0x80,0);
-  DAT_00a20854 = FUN_00502f74_RET_0(0xff,0xff,0xaf,0,0);
-  return;
+    g_CardMsgScale = 0x10000;
+    g_CardMsgBgColor = FUN_00502f74_RET_0(0, 0, 0, 0x80, 0);
+    g_CardMsgTextColor = (u32)FUN_00502f74_RET_0(0xff, 0xff, 0xaf, 0x80, 0);
+    g_CardMsgTextClear = (u32)FUN_00502f74_RET_0(0xff, 0xff, 0xaf, 0, 0);
 }
 
+/* a failure the save code reported: show its message */
+static inline int CardTakeFailure(void)
+{
+    if (g_CardStateFlags & CARD_FLAG_SAVE_FAILED) {
+        g_CardStateFlags = (g_CardStateFlags & ~CARD_FLAG_SAVE_FAILED) | CARD_FLAG_MESSAGE;
+        g_CardState = CARD_STATE_SAVE_FAILED;
+        return 1;
+    }
 
-// 0x00e6598 (0x114 bytes)
+    if (g_CardStateFlags & CARD_FLAG_LOAD_FAILED) {
+        g_CardStateFlags = (g_CardStateFlags & ~CARD_FLAG_LOAD_FAILED) | CARD_FLAG_MESSAGE;
+        g_CardState = CARD_STATE_LOAD_FAILED;
+        return 1;
+    }
+
+    return 0;
+}
+
 void MCSTATE_Update(void)
-
 {
-  int iVar1;
-  
-  iVar1 = g_CardState;
-  if ((DAT_0071fb10 != 0) || (DAT_0071fa40 != 0)) {
-    DAT_00a20884 = 1;
-  }
-  if ((g_CardStateFlags & 0x80) != 0) {
-    g_CardStateFlags = g_CardStateFlags & 0xffffff7f | 0x40;
-    g_CardState = 0x15;
-  }
-  if ((g_CardStateFlags & 0x100) != 0) {
-    g_CardStateFlags = g_CardStateFlags & 0xfffffeff | 0x40;
-    g_CardState = 0x14;
-  }
-  (**(code **)(&g_CardStateFuncs)[g_CardState])();
-  DAT_00a20880 = DAT_00a20880 + 1;
-  if (g_CardState != iVar1) {
-    DAT_00a20880 = 0;
-  }
-  return;
+    int oldState = g_CardState;
+
+    if (g_CardError != 0 || g_CardWarning != 0) {
+        g_CardErrorSeen = 1;
+    }
+
+    if (g_CardStateFlags & CARD_FLAG_SAVE_FAILED) {
+        g_CardStateFlags = (g_CardStateFlags & ~CARD_FLAG_SAVE_FAILED) | CARD_FLAG_MESSAGE;
+        g_CardState = CARD_STATE_SAVE_FAILED;
+    }
+
+    if (g_CardStateFlags & CARD_FLAG_LOAD_FAILED) {
+        g_CardStateFlags = (g_CardStateFlags & ~CARD_FLAG_LOAD_FAILED) | CARD_FLAG_MESSAGE;
+        g_CardState = CARD_STATE_LOAD_FAILED;
+    }
+
+    g_CardStateFuncs[g_CardState]();
+
+    g_CardStateTimer++;
+    if (g_CardState != oldState) {
+        g_CardStateTimer = 0;
+    }
 }
 
-
-// 0x00e66ac (0x28 bytes)
 void CardState_INIT(void)
-
 {
-  g_memcardGameSaved = 0;
-  DAT_0071fa40 = DAT_0071fae8;
-  g_CardState = 3;
-  return;
+    g_memcardGameSaved = 0;
+    g_CardWarning = g_CardBootWarning;
+    g_CardState = CARD_STATE_NOCARD;
 }
 
-
-// 0x00e66d4 (0xb8 bytes)
 void CardState_GOOD_SAVE(void)
-
 {
-  uint uVar1;
-  uint uVar2;
-  
-  uVar1 = g_CardStateFlags & 0xfffffff9;
-  if ((g_CardStateFlags & 0x80) == 0) {
-    if ((g_CardStateFlags & 0x100) == 0) {
-      if (DAT_0071fa40 == 0) {
-        uVar2 = g_CardStateFlags & 0x200;
-        g_CardStateFlags = uVar1;
-        if (uVar2 != 0) {
-          g_CardStateFlags = uVar1 ^ 0x200;
-          g_CardState = 0x16;
-        }
-      }
-      else {
+    g_CardStateFlags &= ~CARD_FLAG_GOOD_CLEAR;
+
+    if (CardTakeFailure()) {
+        return;
+    }
+
+    if (g_CardWarning != 0) {
         g_memcardGameSaved = 0;
-        g_CardState = 2;
-        g_CardStateFlags = uVar1 | 1;
-      }
+        g_CardState = CARD_STATE_WARNING;
+        g_CardStateFlags |= CARD_FLAG_WARNING;
     }
-    else {
-      g_CardState = 0x14;
-      g_CardStateFlags = uVar1 ^ 0x100 | 0x40;
+    else if (g_CardStateFlags & CARD_FLAG_SAVE) {
+        g_CardStateFlags &= ~CARD_FLAG_SAVE;
+        g_CardState = CARD_STATE_SAVING;
     }
-  }
-  else {
-    g_CardState = 0x15;
-    g_CardStateFlags = uVar1 ^ 0x80 | 0x40;
-  }
-  return;
 }
 
+static inline void CardClearWarned(void)
+{
+    if (g_SaveCards[g_SaveCurCard].status == CARD_STATUS_WARNED) {
+        g_SaveCards[g_SaveCurCard].status = 0;
+    }
+}
 
-// 0x00e678c (0x58 bytes)
 void CardState_WARNING(void)
-
 {
-  if ((&DAT_0071fad4)[g_SaveCurCard * 0x30] == 2) {
-    (&DAT_0071fad4)[g_SaveCurCard * 0x30] = 0;
-  }
-  if ((g_CardStateFlags & 1) == 0) {
-    g_CardState = 3;
-  }
-  return;
-}
+    CardClearWarned();
 
-
-// 0x00e67e4 (0x64 bytes)
-void CardState_NOCARD(void)
-
-{
-  DAT_0071fb08 = 0xffffffff;
-  DAT_0071fb0c = 0xffffffff;
-  DAT_0071fa44 = 0xffffffff;
-  DAT_0071fa60 = 0xffffffff;
-  DAT_0071fa7c = 0xffffffff;
-  DAT_0071fa98 = 0xffffffff;
-  DAT_0071fab4 = 0xffffffff;
-  if ((&DAT_0071fad4)[g_SaveCurCard * 0x30] == 2) {
-    (&DAT_0071fad4)[g_SaveCurCard * 0x30] = 0;
-  }
-  g_CardState = 4;
-  return;
-}
-
-
-// 0x00e6848 (0x24 bytes)
-void CardState_WAIT_FOR_CARD(void)
-
-{
-  g_CardState = 9;
-  g_CardStateFlags = g_CardStateFlags & 0xffffffdf;
-  return;
-}
-
-
-// 0x00e686c (0x10 bytes)
-void CardState_UNFORMATTED(void)
-
-{
-  g_CardState = 3;
-  return;
-}
-
-
-// 0x00e687c (0x10 bytes)
-void CardState_PROMPT_FORMAT(void)
-
-{
-  g_CardState = 9;
-  return;
-}
-
-
-// 0x00e688c (0x10 bytes)
-void CardState_FORMAT_PENDING(void)
-
-{
-  g_CardState = 9;
-  return;
-}
-
-
-// 0x00e689c (0x10 bytes)
-void CardState_FORMATTING(void)
-
-{
-  g_CardState = 0xe;
-  return;
-}
-
-
-// 0x00e68ac (0x10 bytes)
-void CardState_FORMATTED(void)
-
-{
-  g_CardState = 10;
-  return;
-}
-
-
-// 0x00e68bc (0x34 bytes)
-void CardState_CHECK_SAVE(void)
-
-{
-  if (DAT_0071fb08 < 0) {
-    DAT_0071fb08 = 7;
-    DAT_0071fb0c = 0;
-  }
-  g_CardState = 0xb;
-  return;
-}
-
-
-// 0x00e68f0 (0x10 bytes)
-void CardState_CHECKING_SAVE(void)
-
-{
-  g_CardState = 0x10;
-  return;
-}
-
-
-// 0x00e6900 (0x24 bytes)
-void CardState_NOSAVE(void)
-
-{
-  if ((g_CardStateFlags & 2) != 0) {
-    g_CardState = 0xd;
-  }
-  return;
-}
-
-
-// 0x00e6924 (0x84 bytes)
-void CardState_PROMPT_CREATE_SAVE(void)
-
-{
-  if ((g_CardStateFlags & 0x20) == 0) {
-    if ((g_CardStateFlags & 0x10) != 0) {
-      g_CardStateFlags = g_CardStateFlags ^ 0x10;
-      g_CardState = 0xe;
+    if ((g_CardStateFlags & CARD_FLAG_WARNING) == 0) {
+        g_CardState = CARD_STATE_NOCARD;
     }
-  }
-  else {
-    g_CardStateFlags = g_CardStateFlags ^ 0x20;
-    g_CardState = ((uint)(ZERO_MASK((uint)g_FrontEnd)) & 0xfffffff4) + 0x18;
-  }
-  return;
 }
 
+void CardState_NOCARD(void)
+{
+    g_CardOp = -1;
+    g_CardOpStep = -1;
 
-// 0x00e69a8 (0x34 bytes)
+    for (int i = 0; i < 5; i++) {
+        g_SaveCards[0].files[i].level = -1;
+    }
+
+    CardClearWarned();
+    g_CardState = CARD_STATE_WAIT_FOR_CARD;
+}
+
+void CardState_WAIT_FOR_CARD(void)
+{
+    g_CardState = CARD_STATE_FORMATTED;
+    g_CardStateFlags &= ~CARD_FLAG_NO;
+}
+
+void CardState_UNFORMATTED(void)
+{
+    g_CardState = CARD_STATE_NOCARD;
+}
+
+void CardState_PROMPT_FORMAT(void)
+{
+    g_CardState = CARD_STATE_FORMATTED;
+}
+
+void CardState_FORMAT_PENDING(void)
+{
+    g_CardState = CARD_STATE_FORMATTED;
+}
+
+void CardState_FORMATTING(void)
+{
+    g_CardState = CARD_STATE_CREATE_SAVE_PENDING;
+}
+
+void CardState_FORMATTED(void)
+{
+    g_CardState = CARD_STATE_CHECK_SAVE;
+}
+
+static inline void CardStartOp(int op)
+{
+    if (g_CardOp < 0) {
+        g_CardOp = op;
+        g_CardOpStep = 0;
+    }
+}
+
+void CardState_CHECK_SAVE(void)
+{
+    CardStartOp(CARD_OP_CHECK);
+    g_CardState = CARD_STATE_CHECKING_SAVE;
+}
+
+void CardState_CHECKING_SAVE(void)
+{
+    g_CardState = CARD_STATE_NEWCARD;
+}
+
+void CardState_NOSAVE(void)
+{
+    if (g_CardStateFlags & CARD_FLAG_CREATE) {
+        g_CardState = CARD_STATE_PROMPT_CREATE_SAVE;
+    }
+}
+
+void CardState_PROMPT_CREATE_SAVE(void)
+{
+    if (g_CardStateFlags & CARD_FLAG_NO) {
+        g_CardStateFlags ^= CARD_FLAG_NO;
+        g_CardState = g_FrontEnd ? CARD_STATE_PROMPT_BEGIN_NOSAVE : CARD_STATE_NOSAVE;
+    }
+    else if (g_CardStateFlags & CARD_FLAG_YES) {
+        g_CardStateFlags ^= CARD_FLAG_YES;
+        g_CardState = CARD_STATE_CREATE_SAVE_PENDING;
+    }
+}
+
 void CardState_CREATE_SAVE_PENDING(void)
-
 {
-  if (DAT_0071fb08 < 0) {
-    DAT_0071fb08 = 9;
-    DAT_0071fb0c = 0;
-  }
-  g_CardState = 0xf;
-  return;
+    CardStartOp(CARD_OP_CREATE);
+    g_CardState = CARD_STATE_CREATING_SAVE;
 }
 
-
-// 0x00e69dc (0x6c bytes)
 void CardState_CREATING_SAVE(void)
-
 {
-  if (DAT_0071fb10 == 0) {
+    if (g_CardError != 0) {
+        g_CardState = CARD_STATE_CREATE_FAILED;
+        g_CardStateFlags |= CARD_FLAG_MESSAGE;
+        return;
+    }
+
     DAT_0071faec = 0;
     g_SaveCurFile = 0;
-    if (DAT_0071fb08 < 0) {
-      DAT_0071fb08 = 7;
-      DAT_0071fb0c = 0;
-    }
-    g_CardState = 0x10;
-  }
-  else {
-    g_CardState = 0x12;
-    g_CardStateFlags = g_CardStateFlags | 0x40;
-  }
-  return;
+    CardStartOp(CARD_OP_CHECK);
+    g_CardState = CARD_STATE_NEWCARD;
 }
 
-
-// 0x00e6a48 (0x10 bytes)
 void CardState_NEWCARD(void)
-
 {
-  g_CardState = 1;
-  return;
+    g_CardState = CARD_STATE_GOOD_SAVE;
 }
 
-
-// 0x00e6a58 (0x10 bytes)
 void CardState_FORMAT_FAILED(void)
-
 {
-  g_CardState = 3;
-  return;
+    g_CardState = CARD_STATE_NOCARD;
 }
 
-
-// 0x00e6a68 (0x10 bytes)
 void CardState_CREATE_FAILED(void)
-
 {
-  g_CardState = 3;
-  return;
+    g_CardState = CARD_STATE_NOCARD;
 }
 
-
-// 0x00e6a78 (0x10 bytes)
 void CardState_NO_ROOM(void)
-
 {
-  g_CardState = 3;
-  return;
+    g_CardState = CARD_STATE_NOCARD;
 }
 
-
-// 0x00e6a88 (0x10 bytes)
 void CardState_LOAD_FAILED(void)
-
 {
-  g_CardState = 3;
-  return;
+    g_CardState = CARD_STATE_NOCARD;
 }
 
-
-// 0x00e6a98 (0x10 bytes)
 void CardState_SAVE_FAILED(void)
-
 {
-  g_CardState = 3;
-  return;
+    g_CardState = CARD_STATE_NOCARD;
 }
 
-
-// 0x00e6aa8 (0x40 bytes)
 void CardState_SAVING(void)
-
 {
-  g_CardState = 1;
-  if (DAT_0071fb10 != 0) {
-    g_CardState = 0x15;
-    g_memcardGameSaved = 0;
-    g_CardStateFlags = g_CardStateFlags | 0x440;
-  }
-  return;
+    g_CardState = CARD_STATE_GOOD_SAVE;
+
+    if (g_CardError != 0) {
+        g_CardState = CARD_STATE_SAVE_FAILED;
+        g_memcardGameSaved = 0;
+        g_CardStateFlags |= CARD_FLAG_SAVE_ERROR | CARD_FLAG_MESSAGE;
+    }
 }
 
-
-// 0x00e6ae8 (0x10 bytes)
 void CardState_PROMPT_BEGIN_UNFORMATTED(void)
-
 {
-  g_CardState = 3;
-  return;
+    g_CardState = CARD_STATE_NOCARD;
 }
 
-
-// 0x00e6af8 (0x10 bytes)
 void CardState_PROMPT_BEGIN_NOSAVE(void)
-
 {
-  g_CardState = 0xc;
-  return;
+    g_CardState = CARD_STATE_NOSAVE;
 }
-
-

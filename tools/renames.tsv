@@ -401,3 +401,14 @@ FUN_00505af8	snd_AutoReverb
 FUN_00506048	snd_SetPlaybackMode
 FUN_00505c6c	snd_BankLoadByPath
 ____Unused_SetStride20Field1c	sound_SetDefsBank
+DAT_0071fa40	g_CardWarning
+DAT_0071fae8	g_CardBootWarning
+DAT_0071fb08	g_CardOp
+DAT_0071fb0c	g_CardOpStep
+DAT_0071fb10	g_CardError
+DAT_00a20880	g_CardStateTimer
+DAT_00a20884	g_CardErrorSeen
+DAT_00726534	g_CardMsgScale
+DAT_00a20848	g_CardMsgBgColor
+DAT_00a20850	g_CardMsgTextColor
+DAT_00a20854	g_CardMsgTextClear

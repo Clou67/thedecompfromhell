@@ -1504,8 +1504,6 @@ int hud::GetIconFrameTex(uint param_1,int param_2)
   int iVar2;
   IconTableEntries *pIVar3;
   
-                    /* The UiTexCategory categories can be inspected closer in replanetizer via it's
-                       UI textures tab in the textureframe */
   uVar1 = 0;
   pIVar3 = IconTableEntry;
   while (pIVar3->iconId != param_1 && pIVar3->iconId != 0xffff) {

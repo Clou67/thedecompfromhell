@@ -4640,7 +4640,7 @@ struct LevelCamData {
 
 typedef struct LevelCollHeader LevelCollHeader, *PLevelCollHeader;
 
-struct LevelCollHeader { /* Level collision block header (Replanetizer Collision ctor). Offsets are relative to this header. +0x8 (Replanetizer 'unknown' collision) is never read by RC1 PS3. */
+struct LevelCollHeader { /* Level collision block header. Offsets are relative to this header. +0x8 is never read by RC1 PS3. */
     int envGridOffset;
     int heroCollOffset;
     int unkCollOffset;
