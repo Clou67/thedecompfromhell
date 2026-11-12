@@ -16,6 +16,7 @@ extern undefined4 DAT_010ea104; /* 0x10ea104 */
 extern undefined1 DAT_0159c350; /* 0x159c350 */
 extern u8 *g_GameplayBuffer; /* 0xa108ec: 0x200000 bytes, the level's gameplay file (Gameplay points into it) */ /* type set in global_types.tsv */
 extern undefined4 g_HasInited; /* 0x71cc6c */
+extern void *g_MemSlotsBase; /* 0xa108d8: start of the MemSlots pool */ /* type set in global_types.tsv */
 extern bool g_MemSlotsCreated; /* 0x724634 */ /* type set in global_types.tsv */
 extern u8 *g_MobyClassBuffer; /* 0xa108e8: 0x60000 bytes, moby classes 0x30000 each */ /* type set in global_types.tsv */
 

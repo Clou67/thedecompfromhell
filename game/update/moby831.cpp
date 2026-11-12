@@ -35,7 +35,7 @@ void FUN_0047ebac(MobyInstance *param_1)
     bVar1 = param_1->levelFlagIdx;
     uVar2 = param_1->uid;
     (&g_CheckpointLive.objState[0])[(short)uVar2] = bVar1 + 2;
-    if ((bVar1 == 0xff) || (((&DAT_00a202c0)[bVar1] != -1 && (g_LevelFlags[Level][bVar1] == -1)))) {
+    if ((bVar1 == 0xff) || (((&g_CheckpointLevelFlags)[bVar1] != -1 && (g_LevelFlags[Level][bVar1] == -1)))) {
       (&g_Checkpoint.objState[0])[(short)uVar2] = bVar1 + 2;
     }
     param_1->state = '\x02';

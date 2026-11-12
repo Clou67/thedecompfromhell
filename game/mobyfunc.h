@@ -1172,7 +1172,6 @@ extern Vec4 g_HeroLightDir; /* 0xa4c4e0: UpdateHeroLightAngle */ /* type set in 
 extern u8 *g_MobyDrawListEnd; /* 0xa39098 */ /* type set in global_types.tsv */
 extern u8 *g_MobyDrawListStart; /* 0xa3909c: draw entries, 0xb0 bytes each */ /* type set in global_types.tsv */
 extern int g_MobyShadowCount; /* 0xa49f50 (guess) */ /* type set in global_types.tsv */
-extern int g_MobyShadowList[]; /* 0xa4a0e0: the shadow list DrawScreenEffect_152df8 draws (Ghidra label "____oClassInstanceList") */ /* type set in global_types.tsv */
 extern int g_MobySkinCount; /* 0xa49b44 (guess: skinned mobys queued for STUB_000f5a7c) */ /* type set in global_types.tsv */
 extern u8 *g_pMobyShadowTag; /* 0xa49f54: the shadow pass's packet tag */ /* type set in global_types.tsv */
 

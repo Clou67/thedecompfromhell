@@ -1,15 +1,19 @@
 #pragma once
 // game/loaders.h
 #include "types.h"
-#include "game/camera.h"
-#include "game/skyfunc.h"
+#include "game/mobyfunc.h"
 
 // ---- types
-struct Cylinder {
-    struct Mtx3 matrix;
-    struct Vec4 pos;
-    struct Mtx3 imatrix;
-    struct Vec4 rot;
+struct EffectTexHeader { /* Pre-baked RSX texture registers; words 0-6 go to methods 0x1A00+unit*0x20 (OFFSET,FORMAT,ADDRESS,CONTROL0,CONTROL1,FILTER,IMAGE_RECT), word 7 to 0x1840+unit*4 (CONTROL3) */
+    int offset;
+    int format;
+    int address;
+    int control0;
+    int control1;
+    int filter;
+    int imageRect;
+    int control3;
+    int unknown_20;
 };
 
 /* header of the level's byte grid (LoadByteGrid); the rows of bytes follow */
@@ -46,18 +50,15 @@ extern undefined4 DAT_0095d2da; /* no defined data */
 extern int DAT_009636c0; /* 0x9636c0 */ /* type set in global_types.tsv */
 extern undefined4 DAT_00964568; /* 0x964568 */
 extern undefined4 DAT_0096456c; /* 0x96456c */
-extern undefined4 DAT_00a108f4; /* 0xa108f4 */
 extern undefined4 DAT_00a15c14; /* 0xa15c14 */
 extern undefined4 DAT_00a15c7c; /* 0xa15c7c */
 extern undefined4 DAT_00a15f50; /* 0xa15f50 */
 extern undefined4 DAT_00a15f70; /* 0xa15f70 */
 extern undefined4 DAT_00a15f74; /* 0xa15f74 */
-extern undefined4 DAT_00a15f80; /* 0xa15f80 */
 extern undefined4 DAT_00a1a860; /* 0xa1a860 */
 extern undefined4 DAT_00a1c840; /* 0xa1c840 */
 extern undefined4 DAT_00a1c880; /* 0xa1c880 */
 extern undefined4 DAT_00a1c900; /* 0xa1c900 */
-extern undefined4 DAT_00a202c0; /* no defined data */
 extern undefined4 DAT_00a204ac; /* 0xa204ac */
 extern undefined4 DAT_00a204b0; /* 0xa204b0 */
 extern undefined4 DAT_00a4d540; /* 0xa4d540 */
@@ -80,14 +81,13 @@ extern int OCLASSES_SPACESHIP[3]; /* 0x731c40 */
 extern pointer32 PTR_AdvanceLoadingStage_00705ad0; /* 0x705ad0 */
 extern pointer32 PTR_sound_BasicCB_00707c38; /* 0x707c38 */
 extern undefined4 ScreenColorEffectLevel; /* 0x95cf1c */
-extern undefined4 ShrubInstanceCnt; /* 0xa1a798 */
 extern int SphereCnt; /* 0xa51bcc */
 extern undefined4 SplineCnt; /* 0xa51ea0 */
 extern void * SplineOfs; /* 0xa51ea4 */
 extern Tfrag * Tfrags; /* 0x92d440 */
 extern undefined4 TfragsCnt; /* 0x92d444 */
 extern TieInstance * g_TieInstance; /* 0xe583f4 */
-extern TieInstance * TieInstanceEnd; /* 0xe583f8 */
+extern s8 g_CheckpointLevelFlags; /* 0xa202c0: per level flag, -1 = clear at this checkpoint (indexed as an array) */ /* type set in global_types.tsv */
 extern short g_CockpitTexDef[8]; /* 0x7247d0 */ /* type set in global_types.tsv */
 extern int *g_EffectTableEntries; /* 0x95e9f4 */ /* type set in global_types.tsv */
 extern int *g_EffectTableOffsets; /* 0x95e9f8 */ /* type set in global_types.tsv */
@@ -100,7 +100,7 @@ extern HeroCollHeader * g_HeroCollision; /* 0xa15c00 */
 extern undefined4 g_IsPal; /* 0x966ae8 */
 extern undefined4 g_JapanFontTex; /* 0x90d724 */
 extern undefined2 g_LoadingStage; /* 0x964560 */
-extern void *g_MemSlotsBase; /* 0xa108d8: start of the MemSlots pool */ /* type set in global_types.tsv */
+extern int g_MobyShadowList[]; /* 0xa4a0e0: the shadow list DrawScreenEffect_152df8 draws (Ghidra label "____oClassInstanceList") */ /* type set in global_types.tsv */
 extern int g_MobyTexAddrs[]; /* 0xa37390: per slot, texture address + a tag */ /* type set in global_types.tsv */
 extern int g_MobyTexDefCnt; /* 0xa37388 */ /* type set in global_types.tsv */
 extern short g_MobyTexDefs[][8]; /* 0xa4c540: tex_def per moby texture slot */ /* type set in global_types.tsv */
@@ -121,6 +121,7 @@ extern float g_byteGridMin; /* 0xa204a0 */ /* type set in global_types.tsv */
 extern int g_byteGridRows; /* 0xa2049c */ /* type set in global_types.tsv */
 extern int g_byteGridStride; /* 0xa20498 */ /* type set in global_types.tsv */
 extern undefined4 g_gadgetIdx; /* 0xa4dae8 */
+extern u32 g_pGameplayFile; /* 0xa108f4: the gameplay file buffer (a MemSlots pointer) */ /* type set in global_types.tsv */
 extern void *g_pPifFileBuffer; /* 0xa10914 */ /* type set in global_types.tsv */
 extern undefined2 mClass_to_oClass; /* 0xa35300 */
 extern undefined4 maximumNumWeapons; /* 0xa4dae4 */
@@ -149,7 +150,7 @@ void ParseColl(char *data);
 void PrintMobyMemory(int *classes, int cnt);
 void STUB_000dce3c(...);
 void LoadHelp(void);
-ulonglong NAVG_LoadFile(int param_1);
+u8 *LoadGameplayFile(int reload);
 undefined8 STUB_000def38_RET_1(...);
 void ____Unused_IncCounter_a204ac(void);
 void AdvanceLoadingStage(void);

@@ -26,7 +26,7 @@ void M78_00459ff0(MobyInstance *param_1)
   uVar2 = param_1->uid;
   param_1->collision = (ushort *)0x0;
   (&g_CheckpointLive.objState[0])[(short)uVar2] = bVar1 + 2;
-  if ((bVar1 == 0xff) || (((&DAT_00a202c0)[bVar1] != -1 && (g_LevelFlags[Level][bVar1] == -1)))) {
+  if ((bVar1 == 0xff) || (((&g_CheckpointLevelFlags)[bVar1] != -1 && (g_LevelFlags[Level][bVar1] == -1)))) {
     (&g_Checkpoint.objState[0])[(short)uVar2] = bVar1 + 2;
   }
   bVar1 = param_1->setByGroup;

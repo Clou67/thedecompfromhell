@@ -630,7 +630,7 @@ void UpdateMoby_1474(MobyInstance *moby)
   
   pvVar9 = moby->pVar;
   uVar17 = ZEXT48(pvVar9);
-  if ((&DAT_00a202c0)[(byte)moby->levelFlagIdx] != -1) {
+  if ((&g_CheckpointLevelFlags)[(byte)moby->levelFlagIdx] != -1) {
     moby->collision = (ushort *)0x0;
     moby->modeBits = moby->modeBits | (UNK_40|DISABLED);
     return;

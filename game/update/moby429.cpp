@@ -104,7 +104,7 @@ void UpdateMoby_429(MobyInstance *moby)
       bVar4 = moby->levelFlagIdx;
       uVar8 = moby->uid;
       (&g_CheckpointLive.objState[0])[(short)uVar8] = bVar4 + 2;
-      if ((bVar4 == 0xff) || (((&DAT_00a202c0)[bVar4] != -1 && (g_LevelFlags[Level][bVar4] == -1))))
+      if ((bVar4 == 0xff) || (((&g_CheckpointLevelFlags)[bVar4] != -1 && (g_LevelFlags[Level][bVar4] == -1))))
       {
         (&g_Checkpoint.objState[0])[(short)uVar8] = bVar4 + 2;
       }

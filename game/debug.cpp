@@ -1855,7 +1855,7 @@ void UpdateDebugSelections(void)
           if ((CVar11 & CIRCLE) != 0) {
             cVar10 = (char)(ZERO_MASK((uint)(byte)g_LevelFlags[Level][Segment]));
             g_LevelFlags[Level][Segment] = cVar10;
-            (&DAT_00a202c0)[iVar19] = cVar10;
+            (&g_CheckpointLevelFlags)[iVar19] = cVar10;
           }
         }
         else if ((CVar11 & CROSS) == 0) {

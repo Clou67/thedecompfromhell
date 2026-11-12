@@ -17,6 +17,7 @@
 #include "game/path.h"
 #include "game/space.h"
 #include "game/update/moby1005.h"
+#include "game/update/moby1826.h"
 #include "game/vendor.h"
 #include "idol/fastfunc.h"
 

@@ -25,7 +25,6 @@
 #include "game/pause.h"
 #include "game/rUnk.h"
 #include "game/skyfunc.h"
-#include "game/skyproc.h"
 #include "game/sound.h"
 #include "game/update.h"
 #include "idol/fastfunc.h"

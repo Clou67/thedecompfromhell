@@ -8,6 +8,7 @@
 // the SCE_GS_SET_* register packers are stubs, so the GS addresses and registers computed here
 // are bookkeeping only.
 #include "rc1.h"
+#include <sys/timer.h>
 
 enum {                      /* PifHeader.texFormat / clutFormat */
     PIF_FMT_32 = 0x12,      /* 32 bits per pixel (clut entries: 32-bit) */
@@ -764,4 +765,882 @@ void LoadHelp(void)
 
         message[0] += (u32)HelpMsgs - 8;
     }
+}
+
+/* the gameplay file: a table of offsets (from the file start) to its sections. Every section
+   starts with a 16-byte header whose first word is usually a count. */
+enum GameplaySection {
+    GP_SETTINGS = 0x00,      /* fog, death height, ship path and position */
+    GP_CAMERAS = 0x02,
+    GP_SOUNDS = 0x03,
+    GP_HELP = 0x04,          /* + language; a section of help messages per language */
+    GP_MOBYS = 0x11,
+    GP_MOBY_GROUPS = 0x12,
+    GP_SHARED_DATA = 0x13,
+    GP_MOBY_LINKS = 0x14,    /* pVar fields holding a moby record index */
+    GP_PVAR_TABLE = 0x15,    /* {offset, size} per pVar block */
+    GP_PVAR_DATA = 0x16,
+    GP_PVAR_POINTERS = 0x17, /* pVar fields holding an offset into their own block */
+    GP_CUBOIDS = 0x18,
+    GP_SPHERES = 0x19,
+    GP_CYLINDERS = 0x1a,
+    GP_UNK_1B = 0x1b,        /* 0x80-byte records, copied as 0x90 */
+    GP_SPLINES = 0x1c,
+    GP_GRIND_PATHS = 0x1d,
+    GP_UNK_1E = 0x1e,        /* a 0x4000-byte grid and its data (stored in Blenders) */
+    GP_UNK_1F = 0x1f,        /* 0x20-byte records */
+    GP_BLENDERS = 0x20,
+    GP_CAM_COLL_GRID = 0x21,
+    GP_ENV_SAMPLES = 0x22,
+    GP_OCCLUSION = 0x23,
+};
+
+/* a moby record of the gameplay file (record[0] is its size) */
+struct GameplayMoby {
+    int size;                /* 0x00 */
+    int levelFlagIdx;        /* 0x04 */
+    int spawnFlags;          /* 0x08  MOBYSPAWN_* */
+    int uid;                 /* 0x0c */
+    int bolts;               /* 0x10 */
+    int boltsAlt;            /* 0x14  the bolts when spawned by level flag bit 2 */
+    int oClass;              /* 0x18 */
+    float scale;             /* 0x1c */
+    int drawDistance;        /* 0x20 */
+    int updateDistance;      /* 0x24 */
+    int unk28;               /* 0x28 */
+    int unk2c;               /* 0x2c */
+    float pos[3];            /* 0x30 */
+    float rot[3];            /* 0x3c */
+    int group;               /* 0x48 */
+    int onGround;            /* 0x4c  drop onto the ground below */
+    float groundOffset;      /* 0x50 */
+    int unk54;               /* 0x54 */
+    int pVar;                /* 0x58  index into the pVar table, -1 none */
+    int occlusion;           /* 0x5c  0: never occluded */
+    int modeBits;            /* 0x60 */
+    int red;                 /* 0x64 */
+    int green;               /* 0x68 */
+    int blue;                /* 0x6c */
+    int light;               /* 0x70 */
+    int mapObject;           /* 0x74  -1 none */
+};
+
+#define MOBYSPAWN_LEVEL_FLAG     0x01   /* spawn while its level flag is set */
+#define MOBYSPAWN_NO_LEVEL_FLAG  0x02   /* spawn while its level flag is clear */
+#define MOBYSPAWN_IF_CHECKPOINT  0x08   /* spawn unless its checkpoint bit is set */
+#define MOBYSPAWN_IF_LEVEL       0x04   /* (without 8) spawn unless its level bit is set */
+#define MOBYSPAWN_MAP_SLOT       0x10
+
+#define MAPSLOT_NONE             (-2)
+#define MAPSLOT_UNSET            (-1)
+
+#define LEVEL_EXTRA_MOBYS        9      /* this level gets room for 0x80 more mobys */
+#define MOBY_PVAR_SIZE           0x80
+#define MAX_DIRECTIONAL_LIGHTS   12
+#define BLENDER_LIGHT_DEFAULT    11
+#define MAX_MOBY_GROUPS          112
+#define MOBY_GROUP_END           0x8000
+#define OCCL_NONE                0x7f80
+#define GROUND_PROBE_UP          0.5f
+#define LOCALE_BUFFER_SIZE       0x40000
+
+#define SHIP_VARIANT_GEMLIK      2
+
+static inline u8 *AlignUp64(u8 *ptr)
+{
+    return (u8 *)(((u32)ptr + 0x3f) & ~0x3f);
+}
+
+static inline u32 ByteSwap32(u32 value)
+{
+    return (value >> 24) | ((value >> 8) & 0xff00) | ((value & 0xff00) << 8) | (value << 24);
+}
+
+/* occlusion bits are stored as a big-endian {bit index} word: byte = bit >> 3, mask = 1 << (bit & 7) */
+static inline int OcclIndex(u32 stored)
+{
+    u32 bit = ByteSwap32(stored);
+
+    return (((int)bit >> 3) << 8) | (1 << ((stored >> 24) & 7));
+}
+
+static inline void HangForever(void)
+{
+    for (;;) {
+        cellSysutilCheckCallback();
+        sys_timer_usleep(100);
+    }
+}
+
+/* Moves a pVar block from the file to `mem`; the table entry then holds its address. */
+static inline u8 *CopyPVar(void **pVar, int *pvarTable, u8 *pvarData, u8 *mem)
+{
+    int index = (int)*pVar;
+
+    if (index < 0) {
+        *pVar = NULL;
+        return mem;
+    }
+
+    int *entry = &pvarTable[index * 2];
+    int size = entry[1];
+    *pVar = mem;
+    FastMemCopy(mem, pvarData + entry[0], size);
+    entry[0] = (int)mem;
+    return mem + size;
+}
+
+/* Copies count 0x80-byte primitives (cuboids, spheres, cylinders) to mem. */
+static inline u8 *LoadPrims(int *section, void **prims, int *count, u8 *mem)
+{
+    u8 *src = (u8 *)(section + 4);
+    int size = section[0] * 0x80;
+
+    *count = section[0];
+    *prims = mem;
+    if (*count != 0) {
+        FastMemSet(mem, 0, size);
+    }
+    for (int i = 0; i < *count; i++) {
+        FastMemCopy32((u8 *)*prims + i * 0x80, src, 0x80);
+        src += 0x80;
+    }
+    return AlignUp64(mem + size);
+}
+
+// 0x00dcf58 (0x1fe0 bytes)
+// DL's LoadGameplayCore (the DL helpers it inlines are marked): reads the level's gameplay file
+// and builds the level's objects from it in the memory at Gameplay. `reload` forces a new buffer
+// for the file. Returns the memory after the help messages.
+u8 *LoadGameplayFile(int reload)
+{
+    char localePath[128];
+    u64 fileSize;
+    int fileHandle;
+    char path[64];
+
+    u8 *mem = (u8 *)Gameplay;
+    u8 *file = (u8 *)g_pGameplayFile;
+    u32 fs = get_default_fs();
+
+    if (g_IsPal == 0) {
+        sprintf(path, "rc1/ps3data/level%d/gameplay_ntsc", Level);
+    }
+    else {
+        sprintf(path, "rc1/ps3data/level%d/gameplay_pal", Level);
+    }
+
+    _ZN4cell4fios2op8syncWaitEPx(
+        (int)_ZN4cell4fios9scheduler8openFileEPKNS0_8opattr_tEPKcjPPNS0_10filehandleE(fs, 0, (byte *)path, 1,
+                                                                                         &fileHandle),
+        NULL);
+    if (fileHandle == 0) {
+        HangForever();
+    }
+
+    _ZN4cell4fios2op8syncWaitEPx(
+        (int)_ZN4cell4fios9scheduler10statCommonEPKNS0_8opattr_tEPKcPvNS0_2op10e_OPSTAGESE(fs, 0, (byte *)path,
+                                                                                            (int)&fileSize, 3),
+        NULL);
+    if (g_pGameplayFile == 0 || reload != 0) {
+        file = (u8 *)(u32)idol::kalloc(TEX_BASE, (int)fileSize);
+        g_pGameplayFile = (u32)file;
+    }
+
+    if (_ZN4cell4fios2op8syncWaitEPx(read_req_setup(fs, 0, fileHandle, (u32)file, fileSize, -1), NULL) != 0) {
+        HangForever();
+    }
+    if (_ZN4cell4fios2op8syncWaitEPx((int)filehandle_close_setup(fs, 0, fileHandle), NULL) != 0) {
+        HangForever();
+    }
+
+    FlushCache(0);
+    STUB_000e9150(DAT_00964568, file);
+    FlushCache(0);
+
+    FastMemSet(&g_heroMtx, 0, 0x2310);
+    FastMemSet(&GameCamera, 0, 0x3a0);
+    FastMemSet(&g_AnimLayerPool, 0, 0x180);
+    seedRand(1234);
+    SetNtscPalTiming();
+    g_CollOutput.padding[0] = (int)&g_CollMobyJointCache;
+    g_CollOutput.padding[1] = (int)&MobyClassRef;
+    g_CollOutput.padding[2] = 0;
+    g_CollOutput.collCount = 0;
+    g_CollOutput.damageNext = 0;
+    FastMemSetZero(g_MobyGrid, 0x10000);
+    FastMemSetZero(&MobyGridAlloc, 0x60);
+
+    /* LoadMiscGameplaySettings */
+    int *header = (int *)file;
+    int *settings = (int *)(file + header[GP_SETTINGS]);
+    g_ViewContext.occlColor0 = settings[0];
+    g_ViewContext.occlColor1 = settings[1];
+    g_ViewContext.occlColor2 = settings[2];
+    levelFog.r = (u8)settings[3];
+    levelFog.g = (u8)settings[4];
+    levelFog.b = (u8)settings[5];
+    LevelFogNearDist = settings[6];
+    LevelFogFarDist = (float)settings[7];
+    LevelFogNearIntensity = (float)settings[8];
+    LevelFogFarIntensity = (float)settings[9];
+    HeroDeathHeight = settings[10];
+    g_shipSplinePath = settings[15];
+    g_shipCameraStartCuboid = settings[16];
+    g_shipCameraEndCuboid = settings[17];
+    UpdateFog();
+
+    TfragDrawDist = 512000.0f;
+    DAT_00a390b8 = 500;
+    TieDrawDist = 720.0f;
+    ShrubDrawDist = 500.0f;
+    PartClipDist = 0x1f4000;
+    STUB_000780f4(g_ViewContext.occlColor0, g_ViewContext.occlColor1, g_ViewContext.occlColor2);
+    STUB_00174bd8(&DAT_00a10680);
+
+    /* lights */
+    FastMemSetZero(PointLights, 0x100);
+    FastMemSetZero(&PointLightData, 0x180);
+    FastMemSetZero(DirectionalLights, 0x400);
+    int lightCount = *(int *)(g_EngineData + 0x60);
+    if (lightCount >= MAX_DIRECTIONAL_LIGHTS) {
+        printf("!!!! Too many directional lights !!!! - Lighting will look bogus as a penalty.\n");
+        lightCount = MAX_DIRECTIONAL_LIGHTS;
+    }
+    if (lightCount != 0) {
+        FastMemCopy32(DirectionalLights, (void *)DAT_00a15f70, lightCount << 6);
+    }
+
+    /* blenders: a 16-byte header each, then the 0x80-byte blenders */
+    if (header[GP_BLENDERS] == 0) {
+        BlenderCnt = 0;
+    }
+    else {
+        int *section = (int *)(file + header[GP_BLENDERS]);
+        u8 *src = (u8 *)(section + 4);
+
+        BlenderCnt = section[0];
+        if (BlenderCnt != 0) {
+            FastMemCopy32(&DAT_00a1c900, src, BlenderCnt << 4);
+            FastMemCopy32(g_Blenders, src + BlenderCnt * 16, BlenderCnt << 7);
+            for (int i = 0; i < (int)BlenderCnt; i++) {
+                Blender *blender = &g_Blenders[i];
+
+                if (*(int *)&blender->dLightA < 0) {
+                    blender->dLightA.A = 0;
+                    blender->dLightA.B = 0;
+                    blender->dLightA.G = 0;
+                    blender->dLightA.R = BLENDER_LIGHT_DEFAULT;
+                }
+                if (*(int *)&blender->dLightB < 0) {
+                    blender->dLightB.A = 0;
+                    blender->dLightB.B = 0;
+                    blender->dLightB.G = 0;
+                    blender->dLightB.R = BLENDER_LIGHT_DEFAULT;
+                }
+            }
+        }
+    }
+
+    /* LoadHelp: the file's messages for the language (replaced from the locale file below) */
+    if (header[GP_HELP] != 0) {
+        int *messages = (int *)(file + header[GP_HELP + g_Language]);
+        int size = ((messages[1] + 3) & ~3) - 8;
+
+        g_Help.num_message = messages[0];
+        HelpMsgs = (HelpMsg *)mem;
+        FastMemCopy32(mem, messages + 2, size);
+        for (int i = 0; i < g_Help.num_message; i++) {
+            u32 *message = (u32 *)((u8 *)HelpMsgs + i * 16);
+
+            message[0] += (u32)HelpMsgs - 8;
+        }
+        mem = AlignUp64(mem + size);
+    }
+
+    /* ties and shrubs (already loaded with the level) */
+    TieCnt = TieCntBase;
+    g_TieInstance = TieInstanceBase;
+    TieInstanceEnd = TieInstanceBase + TieCntBase;
+    DAT_00e583f0 = 0;
+    for (u32 i = 0; i < DAT_00a15f80; i++) {
+        u8 *entry = (u8 *)DAT_00a15f7c + i * 0x40;
+        u16 id = *(u16 *)(entry + 0x30);
+
+        (&DAT_00e574f0)[i] = (int)entry;
+        (&DAT_00e576f0)[i] = id;
+        (&DAT_00e577f0)[id] = (u8)i;
+        DAT_00e583f0 = i + 1;
+    }
+    g_ShrubInstance = ShrubInstanceBase;
+    ShrubInstanceEnd = ShrubInstanceBase + ShrubInstanceCnt;
+
+    /* LoadCameras: file records are {type, pos, rot, pVar}, ImportCamera is {pos, type, rot, pVar} */
+    if (header[GP_CAMERAS] != 0) {
+        int *section = (int *)(file + header[GP_CAMERAS]);
+        int *src = section + 4;
+        int size = section[0] * 0x20;
+
+        ImportCameraCnt = section[0];
+        ImportCameras = (u32)mem;
+        if (ImportCameraCnt != 0) {
+            FastMemSet(mem, 0, size);
+        }
+        mem = AlignUp64(mem + size);
+
+        for (int i = 0; i < ImportCameraCnt; i++, src += 8) {
+            int *camera = (int *)(ImportCameras + i * 0x20);
+
+            camera[3] = src[0];
+            camera[0] = src[1];
+            camera[1] = src[2];
+            camera[2] = src[3];
+            camera[4] = src[4];
+            camera[5] = src[5];
+            camera[6] = src[6];
+            camera[7] = src[7];
+        }
+    }
+
+    /* LoadSound */
+    if (header[GP_SOUNDS] != 0) {
+        int *section = (int *)(file + header[GP_SOUNDS]);
+        u8 *src = (u8 *)(section + 4);
+
+        g_SoundCnt = section[0];
+        if (g_SoundCnt == 0) {
+            g_pSoundInstances = 0;
+        }
+        else {
+            g_pSoundInstances = (u32)mem;
+            u8 *next = AlignUp64(mem + g_SoundCnt * 0x90);
+            FastMemSet(mem, 0, g_SoundCnt * 0x90);
+            for (int i = 0; i < (int)g_SoundCnt; i++, src += 0x90) {
+                short *sound = (short *)(g_pSoundInstances + i * 0x90);
+
+                FastMemCopy32(sound, src, 0x90);
+                sound_SetupAmbientFunctions(sound);
+            }
+            mem = next;
+        }
+    }
+
+    /* InitLoadMobyInstances / LoadMobyInstances: the records that spawn get the next instance;
+       g_MobyShadowList maps record index to instance index (-1 not spawned) */
+    int *mobySection = (int *)(file + header[GP_MOBYS]);
+    int recordCnt = mobySection[0];
+    int extraMobys = mobySection[1] + (Level == LEVEL_EXTRA_MOBYS ? 0x80 : 0);
+    GameplayMoby *record = (GameplayMoby *)(mobySection + 4);
+    short *recordMoby = (short *)g_MobyShadowList;
+    int spawned = 0;
+
+    g_MobyInstance = (MobyInstance *)mem;
+    FastMemSet(mem, 0, (recordCnt + extraMobys) << 8);
+
+    for (int i = 0; i < recordCnt; i++, recordMoby++) {
+        GameplayMoby *rec = record;
+        int flags = rec->spawnFlags;
+        char mapSlot = MAPSLOT_NONE;
+        int bolts = rec->bolts;
+        int boltsBase = rec->bolts;
+
+        record = (GameplayMoby *)((u8 *)record + (rec->size & ~3));
+
+        if (flags != 0) {
+            u32 word = rec->uid >> 5;
+            u32 bit = 1 << (rec->uid & 0x1f);
+
+            mapSlot = MAPSLOT_UNSET;
+            if (flags & MOBYSPAWN_MAP_SLOT) {
+                mapSlot = NAVG_AllocSlot(Level, rec->uid);
+            }
+
+            if (g_Checkpoint.objState[rec->uid] != 0) {
+                *recordMoby = -1;
+                continue;
+            }
+
+            if ((flags & (MOBYSPAWN_LEVEL_FLAG | MOBYSPAWN_NO_LEVEL_FLAG)) == 0) {
+                u32 dead = 0;
+
+                if (flags & MOBYSPAWN_IF_CHECKPOINT) {
+                    dead = g_CheckpointBits[word] & bit;
+                }
+                else if ((flags & (MOBYSPAWN_IF_CHECKPOINT | MOBYSPAWN_IF_LEVEL)) == MOBYSPAWN_IF_LEVEL) {
+                    dead = g_LevelObjBits[Level][word] & bit;
+                }
+                if (dead) {
+                    *recordMoby = -1;
+                    continue;
+                }
+            }
+            else if ((s8)(&g_CheckpointLevelFlags)[rec->levelFlagIdx] == -1) {
+                if (!(flags & MOBYSPAWN_NO_LEVEL_FLAG)) {
+                    *recordMoby = -1;
+                    continue;
+                }
+                bolts = rec->boltsAlt;
+                boltsBase = rec->boltsAlt;
+                if (g_CheckpointBits[word] & bit) {
+                    bolts = (rec->boltsAlt + 1) / 2;
+                }
+            }
+            else {
+                if (!(flags & MOBYSPAWN_LEVEL_FLAG)) {
+                    *recordMoby = -1;
+                    continue;
+                }
+                if (g_LevelObjBits[Level][word] & bit) {
+                    bolts = (rec->bolts + 1) / 2;
+                }
+            }
+        }
+
+        *recordMoby = (short)spawned;
+        MobyInstance *moby = &g_MobyInstance[spawned];
+
+        InitMobyInstance(moby, rec->oClass);
+        moby->field74_0xb1 = mapSlot;
+        moby->uid = (u16)rec->uid;
+        moby->levelFlagIdx = (char)rec->levelFlagIdx;
+        *(short *)&moby->field76_0xb4 = (short)bolts;
+        *(short *)&moby->field78_0xb6 = (short)boltsBase;
+        if (moby->pClass != NULL) {
+            moby->scale = moby->pClass->gScale * rec->scale;
+        }
+        moby->drawDistance = (short)rec->drawDistance;
+        moby->updateDistance = (char)rec->updateDistance;
+        moby->pos.x = rec->pos[0];
+        moby->pos.y = rec->pos[1];
+        moby->pos.z = rec->pos[2];
+        moby->rotation.x = rec->rot[0];
+        moby->rotation.y = rec->rot[1];
+        moby->rotation.z = rec->rot[2];
+        moby->group = (s8)rec->group;
+
+        if (rec->onGround != 0) {
+            float ground = GetGroundZ(GROUND_PROBE_UP, &moby->pos, 0);
+
+            if (ground > 0.0f) {
+                moby->pos.z = ground + rec->groundOffset;
+            }
+        }
+
+        moby->occlIndex = OCCL_NONE;
+        moby->pVar = (void *)rec->pVar;
+        if (rec->occlusion == 0) {
+            moby->occlIndex = 0;
+        }
+
+        if (moby->pClass != NULL) {
+            moby->pClass->mode_bits |= (u16)rec->modeBits;
+        }
+        moby->modeBits |= (u16)rec->modeBits;
+        if (moby->pClass != NULL) {
+            UpdateMobyTransform(moby);
+        }
+
+        moby->colorManipulator = rec->blue * 0x10000 + rec->green * 0x100 + rec->red;
+        MB_SetLights(moby, moby->colorManipulator, 0, 0, 0);
+        *(u64 *)&moby->color |= (s64)rec->light;
+
+        if (rec->mapObject != -1) {
+            Map_RegisterLevelObject(moby, rec->mapObject);
+        }
+        spawned++;
+    }
+
+    MobyInstancePermEnd = &g_MobyInstance[spawned];
+    MobyInstancePermEnd->state = 0xff;
+    MobyInstanceEnd = &g_MobyInstance[extraMobys + spawned - 1];
+    u8 *pvarStart = (u8 *)&g_MobyInstance[extraMobys + spawned];
+    g_pMobyVars = pvarStart;
+    mem = AlignUp64(pvarStart + extraMobys * MOBY_PVAR_SIZE);
+    pvarStart = mem;
+
+    /* LoadCameraPVars, LoadSoundPVars, LoadMobyPVars */
+    int *pvarTable = (int *)(file + header[GP_PVAR_TABLE]);
+    if (header[GP_PVAR_DATA] != 0) {
+        u8 *pvarData = file + header[GP_PVAR_DATA];
+
+        for (int i = 0; i < ImportCameraCnt; i++) {
+            mem = CopyPVar((void **)(ImportCameras + i * 0x20 + 0x1c), pvarTable, pvarData, mem);
+        }
+        for (int i = 0; i < (int)g_SoundCnt; i++) {
+            mem = CopyPVar((void **)(g_pSoundInstances + i * 0x90 + 8), pvarTable, pvarData, mem);
+        }
+        for (MobyInstance *moby = g_MobyInstance; moby != MobyInstancePermEnd; moby++) {
+            mem = CopyPVar(&moby->pVar, pvarTable, pvarData, mem);
+        }
+        mem = AlignUp64(mem);
+    }
+
+    /* LoadMobyLinkRectifyList: {pVar index, field offset} pairs, the field becomes a moby index */
+    if (header[GP_MOBY_LINKS] != 0) {
+        int *link = (int *)(file + header[GP_MOBY_LINKS]);
+
+        for (; link[0] >= 0; link += 2) {
+            u8 *pVar = (u8 *)pvarTable[link[0] * 2];
+
+            if (pVar >= pvarStart) {
+                int *field = (int *)(pVar + link[1]);
+
+                if (*field >= 0) {
+                    *field = ((short *)g_MobyShadowList)[*field];
+                }
+            }
+        }
+    }
+
+    /* LoadPVarRectifyList: offsets in pVar blocks to their own block */
+    if (header[GP_PVAR_POINTERS] != 0) {
+        int *fix = (int *)(file + header[GP_PVAR_POINTERS]);
+
+        for (; fix[0] >= 0; fix += 2) {
+            u8 *pVar = (u8 *)pvarTable[fix[0] * 2];
+
+            if (pVar >= pvarStart) {
+                *(int *)(pVar + fix[1]) += (int)pVar;
+            }
+        }
+    }
+
+    /* LoadMobyGroups: lists of record indexes, the last with bit 15; rewritten in place as
+       instance indexes, leaving out what did not spawn */
+    if (header[GP_MOBY_GROUPS] != 0) {
+        int *section = (int *)(file + header[GP_MOBY_GROUPS]);
+        int *offsets = section + 4;
+        int groupCnt = section[0];
+        int size = section[1];
+        u8 *groups = mem;
+
+        mem = AlignUp64(mem + size);
+        if (size != 0) {
+            FastMemCopyReverse16((u16 *)groups, (u8 *)(section + groupCnt + 4), size);
+        }
+        FastMemSet(&g_MobyGroups, 0, MAX_MOBY_GROUPS * 4);
+
+        for (int i = 0; i < groupCnt; i++) {
+            if (offsets[i] < 0) {
+                continue;
+            }
+
+            u16 *in = (u16 *)(groups + offsets[i]);
+            u16 *out = in;
+            g_NumMobyGroups = i + 1;
+            (&g_MobyGroups)[i] = (u32)in;
+            for (;;) {
+                u16 entry = *in;
+                short moby = ((short *)g_MobyShadowList)[entry & 0x7fff];
+
+                if (moby >= 0) {
+                    *out++ = moby;
+                }
+                if (entry & MOBY_GROUP_END) {
+                    break;
+                }
+                in++;
+            }
+
+            if ((u32)out > (&g_MobyGroups)[i]) {
+                out[-1] |= MOBY_GROUP_END;
+            }
+            else {
+                (&g_MobyGroups)[i] = 0;
+            }
+        }
+    }
+
+    /* LoadMobySharedData: data pVar fields point into, then {short pVar, short field, int offset} */
+    if (header[GP_SHARED_DATA] != 0) {
+        int *section = (int *)(file + header[GP_SHARED_DATA]);
+        int size = section[0];
+        int fixCnt = section[1];
+        u8 *shared = mem;
+
+        mem = AlignUp64(mem + size);
+        if (size != 0) {
+            FastMemCopyReverse32((uint *)shared, (u8 *)(section + 4), size);
+        }
+
+        short *fix = (short *)((u8 *)(section + 4) + size);
+        for (int i = 0; i < fixCnt; i++, fix += 4) {
+            u8 *pVar = (u8 *)pvarTable[fix[0] * 2];
+
+            if (pVar >= pvarStart) {
+                *(int *)(pVar + fix[1]) = *(int *)(fix + 2) + (int)shared;
+            }
+        }
+    }
+
+    /* LoadPaths */
+    if (header[GP_SPLINES] != 0) {
+        int *section = (int *)(file + header[GP_SPLINES]);
+        int size = section[2];
+
+        SplineCnt = section[0];
+        SplineOfs = mem;
+        u8 *next = AlignUp64(mem + size);
+        if (size != 0) {
+            FastMemCopy(mem, (u8 *)section + section[1], size);
+        }
+        for (int i = 0; i < (int)SplineCnt; i++) {
+            Splines[i] = (Spline *)((u8 *)SplineOfs + section[4 + i]);
+        }
+        mem = next;
+    }
+
+    /* LoadGrindPaths: 0x20-byte paths (a bounding sphere, data, count), then their data */
+    if (header[GP_GRIND_PATHS] != 0) {
+        int *section = (int *)(file + header[GP_GRIND_PATHS]);
+        int *src = section + 4;
+        int dataOfs = section[1];
+        int size = section[2];
+
+        DAT_00a1a860 = section[0];
+        DAT_00a1a85c = (u32)mem;
+        u8 *data = AlignUp64(mem + DAT_00a1a860 * 0x20);
+        for (int i = 0; i < (int)DAT_00a1a860; i++, src += 8) {
+            u8 *path = (u8 *)DAT_00a1a85c + i * 0x20;
+
+            memcpy(path, src, 0x10);
+            *(int *)(path + 0x14) = src[4];
+        }
+
+        mem = AlignUp64(data + size);
+        if (size != 0) {
+            FastMemCopy(data, (u8 *)section + dataOfs, size);
+        }
+        for (int i = 0; i < (int)DAT_00a1a860; i++, src++) {
+            *(int *)((u8 *)DAT_00a1a85c + i * 0x20 + 0x10) = src[0] + (int)data;
+        }
+    }
+
+    if (header[GP_UNK_1B] != 0) {
+        int *section = (int *)(file + header[GP_UNK_1B]);
+        u8 *src = (u8 *)(section + 4);
+
+        DAT_00a51bc4 = section[0];
+        DAT_00a51bc0 = (u32)mem;
+        u8 *next = AlignUp64(mem + DAT_00a51bc4 * 0x90);
+        if (DAT_00a51bc4 != 0) {
+            FastMemSet(mem, 0, DAT_00a51bc4 * 0x90);
+        }
+        for (int i = 0; i < (int)DAT_00a51bc4; i++, src += 0x80) {
+            FastMemCopy32((u8 *)DAT_00a51bc0 + i * 0x90, src, 0x90);
+        }
+        mem = next;
+    }
+
+    /* LoadCuboids, LoadSpheres, LoadCylinders */
+    if (header[GP_CUBOIDS] != 0) {
+        mem = LoadPrims((int *)(file + header[GP_CUBOIDS]), (void **)&Cuboids, &CuboidCnt, mem);
+    }
+    if (header[GP_SPHERES] != 0) {
+        mem = LoadPrims((int *)(file + header[GP_SPHERES]), (void **)&Spheres, &SphereCnt, mem);
+    }
+    if (header[GP_CYLINDERS] != 0) {
+        mem = LoadPrims((int *)(file + header[GP_CYLINDERS]), (void **)&Cylinders, &CylinderCnt, mem);
+    }
+
+    /* LoadCameraCollisionPrimGrid: a 0x4000-byte grid, then its data */
+    if (header[GP_CAM_COLL_GRID] != 0) {
+        int *section = (int *)(file + header[GP_CAM_COLL_GRID]);
+
+        CamCollGrid = (u32)mem;
+        FastMemCopy32(mem, section + 4, section[0] + 0x4000);
+        mem = AlignUp64(mem + section[0] + 0x4000);
+    }
+
+    if (header[GP_UNK_1E] != 0) {
+        int *section = (int *)(file + header[GP_UNK_1E]);
+
+        Blenders = (Blender *)mem;
+        FastMemCopy32(mem, section + 4, section[0] + 0x4000);
+        mem = AlignUp64(mem + section[0] + 0x4000);
+    }
+
+    if (header[GP_UNK_1F] != 0) {
+        int *section = (int *)(file + header[GP_UNK_1F]);
+        int size = section[0] * 0x20;
+
+        DAT_00a1c840 = section[0];
+        DAT_00a1c880 = (u32)mem;
+        u8 *next = AlignUp64(mem + size);
+        if (DAT_00a1c840 != 0) {
+            FastMemCopy32(mem, section + 4, size);
+        }
+        mem = next;
+    }
+
+    if (header[GP_ENV_SAMPLES] != 0) {
+        int *section = (int *)(file + header[GP_ENV_SAMPLES]);
+        int size = section[0] * 0x30;
+
+        g_EnvSampleCount = section[0];
+        g_EnvSamples = (EnvSample *)mem;
+        u8 *next = AlignUp64(mem + size);
+        if (g_EnvSampleCount != 0) {
+            FastMemCopy32(mem, section + 4, size);
+        }
+        mem = next;
+    }
+
+    /* ResetParticles */
+    PartInstances = (PartInstance *)mem;
+    PartIndexNext = 0;
+    PartActiveCnt = 0;
+    PartIndexTop = -1;
+    FastMemSetZero(&g_PartUsed, 0x200);
+
+    /* the player's ship, parked where the settings say (none when its x is 0) */
+    g_SpaceshipPtr = NULL;
+    float *shipPos = (float *)&settings[11];
+    if (settings[11] > 0) {
+        bool found = false;
+
+        if (Level == Gemlik && g_SpaceshipVariant == SHIP_VARIANT_GEMLIK && DAT_00a561c0 != 0) {
+            for (MobyInstance *moby = g_MobyInstance; moby->state != 0xff; moby++) {
+                if ((short)moby->oClass == OCLASSES_SPACESHIP[SHIP_VARIANT_GEMLIK]) {
+                    SetupSpaceShipVars(moby);
+                    MB_SetAnimationNoBlend(moby, 1, 0);
+                    found = g_SpaceshipPtr != NULL;
+                    break;
+                }
+            }
+        }
+
+        if (!found) {
+            MobyInstance *ship = CreateMoby(OCLASSES_SPACESHIP[g_SpaceshipVariant]);
+
+            ship->pos.x = shipPos[0];
+            ship->pos.y = shipPos[1];
+            ship->pos.z = shipPos[2];
+            ship->drawDistance = 0xff;
+            ship->rotation.z = shipPos[3];
+            ship->updateDistance = 16;
+            ship->pUpdate = &PTR_UpdateMoby_Spaceship_00707c58;
+            ship->modeBits &= ~NO_UPDATE;
+            MB_SetAnimationNoBlend(ship, 1, 0);
+            UpdateMobyTransform(ship);
+            g_SpaceshipPtr = ship;
+            Map_RegisterLevelObject(ship, 0);
+        }
+    }
+
+    /* AttachMobyOcclusion: {count tfrags, count ties, count mobys}, then {bit, id} pairs for the
+       tfrags, ties and mobys */
+    int tfragCnt = TfragsCnt;
+    if (OcclGrid == NULL || header[GP_OCCLUSION] == 0) {
+        printf("***\nno occlusion\n***\n");
+        for (MobyInstance *moby = g_MobyInstance; moby != MobyInstanceEnd; moby++) {
+            moby->occlIndex = OCCL_NONE;
+        }
+        for (TieInstance *tie = g_TieInstance; tie != TieInstanceEnd; tie++) {
+            tie->occlIndex[0] = 0;
+            tie->occlIndex[1] = 0;
+            tie->occlIndex[2] = 0x7f;
+            tie->occlIndex[3] = 0x80;
+        }
+        for (int i = 0; i < (int)TfragsCnt; i++) {
+            Tfrags[i].occlIndex[0] = 0x7f;
+            Tfrags[i].occlIndex[1] = 0x80;
+        }
+        OcclUpdate = 0;
+    }
+    else {
+        int *section = (int *)(file + header[GP_OCCLUSION]);
+        u32 *tfragOccl = (u32 *)(section + 4);
+        int occlTfrags = section[0];
+        int occlTies = section[1];
+        int occlMobys = section[2];
+        u32 *mobyOccl = tfragOccl + occlTfrags * 2 + occlTies * 2;
+
+        if (g_MobyInstance->state != 0xff) {
+            bool stale = false;
+            int occluded = 0;
+            int missing = 0;
+
+            for (MobyInstance *moby = g_MobyInstance; moby->state != 0xff; moby++) {
+                if (moby->occlIndex == OCCL_NONE) {
+                    continue;
+                }
+
+                occluded++;
+                int j;
+                for (j = 0; j < occlMobys; j++) {
+                    if ((int)ByteSwap32(mobyOccl[j * 2 + 1]) == (short)moby->uid) {
+                        break;
+                    }
+                }
+
+                if (j == occlMobys) {
+                    missing++;
+                    stale = true;
+                    moby->occlIndex = OCCL_NONE;
+                }
+                else {
+                    moby->occlIndex = (u16)OcclIndex(mobyOccl[j * 2]);
+                }
+            }
+
+            if (stale) {
+                printf("***\nocclusion out of date on mobys (%d / %d)\n***\n", missing, occluded);
+            }
+        }
+
+        if (tfragCnt == occlTfrags) {
+            for (int i = 0; i < occlTfrags; i++) {
+                u8 *tfrag = (u8 *)**(int **)&DAT_00a15f74 + i * 0x30;
+
+                *(u16 *)(tfrag + 0x1e) = (u16)OcclIndex(tfragOccl[i * 2]);
+            }
+        }
+        else {
+            printf("***\nocclusion out of date on tfrag\n***\n");
+            for (int i = 0; i < (int)TfragsCnt; i++) {
+                Tfrags[i].occlIndex[0] = 0x7f;
+                Tfrags[i].occlIndex[1] = 0x80;
+            }
+        }
+
+        u32 *tieOccl = tfragOccl + occlTfrags * 2;
+        for (int i = 0; i < occlTies; i++) {
+            *(int *)g_TieInstance[i].occlIndex = OcclIndex(tieOccl[i * 2]);
+        }
+        OcclUpdate = 2;
+    }
+
+    ResetDrawGlobals();
+    Hero_ResetHero();
+    Hero_InitStuff();
+    InitCameras();
+    UpdateCamera();
+    InitPadRing();
+    EnableFontColors();
+
+    g_mobyIdListCount = 0;
+    DAT_00a51ee8 = 0;
+    DAT_00a51f68 = 0;
+    MobyInstance *hero = *(MobyInstance **)((u8 *)&g_heroMtx + 0x2080);
+    worldUpdateTime = 0;
+    DAT_00a15c7c = 0;
+    for (int i = 0; i < 20; i++) {
+        ((u32 *)&DAT_007ff23c)[i] = 0;
+    }
+    DAT_010bb478 = 0;
+    if (g_SpaceshipPtr != NULL) {
+        *(u64 *)&g_SpaceshipPtr->color = *(u64 *)&hero->color;
+    }
+
+    if (Level == Aridia || (Level >= 5 && Level <= 8) || Level == 10) {
+        ScreenColorEffectLevel = (u32)&DAT_0071ef00;
+    }
+    else {
+        ScreenColorEffectLevel = (u32)&DAT_0071eed0;
+    }
+    ScreenColorEffectNow = (pointer)ScreenColorEffectLevel;
+
+    LoadHelp();
+    return mem + LOCALE_BUFFER_SIZE;
 }

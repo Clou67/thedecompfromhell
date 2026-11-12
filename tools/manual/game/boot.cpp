@@ -1595,7 +1595,7 @@ int boot(int argc, char **argv, char **envp)
     print_tty2("DONE!\n");
     idol::RegisterTrophyCtxHandle(TrophyMgr);
     cellSysutilCheckCallback();
-    SetNtscPalTiming(0);
+    SetNtscPalTiming();
 
     /* the main functions: the title screen until a level is picked, then each level */
     for (;;) {

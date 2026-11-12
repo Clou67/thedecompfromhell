@@ -193,7 +193,7 @@ void UpdateMoby_909(MobyInstance *moby)
       (&g_CheckpointLive.objState[0])[(short)g_MobyInstance[*(int *)((int)pvVar9 + 0x144)].uid] =
            g_MobyInstance[*(int *)((int)pvVar9 + 0x144)].levelFlagIdx + '\x02';
       bVar2 = pMVar16[*(int *)((int)pvVar9 + 0x144)].levelFlagIdx;
-      if ((bVar2 == 0xff) || (((&DAT_00a202c0)[bVar2] != -1 && (g_LevelFlags[Level][bVar2] == -1))))
+      if ((bVar2 == 0xff) || (((&g_CheckpointLevelFlags)[bVar2] != -1 && (g_LevelFlags[Level][bVar2] == -1))))
       {
         (&g_Checkpoint.objState[0])[(short)pMVar16[*(int *)((int)pvVar9 + 0x144)].uid] = bVar2 + 2;
       }
@@ -237,7 +237,7 @@ void UpdateMoby_909(MobyInstance *moby)
              g_MobyInstance[*(int *)((int)pvVar9 + 0x144)].levelFlagIdx + '\x02';
         bVar2 = pMVar16[*(int *)((int)pvVar9 + 0x144)].levelFlagIdx;
         if ((bVar2 == 0xff) ||
-           (((&DAT_00a202c0)[bVar2] != -1 && (g_LevelFlags[Level][bVar2] == -1)))) {
+           (((&g_CheckpointLevelFlags)[bVar2] != -1 && (g_LevelFlags[Level][bVar2] == -1)))) {
           (&g_Checkpoint.objState[0])[(short)pMVar16[*(int *)((int)pvVar9 + 0x144)].uid] = bVar2 + 2;
         }
       }

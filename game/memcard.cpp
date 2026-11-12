@@ -28,7 +28,6 @@
 #include "game/pad.h"
 #include "game/pause.h"
 #include "game/respawn.h"
-#include "game/skyproc.h"
 #include "game/space.h"
 #include "game/update.h"
 #include "game/update/moby1118.h"

@@ -1,6 +1,6 @@
 // game/loaders.cpp -- level data loading: textures, moby classes, scenes, the level file itself
 // STATUS: CLEAN (checked against the asm; local names are mine)
-// MERGE (22 of 41 functions cleaned; the rest are generated)
+// MERGE (23 of 41 functions cleaned; the rest are generated)
 // 41 functions, 0xdb1e0-0xe0e14
 //
 // Most of the data comes in with offsets relative to its own start that are turned into
@@ -36,12 +36,11 @@
 #include "game/path.h"
 #include "game/pause.h"
 #include "game/respawn.h"
-#include "game/skyfunc.h"
-#include "game/skyproc.h"
 #include "game/sound.h"
 #include "game/space.h"
 #include "game/tieproc.h"
 #include "game/update.h"
+#include "game/update/moby1826.h"
 #include "game/vuchain.h"
 #include "idol/fastfunc.h"
 #include "idol/idol.h"
@@ -54,6 +53,7 @@
 #include "sdk/mUnk4.h"
 #include "sdk/rUnk.h"
 #include "sdk/sce.h"
+#include <sys/timer.h>
 
 enum {                      /* PifHeader.texFormat / clutFormat */
     PIF_FMT_32 = 0x12,      /* 32 bits per pixel (clut entries: 32-bit) */
@@ -833,1060 +833,883 @@ void LoadHelp(void)
     }
 }
 
+/* the gameplay file: a table of offsets (from the file start) to its sections. Every section
+   starts with a 16-byte header whose first word is usually a count. */
+enum GameplaySection {
+    GP_SETTINGS = 0x00,      /* fog, death height, ship path and position */
+    GP_CAMERAS = 0x02,
+    GP_SOUNDS = 0x03,
+    GP_HELP = 0x04,          /* + language; a section of help messages per language */
+    GP_MOBYS = 0x11,
+    GP_MOBY_GROUPS = 0x12,
+    GP_SHARED_DATA = 0x13,
+    GP_MOBY_LINKS = 0x14,    /* pVar fields holding a moby record index */
+    GP_PVAR_TABLE = 0x15,    /* {offset, size} per pVar block */
+    GP_PVAR_DATA = 0x16,
+    GP_PVAR_POINTERS = 0x17, /* pVar fields holding an offset into their own block */
+    GP_CUBOIDS = 0x18,
+    GP_SPHERES = 0x19,
+    GP_CYLINDERS = 0x1a,
+    GP_UNK_1B = 0x1b,        /* 0x80-byte records, copied as 0x90 */
+    GP_SPLINES = 0x1c,
+    GP_GRIND_PATHS = 0x1d,
+    GP_UNK_1E = 0x1e,        /* a 0x4000-byte grid and its data (stored in Blenders) */
+    GP_UNK_1F = 0x1f,        /* 0x20-byte records */
+    GP_BLENDERS = 0x20,
+    GP_CAM_COLL_GRID = 0x21,
+    GP_ENV_SAMPLES = 0x22,
+    GP_OCCLUSION = 0x23,
+};
+
+/* a moby record of the gameplay file (record[0] is its size) */
+struct GameplayMoby {
+    int size;                /* 0x00 */
+    int levelFlagIdx;        /* 0x04 */
+    int spawnFlags;          /* 0x08  MOBYSPAWN_* */
+    int uid;                 /* 0x0c */
+    int bolts;               /* 0x10 */
+    int boltsAlt;            /* 0x14  the bolts when spawned by level flag bit 2 */
+    int oClass;              /* 0x18 */
+    float scale;             /* 0x1c */
+    int drawDistance;        /* 0x20 */
+    int updateDistance;      /* 0x24 */
+    int unk28;               /* 0x28 */
+    int unk2c;               /* 0x2c */
+    float pos[3];            /* 0x30 */
+    float rot[3];            /* 0x3c */
+    int group;               /* 0x48 */
+    int onGround;            /* 0x4c  drop onto the ground below */
+    float groundOffset;      /* 0x50 */
+    int unk54;               /* 0x54 */
+    int pVar;                /* 0x58  index into the pVar table, -1 none */
+    int occlusion;           /* 0x5c  0: never occluded */
+    int modeBits;            /* 0x60 */
+    int red;                 /* 0x64 */
+    int green;               /* 0x68 */
+    int blue;                /* 0x6c */
+    int light;               /* 0x70 */
+    int mapObject;           /* 0x74  -1 none */
+};
+
+#define MOBYSPAWN_LEVEL_FLAG     0x01   /* spawn while its level flag is set */
+#define MOBYSPAWN_NO_LEVEL_FLAG  0x02   /* spawn while its level flag is clear */
+#define MOBYSPAWN_IF_CHECKPOINT  0x08   /* spawn unless its checkpoint bit is set */
+#define MOBYSPAWN_IF_LEVEL       0x04   /* (without 8) spawn unless its level bit is set */
+#define MOBYSPAWN_MAP_SLOT       0x10
+
+#define MAPSLOT_NONE             (-2)
+#define MAPSLOT_UNSET            (-1)
+
+#define LEVEL_EXTRA_MOBYS        9      /* this level gets room for 0x80 more mobys */
+#define MOBY_PVAR_SIZE           0x80
+#define MAX_DIRECTIONAL_LIGHTS   12
+#define BLENDER_LIGHT_DEFAULT    11
+#define MAX_MOBY_GROUPS          112
+#define MOBY_GROUP_END           0x8000
+#define OCCL_NONE                0x7f80
+#define GROUND_PROBE_UP          0.5f
+#define LOCALE_BUFFER_SIZE       0x40000
+
+#define SHIP_VARIANT_GEMLIK      2
+
+static inline u8 *AlignUp64(u8 *ptr)
+{
+    return (u8 *)(((u32)ptr + 0x3f) & ~0x3f);
+}
+
+static inline u32 ByteSwap32(u32 value)
+{
+    return (value >> 24) | ((value >> 8) & 0xff00) | ((value & 0xff00) << 8) | (value << 24);
+}
+
+/* occlusion bits are stored as a big-endian {bit index} word: byte = bit >> 3, mask = 1 << (bit & 7) */
+static inline int OcclIndex(u32 stored)
+{
+    u32 bit = ByteSwap32(stored);
+
+    return (((int)bit >> 3) << 8) | (1 << ((stored >> 24) & 7));
+}
+
+static inline void HangForever(void)
+{
+    for (;;) {
+        cellSysutilCheckCallback();
+        sys_timer_usleep(100);
+    }
+}
+
+/* Moves a pVar block from the file to `mem`; the table entry then holds its address. */
+static inline u8 *CopyPVar(void **pVar, int *pvarTable, u8 *pvarData, u8 *mem)
+{
+    int index = (int)*pVar;
+
+    if (index < 0) {
+        *pVar = NULL;
+        return mem;
+    }
+
+    int *entry = &pvarTable[index * 2];
+    int size = entry[1];
+    *pVar = mem;
+    FastMemCopy(mem, pvarData + entry[0], size);
+    entry[0] = (int)mem;
+    return mem + size;
+}
+
+/* Copies count 0x80-byte primitives (cuboids, spheres, cylinders) to mem. */
+static inline u8 *LoadPrims(int *section, void **prims, int *count, u8 *mem)
+{
+    u8 *src = (u8 *)(section + 4);
+    int size = section[0] * 0x80;
+
+    *count = section[0];
+    *prims = mem;
+    if (*count != 0) {
+        FastMemSet(mem, 0, size);
+    }
+    for (int i = 0; i < *count; i++) {
+        FastMemCopy32((u8 *)*prims + i * 0x80, src, 0x80);
+        src += 0x80;
+    }
+    return AlignUp64(mem + size);
+}
+
 
 // 0x00dcf58 (0x1fe0 bytes)
-// strings: 006522ec: 'rc1/ps3data/level%d/gameplay_pal' | 00652314: 'rc1/ps3data/level%d/gameplay_ntsc' | 0065233c: '!!!! Too many directional lights !!!! - Lighting will look bogus as a penalty.\n' | 0065238c: '***\nocclusion out of date on mobys (%d / %d)\n***\n' | 006523c4: '***\nocclusion out of date on tfrag\n***\n' | 006523ec: '***\nno occlusion\n***\n' | 006522a8: 'rc1/ps3data/global/locale/%s' | 006522c8: 'rc1/ps3data/global/locale/japanese'
-
-ulonglong NAVG_LoadFile(int param_1)
-
+// DL's LoadGameplayCore (the DL helpers it inlines are marked): reads the level's gameplay file
+// and builds the level's objects from it in the memory at Gameplay. `reload` forces a new buffer
+// for the file. Returns the memory after the help messages.
+u8 *LoadGameplayFile(int reload)
 {
-  u8 uVar1;
-  f32 fVar2;
-  ushort uVar3;
-  MobyModeBit MVar4;
-  uint uVar5;
-  uint uVar6;
-  void *pvVar7;
-  MobyClass *pMVar8;
-  bool bVar9;
-  MobyInstance *pMVar10;
-  char *pcVar11;
-  undefined8 uVar12;
-  undefined8 uVar13;
-  int iVar16;
-  ulonglong uVar14;
-  ulonglong uVar15;
-  char cVar23;
-  uint uVar17;
-  int iVar18;
-  Spline **ppSVar19;
-  MobyInstance *pMVar20;
-  TieInstance *pTVar21;
-  undefined4 *puVar22;
-  int iVar24;
-  ABGR *pAVar25;
-  ushort *puVar26;
-  uint uVar27;
-  ulonglong uVar28;
-  undefined2 *puVar29;
-  uint uVar30;
-  ulonglong uVar31;
-  uint *puVar32;
-  uint uVar33;
-  int *levelVarBlock;
-  uint *puVar34;
-  int iVar35;
-  int iVar36;
-  longlong lVar37;
-  ABGR *pAVar39;
-  longlong lVar38;
-  undefined4 *puVar40;
-  short *psVar41;
-  int *piVar42;
-  uint *puVar43;
-  int iVar44;
-  double dVar45;
-  double dVar46;
-  double dVar47;
-  char acStack_1d0 [128];
-  undefined8 local_150;
-  int local_148 [2];
-  char acStack_140 [64];
-  ulonglong local_100;
-  ulonglong local_f8;
-  ulonglong local_f0;
-  uint *local_e8;
-  ulonglong local_e0;
-  ulonglong local_d8;
-  ulonglong local_d0;
-  ulonglong local_c8;
-  ulonglong local_c0;
-  ulonglong local_b8;
-  
-  uVar5 = Gameplay;
-  uVar28 = (ulonglong)Gameplay;
-  uVar31 = (ulonglong)DAT_00a108f4;
-  uVar12 = get_default_fs();
-  if (g_IsPal == 0) {
-    snprintf(acStack_140,"rc1/ps3data/level%d/gameplay_ntsc",Level);
-  }
-  else {
-    snprintf(acStack_140,"rc1/ps3data/level%d/gameplay_pal",Level);
-  }
-  uVar13 = _ZN4cell4fios9scheduler8openFileEPKNS0_8opattr_tEPKcjPPNS0_10filehandleE(uVar12,0,acStack_140,1,local_148);
-  _ZN4cell4fios2op8syncWaitEPx(uVar13,0);
-  if (local_148[0] == 0) {
-    do {
-      cellSysutilCheckCallback(local_148[0]);
-      local_148[0] = 100;
-      syscall();
-    } while( true );
-  }
-  uVar13 = _ZN4cell4fios9scheduler10statCommonEPKNS0_8opattr_tEPKcPvNS0_2op10e_OPSTAGESE(uVar12,0,acStack_140,&local_150,3);
-  _ZN4cell4fios2op8syncWaitEPx(uVar13,0);
-  if ((DAT_00a108f4 == 0) || (local_c0 = ZEXT48(&g_MemSlotsBase), param_1 != 0)) {
-    local_c0 = ZEXT48(&g_MemSlotsBase);
-    uVar31 = idol::kalloc(TEX_BASE,(int)local_150);
-    DAT_00a108f4 = (uint)uVar31;
-  }
-  uVar13 = read_req_setup(uVar12,0,local_148[0],uVar31,local_150,0xffffffffffffffff);
-  uVar13 = _ZN4cell4fios2op8syncWaitEPx(uVar13,0);
-  if ((int)uVar13 != 0) {
-    do {
-      cellSysutilCheckCallback(uVar13);
-      uVar13 = 100;
-      syscall();
-    } while( true );
-  }
-  uVar12 = filehandle_close_setup(uVar12,0,local_148[0]);
-  uVar12 = _ZN4cell4fios2op8syncWaitEPx(uVar12,0);
-  if ((int)uVar12 != 0) {
-    do {
-      cellSysutilCheckCallback(uVar12);
-      uVar12 = 100;
-      syscall();
-    } while( true );
-  }
-  FlushCache(0);
-  STUB_000e9150(DAT_00964568,uVar31);
-  FlushCache(0);
-  FastMemSet(&g_heroMtx,0,0x2310);
-  FastMemSet(&GameCamera,0,0x3a0);
-  FastMemSet(&g_AnimLayerPool,0,0x180);
-  seedRand(0x4d2);
-  SetNtscPalTiming();
-  g_CollOutput.padding[0] = (int)&g_CollMobyJointCache;
-  g_CollOutput.padding[1] = (int)&MobyClassRef;
-  g_CollOutput.padding[2] = 0;
-  g_CollOutput.collCount = 0;
-  g_CollOutput.damageNext = 0;
-  FastMemSetZero(g_MobyGrid,0x10000);
-  FastMemSetZero(&MobyGridAlloc,0x60);
-  puVar32 = (uint *)uVar31;
-  uVar14 = uVar31 + *puVar32 & 0xffffffff;
-  levelVarBlock = (int *)(uVar31 + *puVar32);
-  g_ViewContext.occlColor0 = *levelVarBlock;
-  g_ViewContext.occlColor1 = levelVarBlock[1];
-  g_ViewContext.occlColor2 = levelVarBlock[2];
-  levelFog.r = (u8)levelVarBlock[3];
-  levelFog.g = (u8)levelVarBlock[4];
-  levelFog.b = (u8)levelVarBlock[5];
-  LevelFogNearDist = levelVarBlock[6];
-  LevelFogFarDist = (float)levelVarBlock[7];
-  LevelFogNearIntensity = (float)levelVarBlock[8];
-  LevelFogFarIntensity = (float)levelVarBlock[9];
-  HeroDeathHeight = levelVarBlock[10];
-  g_shipSplinePath = levelVarBlock[0xf];
-  g_shipCameraStartCuboid = levelVarBlock[0x10];
-  g_shipCameraEndCuboid = levelVarBlock[0x11];
-  UpdateFog();
-  TfragDrawDist = 512000.0;
-  DAT_00a390b8 = 500;
-  TieDrawDist = 720.0;
-  ShrubDrawDist = 500.0;
-  PartClipDist = 0x1f4000;
-  STUB_000780f4(g_ViewContext.occlColor0,g_ViewContext.occlColor1,g_ViewContext.occlColor2);
-  STUB_00174bd8(&DAT_00a10680);
-  FastMemSetZero(PointLights,0x100);
-  FastMemSetZero(&PointLightData,0x180);
-  FastMemSetZero(DirectionalLights,0x400);
-  local_c8 = ZEXT48(&g_SpaceshipPtr);
-  local_b8 = ZEXT48(&g_heroMtx);
-  iVar16 = *(int *)(g_EngineData + 0x60);
-  local_d0 = uVar14;
-  if (iVar16 < 0xc) {
-    if (iVar16 != 0) goto LAB_000dd3fc;
-  }
-  else {
-    printf("!!!! Too many directional lights !!!! - Lighting will look bogus as a penalty.\n")
-    ;
-    iVar16 = 0xc;
-LAB_000dd3fc:
-    FastMemCopy32(DirectionalLights,DAT_00a15f70,iVar16 << 6);
-  }
-  if (puVar32[0x20] == 0) {
-    BlenderCnt = 0;
-  }
-  else {
-    uVar14 = uVar31 + puVar32[0x20];
-    lVar37 = (uVar14 & 0xffffffff) + 0x10;
-    BlenderCnt = *(uint *)uVar14;
-    if (BlenderCnt != 0) {
-      FastMemCopy32(&DAT_00a1c900,lVar37,BlenderCnt << 4);
-      FastMemCopy32
-                (g_Blenders,lVar37 + ((ulonglong)BlenderCnt & 0xfffffff) * 0x10 & 0xffffffff,
-                 BlenderCnt << 7);
-      uVar27 = BlenderCnt;
-      if (0 < (int)BlenderCnt) {
-        pAVar25 = &g_Blenders[0].dLightA;
-        iVar16 = 0;
-        pAVar39 = &g_Blenders[0].dLightB;
-        do {
-          if ((int)*pAVar25 < 0) {
-            pAVar25->A = '\0';
-            pAVar25->B = '\0';
-            pAVar25->G = '\0';
-            pAVar25->R = '\v';
-          }
-          if ((int)*pAVar39 < 0) {
-            pAVar39->A = '\0';
-            pAVar39->B = '\0';
-            pAVar39->G = '\0';
-            pAVar39->R = '\v';
-          }
-          iVar16 = iVar16 + 1;
-          pAVar25 = pAVar25 + 0x20;
-          pAVar39 = pAVar39 + 0x20;
-        } while (iVar16 < (int)uVar27);
-      }
-    }
-  }
-  if (puVar32[4] != 0) {
-    levelVarBlock = (int *)(uVar31 + puVar32[g_Language + 4]);
-    g_Help.num_message = *levelVarBlock;
-    HelpMsgs = (int *)uVar5;
-    lVar37 = (longlong)(int)((levelVarBlock[1] + 3U & 0xfffffffc) - 8);
-    FastMemCopy32(uVar28,(uVar31 + puVar32[g_Language + 4] & 0xffffffff) + 8,lVar37);
-    if (0 < g_Help.num_message) {
-      iVar35 = 0;
-      iVar16 = g_Help.num_message;
-      do {
-        iVar16 = iVar16 + -1;
-        *(uint *)((int)HelpMsgs + iVar35) =
-             *(int *)((int)HelpMsgs + iVar35) + ((int)HelpMsgs - 8U);
-        iVar35 = iVar35 + 0x10;
-      } while (0 < iVar16);
-    }
-    uVar28 = uVar28 + lVar37 + 0x3f & 0xffffffc0;
-  }
-  uVar5 = DAT_00a15f80;
-  local_e0 = ZEXT48(&TEX_BASE);
-  TieCnt = TieCntBase;
-  g_TieInstance = TieInstanceBase;
-  iVar16 = 0;
-  TieInstanceEnd = TieInstanceBase + TieCntBase;
-  DAT_00e583f0 = 0;
-  if (DAT_00a15f80 != 0) {
-    iVar35 = 0;
-    levelVarBlock = &DAT_00e574f0;
-    puVar26 = &DAT_00e576f0;
-    do {
-      iVar24 = DAT_00a15f7c + iVar35;
-      uVar27 = iVar16 + 1;
-      iVar35 = iVar35 + 0x40;
-      uVar3 = *(ushort *)(iVar24 + 0x30);
-      *levelVarBlock = iVar24;
-      *puVar26 = uVar3;
-      levelVarBlock = levelVarBlock + 1;
-      puVar26 = puVar26 + 1;
-      (&DAT_00e577f0)[uVar3] = (char)iVar16;
-      iVar16 = iVar16 + 1;
-      DAT_00e583f0 = iVar16;
-    } while (uVar27 < uVar5);
-  }
-  ShrubInstanceCnt = ShrubInstanceCnt;
-  g_ShrubInstance = ShrubInstanceBase;
-  ShrubInstanceEnd = ShrubInstanceBase + ShrubInstanceCnt;
-  if (puVar32[2] != 0) {
-    uVar14 = uVar31 + puVar32[2];
-    lVar38 = (uVar14 & 0xffffffff) + 0x10;
-    ImportCameraCnt = *(uint *)uVar14;
-    ImportCameras = (int)uVar28;
-    lVar37 = ((ulonglong)(uint)ImportCameraCnt & 0x7ffffff) * 0x20;
-    if (ImportCameraCnt != 0) {
-      FastMemSet(uVar28,0,(int)lVar37);
-    }
-    uVar28 = uVar28 + lVar37 + 0x3f & 0xffffffc0;
-    if (0 < ImportCameraCnt) {
-      iVar35 = 0;
-      iVar16 = 0;
-      do {
-        iVar16 = iVar16 + 1;
-        puVar40 = (undefined4 *)lVar38;
-        puVar22 = (undefined4 *)(ImportCameras + iVar35);
-        iVar35 = iVar35 + 0x20;
-        puVar22[3] = *puVar40;
-        *puVar22 = puVar40[1];
-        puVar22[1] = puVar40[2];
-        puVar22[2] = puVar40[3];
-        puVar22[4] = puVar40[4];
-        puVar22[5] = puVar40[5];
-        puVar22[6] = puVar40[6];
-        lVar38 = lVar38 + 0x20;
-        puVar22[7] = puVar40[7];
-      } while (iVar16 < ImportCameraCnt);
-    }
-  }
-  uVar14 = uVar28;
-  if (puVar32[3] != 0) {
-    uVar15 = uVar31 + puVar32[3];
-    lVar37 = (uVar15 & 0xffffffff) + 0x10;
-    g_SoundCnt = *(uint *)uVar15;
-    if (g_SoundCnt == 0) {
-      g_pSoundInstances = 0;
+    char localePath[128];
+    u64 fileSize;
+    int fileHandle;
+    char path[64];
+
+    u8 *mem = (u8 *)Gameplay;
+    u8 *file = (u8 *)g_pGameplayFile;
+    u32 fs = get_default_fs();
+
+    if (g_IsPal == 0) {
+        sprintf(path, "rc1/ps3data/level%d/gameplay_ntsc", Level);
     }
     else {
-      g_pSoundInstances = (int)uVar28;
-      uVar14 = uVar28 + (ulonglong)g_SoundCnt * 0x90 + 0x3f & 0xffffffc0;
-      FastMemSet(uVar28,0,(int)((ulonglong)g_SoundCnt * 0x90));
-      if (0 < (int)g_SoundCnt) {
-        iVar16 = 0;
-        iVar35 = 0;
-        do {
-          iVar24 = g_pSoundInstances + iVar16;
-          FastMemCopy32(iVar24,lVar37,0x90);
-          sound_SetupAmbientFunctions(iVar24);
-          iVar35 = iVar35 + 1;
-          iVar16 = iVar16 + 0x90;
-          lVar37 = lVar37 + 0x90;
-        } while (iVar35 < (int)g_SoundCnt);
-      }
+        sprintf(path, "rc1/ps3data/level%d/gameplay_pal", Level);
     }
-  }
-  puVar34 = (uint *)(uVar31 + puVar32[0x11]);
-  uVar5 = *puVar34;
-  local_100 = (ulonglong)uVar5;
-  puVar29 = &____oClassInstanceList;
-  g_MobyInstance = (MobyInstance *)uVar14;
-  uVar28 = (uVar31 + puVar32[0x11] & 0xffffffff) + 0x10;
-  uVar31 = (ulonglong)puVar34[1] + (ZERO_MASK((9 - Level)) & 0x80U);
-  local_e8 = puVar32;
-  FastMemSet(uVar14,0,(int)((local_100 + uVar31 & 0xffffffff) << 8));
-  lVar37 = 0;
-  local_d8 = uVar31;
-  if (0 < (int)uVar5) {
-    iVar35 = 0;
-    local_f0 = ZEXT48(&g_Checkpoint.objState[0]);
-    iVar16 = 0;
-    uVar12 = 0x3fe0000000000000;
-    local_f8 = ZEXT48(&DAT_00a202c0);
-    lVar37 = 0;
-    dVar46 = 0.0;
-    do {
-      puVar32 = (uint *)uVar28;
-      cVar23 = -2;
-      uVar5 = puVar32[1];
-      uVar27 = puVar32[2];
-      uVar30 = puVar32[4];
-      uVar6 = puVar32[3];
-      uVar28 = uVar28 + ((ulonglong)*puVar32 & 0xfffffffc) & 0xffffffff;
-      uVar17 = puVar32[5];
-      uVar33 = uVar30;
-      if (uVar27 == 0) goto LAB_000ddaac;
-      cVar23 = -1;
-      if ((uVar27 & 0x10) != 0) {
-        cVar23 = NAVG_AllocSlot(Level,uVar6);
-      }
-      if (*(char *)((int)local_f0 + uVar6) == '\0') {
-        iVar24 = (int)uVar6 >> 5;
-        if ((uVar27 & 3) == 0) {
-          if ((uVar27 & 8) == 0) {
-            if ((uVar27 & 0xc) != 4) goto LAB_000ddaac;
-            uVar27 = *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar24 * 4) & 1 << (uVar6 & 0x1f);
-          }
-          else {
-            uVar27 = *(uint *)(&g_CheckpointBits + iVar24 * 4) & 1 << (uVar6 & 0x1f);
-          }
-          if (uVar27 == 0) goto LAB_000ddaac;
-          goto LAB_000ddaa0;
-        }
-        if (*(char *)((int)local_f8 + uVar5) == -1) {
-          if ((uVar27 & 2) == 0) goto LAB_000ddaa0;
-          uVar33 = uVar17;
-          uVar30 = uVar17;
-          if ((*(uint *)(&g_CheckpointBits + iVar24 * 4) & 1 << (uVar6 & 0x1f)) != 0) {
-            uVar17 = uVar17 + 1;
-            uVar33 = ((int)uVar17 >> 1) + (uint)((int)uVar17 < 0 && (uVar17 & 1) != 0);
-          }
-        }
-        else {
-          if ((uVar27 & 1) == 0) goto LAB_000ddaa0;
-          if ((*(uint *)(&g_LevelObjBits + Level * 0x100 + iVar24 * 4) & 1 << (uVar6 & 0x1f)) != 0) {
-            uVar27 = uVar30 + 1;
-            uVar33 = ((int)uVar27 >> 1) + (uint)((int)uVar27 < 0 && (uVar27 & 1) != 0);
-          }
-        }
-LAB_000ddaac:
-        *puVar29 = (short)lVar37;
-        pMVar20 = (MobyInstance *)((int)&(g_MobyInstance->bSphere).x + iVar35);
-        InitMobyInstance(pMVar20,puVar32[6]);
-        pMVar20->field74_0xb1 = cVar23;
-        pMVar20->uid = (ushort)uVar6;
-        pMVar20->levelFlagIdx = (char)uVar5;
-        pMVar20->field76_0xb4 = (char)((ushort)(short)uVar33 >> 8);
-        pMVar20->field77_0xb5 = (char)(short)uVar33;
-        pMVar20->field78_0xb6 = (char)((ushort)(short)uVar30 >> 8);
-        pMVar20->field79_0xb7 = (char)(short)uVar30;
-        if (pMVar20->pClass != (MobyClass *)0x0) {
-          pMVar20->scale = pMVar20->pClass->gScale * (float)puVar32[7];
-        }
-        pMVar20->drawDistance = (short)puVar32[8];
-        pMVar20->updateDistance = (char)puVar32[9];
-        (pMVar20->pos).x = (f32)puVar32[0xc];
-        (pMVar20->pos).y = (f32)puVar32[0xd];
-        (pMVar20->pos).z = (f32)puVar32[0xe];
-        (pMVar20->rotation).x = (f32)puVar32[0xf];
-        (pMVar20->rotation).y = (f32)puVar32[0x10];
-        (pMVar20->rotation).z = (f32)puVar32[0x11];
-        pMVar20->group = (s8)puVar32[0x12];
-        dVar47 = (double)(float)puVar32[0x14];
-        if ((puVar32[0x13] != 0) &&
-           (dVar45 = (double)GetGroundZ(uVar12,&pMVar20->pos,0), dVar46 < dVar45)) {
-          (pMVar20->pos).z = (float)(dVar45 + dVar47);
-        }
-        pvVar7 = (void *)puVar32[0x16];
-        pMVar20->occlIndex = 0x7f80;
-        pMVar20->pVar = pvVar7;
-        if (puVar32[0x17] == 0) {
-          pMVar20->occlIndex = 0;
-        }
-        pMVar8 = pMVar20->pClass;
-        if (pMVar8 != (MobyClass *)0x0) {
-          *(ushort *)&pMVar8->mode_bits = *(ushort *)&pMVar8->mode_bits | (ushort)puVar32[0x18];
-        }
-        pMVar20->modeBits = pMVar20->modeBits | (MobyModeBit)puVar32[0x18];
-        if (pMVar8 != (MobyClass *)0x0) {
-          UpdateMobyTransform(pMVar20);
-        }
-        uVar5 = puVar32[0x1c];
-        iVar24 = puVar32[0x1b] * 0x10000 + puVar32[0x1a] * 0x100 + puVar32[0x19];
-        pMVar20->colorManipulator = iVar24;
-        MB_SetLights(pMVar20,iVar24,0,0,0);
-        uVar31.piece<0,4>() = pMVar20->color;
-        uVar31.piece<4,4>() = pMVar20->light;
-        pMVar20->color = (int)((uVar31 | (longlong)(int)uVar5) >> 0x20);
-        pMVar20->light = (int)(uVar31 | (longlong)(int)uVar5);
-        if (puVar32[0x1d] != 0xffffffff) {
-          Map_RegisterLevelObject(pMVar20,puVar32[0x1d]);
-        }
-        iVar35 = iVar35 + 0x100;
-        lVar37 = lVar37 + 1;
-      }
-      else {
-LAB_000ddaa0:
-        *puVar29 = 0xffff;
-      }
-      iVar16 = iVar16 + 1;
-      puVar29 = puVar29 + 1;
-    } while (iVar16 < (int)local_100);
-  }
-  puVar32 = local_e8;
-  MobyInstancePermEnd = (MobyInstance *)((int)&(g_MobyInstance->bSphere).x + (int)(lVar37 << 8));
-  lVar38 = uVar14 + (local_d8 + lVar37 & 0xffffff) * 0x100;
-  MobyInstancePermEnd->state = 0xff;
-  MobyInstanceEnd = g_MobyInstance + (int)(local_d8 + lVar37) + -1;
-  g_pMobyVars = (undefined4)lVar38;
-  uVar5 = local_e8[0x16];
-  uVar28 = lVar38 + (local_d8 & 0x1ffffff) * 0x80 + 0x3f & 0xffffffc0;
-  uVar31 = uVar28;
-  puVar34 = local_e8;
-  if (uVar5 != 0) {
-    uVar27 = local_e8[0x15];
-    if (0 < ImportCameraCnt) {
-      iVar35 = 0;
-      iVar16 = 0;
-      do {
-        iVar24 = ImportCameras + iVar35;
-        if (*(int *)(iVar24 + 0x1c) < 0) {
-          *(undefined4 *)(iVar24 + 0x1c) = 0;
-        }
-        else {
-          iVar44 = *(int *)(iVar24 + 0x1c) * 8;
-          iVar36 = *(int *)((int)puVar32 + iVar44 + uVar27);
-          lVar37 = (longlong)*(int *)((int)puVar32 + iVar44 + uVar27 + 4);
-          *(int *)(iVar24 + 0x1c) = (int)uVar31;
-          FastMemCopy(uVar31,(int)puVar32 + iVar36 + uVar5,lVar37);
-          *(int *)((int)puVar32 + iVar44 + uVar27) = (int)uVar31;
-          uVar31 = uVar31 + lVar37 & 0xffffffff;
-        }
-        iVar16 = iVar16 + 1;
-        iVar35 = iVar35 + 0x20;
-      } while (iVar16 < ImportCameraCnt);
+
+    _ZN4cell4fios2op8syncWaitEPx(
+        (int)_ZN4cell4fios9scheduler8openFileEPKNS0_8opattr_tEPKcjPPNS0_10filehandleE(fs, 0, (byte *)path, 1,
+                                                                                         &fileHandle),
+        NULL);
+    if (fileHandle == 0) {
+        HangForever();
     }
-    if (0 < (int)g_SoundCnt) {
-      iVar35 = 0;
-      iVar16 = 0;
-      uVar30 = g_SoundCnt;
-      do {
-        iVar24 = g_pSoundInstances + iVar35;
-        if (*(int *)(iVar24 + 8) < 0) {
-          *(undefined4 *)(iVar24 + 8) = 0;
-        }
-        else {
-          iVar18 = *(int *)(iVar24 + 8) * 8;
-          iVar44 = *(int *)((int)puVar32 + iVar18 + uVar27);
-          iVar36 = *(int *)((int)puVar32 + iVar18 + uVar27 + 4);
-          *(int *)(iVar24 + 8) = (int)uVar31;
-          lVar37 = (longlong)iVar36;
-          FastMemCopy(uVar31,(int)puVar32 + iVar44 + uVar5,lVar37);
-          *(int *)((int)puVar32 + iVar18 + uVar27) = (int)uVar31;
-          uVar31 = uVar31 + lVar37 & 0xffffffff;
-          uVar30 = g_SoundCnt;
-        }
-        iVar16 = iVar16 + 1;
-        iVar35 = iVar35 + 0x90;
-      } while (iVar16 < (int)uVar30);
+
+    _ZN4cell4fios2op8syncWaitEPx(
+        (int)_ZN4cell4fios9scheduler10statCommonEPKNS0_8opattr_tEPKcPvNS0_2op10e_OPSTAGESE(fs, 0, (byte *)path,
+                                                                                            (int)&fileSize, 3),
+        NULL);
+    if (g_pGameplayFile == 0 || reload != 0) {
+        file = (u8 *)(u32)idol::kalloc(TEX_BASE, (int)fileSize);
+        g_pGameplayFile = (u32)file;
     }
-    puVar34 = local_e8;
-    if (g_MobyInstance != MobyInstancePermEnd) {
-      pMVar20 = g_MobyInstance;
-      do {
-        if ((int)pMVar20->pVar < 0) {
-          pMVar20->pVar = (void *)0x0;
-        }
-        else {
-          iVar35 = (int)pMVar20->pVar * 8;
-          iVar16 = *(int *)((int)puVar32 + iVar35 + uVar27);
-          lVar37 = (longlong)*(int *)((int)puVar32 + iVar35 + uVar27 + 4);
-          pMVar20->pVar = (void *)uVar31;
-          FastMemCopy(uVar31,(int)puVar32 + iVar16 + uVar5,lVar37);
-          *(void **)((int)puVar32 + iVar35 + uVar27) = (void *)uVar31;
-          uVar31 = uVar31 + lVar37 & 0xffffffff;
-        }
-        pMVar20 = pMVar20 + 1;
-      } while (pMVar20 != MobyInstancePermEnd);
+
+    if (_ZN4cell4fios2op8syncWaitEPx(read_req_setup(fs, 0, fileHandle, (u32)file, fileSize, -1), NULL) != 0) {
+        HangForever();
     }
-    uVar31 = uVar31 + 0x3f & 0xffffffc0;
-  }
-  iVar16 = (int)uVar28;
-  if (puVar34[0x14] != 0) {
-    levelVarBlock = (int *)((int)puVar34 + puVar34[0x14]);
-    uVar5 = puVar34[0x15];
-    iVar35 = *levelVarBlock;
-    while (-1 < iVar35) {
-      iVar35 = *(int *)((int)puVar34 + *levelVarBlock * 8 + uVar5);
-      if (iVar16 <= iVar35) {
-        piVar42 = (int *)(iVar35 + levelVarBlock[1]);
-        iVar35 = *piVar42;
-        if (-1 < iVar35) {
-          *piVar42 = (int)(short)(&____oClassInstanceList)[iVar35];
-        }
-      }
-      levelVarBlock = levelVarBlock + 2;
-      iVar35 = *levelVarBlock;
+    if (_ZN4cell4fios2op8syncWaitEPx((int)filehandle_close_setup(fs, 0, fileHandle), NULL) != 0) {
+        HangForever();
     }
-  }
-  if (puVar34[0x17] != 0) {
-    levelVarBlock = (int *)((int)puVar34 + puVar34[0x17]);
-    uVar5 = puVar34[0x15];
-    iVar35 = *levelVarBlock;
-    while (-1 < iVar35) {
-      iVar35 = *(int *)((int)puVar34 + *levelVarBlock * 8 + uVar5);
-      if (iVar16 <= iVar35) {
-        *(int *)(iVar35 + levelVarBlock[1]) = *(int *)(iVar35 + levelVarBlock[1]) + iVar35;
-      }
-      levelVarBlock = levelVarBlock + 2;
-      iVar35 = *levelVarBlock;
+
+    FlushCache(0);
+    STUB_000e9150(DAT_00964568, file);
+    FlushCache(0);
+
+    FastMemSet(&g_heroMtx, 0, 0x2310);
+    FastMemSet(&GameCamera, 0, 0x3a0);
+    FastMemSet(&g_AnimLayerPool, 0, 0x180);
+    seedRand(1234);
+    SetNtscPalTiming();
+    g_CollOutput.padding[0] = (int)&g_CollMobyJointCache;
+    g_CollOutput.padding[1] = (int)&MobyClassRef;
+    g_CollOutput.padding[2] = 0;
+    g_CollOutput.collCount = 0;
+    g_CollOutput.damageNext = 0;
+    FastMemSetZero(g_MobyGrid, 0x10000);
+    FastMemSetZero(&MobyGridAlloc, 0x60);
+
+    /* LoadMiscGameplaySettings */
+    int *header = (int *)file;
+    int *settings = (int *)(file + header[GP_SETTINGS]);
+    g_ViewContext.occlColor0 = settings[0];
+    g_ViewContext.occlColor1 = settings[1];
+    g_ViewContext.occlColor2 = settings[2];
+    levelFog.r = (u8)settings[3];
+    levelFog.g = (u8)settings[4];
+    levelFog.b = (u8)settings[5];
+    LevelFogNearDist = settings[6];
+    LevelFogFarDist = (float)settings[7];
+    LevelFogNearIntensity = (float)settings[8];
+    LevelFogFarIntensity = (float)settings[9];
+    HeroDeathHeight = settings[10];
+    g_shipSplinePath = settings[15];
+    g_shipCameraStartCuboid = settings[16];
+    g_shipCameraEndCuboid = settings[17];
+    UpdateFog();
+
+    TfragDrawDist = 512000.0f;
+    DAT_00a390b8 = 500;
+    TieDrawDist = 720.0f;
+    ShrubDrawDist = 500.0f;
+    PartClipDist = 0x1f4000;
+    STUB_000780f4(g_ViewContext.occlColor0, g_ViewContext.occlColor1, g_ViewContext.occlColor2);
+    STUB_00174bd8(&DAT_00a10680);
+
+    /* lights */
+    FastMemSetZero(PointLights, 0x100);
+    FastMemSetZero(&PointLightData, 0x180);
+    FastMemSetZero(DirectionalLights, 0x400);
+    int lightCount = *(int *)(g_EngineData + 0x60);
+    if (lightCount >= MAX_DIRECTIONAL_LIGHTS) {
+        printf("!!!! Too many directional lights !!!! - Lighting will look bogus as a penalty.\n");
+        lightCount = MAX_DIRECTIONAL_LIGHTS;
     }
-  }
-  uVar28 = uVar31;
-  if (puVar34[0x12] != 0) {
-    levelVarBlock = (int *)((int)puVar34 + puVar34[0x12]);
-    puVar32 = (uint *)(levelVarBlock + 4);
-    iVar35 = *levelVarBlock;
-    iVar24 = levelVarBlock[1];
-    uVar28 = uVar31 + (longlong)iVar24 + 0x3f & 0xffffffc0;
-    if (iVar24 != 0) {
-      FastMemCopyReverse16(uVar31,levelVarBlock + iVar35 + 4,(longlong)iVar24);
+    if (lightCount != 0) {
+        FastMemCopy32(DirectionalLights, (void *)DAT_00a15f70, lightCount << 6);
     }
-    levelVarBlock = &g_MobyGroups;
-    FastMemSet(&g_MobyGroups,0,0x1c0);
-    if (0 < iVar35) {
-      iVar24 = 0;
-      do {
-        if (-1 < (int)*puVar32) {
-          uVar15 = *puVar32 + uVar31;
-          g_NumMobyGroups = iVar24 + 1;
-          uVar14 = uVar15 & 0xffffffff;
-          *levelVarBlock = (int)uVar15;
-          uVar15 = uVar14;
-          while( true ) {
-            uVar3 = *(ushort *)uVar15;
-            if (-1 < (short)(&____oClassInstanceList)[uVar3 & 0x7fff]) {
-              *(short *)uVar14 = (&____oClassInstanceList)[uVar3 & 0x7fff];
-              uVar14 = uVar14 + 2;
+
+    /* blenders: a 16-byte header each, then the 0x80-byte blenders */
+    if (header[GP_BLENDERS] == 0) {
+        BlenderCnt = 0;
+    }
+    else {
+        int *section = (int *)(file + header[GP_BLENDERS]);
+        u8 *src = (u8 *)(section + 4);
+
+        BlenderCnt = section[0];
+        if (BlenderCnt != 0) {
+            FastMemCopy32(&DAT_00a1c900, src, BlenderCnt << 4);
+            FastMemCopy32(g_Blenders, src + BlenderCnt * 16, BlenderCnt << 7);
+            for (int i = 0; i < (int)BlenderCnt; i++) {
+                Blender *blender = &g_Blenders[i];
+
+                if (*(int *)&blender->dLightA < 0) {
+                    blender->dLightA.A = 0;
+                    blender->dLightA.B = 0;
+                    blender->dLightA.G = 0;
+                    blender->dLightA.R = BLENDER_LIGHT_DEFAULT;
+                }
+                if (*(int *)&blender->dLightB < 0) {
+                    blender->dLightB.A = 0;
+                    blender->dLightB.B = 0;
+                    blender->dLightB.G = 0;
+                    blender->dLightB.R = BLENDER_LIGHT_DEFAULT;
+                }
             }
-            if ((uVar3 & 0x8000) != 0) break;
-            uVar15 = uVar15 + 2;
-          }
-          iVar36 = (int)uVar14;
-          if (*levelVarBlock < iVar36) {
-            *(ushort *)(iVar36 + -2) = *(ushort *)(iVar36 + -2) | 0x8000;
-          }
-          else {
-            *levelVarBlock = 0;
-          }
         }
-        iVar24 = iVar24 + 1;
-        puVar32 = puVar32 + 1;
-        levelVarBlock = levelVarBlock + 1;
-      } while (iVar24 < iVar35);
     }
-  }
-  puVar32 = local_e8;
-  uVar31 = uVar28;
-  if (local_e8[0x13] != 0) {
-    levelVarBlock = (int *)((int)local_e8 + local_e8[0x13]);
-    iVar35 = levelVarBlock[1];
-    lVar37 = (longlong)*levelVarBlock;
-    uVar31 = uVar28 + lVar37 + 0x3f & 0xffffffc0;
-    if (*levelVarBlock != 0) {
-      FastMemCopyReverse32(uVar28,ZEXT48(levelVarBlock) + 0x10,lVar37);
-    }
-    uVar5 = puVar32[0x15];
-    uVar14 = ZEXT48(levelVarBlock) + 0x10 + lVar37 & 0xffffffff;
-    if (0 < iVar35) {
-      iVar24 = 0;
-      do {
-        psVar41 = (short *)uVar14;
-        iVar36 = (int)((longlong)*psVar41 << 3);
-        if (iVar16 <= *(int *)((int)puVar32 + iVar36 + uVar5)) {
-          *(int *)(*(int *)((int)puVar32 + iVar36 + uVar5) + (int)psVar41[1]) =
-               *(int *)(psVar41 + 2) + (int)uVar28;
+
+    /* LoadHelp: the file's messages for the language (replaced from the locale file below) */
+    if (header[GP_HELP] != 0) {
+        int *messages = (int *)(file + header[GP_HELP + g_Language]);
+        int size = ((messages[1] + 3) & ~3) - 8;
+
+        g_Help.num_message = messages[0];
+        HelpMsgs = (HelpMsg *)mem;
+        FastMemCopy32(mem, messages + 2, size);
+        for (int i = 0; i < g_Help.num_message; i++) {
+            u32 *message = (u32 *)((u8 *)HelpMsgs + i * 16);
+
+            message[0] += (u32)HelpMsgs - 8;
         }
-        iVar24 = iVar24 + 1;
-        uVar14 = uVar14 + 8;
-      } while (iVar24 < iVar35);
+        mem = AlignUp64(mem + size);
     }
-  }
-  uVar28 = uVar31;
-  if (puVar32[0x1c] != 0) {
-    levelVarBlock = (int *)((int)puVar32 + puVar32[0x1c]);
-    piVar42 = levelVarBlock + 4;
-    SplineCnt = *levelVarBlock;
-    iVar16 = levelVarBlock[2];
-    uVar28 = uVar31 + (longlong)iVar16 + 0x3f & 0xffffffc0;
-    SplineOfs = (void *)uVar31;
-    if (iVar16 != 0) {
-      FastMemCopy(uVar31,(int)levelVarBlock + levelVarBlock[1],(longlong)iVar16);
+
+    /* ties and shrubs (already loaded with the level) */
+    TieCnt = TieCntBase;
+    g_TieInstance = TieInstanceBase;
+    TieInstanceEnd = TieInstanceBase + TieCntBase;
+    DAT_00e583f0 = 0;
+    for (u32 i = 0; i < DAT_00a15f80; i++) {
+        u8 *entry = (u8 *)DAT_00a15f7c + i * 0x40;
+        u16 id = *(u16 *)(entry + 0x30);
+
+        (&DAT_00e574f0)[i] = (int)entry;
+        (&DAT_00e576f0)[i] = id;
+        (&DAT_00e577f0)[id] = (u8)i;
+        DAT_00e583f0 = i + 1;
     }
-    pvVar7 = SplineOfs;
-    if (0 < SplineCnt) {
-      ppSVar19 = Splines;
-      iVar16 = SplineCnt;
-      do {
-        iVar35 = *piVar42;
-        iVar16 = iVar16 + -1;
-        piVar42 = piVar42 + 1;
-        *ppSVar19 = (Spline *)(iVar35 + (int)pvVar7);
-        ppSVar19 = ppSVar19 + 1;
-      } while (0 < iVar16);
-    }
-  }
-  if (puVar32[0x1d] != 0) {
-    puVar32 = (uint *)((int)local_e8 + puVar32[0x1d]);
-    puVar34 = puVar32 + 4;
-    DAT_00a1a860 = *puVar32;
-    uVar5 = puVar32[1];
-    uVar27 = puVar32[2];
-    DAT_00a1a85c = (int)uVar28;
-    uVar31 = uVar28 + ((ulonglong)DAT_00a1a860 & 0x7ffffff) * 0x20 + 0x3f & 0xffffffc0;
-    if (0 < (int)DAT_00a1a860) {
-      iVar35 = 0;
-      iVar16 = 0;
-      do {
-        memcpy((void *)(DAT_00a1a85c + iVar35),puVar34,0x10);
-        puVar43 = puVar34 + 4;
-        iVar16 = iVar16 + 1;
-        iVar24 = DAT_00a1a85c + iVar35;
-        puVar34 = puVar34 + 8;
-        iVar35 = iVar35 + 0x20;
-        *(uint *)(iVar24 + 0x14) = *puVar43;
-      } while (iVar16 < (int)DAT_00a1a860);
-    }
-    uVar28 = uVar31 + (longlong)(int)uVar27 + 0x3f & 0xffffffc0;
-    if (uVar27 != 0) {
-      FastMemCopy(uVar31,(int)puVar32 + uVar5,(longlong)(int)uVar27);
-    }
-    if (0 < (int)DAT_00a1a860) {
-      iVar35 = 0;
-      iVar16 = 0;
-      do {
-        iVar16 = iVar16 + 1;
-        uVar5 = *puVar34;
-        iVar24 = DAT_00a1a85c + iVar35;
-        iVar35 = iVar35 + 0x20;
-        puVar34 = puVar34 + 1;
-        *(uint *)(iVar24 + 0x10) = uVar5 + (int)uVar31;
-      } while (iVar16 < (int)DAT_00a1a860);
-    }
-  }
-  puVar32 = local_e8;
-  uVar31 = uVar28;
-  if (local_e8[0x1b] != 0) {
-    puVar34 = (uint *)((int)local_e8 + local_e8[0x1b]);
-    puVar43 = puVar34 + 4;
-    DAT_00a51bc4 = *puVar34;
-    DAT_00a51bc0 = (int)uVar28;
-    uVar31 = uVar28 + (ulonglong)DAT_00a51bc4 * 0x90 + 0x3f & 0xffffffc0;
-    if (DAT_00a51bc4 != 0) {
-      FastMemSet(uVar28,0,(int)((ulonglong)DAT_00a51bc4 * 0x90));
-    }
-    if (0 < (int)DAT_00a51bc4) {
-      iVar16 = 0;
-      iVar35 = 0;
-      do {
-        FastMemCopy32(DAT_00a51bc0 + iVar16,puVar43,0x90);
-        iVar35 = iVar35 + 1;
-        iVar16 = iVar16 + 0x90;
-        puVar43 = puVar43 + 0x20;
-      } while (iVar35 < (int)DAT_00a51bc4);
-    }
-  }
-  uVar28 = uVar31;
-  if (puVar32[0x18] != 0) {
-    puVar34 = (uint *)((int)puVar32 + puVar32[0x18]);
-    puVar43 = puVar34 + 4;
-    CuboidCnt = *puVar34;
-    lVar37 = ((ulonglong)(uint)CuboidCnt & 0x1ffffff) * 0x80;
-    Cuboids = (Cuboid *)uVar31;
-    uVar28 = uVar31 + lVar37 + 0x3f & 0xffffffc0;
-    if (CuboidCnt != 0) {
-      FastMemSet(uVar31,0,(int)lVar37);
-    }
-    if (0 < CuboidCnt) {
-      iVar16 = 0;
-      iVar35 = 0;
-      do {
-        FastMemCopy32((int)&(Cuboids->matrix).v0.x + iVar16,puVar43,0x80);
-        iVar35 = iVar35 + 1;
-        iVar16 = iVar16 + 0x80;
-        puVar43 = puVar43 + 0x20;
-      } while (iVar35 < CuboidCnt);
-    }
-  }
-  uVar31 = uVar28;
-  if (puVar32[0x19] != 0) {
-    puVar34 = (uint *)((int)puVar32 + puVar32[0x19]);
-    puVar43 = puVar34 + 4;
-    SphereCnt = *puVar34;
-    lVar37 = ((ulonglong)(uint)SphereCnt & 0x1ffffff) * 0x80;
-    Spheres = (Sphere *)uVar28;
-    uVar31 = uVar28 + lVar37 + 0x3f & 0xffffffc0;
-    if (SphereCnt != 0) {
-      FastMemSet(uVar28,0,(int)lVar37);
-    }
-    if (0 < SphereCnt) {
-      iVar16 = 0;
-      iVar35 = 0;
-      do {
-        FastMemCopy32((int)&(Spheres->matrix).v0.x + iVar16,puVar43,0x80);
-        iVar35 = iVar35 + 1;
-        iVar16 = iVar16 + 0x80;
-        puVar43 = puVar43 + 0x20;
-      } while (iVar35 < SphereCnt);
-    }
-  }
-  uVar28 = uVar31;
-  if (puVar32[0x1a] != 0) {
-    puVar34 = (uint *)((int)puVar32 + puVar32[0x1a]);
-    puVar43 = puVar34 + 4;
-    CylinderCnt = *puVar34;
-    lVar37 = ((ulonglong)(uint)CylinderCnt & 0x1ffffff) * 0x80;
-    Cylinders = (Cylinder *)uVar31;
-    uVar28 = uVar31 + lVar37 + 0x3f & 0xffffffc0;
-    if (CylinderCnt != 0) {
-      FastMemSet(uVar31,0,(int)lVar37);
-    }
-    if (0 < CylinderCnt) {
-      iVar16 = 0;
-      iVar35 = 0;
-      do {
-        FastMemCopy32((int)&(Cylinders->matrix).v0.x + iVar16,puVar43,0x80);
-        iVar35 = iVar35 + 1;
-        iVar16 = iVar16 + 0x80;
-        puVar43 = puVar43 + 0x20;
-      } while (iVar35 < CylinderCnt);
-    }
-  }
-  if (puVar32[0x21] != 0) {
-    puVar34 = (uint *)((int)puVar32 + puVar32[0x21]);
-    uVar5 = *puVar34;
-    CamCollGrid = (undefined4)uVar28;
-    FastMemCopy32(uVar28,puVar34 + 4,uVar5 + 0x4000);
-    uVar28 = uVar28 + uVar5 + 0x403f & 0xffffffc0;
-  }
-  if (puVar32[0x1e] != 0) {
-    puVar34 = (uint *)((int)puVar32 + puVar32[0x1e]);
-    uVar5 = *puVar34;
-    Blenders = (Blender *)uVar28;
-    FastMemCopy32(uVar28,puVar34 + 4,uVar5 + 0x4000);
-    uVar28 = uVar28 + uVar5 + 0x403f & 0xffffffc0;
-  }
-  uVar31 = uVar28;
-  if (puVar32[0x1f] != 0) {
-    puVar34 = (uint *)((int)puVar32 + puVar32[0x1f]);
-    DAT_00a1c840 = *puVar34;
-    lVar37 = ((ulonglong)DAT_00a1c840 & 0x7ffffff) * 0x20;
-    DAT_00a1c880 = (undefined4)uVar28;
-    uVar31 = uVar28 + lVar37 + 0x3f & 0xffffffc0;
-    if (DAT_00a1c840 != 0) {
-      FastMemCopy32(uVar28,puVar34 + 4,(int)lVar37);
-    }
-  }
-  uVar28 = uVar31;
-  if (puVar32[0x22] != 0) {
-    puVar34 = (uint *)((int)puVar32 + puVar32[0x22]);
-    g_EnvSampleCount = *puVar34;
-    g_EnvSamples = (undefined4)uVar31;
-    uVar28 = uVar31 + (ulonglong)g_EnvSampleCount * 0x30 + 0x3f & 0xffffffc0;
-    if (g_EnvSampleCount != 0) {
-      FastMemCopy32(uVar31,puVar34 + 4,(int)((ulonglong)g_EnvSampleCount * 0x30));
-    }
-  }
-  PartInstances = (void *)uVar28;
-  PartIndexNext = 0;
-  PartActiveCnt = 0;
-  PartIndexTop = 0xffffffff;
-  FastMemSetZero(&g_PartUsed,0x200);
-  g_SpaceshipPtr = (MobyInstance *)0x0;
-  iVar16 = (int)local_d0;
-  if (0 < *(int *)(iVar16 + 0x2c)) {
-    if (((Level == Gemlik) && (*(short *)((int)local_c8 + 0x26) == 2)) && (DAT_00a561c0 != 0)) {
-      uVar1 = g_MobyInstance->state;
-      pMVar20 = g_MobyInstance;
-      while (uVar1 != 0xff) {
-        if ((short)pMVar20->oClass == OCLASSES_SPACESHIP[2]) {
-          SetupSpaceShipVars(pMVar20);
-          MB_SetAnimationNoBlend(pMVar20,1,0);
-          if (g_SpaceshipPtr != (MobyInstance *)0x0) goto LAB_000de924;
-          break;
+    g_ShrubInstance = ShrubInstanceBase;
+    ShrubInstanceEnd = ShrubInstanceBase + ShrubInstanceCnt;
+
+    /* LoadCameras: file records are {type, pos, rot, pVar}, ImportCamera is {pos, type, rot, pVar} */
+    if (header[GP_CAMERAS] != 0) {
+        int *section = (int *)(file + header[GP_CAMERAS]);
+        int *src = section + 4;
+        int size = section[0] * 0x20;
+
+        ImportCameraCnt = section[0];
+        ImportCameras = (u32)mem;
+        if (ImportCameraCnt != 0) {
+            FastMemSet(mem, 0, size);
         }
-        uVar1 = pMVar20[1].state;
-        pMVar20 = pMVar20 + 1;
-      }
+        mem = AlignUp64(mem + size);
+
+        for (int i = 0; i < ImportCameraCnt; i++, src += 8) {
+            int *camera = (int *)(ImportCameras + i * 0x20);
+
+            camera[3] = src[0];
+            camera[0] = src[1];
+            camera[1] = src[2];
+            camera[2] = src[3];
+            camera[4] = src[4];
+            camera[5] = src[5];
+            camera[6] = src[6];
+            camera[7] = src[7];
+        }
     }
-    pMVar20 = CreateMoby
-                        ((MOBY_OCLASSES)
-                         *(undefined4 *)
-                          ((int)OCLASSES_SPACESHIP +
-                          (int)((longlong)*(short *)((int)local_c8 + 0x26) << 2)));
-    (pMVar20->pos).x = *(f32 *)(iVar16 + 0x2c);
-    (pMVar20->pos).y = *(f32 *)(iVar16 + 0x30);
-    MVar4 = pMVar20->modeBits;
-    (pMVar20->pos).z = *(f32 *)(iVar16 + 0x34);
-    fVar2 = *(f32 *)(iVar16 + 0x38);
-    pMVar20->drawDistance = 0xff;
-    (pMVar20->rotation).z = fVar2;
-    pMVar20->updateDistance = '\x10';
-    pMVar20->pUpdate = &PTR_UpdateMoby_Spaceship_00707c58;
-    pMVar20->modeBits =
-         MVar4 & (MIRROR|CAN_BE_DAMAGED|HIDE_BACKFACES|CAN_BE_AUTO_TARGETED|DISABLE_Z_WRITE|
-                  DRAW_SHADOW|DRAW_TRANSPARENT_WEIRD|LOCK_ROTATION|NO_DRAW|UNK_40|HAS_SPECIAL_VARS|
-                  HAS_GLOW|TRANSPARENT|NO_POST_UPDATE|DISABLED);
-    MB_SetAnimationNoBlend(pMVar20,1,0);
-    UpdateMobyTransform(pMVar20);
-    g_SpaceshipPtr = pMVar20;
-    Map_RegisterLevelObject(pMVar20,0);
-  }
-LAB_000de924:
-  iVar16 = TfragsCnt;
-  if ((OcclGrid == (void *)0x0) || (puVar32[0x23] == 0)) {
-    printf("***\nno occlusion\n***\n");
-    pMVar20 = g_MobyInstance;
-    if (g_MobyInstance != MobyInstanceEnd) {
-      do {
-        pMVar20->occlIndex = 0x7f80;
-        pMVar20 = pMVar20 + 1;
-      } while (pMVar20 != MobyInstanceEnd);
+
+    /* LoadSound */
+    if (header[GP_SOUNDS] != 0) {
+        int *section = (int *)(file + header[GP_SOUNDS]);
+        u8 *src = (u8 *)(section + 4);
+
+        g_SoundCnt = section[0];
+        if (g_SoundCnt == 0) {
+            g_pSoundInstances = 0;
+        }
+        else {
+            g_pSoundInstances = (u32)mem;
+            u8 *next = AlignUp64(mem + g_SoundCnt * 0x90);
+            FastMemSet(mem, 0, g_SoundCnt * 0x90);
+            for (int i = 0; i < (int)g_SoundCnt; i++, src += 0x90) {
+                short *sound = (short *)(g_pSoundInstances + i * 0x90);
+
+                FastMemCopy32(sound, src, 0x90);
+                sound_SetupAmbientFunctions(sound);
+            }
+            mem = next;
+        }
     }
-    pTVar21 = g_TieInstance;
-    if (g_TieInstance != TieInstanceEnd) {
-      do {
-        pTVar21->occlIndex[0] = '\0';
-        pTVar21->occlIndex[1] = '\0';
-        pTVar21->occlIndex[2] = '\x7f';
-        pTVar21->occlIndex[3] = -0x80;
-        pTVar21 = pTVar21 + 1;
-      } while (pTVar21 != TieInstanceEnd);
+
+    /* InitLoadMobyInstances / LoadMobyInstances: the records that spawn get the next instance;
+       g_MobyShadowList maps record index to instance index (-1 not spawned) */
+    int *mobySection = (int *)(file + header[GP_MOBYS]);
+    int recordCnt = mobySection[0];
+    int extraMobys = mobySection[1] + (Level == LEVEL_EXTRA_MOBYS ? 0x80 : 0);
+    GameplayMoby *record = (GameplayMoby *)(mobySection + 4);
+    short *recordMoby = (short *)g_MobyShadowList;
+    int spawned = 0;
+
+    g_MobyInstance = (MobyInstance *)mem;
+    FastMemSet(mem, 0, (recordCnt + extraMobys) << 8);
+
+    for (int i = 0; i < recordCnt; i++, recordMoby++) {
+        GameplayMoby *rec = record;
+        int flags = rec->spawnFlags;
+        char mapSlot = MAPSLOT_NONE;
+        int bolts = rec->bolts;
+        int boltsBase = rec->bolts;
+
+        record = (GameplayMoby *)((u8 *)record + (rec->size & ~3));
+
+        if (flags != 0) {
+            u32 word = rec->uid >> 5;
+            u32 bit = 1 << (rec->uid & 0x1f);
+
+            mapSlot = MAPSLOT_UNSET;
+            if (flags & MOBYSPAWN_MAP_SLOT) {
+                mapSlot = NAVG_AllocSlot(Level, rec->uid);
+            }
+
+            if (g_Checkpoint.objState[rec->uid] != 0) {
+                *recordMoby = -1;
+                continue;
+            }
+
+            if ((flags & (MOBYSPAWN_LEVEL_FLAG | MOBYSPAWN_NO_LEVEL_FLAG)) == 0) {
+                u32 dead = 0;
+
+                if (flags & MOBYSPAWN_IF_CHECKPOINT) {
+                    dead = g_CheckpointBits[word] & bit;
+                }
+                else if ((flags & (MOBYSPAWN_IF_CHECKPOINT | MOBYSPAWN_IF_LEVEL)) == MOBYSPAWN_IF_LEVEL) {
+                    dead = g_LevelObjBits[Level][word] & bit;
+                }
+                if (dead) {
+                    *recordMoby = -1;
+                    continue;
+                }
+            }
+            else if ((s8)(&g_CheckpointLevelFlags)[rec->levelFlagIdx] == -1) {
+                if (!(flags & MOBYSPAWN_NO_LEVEL_FLAG)) {
+                    *recordMoby = -1;
+                    continue;
+                }
+                bolts = rec->boltsAlt;
+                boltsBase = rec->boltsAlt;
+                if (g_CheckpointBits[word] & bit) {
+                    bolts = (rec->boltsAlt + 1) / 2;
+                }
+            }
+            else {
+                if (!(flags & MOBYSPAWN_LEVEL_FLAG)) {
+                    *recordMoby = -1;
+                    continue;
+                }
+                if (g_LevelObjBits[Level][word] & bit) {
+                    bolts = (rec->bolts + 1) / 2;
+                }
+            }
+        }
+
+        *recordMoby = (short)spawned;
+        MobyInstance *moby = &g_MobyInstance[spawned];
+
+        InitMobyInstance(moby, rec->oClass);
+        moby->field74_0xb1 = mapSlot;
+        moby->uid = (u16)rec->uid;
+        moby->levelFlagIdx = (char)rec->levelFlagIdx;
+        *(short *)&moby->field76_0xb4 = (short)bolts;
+        *(short *)&moby->field78_0xb6 = (short)boltsBase;
+        if (moby->pClass != NULL) {
+            moby->scale = moby->pClass->gScale * rec->scale;
+        }
+        moby->drawDistance = (short)rec->drawDistance;
+        moby->updateDistance = (char)rec->updateDistance;
+        moby->pos.x = rec->pos[0];
+        moby->pos.y = rec->pos[1];
+        moby->pos.z = rec->pos[2];
+        moby->rotation.x = rec->rot[0];
+        moby->rotation.y = rec->rot[1];
+        moby->rotation.z = rec->rot[2];
+        moby->group = (s8)rec->group;
+
+        if (rec->onGround != 0) {
+            float ground = GetGroundZ(GROUND_PROBE_UP, &moby->pos, 0);
+
+            if (ground > 0.0f) {
+                moby->pos.z = ground + rec->groundOffset;
+            }
+        }
+
+        moby->occlIndex = OCCL_NONE;
+        moby->pVar = (void *)rec->pVar;
+        if (rec->occlusion == 0) {
+            moby->occlIndex = 0;
+        }
+
+        if (moby->pClass != NULL) {
+            moby->pClass->mode_bits |= (u16)rec->modeBits;
+        }
+        moby->modeBits |= (u16)rec->modeBits;
+        if (moby->pClass != NULL) {
+            UpdateMobyTransform(moby);
+        }
+
+        moby->colorManipulator = rec->blue * 0x10000 + rec->green * 0x100 + rec->red;
+        MB_SetLights(moby, moby->colorManipulator, 0, 0, 0);
+        *(u64 *)&moby->color |= (s64)rec->light;
+
+        if (rec->mapObject != -1) {
+            Map_RegisterLevelObject(moby, rec->mapObject);
+        }
+        spawned++;
     }
-    if (0 < TfragsCnt) {
-      iVar35 = 0;
-      iVar16 = 0;
-      do {
-        iVar35 = iVar35 + 1;
-        pcVar11 = Tfrags->occlIndex;
-        (pcVar11 + iVar16)[0] = '\x7f';
-        (pcVar11 + iVar16)[1] = -0x80;
-        iVar16 = iVar16 + 0x30;
-      } while (iVar35 < TfragsCnt);
+
+    MobyInstancePermEnd = &g_MobyInstance[spawned];
+    MobyInstancePermEnd->state = 0xff;
+    MobyInstanceEnd = &g_MobyInstance[extraMobys + spawned - 1];
+    u8 *pvarStart = (u8 *)&g_MobyInstance[extraMobys + spawned];
+    g_pMobyVars = pvarStart;
+    mem = AlignUp64(pvarStart + extraMobys * MOBY_PVAR_SIZE);
+    pvarStart = mem;
+
+    /* LoadCameraPVars, LoadSoundPVars, LoadMobyPVars */
+    int *pvarTable = (int *)(file + header[GP_PVAR_TABLE]);
+    if (header[GP_PVAR_DATA] != 0) {
+        u8 *pvarData = file + header[GP_PVAR_DATA];
+
+        for (int i = 0; i < ImportCameraCnt; i++) {
+            mem = CopyPVar((void **)(ImportCameras + i * 0x20 + 0x1c), pvarTable, pvarData, mem);
+        }
+        for (int i = 0; i < (int)g_SoundCnt; i++) {
+            mem = CopyPVar((void **)(g_pSoundInstances + i * 0x90 + 8), pvarTable, pvarData, mem);
+        }
+        for (MobyInstance *moby = g_MobyInstance; moby != MobyInstancePermEnd; moby++) {
+            mem = CopyPVar(&moby->pVar, pvarTable, pvarData, mem);
+        }
+        mem = AlignUp64(mem);
     }
-    OcclUpdate = 0;
-  }
-  else {
-    levelVarBlock = (int *)((int)local_e8 + puVar32[0x23]);
-    puVar34 = (uint *)(levelVarBlock + 4);
-    iVar35 = *levelVarBlock;
-    iVar24 = levelVarBlock[1];
-    uVar5 = levelVarBlock[2];
-    puVar32 = puVar34 + iVar35 * 2;
-    if (((int)TieInstanceEnd - (int)g_TieInstance) / 0x70 == iVar24) {
-      if (0 < iVar24) {
-        iVar36 = 0;
-        do {
-          iVar36 = iVar36 + 1;
-          puVar32 = puVar32 + 2;
-        } while (iVar36 < iVar24);
-      }
+
+    /* LoadMobyLinkRectifyList: {pVar index, field offset} pairs, the field becomes a moby index */
+    if (header[GP_MOBY_LINKS] != 0) {
+        int *link = (int *)(file + header[GP_MOBY_LINKS]);
+
+        for (; link[0] >= 0; link += 2) {
+            u8 *pVar = (u8 *)pvarTable[link[0] * 2];
+
+            if (pVar >= pvarStart) {
+                int *field = (int *)(pVar + link[1]);
+
+                if (*field >= 0) {
+                    *field = ((short *)g_MobyShadowList)[*field];
+                }
+            }
+        }
+    }
+
+    /* LoadPVarRectifyList: offsets in pVar blocks to their own block */
+    if (header[GP_PVAR_POINTERS] != 0) {
+        int *fix = (int *)(file + header[GP_PVAR_POINTERS]);
+
+        for (; fix[0] >= 0; fix += 2) {
+            u8 *pVar = (u8 *)pvarTable[fix[0] * 2];
+
+            if (pVar >= pvarStart) {
+                *(int *)(pVar + fix[1]) += (int)pVar;
+            }
+        }
+    }
+
+    /* LoadMobyGroups: lists of record indexes, the last with bit 15; rewritten in place as
+       instance indexes, leaving out what did not spawn */
+    if (header[GP_MOBY_GROUPS] != 0) {
+        int *section = (int *)(file + header[GP_MOBY_GROUPS]);
+        int *offsets = section + 4;
+        int groupCnt = section[0];
+        int size = section[1];
+        u8 *groups = mem;
+
+        mem = AlignUp64(mem + size);
+        if (size != 0) {
+            FastMemCopyReverse16((u16 *)groups, (u8 *)(section + groupCnt + 4), size);
+        }
+        FastMemSet(&g_MobyGroups, 0, MAX_MOBY_GROUPS * 4);
+
+        for (int i = 0; i < groupCnt; i++) {
+            if (offsets[i] < 0) {
+                continue;
+            }
+
+            u16 *in = (u16 *)(groups + offsets[i]);
+            u16 *out = in;
+            g_NumMobyGroups = i + 1;
+            (&g_MobyGroups)[i] = (u32)in;
+            for (;;) {
+                u16 entry = *in;
+                short moby = ((short *)g_MobyShadowList)[entry & 0x7fff];
+
+                if (moby >= 0) {
+                    *out++ = moby;
+                }
+                if (entry & MOBY_GROUP_END) {
+                    break;
+                }
+                in++;
+            }
+
+            if ((u32)out > (&g_MobyGroups)[i]) {
+                out[-1] |= MOBY_GROUP_END;
+            }
+            else {
+                (&g_MobyGroups)[i] = 0;
+            }
+        }
+    }
+
+    /* LoadMobySharedData: data pVar fields point into, then {short pVar, short field, int offset} */
+    if (header[GP_SHARED_DATA] != 0) {
+        int *section = (int *)(file + header[GP_SHARED_DATA]);
+        int size = section[0];
+        int fixCnt = section[1];
+        u8 *shared = mem;
+
+        mem = AlignUp64(mem + size);
+        if (size != 0) {
+            FastMemCopyReverse32((uint *)shared, (u8 *)(section + 4), size);
+        }
+
+        short *fix = (short *)((u8 *)(section + 4) + size);
+        for (int i = 0; i < fixCnt; i++, fix += 4) {
+            u8 *pVar = (u8 *)pvarTable[fix[0] * 2];
+
+            if (pVar >= pvarStart) {
+                *(int *)(pVar + fix[1]) = *(int *)(fix + 2) + (int)shared;
+            }
+        }
+    }
+
+    /* LoadPaths */
+    if (header[GP_SPLINES] != 0) {
+        int *section = (int *)(file + header[GP_SPLINES]);
+        int size = section[2];
+
+        SplineCnt = section[0];
+        SplineOfs = mem;
+        u8 *next = AlignUp64(mem + size);
+        if (size != 0) {
+            FastMemCopy(mem, (u8 *)section + section[1], size);
+        }
+        for (int i = 0; i < (int)SplineCnt; i++) {
+            Splines[i] = (Spline *)((u8 *)SplineOfs + section[4 + i]);
+        }
+        mem = next;
+    }
+
+    /* LoadGrindPaths: 0x20-byte paths (a bounding sphere, data, count), then their data */
+    if (header[GP_GRIND_PATHS] != 0) {
+        int *section = (int *)(file + header[GP_GRIND_PATHS]);
+        int *src = section + 4;
+        int dataOfs = section[1];
+        int size = section[2];
+
+        DAT_00a1a860 = section[0];
+        DAT_00a1a85c = (u32)mem;
+        u8 *data = AlignUp64(mem + DAT_00a1a860 * 0x20);
+        for (int i = 0; i < (int)DAT_00a1a860; i++, src += 8) {
+            u8 *path = (u8 *)DAT_00a1a85c + i * 0x20;
+
+            memcpy(path, src, 0x10);
+            *(int *)(path + 0x14) = src[4];
+        }
+
+        mem = AlignUp64(data + size);
+        if (size != 0) {
+            FastMemCopy(data, (u8 *)section + dataOfs, size);
+        }
+        for (int i = 0; i < (int)DAT_00a1a860; i++, src++) {
+            *(int *)((u8 *)DAT_00a1a85c + i * 0x20 + 0x10) = src[0] + (int)data;
+        }
+    }
+
+    if (header[GP_UNK_1B] != 0) {
+        int *section = (int *)(file + header[GP_UNK_1B]);
+        u8 *src = (u8 *)(section + 4);
+
+        DAT_00a51bc4 = section[0];
+        DAT_00a51bc0 = (u32)mem;
+        u8 *next = AlignUp64(mem + DAT_00a51bc4 * 0x90);
+        if (DAT_00a51bc4 != 0) {
+            FastMemSet(mem, 0, DAT_00a51bc4 * 0x90);
+        }
+        for (int i = 0; i < (int)DAT_00a51bc4; i++, src += 0x80) {
+            FastMemCopy32((u8 *)DAT_00a51bc0 + i * 0x90, src, 0x90);
+        }
+        mem = next;
+    }
+
+    /* LoadCuboids, LoadSpheres, LoadCylinders */
+    if (header[GP_CUBOIDS] != 0) {
+        mem = LoadPrims((int *)(file + header[GP_CUBOIDS]), (void **)&Cuboids, &CuboidCnt, mem);
+    }
+    if (header[GP_SPHERES] != 0) {
+        mem = LoadPrims((int *)(file + header[GP_SPHERES]), (void **)&Spheres, &SphereCnt, mem);
+    }
+    if (header[GP_CYLINDERS] != 0) {
+        mem = LoadPrims((int *)(file + header[GP_CYLINDERS]), (void **)&Cylinders, &CylinderCnt, mem);
+    }
+
+    /* LoadCameraCollisionPrimGrid: a 0x4000-byte grid, then its data */
+    if (header[GP_CAM_COLL_GRID] != 0) {
+        int *section = (int *)(file + header[GP_CAM_COLL_GRID]);
+
+        CamCollGrid = (u32)mem;
+        FastMemCopy32(mem, section + 4, section[0] + 0x4000);
+        mem = AlignUp64(mem + section[0] + 0x4000);
+    }
+
+    if (header[GP_UNK_1E] != 0) {
+        int *section = (int *)(file + header[GP_UNK_1E]);
+
+        Blenders = (Blender *)mem;
+        FastMemCopy32(mem, section + 4, section[0] + 0x4000);
+        mem = AlignUp64(mem + section[0] + 0x4000);
+    }
+
+    if (header[GP_UNK_1F] != 0) {
+        int *section = (int *)(file + header[GP_UNK_1F]);
+        int size = section[0] * 0x20;
+
+        DAT_00a1c840 = section[0];
+        DAT_00a1c880 = (u32)mem;
+        u8 *next = AlignUp64(mem + size);
+        if (DAT_00a1c840 != 0) {
+            FastMemCopy32(mem, section + 4, size);
+        }
+        mem = next;
+    }
+
+    if (header[GP_ENV_SAMPLES] != 0) {
+        int *section = (int *)(file + header[GP_ENV_SAMPLES]);
+        int size = section[0] * 0x30;
+
+        g_EnvSampleCount = section[0];
+        g_EnvSamples = (EnvSample *)mem;
+        u8 *next = AlignUp64(mem + size);
+        if (g_EnvSampleCount != 0) {
+            FastMemCopy32(mem, section + 4, size);
+        }
+        mem = next;
+    }
+
+    /* ResetParticles */
+    PartInstances = (PartInstance *)mem;
+    PartIndexNext = 0;
+    PartActiveCnt = 0;
+    PartIndexTop = -1;
+    FastMemSetZero(&g_PartUsed, 0x200);
+
+    /* the player's ship, parked where the settings say (none when its x is 0) */
+    g_SpaceshipPtr = NULL;
+    float *shipPos = (float *)&settings[11];
+    if (settings[11] > 0) {
+        bool found = false;
+
+        if (Level == Gemlik && g_SpaceshipVariant == SHIP_VARIANT_GEMLIK && DAT_00a561c0 != 0) {
+            for (MobyInstance *moby = g_MobyInstance; moby->state != 0xff; moby++) {
+                if ((short)moby->oClass == OCLASSES_SPACESHIP[SHIP_VARIANT_GEMLIK]) {
+                    SetupSpaceShipVars(moby);
+                    MB_SetAnimationNoBlend(moby, 1, 0);
+                    found = g_SpaceshipPtr != NULL;
+                    break;
+                }
+            }
+        }
+
+        if (!found) {
+            MobyInstance *ship = CreateMoby(OCLASSES_SPACESHIP[g_SpaceshipVariant]);
+
+            ship->pos.x = shipPos[0];
+            ship->pos.y = shipPos[1];
+            ship->pos.z = shipPos[2];
+            ship->drawDistance = 0xff;
+            ship->rotation.z = shipPos[3];
+            ship->updateDistance = 16;
+            ship->pUpdate = &PTR_UpdateMoby_Spaceship_00707c58;
+            ship->modeBits &= ~NO_UPDATE;
+            MB_SetAnimationNoBlend(ship, 1, 0);
+            UpdateMobyTransform(ship);
+            g_SpaceshipPtr = ship;
+            Map_RegisterLevelObject(ship, 0);
+        }
+    }
+
+    /* AttachMobyOcclusion: {count tfrags, count ties, count mobys}, then {bit, id} pairs for the
+       tfrags, ties and mobys */
+    int tfragCnt = TfragsCnt;
+    if (OcclGrid == NULL || header[GP_OCCLUSION] == 0) {
+        printf("***\nno occlusion\n***\n");
+        for (MobyInstance *moby = g_MobyInstance; moby != MobyInstanceEnd; moby++) {
+            moby->occlIndex = OCCL_NONE;
+        }
+        for (TieInstance *tie = g_TieInstance; tie != TieInstanceEnd; tie++) {
+            tie->occlIndex[0] = 0;
+            tie->occlIndex[1] = 0;
+            tie->occlIndex[2] = 0x7f;
+            tie->occlIndex[3] = 0x80;
+        }
+        for (int i = 0; i < (int)TfragsCnt; i++) {
+            Tfrags[i].occlIndex[0] = 0x7f;
+            Tfrags[i].occlIndex[1] = 0x80;
+        }
+        OcclUpdate = 0;
     }
     else {
-      puVar32 = puVar32 + iVar24 * 2;
-    }
-    if (g_MobyInstance->state != 0xff) {
-      bVar9 = false;
-      iVar44 = 0;
-      iVar36 = 0;
-      pMVar20 = g_MobyInstance;
-      do {
-        if (pMVar20->occlIndex != 0x7f80) {
-          iVar44 = iVar44 + 1;
-          uVar27 = 0;
-          if (0 < (int)uVar5) {
-            uVar27 = 0;
-            puVar43 = puVar32;
-            do {
-              uVar30 = puVar43[1];
-              if ((uVar30 >> 0x18 | uVar30 >> 8 & 0xff00 | (uVar30 & 0xff00) << 8 | uVar30 << 0x18)
-                  == (int)(short)pMVar20->uid) break;
-              uVar27 = uVar27 + 1;
-              puVar43 = puVar43 + 2;
-            } while ((int)uVar27 < (int)uVar5);
-          }
-          if (uVar27 == uVar5) {
-            iVar36 = iVar36 + 1;
-            bVar9 = true;
-            pMVar20->occlIndex = 0x7f80;
-          }
-          else {
-            uVar27 = *(uint *)((int)(((ulonglong)uVar27 & 0x7fffffff) << 3) + (int)puVar32);
-            pMVar20->occlIndex =
-                 (short)((int)(uVar27 >> 0x18 | uVar27 >> 8 & 0xff00 |
-                              (uVar27 & 0xff00) << 8 | uVar27 << 0x18) >> 3) << 8 |
-                 (ushort)(1 << (uVar27 >> 0x18 & 7));
-          }
+        int *section = (int *)(file + header[GP_OCCLUSION]);
+        u32 *tfragOccl = (u32 *)(section + 4);
+        int occlTfrags = section[0];
+        int occlTies = section[1];
+        int occlMobys = section[2];
+        u32 *mobyOccl = tfragOccl + occlTfrags * 2 + occlTies * 2;
+
+        if (g_MobyInstance->state != 0xff) {
+            bool stale = false;
+            int occluded = 0;
+            int missing = 0;
+
+            for (MobyInstance *moby = g_MobyInstance; moby->state != 0xff; moby++) {
+                if (moby->occlIndex == OCCL_NONE) {
+                    continue;
+                }
+
+                occluded++;
+                int j;
+                for (j = 0; j < occlMobys; j++) {
+                    if ((int)ByteSwap32(mobyOccl[j * 2 + 1]) == (short)moby->uid) {
+                        break;
+                    }
+                }
+
+                if (j == occlMobys) {
+                    missing++;
+                    stale = true;
+                    moby->occlIndex = OCCL_NONE;
+                }
+                else {
+                    moby->occlIndex = (u16)OcclIndex(mobyOccl[j * 2]);
+                }
+            }
+
+            if (stale) {
+                printf("***\nocclusion out of date on mobys (%d / %d)\n***\n", missing, occluded);
+            }
         }
-        pMVar10 = pMVar20 + 1;
-        pMVar20 = pMVar20 + 1;
-      } while (pMVar10->state != 0xff);
-      if (bVar9) {
-        printf("***\nocclusion out of date on mobys (%d / %d)\n***\n",iVar36,iVar44);
-      }
+
+        if (tfragCnt == occlTfrags) {
+            for (int i = 0; i < occlTfrags; i++) {
+                u8 *tfrag = (u8 *)**(int **)&DAT_00a15f74 + i * 0x30;
+
+                *(u16 *)(tfrag + 0x1e) = (u16)OcclIndex(tfragOccl[i * 2]);
+            }
+        }
+        else {
+            printf("***\nocclusion out of date on tfrag\n***\n");
+            for (int i = 0; i < (int)TfragsCnt; i++) {
+                Tfrags[i].occlIndex[0] = 0x7f;
+                Tfrags[i].occlIndex[1] = 0x80;
+            }
+        }
+
+        u32 *tieOccl = tfragOccl + occlTfrags * 2;
+        for (int i = 0; i < occlTies; i++) {
+            *(int *)g_TieInstance[i].occlIndex = OcclIndex(tieOccl[i * 2]);
+        }
+        OcclUpdate = 2;
     }
-    if (iVar16 == iVar35) {
-      if (0 < iVar35) {
-        iVar36 = 0;
-        iVar16 = iVar35;
-        do {
-          uVar5 = *puVar34;
-          iVar16 = iVar16 + -1;
-          puVar34 = puVar34 + 2;
-          iVar44 = **(int **)((int)local_e0 + 0x28) + iVar36;
-          iVar36 = iVar36 + 0x30;
-          *(ushort *)(iVar44 + 0x1e) =
-               (short)((int)(uVar5 >> 0x18 | uVar5 >> 8 & 0xff00 |
-                            (uVar5 & 0xff00) << 8 | uVar5 << 0x18) >> 3) << 8 |
-               (ushort)(1 << (uVar5 >> 0x18 & 7));
-        } while (0 < iVar16);
-      }
+
+    ResetDrawGlobals();
+    Hero_ResetHero();
+    Hero_InitStuff();
+    InitCameras();
+    UpdateCamera();
+    InitPadRing();
+    EnableFontColors();
+
+    g_mobyIdListCount = 0;
+    DAT_00a51ee8 = 0;
+    DAT_00a51f68 = 0;
+    MobyInstance *hero = *(MobyInstance **)((u8 *)&g_heroMtx + 0x2080);
+    worldUpdateTime = 0;
+    DAT_00a15c7c = 0;
+    for (int i = 0; i < 20; i++) {
+        ((u32 *)&DAT_007ff23c)[i] = 0;
+    }
+    DAT_010bb478 = 0;
+    if (g_SpaceshipPtr != NULL) {
+        *(u64 *)&g_SpaceshipPtr->color = *(u64 *)&hero->color;
+    }
+
+    if (Level == Aridia || (Level >= 5 && Level <= 8) || Level == 10) {
+        ScreenColorEffectLevel = (u32)&DAT_0071ef00;
     }
     else {
-      printf("***\nocclusion out of date on tfrag\n***\n");
-      if (0 < TfragsCnt) {
-        iVar36 = 0;
-        iVar16 = 0;
-        do {
-          iVar36 = iVar36 + 1;
-          pcVar11 = Tfrags->occlIndex;
-          (pcVar11 + iVar16)[0] = '\x7f';
-          (pcVar11 + iVar16)[1] = -0x80;
-          iVar16 = iVar16 + 0x30;
-        } while (iVar36 < TfragsCnt);
-      }
+        ScreenColorEffectLevel = (u32)&DAT_0071eed0;
     }
-    puVar32 = (uint *)(levelVarBlock + iVar35 * 2 + 4);
-    if (0 < iVar24) {
-      iVar16 = 0;
-      do {
-        uVar5 = *puVar32;
-        iVar24 = iVar24 + -1;
-        puVar32 = puVar32 + 2;
-        *(int *)(g_TieInstance->occlIndex + iVar16) =
-             ((int)(uVar5 >> 0x18 | uVar5 >> 8 & 0xff00 | (uVar5 & 0xff00) << 8 | uVar5 << 0x18) >>
-             3) << 8 | 1 << (uVar5 >> 0x18 & 7);
-        iVar16 = iVar16 + 0x70;
-      } while (0 < iVar24);
-    }
-    OcclUpdate = 2;
-  }
-  uVar31 = local_b8;
-  ResetDrawGlobals();
-  Hero_ResetHero();
-  Hero_InitStuff();
-  InitCameras();
-  UpdateCamera();
-  InitPadRing();
-  EnableFontColors();
-  pMVar20 = g_SpaceshipPtr;
-  g_mobyIdListCount = 0;
-  DAT_00a51ee8 = 0;
-  DAT_00a51f68 = 0;
-  iVar16 = *(int *)((int)uVar31 + 0x2080);
-  worldUpdateTime = 0;
-  puVar22 = &DAT_007ff23c;
-  DAT_00a15c7c = 0;
-  lVar37 = 5;
-  do {
-    *puVar22 = 0;
-    puVar22[1] = 0;
-    puVar22[2] = 0;
-    puVar22[3] = 0;
-    puVar22 = puVar22 + 4;
-    lVar37 = lVar37 + -1;
-  } while (lVar37 != 0);
-  DAT_010bb478 = 0;
-  if (pMVar20 != (MobyInstance *)0x0) {
-    uVar12 = *(undefined8 *)(iVar16 + 0x38);
-    pMVar20->color = (int)((ulonglong)uVar12 >> 0x20);
-    pMVar20->light = (int)uVar12;
-  }
-  if ((int)Level < 5) {
-    if (Level == Aridia) goto LAB_000dedbc;
-  }
-  else if ((int)Level < 10) {
-    if ((int)Level < 9) {
-LAB_000dedbc:
-      ScreenColorEffectLevel = &DAT_0071ef00;
-      goto LAB_000dede0;
-    }
-  }
-  else if ((int)Level < 0xb) goto LAB_000dedbc;
-  ScreenColorEffectLevel = &DAT_0071eed0;
-LAB_000dede0:
-  ScreenColorEffectNow = ScreenColorEffectLevel;
-  if (g_JapaneseMode == false) {
-    uVar12 = GetLanguageNameByIdx();
-    snprintf(acStack_1d0,"rc1/ps3data/global/locale/%s",uVar12);
-  }
-  else {
-    snprintf(acStack_1d0,"rc1/ps3data/global/locale/japanese");
-  }
-  iVar16 = (int)local_c0;
-  LoadAssetFromFile(acStack_1d0,*(undefined4 *)(iVar16 + 0x54),0x40000);
-  HelpMsgs = *(int **)(iVar16 + 0x54);
-  g_Help.num_message = *HelpMsgs;
-  FastMemCopy32
-            (HelpMsgs,HelpMsgs + 2,(HelpMsgs[1] + 3U & 0xfffffffc) - 8);
-  if (0 < g_Help.num_message) {
-    iVar35 = 0;
-    iVar16 = g_Help.num_message;
-    do {
-      iVar16 = iVar16 + -1;
-      *(int *)((int)HelpMsgs + iVar35) =
-           (int)HelpMsgs + *(int *)((int)HelpMsgs + iVar35) + -8;
-      iVar35 = iVar35 + 0x10;
-    } while (0 < iVar16);
-  }
-  return uVar28 + 0x40000 & 0xffffffff;
+    ScreenColorEffectNow = (pointer)ScreenColorEffectLevel;
+
+    LoadHelp();
+    return mem + LOCALE_BUFFER_SIZE;
 }
 
 
@@ -2077,7 +1900,7 @@ int LoadAllMobys(int param_1,int param_2)
   local_b0 = param_1;
   local_a8 = param_2;
   if ((int)param_1 != 0) {
-    FastMemCopy32(&DAT_00a202c0,g_LevelFlags + Level,0x10);
+    FastMemCopy32(&g_CheckpointLevelFlags,g_LevelFlags + Level,0x10);
     DAT_00a1bfd8 = piVar17[0x1d] + (int)piVar17;
     iVar11 = (int)piVar17 + piVar17[1];
     IconTableEntry = (IconTableEntries *)((int)piVar17 + *(int *)(DAT_00a1bfd8 + 4));
@@ -2399,7 +2222,7 @@ int LoadAllMobys(int param_1,int param_2)
     Gameplay = (int)piVar17 + (int)lVar30 + 0x3f & 0xffffffc0;
   }
   uVar7 = local_a8;
-  NAVG_LoadFile(local_b0);
+  LoadGameplayFile(local_b0);
   if ((int)uVar7 == 0) {
     ClearCheckpointData();
     puVar14 = &DAT_00a0fcd4;

@@ -7,7 +7,6 @@
 #include "game/hero.h"
 #include "game/main.h"
 #include "game/skyfunc.h"
-#include "game/skyproc.h"
 #include "idol/fastfunc.h"
 #include "idol/idol_draw.h"
 #include "idol/mUnk.h"

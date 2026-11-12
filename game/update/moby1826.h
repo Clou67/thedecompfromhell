@@ -1,6 +1,15 @@
 #pragma once
 // game/update/moby1826.h
 #include "types.h"
+#include "game/camera.h"
+
+// ---- types
+struct Cylinder {
+    struct Mtx3 matrix;
+    struct Vec4 pos;
+    struct Mtx3 imatrix;
+    struct Vec4 rot;
+};
 
 // ---- globals
 extern undefined4 DAT_007b7efc; /* 0x7b7efc */

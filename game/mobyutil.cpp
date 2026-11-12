@@ -35,6 +35,7 @@
 #include "game/update/moby112.h"
 #include "game/update/moby122.h"
 #include "game/update/moby1300.h"
+#include "game/update/moby1826.h"
 #include "game/update/moby639.h"
 #include "game/update/moby775.h"
 #include "game/vendor.h"
@@ -659,7 +660,7 @@ void MB_DistributeBolts
   bVar1 = (param_4 & 0x20) == 0;
   if (((bVar1) && (*(byte *)(param_1 + 0xb0) != 0xff)) &&
      ((*(short *)(param_1 + 0xa6) < 500 || (0x21c < *(short *)(param_1 + 0xa6))))) {
-    g_boltMiningActive = ((byte)(&DAT_00a202c0)[*(byte *)(param_1 + 0xb0)] == 0xff)
+    g_boltMiningActive = ((byte)(&g_CheckpointLevelFlags)[*(byte *)(param_1 + 0xb0)] == 0xff)
     ;
   }
   bVar3 = false;
@@ -1071,7 +1072,7 @@ void MB_SpawnBoltsFromCrate(undefined8 param_1,uint param_2,undefined8 param_3)
       *(uint *)(&g_CheckpointBits + iVar7) = uVar17 | 1 << (uVar3 & 0x1f);
       bVar1 = *(byte *)(iVar14 + 0xb0);
       (&g_CheckpointLive.objState[0])[(short)uVar3] = bVar1 + 2;
-      if ((bVar1 == 0xff) || (((&DAT_00a202c0)[bVar1] != -1 && (g_LevelFlags[LVar10][bVar1] == -1)))
+      if ((bVar1 == 0xff) || (((&g_CheckpointLevelFlags)[bVar1] != -1 && (g_LevelFlags[LVar10][bVar1] == -1)))
          ) {
         (&g_Checkpoint.objState[0])[(short)uVar3] = bVar1 + 2;
       }
@@ -2454,7 +2455,7 @@ undefined8 MB_IsSteepGround(int param_1,undefined4 *param_2)
 
 
 // 0x00ffb70 (0xa0 bytes)
-double GetGroundZ(undefined8 param_1,ulonglong param_2)
+float GetGroundZ(float param_1,void *param_2,int param_3)
 
 {
   float fVar1;
@@ -14610,7 +14611,7 @@ LAB_00113080:
 
 
 // 0x01131a8 (0xbc bytes)
-void SetNtscPalTiming(int param_1)
+void SetNtscPalTiming(void)
 
 {
   bool bVar1;

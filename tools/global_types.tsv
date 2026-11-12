@@ -225,3 +225,5 @@ g_MobyTexRef	u8 NAME /* 0x7247e0: the one-entry tex_refs passed with a ship clas
 g_MobyTexDefCnt	int NAME /* 0xa37388 */
 g_MobyTexAddrs	int NAME[] /* 0xa37390: per slot, texture address + a tag */
 g_MobyTexDefs	short NAME[][8] /* 0xa4c540: tex_def per moby texture slot */
+g_pGameplayFile	u32 NAME /* 0xa108f4: the gameplay file buffer (a MemSlots pointer) */
+g_CheckpointLevelFlags	s8 NAME /* 0xa202c0: per level flag, -1 = clear at this checkpoint (indexed as an array) */

@@ -112,7 +112,7 @@ MobyInstance * UpdateMoby_830(MobyInstance *moby)
         uVar3 = moby->uid;
         (&g_CheckpointLive.objState[0])[(short)uVar3] = bVar2 + 2;
         if ((bVar2 == 0xff) ||
-           (((&DAT_00a202c0)[bVar2] != -1 && (g_LevelFlags[Level][bVar2] == -1)))) {
+           (((&g_CheckpointLevelFlags)[bVar2] != -1 && (g_LevelFlags[Level][bVar2] == -1)))) {
           (&g_Checkpoint.objState[0])[(short)uVar3] = bVar2 + 2;
         }
         moby->state = '\x02';

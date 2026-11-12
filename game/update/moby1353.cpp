@@ -125,7 +125,7 @@ void UpdateMoby_1353_GemlikManager(MobyInstance *moby)
     if (piVar2[4] == -1) {
       DeleteMoby(moby);
     }
-    else if ((&DAT_00a202c0)[(byte)g_MobyInstance[piVar2[4]].levelFlagIdx] == -1) {
+    else if ((&g_CheckpointLevelFlags)[(byte)g_MobyInstance[piVar2[4]].levelFlagIdx] == -1) {
       if (piVar2[8] != -1) {
         DeleteMoby(g_MobyInstance + piVar2[8]);
       }

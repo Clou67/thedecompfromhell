@@ -119,6 +119,7 @@ extern undefined4 DAT_00a10724; /* 0xa10724 */
 extern int *DAT_00a108fc; /* 0xa108fc: the level's gameplay file */ /* type set in global_types.tsv */
 extern undefined4 DAT_00a10908; /* 0xa10908 */
 extern undefined4 DAT_00a15f7c; /* 0xa15f7c */
+extern undefined4 DAT_00a15f80; /* 0xa15f80 */
 extern undefined4 DAT_00a1a7b8; /* 0xa1a7b8 */
 extern undefined4 DAT_00a1a7bc; /* 0xa1a7bc */
 extern undefined4 DAT_00a1bfd8; /* 0xa1bfd8 */
@@ -143,10 +144,12 @@ extern undefined * PTR_PTR_00661940; /* 0x661940 */
 extern pointer PTR_PTR_00661960; /* 0x661960 */
 extern pointer32 PTR_TOC_BASE_0070379c; /* 0x70379c */
 extern ShrubInstance *ShrubInstanceBase; /* 0xa1a794 */ /* type set in global_types.tsv */
+extern undefined4 ShrubInstanceCnt; /* 0xa1a798 */
 extern ShrubInstance *ShrubInstanceEnd; /* type set in global_types.tsv */
 extern undefined4 TieCnt; /* 0xe583fc */
 extern undefined4 TieCntBase; /* 0xa18388 */
 extern TieInstance *TieInstanceBase; /* 0xa18384 */ /* type set in global_types.tsv */
+extern TieInstance * TieInstanceEnd; /* 0xe583f8 */
 extern struct BinkPlayer g_BinkPlayerObject; /* 0x927078: what g_pBinkPlayer normally points at */ /* type set in global_types.tsv */
 extern u32 g_BootSoundBank; /* 0x71f404 */ /* type set in global_types.tsv */
 extern SoundDef g_BootSoundDefs[13]; /* 0x71c984: the boot sound bank's defs; [7..11] belong to the frame class */ /* type set in global_types.tsv */

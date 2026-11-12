@@ -259,7 +259,7 @@ void UpdateMoby_890(MobyInstance *moby)
           uVar26 = (ulonglong)uVar10;
           bVar1 = pMVar16[uVar10].levelFlagIdx;
           if ((bVar1 == 0xff) ||
-             (((&DAT_00a202c0)[bVar1] != -1 && (g_LevelFlags[Level][bVar1] == -1)))) {
+             (((&g_CheckpointLevelFlags)[bVar1] != -1 && (g_LevelFlags[Level][bVar1] == -1)))) {
             (&g_Checkpoint.objState[0])[(short)pMVar16[uVar10].uid] = bVar1 + 2;
             uVar26 = (ulonglong)*(uint *)((int)pvVar8 + 0xd0);
           }

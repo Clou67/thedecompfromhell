@@ -13,7 +13,6 @@
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/hud.h"
-#include "game/loaders.h"
 #include "game/main.h"
 #include "game/map.h"
 #include "game/memcard.h"

@@ -166,6 +166,8 @@ typedef unsigned long long    undefined8;
 
 typedef unsigned short    ushort;
 
+typedef unsigned short    word;
+
 struct _2legAnim {
     int anim;
     float stride;
@@ -2504,6 +2506,15 @@ struct ShipsKilledStruct {
     int Oltanis;
     int Unknown;
     int Veldin2;
+};
+
+struct sky_tex {
+    uint tex0;
+    uint tex1;
+    ushort tex_ofs;
+    ushort pal_ofs;
+    ushort u_log;
+    ushort v_log;
 };
 
 typedef ulonglong uint16;

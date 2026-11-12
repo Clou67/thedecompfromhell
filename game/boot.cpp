@@ -45,7 +45,6 @@
 #include "game/respawn.h"
 #include "game/sUnk.h"
 #include "game/skyfunc.h"
-#include "game/skyproc.h"
 #include "game/sound.h"
 #include "game/space.h"
 #include "game/tieproc.h"
@@ -1659,7 +1658,7 @@ int boot(int argc, char **argv, char **envp)
     print_tty2("DONE!\n");
     idol::RegisterTrophyCtxHandle(TrophyMgr);
     cellSysutilCheckCallback();
-    SetNtscPalTiming(0);
+    SetNtscPalTiming();
 
     /* the main functions: the title screen until a level is picked, then each level */
     for (;;) {

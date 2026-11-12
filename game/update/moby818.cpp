@@ -5,9 +5,9 @@
 #include "game/update/moby818.h"
 #include "game/camera.h"
 #include "game/hero.h"
-#include "game/loaders.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
+#include "game/update/moby1826.h"
 #include "idol/fastfunc.h"
 
 // shared update function, registered for oClasses 818, 847

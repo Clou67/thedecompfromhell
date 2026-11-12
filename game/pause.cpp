@@ -28,7 +28,6 @@
 #include "game/respawn.h"
 #include "game/sUnk.h"
 #include "game/skyfunc.h"
-#include "game/skyproc.h"
 #include "game/sound.h"
 #include "game/space.h"
 #include "game/update.h"

@@ -334,3 +334,6 @@ DAT_007247d0	g_CockpitTexDef
 DAT_007247e0	g_MobyTexRef
 DAT_00a37388	g_MobyTexDefCnt
 DAT_00a37390	g_MobyTexAddrs
+NAVG_LoadFile	LoadGameplayFile
+DAT_00a108f4	g_pGameplayFile
+DAT_00a202c0	g_CheckpointLevelFlags

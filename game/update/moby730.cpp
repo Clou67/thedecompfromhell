@@ -608,7 +608,7 @@ void UpdateMoby_730(MobyInstance *moby)
              g_MobyInstance[(int)fVar9].levelFlagIdx + '\x02';
         bVar1 = pMVar18[(int)pfVar27[1]].levelFlagIdx;
         if ((bVar1 == 0xff) ||
-           (((&DAT_00a202c0)[bVar1] != -1 && (g_LevelFlags[Level][bVar1] == -1)))) {
+           (((&g_CheckpointLevelFlags)[bVar1] != -1 && (g_LevelFlags[Level][bVar1] == -1)))) {
           (&g_Checkpoint.objState[0])[(short)pMVar18[(int)pfVar27[1]].uid] = bVar1 + 2;
         }
       }

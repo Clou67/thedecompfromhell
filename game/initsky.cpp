@@ -5,7 +5,6 @@
 #include "game/boot.h"
 #include "game/hero.h"
 #include "game/skyfunc.h"
-#include "game/skyproc.h"
 #include "game/vuchain.h"
 #include "idol/fastfunc.h"
 #include "idol/tiefunc.h"

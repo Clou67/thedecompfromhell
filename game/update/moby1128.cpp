@@ -55,7 +55,7 @@ undefined * UpdateMoby_1128(MobyInstance *moby)
   }
   puVar20 = (undefined *)0x0;
   bVar18 = false;
-  if ((&DAT_00a202c0)[uVar19] == -1) {
+  if ((&g_CheckpointLevelFlags)[uVar19] == -1) {
     if (pfVar13[0xf] == 0.0) {
       bVar18 = true;
     }
