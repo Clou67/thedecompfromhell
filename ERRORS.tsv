@@ -820,6 +820,7 @@ errors	file
 62	game/rUnk.cpp
 62	game/update/moby1368.cpp
 62	game/update/moby940.cpp
+63	game/freeze.cpp
 63	game/update/moby35.cpp
 63	game/update/moby786.cpp
 64	game/update/camera4.cpp
@@ -859,7 +860,6 @@ errors	file
 73	game/update/moby602.cpp
 73	game/update/moby816.cpp
 73	game/update/moby998.cpp
-75	game/freeze.cpp
 75	game/path.cpp
 75	game/update/moby1214.cpp
 75	game/update/moby462.cpp
@@ -1012,7 +1012,7 @@ errors	file
 295	game/update/moby1422.cpp
 303	game/space.cpp
 313	game/update/moby1106.cpp
-359	idol/9Unk2.cpp
+359	idol/sUnk.cpp
 367	game/camera.cpp
 433	game/mobyproc.cpp
 448	game/update/moby194.cpp

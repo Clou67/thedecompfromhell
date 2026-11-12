@@ -16,3 +16,4 @@ g_MainLoopFrames	int NAME /* 0x159c330: frames run by startLevel's loop */
 g_pMsgDialog	IdolMsgDialog *NAME /* 0x1111640 */
 g_LevelRecords	LevelRecord NAME[] /* 0xa0fd24 */
 g_StartLevelClear	u8 NAME /* 0xa106c4: the one byte startLevel clears first (Ghidra label "startLevel") */
+g_Freeze	FreezeState NAME /* 0x963670 */

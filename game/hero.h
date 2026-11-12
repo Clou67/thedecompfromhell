@@ -1000,6 +1000,8 @@ extern undefined4 DAT_00a0fd68; /* 0xa0fd68 */
 extern undefined2 DAT_00a0fd84; /* 0xa0fd84 */
 extern undefined2 DAT_00a0fd86; /* 0xa0fd86 */
 extern undefined4 DAT_00a0fd88; /* 0xa0fd88 */
+extern undefined4 DAT_00a10548; /* 0xa10548 */
+extern undefined4 DAT_00a1054c; /* 0xa1054c */
 extern undefined4 DAT_00a14a00; /* 0xa14a00 */
 extern undefined4 DAT_00a15f34; /* 0xa15f34 */
 extern undefined4 DAT_00a1a840; /* 0xa1a840 */

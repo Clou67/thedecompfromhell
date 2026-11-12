@@ -1,6 +1,11 @@
-// game/freeze.cpp -- reconstructed from NPEA00385 EBOOT
-// STATUS: NOT STARTED (raw Ghidra output)
+// game/freeze.cpp -- in-game prompts ("freeze" mode): quit / continue / reconnect controller ...
+// STATUS: IN PROGRESS
+// MERGE (4 of 5 functions cleaned; the rest are generated)
 // 5 functions, 0x78140-0x7a338
+//
+// DisplayPrompt switches the game into GAME_MODE_FREEZE and sets up g_Freeze for one of the prompt
+// types; UpdateFreeze runs it and DrawDialogText draws it. Timers are frame counts scaled by
+// animationSpeed (the frame-rate factor, 1.0 at 60 fps).
 #include <stdio.h>
 #include <string.h>
 #include "game/freeze.h"
@@ -25,184 +30,107 @@
 #include "idol/idol.h"
 #include "sdk/mUnk4.h"
 
+#define FREEZE_OPEN_FRAMES   30.5f      /* constants at 0x7816c */
+#define FREEZE_DELAY_FRAMES  10.5f
+#define QUIT_FADE_FRAMES     600.5f     /* 0x79b08 */
+#define RACE_MIN_FRAMES      4200.5f    /* 0x79b0c: a race quit after this long counts as an attempt */
+
+/* frames scaled by the frame-rate factor; the binary does this through the vector unit
+   (lvlx both floats, vmaddfp with -0.0, vctsxs, stvewx) */
+static inline int ScaledFrames(float frames)
+{
+    return (int)(frames * animationSpeed);
+}
+
+static inline bool Pressed(int mask)
+{
+    return (g_Pad.buttonsPressedThisFrame & mask) != 0;
+}
+
 // 0x0078140 (0x14 bytes)
 void SECTION_HEADER_FREEZE(void)
-
 {
-  DAT_0071f30c = 0x10000;
-  return;
+    DAT_0071f30c = 0x10000;
 }
 
 
 // 0x0078158 (0x14 bytes)
 gameMode_t GetFreezePrevGameMode(void)
-
 {
-  return g_freezePrevGameMode;
+    return g_Freeze.prevGameMode;
 }
 
 
 // 0x0078178 (0x334 bytes)
-// strings: 00078258: '8`OnH' (raw) | 000782c4: '8`R)H' (raw) | 000782a4: '8`RJH' (raw) | 00078300: '8`N+H' (raw)
-
-
-void DisplayPrompt(int dialog,int arg,int option)
-
+void DisplayPrompt(int dialog, int arg, int option)
 {
-  gameMode_t gVar1;
-  undefined8 in_LR;
-  GPiece<16> auVar2;
-  GPiece<16> auVar3;
-  GPiece<16> auVar4;
-  GPiece<16> auVar5;
-  
-  gVar1 = g_gameMode;
-  g_freezeOption = option;
-  if (g_gameMode != GAME_MODE_PAUSE) {
-    FUN_0060bc8c(0x1d);
-    music_Pause(0);
-    gVar1 = g_gameMode;
-  }
-  g_gameMode = GAME_MODE_FREEZE;
-  g_freezeDelay = 0;
-  g_freezeDialogType = dialog;
-  g_freezePrevGameMode = gVar1;
-  g_freezeArg = arg;
-  if (dialog < 4) {
-    if (0 < dialog) {
-      if (1 < dialog) {
-        if (2 < dialog) {
-          auVar2 = ZEXT416(0xffffffff);
-          auVar2 = auVar2 | auVar2 << 0x20 | auVar2 << 0x40 | auVar2 << 0x60;
-          auVar3 = vectorShiftLeftIntegerWord(auVar2,auVar2);
-          auVar2 = loadVectorLeftIndexed(in_LR,0x7816c);
-          auVar5 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
-          auVar2 = auVar2 >> 0x60 & (GPiece<16>)0xffffffff;
-          auVar3 = vectorMultiplyAddFloatingPoint
-                             (auVar5,auVar2 | auVar2 << 0x20 | auVar2 << 0x40 | auVar2 << 0x60,
-                              auVar3);
-          auVar2 = ZEXT416(0xffffffff);
-          auVar2 = auVar2 | auVar2 << 0x20 | auVar2 << 0x40 | auVar2 << 0x60;
-          auVar4 = vectorShiftLeftIntegerWord(auVar2,auVar2);
-          auVar2 = vectorConvertToSignedFixedPointWordSaturate(auVar3,0);
-          auVar2 = auVar2 >> 0x60 & (GPiece<16>)0xffffffff;
-          auVar2 = auVar2 | auVar2 << 0x20 | auVar2 << 0x40 | auVar2 << 0x60;
-          g_freezeTimer = storeVectorElementWordIndexed(auVar2,4,0x963670);
-          g_freezeOpenAnim2 = storeVectorElementWordIndexed(auVar2,0x24,0x963670);
-          auVar2 = loadVectorLeftIndexed(4,0x7816c);
-          auVar2 = auVar2 >> 0x60 & (GPiece<16>)0xffffffff;
-          auVar2 = vectorMultiplyAddFloatingPoint
-                             (auVar5,auVar2 | auVar2 << 0x20 | auVar2 << 0x40 | auVar2 << 0x60,
-                              auVar4);
-          auVar2 = vectorConvertToSignedFixedPointWordSaturate(auVar2,0);
-          auVar2 = auVar2 >> 0x60 & (GPiece<16>)0xffffffff;
-          g_freezeDelay =
-               storeVectorElementWordIndexed
-                         (auVar2 | auVar2 << 0x20 | auVar2 << 0x40 | auVar2 << 0x60,0x2c,0x963670);
-          DAT_0071fad4 = 3;
-          g_freezeOpenAnim = -1;
-          g_gameMode = GAME_MODE_FREEZE;
-          return;
-        }
-        DAT_00963678 = help_msg_string_by_index(STR_CONTINUE_2);
-        g_freezeTimer = 0;
-        DAT_0096367c = 0;
-        return;
-      }
-LAB_000782c4:
-      DAT_00963678 = help_msg_string_by_index(STR_QUIT);
-      DAT_0096367c = help_msg_string_by_index(STR_EXIT);
-      DAT_00963680 = help_msg_string_by_index(STR_CONTINUE_2);
-      g_freezeTimer = 0;
-      return;
+    g_Freeze.option = option;
+    if (g_gameMode != GAME_MODE_PAUSE) {
+        FUN_0060bc8c(29);
+        music_Pause(0);
     }
-    if (-1 < dialog) {
-      DAT_00963678 = help_msg_string_by_index(STR_QUIT_RACE);
-      DAT_0096367c = help_msg_string_by_index(STR_QUIT_2);
-      DAT_00963680 = help_msg_string_by_index(STR_CONTINUE);
-      g_freezeTimer = 0;
-      g_freezeState = 0;
-      g_freezeOpenAnim = 0;
-      g_freezeOpenAnim2 = 0;
-      DAT_00963698 = 0;
-      return;
+    g_Freeze.prevGameMode = g_gameMode;
+    g_Freeze.dialogType = dialog;
+    g_Freeze.arg = arg;
+    g_gameMode = GAME_MODE_FREEZE;
+    g_Freeze.delay = 0;
+
+    switch (dialog) {
+    case 0:
+        g_Freeze.options[0] = help_msg_string_by_index(STR_QUIT_RACE);
+        g_Freeze.options[1] = help_msg_string_by_index(STR_QUIT_2);
+        g_Freeze.options[2] = help_msg_string_by_index(STR_CONTINUE);
+        g_Freeze.timer = 0;
+        g_Freeze.state = 0;
+        g_Freeze.openAnim = 0;
+        g_Freeze.openAnim2 = 0;
+        g_Freeze.unk28 = 0;
+        break;
+    case 1:
+    case 4:
+        g_Freeze.options[0] = help_msg_string_by_index(STR_QUIT);
+        g_Freeze.options[1] = help_msg_string_by_index(STR_EXIT);
+        g_Freeze.options[2] = help_msg_string_by_index(STR_CONTINUE_2);
+        g_Freeze.timer = 0;
+        break;
+    case 2:
+        g_Freeze.options[0] = help_msg_string_by_index(STR_CONTINUE_2);
+        g_Freeze.options[1] = 0;
+        g_Freeze.timer = 0;
+        break;
+    case 3:
+        g_Freeze.timer = ScaledFrames(FREEZE_OPEN_FRAMES);
+        g_Freeze.openAnim = -1;
+        g_Freeze.openAnim2 = g_Freeze.timer;
+        DAT_0071fad4 = 3;
+        g_Freeze.delay = ScaledFrames(FREEZE_DELAY_FRAMES);
+        break;
+    case 5:
+        Help_AddToLog(STR_WHEN_THE_GAME_SHOWS_0x4E2B);
+        g_Freeze.timer = ScaledFrames(FREEZE_OPEN_FRAMES);
+        g_Freeze.openAnim = 0;
+        g_Freeze.openAnim2 = g_Freeze.timer;
+        break;
+    case 6:
+        g_Freeze.timer = ScaledFrames(FREEZE_OPEN_FRAMES);
+        g_Freeze.state = 0;
+        break;
+    case 7:
+    case 8:
+        g_Freeze.timer = ScaledFrames(FREEZE_OPEN_FRAMES);
+        g_Freeze.openAnim = -1;
+        g_Freeze.openAnim2 = g_Freeze.timer;
+        break;
+    case 9:                                     /* controller disconnected (startLevel) */
+        g_Freeze.delay = 1;
+        break;
+    default:
+        g_Freeze.options[0] = 0;
+        g_Freeze.options[1] = 0;
+        g_Freeze.options[2] = 0;
+        g_Freeze.timer = 120;
+        break;
     }
-  }
-  else {
-    if (dialog < 7) {
-      if (4 < dialog) {
-        if (5 < dialog) {
-          auVar2 = ZEXT416(0xffffffff);
-          auVar2 = auVar2 | auVar2 << 0x20 | auVar2 << 0x40 | auVar2 << 0x60;
-          auVar3 = vectorShiftLeftIntegerWord(auVar2,auVar2);
-          auVar2 = loadVectorLeftIndexed(in_LR,0x7816c);
-          auVar4 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
-          auVar2 = auVar2 >> 0x60 & (GPiece<16>)0xffffffff;
-          auVar2 = vectorMultiplyAddFloatingPoint
-                             (auVar4,auVar2 | auVar2 << 0x20 | auVar2 << 0x40 | auVar2 << 0x60,
-                              auVar3);
-          auVar2 = vectorConvertToSignedFixedPointWordSaturate(auVar2,0);
-          auVar2 = auVar2 >> 0x60 & (GPiece<16>)0xffffffff;
-          g_freezeTimer =
-               storeVectorElementWordIndexed
-                         (auVar2 | auVar2 << 0x20 | auVar2 << 0x40 | auVar2 << 0x60,4,0x963670);
-          g_freezeState = 0;
-          g_freezeDelay = 0;
-          g_gameMode = GAME_MODE_FREEZE;
-          return;
-        }
-        Help_AddToLog(0x4e2b);
-        auVar2 = ZEXT416(0xffffffff);
-        auVar2 = auVar2 | auVar2 << 0x20 | auVar2 << 0x40 | auVar2 << 0x60;
-        auVar3 = vectorShiftLeftIntegerWord(auVar2,auVar2);
-        auVar2 = loadVectorLeftIndexed(in_LR,0x7816c);
-        auVar4 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
-        auVar2 = auVar2 >> 0x60 & (GPiece<16>)0xffffffff;
-        auVar2 = vectorMultiplyAddFloatingPoint
-                           (auVar4,auVar2 | auVar2 << 0x20 | auVar2 << 0x40 | auVar2 << 0x60,auVar3)
-        ;
-        auVar2 = vectorConvertToSignedFixedPointWordSaturate(auVar2,0);
-        auVar2 = auVar2 >> 0x60 & (GPiece<16>)0xffffffff;
-        auVar2 = auVar2 | auVar2 << 0x20 | auVar2 << 0x40 | auVar2 << 0x60;
-        g_freezeTimer = storeVectorElementWordIndexed(auVar2,4,0x963670);
-        g_freezeOpenAnim2 = storeVectorElementWordIndexed(auVar2,0x24,0x963670);
-        g_freezeOpenAnim = 0;
-        return;
-      }
-      goto LAB_000782c4;
-    }
-    if (dialog < 9) {
-      auVar2 = ZEXT416(0xffffffff);
-      auVar2 = auVar2 | auVar2 << 0x20 | auVar2 << 0x40 | auVar2 << 0x60;
-      auVar3 = vectorShiftLeftIntegerWord(auVar2,auVar2);
-      auVar2 = loadVectorLeftIndexed(in_LR,0x7816c);
-      auVar4 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
-      auVar2 = auVar2 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar2 = vectorMultiplyAddFloatingPoint
-                         (auVar4,auVar2 | auVar2 << 0x20 | auVar2 << 0x40 | auVar2 << 0x60,auVar3);
-      auVar2 = vectorConvertToSignedFixedPointWordSaturate(auVar2,0);
-      auVar2 = auVar2 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar2 = auVar2 | auVar2 << 0x20 | auVar2 << 0x40 | auVar2 << 0x60;
-      g_freezeTimer = storeVectorElementWordIndexed(auVar2,4,0x963670);
-      g_freezeOpenAnim2 = storeVectorElementWordIndexed(auVar2,0x24,0x963670);
-      g_freezeOpenAnim = -1;
-      g_freezeDelay = 0;
-      g_gameMode = GAME_MODE_FREEZE;
-      return;
-    }
-    if (dialog < 10) {
-      g_freezeDelay = 1;
-      g_gameMode = GAME_MODE_FREEZE;
-      return;
-    }
-  }
-  g_gameMode = GAME_MODE_FREEZE;
-  g_freezeDelay = 0;
-  DAT_00963680 = 0;
-  DAT_0096367c = 0;
-  DAT_00963678 = 0;
-  g_freezeTimer = 0x78;
-  return;
 }
 
 
@@ -253,29 +181,29 @@ void DrawDialogText(void)
   longlong local_78;
   
   DrawScreenOverlay(0,0,0,0x30);
-  if (g_freezeDelay != 0) {
+  if (g_Freeze.delay != 0) {
     return;
   }
   STUB_0006d704(0);
-  if (g_freezeDialogType != 9) {
-    if (g_freezeDialogType == 8) {
-      if (0 < g_freezeOpenAnim) {
+  if (g_Freeze.dialogType != 9) {
+    if (g_Freeze.dialogType == 8) {
+      if (0 < g_Freeze.openAnim) {
         uVar8 = help_msg_string_by_index
-                          ((int)(ZERO_MASK(g_freezeOption)) +
+                          ((int)(ZERO_MASK(g_Freeze.option)) +
                            STR_SAVE_FAILED_PLEASE_CHECK_0x4FBD);
-        SVar20 = (StringId)(ZERO_MASK(g_freezeTimer)) & STR_CONTINUE_2;
+        SVar20 = (StringId)(ZERO_MASK(g_Freeze.timer)) & STR_CONTINUE_2;
         FontPrintMediumOpt(local_2e8,0,uVar8,0xffffffffffffffff);
         sVar1 = (short)(g_ScreenHeight + -0x28 >> 1);
         sVar18 = sVar1 + 0x28;
         dVar23 = 30.5;
         dVar22 = 1.0;
-        dVar21 = (double)(1.0 - (float)(longlong)g_freezeTimer /
+        dVar21 = (double)(1.0 - (float)(longlong)g_Freeze.timer /
                                 (float)(longlong)(animationSpeed * 30.5));
         local_78 = (longlong)(int)(dVar21 * 80.0);
         DrawRoundedRect(sVar1,sVar18,0x60,0x1a0,(int)(dVar21 * 80.0));
         color = FastLerpColor(dVar21,ABGR_0071f338,ABGR_0071f33c);
         FontPrintMediumOpt(local_2e8,color,uVar8,0xffffffffffffffff);
-        local_78 = (longlong)g_freezeOpenAnim2;
+        local_78 = (longlong)g_Freeze.openAnim2;
         uVar8 = FastLerpColor
                           ((double)(float)(dVar22 - (double)(float)((double)local_78 /
                                                                    (double)(longlong)
@@ -289,12 +217,12 @@ void DrawDialogText(void)
         }
       }
     }
-    else if (g_freezeDialogType == 7) {
-      if (0 < g_freezeOpenAnim) {
+    else if (g_Freeze.dialogType == 7) {
+      if (0 < g_Freeze.openAnim) {
         uVar8 = help_msg_string_by_index(STR_MEMORY_CARD_PS2_IN_0x4FA6);
         pbVar19 = local_278;
         strcpy(pbVar19,uVar8,0x400);
-        iVar12 = g_freezeTimer;
+        iVar12 = g_Freeze.timer;
         for (; 1 < *pbVar19; pbVar19 = pbVar19 + 1) {
         }
         for (; *pbVar19 == 1; pbVar19 = pbVar19 + 1) {
@@ -306,13 +234,13 @@ void DrawDialogText(void)
         sVar18 = sVar1 + 0x28;
         dVar23 = 30.5;
         dVar22 = 1.0;
-        dVar21 = (double)(1.0 - (float)(longlong)g_freezeTimer /
+        dVar21 = (double)(1.0 - (float)(longlong)g_Freeze.timer /
                                 (float)(longlong)(animationSpeed * 30.5));
         local_78 = (longlong)(int)(dVar21 * 80.0);
         DrawRoundedRect(sVar1,sVar18,0x60,0x1a0,(int)(dVar21 * 80.0));
         uVar8 = FastLerpColor(dVar21,ABGR_0071f338,ABGR_0071f33c);
         FontPrintMediumOpt(local_300,uVar8,pbVar19,0xffffffffffffffff);
-        local_78 = (longlong)g_freezeOpenAnim2;
+        local_78 = (longlong)g_Freeze.openAnim2;
         uVar8 = FastLerpColor
                           ((double)(float)(dVar22 - (double)(float)((double)local_78 /
                                                                    (double)(longlong)
@@ -326,16 +254,16 @@ void DrawDialogText(void)
         }
       }
     }
-    else if (g_freezeDialogType == 6) {
+    else if (g_Freeze.dialogType == 6) {
       uVar24 = 0x3ff0000000000000;
-      dVar21 = (double)(1.0 - (float)(longlong)g_freezeTimer /
+      dVar21 = (double)(1.0 - (float)(longlong)g_Freeze.timer /
                               (float)(longlong)(animationSpeed * 30.5));
       local_78 = (longlong)(int)(dVar21 * 80.0);
       DrawRoundedRect(100,300,0x60,0x1a0,(int)(dVar21 * 80.0));
       uVar8 = FastLerpColor(dVar21,ABGR_0071f338,ABGR_0071f33c);
       color = FastLerpColor(dVar21,0x20ffff,0xffffffff8020ffff);
-      if (g_freezeState < 2) {
-        if (g_freezeState < 0) goto LAB_00079abc;
+      if (g_Freeze.state < 2) {
+        if (g_Freeze.state < 0) goto LAB_00079abc;
         if (g_JapaneseMode == false) {
           uVar7 = help_msg_string_by_index(STR_YES_2);
           FontPrintMediumCenter(0xca,0x118,color,uVar7,0xffffffffffffffff);
@@ -348,7 +276,7 @@ void DrawDialogText(void)
         FontPrintMediumCenter(0x135,0x118,color,uVar7,0xffffffffffffffff);
         SVar20 = STR_THE_SCREEN_WILL_NOW_0x522A;
       }
-      else if (g_freezeState < 3) {
+      else if (g_Freeze.state < 3) {
         if (g_JapaneseMode == false) {
           uVar7 = help_msg_string_by_index(STR_YES_2);
           FontPrintMediumCenter(0xca,0x118,color,uVar7,0xffffffffffffffff);
@@ -362,7 +290,7 @@ void DrawDialogText(void)
         SVar20 = STR_THE_DISPLAY_IS_NOW_0x522B;
       }
       else {
-        if (3 < g_freezeState) goto LAB_00079abc;
+        if (3 < g_Freeze.state) goto LAB_00079abc;
         if (g_JapaneseMode == false) {
           uVar7 = help_msg_string_by_index(STR_CONTINUE_2);
           FontPrintMediumCenter(0x100,0x118,color,uVar7,0xffffffffffffffff);
@@ -378,8 +306,8 @@ void DrawDialogText(void)
       FontPrintOptWestern
                 (uVar24,local_2d0,uVar8,color,0xffffffffffffffff,uVar7,&MediumWesternGlyphs);
     }
-    else if ((g_freezeDialogType != 5) && (g_freezeDialogType != 3)) {
-      if (g_freezeDialogType == 2) {
+    else if ((g_Freeze.dialogType != 5) && (g_Freeze.dialogType != 3)) {
+      if (g_Freeze.dialogType == 2) {
         dVar21 = (double)FastIntToDouble(DAT_0071f368);
         local_78 = (longlong)(g_MainLoopFrames - (g_MainLoopFrames / DAT_0071f368) * DAT_0071f368);
         fVar2 = (float)((double)local_78 / dVar21) * 6.28318 - 3.14159;
@@ -400,9 +328,9 @@ void DrawDialogText(void)
                                     fVar4 * 0.0083330255 + fVar2 * fVar5 * -0.16666657 + fVar5) *
                                     0.5 + 0.5),DAT_0071f36c,DAT_0071f370);
         DrawTextBox(100,0xa0,0xb0,0x150,uVar8);
-        FontPrintMediumCenter(0x100,0x7a,0x8000c0c0,DAT_00963678,0xffffffffffffffff);
+        FontPrintMediumCenter(0x100,0x7a,0x8000c0c0,g_Freeze.options[0],0xffffffffffffffff);
       }
-      else if (g_freezeDialogType == 0) {
+      else if (g_Freeze.dialogType == 0) {
         dVar21 = (double)FastIntToDouble(DAT_0071f368);
         local_78 = (longlong)(g_MainLoopFrames - (g_MainLoopFrames / DAT_0071f368) * DAT_0071f368);
         fVar2 = (float)((double)local_78 / dVar21) * 6.28318 - 3.14159;
@@ -445,7 +373,7 @@ void DrawDialogText(void)
           auVar29 = auVar29 >> 0x60 & (GPiece<16>)0xffffffff;
           vectorCompareGreaterThanOrEqualToFloatingPoint
                     (auVar28,auVar29 | auVar29 << 0x20 | auVar29 << 0x40 | auVar29 << 0x60);
-          dVar22 = (double)((float)(longlong)g_freezeOpenAnim * 0.125);
+          dVar22 = (double)((float)(longlong)g_Freeze.openAnim * 0.125);
           if ((bool)(in_cr6 >> 1 & 1)) {
             dVar22 = 0.10000000149011612;
           }
@@ -453,8 +381,8 @@ void DrawDialogText(void)
         puVar9 = PTR_DAT_0071f374;
         uVar10 = DAT_0071f37c;
         uVar11 = DAT_0071f384;
-        if (g_freezeOpenAnim2 != 0) {
-          local_78 = (longlong)g_freezeOpenAnim2;
+        if (g_Freeze.openAnim2 != 0) {
+          local_78 = (longlong)g_Freeze.openAnim2;
           auVar28 = vectorConvertFromSignedFixedPointWord(auVar25,0);
           auVar25 = ZEXT416(0xffffffff);
           auVar25 = auVar25 | auVar25 << 0x20 | auVar25 << 0x40 | auVar25 << 0x60;
@@ -622,15 +550,15 @@ void DrawDialogText(void)
                                     fVar4 * 0.0083330255 + fVar2 * fVar5 * -0.16666657 + fVar5) *
                                     0.5 + 0.5),DAT_0071f36c,DAT_0071f370);
         DrawTextBox(0x50,DAT_0071f334 + 0x1a,0xb0,0x150,uVar8);
-        if (DAT_00963678 != 0) {
-          FontPrintMediumCenter(0x100,0x5a,0x8000c0c0,DAT_00963678,0xffffffffffffffff);
+        if (g_Freeze.options[0] != 0) {
+          FontPrintMediumCenter(0x100,0x5a,0x8000c0c0,g_Freeze.options[0],0xffffffffffffffff);
         }
-        if (DAT_0096367c != 0) {
-          FontPrintMediumCenter(0x100,DAT_0071f330,0x80ffa888,DAT_0096367c,0xffffffffffffffff)
+        if (g_Freeze.options[1] != 0) {
+          FontPrintMediumCenter(0x100,DAT_0071f330,0x80ffa888,g_Freeze.options[1],0xffffffffffffffff)
           ;
         }
-        if (DAT_00963680 != 0) {
-          FontPrintMediumCenter(0x100,DAT_0071f334,0x80ffa888,DAT_00963680,0xffffffffffffffff)
+        if (g_Freeze.options[2] != 0) {
+          FontPrintMediumCenter(0x100,DAT_0071f334,0x80ffa888,g_Freeze.options[2],0xffffffffffffffff)
           ;
         }
       }
@@ -644,262 +572,174 @@ LAB_00079abc:
 
 // 0x0079b18 (0x820 bytes)
 void UpdateFreeze(void)
-
 {
-  MobyModeBit MVar1;
-  MobyInstance *pMVar2;
-  int iVar3;
-  int iVar4;
-  undefined8 in_LR;
-  GPiece<16> auVar5;
-  GPiece<16> auVar6;
-  GPiece<16> auVar7;
-  
-  sound_Update();
-  pMVar2 = g_heroMobyPtr;
-  if (g_freezeTimer != 0) {
-    g_freezeTimer = g_freezeTimer + -1;
-  }
-  if (g_freezeDelay != 0) {
-    g_freezeDelay = g_freezeDelay + -1;
-  }
-  if (g_freezeDialogType < 5) {
-    if (g_freezeDialogType < 2) {
-      if (-1 < g_freezeDialogType) {
-        if (g_freezeDialogType < 1) {
-          if (g_freezeState < 1) {
-            if (-1 < g_freezeState) {
-              if (g_freezeOpenAnim < 8) {
-                g_freezeOpenAnim = g_freezeOpenAnim + 1;
-              }
-              else if (g_freezeOpenAnim2 < 8) {
-                g_freezeOpenAnim2 = g_freezeOpenAnim2 + 1;
-              }
-              else {
-                g_freezeState = 1;
-              }
-            }
-          }
-          else if (g_freezeState < 2) {
-            if ((g_Pad.buttonsPressedThisFrame & pad_ConfirmButtonMask) == 0) {
-              if ((g_Pad.buttonsPressedThisFrame & (START|CIRCLE)) != 0) {
-                g_freezeState = 3;
-              }
-            }
-            else {
-              g_freezeState = 2;
-            }
-          }
-          else if (g_freezeState < 4) {
-            if (g_freezeOpenAnim2 == 0) {
-              if (g_freezeOpenAnim == 0) {
-                if (g_freezeState == 2) {
-                  g_freezeState = 2;
-                  if (DAT_0096a560 != -1) {
-                    Hud_SetEntryValueById(DAT_0096a560,0);
+    sound_Update();
+    if (g_Freeze.timer) g_Freeze.timer--;
+    if (g_Freeze.delay) g_Freeze.delay--;
+
+    switch (g_Freeze.dialogType) {
+    case 0:                                     /* quit race? */
+        switch (g_Freeze.state) {
+        case 0:                                 /* open animation */
+            if (g_Freeze.openAnim < 8) g_Freeze.openAnim++;
+            else if (g_Freeze.openAnim2 < 8) g_Freeze.openAnim2++;
+            else g_Freeze.state = 1;
+            break;
+        case 1:
+            if (Pressed(pad_ConfirmButtonMask)) g_Freeze.state = 2;
+            else if (Pressed(START | CIRCLE)) g_Freeze.state = 3;
+            break;
+        case 2:                                 /* close animation, then quit (2) or resume (3) */
+        case 3:
+            if (g_Freeze.openAnim2) { g_Freeze.openAnim2--; break; }
+            if (g_Freeze.openAnim) { g_Freeze.openAnim--; break; }
+            if (g_Freeze.state == 2) {
+                if (DAT_0096a560 != -1) {
+                    Hud_SetEntryValueById(DAT_0096a560, 0);
                     DAT_0096a560 = -1;
-                  }
-                  Hud_DecHideCounter();
-                  if ((int)(animationSpeed * 4200.5) < DAT_00969e7c) {
-                    if (Level == Rilgar) {
-                      DAT_00a10548 = DAT_00a10548 + 1;
-                    }
-                    else if (Level == Kalebo) {
-                      DAT_00a1054c = DAT_00a1054c + 1;
-                    }
-                  }
-                  g_gameMode = GAME_MODE_NORMAL;
-                  music_SetTransition(0,8);
-                  Hero_Warp((float *)&DAT_0096b9e0,(float *)&DAT_0096b9f0,0,1);
                 }
-                else {
-                  g_gameMode = GAME_MODE_NORMAL;
-                  if (2 < DAT_0096a57a) {
-                    DAT_0096a57a = DAT_0096a57a + -1;
-                    *(undefined1 *)(DAT_0096a570 + 0xbc) = 3;
-                  }
+                Hud_DecHideCounter();
+                if (DAT_00969e7c > ScaledFrames(RACE_MIN_FRAMES)) {
+                    if (Level == Rilgar) DAT_00a10548++;
+                    else if (Level == Kalebo) DAT_00a1054c++;
                 }
-              }
-              else {
-                g_freezeOpenAnim = g_freezeOpenAnim + -1;
-              }
+                g_gameMode = GAME_MODE_NORMAL;
+                music_SetTransition(0, 8);
+                Hero_Warp((float *)&DAT_0096b9e0, (float *)&DAT_0096b9f0, 0, 1);
+            } else {
+                g_gameMode = GAME_MODE_NORMAL;
+                if (DAT_0096a57a > 2) {
+                    DAT_0096a57a--;
+                    *(u8 *)(DAT_0096a570 + 0xbc) = 3;
+                }
             }
-            else {
-              g_freezeOpenAnim2 = g_freezeOpenAnim2 + -1;
-            }
-          }
+            break;
         }
-        else {
-          OcclMode = 2;
-          if ((g_Pad.buttonsPressedThisFrame & TRIANGLE) == 0) {
-            if ((g_Pad.buttonsPressedThisFrame & pad_ConfirmButtonMask) != 0) {
-              g_gameMode = GAME_MODE_NORMAL;
-            }
-          }
-          else {
+        break;
+    case 1:
+        OcclMode = 2;
+        if (Pressed(TRIANGLE)) {
             g_gameMode = GAME_MODE_NORMAL;
-            DAT_0096b2ef = DAT_0096b2ef | 1;
-          }
+            DAT_0096b2ef |= 1;
+        } else if (Pressed(pad_ConfirmButtonMask)) {
+            g_gameMode = GAME_MODE_NORMAL;
         }
-      }
-    }
-    else if (g_freezeDialogType < 3) {
-      OcclMode = 2;
-      if ((g_Pad.buttonsPressedThisFrame & pad_ConfirmButtonMask) != 0) {
-        g_gameMode = GAME_MODE_NORMAL;
-      }
-    }
-    else if (g_freezeDialogType < 4) {
-      g_freezeOpenAnim = g_freezeOpenAnim + 1;
-      if (((int)(animationSpeed * 30.5) < g_freezeOpenAnim) && (g_freezeOpenAnim2 != 0)) {
-        g_freezeOpenAnim2 = g_freezeOpenAnim2 + -1;
-      }
-      if (DAT_00a23099 == '\0') {
-        iVar3 = memcard_PollSaveResult();
-        if (((-1 < iVar3) && (g_memcardPollDone != '\0')) && (iVar3 != 2)) {
-          iVar4 = memcard_GetSaveSysState();
-          g_memcardPollDone = '\0';
-          if ((iVar4 == 6) || (iVar4 == 3)) {
-            g_memcardSaveSysState = 5;
-            g_gameMode = g_freezePrevGameMode;
-          }
-          else if (iVar4 == 1) {
-            g_memcardSaveSysState = 5;
-            if (iVar3 == 0) {
-              ChangeLevel(Level);
-              DAT_0096459a = 0;
+        break;
+    case 2:
+        OcclMode = 2;
+        if (Pressed(pad_ConfirmButtonMask)) g_gameMode = GAME_MODE_NORMAL;
+        break;
+    case 3:                                     /* memory card save result */
+        g_Freeze.openAnim++;
+        if (g_Freeze.openAnim > ScaledFrames(FREEZE_OPEN_FRAMES) && g_Freeze.openAnim2) g_Freeze.openAnim2--;
+        if (DAT_00a23099) {
+            if (!g_Pad.showReconnectPrompt) {
+                g_gameMode = g_Freeze.prevGameMode;
+                DAT_00a23099 = 0;
+                g_memcardPollDone = 0;
             }
-            else if (iVar3 == 1) {
-              g_gameMode = g_freezePrevGameMode;
-            }
-          }
-          else if (iVar4 == 0) {
-            g_memcardSaveSysState = 5;
-            if (iVar3 == 0) {
-              if ((g_FrontEnd == '\0') && (DAT_00a15f39 == '\0')) {
-                g_gameMode = g_freezePrevGameMode;
-              }
-              else {
-                if (DAT_00a15f39 != '\0') {
-                  DAT_00a15f39 = '\0';
+            break;
+        }
+        {
+            int result = memcard_PollSaveResult();
+            if (result < 0 || !g_memcardPollDone || result == 2) break;
+            int sys = memcard_GetSaveSysState();
+            g_memcardPollDone = 0;
+            if (sys == 6 || sys == 3) {
+                g_memcardSaveSysState = 5;
+                g_gameMode = g_Freeze.prevGameMode;
+            } else if (sys == 1) {
+                g_memcardSaveSysState = 5;
+                if (result == 0) {
+                    ChangeLevel(Level);
+                    DAT_0096459a = 0;
+                } else if (result == 1) {
+                    g_gameMode = g_Freeze.prevGameMode;
                 }
-                ChangeLevel(Veldin);
-                DAT_0096459a = 1;
-              }
+            } else if (sys == 0) {
+                g_memcardSaveSysState = 5;
+                if (result == 0) {
+                    if (!g_FrontEnd && !DAT_00a15f39) {
+                        g_gameMode = g_Freeze.prevGameMode;
+                    } else {
+                        if (DAT_00a15f39) DAT_00a15f39 = 0;
+                        ChangeLevel(Veldin);
+                        DAT_0096459a = 1;
+                    }
+                } else if (result == 1) {
+                    g_gameMode = g_Freeze.prevGameMode;
+                }
             }
-            else if (iVar3 == 1) {
-              g_gameMode = g_freezePrevGameMode;
-            }
-          }
         }
-      }
-      else if (g_Pad.showReconnectPrompt == '\0') {
-        g_gameMode = g_freezePrevGameMode;
-        DAT_00a23099 = '\0';
-        g_memcardPollDone = '\0';
-      }
-    }
-    else if ((g_Pad.buttonsPressedThisFrame & TRIANGLE) == 0) {
-      if ((g_Pad.buttonsPressedThisFrame & pad_ConfirmButtonMask) != 0) {
+        break;
+    case 4:
+        if (Pressed(TRIANGLE)) {
+            MobyInstance *hero = g_heroMobyPtr;
+            hero->collision = 0;
+            hero->enabled = 0;
+            hero->modeBits = (MobyModeBit)(hero->modeBits | DISABLED);
+            Hero_RevertToRatchet();
+            Hero_Warp((float *)&DAT_0096b9e0, (float *)&DAT_0096b9f0, 0, 1);
+            g_gameMode = GAME_MODE_NORMAL;
+        } else if (Pressed(pad_ConfirmButtonMask)) {
+            g_gameMode = GAME_MODE_NORMAL;
+        }
+        break;
+    case 5:
+        g_Freeze.openAnim++;
         g_gameMode = GAME_MODE_NORMAL;
-      }
-    }
-    else {
-      MVar1 = g_heroMobyPtr->modeBits;
-      g_heroMobyPtr->collision = (ushort *)0x0;
-      pMVar2->enabled = '\0';
-      pMVar2->modeBits = MVar1 | DISABLED;
-      Hero_RevertToRatchet();
-      Hero_Warp((float *)&DAT_0096b9e0,(float *)&DAT_0096b9f0,0,1);
-      g_gameMode = GAME_MODE_NORMAL;
-    }
-  }
-  else if (g_freezeDialogType < 8) {
-    if (g_freezeDialogType < 6) {
-      g_freezeOpenAnim = g_freezeOpenAnim + 1;
-      g_gameMode = GAME_MODE_NORMAL;
-      if (Level == Novalis) {
-        memcard_Save(0,-1);
-      }
-    }
-    else if (g_freezeDialogType < 7) {
-      if (g_freezeState < 2) {
-        if (-1 < g_freezeState) {
-          if (g_freezeState < 1) {
-            if (g_freezeTimer == 0) {
-              g_freezeState = 1;
+        if (Level == Novalis) memcard_Save(0, -1);
+        break;
+    case 6:                                     /* quit to ...: wait, confirm, fade out */
+        switch (g_Freeze.state) {
+        case 0:
+            if (!g_Freeze.timer) g_Freeze.state = 1;
+            break;
+        case 1:
+            if (Pressed(TRIANGLE)) {
+                g_gameMode = g_Freeze.prevGameMode;
+            } else if (Pressed(pad_ConfirmButtonMask)) {
+                FadeToBlack(4);
+                DAT_00a52e60 = 0;
+                g_Freeze.state = 2;
+                g_Freeze.openAnim = ScaledFrames(QUIT_FADE_FRAMES);
             }
-          }
-          else if ((g_Pad.buttonsPressedThisFrame & TRIANGLE) == 0) {
-            if ((g_Pad.buttonsPressedThisFrame & pad_ConfirmButtonMask) != 0) {
-              FadeToBlack(4);
-              auVar5 = ZEXT416(0xffffffff);
-              auVar5 = auVar5 | auVar5 << 0x20 | auVar5 << 0x40 | auVar5 << 0x60;
-              DAT_00a52e60 = 0;
-              auVar6 = vectorShiftLeftIntegerWord(auVar5,auVar5);
-              g_freezeState = 2;
-              auVar5 = loadVectorLeftIndexed(in_LR,0x79b08);
-              auVar7 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
-              auVar5 = auVar5 >> 0x60 & (GPiece<16>)0xffffffff;
-              auVar5 = vectorMultiplyAddFloatingPoint
-                                 (auVar7,auVar5 | auVar5 << 0x20 | auVar5 << 0x40 | auVar5 << 0x60,
-                                  auVar6);
-              auVar5 = vectorConvertToSignedFixedPointWordSaturate(auVar5,0);
-              auVar5 = auVar5 >> 0x60 & (GPiece<16>)0xffffffff;
-              g_freezeOpenAnim =
-                   storeVectorElementWordIndexed
-                             (auVar5 | auVar5 << 0x20 | auVar5 << 0x40 | auVar5 << 0x60,0x20,
-                              0x963670);
+            break;
+        case 2:
+            if (g_Freeze.openAnim) g_Freeze.openAnim--;
+            if (!g_Freeze.openAnim) {
+                DAT_00a52e60 = 1;
+                g_Freeze.state = 3;
+            } else if (Pressed(TRIANGLE)) {
+                FadeToBlack(4);
+                DAT_00a52e60 = 1;
+                g_gameMode = g_Freeze.prevGameMode;
+            } else if (Pressed(pad_ConfirmButtonMask)) {
+                DAT_00a52e60 = 0;
+                g_gameMode = g_Freeze.prevGameMode;
             }
-          }
-          else {
-            g_gameMode = g_freezePrevGameMode;
-          }
-          goto LAB_0007a2ec;
+            break;
+        case 3:
+            if (Pressed(pad_ConfirmButtonMask)) g_gameMode = g_Freeze.prevGameMode;
+            break;
+        default:
+            g_gameMode = g_Freeze.prevGameMode;
+            break;
         }
-      }
-      else {
-        if (g_freezeState < 3) {
-          if (g_freezeOpenAnim != 0) {
-            g_freezeOpenAnim = g_freezeOpenAnim + -1;
-          }
-          if (g_freezeOpenAnim == 0) {
-            DAT_00a52e60 = 1;
-            g_freezeState = 3;
-          }
-          else if ((g_Pad.buttonsPressedThisFrame & TRIANGLE) == 0) {
-            if ((g_Pad.buttonsPressedThisFrame & pad_ConfirmButtonMask) != 0) {
-              DAT_00a52e60 = 0;
-              g_gameMode = g_freezePrevGameMode;
-            }
-          }
-          else {
-            FadeToBlack(4);
-            DAT_00a52e60 = 1;
-            g_gameMode = g_freezePrevGameMode;
-          }
-          goto LAB_0007a2ec;
-        }
-        if (g_freezeState < 4) {
-          if ((g_Pad.buttonsPressedThisFrame & pad_ConfirmButtonMask) != 0) {
-            g_gameMode = g_freezePrevGameMode;
-          }
-          goto LAB_0007a2ec;
-        }
-      }
-      g_gameMode = g_freezePrevGameMode;
+        break;
+    case 7:
+        g_gameMode = g_Freeze.prevGameMode;
+        break;
+    case 9:                                     /* controller disconnected: wait for it */
+        if (!g_Pad.showReconnectPrompt) g_gameMode = g_Freeze.prevGameMode;
+        break;
     }
-  }
-  else if (((8 < g_freezeDialogType) && (g_freezeDialogType < 10)) && (g_Pad.showReconnectPrompt == '\0')) {
-    g_gameMode = g_freezePrevGameMode;
-  }
-LAB_0007a2ec:
-  if (g_gameMode != GAME_MODE_PAUSE && g_gameMode != GAME_MODE_FREEZE) {
-    FUN_0060bb90(0x1d);
-    music_Unpause();
-    STUB_00505d20();
-  }
-  return;
+
+    if (g_gameMode != GAME_MODE_PAUSE && g_gameMode != GAME_MODE_FREEZE) {
+        FUN_0060bb90(29);
+        music_Unpause();
+        STUB_00505d20();
+    }
 }
 
 

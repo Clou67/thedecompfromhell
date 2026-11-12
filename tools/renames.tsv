@@ -34,3 +34,16 @@ DAT_00a52ce8	g_HideActivityIcon
 DAT_0159c330	g_MainLoopFrames
 DAT_01111640	g_pMsgDialog
 DAT_00964fa0	g_Pad.showReconnectPrompt
+g_freezeDialogType	g_Freeze.dialogType
+g_freezeTimer	g_Freeze.timer
+DAT_00963678	g_Freeze.options[0]
+DAT_0096367c	g_Freeze.options[1]
+DAT_00963680	g_Freeze.options[2]
+g_freezePrevGameMode	g_Freeze.prevGameMode
+g_freezeArg	g_Freeze.arg
+g_freezeState	g_Freeze.state
+g_freezeOpenAnim	g_Freeze.openAnim
+g_freezeOpenAnim2	g_Freeze.openAnim2
+DAT_00963698	g_Freeze.unk28
+g_freezeDelay	g_Freeze.delay
+g_freezeOption	g_Freeze.option

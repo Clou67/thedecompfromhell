@@ -284,9 +284,22 @@ nman = 0
 for root, _, fs in os.walk(MANUAL):
     for f in fs:
         src = os.path.join(root, f); rel = os.path.relpath(src, MANUAL)
-        shutil.copy(src, os.path.join(out, rel)); nman += 1
+        t = open(src).read()
+        if rel.endswith('.cpp') and '// MERGE' in t.split('\n// 0x', 1)[0]:
+            # partly cleaned: the manual file's functions replace the generated ones with the same address,
+            # the rest stay generated (and keep getting generator fixes)
+            gen = open(os.path.join(out, rel)).read()
+            FN = re.compile(r'^// 0x([0-9a-f]{7}) \(', re.M)
+            def split(x):
+                ms = list(FN.finditer(x))
+                head = x[:ms[0].start()] if ms else x
+                return head, {int(m[1], 16): x[m.start():(ms[k + 1].start() if k + 1 < len(ms) else len(x))] for k, m in enumerate(ms)}
+            mh, mf = split(t); gh, gf = split(gen)
+            done = sum(1 for a in gf if a in mf)
+            mh = mh.replace('// MERGE', '// MERGE (%d of %d functions cleaned; the rest are generated)' % (done, len(gf)), 1)
+            t = mh + ''.join(mf.get(a, b).rstrip('\n') + '\n\n\n' for a, b in sorted(gf.items()))
+        open(os.path.join(out, rel), 'w').write(t); nman += 1
         if rel.endswith('.cpp'):
-            t = open(src).read()
             protos = [wrap_ns(re.sub(r'\s+', ' ', m[1]).strip()) for m in DEF.finditer(t)]
             protos = [x for x in protos if x.split('(')[0].split()[-1].lstrip('*') not in SYSDECL and not x.startswith('static')]
             open(os.path.join(out, rel[:-4] + '.h'), 'w').write('#pragma once\n// prototypes for %s (hand-cleaned)\n' % rel + '\n'.join(protos) + '\n')

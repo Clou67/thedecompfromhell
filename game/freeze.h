@@ -3,6 +3,23 @@
 #include "types.h"
 #include "game/path.h"
 
+// ---- types
+/* the in-game prompt ("freeze" mode: quit / continue / reconnect ...), g_Freeze @ 0x963670 */
+typedef struct FreezeState {
+    int dialogType;          /* 0x00  which prompt (DisplayPrompt's first argument) */
+    int timer;               /* 0x04  frames */
+    char *options[3];        /* 0x08  option texts */
+    gameMode_t prevGameMode; /* 0x14  mode to return to */
+    int arg;                 /* 0x18 */
+    int state;               /* 0x1c */
+    int openAnim;            /* 0x20 */
+    int openAnim2;           /* 0x24 */
+    int unk28;               /* 0x28 */
+    int delay;               /* 0x2c  frames */
+    int option;              /* 0x30  initially selected option */
+} FreezeState;
+typedef char FreezeState_size_check[sizeof(FreezeState) == 0x34 ? 1 : -1];
+
 // ---- globals
 extern ABGR ABGR_0071f338; /* 0x71f338 */
 extern ABGR ABGR_0071f33c; /* 0x71f33c */
@@ -27,32 +44,18 @@ extern undefined4 DAT_0071f37c; /* 0x71f37c */
 extern undefined4 DAT_0071f380; /* 0x71f380 */
 extern undefined4 DAT_0071f384; /* 0x71f384 */
 extern undefined4 DAT_0071f388; /* 0x71f388 */
-extern undefined4 DAT_00963678; /* 0x963678 */
-extern undefined4 DAT_0096367c; /* 0x96367c */
-extern undefined4 DAT_00963680; /* 0x963680 */
-extern undefined4 DAT_00963698; /* 0x963698 */
 extern undefined1 DAT_0096b2ef; /* 0x96b2ef */
 extern undefined4 DAT_0096b9e0; /* 0x96b9e0 */
 extern undefined4 DAT_0096b9f0; /* 0x96b9f0 */
-extern undefined4 DAT_00a10548; /* 0xa10548 */
-extern undefined4 DAT_00a1054c; /* 0xa1054c */
 extern undefined1 DAT_00a15f39; /* 0xa15f39 */
 extern undefined1 DAT_00a23099; /* 0xa23099 */
 extern pointer PTR_DAT_0071f374; /* 0x71f374 */
-extern int g_freezeArg; /* 0x963688 */
-extern int g_freezeDelay; /* 0x96369c */
-extern int g_freezeDialogType; /* 0x963670 */
-extern int g_freezeOpenAnim; /* 0x963690 */
-extern int g_freezeOpenAnim2; /* 0x963694 */
-extern int g_freezeOption; /* 0x9636a0 */
-extern gameMode_t g_freezePrevGameMode; /* 0x963684 */
-extern int g_freezeState; /* 0x96368c */
-extern int g_freezeTimer; /* 0x963674 */
+extern FreezeState g_Freeze; /* 0x963670 */ /* type set in global_types.tsv */
 extern gameMode_t g_gameMode; /* 0xa10708 */
 
 // ---- functions
 void SECTION_HEADER_FREEZE(void);
 gameMode_t GetFreezePrevGameMode(void);
-void DisplayPrompt(int dialog,int arg,int option);
+void DisplayPrompt(int dialog, int arg, int option);
 void DrawDialogText(void);
 void UpdateFreeze(void);
