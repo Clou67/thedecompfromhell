@@ -19,7 +19,7 @@ errors	file
 0	game/main.cpp
 80	game/map.cpp
 80	game/memcard.cpp
-20	game/mesh.cpp
+18	game/mesh.cpp
 41	game/mission.cpp
 90	game/mobyfunc.cpp
 433	game/mobyproc.cpp

@@ -1,6 +1,6 @@
 // game/mesh.cpp -- water surfaces: tile wave simulation, water sheets, environment-map UVs
 // STATUS: IN PROGRESS
-// MERGE (17 of 19 functions cleaned; the rest are generated)
+// MERGE (18 of 19 functions cleaned; the rest are generated)
 // 19 functions, 0xe9114-0xea378
 //
 // A water surface is an array of 16x16-height tiles (WaterTile). Each tile keeps three height
@@ -654,155 +654,45 @@ void STUB_000e9f28(...)
 {
 }
 
+#define SHEET_BRIGHTEN 1.38f            /* 0xe9f30 */
+#define SHEET_PHASE    0.0015339808f    /* 0xe9f44: 2pi / 4096 */
+
+/* one channel of the sheet colour brightened, saturating at 255 (done 3-wide in the vector unit) */
+static inline u32 Brighten(u32 c)
+{
+    float f = (float)(c & 0xff) * SHEET_BRIGHTEN;
+    u32 v = f <= 0.0f ? 0 : f >= 4294967295.0f ? 0xffffffff : (u32)f;   /* vctuxs */
+    return v > 0xff ? 0xff : v;
+}
+
 
 // 0x00e9f48 (0x2a0 bytes)
-void BuildVerts(WaterSheet *sheet,WaterSheetVert *outVerts)
-
+/* vertices of a water sheet: height blended between two poses, both UV layers wobbled by a wave
+   whose phase comes from the vertex position */
+void BuildVerts(WaterSheet *sheet, WaterSheetVert *out)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  int iVar5;
-  uint uVar6;
-  uint uVar7;
-  uint uVar8;
-  undefined4 uVar9;
-  undefined4 *puVar10;
-  undefined8 uVar11;
-  uint *puVar12;
-  int iVar13;
-  int iVar14;
-  int iVar15;
-  longlong lVar16;
-  longlong lVar17;
-  double extraout_f1;
-  double dVar18;
-  double dVar19;
-  double dVar20;
-  double dVar21;
-  double dVar22;
-  double dVar23;
-  GPiece<16> auVar24;
-  GPiece<16> auVar25;
-  GPiece<16> auVar26;
-  GPiece<16> auVar27;
-  GPiece<16> auVar28;
-  GPiece<16> auVar29;
-  GPiece<16> auVar30;
-  GPiece<16> auVar31;
-  GPiece<16> auVar32;
-  undefined4 in_vr31_32_0;
-  undefined4 in_vr31_32_1;
-  undefined4 in_vr31_32_2;
-  undefined4 in_vr31_32_3;
-  GPiece<16> auVar33;
-  
-  lVar16 = (longlong)(int)outVerts;
-  puVar10 = (undefined4 *)(ZEXT48(&stack0x00000000) - 0x70);
-  puVar10[3] = in_vr31_32_3;
-  puVar10[2] = in_vr31_32_2;
-  puVar10[1] = in_vr31_32_1;
-  *puVar10 = in_vr31_32_0;
-  auVar29 = ZEXT416(0xfffffff8);
-  auVar25 = ZEXT416(0xfffffff0);
-  auVar24 = ZEXT416(0xffffffff);
-  auVar31 = auVar24 | auVar24 << 0x20 | auVar24 << 0x40 | auVar24 << 0x60;
-  auVar24 = ZEXT416(0xffffffff);
-  auVar32 = auVar24 | auVar24 << 0x20 | auVar24 << 0x40 | auVar24 << 0x60;
-  auVar26 = loadVectorLeftIndexed(0x30,(longlong)(int)sheet);
-  auVar27 = loadVectorLeftIndexed(ZEXT48(&stack0x00000000) - 0x70,0xe9f2c);
-  auVar24 = vectorRotateLeftIntegerWord
-                      (auVar26,auVar29 | auVar29 << 0x20 | auVar29 << 0x40 | auVar29 << 0x60);
-  auVar29 = auVar27 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar33 = auVar29 | auVar29 << 0x20 | auVar29 << 0x40 | auVar29 << 0x60;
-  auVar27 = vectorRotateLeftIntegerWord
-                      (auVar26,auVar25 | auVar25 << 0x20 | auVar25 << 0x40 | auVar25 << 0x60);
-  auVar29 = ZEXT416(0xffffffff);
-  auVar28 = auVar29 | auVar29 << 0x20 | auVar29 << 0x40 | auVar29 << 0x60;
-  auVar29 = loadVectorLeftIndexed(4,0xe9f2c);
-  auVar26 = vectorLogicalAnd(auVar26,auVar33);
-  auVar25 = vectorLogicalAnd(auVar24,auVar33);
-  auVar24 = vectorLogicalAnd(auVar27,auVar33);
-  auVar29 = auVar29 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar30 = auVar29 | auVar29 << 0x20 | auVar29 << 0x40 | auVar29 << 0x60;
-  auVar27 = vectorConvertFromUnsignedFixedPointWord(auVar26,0);
-  auVar29 = vectorConvertFromUnsignedFixedPointWord(auVar25,0);
-  auVar26 = vectorShiftLeftIntegerWord(auVar28,auVar28);
-  auVar25 = vectorConvertFromUnsignedFixedPointWord(auVar24,0);
-  auVar24 = vectorShiftLeftIntegerWord(auVar31,auVar31);
-  auVar31 = vectorShiftLeftIntegerWord(auVar32,auVar32);
-  iVar13 = 0;
-  auVar28 = vectorMultiplyAddFloatingPoint(auVar27,auVar30,auVar26);
-  auVar27 = vectorMultiplyAddFloatingPoint(auVar29,auVar30,auVar24);
-  auVar26 = vectorMultiplyAddFloatingPoint(auVar25,auVar30,auVar31);
-  auVar29 = ZEXT416(8);
-  auVar25 = loadVectorLeftIndexed(8,0xe9f2c);
-  auVar24 = loadVectorLeftIndexed(0xc,0xe9f2c);
-  auVar25 = auVar25 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar24 = auVar24 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar28 = vectorConvertToUnsignedFixedPointWordSaturate(auVar28,0);
-  auVar27 = vectorConvertToUnsignedFixedPointWordSaturate(auVar27,0);
-  auVar26 = vectorConvertToUnsignedFixedPointWordSaturate(auVar26,0);
-  auVar30 = vectorCompareGreaterThanUnsignedWord(auVar28,auVar33);
-  auVar28 = vectorConditionalSelect(auVar28,auVar33,auVar30);
-  auVar31 = vectorCompareGreaterThanUnsignedWord(auVar26,auVar33);
-  auVar30 = vectorCompareGreaterThanUnsignedWord(auVar27,auVar33);
-  auVar26 = vectorConditionalSelect(auVar26,auVar33,auVar31);
-  auVar27 = vectorConditionalSelect(auVar27,auVar33,auVar30);
-  auVar28 = vectorShiftLeftIntegerWord
-                      (auVar28,auVar25 | auVar25 << 0x20 | auVar25 << 0x40 | auVar25 << 0x60);
-  auVar25 = vectorShiftLeftIntegerWord
-                      (auVar26,auVar29 | auVar29 << 0x20 | auVar29 << 0x40 | auVar29 << 0x60);
-  auVar29 = vectorShiftLeftIntegerWord
-                      (auVar27,auVar24 | auVar24 << 0x20 | auVar24 << 0x40 | auVar24 << 0x60);
-  if (0 < sheet->vertexCount) {
-    auVar29 = (auVar28 | auVar29 | auVar25 | auVar33) >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar29 = auVar29 | auVar29 << 0x20 | auVar29 << 0x40 | auVar29 << 0x60;
-    iVar14 = 0;
-    lVar17 = lVar16 + 0x1c;
-    iVar15 = 0;
-    dVar21 = 3.1415927410125732;
-    dVar22 = 1.0;
-    dVar23 = 0.0015339808305725455;
-    do {
-      iVar5 = *(int *)sheet->unknown0;
-      puVar12 = (uint *)(iVar5 + iVar14);
-      uVar6 = sheet->frameCounter;
-      uVar7 = *puVar12;
-      uVar8 = puVar12[1];
-      puVar10 = (undefined4 *)lVar16;
-      *puVar10 = *(undefined4 *)(iVar5 + iVar14);
-      puVar10[1] = puVar12[1];
-      dVar20 = (double)(float)((double)(((ulonglong)uVar6 +
-                                         (((ulonglong)uVar7 + (ulonglong)uVar8 << 0x20) >> 0x2b &
-                                         0x1fe0) & 0xff) << 4) * dVar23 - dVar21);
-      puVar10[2] = (float)((double)(float)puVar12[2] * (double)*(float *)(sheet->unknown54 + 8) +
-                          (double)((float)puVar12[3] *
-                                  (float)(dVar22 - (double)*(float *)(sheet->unknown54 + 8))));
-      uVar11 = _FSin(dVar20,iVar5,0);
-      dVar18 = (double)*(float *)sheet->unknown18;
-      dVar19 = extraout_f1;
-      dVar20 = (double)_FSin(dVar20,uVar11,1);
-      fVar4 = *(float *)(*(int *)(sheet->unknown0 + 4) + iVar15);
-      fVar1 = *(float *)sheet->unknown18;
-      iVar13 = iVar13 + 1;
-      fVar2 = *(float *)(*(int *)(sheet->unknown0 + 4) + iVar15 + 4);
-      iVar14 = iVar14 + 0x10;
-      iVar15 = iVar15 + 8;
-      puVar10[3] = (float)(dVar19 * dVar18 + (double)(fVar4 + sheet->offsetU0));
-      fVar3 = sheet->offsetV0;
-      uVar9 = storeVectorElementWordIndexed(auVar29,0,lVar17);
-      *(undefined4 *)((uint)lVar17 & 0xfffffffc) = uVar9;
-      iVar5 = sheet->vertexCount;
-      lVar17 = lVar17 + 0x20;
-      puVar10[4] = (float)(dVar20 * (double)fVar1 + (double)(fVar2 + fVar3));
-      puVar10[5] = -(float)(dVar19 * dVar18 - (double)(fVar4 + sheet->offsetU1));
-      puVar10[6] = -(float)(dVar20 * (double)fVar1 - (double)(fVar2 + sheet->offsetV1));
-      lVar16 = lVar16 + 0x20;
-    } while (iVar13 < iVar5);
-  }
-  return;
+    u32 c = sheet->color;
+    u32 color = Brighten(c) << 24 | Brighten(c >> 8) << 16 | Brighten(c >> 16) << 8 | 0xff;
+
+    for (int i = 0; i < sheet->vertexCount; i++, out++) {
+        WaterSheetSrcVert *src = &sheet->srcVerts[i];
+        u32 seed = *(u32 *)&src->x + *(u32 *)&src->y;
+        u32 idx = (((seed >> 11) & 0x1fe0) + sheet->frameCounter & 0xff) << 4;
+        float phase = (float)idx * SHEET_PHASE - 3.1415927f;
+        float t = sheet->zBlend;
+
+        out->pos.x = src->x;
+        out->pos.y = src->y;
+        out->pos.z = src->z0 * t + src->z1 * (1.0f - t);
+        float s = sinf(phase) * sheet->waveAmp;
+        float k = cosf(phase) * sheet->waveAmp;
+        Vec2 *uv = &sheet->srcUVs[i];
+        out->uv0.x = s + (uv->x + sheet->offsetU0);
+        out->color = color;
+        out->uv0.y = k + (uv->y + sheet->offsetV0);
+        out->uv1.x = (uv->x + sheet->offsetU1) - s;
+        out->uv1.y = (uv->y + sheet->offsetV1) - k;
+    }
 }
 
 

@@ -28,3 +28,4 @@ g_Checkpoint	game/respawn
 g_CheckpointLive	game/respawn
 g_CheckpointBits	game/respawn
 g_NavSlots	game/respawn
+WaterSheetSrcVert	game/water

@@ -163,6 +163,46 @@ void STUB_000e9f28(...)
 {
 }
 
+#define SHEET_BRIGHTEN 1.38f            /* 0xe9f30 */
+#define SHEET_PHASE    0.0015339808f    /* 0xe9f44: 2pi / 4096 */
+
+/* one channel of the sheet colour brightened, saturating at 255 (done 3-wide in the vector unit) */
+static inline u32 Brighten(u32 c)
+{
+    float f = (float)(c & 0xff) * SHEET_BRIGHTEN;
+    u32 v = f <= 0.0f ? 0 : f >= 4294967295.0f ? 0xffffffff : (u32)f;   /* vctuxs */
+    return v > 0xff ? 0xff : v;
+}
+
+// 0x00e9f48 (0x2a0 bytes)
+/* vertices of a water sheet: height blended between two poses, both UV layers wobbled by a wave
+   whose phase comes from the vertex position */
+void BuildVerts(WaterSheet *sheet, WaterSheetVert *out)
+{
+    u32 c = sheet->color;
+    u32 color = Brighten(c) << 24 | Brighten(c >> 8) << 16 | Brighten(c >> 16) << 8 | 0xff;
+
+    for (int i = 0; i < sheet->vertexCount; i++, out++) {
+        WaterSheetSrcVert *src = &sheet->srcVerts[i];
+        u32 seed = *(u32 *)&src->x + *(u32 *)&src->y;
+        u32 idx = (((seed >> 11) & 0x1fe0) + sheet->frameCounter & 0xff) << 4;
+        float phase = (float)idx * SHEET_PHASE - 3.1415927f;
+        float t = sheet->zBlend;
+
+        out->pos.x = src->x;
+        out->pos.y = src->y;
+        out->pos.z = src->z0 * t + src->z1 * (1.0f - t);
+        float s = sinf(phase) * sheet->waveAmp;
+        float k = cosf(phase) * sheet->waveAmp;
+        Vec2 *uv = &sheet->srcUVs[i];
+        out->uv0.x = s + (uv->x + sheet->offsetU0);
+        out->color = color;
+        out->uv0.y = k + (uv->y + sheet->offsetV0);
+        out->uv1.x = (uv->x + sheet->offsetU1) - s;
+        out->uv1.y = (uv->y + sheet->offsetV1) - k;
+    }
+}
+
 // 0x00ea1e8 (0x4 bytes)
 void STUB_000ea1e8(...)
 {

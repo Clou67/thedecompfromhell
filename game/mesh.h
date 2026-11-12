@@ -42,6 +42,6 @@ void WaterTileBufLerp(float t, float *dst, float *bufA, float *bufB);
 void ShadeVerts(WaterTile *tile);
 void WaterTile_StepWave(float (*stage)[24], int tileIdx, int bufIdx, WaterTile *tiles);
 void STUB_000e9f28(...);
-void BuildVerts(WaterSheet *sheet,WaterSheetVert *outVerts);
+void BuildVerts(WaterSheet *sheet, WaterSheetVert *out);
 void STUB_000ea1e8(...);
 void NormalsToEnvUV(int count, Vec3 *positions, Vec3 *normals, Vec2 *outUV);

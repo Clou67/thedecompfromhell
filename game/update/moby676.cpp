@@ -3,6 +3,7 @@
 // 2 functions, 0x40f810-0x40f878
 #include "game/update/moby676.h"
 #include "game/draw.h"
+#include "game/mesh.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/water.h"
