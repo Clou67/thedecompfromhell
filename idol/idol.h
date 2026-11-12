@@ -2,6 +2,25 @@
 // idol/idol.h
 #include "types.h"
 
+// ---- types
+/* Idol's string table (Locale_GetInstance: a 0x1c-byte singleton @*0x902ec4) */
+typedef struct LocaleEntry {
+    int id;                  /* 0x00  string id + a per-language base */
+    int unk04;
+    char *text;              /* 0x08 */
+} LocaleEntry;
+typedef struct Localizer {
+    int (*getLanguage)(void);/* 0x00 */
+    u32 unk04;               /* 0x04 */
+    int count;               /* 0x08  entries */
+    int unk0c;               /* 0x0c  Locale_Load's third argument */
+    void *buffer;            /* 0x10  Locale_Load's second argument */
+    u8 loaded;               /* 0x14 */
+    u8 _pad15[3];
+    LocaleEntry *entries;    /* 0x18 */
+} Localizer;
+typedef char Localizer_size_check[sizeof(Localizer) == 0x1c ? 1 : -1];
+
 // ---- globals
 extern undefined4 DAT_0065f8dc; /* no defined data */
 extern undefined4 DAT_0065f8e4; /* no defined data */
@@ -30,15 +49,15 @@ undefined8 FUN_005036f0(char *param_1,char *param_2);
 char * FUN_005037a0(char *param_1);
 char * FUN_00503810(char *param_1,undefined8 param_2,char *param_3);
 void FUN_005038c4(int param_1);
-int FUN_005038e0(void);
+Localizer *Locale_GetInstance(void);
 void FUN_00503950(int param_1);
 void FUN_0050396c(int param_1,char *param_2);
-void FUN_00503a3c(undefined4 *param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4, undefined8 param_5);
+void Locale_Load(Localizer *param_1,void *param_2,int param_3,int (*param_4)(void),const char *param_5);
 int FUN_00503ac0(int param_1,int param_2);
 undefined8 FUN_00503b10(undefined4 *param_1,int param_2);
-int FUN_00503bd0(int param_1,int param_2);
+char *Locale_GetString(Localizer *param_1,int param_2);
 int FUN_00503c70(int param_1,int param_2);
-undefined8 FUN_00503ccc(undefined4 *param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4, undefined4 param_5,undefined4 *param_6);
+char *Locale_Convert(Localizer *param_1,char *param_2,int param_3,char *param_4,int param_5,int *param_6);
 void FUN_00503df8(void);
 void FUN_00503dfc(void);
 longlong LoadAssetFromFile(undefined8 param_1,undefined8 param_2,longlong param_3);
@@ -65,7 +84,7 @@ undefined4 FUN_00504c98(int param_1);
 undefined4 FUN_00504ce0(int param_1);
 int FUN_00504d28(int param_1);
 int FUN_00504d48(int param_1);
-undefined1 FUN_00504d90(int param_1);
+u8 FUN_00504d90(void *param_1);
 ulonglong FUN_00504db0(int param_1,int param_2);
 void FUN_00504dc8(int param_1);
 void FUN_00504e20(int param_1);

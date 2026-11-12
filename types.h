@@ -2597,8 +2597,14 @@ struct UpdateCam { /* DL struct UpdateCam (RC1 size 0xa0); 48 of them at UpdateC
 
 extern undefined4 DAT_0011eec0; /* 0x11eec0 */
 extern undefined4 DAT_0015aa20; /* 0x15aa20 */
+extern undefined4 DAT_00652bf8; /* no defined data */
+extern undefined4 DAT_00652c00; /* no defined data */
 extern undefined4 DAT_0071a32c; /* 0x71a32c */
 extern undefined4 DAT_0071a364; /* 0x71a364 */
+extern undefined4 DAT_0071fad8; /* no defined data */
+extern undefined2 DAT_0072b33c; /* 0x72b33c */
+extern undefined2 DAT_0072b348; /* 0x72b348 */
+extern undefined2 DAT_0072b354; /* 0x72b354 */
 extern undefined4 DAT_009313a4; /* no defined data */
 extern undefined4 DAT_009313a8; /* no defined data */
 extern undefined4 DAT_009313b4; /* no defined data */
@@ -2648,6 +2654,12 @@ extern pointer32 PTR_DrawSceneShipEffect_007059a8; /* 0x7059a8 */
 extern pointer PTR_PTR_0071a35c; /* 0x71a35c */
 extern pointer PTR_PTR_0071a360; /* 0x71a360 */
 extern pointer PTR_PTR_0071a368; /* 0x71a368 */
+extern pointer32 PTR_memcard_RestoreSaveGame_00705f80; /* 0x705f80 */
+extern pointer32 PTR_memcard_ReturnLang_00705f10; /* 0x705f10 */
+extern pointer32 PTR_memcard_printGameSaved_00705f88; /* 0x705f88 */
+extern pointer32 PTR_memcard_print_LoadingCB_PS3_00705f98; /* 0x705f98 */
+extern pointer32 PTR_memcard_print_SavingGameCB_PS3_00705f90; /* 0x705f90 */
+extern pointer32 PTR_memcard_print_TimeForPain_00705f78; /* 0x705f78 */
 extern undefined4 _DAT_000e93b0; /* direct read */
 extern undefined4 _DAT_000e93c0; /* direct read */
 extern undefined4 _DAT_000e93d0; /* direct read */

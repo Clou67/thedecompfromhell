@@ -1,6 +1,6 @@
 errors	file
 0	game/bloaders.cpp
-220	game/boot.cpp
+218	game/boot.cpp
 371	game/camera.cpp
 175	game/collproc.cpp
 0	game/crt0.cpp
@@ -19,7 +19,7 @@ errors	file
 2196	game/mUnk.cpp
 0	game/main.cpp
 97	game/map.cpp
-81	game/memcard.cpp
+0	game/memcard.cpp
 0	game/mesh.cpp
 0	game/mission.cpp
 83	game/mobyfunc.cpp
@@ -1025,9 +1025,9 @@ errors	file
 23	idol/9Unk.cpp
 3	idol/fUnk.cpp
 72	idol/fastfunc.cpp
-131	idol/idol.cpp
+136	idol/idol.cpp
 485	idol/idol_draw.cpp
-1799	idol/mUnk.cpp
+1803	idol/mUnk.cpp
 37	idol/mUnk2.cpp
 1097	idol/mathfunc.cpp
 359	idol/sUnk.cpp

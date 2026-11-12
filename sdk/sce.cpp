@@ -860,7 +860,7 @@ void cellMsgDialogAbort(void)
 
 
 // 0x064f604 (0x20 bytes)
-void cellMsgDialogOpen2(void)
+void cellMsgDialogOpen2(unsigned int param_1,const char *param_2,void (*param_3)(int,void *),void *param_4,void *param_5)
 
 {
   ulonglong uStack00000028;

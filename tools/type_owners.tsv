@@ -53,3 +53,13 @@ g_PartProfile	game/partproc
 sky_sprite	game/skyfunc
 CrtArgs	game/crt0
 g_CrtArgs	game/crt0
+SaveDataInfo	idol/mUnk
+Localizer	idol/idol
+SaveFileInfo	game/memcard
+SaveCardInfo	game/memcard
+HelpMenuEntry	game/memcard
+g_SaveCards	game/memcard
+g_HelpMenuList	game/memcard
+g_MapRevealMasks	game/memcard
+g_LevelFlags2	game/memcard
+s_DigitalNames	game/memcard

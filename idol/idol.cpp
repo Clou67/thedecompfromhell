@@ -222,7 +222,7 @@ void FUN_005038c4(int param_1)
 
 
 // 0x05038e0 (0x70 bytes)
-int FUN_005038e0(void)
+Localizer *Locale_GetInstance(void)
 
 {
   int iVar1;
@@ -291,8 +291,7 @@ void FUN_0050396c(int param_1,char *param_2)
 
 
 // 0x0503a3c (0x84 bytes)
-void FUN_00503a3c(undefined4 *param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
-                 undefined8 param_5)
+void Locale_Load(Localizer *param_1,void *param_2,int param_3,int (*param_4)(void),const char *param_5)
 
 {
   cellSysutilCheckCallback();
@@ -359,7 +358,7 @@ undefined8 FUN_00503b10(undefined4 *param_1,int param_2)
 
 
 // 0x0503bd0 (0xa0 bytes)
-int FUN_00503bd0(int param_1,int param_2)
+char *Locale_GetString(Localizer *param_1,int param_2)
 
 {
   int iVar1;
@@ -410,9 +409,7 @@ int FUN_00503c70(int param_1,int param_2)
 // 0x0503ccc (0x12c bytes)
 // strings: 0065f73c: 'Failed to convert string into UTF8! Illegal conversion\n' | 0065f774: 'Failed to convert string into UTF8! Destination buffer overrun!!!!\n' | 0065f7bc: "Failed to convert string into UTF8! CellSDK can't figure its shit out!\n"
 
-undefined8
-FUN_00503ccc(undefined4 *param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-            undefined4 param_5,undefined4 *param_6)
+char *Locale_Convert(Localizer *param_1,char *param_2,int param_3,char *param_4,int param_5,int *param_6)
 
 {
   int iVar1;
@@ -1000,7 +997,7 @@ int FUN_00504d48(int param_1)
 
 
 // 0x0504d90 (0x20 bytes)
-undefined1 FUN_00504d90(int param_1)
+u8 FUN_00504d90(void *param_1)
 
 {
   return *(undefined1 *)(param_1 + *(int *)(param_1 + 0xbc) * 0x14 + 0x24);

@@ -74,7 +74,7 @@ void cellSysutilGetSystemParamInt(void);
 void cellAudioOutConfigure(void);
 void cellSaveDataUserAutoSave(void);
 void cellMsgDialogAbort(void);
-void cellMsgDialogOpen2(void);
+void cellMsgDialogOpen2(unsigned int param_1,const char *param_2,void (*param_3)(int,void *),void *param_4,void *param_5);
 void cellVideoOutGetState(void);
 void cellSysutilRegisterCallback(void);
 void cellVideoOutGetResolutionAvailability(void);

@@ -2594,7 +2594,7 @@ void idol_draw::BindTexture(undefined8 param_1,undefined8 param_2)
 
 
 // 0x04d6f50 (0x138 bytes)
-void FUN_004d6f50(undefined8 param_1,int param_2)
+void FUN_004d6f50(int param_1,int param_2)
 
 {
   int iVar1;
@@ -11422,36 +11422,36 @@ SaveDataInfo * idol::GetSaveData(void)
     pSVar1 = (SaveDataInfo *)0x0;
     puVar1 = (SaveDataInfo *)FUN_005e38b0(0x478);
     if (puVar1 != (SaveDataInfo *)0x0) {
-      puVar1->field1_0x4 = 0;
+      puVar1->loadResult = 0;
       puVar1->field0_0x0 = &PTR_PTR_006618d0;
-      puVar1->field2_0x8 = 0;
+      puVar1->callbackArg = 0;
       puVar1->field3_0xc = 0;
-      puVar1->field4_0x10 = 0;
-      puVar1->field5_0x14 = 0;
-      puVar1->field6_0x18 = 0;
-      puVar1->field1080_0x450 = 0;
-      puVar1->field1082_0x458 = 0;
-      puVar1->field1083_0x45c = 0;
-      puVar1->field1084_0x45d = 0;
-      puVar1->field1087_0x460 = 1;
-      puVar1->field1081_0x454 = 4;
-      memset(&puVar1->field1051_0x430,0,0x20);
-      puVar1->field11_0x20 = 0;
-      puVar1->field12_0x21 = 0;
-      puVar1->field13_0x22 = 0;
-      puVar1->field14_0x23 = 0;
-      puVar1->field15_0x24 = 0;
-      puVar1->field16_0x25 = 0;
-      puVar1->field17_0x26 = 0;
-      puVar1->field18_0x27 = 0;
-      puVar1->field19_0x28 = 0;
-      puVar1->field20_0x29 = 0;
-      puVar1->field21_0x2a = 0;
-      puVar1->field22_0x2b = 0;
-      puVar1->field23_0x2c = 0;
-      puVar1->field24_0x2d = 0;
-      puVar1->field25_0x2e = 0;
-      puVar1->field26_0x2f = 0;
+      puVar1->onLoad = 0;
+      puVar1->unk14 = 0;
+      puVar1->unk18 = 0;
+      puVar1->result = 0;
+      puVar1->unk458 = 0;
+      puVar1->unk45c = 0;
+      puVar1->unk45d = 0;
+      puVar1->flags = 1;
+      puVar1->unk454 = 4;
+      memset(&puVar1->unk430,0,0x20);
+      puVar1->unk20[0] = 0;
+      puVar1->unk20[1] = 0;
+      puVar1->unk20[2] = 0;
+      puVar1->unk20[3] = 0;
+      puVar1->unk20[4] = 0;
+      puVar1->unk20[5] = 0;
+      puVar1->unk20[6] = 0;
+      puVar1->unk20[7] = 0;
+      puVar1->unk20[8] = 0;
+      puVar1->unk20[9] = 0;
+      puVar1->unk20[10] = 0;
+      puVar1->unk20[11] = 0;
+      puVar1->unk20[12] = 0;
+      puVar1->unk20[13] = 0;
+      puVar1->unk20[14] = 0;
+      puVar1->unk20[15] = 0;
       pSVar1 = puVar1;
     }
   }
@@ -11693,9 +11693,7 @@ void FUN_004e79a4(void)
 // 0x04e7a34 (0x268 bytes)
 // strings: 00659ee4: '****Save Game Data ****\n' | 00659f0c: 'SaveGameData(void*)' | 00659dfc: '%s failed: status = 0x%x\n' | 00659f34: 'thr_SaveSystem_Save' | 00659e98: 'LoadGameData(void*)' | 00659ec0: 'list load thread create failed %d\n' | 00659e18: '****Auto Save Game Data ****\n' | 00659e48: 'AutoSaveGameData(void*)' | 00659e70: 'thr_SaveSystem_AutoSave'
 
-void idol::SaveSystem_PS::RunSaveSystem
-               (int param_1,int saveArg,undefined8 param_3,undefined8 param_4,undefined4 param_5,
-               undefined4 param_6,undefined4 param_7,undefined4 param_8)
+void idol::SaveSystem_PS::RunSaveSystem(SaveDataInfo *param_1,int saveArg,char *param_3,int param_4,int (*param_5)(int),int (*param_6)(int),int (*param_7)(int,char *),int (*param_8)(int))
 
 {
   int iVar1;
@@ -11806,7 +11804,7 @@ void FUN_004e7d14(void)
 // 0x04e7d18 (0x7c bytes)
 // strings: 00659fb4: 'Fatalexit_memcardThread()' | 00659f78: 'Really fatal error trying to spawn off fatal error thread\n'
 
-int FUN_004e7d18(undefined8 param_1,undefined8 param_2)
+int SaveData_FatalExit(SaveDataInfo *param_1,int param_2)
 
 {
   int iVar1;
@@ -11827,7 +11825,7 @@ int FUN_004e7d18(undefined8 param_1,undefined8 param_2)
 // 0x04e7d94 (0x70 bytes)
 // strings: 00659fe0: 'OnSave Callback about to occur\n'
 
-undefined4 FUN_004e7d94(int param_1)
+int SaveData_CallOnSave(SaveDataInfo *param_1)
 
 {
   undefined4 uVar1;
@@ -11865,7 +11863,7 @@ undefined4 FUN_004e7e04(int param_1)
 // 0x04e7e6c (0x78 bytes)
 // strings: 0065a044: 'OnLoad Callback about to occur\n'
 
-undefined4 FUN_004e7e6c(int param_1)
+int SaveData_CallOnLoad(SaveDataInfo *param_1)
 
 {
   undefined4 uVar1;
@@ -11946,7 +11944,7 @@ void FUN_004e7f9c(int param_1,longlong param_2)
 
 
 // 0x04e80d8 (0x70 bytes)
-void FUN_004e80d8(int param_1,undefined8 param_2)
+void SaveData_SetTitle(SaveDataInfo *param_1,const char *param_2)
 
 {
   memset(param_1 + 0x30,0,0x400);
@@ -11959,7 +11957,7 @@ void FUN_004e80d8(int param_1,undefined8 param_2)
 // 0x04e8148 (0x6c bytes)
 // strings: 008fa728: 'Ratchet & Clank Save'
 
-void FUN_004e8148(int param_1,undefined4 param_2,undefined8 param_3)
+void SaveData_SetDialogStrings(SaveDataInfo *param_1,char *param_2,char *param_3)
 
 {
   DAT_008fa63c = param_2;
@@ -12594,7 +12592,7 @@ void idol::SaveDataListCallback(undefined4 *param_1,uint *param_2,undefined4 *pa
     }
   }
   GameSavePtr = puVar3;
-  uVar2 = DAT_008fabb4;
+  uVar2 = g_pSaveBuffer;
   puVar3 = GameSavePtr;
   uVar1 = GameSavePtr[0x118];
   DAT_01111620 = 0;
@@ -12686,7 +12684,7 @@ LAB_004e975c:
   DAT_01111628 = &DAT_01111630;
   DAT_01111620 = 0;
   DAT_01111630 = DAT_008fa63c;
-  fileAllocLoad(auStack_190,DAT_008fabb4,local_110);
+  fileAllocLoad(auStack_190,g_pSaveBuffer,local_110);
   DAT_01111634 = 0;
   DAT_01111638 = uVar2;
   DAT_0111163c = 0;
@@ -12943,8 +12941,8 @@ LAB_004ea180:
                            (ulonglong)*(uint *)(iVar5 + 0x4a8) + 0x28);
     uVar3 = FUN_004ef34c(iVar5);
     FUN_004ef4d0(uVar3,acStack_838,auStack_438);
-    iVar5 = idol::fileAllocLoad(auStack_438,DAT_008fabb4,local_840);
-    uVar1 = DAT_008fabb4;
+    iVar5 = idol::fileAllocLoad(auStack_438,g_pSaveBuffer,local_840);
+    uVar1 = g_pSaveBuffer;
     if (iVar5 == 0) {
       *param_3 = 1;
       param_3[0xb] = uVar1;
@@ -12974,8 +12972,8 @@ LAB_004ea180:
                            puVar2[7]);
     uVar3 = FUN_004ef34c(iVar5);
     FUN_004ef4d0(uVar3,acStack_838,auStack_438);
-    iVar5 = idol::fileAllocLoad(auStack_438,DAT_008fabb4,local_840);
-    uVar1 = DAT_008fabb4;
+    iVar5 = idol::fileAllocLoad(auStack_438,g_pSaveBuffer,local_840);
+    uVar1 = g_pSaveBuffer;
     if (iVar5 == 0) {
       *param_3 = 1;
       param_3[0xb] = uVar1;

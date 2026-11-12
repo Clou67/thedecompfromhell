@@ -3180,8 +3180,8 @@ void CardState_GOOD_SAVE(void)
 void CardState_WARNING(void)
 
 {
-  if ((&DAT_0071fad4)[DAT_0071faf0 * 0x30] == 2) {
-    (&DAT_0071fad4)[DAT_0071faf0 * 0x30] = 0;
+  if ((&DAT_0071fad4)[g_SaveCurCard * 0x30] == 2) {
+    (&DAT_0071fad4)[g_SaveCurCard * 0x30] = 0;
   }
   if ((g_CardStateFlags & 1) == 0) {
     g_CardState = 3;
@@ -3201,8 +3201,8 @@ void CardState_NOCARD(void)
   DAT_0071fa7c = 0xffffffff;
   DAT_0071fa98 = 0xffffffff;
   DAT_0071fab4 = 0xffffffff;
-  if ((&DAT_0071fad4)[DAT_0071faf0 * 0x30] == 2) {
-    (&DAT_0071fad4)[DAT_0071faf0 * 0x30] = 0;
+  if ((&DAT_0071fad4)[g_SaveCurCard * 0x30] == 2) {
+    (&DAT_0071fad4)[g_SaveCurCard * 0x30] = 0;
   }
   g_CardState = 4;
   return;
@@ -3334,7 +3334,7 @@ void CardState_CREATING_SAVE(void)
 {
   if (DAT_0071fb10 == 0) {
     DAT_0071faec = 0;
-    DAT_0071fa38 = 0;
+    g_SaveCurFile = 0;
     if (DAT_0071fb08 < 0) {
       DAT_0071fb08 = 7;
       DAT_0071fb0c = 0;

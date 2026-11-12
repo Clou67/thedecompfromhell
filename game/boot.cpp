@@ -249,9 +249,9 @@ void ZeroFillKeyGlobals(void)
   DAT_0071fb24 = 1;
   DAT_00969c9c = 0;
   g_memcardRestoredBolts = 0;
-  DAT_00a23094 = 0;
-  DAT_00a2308d = 0;
-  DAT_00a2308e = 0;
+  g_memcardRestoredGoldWeapons = 0;
+  g_memcardHadBoltTrophy = 0;
+  g_memcardHadMidasTrophy = 0;
   return;
 }
 
@@ -1407,8 +1407,8 @@ void GameStart(void)
   *(undefined4 *)(iVar4 + 0x460) = 1;
   idol::GetSaveData();
   g_memcardSaveSysState = 5;
-  DAT_00a23098 = 0;
-  DAT_00a23099 = 0;
+  g_memcardFatalShown = 0;
+  g_memcardFatalError = 0;
   ZeroFillKeyGlobals();
   ReturnTrue_GameStart();
   if (g_HasInited != 0) {

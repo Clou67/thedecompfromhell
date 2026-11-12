@@ -1,1260 +1,1030 @@
-// game/memcard.cpp -- reconstructed from NPEA00385 EBOOT
-// STATUS: NOT STARTED (raw Ghidra output)
+// game/memcard.cpp -- the save game: what goes in it, building and reading it back, the save UI text
+// STATUS: CLEAN (checked against the asm; local names are mine)
 // 32 functions, 0xe6b08-0xe9114
+//
+// A save is a list of chunks described by mc_data tables (DL's names): mc_gamedata for the global
+// state, mc_leveldata for the per-level state, which is stored once per level (20 copies, each
+// entry's addr is the base of a per-level array of `size`-byte records). On disk a chunk list is
+//   int listSize; int 0; { int iff; int size; data, padded to 4 } ... { -1, 0 }
+// and a whole save is   int gameListSize; int levelListSize; game list; 20 level lists.
+// Reading matches chunks by iff, so chunks may be missing, extra or resized (each mc_data's
+// mark records what happened). The PS3 save itself (dialogs, files, threads) is Idol's
+// SaveSystem_PS; this file builds the data and its description string and handles the callbacks.
 #include <stdio.h>
 #include <string.h>
 #include "game/memcard.h"
 #include "game/boot.h"
+#include "game/crt0.h"
+#include "game/debug.h"
 #include "game/draw.h"
 #include "game/freeze.h"
 #include "game/help.h"
 #include "game/hero.h"
 #include "game/map.h"
+#include "game/mission.h"
 #include "game/mobyutil.h"
+#include "game/music.h"
 #include "game/pad.h"
 #include "game/pause.h"
+#include "game/respawn.h"
+#include "game/skyproc.h"
 #include "game/space.h"
 #include "game/update.h"
 #include "game/update/moby1118.h"
 #include "game/vendor.h"
+#include "idol/fastfunc.h"
 #include "idol/idol.h"
 #include "idol/idol_draw.h"
 #include "idol/mUnk.h"
 #include "sdk/sce.h"
 
+#ifndef CELL_MSGDIALOG_TYPE_SE_TYPE_NORMAL
+#define CELL_MSGDIALOG_TYPE_SE_TYPE_NORMAL (1 << 0)   /* sysutil_msgdialog.h */
+#endif
+
+#define NUM_SAVE_LEVELS     20
+#define CHUNK_END           (-1)
+
+#define FRAMES_PER_MINUTE   3600
+#define FRAMES_PER_HOUR     216000
+
+#define SAVE_STRBUF_SIZE    0x400
+#define NUM_SAVE_STRBUFS    5
+
+/* how a chunk in the save compared with its mc_data entry (mc_data.mark) */
+enum McChunkMark {
+    MC_CHUNK_LARGER  = -2,  /* the save's chunk is bigger: the rest is ignored */
+    MC_CHUNK_SMALLER = -1,  /* the save's chunk is smaller: the rest keeps its value */
+    MC_CHUNK_MISSING = 0,
+    MC_CHUNK_OK      = 1,
+};
+
+/* memcard_PerformOperation / RunSaveSystem modes */
+enum McOperation {
+    MC_OP_SAVE_NEW = 0,     /* guess: the first save of a game */
+    MC_OP_LOAD     = 1,
+    MC_OP_NONE     = 2,
+    MC_OP_SAVE     = 3,
+    MC_OP_LIST     = 4,     /* guess: runs the save system without building data */
+};
+
+/* Idol save system states (g_memcardSaveSysState, SaveDataInfo.state) */
+enum SaveSysState {
+    SAVESYS_SAVED    = 0,
+    SAVESYS_LOADED   = 1,
+    SAVESYS_SAVING   = 3,
+    SAVESYS_IDLE     = 5,
+    SAVESYS_CANCELED = 6,
+    SAVESYS_FATAL    = 11,
+    SAVESYS_NO_SPACE = 12,  /* guess */
+};
+
+#define SAVE_FATAL_CODE     0x66
+
+/* ids in SaveMsg_UTF8.dat (the meanings are inferred from the format strings) */
+enum SaveMsgId {
+    SAVEMSG_PLAYTIME  = 1000,
+    SAVEMSG_CHALLENGE = 2000,
+    SAVEMSG_BOLTS     = 3000,
+    SAVEMSG_CONFIRM   = 5000,   /* the "continue?" dialog after a load */
+    SAVEMSG_TITLE     = 6000,
+    SAVEMSG_SUBTITLE  = 6003,
+};
+
+#define SAVEDATA_FLAG_LOADED    1   /* SaveDataInfo.flags: the game has been loaded once */
+
+/* s_DigitalNames (@0x652b84): the "Digital" line per language, indexed by g_Language - 1 */
+
+
 // 0x00e6b08 (0x14 bytes)
 void SECTION_HEADER_MEMCARD(void)
-
 {
-  DAT_0072666c = 0x10000;
-  return;
+    DAT_0072666c = 0x10000;
 }
-
 
 // 0x00e6b1c (0x15c bytes)
-// strings: 0071f970: '/BASCUS-97199RATCHET' | 0071f985: '/BASCUS-97199RATCHET/*' | 0071f99c: '/BASCUS-97199RATCHET/icon.sys' | 0071f9ba: '/BASCUS-97199RATCHET/static.ico' | 0071f9da: '/BASCUS-97199RATCHET/BASCUS-97199RATCHET' | 0071fa03: '/BASCUS-97199RATCHET/save%d.bin'
-
+/* Puts the title id from the boot parameter into the memory card paths (they were built for the
+   PS2's BASCUS-97199). 'E' and 'P' are the region letters of the PS2 product codes. */
 void memcard_GetName(char *buff)
-
 {
-  int iVar1;
-  int iVar2;
-  
-  if (buff[0x12] == 'E') {
-    s__BASCUS_97199RATCHET_0071f970[2] = 'E';
-  }
-  else if (buff[0x12] == 'P') {
-    s__BASCUS_97199RATCHET_0071f970[2] = 'I';
-  }
-  iVar1 = 3;
-  do {
-    iVar2 = iVar1 + 1;
-    s__BASCUS_97199RATCHET_0071f970[iVar1] = buff[iVar1 + 0xd];
-    iVar1 = iVar2;
-  } while (iVar2 < 7);
-  iVar1 = 8;
-  do {
-    iVar2 = iVar1 + 1;
-    s__BASCUS_97199RATCHET_0071f970[iVar1] = buff[iVar1 + 0xd];
-    iVar1 = iVar2;
-  } while (iVar2 < 0xb);
-  iVar1 = 0xb;
-  do {
-    iVar2 = iVar1 + 1;
-    s__BASCUS_97199RATCHET_0071f970[iVar1] = buff[iVar1 + 0xe];
-    iVar1 = iVar2;
-  } while (iVar2 < 0xd);
-  strcpy(s__BASCUS_97199RATCHET___0071f985,s__BASCUS_97199RATCHET_0071f970,0xd);
-  strcpy(s__BASCUS_97199RATCHET_icon_sys_0071f99c,s__BASCUS_97199RATCHET_0071f970,0xd);
-  strcpy(s__BASCUS_97199RATCHET_static_ico_0071f9ba,s__BASCUS_97199RATCHET_0071f970,0xd);
-  strcpy(s__BASCUS_97199RATCHET_BASCUS_9719_0071f9da,s__BASCUS_97199RATCHET_0071f970,0xd);
-  strcpy(s__BASCUS_97199RATCHET_BASCUS_9719_0071f9da + 0x14,s__BASCUS_97199RATCHET_0071f970,
-               0xd);
-  strcpy(s__BASCUS_97199RATCHET_save_d_bin_0071fa03,s__BASCUS_97199RATCHET_0071f970,0xd);
-  return;
-}
+    int i;
 
+    if (buff[0x12] == 'E') {
+        g_McDir[2] = 'E';
+    }
+    else if (buff[0x12] == 'P') {
+        g_McDir[2] = 'I';
+    }
+
+    for (i = 3; i < 7; i++) {
+        g_McDir[i] = buff[i + 13];
+    }
+
+    for (i = 8; i < 11; i++) {
+        g_McDir[i] = buff[i + 13];
+    }
+
+    for (i = 11; i < 13; i++) {
+        g_McDir[i] = buff[i + 14];
+    }
+
+    /* the call at 0x5cccec is Ghidra's "strcpy", but it takes a length: strncpy */
+    strncpy(g_McDirAll, g_McDir, 13);
+    strncpy(g_McIconSys, g_McDir, 13);
+    strncpy(g_McStaticIco, g_McDir, 13);
+    strncpy(g_McMainFile, g_McDir, 13);
+    strncpy(g_McMainFile + 20, g_McDir, 13);
+    strncpy(g_McSaveFile, g_McDir, 13);
+}
 
 // 0x00e6c78 (0x8 bytes)
-undefined8 STUB_000e6c78(...)
-
+int STUB_000e6c78(void)
 {
-  return 0;
+    return 0;
 }
-
 
 // 0x00e6c80 (0x58 bytes)
+/* bytes a chunk list for mcd takes in the save, its 8-byte header included */
 int memcard_GetDataSize(mc_data *mcd)
-
 {
-  int *piVar1;
-  int iVar2;
-  uint uVar3;
-  
-  uVar3 = 8;
-  if (mcd->addr != (void *)0x0) {
-    iVar2 = 0;
-    uVar3 = 8;
-    do {
-      piVar1 = (int *)((int)&mcd[1].addr + iVar2);
-      uVar3 = uVar3 + *(int *)((int)&mcd->size + iVar2) + 0xb & 0xfffffffc;
-      iVar2 = iVar2 + 0x10;
-    } while (*piVar1 != 0);
-  }
-  return uVar3 + 8;
-}
+    int size = 8;
 
+    for (; mcd->addr != NULL; mcd++) {
+        size = (size + 8 + mcd->size + 3) & ~3;
+    }
+
+    return size + 8;
+}
 
 // 0x00e6cd8 (0x30c bytes)
-int memcard_RestoreData(char *addr,int index,mc_data *mcd)
-
+/* Reads one chunk list back into the index'th record of each mcd entry. Returns the number of
+   problems (unknown chunks, a size mismatch, entries not in the save), also kept per card. */
+int memcard_RestoreData(char *addr, int index, mc_data *mcd)
 {
-  int *piVar1;
-  int iVar2;
-  int iVar3;
-  ulonglong uVar4;
-  uint uVar5;
-  ulonglong uVar6;
-  int *piVar7;
-  void *__s1;
-  longlong lVar8;
-  longlong lVar9;
-  int iVar10;
-  
-  piVar7 = (int *)(addr + 8);
-  lVar9 = 8;
-  iVar3 = 8;
-  uVar6 = 0;
-  uVar5 = 8;
-  if (mcd->addr != (void *)0x0) {
-    iVar2 = 0;
-    do {
-      iVar10 = *(int *)((int)&mcd[1].addr + iVar2);
-      *(undefined4 *)((int)&mcd->mark + iVar2) = 0;
-      iVar2 = iVar2 + 0x10;
-    } while (iVar10 != 0);
-  }
-  iVar10 = 0;
-  iVar2 = *piVar7;
-  while (iVar2 != -1) {
-    uVar4 = 0;
-    while ((iVar3 = (int)((uVar4 & 0xfffffff) << 4), *(int *)((int)&mcd->addr + iVar3) != 0 &&
-           (*(int *)((int)&mcd->iff + iVar3) != *piVar7))) {
-      uVar4 = uVar4 + 1;
-    }
-    if (*(int *)((int)&mcd->addr + iVar3) == 0) {
-      iVar10 = iVar10 + 1;
-    }
-    else {
-      piVar1 = (int *)((int)&mcd->size + iVar3);
-      iVar2 = piVar7[1];
-      __s1 = (void *)(*(int *)((int)&mcd->addr + iVar3) + index * *piVar1);
-      if (iVar2 == *piVar1) {
-        lVar8 = (longlong)*piVar1;
-        *(undefined4 *)((int)&mcd->mark + iVar3) = 1;
-      }
-      else if (iVar2 < *piVar1) {
-        lVar8 = (longlong)iVar2;
-        *(undefined4 *)((int)&mcd->mark + iVar3) = 0xffffffff;
-      }
-      else {
-        lVar8 = (longlong)*piVar1;
-        *(undefined4 *)((int)&mcd->mark + iVar3) = 0xfffffffe;
-      }
-      iVar3 = memcmp(__s1,piVar7 + 2,(size_t)lVar8);
-      if (iVar3 != 0) {
-        g_loaderr = g_loaderr + 1;
-      }
-      FastMemCopy32(__s1,piVar7 + 2,lVar8);
-      lVar9 = (lVar8 + 3U & 0xfffffffc) + lVar9 + 8;
-    }
-    iVar3 = (int)lVar9;
-    piVar7 = (int *)((int)piVar7 + (piVar7[1] + 3U & 0xfffffffc) + 8);
-    iVar2 = *piVar7;
-  }
-  if (mcd->addr != (void *)0x0) {
-    iVar2 = 0;
-    uVar5 = 8;
-    do {
-      piVar1 = (int *)((int)&mcd[1].addr + iVar2);
-      uVar5 = uVar5 + *(int *)((int)&mcd->size + iVar2) + 0xb & 0xfffffffc;
-      iVar2 = iVar2 + 0x10;
-    } while (*piVar1 != 0);
-  }
-  if (iVar3 + 8 != uVar5 + 8) {
-    iVar10 = iVar10 + 1;
-  }
-  while ((iVar3 = (int)((uVar6 & 0xfffffff) << 4), *(int *)((int)&mcd->addr + iVar3) != 0 &&
-         (*(int *)((int)&mcd->iff + iVar3) != piVar7[2]))) {
-    if (*(int *)((int)&mcd->mark + iVar3) < 1) {
-      iVar10 = iVar10 + 1;
-    }
-    uVar6 = uVar6 + 1;
-  }
-  *(int *)(&DAT_0071fad8 + DAT_0071faf0 * 0xc0) = iVar10;
-  return iVar10;
-}
+    int *chunk = (int *)(addr + 8);
+    int restored = 8;
+    int errors = 0;
+    int expected;
+    int i;
 
+    for (i = 0; mcd[i].addr != NULL; i++) {
+        mcd[i].mark = MC_CHUNK_MISSING;
+    }
+
+    while (chunk[0] != CHUNK_END) {
+        mc_data *entry;
+        char *dest;
+        int copySize;
+
+        for (i = 0; mcd[i].addr != NULL && mcd[i].iff != chunk[0]; i++) {
+        }
+
+        entry = &mcd[i];
+
+        if (entry->addr == NULL) {
+            errors++;
+        }
+        else {
+            dest = (char *)entry->addr + index * entry->size;
+
+            if (chunk[1] == entry->size) {
+                copySize = entry->size;
+                entry->mark = MC_CHUNK_OK;
+            }
+            else if (chunk[1] < entry->size) {
+                copySize = chunk[1];
+                entry->mark = MC_CHUNK_SMALLER;
+            }
+            else {
+                copySize = entry->size;
+                entry->mark = MC_CHUNK_LARGER;
+            }
+
+            if (memcmp(dest, &chunk[2], copySize) != 0) {
+                g_loaderr++;
+            }
+
+            FastMemCopy32(dest, &chunk[2], copySize);
+            restored += ((copySize + 3) & ~3) + 8;
+        }
+
+        chunk = (int *)((char *)chunk + ((chunk[1] + 3) & ~3) + 8);
+    }
+
+    chunk += 2;
+    restored += 8;
+    expected = memcard_GetDataSize(mcd);
+
+    if (restored != expected) {
+        errors++;
+    }
+
+    /* the binary compares each iff with the word after the end marker, not with the chunks read */
+    for (i = 0; mcd[i].addr != NULL && mcd[i].iff != chunk[0]; i++) {
+        if (mcd[i].mark < MC_CHUNK_OK) {
+            errors++;
+        }
+    }
+
+    g_SaveCards[g_SaveCurCard].loadErrors = errors;
+    return errors;
+}
 
 // 0x00e6fe4 (0x170 bytes)
-// strings: 00652ba0: 'Out of date save!\n'
-
-
 void memcard_RestoreGame(char *addr)
-
 {
-  undefined **ppuVar1;
-  int *piVar2;
-  undefined **ppuVar3;
-  int iVar4;
-  uint uVar5;
-  uint uVar6;
-  int index;
-  char *addr_00;
-  
-  uVar6 = 8;
-  ppuVar3 = &mc_gamedata;
-  index = 0;
-  uVar5 = 8;
-  if (mc_gamedata != (undefined *)0x0) {
-    iVar4 = 0;
-    do {
-      ppuVar1 = ppuVar3 + 1;
-      ppuVar3 = ppuVar3 + 4;
-      piVar2 = (int *)(iVar4 + 0x7266a0);
-      uVar6 = (uint)(*ppuVar1 + uVar6 + 0xb) & 0xfffffffc;
-      iVar4 = iVar4 + 0x10;
-    } while (*piVar2 != 0);
-  }
-  ppuVar3 = &mc_leveldata;
-  if (mc_leveldata != (undefined *)0x0) {
-    iVar4 = 0;
-    do {
-      ppuVar1 = ppuVar3 + 1;
-      ppuVar3 = ppuVar3 + 4;
-      piVar2 = (int *)(iVar4 + 0x7269b0);
-      uVar5 = (uint)(*ppuVar1 + uVar5 + 0xb) & 0xfffffffc;
-      iVar4 = iVar4 + 0x10;
-    } while (*piVar2 != 0);
-  }
-  if (*(int *)addr == uVar6 + 8) {
-    if (*(int *)(addr + 4) == uVar5 + 8) {
-      memcard_RestoreData(addr + 8,0,(mc_data *)&mc_gamedata);
-      addr_00 = addr + 8 + uVar6 + 8;
-      do {
-        memcard_RestoreData(addr_00,index,(mc_data *)&mc_leveldata);
-        index = index + 1;
-        addr_00 = addr_00 + uVar5 + 8;
-      } while (index < 0x14);
-    }
-    else {
-      printf("Out of date save!\n");
-    }
-  }
-  else {
-    printf("Out of date save!\n");
-  }
-  return;
-}
+    int gameSize = memcard_GetDataSize(mc_gamedata);
+    int levelSize = memcard_GetDataSize(mc_leveldata);
+    char *levelData;
+    int level;
 
+    if (((int *)addr)[0] != gameSize) {
+        printf("Out of date save!\n");
+        return;
+    }
+
+    if (((int *)addr)[1] != levelSize) {
+        printf("Out of date save!\n");
+        return;
+    }
+
+    memcard_RestoreData(addr + 8, 0, mc_gamedata);
+
+    levelData = addr + 8 + gameSize;
+
+    for (level = 0; level < NUM_SAVE_LEVELS; level++) {
+        memcard_RestoreData(levelData, level, mc_leveldata);
+        levelData += levelSize;
+    }
+}
 
 // 0x00e7154 (0x4e4 bytes)
-// strings: 0096c074: 'None' | 0071fb2c: '������������'
-
+/* the state of a new game: everything the save holds back to its starting value */
 void memcard_SetupNewGameGlobals(void)
-
 {
-  undefined2 *puVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  
-  iVar2 = 4;
-  g_heroMaxNanotech = 4;
-  DAT_0071fb24 = 1;
-  g_HelpTextOn = 1;
-  g_GameSettings.Stereo = 1;
-  g_HelpVoiceOn = 1;
-  g_GameSettings.MusicVolume = 0x2cc;
-  g_GameSettings.SfxVolume = 0x400;
-  Level = Veldin;
-  g_boltCount = 0;
-  g_ChallengeMode = 0;
-  g_FrameCount = 0;
-  g_totalBoltsCollected = 0;
-  DAT_0096ca08 = 0;
-  memset(&g_MiscLevelFlags,0,0x80);
-  memset(Cheats,0,0xc);
-  memset(g_SkillPoints,0,0x20);
-  memset(&currentAmmoArray,0,0x25);
-  memset(&UnlockableItems,0,0x25);
-  memset(CHAR_ARRAY_0096c165,0,0x25);
-  memset(g_purchasableVendorItems,0,0xc);
-  memset(UINT_ARRAY_0096c1dc,0,8);
-  memset(&g_SeenPlanets,0,0x14);
-  memset(GalacticMap,0,0x50);
-  memset(g_MissionTargets,0,0x790);
-  memset(HelpData,0,0x4a0);
-  memset(CHAR_ARRAY_00a0feec,0,0x120);
-  memset(CHAR_ARRAY_00a0fdc4,0,0x128);
-  DAT_0071fb24 = 1;
-  g_HelpTextOn = 1;
-  g_HelpVoiceOn = 1;
-  g_GameSettings.CameraLeftRight = 1;
-  DAT_00969c98 = 0;
-  DAT_00969c9c = 0;
-  DAT_00969ca4 = 0;
-  g_GameSettings.CameraUpDown = 1;
-  g_GameSettings.CameraSpeed = 1;
-  memset(&g_goldWeaponsArray,0,0x28);
-  g_goodiesMenuActive = 0;
-  memset(&g_equippedItem,0,0x1c);
-  g_GameSettings.Stereo = 1;
-  g_GameSettings.MusicVolume = 0x2cc;
-  g_GameSettings.SfxVolume = 0x400;
-  DAT_00969c78 = 0;
-  memset(&DAT_0096c080,0,0xc);
-  memset(&DAT_00a0f51c,0,0x94);
-  memset(&DAT_00a0f5b0,0,0x94);
-  memset(&DAT_00a0f644,0,0x94);
-  DAT_00a0f6dc = 0;
-  g_GameFrameCount = 0;
-  g_deathCount = 0;
-  g_boltMiningTimer = 0;
-  g_boltsMined = 0;
-  HelpLogPos = 1;
-  memset(&HelpLog,0,0x96);
-  puVar1 = &DAT_0072b330;
-  memset(&DAT_0072b330,0,0x714);
-  DAT_0072b330 = 0x5277;
-  DAT_0072b33c = 0x5278;
-  DAT_0072b348 = 0x52b9;
-  DAT_0072b354 = 0x52c0;
-  do {
-    iVar2 = iVar2 + -1;
-    puVar1[1] = 1;
-    puVar1 = puVar1 + 6;
-  } while (iVar2 != 0);
-  memset(&VisitedPlanets,0,0x14);
-  iVar4 = 0;
-  iVar3 = 0;
-  iVar2 = 0;
-  do {
-    memset(&DAT_0096ca34 + iVar4 * 0x8000,0,0x8000);
-    memset(g_LevelFlags[0] + iVar2,0,0x10);
-    memset(&g_LevelObjBits + iVar3,0,0x100);
-    memset(&g_NavSlots + iVar3,0,0x100);
-    memset(&DAT_00a0cbc4 + iVar2,0,0x10);
-    iVar4 = iVar4 + 1;
-    iVar3 = iVar3 + 0x100;
-    iVar2 = iVar2 + 0x10;
-  } while (iVar4 < 0x14);
-  return;
-}
+    int level;
+    int i;
 
+    g_heroMaxNanotech = 4;
+    DAT_0071fb24 = 1;
+    g_HelpTextOn = 1;
+    g_GameSettings.Stereo = 1;
+    g_HelpVoiceOn = 1;
+    g_GameSettings.MusicVolume = 0x2cc;
+    g_GameSettings.SfxVolume = 0x400;
+    Level = Veldin;
+    g_boltCount = 0;
+    g_ChallengeMode = 0;
+    g_FrameCount = 0;
+    g_totalBoltsCollected = 0;
+    DAT_0096ca08 = 0;
+
+    memset(&g_MiscLevelFlags, 0, 0x80);
+    memset(Cheats, 0, sizeof(Cheats));
+    memset(g_SkillPoints, 0, sizeof(g_SkillPoints));
+    memset(&currentAmmoArray, 0, 0x25);
+    memset(&UnlockableItems, 0, 0x25);
+    memset(CHAR_ARRAY_0096c165, 0, 0x25);
+    memset(g_purchasableVendorItems, 0, sizeof(g_purchasableVendorItems));
+    memset(UINT_ARRAY_0096c1dc, 0, 8);
+    memset(&g_SeenPlanets, 0, 0x14);
+    memset(GalacticMap, 0, sizeof(GalacticMap));
+    memset(g_MissionTargets, 0, sizeof(g_MissionTargets));
+    memset(HelpData, 0, sizeof(HelpData));
+    memset(CHAR_ARRAY_00a0feec, 0, 0x120);
+    memset(CHAR_ARRAY_00a0fdc4, 0, 0x128);
+
+    /* the options again (an inlined defaults function, probably) */
+    DAT_0071fb24 = 1;
+    g_HelpTextOn = 1;
+    g_HelpVoiceOn = 1;
+    g_GameSettings.CameraLeftRight = 1;
+    DAT_00969c98 = 0;
+    DAT_00969c9c = 0;
+    DAT_00969ca4 = 0;
+    g_GameSettings.CameraUpDown = 1;
+    g_GameSettings.CameraSpeed = 1;
+
+    memset(&g_goldWeaponsArray, 0, 0x28);
+    g_goodiesMenuActive = 0;
+    memset(&g_equippedItem, 0, 0x1c);
+
+    g_GameSettings.Stereo = 1;
+    g_GameSettings.MusicVolume = 0x2cc;
+    g_GameSettings.SfxVolume = 0x400;
+    DAT_00969c78 = 0;
+
+    memset(&DAT_0096c080, 0, 0xc);
+    memset(&DAT_00a0f51c, 0, 0x94);
+    memset(&DAT_00a0f5b0, 0, 0x94);
+    memset(&DAT_00a0f644, 0, 0x94);
+
+    DAT_00a0f6dc = 0;
+    g_GameFrameCount = 0;
+    g_deathCount = 0;
+    g_boltMiningTimer = 0;
+    g_boltsMined = 0;
+
+    HelpLogPos = 1;
+    memset(HelpLog, 0, sizeof(HelpLog));
+
+    /* the pause menu's help list starts with four entries */
+    memset(g_HelpMenuList, 0, 0x714);
+    g_HelpMenuList[0].msg = 0x5277;
+    g_HelpMenuList[1].msg = 0x5278;
+    g_HelpMenuList[2].msg = 0x52b9;
+    g_HelpMenuList[3].msg = 0x52c0;
+
+    for (i = 0; i < 4; i++) {
+        g_HelpMenuList[i].enabled = 1;
+    }
+
+    memset(&VisitedPlanets, 0, 0x14);
+
+    for (level = 0; level < NUM_SAVE_LEVELS; level++) {
+        memset(g_MapRevealMasks[level], 0, sizeof(g_MapRevealMasks[level]));
+        memset(g_LevelFlags[level], 0, sizeof(g_LevelFlags[level]));
+        memset(g_LevelObjBits[level], 0, 0x100);
+        memset(g_NavSlots[level], 0, 0x100);
+        memset(g_LevelFlags2[level], 0, sizeof(g_LevelFlags2[level]));
+    }
+}
 
 // 0x00e7638 (0x84 bytes)
 void memcard_ResetGame(void)
-
 {
-  LoadMusic2(1);
-  memcard_SetupNewGameGlobals();
-  LoadMusic2(1);
-  g_totalBoltsCollected = 0;
-  DAT_0096ca08 = 0;
-  Level = Veldin;
-  return;
-}
+    LoadMusic2(1);
+    memcard_SetupNewGameGlobals();
+    LoadMusic2(1);
 
+    g_totalBoltsCollected = 0;
+    DAT_0096ca08 = 0;
+    Level = Veldin;
+}
 
 // 0x00e76bc (0x10 bytes)
 int memcard_GetSaveSysState(void)
-
 {
-  return g_memcardSaveSysState;
+    return g_memcardSaveSysState;
 }
-
 
 // 0x00e76cc (0x178 bytes)
+/* Once a frame: the bolt and gold weapon trophies (only for progress made since the load, so a
+   save that already had them doesn't unlock them again), and the save system's error states. */
 void memcard_Update(void)
-
 {
-  int iVar2;
-  undefined8 uVar1;
-  
-  MB_CountGoldBolts();
-  iVar2 = MB_CountGoldWeapons();
-  if ((uint)g_memcardRestoredBolts < g_totalBoltsCollected) {
-    DAT_00a2308d = '\0';
-  }
-  if (DAT_00a23094 < iVar2) {
-    DAT_00a2308e = '\0';
-  }
-  if ((iVar2 == 10) && (DAT_00a2308e != '\x01')) {
-    MB_UnlockTrophy(RACHET_KING_MIDAS);
-  }
-  if ((1000000 < g_totalBoltsCollected) && (DAT_00a2308d != '\x01')) {
-    MB_UnlockTrophy(BOLT_COLLECTOR);
-  }
-  if (g_memcardSaveSysState != 5) {
-    if (((g_FrontEnd == '\0') || (DAT_00a23098 != '\0')) || (g_memcardSaveSysState != 0xb)) {
-      if ((g_FrontEnd != '\0') && (g_memcardSaveSysState == 0xc)) {
+    int goldWeapons;
+
+    MB_CountGoldBolts();
+    goldWeapons = MB_CountGoldWeapons();
+
+    if (g_totalBoltsCollected > (u32)g_memcardRestoredBolts) {
+        g_memcardHadBoltTrophy = 0;
+    }
+
+    if (goldWeapons > g_memcardRestoredGoldWeapons) {
+        g_memcardHadMidasTrophy = 0;
+    }
+
+    if (goldWeapons == 10 && g_memcardHadMidasTrophy != 1) {
+        MB_UnlockTrophy(RACHET_KING_MIDAS);
+    }
+
+    if (g_totalBoltsCollected > 1000000 && g_memcardHadBoltTrophy != 1) {
+        MB_UnlockTrophy(BOLT_COLLECTOR);
+    }
+
+    if (g_memcardSaveSysState == SAVESYS_IDLE) {
+        return;
+    }
+
+    if (g_FrontEnd && !g_memcardFatalShown && g_memcardSaveSysState == SAVESYS_FATAL) {
+        g_memcardFatalShown = 1;
+
+        if (idol::GetSaveData()->state == SAVESYS_FATAL) {
+            SaveData_FatalExit(idol::GetSaveData(), SAVE_FATAL_CODE);
+        }
+    }
+    else if (g_FrontEnd && g_memcardSaveSysState == SAVESYS_NO_SPACE) {
         g_gameMode = GAME_MODE_NORMAL;
         idol::GetSaveData();
-        g_memcardSaveSysState = 5;
-      }
+        g_memcardSaveSysState = SAVESYS_IDLE;
     }
-    else {
-      DAT_00a23098 = '\x01';
-      iVar2 = idol::GetSaveData();
-      if (*(int *)(iVar2 + 0x468) == 0xb) {
-        uVar1 = idol::GetSaveData();
-        FUN_004e7d18(uVar1,0x66);
-      }
-    }
-  }
-  return;
 }
-
 
 // 0x00e7844 (0x8 bytes)
-undefined8 STUB_000e7844(...)
-
+int STUB_000e7844(void)
 {
-  return 0;
+    return 0;
 }
-
 
 // 0x00e784c (0x138 bytes)
-int memcard_PrepData(char *addr,int index,mc_data *mcd)
-
+/* Writes the index'th record of each mcd entry as a chunk list; returns the bytes written. */
+int memcard_PrepData(char *addr, int index, mc_data *mcd)
 {
-  int iVar1;
-  int iVar2;
-  int *piVar3;
-  char *pcVar4;
-  int *piVar5;
-  uint uVar6;
-  int iVar7;
-  
-  pcVar4 = addr + 8;
-  uVar6 = 0;
-  if (mcd->addr != (void *)0x0) {
-    iVar7 = 0;
-    uVar6 = 0;
-    do {
-      piVar5 = (int *)((int)&mcd->size + iVar7);
-      iVar2 = *(int *)((int)&mcd->addr + iVar7);
-      iVar1 = *piVar5;
-      *(undefined4 *)pcVar4 = *(undefined4 *)((int)&mcd->iff + iVar7);
-      *(int *)(pcVar4 + 4) = *piVar5;
-      FastMemCopy32(pcVar4 + 8,iVar2 + index * iVar1,*piVar5);
-      piVar3 = (int *)((int)&mcd[1].addr + iVar7);
-      pcVar4 = (char *)((uint)(pcVar4 + 8 + *piVar5 + 3) & 0xfffffffc);
-      uVar6 = uVar6 + *piVar5 + 0xb & 0xfffffffc;
-      iVar7 = iVar7 + 0x10;
-    } while (*piVar3 != 0);
-  }
-  pcVar4[0] = -1;
-  pcVar4[1] = -1;
-  pcVar4[2] = -1;
-  pcVar4[3] = -1;
-  pcVar4[4] = '\0';
-  pcVar4[5] = '\0';
-  pcVar4[6] = '\0';
-  pcVar4[7] = '\0';
-  addr[4] = '\0';
-  addr[5] = '\0';
-  addr[6] = '\0';
-  addr[7] = '\0';
-  *(uint *)addr = uVar6 + 8;
-  return uVar6 + 0x10;
-}
+    int *chunk = (int *)(addr + 8);
+    int size = 0;
 
+    for (; mcd->addr != NULL; mcd++) {
+        chunk[0] = mcd->iff;
+        chunk[1] = mcd->size;
+        FastMemCopy32(&chunk[2], (char *)mcd->addr + index * mcd->size, mcd->size);
+
+        chunk = (int *)(((u32)&chunk[2] + mcd->size + 3) & ~3);
+        size = (size + mcd->size + 8 + 3) & ~3;
+    }
+
+    chunk[0] = CHUNK_END;
+    chunk[1] = 0;
+
+    ((int *)addr)[1] = 0;
+    ((int *)addr)[0] = size + 8;
+
+    return size + 16;
+}
 
 // 0x00e7984 (0x134 bytes)
 void memcard_MakeWholeSave(char *addr)
-
 {
-  undefined **ppuVar1;
-  int *piVar2;
-  int iVar3;
-  uint uVar4;
-  uint uVar5;
-  undefined **ppuVar6;
-  int index;
-  char *addr_00;
-  
-  uVar4 = 8;
-  ppuVar6 = &mc_gamedata;
-  index = 0;
-  if (mc_gamedata != (undefined *)0x0) {
-    iVar3 = 0;
-    uVar4 = 8;
-    do {
-      ppuVar1 = ppuVar6 + 1;
-      ppuVar6 = ppuVar6 + 4;
-      piVar2 = (int *)(iVar3 + 0x7266a0);
-      uVar4 = (uint)(*ppuVar1 + uVar4 + 0xb) & 0xfffffffc;
-      iVar3 = iVar3 + 0x10;
-    } while (*piVar2 != 0);
-  }
-  uVar5 = 8;
-  ppuVar6 = &mc_leveldata;
-  *(uint *)addr = uVar4 + 8;
-  if (mc_leveldata != (undefined *)0x0) {
-    iVar3 = 0;
-    uVar5 = 8;
-    do {
-      ppuVar1 = ppuVar6 + 1;
-      ppuVar6 = ppuVar6 + 4;
-      piVar2 = (int *)(iVar3 + 0x7269b0);
-      uVar5 = (uint)(*ppuVar1 + uVar5 + 0xb) & 0xfffffffc;
-      iVar3 = iVar3 + 0x10;
-    } while (*piVar2 != 0);
-  }
-  *(uint *)(addr + 4) = uVar5 + 8;
-  iVar3 = memcard_PrepData(addr + 8,0,(mc_data *)&mc_gamedata);
-  addr_00 = addr + 8 + iVar3;
-  do {
-    iVar3 = memcard_PrepData(addr_00,index,(mc_data *)&mc_leveldata);
-    index = index + 1;
-    addr_00 = addr_00 + iVar3;
-  } while (index < 0x14);
-  return;
-}
+    char *levelData;
+    int level;
 
+    ((int *)addr)[0] = memcard_GetDataSize(mc_gamedata);
+    ((int *)addr)[1] = memcard_GetDataSize(mc_leveldata);
+
+    levelData = addr + 8 + memcard_PrepData(addr + 8, 0, mc_gamedata);
+
+    for (level = 0; level < NUM_SAVE_LEVELS; level++) {
+        levelData += memcard_PrepData(levelData, level, mc_leveldata);
+    }
+}
 
 // 0x00e7ab8 (0x10 bytes)
 int memcard_ReturnLang(void)
-
 {
-  return g_Language;
+    return g_Language;
 }
-
 
 // 0x00e7ac8 (0xa4 bytes)
-// strings: 00652bb4: 'rc1/ps3data/global/locale/SaveMsg_UTF8.dat'
-
 void memcard_InitSaveMsg(void)
-
 {
-  undefined8 uVar1;
-  undefined8 uVar2;
-  undefined8 uVar3;
-  
-  cellSysutilCheckCallback();
-  uVar1 = FUN_005038e0();
-  FUN_00503a3c(uVar1,&DAT_00a2088d,1,&PTR_memcard_ReturnLang_00705f10,
-               "rc1/ps3data/global/locale/SaveMsg_UTF8.dat");
-  uVar2 = FUN_00503bd0(uVar1,6000);
-  uVar1 = FUN_00503bd0(uVar1,0x1773);
-  uVar3 = idol::GetSaveData();
-  FUN_004e8148(uVar3,uVar2,uVar1);
-  return;
-}
+    cellSysutilCheckCallback();
 
+    Locale_Load(Locale_GetInstance(), &g_SaveMsgLocale, 1, memcard_ReturnLang,
+                "rc1/ps3data/global/locale/SaveMsg_UTF8.dat");
+
+    memcard_SetSaveDialogStrings();
+}
 
 // 0x00e7b6c (0x24 bytes)
-/* WARNING: Removing unreachable block (ram,0x000e7b88) */
-
-undefined8 STUB_000e7b6c(...)
-
+/* Always 0: the binary tests the save's second word for "== 0 || != 0". Probably a version check
+   whose condition no longer means anything (guess). */
+int STUB_000e7b6c(char *addr)
 {
-  return 0;
-}
+    int value = ((int *)addr)[1];
 
+    return !(value == 0 || value != 0);
+}
 
 // 0x00e7b90 (0x104 bytes)
-/* WARNING: Removing unreachable block (ram,0x000e7bb8) */
-
-void memcard_RestoreInfo(char *addr,int slot,int index)
-
+/* fills the save list entry for one file from the save's header data */
+void memcard_RestoreInfo(char *addr, int slot, int index)
 {
-  undefined4 *puVar1;
-  
-  *(undefined4 *)(index * 0x1c + 0x71fa5c + slot * 0xc0) = 1;
-  (&DAT_0071fa44)[index * 7 + slot * 0x30] = *(undefined4 *)(addr + 0x10);
-  (&DAT_0071fa48)[index * 7 + slot * 0x30] = *(undefined4 *)(addr + 0x1c);
-  puVar1 = (undefined4 *)(index * 0x1c + 0x71fa54 + slot * 0xc0);
-  (&DAT_0071fa4c)[index * 7 + slot * 0x30] = *(undefined4 *)(addr + 0x28);
-  (&DAT_0071fa50)[index * 7 + slot * 0x30] = *(undefined4 *)(addr + 0x34);
-  *puVar1 = *(undefined4 *)(addr + 0x40);
-  puVar1[1] = *(undefined4 *)(addr + 0x44);
-  return;
-}
+    SaveFileInfo *file = &g_SaveCards[slot].files[index];
 
+    file->valid = !STUB_000e7b6c(addr);
+    file->level = *(int *)(addr + 0x10);
+    file->bolts = *(int *)(addr + 0x1c);
+    file->challenge = *(int *)(addr + 0x28);
+    file->frames = *(int *)(addr + 0x34);
+    file->unk10 = *(u32 *)(addr + 0x40);
+    file->unk14 = *(u32 *)(addr + 0x44);
+}
 
 // 0x00e7c94 (0xb4 bytes)
-// strings: 00652be0: 'FAILZ!'
-
-
-char * memcard_GetSaveMsgString(int idx)
-
+/* len is never written (a leftover; the callers pass a zeroed int and use it as an offset) */
+char *memcard_GetSaveMsgString(int idx, int *len)
 {
-  undefined8 uVar1;
-  char *pcVar2;
-  
-  if (idx < 2) {
-    if (-1 < idx) {
-      if (0 < idx) {
-        uVar1 = FUN_005038e0();
-        pcVar2 = (char *)FUN_00503bd0(uVar1,2000);
-        return pcVar2;
-      }
-      uVar1 = FUN_005038e0();
-      pcVar2 = (char *)FUN_00503bd0(uVar1,1000);
-      return pcVar2;
+    switch (idx) {
+    case 0:
+        return Locale_GetString(Locale_GetInstance(), SAVEMSG_PLAYTIME);
+    case 1:
+        return Locale_GetString(Locale_GetInstance(), SAVEMSG_CHALLENGE);
+    case 2:
+        return Locale_GetString(Locale_GetInstance(), SAVEMSG_SUBTITLE);
+    case 3:
+        return Locale_GetString(Locale_GetInstance(), SAVEMSG_BOLTS);
     }
-  }
-  else {
-    if (idx < 3) {
-      uVar1 = FUN_005038e0();
-      pcVar2 = (char *)FUN_00503bd0(uVar1,0x1773);
-      return pcVar2;
-    }
-    if (idx < 4) {
-      uVar1 = FUN_005038e0();
-      pcVar2 = (char *)FUN_00503bd0(uVar1,3000);
-      return pcVar2;
-    }
-  }
-  return "FAILZ!";
-}
 
+    return "FAILZ!";
+}
 
 // 0x00e7d48 (0x110 bytes)
-void memcard_ConvertSaveMsgString(char *str,void *arg)
-
+/* converts str for the save system into the next of five rotating buffers */
+char *memcard_ConvertSaveMsgString(char *str, int *outLen)
 {
-  char cVar1;
-  undefined8 uVar2;
-  int iVar3;
-  uint uVar4;
-  
-  uVar4 = 0;
-  cVar1 = *str;
-  while (cVar1 != '\0') {
-    uVar4 = uVar4 + 1;
-    cVar1 = str[uVar4];
-  }
-  if (g_JapaneseMode) {
-    uVar4 = ((int)uVar4 >> 1) + (uint)((int)uVar4 < 0 && (uVar4 & 1) != 0);
-  }
-  iVar3 = g_memcardStrBufIdx * 0x400;
-  g_memcardStrBufIdx = (g_memcardStrBufIdx + 1) % 5;
-  memset(g_memcardStrBufs + iVar3,0,0x400);
-  uVar2 = FUN_005038e0();
-  FUN_00503ccc(uVar2,str,uVar4,g_memcardStrBufs + iVar3,0x400,arg);
-  return;
-}
+    char *out;
+    int len = 0;
 
+    while (str[len] != '\0') {
+        len++;
+    }
+
+    if (g_JapaneseMode) {
+        len /= 2;
+    }
+
+    out = g_memcardStrBufs[g_memcardStrBufIdx];
+    g_memcardStrBufIdx = (g_memcardStrBufIdx + 1) % NUM_SAVE_STRBUFS;
+    memset(out, 0, SAVE_STRBUF_SIZE);
+
+    return Locale_Convert(Locale_GetInstance(), str, len, out, SAVE_STRBUF_SIZE, outLen);
+}
 
 // 0x00e7e58 (0x338 bytes)
-char * memcard_FixupAccentChars(char *str)
-
+/* The game's font encodes accented letters at 0x81-0xc5; the save system wants Latin-1.
+   0x82 and 0x88 both become 0xc9 in the binary. */
+char *memcard_FixupAccentChars(char *str)
 {
-  char cVar1;
-  byte bVar2;
-  int iVar3;
-  
-  cVar1 = *str;
-  iVar3 = 0;
-  do {
-    if (cVar1 == '\0') {
-      return str;
-    }
-    bVar2 = str[iVar3];
-    if (0x80 < bVar2) {
-      if (bVar2 < 0x97) {
-        if (bVar2 < 0x8b) {
-          if (bVar2 < 0x85) {
-            if (bVar2 < 0x82) {
-              if (0x80 < bVar2) {
-                str[iVar3] = -0x40;
-              }
-            }
-            else if (bVar2 < 0x83) {
-LAB_000e8098:
-              str[iVar3] = -0x37;
-            }
-            else if (bVar2 < 0x84) {
-              str[iVar3] = -0x3c;
-            }
-            else {
-              str[iVar3] = -0x1f;
-            }
-          }
-          else if (bVar2 < 0x88) {
-            if (bVar2 < 0x86) {
-              str[iVar3] = -0x20;
-            }
-            else if (bVar2 < 0x87) {
-              str[iVar3] = -0x1e;
-            }
-            else {
-              str[iVar3] = -0x1c;
-            }
-          }
-          else {
-            if (bVar2 < 0x89) goto LAB_000e8098;
-            if (bVar2 < 0x8a) {
-              str[iVar3] = -0x38;
-            }
-            else {
-              str[iVar3] = -0x36;
-            }
-          }
-        }
-        else if (bVar2 == 0x96) {
-          str[iVar3] = -0x12;
-        }
-        else if (bVar2 == 0x95) {
-          str[iVar3] = -0x14;
-        }
-        else if (bVar2 == 0x92) {
-          str[iVar3] = -0x32;
-        }
-        else if (bVar2 == 0x91) {
-          str[iVar3] = -0x34;
-        }
-        else if (bVar2 != 0x8f) {
-          if (bVar2 == 0x8e) {
-            str[iVar3] = -0x16;
-          }
-          else if (bVar2 == 0x8d) {
-            str[iVar3] = -0x18;
-          }
-          else if (bVar2 == 0x8c) {
-            str[iVar3] = -0x17;
-          }
-        }
-      }
-      else if (bVar2 < 0xa4) {
-        if (bVar2 < 0x9d) {
-          if (bVar2 < 0x99) {
-            if (bVar2 < 0x98) {
-              str[iVar3] = -0x11;
-            }
-            else {
-              str[iVar3] = -0x2d;
-            }
-          }
-          else if (0x9a < bVar2) {
-            if (bVar2 < 0x9c) {
-              str[iVar3] = -0x2a;
-            }
-            else {
-              str[iVar3] = -0xd;
-            }
-          }
-        }
-        else if (bVar2 < 0xa0) {
-          if (bVar2 < 0x9e) {
-            str[iVar3] = -0xe;
-          }
-          else if (bVar2 < 0x9f) {
-            str[iVar3] = -0xc;
-          }
-          else {
-            str[iVar3] = -10;
-          }
-        }
-        else if (bVar2 < 0xa1) {
-          str[iVar3] = -0x26;
-        }
-        else if (0xa2 < bVar2) {
-          str[iVar3] = -0x24;
-        }
-      }
-      else if (bVar2 < 0xaa) {
-        if (bVar2 < 0xa7) {
-          if (bVar2 < 0xa6) {
-            str[iVar3] = -7;
-          }
-          else {
-            str[iVar3] = -5;
-          }
-        }
-        else if (bVar2 < 0xa8) {
-          str[iVar3] = -4;
-        }
-        else if (bVar2 < 0xa9) {
-          str[iVar3] = -0x2f;
-        }
-        else {
-          str[iVar3] = -0xf;
-        }
-      }
-      else if (bVar2 < 0xad) {
-        if (bVar2 < 0xab) {
-          str[iVar3] = -0x39;
-        }
-        else if (bVar2 < 0xac) {
-          str[iVar3] = -0x19;
-        }
-        else {
-          str[iVar3] = -0x21;
-        }
-      }
-      else if (bVar2 == 0xc5) {
-        str[iVar3] = -0x4c;
-      }
-    }
-    iVar3 = iVar3 + 1;
-    cVar1 = str[iVar3];
-  } while( true );
-}
+    int i;
 
+    for (i = 0; str[i] != '\0'; i++) {
+        switch ((u8)str[i]) {
+        case 0x81:
+            str[i] = 0xc0;
+            break;
+        case 0x82:
+            str[i] = 0xc9;
+            break;
+        case 0x83:
+            str[i] = 0xc4;
+            break;
+        case 0x84:
+            str[i] = 0xe1;
+            break;
+        case 0x85:
+            str[i] = 0xe0;
+            break;
+        case 0x86:
+            str[i] = 0xe2;
+            break;
+        case 0x87:
+            str[i] = 0xe4;
+            break;
+        case 0x88:
+            str[i] = 0xc9;
+            break;
+        case 0x89:
+            str[i] = 0xc8;
+            break;
+        case 0x8a:
+            str[i] = 0xca;
+            break;
+        case 0x8c:
+            str[i] = 0xe9;
+            break;
+        case 0x8d:
+            str[i] = 0xe8;
+            break;
+        case 0x8e:
+            str[i] = 0xea;
+            break;
+        case 0x91:
+            str[i] = 0xcc;
+            break;
+        case 0x92:
+            str[i] = 0xce;
+            break;
+        case 0x95:
+            str[i] = 0xec;
+            break;
+        case 0x96:
+            str[i] = 0xee;
+            break;
+        case 0x97:
+            str[i] = 0xef;
+            break;
+        case 0x98:
+            str[i] = 0xd3;
+            break;
+        case 0x9b:
+            str[i] = 0xd6;
+            break;
+        case 0x9c:
+            str[i] = 0xf3;
+            break;
+        case 0x9d:
+            str[i] = 0xf2;
+            break;
+        case 0x9e:
+            str[i] = 0xf4;
+            break;
+        case 0x9f:
+            str[i] = 0xf6;
+            break;
+        case 0xa0:
+            str[i] = 0xda;
+            break;
+        case 0xa3:
+            str[i] = 0xdc;
+            break;
+        case 0xa4:
+        case 0xa5:
+            str[i] = 0xf9;
+            break;
+        case 0xa6:
+            str[i] = 0xfb;
+            break;
+        case 0xa7:
+            str[i] = 0xfc;
+            break;
+        case 0xa8:
+            str[i] = 0xd1;
+            break;
+        case 0xa9:
+            str[i] = 0xf1;
+            break;
+        case 0xaa:
+            str[i] = 0xc7;
+            break;
+        case 0xab:
+            str[i] = 0xe7;
+            break;
+        case 0xac:
+            str[i] = 0xdf;
+            break;
+        case 0xc5:
+            str[i] = 0xb4;
+            break;
+        }
+    }
+
+    return str;
+}
 
 // 0x00e8190 (0xd8 bytes)
-// strings: 00652bf0: '%s %s'
-
-int memcard_ConstructPlanetString(char *buf,int id)
-
+/* "Planet <name>", or just the name for the places that aren't planets */
+int memcard_ConstructPlanetString(char *buf, int id)
 {
-  undefined8 uVar1;
-  undefined8 uVar2;
-  int iVar3;
-  StringId helpmsg;
-  
-  helpmsg = id + STR_PLANET;
-  if ((id == 0xc || id == 0x10) || (id == 6)) {
-    uVar1 = help_msg_string_by_index(helpmsg);
-    iVar3 = snprintf(buf,"%s",uVar1);
-  }
-  else {
-    if (id == 0) {
-      helpmsg = STR_VELDIN;
-    }
-    uVar1 = help_msg_string_by_index(STR_PLANET);
-    uVar2 = help_msg_string_by_index(helpmsg);
-    iVar3 = snprintf(buf,"%s %s",uVar1,uVar2);
-  }
-  return iVar3;
-}
+    StringId name = (StringId)(STR_PLANET + id);
 
+    if (id == Hoven || id == Kalebo || id == Blarg) {
+        return sprintf(buf, "%s", help_msg_string_by_index(name));
+    }
+
+    if (id == Veldin) {
+        name = STR_VELDIN;
+    }
+
+    return sprintf(buf, "%s %s", help_msg_string_by_index(STR_PLANET), help_msg_string_by_index(name));
+}
 
 // 0x00e8268 (0x590 bytes)
-// strings: 00652c08: '%s %d' | 00652c10: ' - %s%d:%s%d\n%s: %d\n%s' | 00652bf0: '%s %s' | 00652c28: 'Ratchet & Clank' | 00652c38: '%s - %s' | 00652c40: '%s\n%s %s%d:%s%d\n%s: %d\n%s%s%s'
-
-
-char * memcard_ConstructSaveString(char *buf)
-
+/* the description shown with the save: place, play time, bolts, challenge mode */
+char *memcard_ConstructSaveString(char *buf)
 {
-  char cVar1;
-  undefined *puVar2;
-  char *pcVar5;
-  char *pcVar6;
-  char *pcVar7;
-  undefined8 uVar3;
-  undefined8 uVar4;
-  int iVar8;
-  StringId helpmsg;
-  uint uVar9;
-  LevelId LVar10;
-  int iVar11;
-  longlong lVar12;
-  GPiece<4> local_1c4;
-  char acStack_1c0 [8];
-  char acStack_1b8 [8];
-  char acStack_1b0 [64];
-  char acStack_170 [64];
-  byte local_130 [64];
-  char acStack_f0 [136];
-  
-  iVar8 = g_FrameCount / 0x34bc0;
-  lVar12 = (longlong)iVar8;
-  iVar11 = g_FrameCount / 0xe10 - ((int)(lVar12 << 6) - (int)(lVar12 << 2));
-  if (iVar11 < 10) {
-    puVar2 = &DAT_00652bf8;
-  }
-  else {
-    puVar2 = &DAT_00652c00;
-  }
-  snprintf(acStack_1c0,"%s",puVar2);
-  if (iVar8 < 10) {
-    puVar2 = &DAT_00652bf8;
-  }
-  else {
-    puVar2 = &DAT_00652c00;
-  }
-  snprintf(acStack_1b8,"%s",puVar2);
-  LVar10 = Level;
-  if (g_JapaneseMode == false) {
-    pcVar5 = memcard_GetSaveMsgString(1);
-    snprintf(acStack_170,"%s %d",pcVar5,g_ChallengeMode);
-    if (g_FrontEnd != '\0') {
-      LVar10 = LVar10 + Novalis;
-    }
-    if (((int)LVar10 < 0) || (0x12 < (int)LVar10)) {
-      snprintf(acStack_1b0,"Ratchet & Clank");
+    char minutePad[8];
+    char hourPad[8];
+    char planet[64];
+    char challenge[64];
+    char boltsLabel[64];
+    char place[136];
+    int hours = (int)g_FrameCount / FRAMES_PER_HOUR;
+    int minutes = (int)g_FrameCount / FRAMES_PER_MINUTE - hours * 60;
+
+    sprintf(minutePad, "%s", minutes < 10 ? "0" : "");
+    sprintf(hourPad, "%s", hours < 10 ? "0" : "");
+
+    if (!g_JapaneseMode) {
+        int len = 0;
+        int level = Level;
+        int language;
+        char *title;
+        char *newline;
+        char *digital;
+        u8 noDigitalLine;
+
+        sprintf(challenge, "%s %d", memcard_GetSaveMsgString(1, &len), (int)g_ChallengeMode);
+
+        if (g_FrontEnd) {
+            level++;
+        }
+
+        if (level < 0 || level > Veldin2) {
+            sprintf(planet, "Ratchet & Clank");
+        }
+        else {
+            memcard_ConstructPlanetString(planet, level);
+        }
+
+        sprintf(boltsLabel, "%s", memcard_GetSaveMsgString(3, &len));
+
+        if (boltsLabel[0] >= 'a' && boltsLabel[0] <= 'z') {
+            boltsLabel[0] -= 'a' - 'A';
+        }
+
+        sprintf(place, "%s - %s", help_msg_string_by_index((StringId)(STR_KYZIL_PLATEAU + level)), planet);
+        title = memcard_ConvertSaveMsgString(memcard_FixupAccentChars(place), &len);
+
+        noDigitalLine = FUN_00504d90(g_pHWSystem);
+
+        language = g_Language;
+
+        if (language != 0) {
+            language--;
+        }
+
+        if (noDigitalLine) {
+            newline = "";
+            digital = "";
+        }
+        else {
+            newline = "\n";
+            digital = (char *)s_DigitalNames[language];
+        }
+
+        sprintf(buf, "%s\n%s %s%d:%s%d\n%s: %d\n%s%s%s", title, memcard_GetSaveMsgString(0, &len),
+                hourPad, hours, minutePad, minutes, boltsLabel, (int)g_boltCount,
+                (int)g_ChallengeMode > 0 ? challenge : "", newline, digital);
     }
     else {
-      helpmsg = LVar10 + 0x4ecc;
-      if (((LVar10 == Kalebo) || (LVar10 == Hoven)) || (LVar10 == Blarg)) {
-        uVar3 = help_msg_string_by_index(helpmsg);
-        snprintf(acStack_1b0,"%s",uVar3);
-      }
-      else {
-        if (LVar10 == Veldin) {
-          helpmsg = STR_VELDIN;
-        }
-        uVar3 = help_msg_string_by_index(STR_PLANET);
-        uVar4 = help_msg_string_by_index(helpmsg);
-        snprintf(acStack_1b0,"%s %s",uVar3,uVar4);
-      }
-    }
-    pcVar5 = memcard_GetSaveMsgString(3);
-    snprintf((char *)local_130,"%s",pcVar5);
-    if ((0x60 < local_130[0]) && (local_130[0] < 0x7b)) {
-      local_130[0] = local_130[0] - 0x20;
-    }
-    uVar3 = help_msg_string_by_index(LVar10 + 0x4eb9);
-    snprintf(acStack_f0,"%s - %s",uVar3,acStack_1b0);
-    pcVar5 = memcard_FixupAccentChars(acStack_f0);
-    uVar9 = 0;
-    cVar1 = *pcVar5;
-    while (cVar1 != '\0') {
-      uVar9 = uVar9 + 1;
-      cVar1 = pcVar5[uVar9];
-    }
-    if (g_JapaneseMode != false) {
-      uVar9 = ((int)uVar9 >> 1) + (uint)((int)uVar9 < 0 && (uVar9 & 1) != 0);
-    }
-    iVar8 = g_memcardStrBufIdx * 0x400;
-    g_memcardStrBufIdx = (g_memcardStrBufIdx + 1) % 5;
-    memset(g_memcardStrBufs + iVar8,0,0x400);
-    uVar3 = FUN_005038e0();
-    uVar3 = FUN_00503ccc(uVar3,pcVar5,uVar9,g_memcardStrBufs + iVar8,0x400,local_1c4);
-    FUN_00504d90(g_pHWSystem);
-    pcVar5 = memcard_GetSaveMsgString(0);
-    snprintf(buf,"%s\n%s %s%d:%s%d\n%s: %d\n%s%s%s",uVar3,pcVar5,acStack_1b8,lVar12,
-                   acStack_1c0,iVar11);
-  }
-  else {
-    pcVar5 = memcard_GetSaveMsgString(0);
-    pcVar6 = memcard_GetSaveMsgString(3);
-    pcVar7 = memcard_GetSaveMsgString(1);
-    snprintf(acStack_170,"%s %d",pcVar7,g_ChallengeMode);
-    strcpy(buf,pcVar5);
-    snprintf(buf," - %s%d:%s%d\n%s: %d\n%s",acStack_1b8,lVar12,acStack_1c0,iVar11,pcVar6,
-                   g_boltCount);
-  }
-  return buf;
-}
+        int timeLen = 0;
+        int boltsLen = 0;
+        int challengeLen = 0;
+        char *timeLabel = memcard_GetSaveMsgString(0, &timeLen);
+        char *bolts = memcard_GetSaveMsgString(3, &boltsLen);
 
+        sprintf(challenge, "%s %d", memcard_GetSaveMsgString(1, &challengeLen), (int)g_ChallengeMode);
+        strcpy(buf, timeLabel);
+        sprintf(buf + timeLen, " - %s%d:%s%d\n%s: %d\n%s", hourPad, hours, minutePad, minutes, bolts,
+                (int)g_boltCount, (int)g_ChallengeMode > 0 ? challenge : "");
+    }
+
+    return buf;
+}
 
 // 0x00e87f8 (0x74 bytes)
 void memcard_SetSaveDialogStrings(void)
-
 {
-  undefined8 uVar1;
-  undefined8 uVar2;
-  undefined8 uVar3;
-  
-  uVar1 = FUN_005038e0();
-  uVar1 = FUN_00503bd0(uVar1,6000);
-  uVar2 = FUN_005038e0();
-  uVar2 = FUN_00503bd0(uVar2,0x1773);
-  uVar3 = idol::GetSaveData();
-  FUN_004e8148(uVar3,uVar2,uVar1);
-  return;
-}
+    char *title = Locale_GetString(Locale_GetInstance(), SAVEMSG_TITLE);
+    char *subtitle = Locale_GetString(Locale_GetInstance(), SAVEMSG_SUBTITLE);
 
+    SaveData_SetDialogStrings(idol::GetSaveData(), subtitle, title);
+}
 
 // 0x00e886c (0x1c bytes)
 int memcard_IsSaveSystemIdle(void)
-
 {
-  return (uint)(g_memcardSaveBusy == 0);
+    return g_memcardSaveBusy == 0;
 }
-
 
 // 0x00e8888 (0x21c bytes)
-// strings: 00a244a8: 'None'
-
+/* Starts a save system operation. For a save, builds the description and the save data (a meg
+   into the save buffer) first; the level saved is the one being loaded, if any. */
 void memcard_PerformOperation(int mode)
-
 {
-  undefined4 uVar1;
-  LevelId LVar2;
-  int iVar3;
-  int iVar7;
-  undefined8 uVar4;
-  undefined8 uVar5;
-  undefined8 uVar6;
-  LevelId LVar8;
-  char *pcVar9;
-  char *addr;
-  
-  if (g_memcardSaveBusy != 0) {
-    return;
-  }
-  iVar7 = idol::GetSaveData();
-  uVar1 = *(undefined4 *)(iVar7 + 0x46c);
-  memset(g_memcardSaveString,0,0x100);
-  uVar4 = FUN_005038e0();
-  uVar4 = FUN_00503bd0(uVar4,6000);
-  uVar5 = FUN_005038e0();
-  uVar5 = FUN_00503bd0(uVar5,0x1773);
-  uVar6 = idol::GetSaveData();
-  FUN_004e8148(uVar6,uVar5,uVar4);
-  if (g_FrontEnd != '\0') {
-    *(undefined4 *)(iVar7 + 0x460) = 1;
-  }
-  iVar3 = SaveDataPtr;
-  LVar2 = Level;
-  addr = (char *)(SaveDataPtr + 0x100000);
-  if (mode != 4) {
-    if (mode != 3) {
-      if (mode == 2) {
-        return;
-      }
-      if (mode == 1) goto LAB_000e8a34;
-      if (mode != 0) {
-        return;
-      }
-    }
-    if (g_loadingPlanet != 0) {
-      Level = g_newlevelnum;
-    }
-    LVar8 = Level;
-    if ((int)Level < 0) {
-      LVar8 = Veldin;
-    }
-    *(LevelId *)(iVar7 + 0x1c) = LVar8;
-    pcVar9 = memcard_ConstructSaveString(g_memcardSaveString);
-    FUN_004e80d8(iVar7,pcVar9);
-    DAT_008fabb4 = iVar3;
-    Map_SaveRevealMask(&DAT_0096ca34 + Level * 0x8000);
-    memset(addr,0xf,uVar1);
-    memcard_MakeWholeSave(addr);
-  }
-LAB_000e8a34:
-  Level = LVar2;
-  idol::SaveSystem_PS::RunSaveSystem
-            (iVar7,mode,addr,uVar1,&PTR_memcard_printGameSaved_00705f88,
-             &PTR_memcard_print_SavingGameCB_PS3_00705f90,&PTR_memcard_RestoreSaveGame_00705f80,
-             &PTR_memcard_print_LoadingCB_PS3_00705f98);
-  return;
-}
+    SaveDataInfo *save;
+    int saveSize;
+    char *data;
+    LevelId realLevel;
 
+    if (g_memcardSaveBusy != 0) {
+        return;
+    }
+
+    save = idol::GetSaveData();
+    saveSize = save->dataSize;
+    memset(g_memcardSaveString, 0, sizeof(g_memcardSaveString));
+    memcard_SetSaveDialogStrings();
+
+    if (g_FrontEnd) {
+        save->flags = SAVEDATA_FLAG_LOADED;
+    }
+
+    data = SaveDataPtr + 0x100000;
+
+    switch (mode) {
+    case MC_OP_SAVE_NEW:
+    case MC_OP_SAVE:
+        realLevel = Level;
+
+        if (g_loadingPlanet) {
+            Level = (LevelId)g_newlevelnum;
+        }
+
+        save->level = Level < 0 ? Veldin : Level;
+        SaveData_SetTitle(save, memcard_ConstructSaveString(g_memcardSaveString));
+
+        g_pSaveBuffer = SaveDataPtr;
+        Map_SaveRevealMask(g_MapRevealMasks[Level]);
+        memset(data, 0xf, saveSize);
+        memcard_MakeWholeSave(data);
+
+        Level = realLevel;
+        break;
+    case MC_OP_LOAD:
+    case MC_OP_LIST:
+        break;
+    default:
+        return;
+    }
+
+    idol::SaveSystem_PS::RunSaveSystem(save, mode, data, saveSize, memcard_printGameSaved,
+                                       memcard_print_SavingGameCB_PS3, memcard_RestoreSaveGame,
+                                       memcard_print_LoadingCB_PS3);
+}
 
 // 0x00e8aa4 (0x1c4 bytes)
-// strings: 0071f9ba: '/BASCUS-97199RATCHET/static.ico' | 0071f99c: '/BASCUS-97199RATCHET/icon.sys' | 0071f9da: '/BASCUS-97199RATCHET/BASCUS-97199RATCHET'
-
-
-int memcard_Save(int force,int level)
-
+/* Saves the game; level >= 0 saves as if on that level (marking it visited only for the save).
+   Returns 0 if not on a real level. */
+int memcard_Save(int force, int level)
 {
-  LevelId LVar1;
-  undefined4 uVar2;
-  undefined4 uVar3;
-  int iVar4;
-  char cVar5;
-  
-  if ((int)Level < 0x14) {
-    Map_SaveLevelObjectState();
-    Map_SaveRevealMask(&DAT_0096ca34 + Level * 0x8000);
-    g_memcardGameSaved = g_memcardGameSaved | force;
-    if (g_memcardGameSaved == 0) {
-      if (force != 0) {
-        memcard_PerformOperation(0);
-      }
-    }
-    else {
-      if (force == 0) {
-        g_CardStateFlags = g_CardStateFlags | 0x200;
-      }
-      cVar5 = '\0';
-      g_CardStateFlags = g_CardStateFlags | 0x200;
-      DAT_0071faf4 = Level;
-      if (-1 < level) {
-        cVar5 = (&VisitedPlanets.Veldin)[level];
-        Level = level;
-        if ((&VisitedPlanets.Veldin)[level] == '\0') {
-          (&VisitedPlanets.Veldin)[level] = '\x01';
-        }
-      }
-      LVar1 = Level;
-      iVar4 = DAT_0071fa38;
-      (&DAT_0071fa48)[DAT_0071fa38 * 7] = g_boltCount;
-      uVar3 = g_FrameCount;
-      uVar2 = g_ChallengeMode;
-      (&DAT_0071fa44)[iVar4 * 7] = LVar1;
-      (&DAT_0071fa4c)[iVar4 * 7] = uVar2;
-      (&DAT_0071fa50)[iVar4 * 7] = uVar3;
-      if (-1 < level) {
-        Level = DAT_0071faf4;
-        (&VisitedPlanets.Veldin)[LVar1] = cVar5;
-      }
-      memcard_PerformOperation(3);
-    }
-    iVar4 = 1;
-  }
-  else {
-    iVar4 = 0;
-  }
-  return iVar4;
-}
+    SaveFileInfo *file;
+    u8 wasVisited = 0;
 
+    if (Level >= NUM_SAVE_LEVELS) {
+        return 0;
+    }
+
+    Map_SaveLevelObjectState();
+    Map_SaveRevealMask(g_MapRevealMasks[Level]);
+
+    g_memcardGameSaved |= force;
+
+    if (g_memcardGameSaved) {
+        if (!force) {
+            g_CardStateFlags |= 0x200;
+        }
+
+        g_CardStateFlags |= 0x200;
+        g_SaveRealLevel = Level;
+
+        if (level >= 0) {
+            Level = (LevelId)level;
+            wasVisited = (&VisitedPlanets.Veldin)[level];
+
+            if (!(&VisitedPlanets.Veldin)[level]) {
+                (&VisitedPlanets.Veldin)[level] = 1;
+            }
+        }
+
+        file = &g_SaveCards[0].files[g_SaveCurFile];
+        file->bolts = g_boltCount;
+        file->level = Level;
+        file->challenge = g_ChallengeMode;
+        file->frames = g_FrameCount;
+
+        if (level >= 0) {
+            (&VisitedPlanets.Veldin)[Level] = wasVisited;
+            Level = (LevelId)g_SaveRealLevel;
+        }
+
+        memcard_PerformOperation(MC_OP_SAVE);
+    }
+    else if (force) {
+        memcard_PerformOperation(MC_OP_SAVE_NEW);   /* unreachable: force was or'ed in above */
+    }
+
+    return 1;
+}
 
 // 0x00e8c68 (0x38 bytes)
-// strings: 00652c64: 'User agrees.  Time for the pain!\n'
-
-void memcard_print_TimeForPain(void)
-
+/* cellMsgDialog callback for the confirmation after a load */
+void memcard_print_TimeForPain(int buttonType, void *userData)
 {
-  print_tty2("User agrees.  Time for the pain!\n");
-  g_memcardWaitDialog = 0;
-  return;
+    print_tty2("User agrees.  Time for the pain!\n");
+    g_memcardWaitDialog = 0;
 }
-
 
 // 0x00e8ca0 (0x280 bytes)
-// strings: 00652c88: ' Restoring saved game...\n' | 00652ca8: '\n Restored game from Idol/memcard.cpp \n'
-
-undefined8 memcard_RestoreSaveGame(undefined8 param_1,char *param_2)
-
+/* Load callback: result 0 = loaded (data is the save), 1 = canceled, else failed: start a new
+   game from the beginning. */
+int memcard_RestoreSaveGame(int result, char *data)
 {
-  undefined8 uVar1;
-  undefined8 uVar2;
-  undefined8 uVar3;
-  int iVar4;
-  
-  memset(&g_memcardRestoredBolts,0,8);
-  memset(&DAT_00a2308d,0,2);
-  printf(" Restoring saved game...\n");
-  if ((int)param_1 == 0) {
-    memcard_RestoreGame(param_2);
-    g_memcardRestoredBolts = g_totalBoltsCollected;
-    if (999999 < g_totalBoltsCollected) {
-      DAT_00a2308d = 1;
-    }
-    DAT_00a23094 = MB_CountGoldWeapons();
-    if (DAT_00a23094 == 10) {
-      DAT_00a2308e = 1;
-    }
-    if (*(char *)(g_viewMtxPtr + 0x185a4) == '\0') {
-      DAT_00a52e64 = 0;
-    }
-    else {
-      FUN_004d6f50(g_viewMtxPtr,DAT_00a52e64);
-    }
-    g_memcardGameSaved = 1;
-    print_tty2("\n Restored game from Idol/memcard.cpp \n");
-    uVar1 = FUN_005038e0();
-    uVar1 = FUN_00503bd0(uVar1,6000);
-    uVar2 = FUN_005038e0();
-    uVar2 = FUN_00503bd0(uVar2,0x1773);
-    uVar3 = idol::GetSaveData();
-    FUN_004e8148(uVar3,uVar2,uVar1);
-    iVar4 = idol::GetSaveData();
-    if ((*(uint *)(iVar4 + 0x460) & 1) == 0) {
-      *(undefined1 *)(TrophyMgr + 0x18c) = 0;
-      uVar1 = FUN_005038e0();
-      uVar1 = FUN_00503bd0(uVar1,5000);
-      cellMsgDialogOpen2(1,uVar1,&PTR_memcard_print_TimeForPain_00705f78,0,0);
-      g_memcardWaitDialog = 1;
-      do {
-        UpdatePad();
-        UpdateOcclusion(0);
-        cellSysutilCheckCallback();
-        Render_DispatchJob();
-      } while (g_memcardWaitDialog == 1);
-    }
-  }
-  else if ((int)param_1 != 1) {
-    g_memcardGameSaved = 0;
-    g_newlevelnum = 0xffffffff;
-    g_loadingPlanet = 1;
-    g_CutscenePlaying = 1;
-  }
-  return param_1;
-}
+    memset(&g_memcardRestoredBolts, 0, 8);          /* and g_memcardRestoredGoldWeapons */
+    memset(&g_memcardHadBoltTrophy, 0, 2);          /* and g_memcardHadMidasTrophy */
+    printf(" Restoring saved game...\n");
 
+    if (result == 0) {
+        memcard_RestoreGame(data);
+
+        g_memcardRestoredBolts = g_totalBoltsCollected;
+
+        if (g_memcardRestoredBolts >= 1000000) {
+            g_memcardHadBoltTrophy = 1;
+        }
+
+        g_memcardRestoredGoldWeapons = MB_CountGoldWeapons();
+
+        if (g_memcardRestoredGoldWeapons == 10) {
+            g_memcardHadMidasTrophy = 1;
+        }
+
+        if (*((u8 *)g_viewMtxPtr + 0x185a4) == 0) {
+            DAT_00a52e64 = 0;
+        }
+        else {
+            FUN_004d6f50(g_viewMtxPtr, DAT_00a52e64);
+        }
+
+        g_memcardGameSaved = 1;
+        print_tty2("\n Restored game from Idol/memcard.cpp \n");
+        memcard_SetSaveDialogStrings();
+
+        if (!(idol::GetSaveData()->flags & SAVEDATA_FLAG_LOADED)) {
+            *((u8 *)TrophyMgr + 0x18c) = 0;
+            cellMsgDialogOpen2(CELL_MSGDIALOG_TYPE_SE_TYPE_NORMAL,
+                               Locale_GetString(Locale_GetInstance(), SAVEMSG_CONFIRM),
+                               memcard_print_TimeForPain, NULL, NULL);
+
+            g_memcardWaitDialog = 1;
+
+            do {
+                UpdatePad();
+                UpdateOcclusion(0);
+                cellSysutilCheckCallback();
+                Render_DispatchJob();
+            } while (g_memcardWaitDialog == 1);
+        }
+    }
+    else if (result != 1) {
+        g_memcardGameSaved = 0;
+        g_newlevelnum = -1;
+        g_loadingPlanet = 1;
+        g_CutscenePlaying = 1;
+    }
+
+    return result;
+}
 
 // 0x00e8f20 (0x4c bytes)
-// strings: 00652cd0: '\n Game has been saved!\n'
-
-undefined8 memcard_printGameSaved(undefined8 param_1)
-
+int memcard_printGameSaved(int result)
 {
-  printf("\n Game has been saved!\n");
-  g_memcardGameSaved = 1;
-  return param_1;
-}
+    printf("\n Game has been saved!\n");
+    g_memcardGameSaved = 1;
 
+    return result;
+}
 
 // 0x00e8f6c (0x30 bytes)
-// strings: 00652ce8: '###### PS3_SavingGame Callback in Idol/memcard.cpp####\n'
-
-undefined8 memcard_print_SavingGameCB_PS3(void)
-
+int memcard_print_SavingGameCB_PS3(int result)
 {
-  print_tty2("###### PS3_SavingGame Callback in Idol/memcard.cpp####\n");
-  return 0;
-}
+    print_tty2("###### PS3_SavingGame Callback in Idol/memcard.cpp####\n");
 
+    return 0;
+}
 
 // 0x00e8f9c (0x3c bytes)
-// strings: 00652d20: '####### LoadingCB_PS3 Callback has been called#####\n'
-
-undefined8 memcard_print_LoadingCB_PS3(undefined8 param_1)
-
+int memcard_print_LoadingCB_PS3(int result)
 {
-  print_tty2("####### LoadingCB_PS3 Callback has been called#####\n");
-  return param_1;
-}
+    print_tty2("####### LoadingCB_PS3 Callback has been called#####\n");
 
+    return result;
+}
 
 // 0x00e8fd8 (0x13c bytes)
+/* Once the save system is idle, the result of the last operation, reported once: -1 busy or
+   already reported, 0 nothing, 1 canceled, 2 error, else the save/load callback's result. */
 int memcard_PollSaveResult(void)
-
 {
-  int iVar1;
-  
-  if ((g_memcardSaveBusy != 0) || (g_memcardPollDone != '\0')) {
-    return -1;
-  }
-  if (g_memcardSaveSysState != 0xc) {
-    if (g_memcardSaveSysState != 0xb) {
-      if (g_memcardSaveSysState == 6) {
-        g_memcardPollDone = '\x01';
+    int result;
+
+    if (g_memcardSaveBusy != 0 || g_memcardPollDone) {
+        return -1;
+    }
+
+    switch (g_memcardSaveSysState) {
+    case SAVESYS_FATAL:
+        g_memcardPollDone = 1;
+
+        if (idol::GetSaveData()->state == SAVESYS_FATAL) {
+            g_memcardFatalError = 1;
+        }
+
+        /* fall through */
+    case SAVESYS_NO_SPACE:
+        g_memcardPollDone = 1;
+
+        if (idol::GetSaveData()->state == SAVESYS_NO_SPACE) {
+            g_memcardFatalError = 1;
+        }
+
+        return 2;
+    case SAVESYS_CANCELED:
+        g_memcardPollDone = 1;
         return 1;
-      }
-      if (g_memcardSaveSysState == 5) {
+    case SAVESYS_IDLE:
         return 0;
-      }
-      if (g_memcardSaveSysState != 3) {
-        if (g_memcardSaveSysState == 1) {
-          idol::GetSaveData();
-          iVar1 = FUN_004e7e6c();
-          g_memcardPollDone = '\x01';
-          return iVar1;
-        }
-        if (g_memcardSaveSysState != 0) {
-          return 0;
-        }
-      }
-      idol::GetSaveData();
-      iVar1 = FUN_004e7d94();
-      g_memcardPollDone = '\x01';
-      return iVar1;
+    case SAVESYS_LOADED:
+        result = SaveData_CallOnLoad(idol::GetSaveData());
+        g_memcardPollDone = 1;
+        return result;
+    case SAVESYS_SAVED:
+    case SAVESYS_SAVING:
+        result = SaveData_CallOnSave(idol::GetSaveData());
+        g_memcardPollDone = 1;
+        return result;
     }
-    g_memcardPollDone = '\x01';
-    iVar1 = idol::GetSaveData();
-    if (*(int *)(iVar1 + 0x468) == 0xb) {
-      DAT_00a23099 = 1;
-    }
-  }
-  g_memcardPollDone = '\x01';
-  iVar1 = idol::GetSaveData();
-  if (*(int *)(iVar1 + 0x468) == 0xc) {
-    DAT_00a23099 = 1;
-  }
-  return 2;
+
+    return 0;
 }
-
-

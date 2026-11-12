@@ -110,3 +110,28 @@ __dtors_next	PtrFunc *NAME /* 0x9044f0: crtstuff's p, walks __DTOR_LIST__ */
 __frame_object	u8 NAME[24] /* 0x9270f8: crtstuff's object for __register_frame_info */
 __JCR_LIST__	void *NAME[1] /* 0x700bc8 */
 __CTOR_END__	PtrFunc NAME[1] /* 0x700b98 */
+mc_gamedata	mc_data NAME[] /* 0x726690: the global save chunks (DL name) */
+mc_leveldata	mc_data NAME[] /* 0x7269a0: the per-level save chunks (DL name) */
+g_memcardStrBufs	char NAME[5][1024] /* 0xa230a0: rotating buffers for memcard_ConvertSaveMsgString */
+SaveDataPtr	char *NAME /* 0xa10928: the save buffer; the save data is built 1MB in */
+g_pSaveBuffer	char *NAME /* 0x8fabb4 */
+g_SaveCurFile	int NAME /* 0x71fa38: the save list entry selected */
+g_SaveCurCard	int NAME /* 0x71faf0 */
+g_SaveRealLevel	int NAME /* 0x71faf4: Level while memcard_Save pretends to be on another */
+g_SaveCards	SaveCardInfo NAME[] /* 0x71fa44 (pause.cpp still uses the DAT_0071fa44.. names) */
+g_HelpMenuList	HelpMenuEntry NAME[151] /* 0x72b330 (pause.cpp still uses DAT_0072b330) */
+g_MapRevealMasks	char NAME[20][0x8000] /* 0x96ca34: per level map reveal masks (map.cpp/pause.cpp still use DAT_0096ca34) */
+g_LevelFlags2	char NAME[20][16] /* 0xa0cbc4: follows g_LevelFlags (moby585/605 still use DAT_00a0cbc4) */
+g_memcardHadBoltTrophy	u8 NAME /* 0xa2308d: the loaded save already had over 1,000,000 bolts */
+g_memcardHadMidasTrophy	u8 NAME /* 0xa2308e: the loaded save already had all 10 gold weapons */
+g_memcardRestoredGoldWeapons	int NAME /* 0xa23094 */
+g_memcardFatalShown	u8 NAME /* 0xa23098 */
+g_memcardFatalError	u8 NAME /* 0xa23099: freeze mode shows the save error */
+s_DigitalNames	const char *NAME[] /* 0x652b84 */
+g_McDir	char NAME[21] /* 0x71f970: "/BASCUS-97199RATCHET", the title id is patched in by memcard_GetName */
+g_McDirAll	char NAME[23] /* 0x71f985: ".../*" */
+g_McIconSys	char NAME[30] /* 0x71f99c: ".../icon.sys" */
+g_McStaticIco	char NAME[32] /* 0x71f9ba: ".../static.ico" */
+g_McMainFile	char NAME[41] /* 0x71f9da: ".../BASCUS-97199RATCHET" */
+g_McSaveFile	char NAME[32] /* 0x71fa03: ".../save%d.bin" */
+g_SaveMsgLocale	u8 NAME /* 0xa2088d: Locale_Load's buffer argument for SaveMsg_UTF8.dat */

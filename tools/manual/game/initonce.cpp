@@ -195,7 +195,7 @@ void InitOnce(void)
     void *heap2 = (u8 *)game + 0x7c;
     g_pLocaleBuffer = (int *)Alloc(FUN_0050436c(game), 0x40000, 128);
     DAT_00a10920 = (u32)Alloc(FUN_0050436c(game), 0x300000, 128);
-    SaveDataPtr = (u32)Alloc(FUN_0050436c(game), 0x300000, 128);
+    SaveDataPtr = (char *)Alloc(FUN_0050436c(game), 0x300000, 128);
     DAT_00a10924 = (u32)Alloc(heap2, 0x300000, 128);
     g_FontVram = (u8 *)Alloc(heap2, 0x100000, 128);
     DAT_00a2080c = 0;

@@ -5,9 +5,9 @@
 #include "game/update/moby605.h"
 #include "game/camera.h"
 #include "game/hero.h"
-#include "game/memcard.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
+#include "game/update/moby585.h"
 
 // 0x03d919c (0x14 bytes)
 void M605_003d919c(void)

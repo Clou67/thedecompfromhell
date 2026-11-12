@@ -2005,7 +2005,7 @@ void PrepareChallengeModeSave(longlong param_1)
   g_boltCount = uVar1;
   g_totalBoltsCollected = uVar5;
   if (-1 < (int)param_1) {
-    DAT_0071fa38 = (int)param_1;
+    g_SaveCurFile = (int)param_1;
     *(undefined4 *)((int)&DAT_0071fa44 + ((int)(param_1 << 5) - (int)(param_1 << 2))) = 0;
     memcard_MakeWholeSave(addr);
     DAT_0071faec = 0;
@@ -8787,7 +8787,7 @@ undefined8 SaveGame_Update(int param_1)
     Map_SaveLevelObjectState();
     Map_SaveRevealMask(&DAT_0096ca34 + Level * 0x8000);
     DAT_0071faec = 0;
-    DAT_0071fa38 = iVar2;
+    g_SaveCurFile = iVar2;
     DAT_0071fb18 = uVar1;
     memcard_Save(1,-1);
     DAT_00a52cd4 = 1;
@@ -8799,7 +8799,7 @@ undefined8 SaveGame_Update(int param_1)
   if (DAT_00a52cd4 != 0) {
     iVar6 = memcard_IsSaveSystemIdle();
     LVar4 = Level;
-    iVar7 = DAT_0071fa38;
+    iVar7 = g_SaveCurFile;
     if ((iVar6 == 0) || (DAT_00a52d00 < 0xb)) {
       return 0;
     }
@@ -8811,7 +8811,7 @@ undefined8 SaveGame_Update(int param_1)
       return 0;
     }
     g_memcardGameSaved = 1;
-    (&DAT_0071fa48)[DAT_0071fa38 * 7] = g_boltCount;
+    (&DAT_0071fa48)[g_SaveCurFile * 7] = g_boltCount;
     uVar5 = g_FrameCount;
     (&DAT_0071fa44)[iVar7 * 7] = LVar4;
     uVar1 = g_ChallengeMode;
@@ -8918,7 +8918,7 @@ undefined8 SaveLoad_Update2(int param_1)
        (-1 < (int)(&DAT_0071fa44)[*(int *)(param_1 + 0x40) * 7])) {
       PlayMobySound(0,0x11,*(MobyInstance **)(param_1 + 0x14));
       DAT_0071faec = 0;
-      DAT_0071fa38 = *(undefined4 *)(param_1 + 0x40);
+      g_SaveCurFile = *(undefined4 *)(param_1 + 0x40);
       if (DAT_0071fb08 < 0) {
         DAT_0071fb08 = 0xd;
         DAT_0071fb0c = 0;
@@ -8972,7 +8972,7 @@ undefined8 LoadGame_Update(int param_1)
         uVar2 = *(undefined4 *)(param_1 + 0x48);
         memcard_ResetGame();
         DAT_0071faec = 0;
-        DAT_0071fa38 = iVar1;
+        g_SaveCurFile = iVar1;
         DAT_0071fb18 = uVar2;
         (&DAT_0071fa44)[iVar1 * 7] = 0;
         memcard_PerformOperation(0);
@@ -9066,7 +9066,7 @@ undefined8 LoadGame_Update(int param_1)
     else {
       iVar8 = memcard_IsSaveSystemIdle();
       LVar5 = Level;
-      iVar1 = DAT_0071fa38;
+      iVar1 = g_SaveCurFile;
       if ((iVar8 == 0) || (DAT_00a52d00 < 0xb)) {
         uVar7 = 0;
       }
@@ -9074,7 +9074,7 @@ undefined8 LoadGame_Update(int param_1)
         DAT_00a52cd4 = 0;
         if (((DAT_0071fb10 == 0) && (DAT_0071fa40 == 0)) && (DAT_00a20884 == 0)) {
           g_memcardGameSaved = 1;
-          (&DAT_0071fa48)[DAT_0071fa38 * 7] = g_boltCount;
+          (&DAT_0071fa48)[g_SaveCurFile * 7] = g_boltCount;
           uVar6 = g_FrameCount;
           (&DAT_0071fa44)[iVar1 * 7] = LVar5;
           uVar2 = g_ChallengeMode;

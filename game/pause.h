@@ -98,7 +98,6 @@ extern undefined4 DAT_0013ca64; /* 0x13ca64 */
 extern undefined4 DAT_00653684; /* no defined data */
 extern undefined4 DAT_0065368c; /* no defined data */
 extern undefined4 DAT_0071fa2c; /* 0x71fa2c */
-extern undefined4 DAT_0071fa38; /* 0x71fa38 */
 extern undefined4 DAT_0071fa44; /* 0x71fa44 */
 extern undefined4 DAT_0071fa48; /* 0x71fa48 */
 extern undefined4 DAT_0071fa4c; /* 0x71fa4c */
@@ -133,6 +132,7 @@ extern undefined4 DAT_0072a9f0; /* no defined data */
 extern undefined4 DAT_0072ace0; /* no defined data */
 extern undefined4 DAT_0072adc0; /* 0x72adc0 */
 extern undefined4 DAT_0072af24; /* 0x72af24 */
+extern undefined2 DAT_0072b330; /* 0x72b330 */
 extern undefined4 DAT_0072ba84; /* 0x72ba84 */
 extern undefined4 DAT_0072be04; /* no defined data */
 extern undefined4 DAT_0072be38; /* no defined data */
@@ -479,6 +479,7 @@ extern Planets32 g_MaxBoltsPerLevel; /* 0x738608 */
 extern undefined4 g_MenuScreen; /* 0xa52bb0 */
 extern int g_MoviePlayState; /* 0x969cd4 */
 extern undefined4 g_NpcBuffer; /* 0xa10918 */
+extern int g_SaveCurFile; /* 0x71fa38: the save list entry selected */ /* type set in global_types.tsv */
 extern undefined4 g_SelectedLevel; /* 0xa206e4 */
 extern char g_SkillPoints[32]; /* 0x96c08c */
 extern undefined4 g_currentMenuPage; /* 0xa52bb4 */

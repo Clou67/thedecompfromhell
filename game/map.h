@@ -30,7 +30,6 @@ extern undefined4 DAT_0071fa98; /* 0x71fa98 */
 extern undefined4 DAT_0071fab4; /* 0x71fab4 */
 extern undefined4 DAT_0071fad4; /* 0x71fad4 */
 extern undefined4 DAT_0071fae8; /* 0x71fae8 */
-extern undefined4 DAT_0071faf0; /* 0x71faf0 */
 extern undefined4 DAT_0071fb08; /* 0x71fb08 */
 extern undefined4 DAT_0071fb0c; /* 0x71fb0c */
 extern undefined4 DAT_0071fb10; /* 0x71fb10 */
@@ -56,6 +55,7 @@ extern undefined4 DAT_007264e0; /* 0x7264e0 */
 extern undefined4 DAT_007264e4; /* 0x7264e4 */
 extern undefined4 DAT_00726534; /* 0x726534 */
 extern undefined1 DAT_0096afc4; /* 0x96afc4 */
+extern undefined4 DAT_0096ca34; /* no defined data */
 extern undefined4 DAT_00a204c0; /* 0xa204c0 */
 extern undefined4 DAT_00a204c4; /* 0xa204c4 */
 extern undefined4 DAT_00a204c8; /* 0xa204c8 */
@@ -110,6 +110,7 @@ extern int g_MapRevealMask; /* 0xa204cc */
 extern float g_MapWorldBounds; /* 0x724af0 */
 extern float g_MapWorldToMap; /* 0x724d50 */
 extern float g_MapZoom; /* 0xa20574 */
+extern int g_SaveCurCard; /* 0x71faf0 */ /* type set in global_types.tsv */
 extern pointer ptr_GalacticMap; /* 0x729970 */
 
 // ---- functions
