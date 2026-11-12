@@ -1,6 +1,7 @@
 #pragma once
 // game/update/moby224.h
 #include "types.h"
+#include "game/mobyfunc.h"
 
 // ---- globals
 extern undefined4 DAT_007ff098; /* 0x7ff098 */

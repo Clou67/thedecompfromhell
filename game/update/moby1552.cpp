@@ -55,7 +55,7 @@ void UpdateMoby_1552(MobyInstance *moby)
         return;
       }
       iVar8 = 0;
-      uVar1 = *(undefined4 *)((int)&DAT_0095cec8 + (int)(uVar3 << 2));
+      uVar1 = *(undefined4 *)((int)&g_SpaceSceneMobys[0] + (int)(uVar3 << 2));
       dVar10 = 20000.0;
       dVar11 = 200000.0;
       uVar12 = 0x3fe3333340000000;

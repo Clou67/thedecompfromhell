@@ -67,3 +67,5 @@ g_MobyClassBuffer	u8 *NAME /* 0xa108e8: 0x60000 bytes, moby classes 0x30000 each
 g_GameplayBuffer	u8 *NAME /* 0xa108ec: 0x200000 bytes, the level's gameplay file (Gameplay points into it) */
 g_FontVram	u8 *NAME /* 0xa10930: 0x100000 bytes, the Japanese font texture */
 DAT_00927204	u32 *NAME /* 0x927204: set to 130 at start-up, next to g_pFrameTicks */
+g_SpaceSceneMobys	MobyInstance *NAME[8] /* 0x95cec8: the mobys of the playing space (ship) cutscene */
+g_SpaceSceneMobyCnt	short NAME /* 0x95cd94: entries in g_SpaceSceneMobys (read as a halfword) */

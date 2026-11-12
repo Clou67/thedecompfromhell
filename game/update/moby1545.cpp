@@ -47,13 +47,13 @@ void UpdateMoby_1545(MobyInstance *moby)
       else if (g_SceneId == 3) {
         lVar5 = 2;
       }
-      MB_SpawnSparks_oClass2EE(*(undefined4 *)((int)&DAT_0095cec8 + (int)(lVar5 << 2)));
+      MB_SpawnSparks_oClass2EE(*(undefined4 *)((int)&g_SpaceSceneMobys[0] + (int)(lVar5 << 2)));
     }
     if (((g_gameMode == GAME_MODE_SCENE) && (g_SceneId == 4)) &&
-       ((DAT_0095ced4 != 0 &&
+       ((g_SpaceSceneMobys[3] != 0 &&
         (((int)(animationSpeed * 150.5) <= g_SpaceSceneFrame &&
          (g_SpaceSceneFrame <= (int)(animationSpeed * 220.5))))))) {
-      GetBonePosition(DAT_0095ced4,0,auStack_70);
+      GetBonePosition(g_SpaceSceneMobys[3],0,auStack_70);
       uVar8 = 0x40fd4c0000000000;
       MB_SpawnSparksPair
                 (0x40fd4c0000000000,0x40e86a0000000000,auStack_70,auStack_70,&DAT_00a15d30);

@@ -8,7 +8,6 @@
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/space.h"
-#include "game/update/moby1563.h"
 
 // 0x02985a0 (0xb4 bytes)
 /* Moby 1551 */
@@ -22,7 +21,7 @@ void UpdateMoby_1551(MobyInstance *moby)
   }
   else if ((((moby->state < 2) && (g_gameMode == GAME_MODE_SCENE)) && (g_SceneId == 5)) &&
           (g_SpaceSceneFrame <= (int)(animationSpeed * 127.5))) {
-    MB_SpawnSparks_oClass2EE(DAT_0095ced0);
+    MB_SpawnSparks_oClass2EE(g_SpaceSceneMobys[2]);
   }
   return;
 }

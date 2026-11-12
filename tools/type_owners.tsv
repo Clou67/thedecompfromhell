@@ -36,3 +36,4 @@ HelpDef	game/help
 g_Help	game/help
 Language	game/pause
 IMSeqMem	game/initonce
+QuadDef	game/draw

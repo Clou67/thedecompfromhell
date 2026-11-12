@@ -2228,7 +2228,7 @@ void TransitionDraw_Space(void)
   STUB_00175554(0x2080000);
   STUB_0006d704(1);
   if ((Level != Veldin) && ((Level != Novalis || (g_SeenPlanets.Kerwan != '\0')))) {
-    Space_DrawTransitionOverlay(DAT_0095cec8);
+    Space_DrawTransitionOverlay(g_SpaceSceneMobys[0]);
   }
   if ((g_currentLoadingScreen == 4) && (0x3c < g_SpaceSceneFrame)) {
     uVar1 = idol_draw::Blend(1,0,0x80,1,0,0,1,1);
@@ -2240,7 +2240,7 @@ void TransitionDraw_Space(void)
     SetGSReg(0x16,uVar1);
   }
   if ((Level != Veldin) && ((Level != Novalis || (g_SeenPlanets.Kerwan != '\0')))) {
-    Space_DrawShipEffects(DAT_0095cec8);
+    Space_DrawShipEffects(g_SpaceSceneMobys[0]);
   }
   STUB_0006d708();
   if ((0 < (int)SceneScreenFade) &&

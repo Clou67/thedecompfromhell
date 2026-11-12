@@ -262,12 +262,12 @@ void UpdateMoby_1563(MobyInstance *moby)
       iVar30 = g_SpaceSceneFrame;
       fVar1 = animationSpeed;
       puVar10[0x4c] = (longlong)(int)(animationSpeed * 706.5);
-      iVar29 = DAT_0095cee4;
+      iVar29 = g_SpaceSceneMobys[7];
       uVar40 = 0x4020000000000000;
       uVar36 = 0x403e000000000000;
       uVar38 = 0x4022000000000000;
-      if ((iVar30 == *(int *)((int)puVar10 + 0x264)) && (DAT_0095cee4 != 0)) {
-        GetBonePosition(DAT_0095cee4,0,uVar19 - 0x230);
+      if ((iVar30 == *(int *)((int)puVar10 + 0x264)) && (g_SpaceSceneMobys[7] != 0)) {
+        GetBonePosition(g_SpaceSceneMobys[7],0,uVar19 - 0x230);
         *(undefined4 *)((int)puVar10 + 0xec) = 0;
         *(undefined4 *)((int)puVar10 + 0xe4) = 0;
         *(undefined4 *)(puVar10 + 0x1c) = 0;
@@ -284,9 +284,9 @@ void UpdateMoby_1563(MobyInstance *moby)
         iVar30 = g_SpaceSceneFrame;
       }
       puVar10[0x4c] = (longlong)(int)(fVar1 * 710.5);
-      iVar29 = DAT_0095ced8;
-      if ((iVar30 == *(int *)((int)puVar10 + 0x264)) && (DAT_0095ced8 != 0)) {
-        GetBonePosition(DAT_0095ced8,0,uVar19 - 0x210);
+      iVar29 = g_SpaceSceneMobys[4];
+      if ((iVar30 == *(int *)((int)puVar10 + 0x264)) && (g_SpaceSceneMobys[4] != 0)) {
+        GetBonePosition(g_SpaceSceneMobys[4],0,uVar19 - 0x210);
         *(undefined4 *)((int)puVar10 + 0x10c) = 0;
         *(undefined4 *)((int)puVar10 + 0x104) = 0;
         *(undefined4 *)(puVar10 + 0x20) = 0;
@@ -303,9 +303,9 @@ void UpdateMoby_1563(MobyInstance *moby)
         iVar30 = g_SpaceSceneFrame;
       }
       puVar10[0x4c] = (longlong)(int)(fVar1 * 720.5);
-      iVar29 = DAT_0095cee0;
-      if ((iVar30 == *(int *)((int)puVar10 + 0x264)) && (DAT_0095cee0 != 0)) {
-        GetBonePosition(DAT_0095cee0,0,uVar19 - 0x1f0);
+      iVar29 = g_SpaceSceneMobys[6];
+      if ((iVar30 == *(int *)((int)puVar10 + 0x264)) && (g_SpaceSceneMobys[6] != 0)) {
+        GetBonePosition(g_SpaceSceneMobys[6],0,uVar19 - 0x1f0);
         *(undefined4 *)((int)puVar10 + 300) = 0;
         *(undefined4 *)((int)puVar10 + 0x124) = 0;
         *(undefined4 *)(puVar10 + 0x24) = 0;
@@ -322,9 +322,9 @@ void UpdateMoby_1563(MobyInstance *moby)
         iVar30 = g_SpaceSceneFrame;
       }
       puVar10[0x4c] = (longlong)(int)(fVar1 * 730.5);
-      iVar29 = DAT_0095cedc;
-      if ((iVar30 == *(int *)((int)puVar10 + 0x264)) && (DAT_0095cedc != 0)) {
-        GetBonePosition(DAT_0095cedc,0,uVar19 - 0x1d0);
+      iVar29 = g_SpaceSceneMobys[5];
+      if ((iVar30 == *(int *)((int)puVar10 + 0x264)) && (g_SpaceSceneMobys[5] != 0)) {
+        GetBonePosition(g_SpaceSceneMobys[5],0,uVar19 - 0x1d0);
         *(undefined4 *)((int)puVar10 + 0x14c) = 0;
         *(undefined4 *)((int)puVar10 + 0x144) = 0;
         *(undefined4 *)(puVar10 + 0x28) = 0;
@@ -402,7 +402,7 @@ void UpdateMoby_1563(MobyInstance *moby)
         puVar10[0x4c] = (longlong)DAT_007ab920;
         puVar10[0x4c] = (longlong)(int)(fVar1 * (float)((double)(longlong)puVar10[0x4c] + dVar34));
         if (iVar30 < *(int *)((int)puVar10 + 0x264)) {
-          RegisterFuncForMoby(&PTR_M1564_0029bde8_0070aaa0,DAT_0095cec8);
+          RegisterFuncForMoby(&PTR_M1564_0029bde8_0070aaa0,g_SpaceSceneMobys[0]);
           puVar10[0x4c] = (longlong)DAT_007ab91c;
           iVar30 = g_SpaceSceneFrame;
           fVar1 = animationSpeed;
@@ -481,7 +481,7 @@ void UpdateMoby_1563(MobyInstance *moby)
         puVar10[0x4c] = (longlong)DAT_007ab920;
         puVar10[0x4c] = (longlong)(int)(fVar1 * (float)((double)(longlong)puVar10[0x4c] + dVar34));
         if (iVar30 < *(int *)((int)puVar10 + 0x264)) {
-          RegisterFuncForMoby(&PTR_M1564_0029bde8_0070aaa0,DAT_0095cec8);
+          RegisterFuncForMoby(&PTR_M1564_0029bde8_0070aaa0,g_SpaceSceneMobys[0]);
           if (g_SpaceSceneFrame < DAT_007ab91c) {
             dVar34 = (double)FastIntToDouble(g_SpaceSceneFrame - DAT_007ab918);
             dVar35 = (double)FastIntToDouble(DAT_007ab91c - DAT_007ab918);
@@ -493,16 +493,16 @@ void UpdateMoby_1563(MobyInstance *moby)
         }
       }
     }
-    if ((g_SceneId == 1) && (DAT_0095ced4 != (MobyInstance *)0x0)) {
-      RegisterFuncForMoby(&PTR_M1564_0029c460_0070aaa8,DAT_0095ced4);
+    if ((g_SceneId == 1) && (g_SpaceSceneMobys[3] != (MobyInstance *)0x0)) {
+      RegisterFuncForMoby(&PTR_M1564_0029c460_0070aaa8,g_SpaceSceneMobys[3]);
     }
     iVar30 = g_SpaceSceneFrame;
     fVar1 = animationSpeed;
     if ((((g_SceneId == 5) &&
          (puVar10[0x4c] = (longlong)(int)(animationSpeed * 138.5),
          *(int *)((int)puVar10 + 0x264) <= iVar30)) &&
-        (puVar10[0x4c] = (longlong)(int)(fVar1 * 264.5), pMVar18 = DAT_0095ced0,
-        iVar30 <= *(int *)((int)puVar10 + 0x264))) && (DAT_0095ced0 != (MobyInstance *)0x0)) {
+        (puVar10[0x4c] = (longlong)(int)(fVar1 * 264.5), pMVar18 = g_SpaceSceneMobys[2],
+        iVar30 <= *(int *)((int)puVar10 + 0x264))) && (g_SpaceSceneMobys[2] != (MobyInstance *)0x0)) {
       puVar10[0x4c] = (longlong)(int)(fVar1 * 140.5);
       if (*(int *)((int)puVar10 + 0x264) < iVar30) {
         GetBonePosition(pMVar18,0,uVar19 - 400);
@@ -557,8 +557,8 @@ void UpdateMoby_1563(MobyInstance *moby)
     if (((g_SceneId == 1) &&
         (puVar10[0x4c] = (longlong)(int)(animationSpeed * 446.5),
         *(int *)((int)puVar10 + 0x264) <= iVar29)) &&
-       ((puVar10[0x4c] = (longlong)(int)(fVar1 * 502.5), iVar16 = DAT_0095ced8,
-        iVar29 < *(int *)((int)puVar10 + 0x264) && (DAT_0095ced8 != 0)))) {
+       ((puVar10[0x4c] = (longlong)(int)(fVar1 * 502.5), iVar16 = g_SpaceSceneMobys[4],
+        iVar29 < *(int *)((int)puVar10 + 0x264) && (g_SpaceSceneMobys[4] != 0)))) {
       pfVar7 = (float *)moby->pVar;
       pfVar7[4] = 0.0;
       GetBonePosition(iVar16,3,uVar19 - 0x150);
@@ -746,8 +746,8 @@ void UpdateMoby_1563(MobyInstance *moby)
     if ((((iVar30 == 2) || (iVar30 == 0)) ||
         ((iVar30 == 3 &&
          (puVar10[0x4c] = (longlong)(int)(animationSpeed * 586.5),
-         iVar29 < *(int *)((int)puVar10 + 0x264))))) && (DAT_0095ced0 != (MobyInstance *)0x0)) {
-      RegisterFuncForMoby(&PTR_M1564_0029c460_0070aaa8,DAT_0095ced0);
+         iVar29 < *(int *)((int)puVar10 + 0x264))))) && (g_SpaceSceneMobys[2] != (MobyInstance *)0x0)) {
+      RegisterFuncForMoby(&PTR_M1564_0029c460_0070aaa8,g_SpaceSceneMobys[2]);
       iVar30 = g_SceneId;
     }
     iVar29 = g_SpaceSceneFrame;

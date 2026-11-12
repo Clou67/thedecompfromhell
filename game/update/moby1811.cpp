@@ -6,7 +6,7 @@
 #include "game/initsky.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
-#include "game/update/moby1563.h"
+#include "game/space.h"
 
 // 0x02bc1d8 (0x14 bytes)
 void M1811_002bc1d8(void)
@@ -31,13 +31,13 @@ void UpdateMoby_1811(MobyInstance *moby)
   GPiece<16> local_50;
   GPiece<16> local_40;
   
-  uVar1 = DAT_0095ced0;
+  uVar1 = g_SpaceSceneMobys[2];
   if (moby->state == 0) {
     moby->updateDistance = -1;
     moby->state = '\x01';
   }
   else if (((moby->state < 2) && (g_gameMode == GAME_MODE_SCENE)) && (g_SceneId == 2)) {
-    GetBonePosition(DAT_0095ced0,2,local_90);
+    GetBonePosition(g_SpaceSceneMobys[2],2,local_90);
     GetBonePosition(uVar1,4,local_70);
     MB_SpawnSparksPair
               ((double)DAT_007b7df4,(double)DAT_007b7df8,local_90,local_90,local_50);

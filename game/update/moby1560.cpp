@@ -42,7 +42,7 @@ void UpdateMoby_1560(MobyInstance *moby)
     else if (g_SceneId == 6) {
       lVar1 = 1;
     }
-    MB_SpawnSparks_oClass2EE(*(undefined4 *)((int)&DAT_0095cec8 + (int)(lVar1 << 2)));
+    MB_SpawnSparks_oClass2EE(*(undefined4 *)((int)&g_SpaceSceneMobys[0] + (int)(lVar1 << 2)));
   }
   return;
 }

@@ -13542,7 +13542,7 @@ void MB_QuatRotate(undefined8 param_1,undefined8 param_2,undefined4 param_3)
 
 // 0x01113e0 (0x1b4 bytes)
 // inlined: FastRSqrt @0x111484
-void MB_RotateQuatAxisAngle(float angle,float *outQuat,float *inQuat)
+void MB_RotateQuatAxisAngle(float angle,float *outQuat,float *inQuat,float *axis)
 
 {
   float local_60 [4];

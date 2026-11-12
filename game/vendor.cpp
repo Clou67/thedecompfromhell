@@ -12,7 +12,6 @@
 #include "game/help.h"
 #include "game/hero.h"
 #include "game/hud.h"
-#include "game/initsky.h"
 #include "game/lights.h"
 #include "game/loaders.h"
 #include "game/main.h"
@@ -689,7 +688,7 @@ int StartGadgetPickupCutscene(int param_1,longlong param_2)
     sound_Update();
     STUB_00503078(0);
   }
-  Hero_SetLightsFromMoby(DAT_0095cecc,g_heroMobyPtr);
+  Hero_SetLightsFromMoby(g_SpaceSceneMobys[1],g_heroMobyPtr);
   iVar2 = music_PlayPreseekedSpeech();
   return iVar2;
 }

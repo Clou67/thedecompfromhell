@@ -41,7 +41,7 @@ void UpdateMoby_1799(MobyInstance *moby)
       lVar2 = 3;
     }
     uVar1 = *(undefined4 *)
-             ((int)&DAT_0095cec8 +
+             ((int)&g_SpaceSceneMobys[0] +
              (int)((lVar2 + (ZERO_MASK((1 - g_SceneId)) & 4U - lVar2) &
                    0xffffffff) << 2));
     GetBonePosition(uVar1,8,local_40);

@@ -2,6 +2,7 @@
 // game/mobyutil.h
 #include "types.h"
 #include "game/collproc.h"
+#include "game/mobyfunc.h"
 
 // ---- types
 typedef enum StringId {
@@ -2074,7 +2075,7 @@ int MB_IsPntInCylinder(Vec4 *point,longlong cylinderLink);
 undefined8 MB_IsPntInSphere(Vec4 *point,longlong sphereLink);
 void MB_MtxFromDir(double param_1,Vec4 *param_2,float *param_3);
 void MB_QuatRotate(undefined8 param_1,undefined8 param_2,undefined4 param_3);
-void MB_RotateQuatAxisAngle(float angle,float *outQuat,float *inQuat);
+void MB_RotateQuatAxisAngle(float angle,float *outQuat,float *inQuat,float *axis);
 void MB_QuatBetweenVecs (float *param_1,float *param_2,float *param_3,undefined8 param_4,int param_5);
 f32 MB_getTarget(double param_1,int param_2,undefined8 param_3,f32 *param_4);
 f32 MB_getTargetInArea (double param_1,int param_2,f32 *param_3,undefined8 param_4,int *param_5,int param_6, Vec4 *param_7,int param_8);

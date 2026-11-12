@@ -6,6 +6,7 @@
 #include "game/initsky.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
+#include "game/space.h"
 
 // 0x02bc4b8 (0x290 bytes)
 /* Moby 1812 */
@@ -23,13 +24,13 @@ void UpdateMoby_1812(MobyInstance *moby)
   GPiece<16> local_50;
   GPiece<16> local_40;
   
-  uVar1 = DAT_0095ced4;
+  uVar1 = g_SpaceSceneMobys[3];
   if (moby->state == 0) {
     moby->updateDistance = -1;
     moby->state = '\x01';
   }
   else if (((moby->state < 2) && (g_gameMode == GAME_MODE_SCENE)) && (g_SceneId == 0)) {
-    GetBonePosition(DAT_0095ced4,6,local_90);
+    GetBonePosition(g_SpaceSceneMobys[3],6,local_90);
     GetBonePosition(uVar1,4,local_70);
     uVar3 = 0x40d3880000000000;
     uVar2 = 0x408f400000000000;

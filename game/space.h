@@ -36,7 +36,6 @@ extern undefined4 DAT_00734a40; /* no defined data */
 extern undefined4 DAT_00734a50; /* no defined data */
 extern undefined4 DAT_00734b00; /* no defined data */
 extern undefined4 DAT_0095cda8; /* 0x95cda8 */
-extern undefined4 DAT_0095cec8; /* 0x95cec8 */
 extern undefined4 DAT_0095cf14; /* 0x95cf14 */
 extern undefined2 DAT_00964562; /* 0x964562 */
 extern undefined4 DAT_00964578; /* 0x964578 */
@@ -104,7 +103,8 @@ extern Planets g_SeenPlanets; /* 0x96ca0c */
 extern void * g_SpaceSceneCameraFrames; /* 0x95cda4 */
 extern int g_SpaceSceneChunk; /* 0x95cd8c */
 extern int g_SpaceSceneFrame; /* 0x95cd84 */
-extern int g_SpaceSceneMobyCnt; /* 0x95cd94 */
+extern short g_SpaceSceneMobyCnt; /* 0x95cd94: entries in g_SpaceSceneMobys (read as a halfword) */ /* type set in global_types.tsv */
+extern MobyInstance *g_SpaceSceneMobys[8]; /* 0x95cec8: the mobys of the playing space (ship) cutscene */ /* type set in global_types.tsv */
 extern int g_SpaceSceneNumFrames; /* 0x95cd90 */
 extern MobyInstance * g_SpaceshipPtr; /* 0x964570 */
 extern undefined2 g_SpaceshipVariant; /* 0x964596 */

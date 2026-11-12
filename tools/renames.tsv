@@ -119,3 +119,11 @@ DAT_00a108e8	g_MobyClassBuffer
 DAT_00a108ec	g_GameplayBuffer
 DAT_00a10930	g_FontVram
 ____Unused_InitOnce_RunSysCallWait	InitOnce_RunSysCallWait
+DAT_0095cec8	g_SpaceSceneMobys[0]
+DAT_0095cecc	g_SpaceSceneMobys[1]
+DAT_0095ced0	g_SpaceSceneMobys[2]
+DAT_0095ced4	g_SpaceSceneMobys[3]
+DAT_0095ced8	g_SpaceSceneMobys[4]
+DAT_0095cedc	g_SpaceSceneMobys[5]
+DAT_0095cee0	g_SpaceSceneMobys[6]
+DAT_0095cee4	g_SpaceSceneMobys[7]

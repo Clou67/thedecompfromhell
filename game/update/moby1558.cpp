@@ -6,7 +6,7 @@
 #include "game/initsky.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
-#include "game/update/moby1563.h"
+#include "game/space.h"
 
 // 0x0298c3c (0xb0 bytes)
 /* Moby 1558 */
@@ -19,7 +19,7 @@ void UpdateMoby_1558(MobyInstance *moby)
     moby->state = '\x01';
   }
   else if (((moby->state < 2) && (g_gameMode == GAME_MODE_SCENE)) && (g_SceneId == 2)) {
-    MB_SpawnSparks_oClass2EE(DAT_0095ced0);
+    MB_SpawnSparks_oClass2EE(g_SpaceSceneMobys[2]);
   }
   return;
 }

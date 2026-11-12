@@ -3373,7 +3373,7 @@ undefined8 FUN_00502ff4(void)
 
 
 // 0x0502ffc (0x8 bytes)
-undefined8 VU1_addGSregister(void)
+u64 VU1_addGSregister(int param_1,int param_2,int param_3)
 
 {
   return 0;

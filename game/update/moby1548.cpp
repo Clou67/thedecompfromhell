@@ -39,11 +39,11 @@ void UpdateMoby_1548(MobyInstance *moby)
                   (((uint)((ZERO_MASK((4 - g_SceneId)) & 2U) << 2) | 0x95cd50)
                   + 0x178));
     }
-    iVar1 = DAT_0095ced4;
+    iVar1 = g_SpaceSceneMobys[3];
     if ((((g_gameMode == GAME_MODE_SCENE) && (g_SceneId == 3)) &&
         ((int)(animationSpeed * 900.5) <= g_SpaceSceneFrame)) &&
-       ((g_SpaceSceneFrame <= (int)(animationSpeed * 10000.5) && (DAT_0095ced4 != 0)))) {
-      GetBonePosition(DAT_0095ced4,0,auStack_80);
+       ((g_SpaceSceneFrame <= (int)(animationSpeed * 10000.5) && (g_SpaceSceneMobys[3] != 0)))) {
+      GetBonePosition(g_SpaceSceneMobys[3],0,auStack_80);
       GetBonePosition(iVar1,1,auStack_70);
       dVar6 = 0.25;
       dVar5 = 0.5;

@@ -12,6 +12,9 @@ for line in src:
     if re.match(r'typedef\s+.*\s+(bool|wchar_t)\s*;', line): continue
     mt = re.match(r'typedef\s+[^;{}()]*?\b(\w+)\s*;\s*$', line)
     if mt and mt[1] in systypes: continue      # the SDK headers already define it
+    # Ghidra wrote the 64-bit types as long, which is 32 bits here (__LP32__)
+    if re.match(r'typedef ulong u64;', line): line = 'typedef unsigned long long u64;'
+    if re.match(r'typedef long s64;', line): line = 'typedef long long s64;'
     if line.lstrip().startswith('-BAD- '): line = line.replace('-BAD- ', 'void * /*BAD*/ ', 1)
     # '?' is not legal in identifiers (Ghidra field names like "ip?")
     line = re.sub(r'(\w)\?', r'\1_q', line)

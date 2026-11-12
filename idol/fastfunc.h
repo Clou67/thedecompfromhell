@@ -171,7 +171,7 @@ undefined8 FUN_00502fdc(void);
 undefined8 FUN_00502fe4(void);
 undefined8 FUN_00502fec(void);
 undefined8 FUN_00502ff4(void);
-undefined8 VU1_addGSregister(void);
+u64 VU1_addGSregister(int param_1,int param_2,int param_3);
 undefined8 FUN_00503004(void);
 undefined8 FUN_0050300c(void);
 undefined8 FUN_00503014(void);

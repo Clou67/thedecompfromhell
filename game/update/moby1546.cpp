@@ -10,7 +10,6 @@
 #include "game/mobyutil.h"
 #include "game/partupd.h"
 #include "game/space.h"
-#include "game/update/moby1563.h"
 #include "game/update/moby775.h"
 #include "idol/fastfunc.h"
 
@@ -108,8 +107,8 @@ void UpdateMoby_1546(MobyInstance *moby)
         (local_c0 = (longlong)(int)(animationSpeed * 472.5),
         (int)(animationSpeed * 472.5) <= g_SpaceSceneFrame)) &&
        ((local_c0 = (longlong)(int)(animationSpeed * 537.5),
-        g_SpaceSceneFrame <= (int)(animationSpeed * 537.5) && (DAT_0095cec8 != 0)))) {
-      GetBonePosition(DAT_0095cec8,1,auStack_150);
+        g_SpaceSceneFrame <= (int)(animationSpeed * 537.5) && (g_SpaceSceneMobys[0] != 0)))) {
+      GetBonePosition(g_SpaceSceneMobys[0],1,auStack_150);
       uVar30 = 0x4000000000000000;
       uVar12 = MB_randRangeFloat(0.5,2.0);
       iVar6 = MB_randInt(2);
@@ -136,8 +135,8 @@ void UpdateMoby_1546(MobyInstance *moby)
     }
     if (((g_SceneId == 1) &&
         (local_c0 = (longlong)(int)(animationSpeed * 472.5),
-        g_SpaceSceneFrame == (int)(animationSpeed * 472.5))) && (DAT_0095cec8 != 0)) {
-      GetBonePosition(DAT_0095cec8,1,&VStack_140);
+        g_SpaceSceneFrame == (int)(animationSpeed * 472.5))) && (g_SpaceSceneMobys[0] != 0)) {
+      GetBonePosition(g_SpaceSceneMobys[0],1,&VStack_140);
       dVar33 = 3.0;
       iVar6 = FUN_00456478(0x4008000000000000,&VStack_140);
       if (iVar6 != 0) {
@@ -202,10 +201,10 @@ void UpdateMoby_1546(MobyInstance *moby)
         iVar6 = iVar6 + 1;
       } while (iVar6 < 0x10);
     }
-    pMVar2 = DAT_0095ced8;
-    if (((g_SceneId == 4) && (DAT_0095ced8 != (MobyInstance *)0x0)) &&
-       ((DAT_0095ced8->oClass == GREEN_SHIP_0213 &&
-        ((RegisterFuncForMoby(&PTR_Space_DrawShipEffects_00707cd8,DAT_0095ced8),
+    pMVar2 = g_SpaceSceneMobys[4];
+    if (((g_SceneId == 4) && (g_SpaceSceneMobys[4] != (MobyInstance *)0x0)) &&
+       ((g_SpaceSceneMobys[4]->oClass == GREEN_SHIP_0213 &&
+        ((RegisterFuncForMoby(&PTR_Space_DrawShipEffects_00707cd8,g_SpaceSceneMobys[4]),
          (int)(animationSpeed * 850.5) <= g_SpaceSceneFrame &&
          (local_c0 = (longlong)(int)(animationSpeed * 1160.5),
          g_SpaceSceneFrame <= (int)(animationSpeed * 1160.5))))))) {
@@ -256,16 +255,16 @@ void UpdateMoby_1546(MobyInstance *moby)
         iVar6 = iVar6 + 1;
       } while (iVar6 < 7);
     }
-    pMVar2 = DAT_0095ced0;
+    pMVar2 = g_SpaceSceneMobys[2];
     if (((g_SceneId == 5) &&
         (local_c0 = (longlong)(int)(animationSpeed * 120.5),
         g_SpaceSceneFrame < (int)(animationSpeed * 120.5))) &&
-       (DAT_0095ced0 != (MobyInstance *)0x0)) {
+       (g_SpaceSceneMobys[2] != (MobyInstance *)0x0)) {
       dVar24 = 0.0;
       dVar33 = dVar24;
       dVar22 = dVar24;
       dVar23 = dVar24;
-      GetBonePosition(DAT_0095ced0,5,&local_110);
+      GetBonePosition(g_SpaceSceneMobys[2],5,&local_110);
       if (1 < g_SpaceSceneFrame) {
         dVar23 = (double)(local_110 - DAT_00fadb70);
         dVar22 = (double)(local_10c - DAT_00fadb74);

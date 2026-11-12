@@ -44,3 +44,7 @@ sceGsSetDefLoadImage	void sceGsSetDefLoadImage(void *param_1,int param_2,int par
 sceGsExecLoadImage	void sceGsExecLoadImage(void *param_1,void *param_2)
 sceGsSyncPath	void sceGsSyncPath(int param_1,int param_2)
 InitOnce_RunSysCallWait	int InitOnce_RunSysCallWait(int param_1,int param_2)
+DrawSceneShipEffect	void DrawSceneShipEffect(MobyInstance *moby)
+SpawnSceneShipParticles	void SpawnSceneShipParticles(MobyInstance *moby)
+MB_RotateQuatAxisAngle	void MB_RotateQuatAxisAngle(float angle,float *outQuat,float *inQuat,float *axis)
+VU1_addGSregister	u64 VU1_addGSregister(int param_1,int param_2,int param_3)
