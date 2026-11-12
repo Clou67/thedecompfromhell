@@ -1139,7 +1139,7 @@ extern undefined4 g_heroStateType; /* 0x96bd6c */
 extern undefined g_heroTweakers; /* 0x721bd0 */
 extern undefined1 g_heroType; /* 0x96bd84 */
 extern undefined4 g_heroVelocity; /* 0x969dc0 */
-extern undefined4 g_heroWaterZ; /* 0x969fd0 */
+extern float g_heroWaterZ; /* 0x969fd0 */ /* type set in global_types.tsv */
 extern undefined2 g_onMagnerail; /* 0x969fe8 */
 extern undefined4 g_ratchetMoby; /* 0x96a768 */
 extern undefined4 g_standingOnMoby; /* 0x969fdc */

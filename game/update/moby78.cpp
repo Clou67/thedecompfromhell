@@ -3,6 +3,7 @@
 // 2 functions, 0x459ff0-0x45a9f4
 #include <math.h>
 #include "game/update/moby78.h"
+#include "game/camera.h"
 #include "game/debug.h"
 #include "game/draw.h"
 #include "game/hero.h"

@@ -1508,7 +1508,7 @@ undefined8 FUN_00505af0(void)
 
 
 // 0x0505af8 (0x4 bytes)
-void FUN_00505af8(void)
+void snd_AutoReverb(int param_1,int param_2,int param_3,int param_4)
 
 {
   return;
@@ -1569,7 +1569,7 @@ void FUN_00505bac(undefined8 param_1,undefined8 param_2,undefined4 *param_3,unde
 
 
 // 0x0505c6c (0x8c bytes)
-longlong FUN_00505c6c(undefined8 param_1,undefined8 param_2)
+int snd_BankLoadByPath(const char *param_1,int param_2)
 
 {
   undefined8 uVar1;
@@ -1609,7 +1609,7 @@ undefined8 STUB_00505d20(...)
 
 
 // 0x0505d30 (0x48 bytes)
-void FUN_00505d30(int param_1)
+int snd_GetDopplerPitchMod(int param_1)
 
 {
   FUN_006051ac((double)((float)(longlong)param_1 * 0.44704));

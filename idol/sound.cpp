@@ -92,7 +92,7 @@ void STUB_00506044(...)
 
 
 // 0x0506048 (0x2c bytes)
-void FUN_00506048(void)
+void snd_SetPlaybackMode(int param_1)
 
 {
   FUN_0060c118(2,0);
@@ -101,7 +101,7 @@ void FUN_00506048(void)
 
 
 // 0x0506074 (0x4 bytes)
-void STUB_00506074(...)
+void snd_SetReverbEx(int param_1,int param_2,int param_3,int param_4,int param_5)
 
 {
   return;
@@ -215,8 +215,7 @@ void FUN_00506294(undefined4 param_1,undefined8 param_2,undefined8 param_3,undef
 
 
 // 0x05062f4 (0xbc bytes)
-void FUN_005062f4(undefined8 param_1,undefined2 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined4 *param_7,undefined8 param_8)
+void snd_PlaySoundVolPanPMPB_CB(int param_1,short param_2,int param_3,int param_4,int param_5,int param_6,SndCompleteProc param_7,u64 param_8)
 
 {
   undefined8 uVar1;

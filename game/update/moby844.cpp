@@ -2,6 +2,7 @@
 // STATUS: NOT STARTED (raw Ghidra output)
 // 3 functions, 0x4828f8-0x48428c
 #include "game/update/moby844.h"
+#include "game/camera.h"
 #include "game/freeze.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"

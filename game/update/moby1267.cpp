@@ -463,7 +463,7 @@ void UpdateMoby_1267(MobyInstance *moby)
   pManipulator = moby->pVar;
   uVar28 = ZEXT48(pManipulator);
   uVar2 = moby->state;
-  DAT_009637cc = moby;
+  g_SoundCamOfsIgnore = moby;
   puVar13[0x32] = unaff_r28;
   puVar13[0x31] = unaff_r27;
   puVar13[0x30] = unaff_r26;
@@ -1062,7 +1062,7 @@ void UpdateMoby_1267(MobyInstance *moby)
       *(f32 *)((int)pManipulator + 0xa0) = fVar3;
       *(undefined4 *)((int)pManipulator + 0x98) = 0xffffffff;
       (moby->rotation).z = 3.1415927;
-      DAT_009637cc = moby;
+      g_SoundCamOfsIgnore = moby;
     }
   }
   return;

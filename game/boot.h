@@ -105,6 +105,7 @@ extern undefined4 DAT_00927134; /* 0x927134 */
 extern undefined4 DAT_009271d0; /* 0x9271d0 */
 extern undefined4 DAT_009271d4; /* 0x9271d4 */
 extern int *DAT_009271f8; /* 0x9271f8 */ /* type set in global_types.tsv */
+extern undefined1 DAT_009637cb; /* 0x9637cb */
 extern u32 *DAT_00964564; /* 0x964564: the initialised-data records */ /* type set in global_types.tsv */
 extern undefined4 DAT_0096c1e4; /* 0x96c1e4 */
 extern undefined4 DAT_0096c1e8; /* 0x96c1e8 */

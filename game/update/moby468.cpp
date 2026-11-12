@@ -3,6 +3,7 @@
 // 2 functions, 0x398538-0x3988e8
 // shared update function UpdateMoby_{468_469}; registered for oClasses 468, 469
 #include "game/update/moby468.h"
+#include "game/camera.h"
 #include "game/freeze.h"
 #include "game/hero.h"
 #include "game/map.h"

@@ -2640,6 +2640,9 @@ extern undefined4 DAT_0095d6d8; /* no defined data */
 extern undefined4 DAT_0095d6da; /* no defined data */
 extern undefined4 DAT_0095d6dc; /* no defined data */
 extern undefined4 DAT_0095d6de; /* no defined data */
+extern undefined1 DAT_00963764; /* 0x963764 */
+extern undefined1 DAT_00963768; /* 0x963768 */
+extern undefined1 DAT_0096376c; /* 0x96376c */
 extern undefined4 DAT_00a0fd24; /* no defined data */
 extern undefined4 DAT_00a0fd26; /* no defined data */
 extern undefined4 DAT_00a0fd28; /* no defined data */
@@ -2702,6 +2705,8 @@ extern pointer32 PTR_music_CdCB_00706db0; /* 0x706db0 */
 extern pointer32 PTR_music_FreshenCB_00706db8; /* 0x706db8 */
 extern pointer32 PTR_music_StopCB_00706de8; /* 0x706de8 */
 extern pointer32 PTR_music_TimeRemainingCB_00706df8; /* 0x706df8 */
+extern pointer32 PTR_sound_FreshenCB_00707c48; /* 0x707c48 */
+extern pointer32 PTR_sound_PlayCB_00707c40; /* 0x707c40 */
 extern pointer32 PTR_sysutil_gameexit_callback_00703618; /* 0x703618 */
 extern undefined4 _DAT_000dc1e0; /* direct read */
 extern undefined4 _DAT_000dc1f0; /* direct read */

@@ -874,7 +874,7 @@ void UpdateScene(void)
 void StartMovie(int arg0,int arg1,int language)
 
 {
-  DAT_009637cb = DAT_009637cb | 8;
+  g_ReverbDirty = g_ReverbDirty | 8;
   FlushCache(0);
   sound_StopAllSounds();
   music_Stop();
@@ -923,7 +923,7 @@ void PlayInfobotMovie(int movieIdx)
       HandleHeroDeath();
     }
     else if (g_HeroIsOutOfBounds == '\0') {
-      DAT_009637cb = DAT_009637cb | 8;
+      g_ReverbDirty = g_ReverbDirty | 8;
       FlushCache(0);
       sound_StopAllSounds();
       music_Stop();
@@ -974,7 +974,7 @@ void PlayHelpMovie(int movieIdx)
       HandleHeroDeath();
     }
     else if (g_HeroIsOutOfBounds == '\0') {
-      DAT_009637cb = DAT_009637cb | 8;
+      g_ReverbDirty = g_ReverbDirty | 8;
       FlushCache(0);
       sound_StopAllSounds();
       music_Stop();
@@ -1021,7 +1021,7 @@ void PlaySpecialMovie(int movieIdx)
     uVar2 = FileSys_Get(iVar3);
     FileSys_ResolvePath(uVar2,acStack_e0,auStack_a0);
     BinkPlayer_Start(pvVar1,auStack_a0,0,0x400);
-    DAT_009637cb = DAT_009637cb | 8;
+    g_ReverbDirty = g_ReverbDirty | 8;
     FlushCache(0);
     sound_StopAllSounds();
     music_Stop();
@@ -1068,7 +1068,7 @@ void PlayStoryMovie(int movieIdx)
     FileSys_ResolvePath(uVar2,acStack_e0,auStack_a0);
     BinkPlayer_Start(pvVar1,auStack_a0,g_Language,0x400);
     iVar3 = g_Language;
-    DAT_009637cb = DAT_009637cb | 8;
+    g_ReverbDirty = g_ReverbDirty | 8;
     FlushCache(0);
     sound_StopAllSounds();
     music_Stop();
@@ -1149,7 +1149,7 @@ void mode_movieUnInit(void)
     DAT_00a15c10 = 0;
     FUN_004d31b0(iVar2,uVar1,1);
   }
-  DAT_009637cb = DAT_009637cb | 0x10;
+  g_ReverbDirty = g_ReverbDirty | 0x10;
   return;
 }
 

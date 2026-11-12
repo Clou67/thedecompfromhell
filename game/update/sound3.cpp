@@ -2,6 +2,7 @@
 // STATUS: NOT STARTED (raw Ghidra output)
 // 2 functions, 0x180210-0x1803e8
 #include "game/update/sound3.h"
+#include "game/camera.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"

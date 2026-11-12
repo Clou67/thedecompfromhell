@@ -286,3 +286,18 @@ Actuator	int NAME /* 0x95c6b4 */
 AddStart	char NAME /* 0x95c6b8: 'y' once a start point was written */
 AddSample	char NAME /* 0x95c6b9 */
 g_debugLastGameMode	int NAME /* 0x95c664 */
+g_SoundCamHistory	Vec4 NAME[4] /* 0x963760: the camera's last 4 positions, for its velocity */
+g_SoundCamHistoryIdx	int NAME /* 0x9637a0 */
+g_ReverbOwner	SoundInstance *NAME /* 0x9637c0: the ambient sound that set the reverb */
+g_ReverbDepth	int NAME /* 0x9637c4 */
+g_ReverbType	u8 NAME /* 0x9637c8 */
+g_ReverbDelay	u8 NAME /* 0x9637c9 */
+g_ReverbFeedback	u8 NAME /* 0x9637ca */
+g_ReverbDirty	u8 NAME /* 0x9637cb: 1 type, 2 delay/feedback, 4 depth, 8 off */
+g_SoundCamOfsIgnore	MobyInstance *NAME /* 0x9637cc: moby the occlusion probes ignore, cleared each frame */
+g_SoundProbeTime	u32 NAME /* 0x9644f8: worldUpdateTime g_SoundProbes were made at */
+g_SoundProbes	Vec4 NAME[6] /* 0x964500: points around the camera that new sounds are tested from */
+g_FootstepSoundBase	u8 NAME[] /* 0x731be8: per level, first footstep sound after the core sounds */
+g_pSoundInstances	SoundInstance *NAME /* 0x9644f4 */
+g_SoundCnt	int NAME /* 0x9644f0 */
+g_heroWaterZ	float NAME /* 0x969fd0 */

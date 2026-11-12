@@ -42,6 +42,10 @@ typedef struct NavSlot {
 
 // ---- globals
 extern undefined4 DAT_00731734; /* 0x731734 */
+extern undefined4 DAT_009637c4; /* 0x9637c4 */
+extern undefined1 DAT_009637c8; /* 0x9637c8 */
+extern undefined1 DAT_009637c9; /* 0x9637c9 */
+extern undefined1 DAT_009637ca; /* 0x9637ca */
 extern CheckpointData g_Checkpoint; /* 0xa54170 */ /* type set in global_types.tsv */
 extern u32 g_CheckpointBits[64]; /* 0xa54dd0: objects changed since the level started, one bit each */ /* type set in global_types.tsv */
 extern CheckpointData g_CheckpointLive; /* 0xa53510 */ /* type set in global_types.tsv */

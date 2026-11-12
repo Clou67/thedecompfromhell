@@ -2,6 +2,7 @@
 // STATUS: NOT STARTED (raw Ghidra output)
 // 1 functions, 0x195a48-0x195da8
 #include "game/update/moby1040.h"
+#include "game/camera.h"
 #include "game/collproc.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"

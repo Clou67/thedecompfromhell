@@ -80,3 +80,5 @@ SndCompleteProc	idol/sound
 ByteGridHeader	game/loaders
 SeqFrameFix	game/loaders
 SKY	game/skyfunc
+SoundData	game/sound
+SoundInstance	game/sound

@@ -1153,16 +1153,16 @@ u8 *LoadGameplayFile(int reload)
 
         g_SoundCnt = section[0];
         if (g_SoundCnt == 0) {
-            g_pSoundInstances = 0;
+            g_pSoundInstances = NULL;
         }
         else {
-            g_pSoundInstances = (u32)mem;
+            g_pSoundInstances = (SoundInstance *)mem;
             u8 *next = AlignUp64(mem + g_SoundCnt * 0x90);
             FastMemSet(mem, 0, g_SoundCnt * 0x90);
             for (int i = 0; i < (int)g_SoundCnt; i++, src += 0x90) {
-                short *sound = (short *)(g_pSoundInstances + i * 0x90);
+                SoundInstance *sound = &g_pSoundInstances[i];
 
-                FastMemCopy32(sound, src, 0x90);
+                FastMemCopy32(sound, src, sizeof(SoundInstance));
                 sound_SetupAmbientFunctions(sound);
             }
             mem = next;
@@ -1311,7 +1311,7 @@ u8 *LoadGameplayFile(int reload)
             mem = CopyPVar((void **)(ImportCameras + i * 0x20 + 0x1c), pvarTable, pvarData, mem);
         }
         for (int i = 0; i < (int)g_SoundCnt; i++) {
-            mem = CopyPVar((void **)(g_pSoundInstances + i * 0x90 + 8), pvarTable, pvarData, mem);
+            mem = CopyPVar(&g_pSoundInstances[i].pVar, pvarTable, pvarData, mem);
         }
         for (MobyInstance *moby = g_MobyInstance; moby != MobyInstancePermEnd; moby++) {
             mem = CopyPVar(&moby->pVar, pvarTable, pvarData, mem);

@@ -1428,7 +1428,7 @@ void ChooseLoadingScreen(void)
   if (((g_SpaceSceneFrame == 1) && (Level != Veldin)) &&
      ((Level != Novalis || (g_SeenPlanets.Kerwan != '\0')))) {
     STUB_00505f50();
-    FUN_005062f4(g_BootSoundBank,g_currentLoadingScreen,0x400,0,0,0,0,g_SoundChannels);
+    snd_PlaySoundVolPanPMPB_CB(g_BootSoundBank,g_currentLoadingScreen,0x400,0,0,0,0,g_SoundChannels);
     STUB_00505f4c();
     STUB_00505d20();
   }
@@ -3789,7 +3789,7 @@ void PlaySpaceMovie(undefined8 param_1)
   GPiece<128> auStack_b0;
   
   uVar6 = ZEXT48(g_pBinkPlayer);
-  DAT_009637cb = DAT_009637cb | 8;
+  g_ReverbDirty = g_ReverbDirty | 8;
   if (g_pBinkPlayer == (void *)0x0) {
     uVar1 = Idol_New(0x60);
     uVar6 = 0;
@@ -3822,7 +3822,7 @@ LAB_0016455c:
       sceGsSyncPath(0,0);
       STUB_00503208(&PTR_____Unused_Respawn_IncCounter_a53504_00707950);
       FadeToBlack(4);
-      DAT_009637cb = DAT_009637cb | 0x10;
+      g_ReverbDirty = g_ReverbDirty | 0x10;
       return;
     }
   }
@@ -3997,7 +3997,7 @@ void DoSpaceTransition(void)
     g_SpaceshipVariant = 2;
   }
   FlushCache(0);
-  STUB_00506074(0,5,0,0,0);
+  snd_SetReverbEx(0,5,0,0,0);
   STUB_00505f4c();
   STUB_00505d20();
   sound_StopAllSounds();

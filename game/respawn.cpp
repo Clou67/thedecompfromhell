@@ -7,6 +7,7 @@
 // along with Ratchet's position; RestoreCheckpoint copies g_Checkpoint back over the live copy
 // and puts the hero and the saved moby variables back.
 #include "game/respawn.h"
+#include "game/boot.h"
 #include "game/camera.h"
 #include "game/debug.h"
 #include "game/hero.h"
@@ -16,8 +17,6 @@
 #include "game/mobyutil.h"
 #include "game/music.h"
 #include "game/path.h"
-#include "game/sound.h"
-#include "game/update.h"
 #include "idol/fastfunc.h"
 
 #define NO_TRACK (-1)

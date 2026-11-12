@@ -14,6 +14,7 @@
 #include <string.h>
 #include "game/mobyfunc.h"
 #include "game/boot.h"
+#include "game/camera.h"
 #include "game/debug.h"
 #include "game/draw.h"
 #include "game/hero.h"
@@ -24,6 +25,7 @@
 #include "game/music.h"
 #include "game/pause.h"
 #include "game/rUnk.h"
+#include "game/respawn.h"
 #include "game/sound.h"
 #include "game/update.h"
 #include "idol/fastfunc.h"

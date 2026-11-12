@@ -296,7 +296,7 @@ void UpdateMoby_1201(MobyInstance *moby)
       *(undefined4 *)((int)manipulator + 0x48) = 0;
       *(undefined4 *)((int)manipulator + 0x4c) = 0;
       *(undefined4 *)((int)manipulator + 0x68) = 0xffffffff;
-      DAT_009637cc = moby;
+      g_SoundCamOfsIgnore = moby;
     }
   }
   else if (bVar3 < 5) {
@@ -467,7 +467,7 @@ void UpdateMoby_1201(MobyInstance *moby)
         (int)((uVar9 >> 1 ^ *(uint *)((int)manipulator + 0x5c)) - uVar9)) {
       fVar4 = (moby->pos).z + g_FrameTime;
     }
-    DAT_009637cc = moby;
+    g_SoundCamOfsIgnore = moby;
     (moby->pos).z = fVar4;
     fVar4 = g_heroPadStick;
     *(float *)(puVar11 + 0x14) = g_heroPadStick;

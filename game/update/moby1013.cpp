@@ -4,6 +4,7 @@
 // shared update function UpdateMoby_{1013_1014_1064_1065}; registered for oClasses 1013, 1014, 1064, 1065
 #include <math.h>
 #include "game/update/moby1013.h"
+#include "game/camera.h"
 #include "game/debug.h"
 #include "game/hero.h"
 #include "game/map.h"

@@ -2,6 +2,7 @@
 // STATUS: NOT STARTED (raw Ghidra output)
 // 2 functions, 0x428f68-0x429228
 #include "game/update/moby702.h"
+#include "game/camera.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/partupd.h"

@@ -3,6 +3,7 @@
 // 2 functions, 0x372898-0x372c84
 // shared update function UpdateMoby_{432_1052}; registered for oClasses 432, 1052
 #include "game/update/moby432.h"
+#include "game/camera.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"

@@ -19,7 +19,6 @@ extern undefined4 DAT_0095cd5c; /* 0x95cd5c */
 extern undefined4 DAT_0095cd60; /* 0x95cd60 */
 extern undefined4 DAT_0095cd68; /* 0x95cd68 */
 extern undefined2 DAT_0095cda2; /* 0x95cda2 */
-extern undefined1 DAT_009637cb; /* 0x9637cb */
 extern undefined4 DAT_0096b2d0; /* 0x96b2d0 */
 extern undefined4 DAT_00a15c0c; /* 0xa15c0c */
 extern undefined4 DAT_00a15c10; /* 0xa15c10 */
@@ -61,6 +60,7 @@ extern undefined4 g_FramesSinceStateChange; /* 0xa1070c */
 extern int g_IdleFrames; /* 0x738830 */
 extern int g_MovieLanguage; /* 0xe5a638 */
 extern undefined4 g_MovieParam0; /* 0xe5a630 */
+extern u8 g_ReverbDirty; /* 0x9637cb: 1 type, 2 delay/feedback, 4 depth, 8 off */ /* type set in global_types.tsv */
 extern char g_SceneSavedCamUnderWater; /* 0x95cd9b */
 extern struct BinkPlayer *g_pBinkPlayer; /* 0x8fa410 */ /* type set in global_types.tsv */
 extern undefined4 worldUpdateTime; /* 0xa10710 */
