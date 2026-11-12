@@ -371,7 +371,7 @@ void FUN_006322dc(void);
 uint FUN_0063235c(uint param_1,uint *param_2,int param_3,int param_4,int param_5);
 uint FUN_00632404(uint param_1,uint *param_2);
 int FUN_00632508(int param_1,uint *param_2,ulonglong param_3,int param_4,int param_5);
-void FUN_00632674(void);
+void snd_StopAllStreams(void);
 int FUN_00632790(double param_1,void *param_2);
 int FUN_00632a38(int param_1);
 int FUN_00632ccc(int param_1);

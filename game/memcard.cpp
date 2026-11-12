@@ -353,9 +353,9 @@ void memcard_SetupNewGameGlobals(void)
 // 0x00e7638 (0x84 bytes)
 void memcard_ResetGame(void)
 {
-    LoadMusic2(1);
+    music_Sync(1);
     memcard_SetupNewGameGlobals();
-    LoadMusic2(1);
+    music_Sync(1);
 
     g_totalBoltsCollected = 0;
     DAT_0096ca08 = 0;

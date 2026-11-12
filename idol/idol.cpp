@@ -7,6 +7,7 @@
 #include "game/draw.h"
 #include "idol/idol_draw.h"
 #include "idol/mUnk.h"
+#include "idol/sound.h"
 #include "idol/tiefunc.h"
 #include "sdk/cell.h"
 #include "sdk/libcgc/libcgc_cell_localize.h"
@@ -568,7 +569,7 @@ void FUN_005040f4(int param_1)
 
 
 // 0x0504178 (0xa0 bytes)
-undefined8 GetFileSize(undefined8 param_1)
+int GetFileSize(const char *param_1)
 
 {
   undefined8 uVar1;
@@ -1470,7 +1471,7 @@ void FUN_005058a0(void)
 // 0x0505954 (0x178 bytes)
 // strings: 0065fac8: 'Scream Initialization called already!'
 
-undefined8 FUN_00505954(undefined4 param_1)
+int snd_InitVAGStreamingEx(int param_1,int param_2,int param_3,int param_4)
 
 {
   GPiece<40> local_70;
@@ -1591,7 +1592,7 @@ void FUN_00505cf8(void)
 
 
 // 0x0505cfc (0x24 bytes)
-void FUN_00505cfc(void)
+void snd_ContinueVAGStream(u32 param_1)
 
 {
   FUN_00609ad0();
@@ -1631,7 +1632,7 @@ void FUN_00505d78(undefined4 param_1,undefined4 *param_2,undefined8 param_3)
 
 
 // 0x0505e08 (0x90 bytes)
-void FUN_00505e08(undefined8 param_1,undefined4 *param_2,undefined8 param_3)
+void snd_GetVAGStreamTimeRemaining_CB(u32 param_1,SndCompleteProc param_2,u64 param_3)
 
 {
   GPiece<24> local_30;
@@ -1643,7 +1644,7 @@ void FUN_00505e08(undefined8 param_1,undefined4 *param_2,undefined8 param_3)
 
 
 // 0x0505e98 (0x80 bytes)
-void FUN_00505e98(undefined8 param_1,undefined4 *param_2,undefined8 param_3)
+void snd_IsVAGStreamBuffered_CB(u32 param_1,SndCompleteProc param_2,u64 param_3)
 
 {
   GPiece<4> local_20;
@@ -1658,7 +1659,7 @@ void FUN_00505e98(undefined8 param_1,undefined4 *param_2,undefined8 param_3)
 
 
 // 0x0505f18 (0x24 bytes)
-void FUN_00505f18(void)
+void snd_PauseVAGStream(u32 param_1)
 
 {
   FUN_00609a5c();

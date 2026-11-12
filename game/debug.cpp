@@ -1507,32 +1507,32 @@ void UpdateDebugSelections(void)
         puVar9[10] = (ulonglong)dVar31;
         snprintf((char *)(puVar9 + 0x17),"add_sample: %.2f %.2f %.2f\n",puVar9[8],puVar9[9],
                        puVar9[10]);
-        uVar17 = FUN_00502dcc(uVar23 - 0xd8,7);
+        uVar17 = HostOpen(uVar23 - 0xd8,7);
         if (-1 < (int)uVar17) {
-          STUB_00502de0_RET_0(uVar17,0,5);
+          HostSeek(uVar17,0,5);
           sVar21 = strlen((char *)(uVar23 - 0x128));
           STUB_00502de8(uVar17,uVar23 - 0x128,sVar21);
-          STUB_00502ddc(uVar17);
+          HostClose(uVar17);
           AddSample = 0x79;
         }
         iVar20 = DAT_00a1090c;
         snprintf((char *)(uVar23 - 0xd8),"%s%d\\%s%s","host0:z:/i5/levels/level",Level,
                        "occ_samp.dat",&DAT_00651c88);
-        uVar17 = FUN_00502dcc(uVar23 - 0xd8,7);
+        uVar17 = HostOpen(uVar23 - 0xd8,7);
         if (-1 < (int)uVar17) {
-          STUB_00502de0_RET_0(uVar17,0,5);
+          HostSeek(uVar17,0,5);
           STUB_00502de8(uVar17,0x951500,4);
           STUB_00502de8(uVar17,0x951504,4);
           STUB_00502de8(uVar17,0x951508,4);
-          STUB_00502de0_RET_0(uVar17,0,6);
-          uVar18 = STUB_00502de0_RET_0(uVar17,0,5);
+          HostSeek(uVar17,0,6);
+          uVar18 = HostSeek(uVar17,0,5);
           if ((int)uVar18 < 0x100001) {
-            STUB_00502de0_RET_0(uVar17,0,6);
-            STUB_00502dd4(uVar17,iVar20,uVar18);
+            HostSeek(uVar17,0,6);
+            HostRead(uVar17,iVar20,uVar18);
             iVar19 = (int)uVar18 / 0xc;
           }
           DAT_00a108d4 = iVar19;
-          STUB_00502ddc(uVar17);
+          HostClose(uVar17);
         }
       }
       if ((DebugSelectedRow == 3) &&
@@ -1546,12 +1546,12 @@ void UpdateDebugSelections(void)
         puVar9[10] = (ulonglong)dVar31;
         snprintf((char *)(puVar9 + 0x1c),"start_pt: %.2f %.2f %.2f\n",puVar9[8],puVar9[9],
                        puVar9[10]);
-        uVar17 = FUN_00502dcc(uVar23 - 0x98,7);
+        uVar17 = HostOpen(uVar23 - 0x98,7);
         if (-1 < (int)uVar17) {
-          STUB_00502de0_RET_0(uVar17,0,5);
+          HostSeek(uVar17,0,5);
           sVar21 = strlen((char *)(uVar23 - 0x100));
           STUB_00502de8(uVar17,uVar23 - 0x100,sVar21);
-          STUB_00502ddc(uVar17);
+          HostClose(uVar17);
           AddStart = 0x79;
         }
       }

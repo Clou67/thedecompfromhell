@@ -475,7 +475,7 @@ void mode_sceneInit(int absolute_scene_id)
     }
     else {
       music_Pause(0);
-      LoadMusic2(0);
+      music_Sync(0);
       puVar7 = &DAT_0095cd50;
       g_CutscenePlaying = 1;
       FastMemSet(&DAT_0095cd50,0,0x1c0);
@@ -520,7 +520,7 @@ void mode_sceneInit(int absolute_scene_id)
         PreLoadNpcChunk(0);
         local_50 = (longlong)(int)(animationSpeed * 6.5);
         FadeToBlack((int)(animationSpeed * 6.5));
-        LoadMusic2(1);
+        music_Sync(1);
         g_SceneLoadBuffer = g_NpcBuffer + 0x80000;
         ParseNpcChunk();
         if (Scene == g_SceneId) {
@@ -800,7 +800,7 @@ void UpdateScene(void)
           iVar13 = 0x50;
         }
         if (iVar13 <= (int)g_cutsceneCameraFrame) {
-          LoadMusic2(1);
+          music_Sync(1);
           g_SpaceSceneChunk = g_SpaceSceneChunk + 1;
           g_SceneLoadBuffer = g_NpcBuffer + 0x80000;
           ParseNpcChunk();
@@ -1258,7 +1258,7 @@ void mode_creditsInit(void)
   int *piVar2;
   
   iVar1 = DAT_00902e9c;
-  LoadMusic2(0);
+  music_Sync(0);
   FadeToBlack(8);
   SceneScreenFade = 1.0;
   g_CutscenePlaying = 1;
@@ -1289,7 +1289,7 @@ void mode_creditsInit(void)
   DAT_00a15c70 = piVar2[8];
   LoadAssetFromFile("rc1/ps3data/global/credits/credits[0].vram",DAT_00a15c24,0xd0000);
   DAT_00a15c2c = DAT_00a15c2c + (DAT_00a15c24 - *(int *)(iVar1 + 0x4ac));
-  LoadMusic2(1);
+  music_Sync(1);
   idol::PRINT_m_LoadGameFile(DAT_00a15c28,"credits_images_ntsc");
   LoadAssetFromFile("/rc1/ps3data/global/credits/credits[1].vram",DAT_00a15c28,0xd0000);
   DAT_00a15c50 = DAT_00a15c50 + (DAT_00a15c28 - *(int *)(iVar1 + 0x4ac));
@@ -1326,7 +1326,7 @@ void UpdateCredits(void)
   double dVar5;
   char acStack_110 [128];
   
-  LoadMusic2(0);
+  music_Sync(0);
   bVar3 = g_JapaneseMode;
   SceneScreenFade = SceneScreenFade - 0.05;
   dVar5 = 0.0;
@@ -1335,8 +1335,8 @@ void UpdateCredits(void)
   }
   if (DAT_00a15c1c == 0) {
     if (*(int *)(&DAT_0072075c + (int)((longlong)DAT_00a15c1e << 2)) + -0x24 <= (int)DAT_00a15c22) {
-      if (Music != 0) {
-        LoadMusic2(1);
+      if (g_MusicLoading != 0) {
+        music_Sync(1);
       }
       if (g_JapaneseMode == false) {
         if ((bVar3 != false) && (DAT_00a15c1e == 0x29)) {

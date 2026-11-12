@@ -6,6 +6,7 @@
 // into GS memory allocated from g_GsRamAlloc. On PS3 the SCE_GS_SET_* packers are stubs that
 // return 0, so the packets are built but carry no real register values.
 #include <stdio.h>
+#include <string.h>
 #include "game/bloaders.h"
 #include "game/boot.h"
 #include "game/draw.h"
@@ -331,7 +332,7 @@ void UnloadSoundBanks(void)
     STUB_00505d20();
     sound_StopAllSounds();
     music_Stop();
-    FUN_00506664(0);
+    snd_StreamSafeCdCallback(NULL);
     STUB_001754e0();
 
     if (g_pSoundDefs != 0) {

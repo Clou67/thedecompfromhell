@@ -2975,7 +2975,7 @@ void FUN_00502d80(void)
 
 
 // 0x0502dcc (0x8 bytes)
-undefined8 FUN_00502dcc(void)
+int HostOpen(const char *param_1,int param_2)
 
 {
   return 0;
@@ -2983,7 +2983,7 @@ undefined8 FUN_00502dcc(void)
 
 
 // 0x0502dd4 (0x8 bytes)
-undefined8 STUB_00502dd4(...)
+int HostRead(int param_1,void *param_2,int param_3)
 
 {
   return 0;
@@ -2991,7 +2991,7 @@ undefined8 STUB_00502dd4(...)
 
 
 // 0x0502ddc (0x4 bytes)
-void STUB_00502ddc(...)
+void HostClose(int param_1)
 
 {
   return;
@@ -2999,7 +2999,7 @@ void STUB_00502ddc(...)
 
 
 // 0x0502de0 (0x8 bytes)
-undefined8 STUB_00502de0_RET_0(...)
+int HostSeek(int param_1,int param_2,int param_3)
 
 {
   return 0;

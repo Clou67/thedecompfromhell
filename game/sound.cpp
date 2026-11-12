@@ -855,12 +855,12 @@ undefined8 sound_Update(void)
                          &PTR_sound_PlayCB_00707c40,uVar54);
           }
           else {
-            FUN_005063b0(uVar13,uVar32,*(undefined4 *)(iVar22 + 0x138),uVar33,iVar27,iVar26,
+            snd_SetSoundParams_CB(uVar13,uVar32,*(undefined4 *)(iVar22 + 0x138),uVar33,iVar27,iVar26,
                          &PTR_sound_FreshenCB_00707c48,uVar54);
           }
         }
         else {
-          FUN_005065dc(uVar13,&PTR_sound_FreshenCB_00707c48,uVar54);
+          snd_SoundIsStillPlaying_CB(uVar13,&PTR_sound_FreshenCB_00707c48,uVar54);
         }
       }
       else if (*pcVar49 == '\a') {
@@ -869,9 +869,9 @@ undefined8 sound_Update(void)
         *pcVar49 = '\0';
       }
       else {
-        FUN_00506638(uVar13);
+        snd_StopVAGStream(uVar13);
         *pcVar49 = '\x06';
-        FUN_005065dc(uVar13,&PTR_sound_FreshenCB_00707c48,uVar54);
+        snd_SoundIsStillPlaying_CB(uVar13,&PTR_sound_FreshenCB_00707c48,uVar54);
       }
     }
     iVar34 = iVar34 + 1;
@@ -884,7 +884,7 @@ undefined8 sound_Update(void)
     uVar46 = uVar46 + 0x70;
     lVar51 = lVar51 + 4;
   } while (iVar34 < 0x1e);
-  LoadMusic();
+  music_Update();
   STUB_00505f4c();
   STUB_00505d20();
   STUB_00505f50();

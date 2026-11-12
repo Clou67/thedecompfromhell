@@ -189,3 +189,18 @@ OceanFogFarIntensity	float NAME /* 0xe5aec4 */
 OceanFogR	int NAME /* 0xe5aec8 */
 OceanFogG	int NAME /* 0xe5aecc */
 OceanFogB	int NAME /* 0xe5aed0 */
+g_MusicLoading	short NAME /* 0x9636d0: DL music_Globals.loading; 2 = retry the host load */
+g_MusicLoadStop	char NAME /* 0x9636d2 */
+g_MusicLoadSector	int NAME /* 0x9636d4 */
+g_MusicLoadSectors	int NAME /* 0x9636d8 */
+g_MusicLoadBuffer	void *NAME /* 0x9636dc */
+g_PendingTrack	signed char NAME /* 0x9636ea */
+g_PendingTransition	signed char NAME /* 0x9636eb: transition piece for g_PendingTrack */
+g_PendingSpeech	int NAME /* 0x9636e4 */
+g_TransitionState	short NAME /* 0x9636e8 */
+g_TransitionRemainStart	int NAME /* 0x9636ec */
+g_TransitionFadeTime	int NAME /* 0x9636f0 */
+g_TransitionTimer	int NAME /* 0x9636f4 */
+g_LevelMusicFileSizes	int NAME[15] /* 0x10ea770 */
+DAT_009636c0	int NAME /* 0x9636c0 */
+DAT_009636c4	int NAME /* 0x9636c4 */

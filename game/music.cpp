@@ -1,6 +1,21 @@
-// game/music.cpp -- reconstructed from NPEA00385 EBOOT
-// STATUS: NOT STARTED (raw Ghidra output)
+// game/music.cpp -- streamed music and speech (Scream VAG streams)
+// STATUS: CLEAN (checked against the asm; local names are mine)
 // 39 functions, 0x11b944-0x11dfc4
+//
+// Three streams are tracked by music_Playing records: g_MusicPlaying (the level music),
+// g_TransitionPlaying (a one-shot transition piece) and g_SpeechPlaying (dialogue). Every
+// Scream request is asynchronous: the record's handle is set to -1 while a request is in flight
+// and the completion callback (music_*CB) stores the real handle and moves the status on.
+//
+// A music track is a head file music[n] and, when flags bit 0 is set, a looping body file
+// music[n+1] queued behind it. music_SetTransition asks for a new track; music_Update then plays
+// the transition piece, fades the old track out over the last quarter of the piece
+// (g_TransitionState 1-5) and preseeks the new track to start when the piece ends.
+//
+// Speech ids select the file by range: <10000 level scene speech, 10000 vendor, 20000 level
+// bindata, 30000 help, 40000 space, 50000 Qwark taunts, 60000 helpgirl. Speech is always
+// preseeked (started paused) and music_PlayPreseekedSpeech lets it go.
+#include <ctype.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
@@ -14,1209 +29,896 @@
 #include "idol/idol.h"
 #include "idol/sound.h"
 #include "sdk/libscream/989snd.h"
+#include <ctype.h>
+
+/* music_Playing.status */
+#define MUSIC_IDLE           0
+#define MUSIC_STARTING       1      /* stream requested, waiting for the handle */
+#define MUSIC_BUFFERING      2      /* preseeked, polling snd_IsVAGStreamBuffered_CB */
+#define MUSIC_BUFFERED       3      /* preseeked and ready to continue */
+#define MUSIC_PLAYING        4
+#define MUSIC_STOP           5      /* stop requested */
+#define MUSIC_STOPPING       6
+#define MUSIC_STOPPED        7
+#define MUSIC_HEAD_READY     8      /* head started, body not queued yet */
+#define MUSIC_BODY_STARTING  9      /* body requested behind the head */
+#define MUSIC_PAUSED         0x8000 /* status and pause flag bit */
+
+/* snd_PlayVAGStreamByNameEx_CB flags */
+#define STREAM_PRESEEK       0x04   /* start paused, snd_ContinueVAGStream starts it */
+#define STREAM_FLAG_8        0x08   /* set on every music stream (meaning unknown) */
+#define STREAM_LOOP          0x10
+
+/* snd_PlayVAGStreamByNameEx_CB volume groups */
+#define VOLGROUP_MUSIC       1
+#define VOLGROUP_SPEECH      2
+
+#define SOUND_PARAM_VOLUME   0x0c   /* snd_SetSoundParams_CB mask used for the fade */
+
+#define MUSIC_FLAG_HAS_BODY  0x01   /* music_Playing.flags: track n+1 loops after track n */
+
+#define STREAM_QUEUE_LEN     10
+#define STREAM_REMAIN_START  48000
+
+#define NO_TRACK             (-1)
+#define NO_SPEECH            (-1)
+#define LANG_JAPANESE        6
+
+#define SPEECH_VENDOR        10000
+#define SPEECH_BINDATA       20000
+#define SPEECH_HELP          30000
+#define SPEECH_SPACE         40000
+#define SPEECH_QWARK         50000
+#define SPEECH_HELPGIRL      60000
+
+#define MUSIC_FILE           "rc1/ps3data/level%d/music[%d].xvag"
+#define HOST_WAD_FILE        "host0:\\data\\game.wad"
+#define SECTOR_SHIFT         11
+#define SECTOR_SIZE          0x800
+#define HOST_SEEK_END        5
+#define HOST_SEEK_SET        6
+
+#define LEVEL_MUSIC_FILES    15
+
+#define TRANSITION_DELAY_SECONDS  7.5f      /* constants at 0x11d1e4 */
+#define FRAMES_PER_SECOND         60.0f
+
+#define CD_REASON_READY      5
+#define CD_STATUS_BUSY       4
+
+/* Claims a free stream record and fills in what every new stream starts with. */
+static inline void music_ClaimStream(music_Playing *stream, int track, int flags, int vol, int transition)
+{
+    stream->handle = -1;
+    stream->status = MUSIC_STARTING;
+    stream->track = (short)track;
+    stream->volume = (short)vol;
+    stream->flags = (short)flags;
+    stream->queuelen = STREAM_QUEUE_LEN;
+    stream->remain = STREAM_REMAIN_START;
+    stream->transition = (short)transition;
+}
+
+static inline void music_PlayStream(music_Playing *stream, const char *path, int vol, int volGroup,
+                                    int queueOn, int streamFlags, SndCompleteProc callback)
+{
+    snd_PlayVAGStreamByNameEx_CB(path, NULL, 0, 0, vol, 0, volGroup, queueOn, streamFlags, callback,
+                                 (u64)stream);
+}
+
+static inline void music_PlaySpeechFile(const char *path, int vol)
+{
+    music_PlayStream(&g_SpeechPlaying, path, vol, VOLGROUP_SPEECH, 0, STREAM_FLAG_8 | STREAM_PRESEEK,
+                     music_SpeechPreseekCB);
+}
 
 // 0x011b944 (0x14 bytes)
 void SECTION_HEADER_MUSIC(void)
-
 {
-  DAT_00729554 = 0x10000;
-  return;
+    DAT_00729554 = 0x10000;
 }
-
 
 // 0x011b960 (0xcc bytes)
-// strings: 00653004: 'cdrom0:'
-
-
 void music_UppercaseCdromPath(char *path)
-
 {
-  byte bVar1;
-  size_t sVar2;
-  int iVar3;
-  size_t sVar4;
-  
-  sVar2 = strlen("cdrom0:");
-  iVar3 = FUN_005ccb28("cdrom0:",path,sVar2);
-  if (iVar3 == 0) {
-    for (; sVar4 = strlen(path), sVar2 < sVar4; sVar2 = sVar2 + 1) {
-      bVar1 = path[sVar2];
-      path[sVar2] = (bVar1 - 0x20) +
-                    ((byte)(ZERO_MASK((*(ushort *)(PTR_PTR_00905664 + (uint)bVar1 * 2) & 0x10))) & bVar1 - (bVar1 - 0x20));
-    }
-  }
-  return;
-}
+    size_t prefixLen = strlen("cdrom0:");
 
+    if (strncmp("cdrom0:", path, prefixLen) != 0) {
+        return;
+    }
+
+    for (size_t i = prefixLen; i < strlen(path); i++) {
+        if (islower((unsigned char)path[i])) {
+            path[i] = path[i] - ('a' - 'A');
+        }
+    }
+}
 
 // 0x011ba2c (0x2c bytes)
 void music_LoadCoreBank(void)
-
 {
-  FUN_00506664(&PTR_music_CdCB_00706db0);
-  return;
+    snd_StreamSafeCdCallback(music_CdCB);
 }
-
 
 // 0x011ba58 (0xa8 bytes)
 void music_Init(void)
-
 {
-  int iVar1;
-  
-  DAT_009636f8 = 0x20;
-  DAT_009636fc = 10;
-  DAT_00963700 = 8;
-  DAT_00963704 = 0;
-  DAT_009636c8 = 0;
-  g_MusicPlaying.handle = 0;
-  g_MusicPlaying.status = 0;
-  g_SpeechPlaying.handle = 0;
-  g_SpeechPlaying.status = 0;
-  g_TransitionPlaying.handle = 0;
-  g_TransitionPlaying.status = 0;
-  g_PendingSpeech = 0xffffffff;
-  g_PendingTrack = 0xff;
-  FUN_00505954(4,0xf000,10,1);
-  do {
-    iVar1 = STUB_00505d20();
-  } while (iVar1 != 0);
-  FUN_00506664(&PTR_music_CdCB_00706db0);
-  return;
-}
+    DAT_009636f8 = 0x20;
+    DAT_009636fc = 10;
+    DAT_00963700 = 8;
+    DAT_00963704 = 0;
+    DAT_009636c8 = 0;
 
+    g_MusicPlaying.handle = 0;
+    g_MusicPlaying.status = MUSIC_IDLE;
+    g_SpeechPlaying.handle = 0;
+    g_SpeechPlaying.status = MUSIC_IDLE;
+    g_TransitionPlaying.handle = 0;
+    g_TransitionPlaying.status = MUSIC_IDLE;
+    g_PendingSpeech = NO_SPEECH;
+    g_PendingTrack = NO_TRACK;
+
+    snd_InitVAGStreamingEx(4, 0xf000, 10, 1);
+    while (STUB_00505d20() != 0) {
+    }
+
+    snd_StreamSafeCdCallback(music_CdCB);
+}
 
 // 0x011bb00 (0x9c bytes)
-// strings: 0065300c: 'rc1/ps3data/level%d/music[%d].xvag'
-
-
 void InitLevelMusicFileSizes(void)
-
 {
-  ulonglong uVar1;
-  undefined4 size;
-  ulonglong music;
-  int iVar2;
-  char buff [256];
-  
-  music = 0;
-  do {
-    snprintf(buff,"rc1/ps3data/level%d/music[%d].xvag",Level,music);
-    size = GetFileSize(buff);
-    uVar1 = music & 0xffffffff;
-    iVar2 = (int)music + 1;
-    music = (ulonglong)iVar2;
-    *(undefined4 *)(&g_LevelMusicFileSizes + (int)(uVar1 << 2)) = size;
-  } while (iVar2 < 0xf);
-  return;
-}
+    char path[256];
 
+    for (int music = 0; music < LEVEL_MUSIC_FILES; music++) {
+        sprintf(path, MUSIC_FILE, Level, music);
+        g_LevelMusicFileSizes[music] = GetFileSize(path);
+    }
+}
 
 // 0x011bb9c (0xf4 bytes)
-// strings: 00653030: 'rc1/ps3data/global/audio/helpgirl_speeches%d.xvag'
-
-
-void music_StartSpeech_Helpgirl(int id,int flags,int vol)
-
+void music_StartSpeech_Helpgirl(int id, int flags, int vol)
 {
-  char acStack_110 [256];
-  
-  if (g_SpeechPlaying.handle == 0) {
-    g_SpeechPlaying.handle = -1;
-    g_SpeechPlaying.status = 1;
-    g_SpeechPlaying.track = (short)id;
-    g_SpeechPlaying.volume = (short)vol;
-    g_SpeechPlaying.flags = (short)flags;
-    g_SpeechPlaying.queuelen = 10;
-    g_SpeechPlaying.remain = 48000;
-    g_SpeechPlaying.transition = 0;
-    snprintf(acStack_110,"rc1/ps3data/global/audio/helpgirl_speeches%d.xvag",id + -60000);
-    FUN_00506444(acStack_110,0,0,0,g_SpeechPlaying.volume,0,2,0);
-  }
-  return;
-}
+    char path[256];
 
+    if (g_SpeechPlaying.handle != 0) {
+        return;
+    }
+
+    music_ClaimStream(&g_SpeechPlaying, id, flags, vol, 0);
+    sprintf(path, "rc1/ps3data/global/audio/helpgirl_speeches%d.xvag", id - SPEECH_HELPGIRL);
+    music_PlaySpeechFile(path, g_SpeechPlaying.volume);
+}
 
 // 0x011bc90 (0x100 bytes)
-// strings: 00653064: 'rc1/ps3data/global/audio/qwark_taunts%d_%d.xvag'
-
-
-void music_StartSpeech_Qwark(int id,int flags,int vol)
-
+void music_StartSpeech_Qwark(int id, int flags, int vol)
 {
-  char acStack_110 [256];
-  
-  if (g_SpeechPlaying.handle == 0) {
-    g_SpeechPlaying.handle = -1;
-    g_SpeechPlaying.status = 1;
-    g_SpeechPlaying.track = (short)id;
-    g_SpeechPlaying.volume = (short)vol;
-    g_SpeechPlaying.flags = (short)flags;
-    g_SpeechPlaying.queuelen = 10;
-    g_SpeechPlaying.remain = 48000;
-    g_SpeechPlaying.transition = 0;
-    snprintf(acStack_110,"rc1/ps3data/global/audio/qwark_taunts%d_%d.xvag",id + -50000,
-                   g_Language);
-    FUN_00506444(acStack_110,0,0,0,g_SpeechPlaying.volume,0,2,0);
-  }
-  return;
-}
+    char path[256];
 
+    if (g_SpeechPlaying.handle != 0) {
+        return;
+    }
+
+    music_ClaimStream(&g_SpeechPlaying, id, flags, vol, 0);
+    sprintf(path, "rc1/ps3data/global/audio/qwark_taunts%d_%d.xvag", id - SPEECH_QWARK, g_Language);
+    music_PlaySpeechFile(path, g_SpeechPlaying.volume);
+}
 
 // 0x011bd90 (0xf4 bytes)
-// strings: 00653094: 'rc1/ps3data/global/audio/space_sounds_l%d.xvag'
-
-
-void music_StartSpeech_Space(int id,int flags,int vol)
-
+void music_StartSpeech_Space(int id, int flags, int vol)
 {
-  char acStack_110 [256];
-  
-  if (g_SpeechPlaying.handle == 0) {
-    g_SpeechPlaying.handle = -1;
-    g_SpeechPlaying.status = 1;
-    g_SpeechPlaying.track = (short)id;
-    g_SpeechPlaying.volume = (short)vol;
-    g_SpeechPlaying.flags = (short)flags;
-    g_SpeechPlaying.queuelen = 10;
-    g_SpeechPlaying.remain = 48000;
-    g_SpeechPlaying.transition = 0;
-    snprintf(acStack_110,"rc1/ps3data/global/audio/space_sounds_l%d.xvag",id + -40000);
-    FUN_00506444(acStack_110,0,0,0,g_SpeechPlaying.volume,0,2,0);
-  }
-  return;
-}
+    char path[256];
 
+    if (g_SpeechPlaying.handle != 0) {
+        return;
+    }
+
+    music_ClaimStream(&g_SpeechPlaying, id, flags, vol, 0);
+    sprintf(path, "rc1/ps3data/global/audio/space_sounds_l%d.xvag", id - SPEECH_SPACE);
+    music_PlaySpeechFile(path, g_SpeechPlaying.volume);
+}
 
 // 0x011be84 (0x180 bytes)
-// strings: 006530c4: 'rc1/ps3data/global/audio/help%d_%d.xvag'
-
-
-void music_StartSpeech_Help(int id,int flags,int vol)
-
+// Help voice-overs are muted when the help voice option is off. Japanese falls back to the
+// English file when there is no Japanese one.
+void music_StartSpeech_Help(int id, int flags, int vol)
 {
-  int iVar1;
-  longlong lVar2;
-  char acStack_130 [264];
-  
-  iVar1 = g_Language;
-  if (g_SpeechPlaying.handle == 0) {
-    g_SpeechPlaying.volume = (short)vol;
-    g_SpeechPlaying.handle = -1;
-    g_SpeechPlaying.status = 1;
-    g_SpeechPlaying.track = (short)id;
-    g_SpeechPlaying.flags = (short)flags;
-    g_SpeechPlaying.queuelen = 10;
-    g_SpeechPlaying.remain = 48000;
-    g_SpeechPlaying.transition = 0;
-    snprintf(acStack_130,"rc1/ps3data/global/audio/help%d_%d.xvag",id + -30000,g_Language);
-    if ((iVar1 == 6) && (lVar2 = GetFileSize(acStack_130), lVar2 == 0)) {
-      snprintf(acStack_130,"rc1/ps3data/global/audio/help%d_%d.xvag",id + -30000,0);
-    }
-    FUN_00506444(acStack_130,0,0,0,
-                 g_SpeechPlaying.volume +
-                 ((ushort)(ZERO_MASK((uint)g_HelpVoiceOn)) & -g_SpeechPlaying.volume
-                 ),0,2,0);
-  }
-  return;
-}
+    char path[264];
+    int language = g_Language;
 
+    if (g_SpeechPlaying.handle != 0) {
+        return;
+    }
+
+    music_ClaimStream(&g_SpeechPlaying, id, flags, vol, 0);
+    sprintf(path, "rc1/ps3data/global/audio/help%d_%d.xvag", id - SPEECH_HELP, g_Language);
+    if (language == LANG_JAPANESE && GetFileSize(path) == 0) {
+        sprintf(path, "rc1/ps3data/global/audio/help%d_%d.xvag", id - SPEECH_HELP, 0);
+    }
+
+    music_PlaySpeechFile(path, g_HelpVoiceOn ? g_SpeechPlaying.volume : 0);
+}
 
 // 0x011c004 (0xf8 bytes)
-// strings: 006530ec: 'rc1/ps3data/level%d/bindata[%d].xvag'
-
-
-void music_StartSpeech_Bindata(int id,int flags,int vol)
-
+void music_StartSpeech_Bindata(int id, int flags, int vol)
 {
-  char acStack_110 [256];
-  
-  if (g_SpeechPlaying.handle == 0) {
-    g_SpeechPlaying.handle = -1;
-    g_SpeechPlaying.status = 1;
-    g_SpeechPlaying.track = (short)id;
-    g_SpeechPlaying.volume = (short)vol;
-    g_SpeechPlaying.flags = (short)flags;
-    g_SpeechPlaying.queuelen = 10;
-    g_SpeechPlaying.remain = 48000;
-    g_SpeechPlaying.transition = 0;
-    snprintf(acStack_110,"rc1/ps3data/level%d/bindata[%d].xvag",Level,id + -20000);
-    FUN_00506444(acStack_110,0,0,0,g_SpeechPlaying.volume,0,2,0);
-  }
-  return;
-}
+    char path[256];
 
+    if (g_SpeechPlaying.handle != 0) {
+        return;
+    }
+
+    music_ClaimStream(&g_SpeechPlaying, id, flags, vol, 0);
+    sprintf(path, "rc1/ps3data/level%d/bindata[%d].xvag", Level, id - SPEECH_BINDATA);
+    music_PlaySpeechFile(path, g_SpeechPlaying.volume);
+}
 
 // 0x011c0fc (0xec bytes)
-// strings: 00653114: 'rc1/ps3data/global/audio/vendor_speech%d.xvag'
-
-
-void music_StartSpeech_Vendor(int id,int flags,int vol)
-
+void music_StartSpeech_Vendor(int id, int flags, int vol)
 {
-  char acStack_110 [256];
-  
-  if (g_SpeechPlaying.handle == 0) {
-    g_SpeechPlaying.handle = -1;
-    g_SpeechPlaying.status = 1;
-    g_SpeechPlaying.track = (short)id;
-    g_SpeechPlaying.volume = (short)vol;
-    g_SpeechPlaying.flags = (short)flags;
-    g_SpeechPlaying.queuelen = 10;
-    g_SpeechPlaying.remain = 48000;
-    g_SpeechPlaying.transition = 0;
-    snprintf(acStack_110,"rc1/ps3data/global/audio/vendor_speech%d.xvag",id + -10000);
-    FUN_00506444(acStack_110,0,0,0,g_SpeechPlaying.volume,0,2,0);
-  }
-  return;
-}
+    char path[256];
 
+    if (g_SpeechPlaying.handle != 0) {
+        return;
+    }
+
+    music_ClaimStream(&g_SpeechPlaying, id, flags, vol, 0);
+    sprintf(path, "rc1/ps3data/global/audio/vendor_speech%d.xvag", id - SPEECH_VENDOR);
+    music_PlaySpeechFile(path, g_SpeechPlaying.volume);
+}
 
 // 0x011c1e8 (0x648 bytes)
-// strings: 00653030: 'rc1/ps3data/global/audio/helpgirl_speeches%d.xvag' | 00653064: 'rc1/ps3data/global/audio/qwark_taunts%d_%d.xvag' | 00653094: 'rc1/ps3data/global/audio/space_sounds_l%d.xvag' | 006530c4: 'rc1/ps3data/global/audio/help%d_%d.xvag' | 006530ec: 'rc1/ps3data/level%d/bindata[%d].xvag' | 00653114: 'rc1/ps3data/global/audio/vendor_speech%d.xvag' | 007295d0: 'efgsij' | 00653144: 'rc1/ps3data/level%d/scene[%d]/speech_%c.xvag'
-
-
-void music_StartSpeech(int id,int flags,int vol)
-
+// The per-range functions above are inlined here. Scene speech (ids below 10000) has one file per
+// language, lettered by s_efgsij (English for language 0 as well as 1); it is also muted when the
+// help voice option is off.
+void music_StartSpeech(int id, int flags, int vol)
 {
-  int iVar1;
-  short sVar3;
-  longlong lVar2;
-  short sVar4;
-  short sVar5;
-  char acStack_730 [256];
-  char acStack_630 [256];
-  char acStack_530 [256];
-  char acStack_430 [256];
-  char acStack_330 [256];
-  char acStack_230 [256];
-  char acStack_130 [256];
-  
-  iVar1 = g_Language;
-  sVar5 = (short)id;
-  sVar3 = (short)vol;
-  sVar4 = (short)flags;
-  if (id < 60000) {
-    if (id < 50000) {
-      if (id < 40000) {
-        if (id < 30000) {
-          if (id < 20000) {
-            if (id < 10000) {
-              if (g_SpeechPlaying.handle == 0) {
-                g_SpeechPlaying.handle = -1;
-                g_SpeechPlaying.status = 1;
-                g_SpeechPlaying.queuelen = 10;
-                g_SpeechPlaying.remain = 48000;
-                g_SpeechPlaying.transition = 0;
-                g_SpeechPlaying.track = sVar5;
-                g_SpeechPlaying.volume = sVar3;
-                g_SpeechPlaying.flags = sVar4;
-                snprintf(acStack_130,"rc1/ps3data/level%d/scene[%d]/speech_%c.xvag",Level,id,
-                               (ulonglong)
-                               (byte)s_efgsij_007295d0
-                                     [g_Language + -1 +
-                                      ((uint)(ZERO_MASK(g_Language)) &
-                                      g_Language - (g_Language + -1))]);
-                FUN_00506444(acStack_130,0,0,0,g_SpeechPlaying.volume,0,2,0);
-              }
-            }
-            else if (g_SpeechPlaying.handle == 0) {
-              g_SpeechPlaying.handle = -1;
-              g_SpeechPlaying.status = 1;
-              g_SpeechPlaying.queuelen = 10;
-              g_SpeechPlaying.remain = 48000;
-              g_SpeechPlaying.transition = 0;
-              g_SpeechPlaying.track = sVar5;
-              g_SpeechPlaying.volume = sVar3;
-              g_SpeechPlaying.flags = sVar4;
-              snprintf(acStack_730,"rc1/ps3data/global/audio/vendor_speech%d.xvag",id + -10000
-                            );
-              FUN_00506444(acStack_730,0,0,0,g_SpeechPlaying.volume,0,2,0);
-            }
-          }
-          else if (g_SpeechPlaying.handle == 0) {
-            g_SpeechPlaying.handle = -1;
-            g_SpeechPlaying.status = 1;
-            g_SpeechPlaying.queuelen = 10;
-            g_SpeechPlaying.remain = 48000;
-            g_SpeechPlaying.transition = 0;
-            g_SpeechPlaying.track = sVar5;
-            g_SpeechPlaying.volume = sVar3;
-            g_SpeechPlaying.flags = sVar4;
-            snprintf(acStack_630,"rc1/ps3data/level%d/bindata[%d].xvag",Level,id + -20000);
-            FUN_00506444(acStack_630,0,0,0,g_SpeechPlaying.volume,0,2,0);
-          }
-        }
-        else if (g_SpeechPlaying.handle == 0) {
-          g_SpeechPlaying.handle = -1;
-          g_SpeechPlaying.status = 1;
-          g_SpeechPlaying.queuelen = 10;
-          g_SpeechPlaying.remain = 48000;
-          g_SpeechPlaying.transition = 0;
-          g_SpeechPlaying.track = sVar5;
-          g_SpeechPlaying.volume = sVar3;
-          g_SpeechPlaying.flags = sVar4;
-          snprintf(acStack_530,"rc1/ps3data/global/audio/help%d_%d.xvag",id + -30000,
-                         g_Language);
-          if ((iVar1 == 6) && (lVar2 = GetFileSize(acStack_530), lVar2 == 0)) {
-            snprintf(acStack_530,"rc1/ps3data/global/audio/help%d_%d.xvag",id + -30000,0);
-          }
-          FUN_00506444(acStack_530,0,0,0,
-                       g_SpeechPlaying.volume +
-                       ((ushort)(ZERO_MASK((uint)g_HelpVoiceOn)) &
-                       -g_SpeechPlaying.volume),0,2,0);
-        }
-      }
-      else if (g_SpeechPlaying.handle == 0) {
-        g_SpeechPlaying.handle = -1;
-        g_SpeechPlaying.status = 1;
-        g_SpeechPlaying.queuelen = 10;
-        g_SpeechPlaying.remain = 48000;
-        g_SpeechPlaying.transition = 0;
-        g_SpeechPlaying.track = sVar5;
-        g_SpeechPlaying.volume = sVar3;
-        g_SpeechPlaying.flags = sVar4;
-        snprintf(acStack_430,"rc1/ps3data/global/audio/space_sounds_l%d.xvag",id + -40000);
-        FUN_00506444(acStack_430,0,0,0,g_SpeechPlaying.volume,0,2,0);
-      }
+    char path[256];
+
+    if (id >= SPEECH_HELPGIRL) {
+        music_StartSpeech_Helpgirl(id, flags, vol);
+    }
+    else if (id >= SPEECH_QWARK) {
+        music_StartSpeech_Qwark(id, flags, vol);
+    }
+    else if (id >= SPEECH_SPACE) {
+        music_StartSpeech_Space(id, flags, vol);
+    }
+    else if (id >= SPEECH_HELP) {
+        music_StartSpeech_Help(id, flags, vol);
+    }
+    else if (id >= SPEECH_BINDATA) {
+        music_StartSpeech_Bindata(id, flags, vol);
+    }
+    else if (id >= SPEECH_VENDOR) {
+        music_StartSpeech_Vendor(id, flags, vol);
     }
     else if (g_SpeechPlaying.handle == 0) {
-      g_SpeechPlaying.handle = -1;
-      g_SpeechPlaying.status = 1;
-      g_SpeechPlaying.queuelen = 10;
-      g_SpeechPlaying.remain = 48000;
-      g_SpeechPlaying.transition = 0;
-      g_SpeechPlaying.track = sVar5;
-      g_SpeechPlaying.volume = sVar3;
-      g_SpeechPlaying.flags = sVar4;
-      snprintf(acStack_330,"rc1/ps3data/global/audio/qwark_taunts%d_%d.xvag",id + -50000,
-                     g_Language);
-      FUN_00506444(acStack_330,0,0,0,g_SpeechPlaying.volume,0,2,0);
-    }
-  }
-  else if (g_SpeechPlaying.handle == 0) {
-    g_SpeechPlaying.handle = -1;
-    g_SpeechPlaying.status = 1;
-    g_SpeechPlaying.queuelen = 10;
-    g_SpeechPlaying.remain = 48000;
-    g_SpeechPlaying.transition = 0;
-    g_SpeechPlaying.track = sVar5;
-    g_SpeechPlaying.volume = sVar3;
-    g_SpeechPlaying.flags = sVar4;
-    snprintf(acStack_230,"rc1/ps3data/global/audio/helpgirl_speeches%d.xvag",id + -60000);
-    FUN_00506444(acStack_230,0,0,0,g_SpeechPlaying.volume,0,2,0);
-  }
-  return;
-}
+        int letter = g_Language != 0 ? g_Language - 1 : 0;
 
+        music_ClaimStream(&g_SpeechPlaying, id, flags, vol, 0);
+        sprintf(path, "rc1/ps3data/level%d/scene[%d]/speech_%c.xvag", Level, id, s_efgsij_007295d0[letter]);
+        music_PlaySpeechFile(path, g_HelpVoiceOn ? g_SpeechPlaying.volume : 0);
+    }
+}
 
 // 0x011c830 (0x60 bytes)
 int music_PlayPreseekedSpeech(void)
-
 {
-  int iVar1;
-  
-  if ((g_SpeechPlaying.handle == 0) || (g_SpeechPlaying.status != 3)) {
-    iVar1 = 0;
-  }
-  else {
-    FUN_00505cfc();
-    iVar1 = 1;
-    g_SpeechPlaying.status = 4;
-  }
-  return iVar1;
-}
+    if (g_SpeechPlaying.handle == 0 || g_SpeechPlaying.status != MUSIC_BUFFERED) {
+        return 0;
+    }
 
+    snd_ContinueVAGStream(g_SpeechPlaying.handle);
+    g_SpeechPlaying.status = MUSIC_PLAYING;
+    return 1;
+}
 
 // 0x011c890 (0xf4 bytes)
-// strings: 0065300c: 'rc1/ps3data/level%d/music[%d].xvag'
-
-
-void music_PreseekTrack(int track,int flags,int vol)
-
+void music_PreseekTrack(int track, int flags, int vol)
 {
-  char acStack_110 [256];
-  
-  if (g_MusicPlaying.handle == 0) {
-    g_MusicPlaying.handle = -1;
-    g_MusicPlaying.status = 1;
-    g_MusicPlaying.track = (short)track;
-    g_MusicPlaying.volume = (short)vol;
-    g_MusicPlaying.flags = (short)flags;
-    g_MusicPlaying.queuelen = 10;
-    g_MusicPlaying.remain = 48000;
-    g_MusicPlaying.transition = 0;
-    snprintf(acStack_110,"rc1/ps3data/level%d/music[%d].xvag",Level,track);
-    FUN_00506444(acStack_110,0,0,0,g_MusicPlaying.volume,0,1,0);
-  }
-  return;
-}
+    char path[256];
 
+    if (g_MusicPlaying.handle != 0) {
+        return;
+    }
+
+    music_ClaimStream(&g_MusicPlaying, track, flags, vol, 0);
+    sprintf(path, MUSIC_FILE, Level, track);
+    music_PlayStream(&g_MusicPlaying, path, g_MusicPlaying.volume, VOLGROUP_MUSIC, 0,
+                     STREAM_FLAG_8 | STREAM_PRESEEK, music_PreseekCB);
+}
 
 // 0x011c984 (0xf4 bytes)
-// strings: 0065300c: 'rc1/ps3data/level%d/music[%d].xvag'
-
-
-void music_StartTrack(int track,int flags,int vol)
-
+void music_StartTrack(int track, int flags, int vol)
 {
-  char acStack_110 [256];
-  
-  if (g_MusicPlaying.handle == 0) {
-    g_MusicPlaying.handle = -1;
-    g_MusicPlaying.status = 1;
-    g_MusicPlaying.track = (short)track;
-    g_MusicPlaying.volume = (short)vol;
-    g_MusicPlaying.flags = (short)flags;
-    g_MusicPlaying.queuelen = 10;
-    g_MusicPlaying.remain = 48000;
-    g_MusicPlaying.transition = 0;
-    snprintf(acStack_110,"rc1/ps3data/level%d/music[%d].xvag",Level,track);
-    FUN_00506444(acStack_110,0,0,0,g_MusicPlaying.volume,0,1,0);
-  }
-  return;
-}
+    char path[256];
 
+    if (g_MusicPlaying.handle != 0) {
+        return;
+    }
+
+    music_ClaimStream(&g_MusicPlaying, track, flags, vol, 0);
+    sprintf(path, MUSIC_FILE, Level, track);
+    music_PlayStream(&g_MusicPlaying, path, g_MusicPlaying.volume, VOLGROUP_MUSIC, 0, STREAM_FLAG_8,
+                     music_PreseekTrackCB);
+}
 
 // 0x011ca78 (0x13c bytes)
-// strings: 0065300c: 'rc1/ps3data/level%d/music[%d].xvag'
-
-
-void music_StartTrackBody(int track,int flags,int vol)
-
+// Queues the body (track + 1) behind the playing head; it loops when the track has a body.
+void music_StartTrackBody(int track, int flags, int vol)
 {
-  int iVar1;
-  char acStack_120 [256];
-  
-  iVar1 = g_MusicPlaying.handle;
-  if (g_MusicPlaying.status != 9) {
-    if (g_MusicPlaying.handle != -1 && g_MusicPlaying.handle != 0) {
-      g_MusicPlaying.track = (short)track;
-      g_MusicPlaying.status = 9;
-      g_MusicPlaying.volume = (short)vol;
-      g_MusicPlaying.flags = (short)flags;
-      g_MusicPlaying.queuelen = 10;
-      g_MusicPlaying.remain = 48000;
-      g_MusicPlaying.transition = 0;
-      snprintf(acStack_120,"rc1/ps3data/level%d/music[%d].xvag",Level,track + 1);
-      FUN_00506444(acStack_120,0,0,0,g_MusicPlaying.volume,0,1,iVar1);
-    }
-  }
-  return;
-}
+    char path[256];
+    int head = g_MusicPlaying.handle;
 
+    if (g_MusicPlaying.status == MUSIC_BODY_STARTING || head == -1 || head == 0) {
+        return;
+    }
+
+    g_MusicPlaying.track = (short)track;
+    g_MusicPlaying.status = MUSIC_BODY_STARTING;
+    g_MusicPlaying.volume = (short)vol;
+    g_MusicPlaying.flags = (short)flags;
+    g_MusicPlaying.queuelen = STREAM_QUEUE_LEN;
+    g_MusicPlaying.remain = STREAM_REMAIN_START;
+    g_MusicPlaying.transition = 0;
+
+    sprintf(path, MUSIC_FILE, Level, track + 1);
+    music_PlayStream(&g_MusicPlaying, path, g_MusicPlaying.volume, VOLGROUP_MUSIC, head,
+                     (flags & MUSIC_FLAG_HAS_BODY) ? STREAM_FLAG_8 | STREAM_LOOP : STREAM_FLAG_8,
+                     music_StartBodyCB);
+}
 
 // 0x011cbb4 (0x114 bytes)
-// strings: 0065300c: 'rc1/ps3data/level%d/music[%d].xvag'
-
-
-int music_Transition(int track,int transition,int flags,int vol)
-
+// Plays transition piece `transition` on its own stream; `track` is what follows it.
+int music_Transition(int track, int transition, int flags, int vol)
 {
-  bool bVar1;
-  char acStack_120 [264];
-  
-  bVar1 = g_TransitionPlaying.handle == 0;
-  if (bVar1) {
-    g_TransitionPlaying.handle = -1;
-    g_TransitionPlaying.status = 1;
-    g_TransitionPlaying.track = (short)track;
-    g_TransitionPlaying.volume = (short)vol;
-    g_TransitionPlaying.flags = (short)flags;
-    g_TransitionPlaying.queuelen = 10;
-    g_TransitionPlaying.remain = 48000;
-    g_TransitionPlaying.transition = 1;
-    snprintf(acStack_120,"rc1/ps3data/level%d/music[%d].xvag",Level,transition);
-    FUN_00506444(acStack_120,0,0,0,g_TransitionPlaying.volume,0,1,0);
-  }
-  return (int)bVar1;
-}
+    char path[264];
 
+    if (g_TransitionPlaying.handle != 0) {
+        return 0;
+    }
+
+    music_ClaimStream(&g_TransitionPlaying, track, flags, vol, 1);
+    sprintf(path, MUSIC_FILE, Level, transition);
+    music_PlayStream(&g_TransitionPlaying, path, g_TransitionPlaying.volume, VOLGROUP_MUSIC, 0, STREAM_FLAG_8,
+                     music_StartCB);
+    return 1;
+}
 
 // 0x011ccc8 (0x54 bytes)
-void music_SetTransition(int track,int transition)
-
+void music_SetTransition(int track, int transition)
 {
-  if ((g_MusicPlaying.track != track) || (g_PendingTrack != -1)) {
-    if ((g_MusicPlaying.status == 0) && (g_TransitionPlaying.status == 0)) {
-      g_MusicPlaying.track = (short)track;
+    if (g_MusicPlaying.track == track && g_PendingTrack == NO_TRACK) {
+        return;
+    }
+
+    if (g_MusicPlaying.status == MUSIC_IDLE && g_TransitionPlaying.status == MUSIC_IDLE) {
+        g_MusicPlaying.track = (short)track;
     }
     else {
-      g_PendingTrack = (char)track;
-      MusicId = (undefined1)transition;
+        g_PendingTrack = (signed char)track;
+        g_PendingTransition = (signed char)transition;
     }
-  }
-  return;
 }
-
 
 // 0x011cd1c (0x104 bytes)
 void music_Stop(void)
-
 {
-  bool bVar1;
-  int iVar2;
-  
-  bVar1 = g_MusicPlaying.handle == -1;
-  while (bVar1) {
-    STUB_00505d20();
-    bVar1 = g_MusicPlaying.handle == -1;
-  }
-  while (g_TransitionPlaying.handle == -1) {
-    STUB_00505d20();
-  }
-  while (g_SpeechPlaying.handle == -1) {
-    STUB_00505d20();
-  }
-  FUN_00632674();
-  do {
-    iVar2 = STUB_00505d20();
-  } while (iVar2 != 0);
-  FUN_005066c4(1);
-  g_MusicPlaying.status = 0;
-  g_MusicPlaying.flags = 0;
-  g_MusicPlaying.handle = 0;
-  if (g_PendingTrack != -1) {
-    g_MusicPlaying.track = (short)g_PendingTrack;
-  }
-  g_SpeechPlaying.status = 0;
-  g_SpeechPlaying.flags = 0;
-  g_SpeechPlaying.handle = 0;
-  g_TransitionPlaying.status = 0;
-  g_TransitionPlaying.flags = 0;
-  g_TransitionPlaying.handle = 0;
-  g_TransitionState = 0;
-  g_PendingTrack = 0xff;
-  MusicId = 0xff;
-  return;
-}
+    while (g_MusicPlaying.handle == -1) {
+        STUB_00505d20();
+    }
+    while (g_TransitionPlaying.handle == -1) {
+        STUB_00505d20();
+    }
+    while (g_SpeechPlaying.handle == -1) {
+        STUB_00505d20();
+    }
 
+    snd_StopAllStreams();
+    while (STUB_00505d20() != 0) {
+    }
+    FUN_005066c4(1);
+
+    g_MusicPlaying.status = MUSIC_IDLE;
+    g_MusicPlaying.flags = 0;
+    g_MusicPlaying.handle = 0;
+    if (g_PendingTrack != NO_TRACK) {
+        g_MusicPlaying.track = g_PendingTrack;
+    }
+
+    g_SpeechPlaying.status = MUSIC_IDLE;
+    g_SpeechPlaying.flags = 0;
+    g_SpeechPlaying.handle = 0;
+    g_TransitionPlaying.status = MUSIC_IDLE;
+    g_TransitionPlaying.flags = 0;
+    g_TransitionPlaying.handle = 0;
+
+    g_TransitionState = 0;
+    g_PendingTrack = NO_TRACK;
+    g_PendingTransition = NO_TRACK;
+}
 
 // 0x011ce20 (0x44 bytes)
 void music_Pause(int speech)
-
 {
-  if (speech != 0) {
-    g_SpeechPlaying.pause = -0x8000;
-    g_SpeechPlaying.unpause = 0;
-  }
-  g_MusicPlaying.pause = -0x8000;
-  g_MusicPlaying.unpause = 0;
-  g_TransitionPlaying.pause = -0x8000;
-  g_TransitionPlaying.unpause = 0;
-  return;
-}
+    if (speech != 0) {
+        g_SpeechPlaying.pause = (short)MUSIC_PAUSED;
+        g_SpeechPlaying.unpause = 0;
+    }
 
+    g_MusicPlaying.pause = (short)MUSIC_PAUSED;
+    g_MusicPlaying.unpause = 0;
+    g_TransitionPlaying.pause = (short)MUSIC_PAUSED;
+    g_TransitionPlaying.unpause = 0;
+}
 
 // 0x011ce64 (0x1c bytes)
 void music_Unpause(void)
-
 {
-  g_MusicPlaying.pause = 4;
-  g_TransitionPlaying.pause = 4;
-  g_SpeechPlaying.pause = 4;
-  return;
+    g_MusicPlaying.pause = 4;
+    g_TransitionPlaying.pause = 4;
+    g_SpeechPlaying.pause = 4;
 }
-
 
 // 0x011ce80 (0x48 bytes)
+// Unpauses the paused streams after `time` frames (counted down in music_UpdateStream).
 void music_UnpauseDelay(int time)
-
 {
-  short sVar1;
-  
-  sVar1 = (short)time;
-  if ((g_MusicPlaying.pause & 0x8000U) != 0) {
-    g_MusicPlaying.unpause = sVar1;
-  }
-  if ((g_TransitionPlaying.pause & 0x8000U) != 0) {
-    g_TransitionPlaying.unpause = sVar1;
-  }
-  if ((g_SpeechPlaying.pause & 0x8000U) != 0) {
-    g_SpeechPlaying.unpause = sVar1;
-  }
-  return;
+    if (g_MusicPlaying.pause & MUSIC_PAUSED) {
+        g_MusicPlaying.unpause = (short)time;
+    }
+    if (g_TransitionPlaying.pause & MUSIC_PAUSED) {
+        g_TransitionPlaying.unpause = (short)time;
+    }
+    if (g_SpeechPlaying.pause & MUSIC_PAUSED) {
+        g_SpeechPlaying.unpause = (short)time;
+    }
 }
-
 
 // 0x011cec8 (0x1c0 bytes)
+// Per-frame stream housekeeping: stops, pausing, and the buffered / still-playing polls.
 void music_UpdateStream(music_Playing *stream)
-
 {
-  longlong lVar1;
-  int iVar2;
-  ushort uVar3;
-  
-  lVar1 = (longlong)(int)stream;
-  uVar3 = stream->status;
-  iVar2 = stream->handle;
-  if (((uVar3 == 9) || (iVar2 == 0)) || (iVar2 == -1)) {
-    if ((uVar3 == 7) || (iVar2 == 0)) {
-      stream->status = 0;
-    }
-  }
-  else {
-    if (uVar3 == 5) {
-      FUN_00506638();
-      uVar3 = 0;
-      iVar2 = stream->handle;
-      stream->status = 6;
-    }
-    if (iVar2 != 0) {
-      if ((stream->pause & 0x8000U) == 0) {
-        if ((uVar3 & 0x8000) != 0) {
-          FUN_00505cfc(iVar2);
-          stream->status = stream->status ^ 0x8000;
-        }
-      }
-      else {
-        if ((uVar3 & 0x8000) == 0) {
-          FUN_00505f18(iVar2);
-          stream->status = stream->status | 0x8000;
-        }
-        iVar2 = FastDecTimerS16(lVar1 + 0xe);
-        if (iVar2 == 2) {
-          stream->pause = 4;
-        }
-      }
-      uVar3 = stream->status;
-      if ((((uVar3 & 0x8000) == 0 && uVar3 != 1) && (uVar3 != 8)) && (uVar3 != 9)) {
-        if ((uVar3 == 2) || (uVar3 == 3)) {
-          if ((stream->handle != -1) && (uVar3 == 2)) {
-            FUN_00505e98(stream->handle,&PTR_music_FreshenCB_00706db8,lVar1);
-          }
-        }
-        else {
-          iVar2 = stream->handle;
-          stream->handle = -1;
-          FUN_00505e08(iVar2,&PTR_music_TimeRemainingCB_00706df8,lVar1);
-          FUN_005065dc(iVar2,&PTR_music_StopCB_00706de8,lVar1);
-        }
-      }
-    }
-  }
-  return;
-}
+    u16 status = stream->status;
+    int handle = stream->handle;
 
+    if (status == MUSIC_BODY_STARTING || handle == 0 || handle == -1) {
+        if (status == MUSIC_STOPPED || handle == 0) {
+            stream->status = MUSIC_IDLE;
+        }
+        return;
+    }
+
+    if (status == MUSIC_STOP) {
+        snd_StopVAGStream(handle);
+        handle = stream->handle;
+        stream->status = MUSIC_STOPPING;
+    }
+
+    if (handle == 0) {
+        return;
+    }
+
+    /* status is the value read on entry */
+    if (stream->pause & MUSIC_PAUSED) {
+        if (!(status & MUSIC_PAUSED)) {
+            snd_PauseVAGStream(handle);
+            stream->status |= MUSIC_PAUSED;
+        }
+        if (FastDecTimerS16((u16 *)&stream->unpause) == 2) {
+            stream->pause = 4;
+        }
+    }
+    else if (status & MUSIC_PAUSED) {
+        snd_ContinueVAGStream(handle);
+        stream->status ^= MUSIC_PAUSED;
+    }
+
+    status = stream->status;
+    if ((status & MUSIC_PAUSED) || status == MUSIC_STARTING || status == MUSIC_HEAD_READY ||
+        status == MUSIC_BODY_STARTING) {
+        return;
+    }
+
+    if (status == MUSIC_BUFFERING || status == MUSIC_BUFFERED) {
+        if (stream->handle != -1 && status == MUSIC_BUFFERING) {
+            snd_IsVAGStreamBuffered_CB(stream->handle, music_FreshenCB, (u64)stream);
+        }
+        return;
+    }
+
+    handle = stream->handle;
+    stream->handle = -1;
+    snd_GetVAGStreamTimeRemaining_CB(handle, music_TimeRemainingCB, (u64)stream);
+    snd_SoundIsStillPlaying_CB(handle, music_StopCB, (u64)stream);
+}
 
 // 0x011d088 (0x15c bytes)
-// strings: 00653174: 'host0:\\data\\game.wad'
-
-
-int music_LoadFromHostWad(void *dest,int sector,int numSectors)
-
+// Debug path: reads sectors straight out of the host PC's game.wad.
+int music_LoadFromHostWad(void *dest, int sector, int numSectors)
 {
-  undefined8 uVar1;
-  int iVar2;
-  int iVar3;
-  char acStack_70 [72];
-  
-  if ((Music == 0) && (numSectors != 0)) {
-    snprintf(acStack_70,"host0:\\data\\game.wad");
-    uVar1 = FUN_00502dcc(acStack_70,0);
-    if ((int)uVar1 < 0) {
-      iVar2 = 0;
-    }
-    else {
-      iVar2 = STUB_00502de0_RET_0(uVar1,0,5);
-      if ((numSectors + sector + -1) * 0x800 < iVar2) {
-        STUB_00502de0_RET_0(uVar1,sector << 0xb,6);
-        iVar2 = numSectors << 0xb;
-        iVar3 = STUB_00502dd4(uVar1,dest,iVar2);
-        if ((numSectors + -1) * 0x800 < iVar3) {
-          STUB_00502ddc(uVar1);
-          Music = 1;
-        }
-        else {
-          STUB_00502ddc(uVar1);
-          iVar2 = 0;
-        }
-      }
-      else {
-        STUB_00502ddc(uVar1);
-        iVar2 = 0;
-      }
-    }
-  }
-  else {
-    iVar2 = 0;
-  }
-  return iVar2;
-}
+    char path[72];
 
+    if (g_MusicLoading != 0 || numSectors == 0) {
+        return 0;
+    }
+
+    sprintf(path, HOST_WAD_FILE);
+    int file = HostOpen(path, 0);
+    if (file < 0) {
+        return 0;
+    }
+
+    if (HostSeek(file, 0, HOST_SEEK_END) <= (numSectors + sector - 1) * SECTOR_SIZE) {
+        HostClose(file);
+        return 0;
+    }
+
+    HostSeek(file, sector << SECTOR_SHIFT, HOST_SEEK_SET);
+    int size = numSectors << SECTOR_SHIFT;
+    if (HostRead(file, dest, size) <= (numSectors - 1) * SECTOR_SIZE) {
+        HostClose(file);
+        return 0;
+    }
+
+    HostClose(file);
+    g_MusicLoading = 1;
+    return size;
+}
 
 // 0x011d1f0 (0x7f0 bytes)
-// strings: 0065300c: 'rc1/ps3data/level%d/music[%d].xvag' | 00653174: 'host0:\\data\\game.wad'
-
-
-void LoadMusic(void)
-
+// Once per frame: starts the head and body of the level track, runs a pending transition,
+// starts pending speech, fades between tracks, updates the streams and retries host loads.
+void music_Update(void)
 {
-  int iVar1;
-  undefined4 uVar2;
-  int iVar4;
-  undefined8 uVar3;
-  int iVar5;
-  undefined8 in_LR;
-  GPiece<16> auVar6;
-  GPiece<16> auVar7;
-  GPiece<16> auVar8;
-  char acStack_470 [64];
-  char acStack_430 [256];
-  char acStack_330 [256];
-  char acStack_230 [256];
-  char acStack_130 [264];
-  
-  iVar4 = g_MusicPlaying.handle;
-  if (g_FinishedLoading != '\0') {
-    return;
-  }
-  if (Music != 0) {
-    Music = Music + -1;
-  }
-  if (((g_MusicPlaying.pause & 0x8000U) == 0) && ((g_MusicPlaying.status & 0x8000U) == 0)) {
-    if ((g_MusicPlaying.handle != 0) ||
-       (((g_MusicPlaying.flags & 1U) == 0 || (g_PendingTrack != -1)))) {
-      if (((g_MusicPlaying.status != 9) &&
-          (((g_MusicPlaying.handle != 0 && (g_MusicPlaying.handle != -1)) &&
-           (g_MusicPlaying.status == 8)))) &&
-         ((g_MusicPlaying.status != 9 && (g_MusicPlaying.handle != -1)))) {
-        g_MusicPlaying.status = 9;
-        g_MusicPlaying.queuelen = 10;
-        g_MusicPlaying.transition = 0;
-        g_MusicPlaying.remain = 48000;
-        snprintf(acStack_230,"rc1/ps3data/level%d/music[%d].xvag",Level,
-                       (longlong)g_MusicPlaying.track + 1);
-        FUN_00506444(acStack_230,0,0,0,g_MusicPlaying.volume,0,1,iVar4);
-      }
+    if (g_FinishedLoading != 0) {
+        return;
     }
-    else {
-      g_MusicPlaying.handle = -1;
-      g_MusicPlaying.status = 1;
-      g_MusicPlaying.queuelen = 10;
-      g_MusicPlaying.transition = 0;
-      g_MusicPlaying.remain = 48000;
-      snprintf(acStack_130,"rc1/ps3data/level%d/music[%d].xvag",Level,g_MusicPlaying.track);
-      FUN_00506444(acStack_130,0,0,0,g_MusicPlaying.volume,0,1,0);
-    }
-  }
-  iVar4 = FastDecTimerS32(&g_TransitionTimer);
-  if (((iVar4 != 0) && (g_PendingTrack != -1)) && (g_TransitionState == 0)) {
-    if ((int)g_MusicPlaying.track == (int)g_PendingTrack) {
-      g_PendingTrack = -1;
-    }
-    else {
-      if (MusicId != -1) {
-        if (g_TransitionPlaying.handle != 0) goto LAB_0011d584;
-        g_TransitionPlaying.track = (short)g_PendingTrack;
-        g_TransitionPlaying.volume = g_MusicPlaying.volume;
-        g_TransitionPlaying.handle = -1;
-        g_TransitionPlaying.flags = g_MusicPlaying.flags;
-        g_TransitionPlaying.status = 1;
-        g_TransitionPlaying.queuelen = 10;
-        g_TransitionPlaying.remain = 48000;
-        g_TransitionPlaying.transition = 1;
-        snprintf(acStack_330,"rc1/ps3data/level%d/music[%d].xvag",Level,MusicId);
-        FUN_00506444(acStack_330,0,0,0,g_TransitionPlaying.volume,0,1,0);
-      }
-      auVar6 = ZEXT416(0xffffffff);
-      auVar6 = auVar6 | auVar6 << 0x20 | auVar6 << 0x40 | auVar6 << 0x60;
-      auVar7 = vectorShiftLeftIntegerWord(auVar6,auVar6);
-      auVar6 = loadVectorLeftIndexed(in_LR,0x11d1e4);
-      auVar8 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
-      auVar6 = auVar6 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar7 = vectorMultiplyAddFloatingPoint
-                         (auVar8,auVar6 | auVar6 << 0x20 | auVar6 << 0x40 | auVar6 << 0x60,auVar7);
-      auVar6 = ZEXT416(0xffffffff);
-      auVar8 = auVar6 | auVar6 << 0x20 | auVar6 << 0x40 | auVar6 << 0x60;
-      auVar6 = loadVectorLeftIndexed(4,0x11d1e4);
-      auVar6 = auVar6 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar8 = vectorShiftLeftIntegerWord(auVar8,auVar8);
-      auVar7 = vectorConvertToSignedFixedPointWordSaturate(auVar7,0);
-      auVar7 = vectorConvertFromSignedFixedPointWord(auVar7,0);
-      auVar6 = vectorMultiplyAddFloatingPoint
-                         (auVar7,auVar6 | auVar6 << 0x20 | auVar6 << 0x40 | auVar6 << 0x60,auVar8);
-      auVar6 = vectorConvertToSignedFixedPointWordSaturate(auVar6,0);
-      auVar6 = auVar6 >> 0x60 & (GPiece<16>)0xffffffff;
-      g_TransitionTimer =
-           storeVectorElementWordIndexed
-                     (auVar6 | auVar6 << 0x20 | auVar6 << 0x40 | auVar6 << 0x60,0x2c,0x9636c8);
-    }
-  }
-LAB_0011d584:
-  if (-1 < g_PendingSpeech) {
-    if (g_SpeechPlaying.handle == 0) {
-      music_StartSpeech(g_PendingSpeech,0,0x400);
-      g_PendingSpeech = -1;
-    }
-    else if (g_SpeechPlaying.status != 7 && g_SpeechPlaying.status != 6) {
-      g_SpeechPlaying.status = 5;
-    }
-  }
-  iVar4 = g_MusicPlaying.handle;
-  if (((((g_MusicPlaying.status != 9) && (g_MusicPlaying.handle != -1)) &&
-       ((g_MusicPlaying.pause & 0x8000U) == 0)) &&
-      (((g_MusicPlaying.status & 0x8000U) == 0 && ((g_TransitionPlaying.pause & 0x8000U) == 0)))) &&
-     ((g_TransitionPlaying.status & 0x8000U) == 0)) {
-    if (g_TransitionState < 4) {
-      if (1 < g_TransitionState) {
-        if (g_TransitionState < 3) {
-          iVar1 = ((int)g_MusicPlaying.volume *
-                  (g_TransitionFadeTime - (g_TransitionRemainStart - g_TransitionPlaying.remain))) /
-                  g_TransitionFadeTime;
-          if (((iVar1 < 1) ||
-              (((g_TransitionPlaying.status != 4 || (g_TransitionPlaying.transition == 0)) &&
-               (g_TransitionPlaying.handle == 0)))) || (g_MusicPlaying.handle == 0)) {
-            g_TransitionState = 3;
-            g_MusicPlaying.status = 5;
-          }
-          else if (g_MusicPlaying.status != 9) {
-            g_MusicPlaying.handle = -1;
-            FUN_005063b0(iVar4,0xc,iVar1,0,0,0,&PTR_music_StopCB_00706de8,&g_MusicPlaying);
-          }
-        }
-        else if ((g_MusicPlaying.status == 0) &&
-                ((g_TransitionPlaying.transition != 0 || (g_TransitionPlaying.handle == 0)))) {
-          if (g_MusicPlaying.handle == 0) {
-            g_MusicPlaying.handle = -1;
-            g_MusicPlaying.status = 1;
-            g_MusicPlaying.track = (short)g_PendingTrack;
-            g_MusicPlaying.queuelen = 10;
-            g_MusicPlaying.remain = 48000;
-            g_MusicPlaying.transition = 0;
-            snprintf(acStack_430,"rc1/ps3data/level%d/music[%d].xvag",Level);
-            FUN_00506444(acStack_430,0,0,0,g_MusicPlaying.volume,0,1,0);
-          }
-          g_PendingTrack = -1;
-          g_TransitionState = 4;
-        }
-      }
-    }
-    else if (g_TransitionState < 5) {
-      if ((g_MusicPlaying.status == 3) &&
-         (((g_TransitionPlaying.remain < g_TransitionFadeTime || (g_TransitionPlaying.status != 4))
-          || ((g_TransitionPlaying.transition == 0 && (g_TransitionPlaying.handle == 0)))))) {
-        FUN_00505cfc(g_MusicPlaying.handle);
-        g_MusicPlaying.status = 8;
-        g_TransitionState = 5;
-      }
-    }
-    else if ((g_TransitionState < 6) &&
-            ((g_TransitionPlaying.status != 4 || (g_TransitionPlaying.transition == 0)))) {
-      g_TransitionState = 0;
-    }
-  }
-  music_UpdateStream(&g_MusicPlaying);
-  music_UpdateStream(&g_TransitionPlaying);
-  music_UpdateStream(&g_SpeechPlaying);
-  uVar2 = DAT_009636dc;
-  iVar1 = DAT_009636d8;
-  iVar4 = DAT_009636d4;
-  if (DAT_009636d2 == '\0') {
-    if (Music == 2) {
-      Music = 0;
-      if (DAT_009636d8 != 0) {
-        snprintf(acStack_470,"host0:\\data\\game.wad");
-        uVar3 = FUN_00502dcc(acStack_470,0);
-        if (-1 < (int)uVar3) {
-          iVar5 = STUB_00502de0_RET_0(uVar3,0,5);
-          if ((iVar1 + iVar4 + -1) * 0x800 < iVar5) {
-            STUB_00502de0_RET_0(uVar3,iVar4 << 0xb,6);
-            iVar4 = STUB_00502dd4(uVar3,uVar2,iVar1 << 0xb);
-            if ((iVar1 + -1) * 0x800 < iVar4) {
-              STUB_00502ddc(uVar3);
-              Music = 1;
-            }
-            else {
-              STUB_00502ddc(uVar3);
-            }
-          }
-          else {
-            STUB_00502ddc(uVar3);
-          }
-        }
-      }
-      if (Music == 0) {
-        Music = 2;
-      }
-    }
-  }
-  else {
-    iVar4 = STUB_005066bc_RET_0(1);
-    if (iVar4 == 0) {
-      Music = 0;
-      DAT_009636d2 = '\0';
-    }
-  }
-  return;
-}
 
+    if (g_MusicLoading != 0) {
+        g_MusicLoading--;
+    }
+
+    /* start the level track, then queue its body once the head is going */
+    if (!(g_MusicPlaying.pause & MUSIC_PAUSED) && !(g_MusicPlaying.status & MUSIC_PAUSED)) {
+        if (g_MusicPlaying.handle == 0 && (g_MusicPlaying.flags & MUSIC_FLAG_HAS_BODY) &&
+            g_PendingTrack == NO_TRACK) {
+            music_StartTrack(g_MusicPlaying.track, g_MusicPlaying.flags, g_MusicPlaying.volume);
+        }
+        else if (g_MusicPlaying.status == MUSIC_HEAD_READY) {
+            music_StartTrackBody(g_MusicPlaying.track, g_MusicPlaying.flags, g_MusicPlaying.volume);
+        }
+    }
+
+    /* a pending track change: play its transition piece, then wait before changing again */
+    if (FastDecTimerS32(&g_TransitionTimer) != 0 && g_PendingTrack != NO_TRACK && g_TransitionState == 0) {
+        if (g_MusicPlaying.track == g_PendingTrack) {
+            g_PendingTrack = NO_TRACK;
+        }
+        else if (g_PendingTransition == NO_TRACK ||
+                 music_Transition(g_PendingTrack, g_PendingTransition, g_MusicPlaying.flags,
+                                  g_MusicPlaying.volume)) {
+            int delay = (int)(animationSpeed * TRANSITION_DELAY_SECONDS);
+            g_TransitionTimer = (int)((float)delay * FRAMES_PER_SECOND);
+        }
+    }
+
+    if (g_PendingSpeech > NO_SPEECH) {
+        if (g_SpeechPlaying.handle == 0) {
+            music_StartSpeech(g_PendingSpeech, 0, 0x400);
+            g_PendingSpeech = NO_SPEECH;
+        }
+        else if (g_SpeechPlaying.status != MUSIC_STOPPED && g_SpeechPlaying.status != MUSIC_STOPPING) {
+            g_SpeechPlaying.status = MUSIC_STOP;
+        }
+    }
+
+    /* the cross-fade, driven by the transition piece's time remaining */
+    int handle = g_MusicPlaying.handle;
+    bool transitionAlive = (g_TransitionPlaying.status == MUSIC_PLAYING && g_TransitionPlaying.transition != 0) ||
+                           g_TransitionPlaying.handle != 0;
+    if (g_MusicPlaying.status != MUSIC_BODY_STARTING && handle != -1 && !(g_MusicPlaying.pause & MUSIC_PAUSED) &&
+        !(g_MusicPlaying.status & MUSIC_PAUSED) && !(g_TransitionPlaying.pause & MUSIC_PAUSED) &&
+        !(g_TransitionPlaying.status & MUSIC_PAUSED)) {
+        switch (g_TransitionState) {
+        case 2: {
+            /* fade the old track out over g_TransitionFadeTime */
+            int elapsed = g_TransitionRemainStart - g_TransitionPlaying.remain;
+            int vol = g_MusicPlaying.volume * (g_TransitionFadeTime - elapsed) / g_TransitionFadeTime;
+
+            if (vol < 1 || !transitionAlive || g_MusicPlaying.handle == 0) {
+                g_TransitionState = 3;
+                g_MusicPlaying.status = MUSIC_STOP;
+            }
+            else if (g_MusicPlaying.status != MUSIC_BODY_STARTING) {
+                g_MusicPlaying.handle = -1;
+                snd_SetSoundParams_CB(handle, SOUND_PARAM_VOLUME, vol, 0, 0, 0, music_StopCB, (u64)&g_MusicPlaying);
+            }
+            break;
+        }
+
+        case 3:
+            /* old track gone: preseek the new one */
+            if (g_MusicPlaying.status == MUSIC_IDLE &&
+                (g_TransitionPlaying.transition != 0 || g_TransitionPlaying.handle == 0)) {
+                music_PreseekTrack(g_PendingTrack, g_MusicPlaying.flags, g_MusicPlaying.volume);
+                g_PendingTrack = NO_TRACK;
+                g_TransitionState = 4;
+            }
+            break;
+
+        case 4:
+            /* start the new track as the transition piece runs out */
+            if (g_MusicPlaying.status == MUSIC_BUFFERED &&
+                (g_TransitionPlaying.remain < g_TransitionFadeTime || g_TransitionPlaying.status != MUSIC_PLAYING ||
+                 (g_TransitionPlaying.transition == 0 && g_TransitionPlaying.handle == 0))) {
+                snd_ContinueVAGStream(g_MusicPlaying.handle);
+                g_MusicPlaying.status = MUSIC_HEAD_READY;
+                g_TransitionState = 5;
+            }
+            break;
+
+        case 5:
+            if (g_TransitionPlaying.status != MUSIC_PLAYING || g_TransitionPlaying.transition == 0) {
+                g_TransitionState = 0;
+            }
+            break;
+        }
+    }
+
+    music_UpdateStream(&g_MusicPlaying);
+    music_UpdateStream(&g_TransitionPlaying);
+    music_UpdateStream(&g_SpeechPlaying);
+
+    /* host loads: 2 means retry */
+    if (g_MusicLoadStop) {
+        if (STUB_005066bc_RET_0(1) == 0) {
+            g_MusicLoading = 0;
+            g_MusicLoadStop = 0;
+        }
+    }
+    else if (g_MusicLoading == 2) {
+        g_MusicLoading = 0;
+        music_LoadFromHostWad(g_MusicLoadBuffer, g_MusicLoadSector, g_MusicLoadSectors);
+        if (g_MusicLoading == 0) {
+            g_MusicLoading = 2;
+        }
+    }
+}
 
 // 0x011d9e0 (0x48 bytes)
 void music_StopLoad(void)
-
 {
-  if (Music != 0) {
-    FUN_00506660();
-    DAT_009636d2 = 1;
-  }
-  return;
+    if (g_MusicLoading != 0) {
+        snd_StreamSafeCdBreak();
+        g_MusicLoadStop = 1;
+    }
 }
-
 
 // 0x011da28 (0x2c bytes)
 void music_Reset(void)
-
 {
-  DAT_009636c0 = 0;
-  DAT_009636c4 = 0;
-  g_FinishedLoading = 1;
-  Music = 0;
-  return;
+    DAT_009636c0 = 0;
+    DAT_009636c4 = 0;
+    g_FinishedLoading = 1;
+    g_MusicLoading = 0;
 }
-
 
 // 0x011da54 (0x178 bytes)
-// strings: 00653174: 'host0:\\data\\game.wad'
-
-
-int music_LoadFromHostWad_v2(void *dest,int sector,int numSectors)
-
+// As music_LoadFromHostWad, but a read that returns data leaves g_MusicLoading clear.
+int music_LoadFromHostWad_v2(void *dest, int sector, int numSectors)
 {
-  undefined8 uVar1;
-  int iVar2;
-  int iVar3;
-  char acStack_70 [64];
-  
-  if ((Music == 0) && (numSectors != 0)) {
-    snprintf(acStack_70,"host0:\\data\\game.wad");
-    uVar1 = FUN_00502dcc(acStack_70,0);
-    if ((int)uVar1 < 0) {
-      iVar2 = 0;
-    }
-    else {
-      iVar2 = STUB_00502de0_RET_0(uVar1,0,5);
-      if ((numSectors + sector + -1) * 0x800 < iVar2) {
-        STUB_00502de0_RET_0(uVar1,sector << 0xb,6);
-        iVar2 = numSectors << 0xb;
-        iVar3 = STUB_00502dd4(uVar1,dest,iVar2);
-        if ((numSectors + -1) * 0x800 < iVar3) {
-          STUB_00502ddc(uVar1);
-          Music = 1;
-          if (iVar2 != 0) {
-            Music = 0;
-          }
-        }
-        else {
-          STUB_00502ddc(uVar1);
-          iVar2 = 0;
-        }
-      }
-      else {
-        STUB_00502ddc(uVar1);
-        iVar2 = 0;
-      }
-    }
-  }
-  else {
-    iVar2 = 0;
-  }
-  return iVar2;
-}
+    char path[64];
 
+    if (g_MusicLoading != 0 || numSectors == 0) {
+        return 0;
+    }
+
+    sprintf(path, HOST_WAD_FILE);
+    int file = HostOpen(path, 0);
+    if (file < 0) {
+        return 0;
+    }
+
+    if (HostSeek(file, 0, HOST_SEEK_END) <= (numSectors + sector - 1) * SECTOR_SIZE) {
+        HostClose(file);
+        return 0;
+    }
+
+    HostSeek(file, sector << SECTOR_SHIFT, HOST_SEEK_SET);
+    int size = numSectors << SECTOR_SHIFT;
+    if (HostRead(file, dest, size) <= (numSectors - 1) * SECTOR_SIZE) {
+        HostClose(file);
+        return 0;
+    }
+
+    HostClose(file);
+    g_MusicLoading = 1;
+    if (size != 0) {
+        g_MusicLoading = 0;
+    }
+    return size;
+}
 
 // 0x011dbcc (0x48 bytes)
-void LoadMusic2(int block)
-
+void music_Sync(int block)
 {
-  LoadMusic();
-  STUB_00505f4c();
-  STUB_00505d20();
-  STUB_00505f50();
-  Music = 0;
-  return;
+    music_Update();
+    STUB_00505f4c();
+    STUB_00505d20();
+    STUB_00505f50();
+    g_MusicLoading = 0;
 }
-
 
 // 0x011dc14 (0x5c bytes)
 void music_CdCB(int reason)
-
 {
-  int iVar1;
-  
-  if ((reason < 0xb) && (reason == 5)) {
-    Music = 0;
-    iVar1 = FUN_005066ac();
-    if (iVar1 != 4) {
-      Music = 2;
+    if (reason != CD_REASON_READY) {
+        return;
     }
-  }
-  return;
-}
 
+    g_MusicLoading = 0;
+    if (snd_StreamSafeCdGetError() != CD_STATUS_BUSY) {
+        g_MusicLoading = 2;
+    }
+}
 
 // 0x011dc70 (0x28 bytes)
-void music_FreshenCB(int ret_val,music_Playing *mp)
-
+void music_FreshenCB(u32 retVal, u64 data)
 {
-  if (((mp != (music_Playing *)0x0) && (ret_val != 0)) && (mp->status == 2)) {
-    mp->status = 3;
-  }
-  return;
-}
+    music_Playing *stream = (music_Playing *)data;
 
+    if (stream != NULL && retVal != 0 && stream->status == MUSIC_BUFFERING) {
+        stream->status = MUSIC_BUFFERED;
+    }
+}
 
 // 0x011dc98 (0x6c bytes)
-void music_SpeechPreseekCB(int ret_val,music_Playing *mp)
-
+// A failed speech request is simply asked for again.
+void music_SpeechPreseekCB(u32 retVal, u64 data)
 {
-  if (mp != (music_Playing *)0x0) {
-    mp->handle = ret_val;
-    if (ret_val == 0) {
-      music_StartSpeech((int)g_SpeechPlaying.track,(int)g_SpeechPlaying.flags,
-                        (int)g_SpeechPlaying.volume);
-    }
-    else if (mp->status == 1) {
-      mp->status = 2;
-    }
-  }
-  return;
-}
+    music_Playing *stream = (music_Playing *)data;
 
+    if (stream == NULL) {
+        return;
+    }
+
+    stream->handle = retVal;
+    if (retVal == 0) {
+        music_StartSpeech(g_SpeechPlaying.track, g_SpeechPlaying.flags, g_SpeechPlaying.volume);
+    }
+    else if (stream->status == MUSIC_STARTING) {
+        stream->status = MUSIC_BUFFERING;
+    }
+}
 
 // 0x011dd04 (0x114 bytes)
-// strings: 0065300c: 'rc1/ps3data/level%d/music[%d].xvag'
-
-
-void music_PreseekCB(int ret_val,music_Playing *mp)
-
+void music_PreseekCB(u32 retVal, u64 data)
 {
-  char acStack_110 [256];
-  
-  if (mp != (music_Playing *)0x0) {
-    mp->handle = ret_val;
-    if (ret_val == 0) {
-      if (g_MusicPlaying.handle == 0) {
-        g_MusicPlaying.handle = -1;
-        g_MusicPlaying.status = 1;
-        g_MusicPlaying.transition = 0;
-        g_MusicPlaying.queuelen = 10;
-        g_MusicPlaying.remain = 48000;
-        snprintf(acStack_110,"rc1/ps3data/level%d/music[%d].xvag",Level,g_MusicPlaying.track);
-        FUN_00506444(acStack_110,0,0,0,g_MusicPlaying.volume,0,1,0);
-      }
-    }
-    else if (mp->status == 1) {
-      mp->status = 2;
-    }
-  }
-  return;
-}
+    music_Playing *stream = (music_Playing *)data;
 
+    if (stream == NULL) {
+        return;
+    }
+
+    stream->handle = retVal;
+    if (retVal == 0) {
+        music_PreseekTrack(g_MusicPlaying.track, g_MusicPlaying.flags, g_MusicPlaying.volume);
+    }
+    else if (stream->status == MUSIC_STARTING) {
+        stream->status = MUSIC_BUFFERING;
+    }
+}
 
 // 0x011de18 (0x54 bytes)
-void music_StartCB(int ret_val,music_Playing *mp)
-
+void music_StartCB(u32 retVal, u64 data)
 {
-  if (mp != (music_Playing *)0x0) {
-    mp->handle = ret_val;
-    if (ret_val == 0) {
-      mp->status = 0;
-    }
-    else if ((mp->status == 1) && (mp->status = 4, mp->transition != 0)) {
-      g_TransitionState = 1;
-    }
-  }
-  return;
-}
+    music_Playing *stream = (music_Playing *)data;
 
+    if (stream == NULL) {
+        return;
+    }
+
+    stream->handle = retVal;
+    if (retVal == 0) {
+        stream->status = MUSIC_IDLE;
+    }
+    else if (stream->status == MUSIC_STARTING) {
+        stream->status = MUSIC_PLAYING;
+        if (stream->transition != 0) {
+            g_TransitionState = 1;
+        }
+    }
+}
 
 // 0x011de6c (0x60 bytes)
-void music_StartBodyCB(int ret_val,music_Playing *mp)
-
+// The body is queued on the head's handle, so the handle only changes on an error.
+void music_StartBodyCB(u32 retVal, u64 data)
 {
-  if (mp != (music_Playing *)0x0) {
-    if ((ret_val & 0x80000000U) != 0) {
-      mp->handle = ret_val;
-    }
-    if (ret_val == 0) {
-      mp->status = 0;
-    }
-    else if ((mp->status == 9) && (mp->status = 4, mp->transition != 0)) {
-      g_TransitionState = 1;
-    }
-  }
-  return;
-}
+    music_Playing *stream = (music_Playing *)data;
 
+    if (stream == NULL) {
+        return;
+    }
+
+    if ((int)retVal < 0) {
+        stream->handle = retVal;
+    }
+
+    if (retVal == 0) {
+        stream->status = MUSIC_IDLE;
+    }
+    else if (stream->status == MUSIC_BODY_STARTING) {
+        stream->status = MUSIC_PLAYING;
+        if (stream->transition != 0) {
+            g_TransitionState = 1;
+        }
+    }
+}
 
 // 0x011decc (0x38 bytes)
-void music_PreseekTrackCB(int ret_val,music_Playing *mp)
-
+void music_PreseekTrackCB(u32 retVal, u64 data)
 {
-  if (mp != (music_Playing *)0x0) {
-    mp->handle = ret_val;
-    if (ret_val == 0) {
-      mp->status = 0;
-    }
-    else if (mp->status == 1) {
-      mp->status = 8;
-    }
-  }
-  return;
-}
+    music_Playing *stream = (music_Playing *)data;
 
+    if (stream == NULL) {
+        return;
+    }
+
+    stream->handle = retVal;
+    if (retVal == 0) {
+        stream->status = MUSIC_IDLE;
+    }
+    else if (stream->status == MUSIC_STARTING) {
+        stream->status = MUSIC_HEAD_READY;
+    }
+}
 
 // 0x011df04 (0x58 bytes)
-// strings: 0065318c: 'wtf\n' (raw)
-
-
-int music_StopCB(int ret_val,music_Playing *mp)
-
+void music_StopCB(u32 retVal, u64 data)
 {
-  if (mp != (music_Playing *)0x0) {
-    if (mp->handle == -1) {
-      mp->handle = ret_val;
-      if (ret_val == 0) {
-        ret_val = 7;
-        mp->status = 7;
-      }
-    }
-    else {
-      ret_val = printf("wtf\n");
-    }
-  }
-  return ret_val;
-}
+    music_Playing *stream = (music_Playing *)data;
 
+    if (stream == NULL) {
+        return;
+    }
+
+    if (stream->handle != -1) {
+        printf("wtf\n");
+        return;
+    }
+
+    stream->handle = retVal;
+    if (retVal == 0) {
+        stream->status = MUSIC_STOPPED;
+    }
+}
 
 // 0x011df5c (0x10 bytes)
-void music_QueueLengthCB(int ret_val,music_Playing *mp)
-
+void music_QueueLengthCB(u32 retVal, u64 data)
 {
-  if (mp != (music_Playing *)0x0) {
-    mp->queuelen = ret_val;
-  }
-  return;
-}
+    music_Playing *stream = (music_Playing *)data;
 
+    if (stream != NULL) {
+        stream->queuelen = retVal;
+    }
+}
 
 // 0x011df6c (0x58 bytes)
-void music_TimeRemainingCB(int ret_val,music_Playing *mp)
-
+// The transition piece's first time report starts the fade: it lasts the last quarter.
+void music_TimeRemainingCB(u32 retVal, u64 data)
 {
-  uint uVar1;
-  
-  if (mp != (music_Playing *)0x0) {
-    mp->remain = ret_val;
-    if (((mp->transition != 0) && (g_TransitionState == 1)) && (ret_val != 0)) {
-      g_TransitionState = 2;
-      g_TransitionRemainStart = mp->remain;
-      uVar1 = mp->remain;
-      g_TransitionFadeTime = ((int)uVar1 >> 2) + (uint)((int)uVar1 < 0 && (uVar1 & 3) != 0);
+    music_Playing *stream = (music_Playing *)data;
+
+    if (stream == NULL) {
+        return;
     }
-  }
-  return;
+
+    stream->remain = retVal;
+    if (stream->transition != 0 && g_TransitionState == 1 && retVal != 0) {
+        g_TransitionState = 2;
+        g_TransitionRemainStart = stream->remain;
+        g_TransitionFadeTime = stream->remain / 4;
+    }
 }
-
-

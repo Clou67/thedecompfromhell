@@ -286,16 +286,16 @@ int LoadPifFile(char *filename)
   longlong *tex_regs;
   
   piVar1 = DAT_00a10914;
-  uVar2 = FUN_00502dcc(filename,0);
+  uVar2 = HostOpen(filename,0);
   if ((int)uVar2 < 0) {
     iVar4 = 0;
   }
   else {
-    uVar3 = STUB_00502de0_RET_0(uVar2,0,5);
-    STUB_00502de0_RET_0(uVar2,0,6);
-    iVar4 = STUB_00502dd4(uVar2,piVar1,uVar3);
+    uVar3 = HostSeek(uVar2,0,5);
+    HostSeek(uVar2,0,6);
+    iVar4 = HostRead(uVar2,piVar1,uVar3);
     if (iVar4 == (int)uVar3) {
-      STUB_00502ddc(uVar2);
+      HostClose(uVar2);
       if ((int)uVar3 == 0) {
         iVar4 = 0;
       }
@@ -315,7 +315,7 @@ int LoadPifFile(char *filename)
       }
     }
     else {
-      STUB_00502ddc(uVar2);
+      HostClose(uVar2);
       iVar4 = 0;
     }
   }
@@ -2820,10 +2820,10 @@ int LoadNpcMobys(int level_id,int scene_id)
     snprintf(acStack_70,"host0:z:/i5/levels/level%d/npcs/scene_%d/scenep.dat",level_id,
                    scene_id);
   }
-  uVar2 = FUN_00502dcc(acStack_70,0);
+  uVar2 = HostOpen(acStack_70,0);
   bVar1 = -1 < (int)uVar2;
   if (bVar1) {
-    STUB_00502ddc(uVar2);
+    HostClose(uVar2);
   }
   return (int)bVar1;
 }
@@ -2992,8 +2992,8 @@ void LoadWeaponCutscene(int weapon)
   else {
     idol::PRINT_m_LoadGameFile((uint)g_SceneLoadBuffer,"weapon_scenes_pal");
   }
-  LoadMusic2(0);
-  LoadMusic2(1);
+  music_Sync(0);
+  music_Sync(1);
   iVar3 = 0;
   piVar2 = &g_SceneChunkPtrs;
   piVar4 = g_SceneLoadBuffer;
@@ -3051,9 +3051,9 @@ void LoadSpaceScene(int scene,int fade)
     idol::PRINT_m_LoadGameFile((uint)g_SceneLoadBuffer,"space_scenes_pal");
   }
   if (fade != 0) {
-    LoadMusic2(0);
+    music_Sync(0);
   }
-  LoadMusic2(1);
+  music_Sync(1);
   iVar3 = 0;
   piVar2 = &g_SceneChunkPtrs;
   piVar4 = g_SceneLoadBuffer;

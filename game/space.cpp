@@ -2425,7 +2425,7 @@ void UpdateSpace(void)
       UpdateParts();
       if (DAT_00964594 == 0) {
         music_Pause(0);
-        LoadMusic2(0);
+        music_Sync(0);
         g_PendingSpeech = g_SpaceshipVariant + 0x9c4f;
         local_1d0 = (longlong)(int)(animationSpeed * 12.5);
         FadeToBlack((int)(animationSpeed * 12.5));
@@ -4009,7 +4009,7 @@ void DoSpaceTransition(void)
     printf("unloaded sound bank %#010x\n",*(undefined4 *)(g_pSoundDefs + 0x1c));
   }
   g_BootSoundBank = 0;
-  FUN_00506664(0);
+  snd_StreamSafeCdCallback(0);
   STUB_005066bc_RET_0(0);
   g_ViewContext.fogR = 0;
   g_ViewContext.fogG = 0;

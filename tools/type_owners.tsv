@@ -76,3 +76,4 @@ SceneSound	game/boot
 SoundDef	game/sound
 WaterDrift	game/water
 WaterStrip	game/water
+SndCompleteProc	idol/sound

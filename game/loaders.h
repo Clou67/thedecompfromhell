@@ -41,7 +41,7 @@ extern undefined4 DAT_0095d6dc; /* no defined data */
 extern undefined4 DAT_0095d6de; /* no defined data */
 extern undefined4 DAT_0095e9f4; /* 0x95e9f4 */
 extern undefined4 DAT_0095e9f8; /* 0x95e9f8 */
-extern undefined4 DAT_009636c0; /* 0x9636c0 */
+extern int DAT_009636c0; /* 0x9636c0 */ /* type set in global_types.tsv */
 extern undefined4 DAT_00964568; /* 0x964568 */
 extern undefined4 DAT_0096456c; /* 0x96456c */
 extern undefined4 DAT_00a108f4; /* 0xa108f4 */

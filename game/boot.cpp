@@ -748,7 +748,7 @@ void Load_Front_End(void)
     LoadAssetFromFile("rc1/ps3data/japan_font.ps3", &g_JapanFontTex, 0x24);
     LoadAssetFromFile("rc1/ps3data/japan_font.vram", g_FontVram, 0x80000);
     g_JapanFontTex += (u32)g_FontVram - *(u32 *)((u8 *)g_viewMtxPtr + 0x4ac);
-    LoadMusic2(1);
+    music_Sync(1);
 
     /* the engine file: its moby classes, icons and effect textures */
     engine = (int *)g_EngineData;

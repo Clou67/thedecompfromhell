@@ -14598,7 +14598,7 @@ int FUN_00632508(int param_1,uint *param_2,ulonglong param_3,int param_4,int par
 
 
 // 0x0632674 (0x11c bytes)
-void FUN_00632674(void)
+void snd_StopAllStreams(void)
 
 {
   char cVar1;
@@ -16952,7 +16952,7 @@ undefined4 FUN_00636718(void)
     FUN_00633e34();
     **(undefined4 **)(puVar8 + -0x7ebc) = 0;
     FUN_00633da4();
-    FUN_00632674();
+    snd_StopAllStreams();
     FUN_00619fd0(*(undefined4 *)(puVar8 + -0x7eb8));
     FUN_0063b9e8();
     FUN_006310a0();

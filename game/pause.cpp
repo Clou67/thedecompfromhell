@@ -620,7 +620,7 @@ LAB_0013b904:
     if (DAT_00a52bc4 != 0) {
       DAT_00a52bc4 = DAT_00a52bc4 + -1;
     }
-    if ((DAT_00a52bc4 == 0) && (Music == 0)) {
+    if ((DAT_00a52bc4 == 0) && (g_MusicLoading == 0)) {
       DAT_0071fbd4 = 0x1e000;
       VU1_setBufSizeByLevel();
       GameCamera.posX = DAT_00a52bf0;
@@ -1539,7 +1539,7 @@ void FrontEnd_UpdateMenu(void)
     if (DAT_00a52bc4 != 0) {
       DAT_00a52bc4 = DAT_00a52bc4 + -1;
     }
-    if ((DAT_00a52bc4 == 0) && (Music == 0)) {
+    if ((DAT_00a52bc4 == 0) && (g_MusicLoading == 0)) {
       DAT_0071fbd4 = 0x1e000;
       VU1_setBufSizeByLevel();
       UpdateFog();
@@ -2037,7 +2037,7 @@ void MakeWholeSaveWithMode(char *param_1)
 void ClearMenuQueue(void)
 
 {
-  if ((Music != 0) && (DAT_00a52c7b != '\0')) {
+  if ((g_MusicLoading != 0) && (DAT_00a52c7b != '\0')) {
     music_StopLoad();
     DAT_00a52c7b = '\0';
   }
@@ -2140,7 +2140,7 @@ LoadMenuRatchetModel
       }
     }
     uVar11 = (uint)DAT_00a52c7b;
-    if ((DAT_00a52c7b != 0) && (Music == 0)) {
+    if ((DAT_00a52c7b != 0) && (g_MusicLoading == 0)) {
       iVar12 = uVar11 - 1;
       iVar15 = 0;
       DAT_00a52c6c = 0;
@@ -2161,7 +2161,7 @@ LoadMenuRatchetModel
       ParseMobySeq(MobyClasses[0],DAT_00a52cf8);
       DAT_00a52c7b = 0;
     }
-    if ((((DAT_00a52c7b == 0) && (Music == 0)) && (0 < DAT_00a52e9c)) && (DAT_00a52ea0 == 0)) {
+    if ((((DAT_00a52c7b == 0) && (g_MusicLoading == 0)) && (0 < DAT_00a52e9c)) && (DAT_00a52ea0 == 0)) {
       if (((&DAT_00a52c78)[DAT_00a52c7a] == DAT_00a52ea4) ||
          ((&DAT_00a52c78)[((uint)DAT_00a52c7a == 0)] == DAT_00a52ea4)) {
         DAT_00a52ea0 = 2;
@@ -3913,8 +3913,8 @@ undefined8 MapPage_OnExit(void)
   int iVar3;
   
   iVar3 = DAT_00a207d0;
-  sVar2 = Music;
-  if ((Music == 0) && (DAT_00a207d0 != -1)) {
+  sVar2 = g_MusicLoading;
+  if ((g_MusicLoading == 0) && (DAT_00a207d0 != -1)) {
     puVar1 = (uint *)(&g_MapCacheId + DAT_00a207d0);
     DAT_00a207d0 = -1;
     DAT_00a52c7b = '\0';
@@ -4083,8 +4083,8 @@ undefined8 MapPage_Update(int param_1)
     UpdateMissionDisplay(g_SelectedLevel,0);
   }
   iVar7 = DAT_00a207d0;
-  sVar4 = Music;
-  if ((Music == 0) && (DAT_00a207d0 != -1)) {
+  sVar4 = g_MusicLoading;
+  if ((g_MusicLoading == 0) && (DAT_00a207d0 != -1)) {
     puVar2 = (uint *)(&g_MapCacheId + DAT_00a207d0);
     DAT_00a207d0 = -1;
     DAT_00a52c7b = 0;
@@ -4650,7 +4650,7 @@ void MusicWidget_OnEnter(int param_1)
     iVar1 = iVar1 + 8;
   } while (iVar2 < 5);
   *(undefined4 *)(param_1 + 0x50) = 0;
-  if (Music == 0) {
+  if (g_MusicLoading == 0) {
     *(undefined4 *)(param_1 + 0x50) = 1;
   }
   *(uint *)(param_1 + 0x10) = *(uint *)(param_1 + 0x10) | 4;
@@ -4666,7 +4666,7 @@ void MusicWidget_OnEnter(int param_1)
 undefined8 MusicWidget_OnExit(int param_1)
 
 {
-  if ((Music != 0) && (*(int *)(param_1 + 0x50) == 1)) {
+  if ((g_MusicLoading != 0) && (*(int *)(param_1 + 0x50) == 1)) {
     music_StopLoad();
   }
   Menu_InitStreamBuffers(1);
@@ -4675,9 +4675,9 @@ undefined8 MusicWidget_OnExit(int param_1)
 
 
 // 0x0144598 (0x8c bytes)
-/* [p2_pause] state machine on Music flag
-   [p2_pause] state machine on Music flag
-   [p2_pause] state machine on Music flag */
+/* [p2_pause] state machine on g_MusicLoading flag
+   [p2_pause] state machine on g_MusicLoading flag
+   [p2_pause] state machine on g_MusicLoading flag */
 
 undefined8 MusicWidget_Update(int param_1)
 
@@ -4687,11 +4687,11 @@ undefined8 MusicWidget_Update(int param_1)
   iVar1 = *(int *)(param_1 + 0x50);
   if ((iVar1 < 2) && (-1 < iVar1)) {
     if (iVar1 < 1) {
-      if (Music == 0) {
+      if (g_MusicLoading == 0) {
         *(undefined4 *)(param_1 + 0x50) = 1;
       }
     }
-    else if (Music == 0) {
+    else if (g_MusicLoading == 0) {
       *(undefined4 *)(param_1 + 0x50) = 2;
       *(uint *)(param_1 + 0x10) = *(uint *)(param_1 + 0x10) & 0xfffffffb;
     }
@@ -6414,7 +6414,7 @@ LAB_00148288:
       if (*(int *)(param_1 + 0x48) == 0) {
         return 0;
       }
-      if (Music != 0) {
+      if (g_MusicLoading != 0) {
         return 0;
       }
       if (*(uint *)(param_1 + 0x30) < 0x10) {
@@ -6469,7 +6469,7 @@ LAB_00148288:
       return 0;
     }
   }
-  if (Music == 0) {
+  if (g_MusicLoading == 0) {
     *(undefined4 *)(param_1 + 0x44) = 2;
   }
   return 0;
@@ -6757,7 +6757,7 @@ LAB_00148e14:
       if (uVar4 == 0) {
         *(undefined4 *)(param_1 + 0x44) = 0;
       }
-      else if (Music == 0) {
+      else if (g_MusicLoading == 0) {
         if ((uVar1 & 0x10) == 0) {
           idol::PRINT_m_LoadGameFile(uVar4,"pMon->base[index]");
         }
@@ -6825,7 +6825,7 @@ LAB_00148e14:
           *(undefined4 *)(param_1 + 0x44) = 0xffffffff;
           return 0;
         }
-        if (Music != 0) {
+        if (g_MusicLoading != 0) {
           return 0;
         }
         if ((uVar1 & 0x10) == 0) {
@@ -6879,7 +6879,7 @@ LAB_00148e14:
           if (*(int *)(param_1 + 0x48) == 0) {
             return 0;
           }
-          if (Music != 0) {
+          if (g_MusicLoading != 0) {
             return 0;
           }
           if (*(uint *)(param_1 + 0x30) < 0x10) {
@@ -6930,7 +6930,7 @@ LAB_00148e14:
         }
       }
     }
-    if (Music == 0) {
+    if (g_MusicLoading == 0) {
       *(int *)(param_1 + 0x44) = iVar2 + 1;
     }
   }
@@ -7053,7 +7053,7 @@ undefined8 HelpControls_Update(int param_1)
   if (iVar1 < 2) {
     if (-1 < iVar1) {
       if (iVar1 < 1) {
-        if ((*(int *)(param_1 + 0x48) != 0) && (Music == 0)) {
+        if ((*(int *)(param_1 + 0x48) != 0) && (g_MusicLoading == 0)) {
           snprintf(acStack_230,"rc1/ps3data/global/help_controlsA/help_controlsA[%d]",
                          g_Language);
           snprintf(acStack_1b0,"%s.ps3",acStack_230);
@@ -7082,13 +7082,13 @@ undefined8 HelpControls_Update(int param_1)
           *(int *)(param_1 + 0x44) = *(int *)(param_1 + 0x44) + 1;
         }
       }
-      else if (Music == 0) {
+      else if (g_MusicLoading == 0) {
         *(int *)(param_1 + 0x44) = iVar1 + 1;
       }
     }
   }
   else if (iVar1 < 3) {
-    if ((*(int *)(param_1 + 0x4c) != 0) && (Music == 0)) {
+    if ((*(int *)(param_1 + 0x4c) != 0) && (g_MusicLoading == 0)) {
       snprintf(acStack_130,"rc1/ps3data/global/help_controlsB/help_controlsB[%d]",g_Language);
       snprintf(acStack_b0,"%s.ps3",acStack_130);
       LoadAssetFromFile(acStack_b0,g_NpcBuffer,0x24);
@@ -7117,7 +7117,7 @@ undefined8 HelpControls_Update(int param_1)
       *(int *)(param_1 + 0x44) = *(int *)(param_1 + 0x44) + 1;
     }
   }
-  else if ((iVar1 < 4) && (Music == 0)) {
+  else if ((iVar1 < 4) && (g_MusicLoading == 0)) {
     *(int *)(param_1 + 0x44) = iVar1 + 1;
   }
   return 0;
@@ -9231,7 +9231,7 @@ undefined8 SpawnHeroInMenu_(int param_1)
                        Though it's fully possible it could be contained within pause_q It's not part
                        of the hero namespace at least */
   Menu_InitStreamBuffers(1);
-  if ((Music != 0) && (DAT_00a52c7b != '\0')) {
+  if ((g_MusicLoading != 0) && (DAT_00a52c7b != '\0')) {
     music_StopLoad();
     DAT_00a52c7b = '\0';
   }
@@ -9843,7 +9843,7 @@ undefined8 MenuHero_Update(int param_1)
   iVar10 = (int)uVar9;
   if ((iVar10 != DAT_00a52bcc) && (0 < iVar10 && iVar10 < 0x24)) {
     DAT_00a52bcc = iVar10;
-    if ((Music != 0) && (DAT_00a52c7b != '\0')) {
+    if ((g_MusicLoading != 0) && (DAT_00a52c7b != '\0')) {
       music_StopLoad();
       DAT_00a52c7b = '\0';
     }
@@ -10456,7 +10456,7 @@ undefined8 M1957_Update_GirlwadOnGameComplete(int param_1)
     if (iVar10 < 0) {
       return 0;
     }
-    if (Music != 0) {
+    if (g_MusicLoading != 0) {
       return 0;
     }
     iVar10 = (DAT_010ea454 & 0x1fffff) * -0x800 + 0x4f000;
@@ -10480,7 +10480,7 @@ undefined8 M1957_Update_GirlwadOnGameComplete(int param_1)
     return 0;
   }
   if (iVar10 < 2) {
-    if (Music != 0) {
+    if (g_MusicLoading != 0) {
       return 0;
     }
     iVar9 = 0;

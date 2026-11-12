@@ -1504,7 +1504,7 @@ void Vendor_PreUpdate(void)
       if (g_OpenVendorState < 0) goto LAB_0016f940;
     }
     else if (g_OpenVendorState < 2) {
-      if (((DAT_00e5a9d0 == '\0') && (Music == 0)) && (DAT_00e5a9d1 != 0)) {
+      if (((DAT_00e5a9d0 == '\0') && (g_MusicLoading == 0)) && (DAT_00e5a9d1 != 0)) {
         iVar25 = 0;
         pClass = MobyClasses[DAT_00a354cc];
         piVar31 = DAT_00e5a668;
@@ -4051,7 +4051,7 @@ void Vendor_PostUpdate(void)
     DAT_00e5a67c = DAT_00e5a664 + 0x1400;
     FastMemSetZero(DAT_00e5a67c,0x400);
     DAT_00e5a668 = DAT_00e5a67c + 0x400;
-    if (Music == 0) {
+    if (g_MusicLoading == 0) {
       if (g_IsPal == 0) {
         snprintf(acStack_70,"rc1/ps3data/global/vendor_pal.ps3");
       }

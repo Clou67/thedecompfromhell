@@ -4,7 +4,7 @@ errors	file
 372	game/camera.cpp
 165	game/collproc.cpp
 0	game/crt0.cpp
-96	game/debug.cpp
+97	game/debug.cpp
 778	game/draw.cpp
 12	game/fUnk.cpp
 0	game/freeze.cpp
@@ -15,17 +15,17 @@ errors	file
 0	game/initsky.cpp
 0	game/initspace.cpp
 0	game/lights.cpp
-189	game/loaders.cpp
+186	game/loaders.cpp
 2196	game/mUnk.cpp
 0	game/main.cpp
-99	game/map.cpp
+100	game/map.cpp
 0	game/memcard.cpp
 0	game/mesh.cpp
 0	game/mission.cpp
 0	game/mobyfunc.cpp
 480	game/mobyproc.cpp
 535	game/mobyutil.cpp
-72	game/music.cpp
+0	game/music.cpp
 0	game/pad.cpp
 0	game/partproc.cpp
 445	game/partupd.cpp
@@ -511,7 +511,7 @@ errors	file
 2	game/update/moby198.cpp
 13	game/update/moby199.cpp
 2	game/update/moby20.cpp
-60	game/update/moby200.cpp
+57	game/update/moby200.cpp
 0	game/update/moby2000.cpp
 0	game/update/moby202.cpp
 71	game/update/moby203.cpp
@@ -1032,7 +1032,7 @@ errors	file
 1099	idol/mathfunc.cpp
 359	idol/sUnk.cpp
 209	idol/shrubfunc.cpp
-57	idol/sound.cpp
+58	idol/sound.cpp
 115	idol/tfragfunc.cpp
 196	idol/tiefunc.cpp
 0	idol/xUnk.cpp

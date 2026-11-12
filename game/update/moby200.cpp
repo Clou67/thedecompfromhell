@@ -600,13 +600,13 @@ int32_t M1807_0042664c(float *param_1)
   iVar4 = 0;
   do {
     snprintf(acStack_c0,"host:c:/data/M671_%04d.txt",iVar4);
-    uVar1 = FUN_00502dcc(acStack_c0,0);
+    uVar1 = HostOpen(acStack_c0,0);
     if ((int)uVar1 < 0) break;
-    STUB_00502ddc(uVar1);
+    HostClose(uVar1);
     iVar4 = iVar4 + 1;
   } while (-1 < (int)uVar1);
-  uVar1 = FUN_00502dcc(acStack_c0,1);
-  if (((int)uVar1 < 0) && (uVar1 = FUN_00502dcc(acStack_c0,3), (int)uVar1 < 0)) {
+  uVar1 = HostOpen(acStack_c0,1);
+  if (((int)uVar1 < 0) && (uVar1 = HostOpen(acStack_c0,3), (int)uVar1 < 0)) {
     iVar2 = printf("Can\'t create M671 parameter file %s\n",acStack_c0);
   }
   else {
@@ -751,7 +751,7 @@ int32_t M1807_0042664c(float *param_1)
     snprintf(acStack_80,"\r\n");
     sVar3 = strlen(acStack_80);
     STUB_00502de8(uVar1,acStack_80,sVar3);
-    iVar2 = STUB_00502ddc(uVar1);
+    iVar2 = HostClose(uVar1);
   }
   return iVar2;
 }

@@ -52,7 +52,7 @@ extern HelpDef g_Help; /* 0x720884 */ /* type set in global_types.tsv */
 extern short g_HelpIdPairs[150][2]; /* 0x7208cc */ /* type set in global_types.tsv */
 extern bool g_HelpTextOn; /* 0x71fb59: options, help text */ /* type set in global_types.tsv */
 extern bool g_HelpVoiceOn; /* 0x71fb58: options, help voice (guess) */ /* type set in global_types.tsv */
-extern undefined4 g_PendingSpeech; /* 0x9636e4 */
+extern int g_PendingSpeech; /* 0x9636e4 */ /* type set in global_types.tsv */
 
 // ---- functions
 void SECTION_HEADER_HELP(void);

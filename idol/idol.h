@@ -1,6 +1,7 @@
 #pragma once
 // idol/idol.h
 #include "types.h"
+#include "idol/sound.h"
 
 // ---- types
 /* Idol's string table (Locale_GetInstance: a 0x1c-byte singleton @*0x902ec4) */
@@ -63,7 +64,7 @@ void FUN_00503dfc(void);
 int LoadAssetFromFile(const char *param_1,void *param_2,int param_3);
 void FUN_00503f8c(undefined8 param_1,undefined8 param_2,longlong param_3);
 void FUN_005040f4(int param_1);
-undefined8 GetFileSize(undefined8 param_1);
+int GetFileSize(const char *param_1);
 void FUN_00504218(undefined8 param_1,undefined8 param_2,int param_3,int param_4);
 void *FUN_0050436c(void *param_1);
 void FUN_00504374(longlong param_1,undefined8 param_2,undefined4 param_3);
@@ -108,7 +109,7 @@ void FUN_005057d4(undefined4 param_1);
 void FUN_00505808(void);
 void FUN_00505810(void);
 void FUN_005058a0(void);
-undefined8 FUN_00505954(undefined4 param_1);
+int snd_InitVAGStreamingEx(int param_1,int param_2,int param_3,int param_4);
 void FUN_00505acc(void);
 undefined8 FUN_00505af0(void);
 void FUN_00505af8(void);
@@ -119,13 +120,13 @@ void Sound_LoadBank(u8 *param_1,u8 *param_2,u32 *param_3);
 void FUN_00505bac(undefined8 param_1,undefined8 param_2,undefined4 *param_3,undefined8 param_4);
 longlong FUN_00505c6c(undefined8 param_1,undefined8 param_2);
 void FUN_00505cf8(void);
-void FUN_00505cfc(void);
+void snd_ContinueVAGStream(u32 param_1);
 undefined8 STUB_00505d20(...);
 void FUN_00505d30(int param_1);
 void FUN_00505d78(undefined4 param_1,undefined4 *param_2,undefined8 param_3);
-void FUN_00505e08(undefined8 param_1,undefined4 *param_2,undefined8 param_3);
-void FUN_00505e98(undefined8 param_1,undefined4 *param_2,undefined8 param_3);
-void FUN_00505f18(void);
+void snd_GetVAGStreamTimeRemaining_CB(u32 param_1,SndCompleteProc param_2,u64 param_3);
+void snd_IsVAGStreamBuffered_CB(u32 param_1,SndCompleteProc param_2,u64 param_3);
+void snd_PauseVAGStream(u32 param_1);
 void STUB_00505f3c(...);
 void STUB_00505f40(...);
 void STUB_00505f44(...);

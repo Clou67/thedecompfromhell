@@ -232,8 +232,7 @@ void FUN_005062f4(undefined8 param_1,undefined2 param_2,undefined8 param_3,undef
 
 
 // 0x05063b0 (0x94 bytes)
-void FUN_005063b0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined4 *param_7,undefined8 param_8)
+void snd_SetSoundParams_CB(u32 param_1,u32 param_2,int param_3,int param_4,int param_5,int param_6,SndCompleteProc param_7,u64 param_8)
 
 {
   undefined8 uVar1;
@@ -247,7 +246,7 @@ void FUN_005063b0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 
 
 // 0x0506444 (0x194 bytes)
-void FUN_00506444(void)
+void snd_PlayVAGStreamByNameEx_CB(const char *param_1,const char *param_2,int param_3,int param_4,int param_5,int param_6,int param_7,int param_8,int param_9,SndCompleteProc param_10,u64 param_11)
 
 {
   undefined8 uVar1;
@@ -284,7 +283,7 @@ void FUN_005065d8(void)
 
 
 // 0x05065dc (0x58 bytes)
-void FUN_005065dc(undefined8 param_1,undefined4 *param_2,undefined8 param_3)
+void snd_SoundIsStillPlaying_CB(u32 param_1,SndCompleteProc param_2,u64 param_3)
 
 {
   undefined8 uVar1;
@@ -304,7 +303,7 @@ void FUN_00506634(void)
 
 
 // 0x0506638 (0x28 bytes)
-void FUN_00506638(undefined8 param_1)
+void snd_StopVAGStream(u32 param_1)
 
 {
   FUN_006084f4(param_1,1);
@@ -313,7 +312,7 @@ void FUN_00506638(undefined8 param_1)
 
 
 // 0x0506660 (0x4 bytes)
-void FUN_00506660(void)
+void snd_StreamSafeCdBreak(void)
 
 {
   return;
@@ -321,7 +320,7 @@ void FUN_00506660(void)
 
 
 // 0x0506664 (0x48 bytes)
-void FUN_00506664(undefined4 *param_1)
+void snd_StreamSafeCdCallback(void (*param_1)(int))
 
 {
   if (param_1 != (undefined4 *)0x0) {
@@ -332,7 +331,7 @@ void FUN_00506664(undefined4 *param_1)
 
 
 // 0x05066ac (0x8 bytes)
-undefined8 FUN_005066ac(void)
+int snd_StreamSafeCdGetError(void)
 
 {
   return 4;
@@ -356,7 +355,7 @@ undefined8 STUB_005066bc_RET_0(...)
 
 
 // 0x05066c4 (0x4 bytes)
-void FUN_005066c4(void)
+void FUN_005066c4(int param_1)
 
 {
   return;

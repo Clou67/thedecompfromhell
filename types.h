@@ -2640,12 +2640,17 @@ extern pointer32 PTR_Global_QuickMovieMalloc_00704d30; /* 0x704d30 */
 extern pointer PTR_PTR_0071a35c; /* 0x71a35c */
 extern pointer PTR_PTR_0071a360; /* 0x71a360 */
 extern pointer PTR_PTR_0071a368; /* 0x71a368 */
+extern pointer PTR_PTR_00905664; /* 0x905664 */
 extern pointer32 PTR_memcard_RestoreSaveGame_00705f80; /* 0x705f80 */
 extern pointer32 PTR_memcard_ReturnLang_00705f10; /* 0x705f10 */
 extern pointer32 PTR_memcard_printGameSaved_00705f88; /* 0x705f88 */
 extern pointer32 PTR_memcard_print_LoadingCB_PS3_00705f98; /* 0x705f98 */
 extern pointer32 PTR_memcard_print_SavingGameCB_PS3_00705f90; /* 0x705f90 */
 extern pointer32 PTR_memcard_print_TimeForPain_00705f78; /* 0x705f78 */
+extern pointer32 PTR_music_CdCB_00706db0; /* 0x706db0 */
+extern pointer32 PTR_music_FreshenCB_00706db8; /* 0x706db8 */
+extern pointer32 PTR_music_StopCB_00706de8; /* 0x706de8 */
+extern pointer32 PTR_music_TimeRemainingCB_00706df8; /* 0x706df8 */
 extern pointer32 PTR_sysutil_gameexit_callback_00703618; /* 0x703618 */
 extern undefined4 _DAT_000e93b0; /* direct read */
 extern undefined4 _DAT_000e93c0; /* direct read */

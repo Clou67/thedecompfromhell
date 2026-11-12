@@ -319,7 +319,7 @@ void UnloadSoundBanks(void)
     STUB_00505d20();
     sound_StopAllSounds();
     music_Stop();
-    FUN_00506664(0);
+    snd_StreamSafeCdCallback(NULL);
     STUB_001754e0();
 
     if (g_pSoundDefs != 0) {
