@@ -3217,7 +3217,7 @@ bool camera_IsPntInCollPrim(double param_1,undefined8 param_2,undefined8 param_3
   fStack00000030 = (float)((ulonglong)param_2 >> 0x20);
   fStack00000038 = (float)((ulonglong)param_3 >> 0x20);
   if (iVar10 == 7) {
-    iVar10 = DAT_00a51bc0 + *(int *)(param_4 + 0x14) * 0x90;
+    iVar10 = g_Pills + *(int *)(param_4 + 0x14) * 0x90;
     fVar1 = *(float *)(iVar10 + 0x34);
     fVar2 = *(float *)(iVar10 + 0x30);
     fVar5 = fStack00000034 - fVar1;

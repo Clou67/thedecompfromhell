@@ -35,7 +35,6 @@ typedef struct SeqFrameFix {
 
 // ---- globals
 extern undefined4 BlenderCnt; /* 0xa1c8c4 */
-extern Blender * Blenders; /* 0xa1c8c0 */
 extern int CuboidCnt; /* 0xa51bdc */
 extern int CylinderCnt; /* 0xa51bd4 */
 extern undefined4 DAT_0071ef00; /* no defined data */
@@ -48,12 +47,8 @@ extern undefined4 DAT_00a15f50; /* 0xa15f50 */
 extern undefined4 DAT_00a15f70; /* 0xa15f70 */
 extern undefined4 DAT_00a15f74; /* 0xa15f74 */
 extern undefined4 DAT_00a1a860; /* 0xa1a860 */
-extern undefined4 DAT_00a1c840; /* 0xa1c840 */
-extern undefined4 DAT_00a1c880; /* 0xa1c880 */
 extern undefined4 DAT_00a1c900; /* 0xa1c900 */
 extern undefined4 DAT_00a204ac; /* 0xa204ac */
-extern undefined4 DAT_00a51bc0; /* 0xa51bc0 */
-extern undefined4 DAT_00a51bc4; /* 0xa51bc4 */
 extern undefined4 DAT_010bb478; /* 0x10bb478 */
 extern undefined4 DAT_010ea114; /* no defined data */
 extern int OCLASSES_COCKPIT[3]; /* 0x731c4c */
@@ -94,6 +89,11 @@ extern undefined4 g_NpcChunkLoadHandle; /* 0x7247f0 */
 extern u64 g_PifFileTexRegs[][3]; /* 0xa202d0 */ /* type set in global_types.tsv */
 extern undefined g_PifLoadQueue; /* 0x95d2cc */
 extern undefined4 g_PifLoadQueueCnt; /* 0x95d6cc */
+extern int g_PillCnt; /* 0xa51bc4 */ /* type set in global_types.tsv */
+extern u32 g_Pills; /* 0xa51bc0: gameplay section 0x6c, 0x90 bytes each (collision prim type 7) */ /* type set in global_types.tsv */
+extern int g_PointLightCnt; /* 0xa1c840: gameplay section 0x7c */ /* type set in global_types.tsv */
+extern u8 *g_PointLightGrid; /* 0xa1c8c0: gameplay section 0x78, a 0x4000-byte grid then its data (Ghidra label "Blenders"; the real blenders are g_Blenders) */ /* type set in global_types.tsv */
+extern u32 g_PointLightRecords; /* 0xa1c880: 0x20 bytes each */ /* type set in global_types.tsv */
 extern SeqFrameFix g_RatchetWideFixes[33]; /* 0x724864 */ /* type set in global_types.tsv */
 extern undefined4 g_SceneChunkPtrs; /* 0x95cdb0 */
 extern undefined4 g_SceneLoadBuffer; /* 0x95cdac */

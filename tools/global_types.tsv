@@ -236,3 +236,8 @@ g_GadgetModelSizes	int NAME[24] /* 0xa4d600 */
 g_GadgetSoundIds	short NAME[][16] /* 0xa4d7e0: sound ids of gadgets whose class is loaded later */
 g_GadgetBufferSlot	int NAME /* 0xa4daec: the gadget class buffer used last */
 g_LevelSoundBank	u32 NAME /* 0xa4dae0 */
+g_PointLightGrid	u8 *NAME /* 0xa1c8c0: gameplay section 0x78, a 0x4000-byte grid then its data (Ghidra label "Blenders"; the real blenders are g_Blenders) */
+g_Pills	u32 NAME /* 0xa51bc0: gameplay section 0x6c, 0x90 bytes each (collision prim type 7) */
+g_PillCnt	int NAME /* 0xa51bc4 */
+g_PointLightCnt	int NAME /* 0xa1c840: gameplay section 0x7c */
+g_PointLightRecords	u32 NAME /* 0xa1c880: 0x20 bytes each */

@@ -821,19 +821,19 @@ enum GameplaySection {
     GP_MOBYS = 0x11,
     GP_MOBY_GROUPS = 0x12,
     GP_SHARED_DATA = 0x13,
-    GP_MOBY_LINKS = 0x14,    /* pVar fields holding a moby record index */
+    GP_MOBY_LINKS = 0x14,    /* pVar fields holding a moby record index (Replanetizer: pvar scratchpad) */
     GP_PVAR_TABLE = 0x15,    /* {offset, size} per pVar block */
     GP_PVAR_DATA = 0x16,
     GP_PVAR_POINTERS = 0x17, /* pVar fields holding an offset into their own block */
     GP_CUBOIDS = 0x18,
     GP_SPHERES = 0x19,
     GP_CYLINDERS = 0x1a,
-    GP_UNK_1B = 0x1b,        /* 0x80-byte records, copied as 0x90 */
+    GP_PILLS = 0x1b,         /* 0x80-byte records, copied as 0x90 */
     GP_SPLINES = 0x1c,
     GP_GRIND_PATHS = 0x1d,
-    GP_UNK_1E = 0x1e,        /* a 0x4000-byte grid and its data (stored in Blenders) */
-    GP_UNK_1F = 0x1f,        /* 0x20-byte records */
-    GP_BLENDERS = 0x20,
+    GP_POINT_LIGHT_GRID = 0x1e, /* a 0x4000-byte grid and its data */
+    GP_POINT_LIGHTS = 0x1f,  /* 0x20-byte records */
+    GP_BLENDERS = 0x20,      /* the game's name ("Entering blender %d"); Replanetizer: env transitions */
     GP_CAM_COLL_GRID = 0x21,
     GP_ENV_SAMPLES = 0x22,
     GP_OCCLUSION = 0x23,
@@ -1460,18 +1460,19 @@ u8 *LoadGameplayFile(int reload)
         }
     }
 
-    if (header[GP_UNK_1B] != 0) {
-        int *section = (int *)(file + header[GP_UNK_1B]);
+    /* LoadPills */
+    if (header[GP_PILLS] != 0) {
+        int *section = (int *)(file + header[GP_PILLS]);
         u8 *src = (u8 *)(section + 4);
 
-        DAT_00a51bc4 = section[0];
-        DAT_00a51bc0 = (u32)mem;
-        u8 *next = AlignUp64(mem + DAT_00a51bc4 * 0x90);
-        if (DAT_00a51bc4 != 0) {
-            FastMemSet(mem, 0, DAT_00a51bc4 * 0x90);
+        g_PillCnt = section[0];
+        g_Pills = (u32)mem;
+        u8 *next = AlignUp64(mem + g_PillCnt * 0x90);
+        if (g_PillCnt != 0) {
+            FastMemSet(mem, 0, g_PillCnt * 0x90);
         }
-        for (int i = 0; i < (int)DAT_00a51bc4; i++, src += 0x80) {
-            FastMemCopy32((u8 *)DAT_00a51bc0 + i * 0x90, src, 0x90);
+        for (int i = 0; i < (int)g_PillCnt; i++, src += 0x80) {
+            FastMemCopy32((u8 *)g_Pills + i * 0x90, src, 0x90);
         }
         mem = next;
     }
@@ -1496,22 +1497,23 @@ u8 *LoadGameplayFile(int reload)
         mem = AlignUp64(mem + section[0] + 0x4000);
     }
 
-    if (header[GP_UNK_1E] != 0) {
-        int *section = (int *)(file + header[GP_UNK_1E]);
+    /* the point light grid and the point lights */
+    if (header[GP_POINT_LIGHT_GRID] != 0) {
+        int *section = (int *)(file + header[GP_POINT_LIGHT_GRID]);
 
-        Blenders = (Blender *)mem;
+        g_PointLightGrid = mem;
         FastMemCopy32(mem, section + 4, section[0] + 0x4000);
         mem = AlignUp64(mem + section[0] + 0x4000);
     }
 
-    if (header[GP_UNK_1F] != 0) {
-        int *section = (int *)(file + header[GP_UNK_1F]);
+    if (header[GP_POINT_LIGHTS] != 0) {
+        int *section = (int *)(file + header[GP_POINT_LIGHTS]);
         int size = section[0] * 0x20;
 
-        DAT_00a1c840 = section[0];
-        DAT_00a1c880 = (u32)mem;
+        g_PointLightCnt = section[0];
+        g_PointLightRecords = (u32)mem;
         u8 *next = AlignUp64(mem + size);
-        if (DAT_00a1c840 != 0) {
+        if (g_PointLightCnt != 0) {
             FastMemCopy32(mem, section + 4, size);
         }
         mem = next;
@@ -2015,6 +2017,8 @@ int LoadAllMobys(int reload, int restoreCheckpoint)
             LoadByteGrid((ByteGridHeader *)(base + engine[0x10]));
         }
 
+        /* occlusion octants: a centre, then a 0x80-byte visibility set per octant around it
+           (Replanetizer calls engine 0x08 "unk1, ship missions") */
         OcclOct = engine[2] != 0 ? base + engine[2] : NULL;
         Loaders_RelocSpaceWadPtrs((int *)(base + engine[0x1c]));
 

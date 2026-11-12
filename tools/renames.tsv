@@ -347,3 +347,8 @@ DAT_00a4d600	g_GadgetModelSizes
 DAT_00a4d7e0	g_GadgetSoundIds
 DAT_00a4daec	g_GadgetBufferSlot
 DAT_00a4dae0	g_LevelSoundBank
+Blenders	g_PointLightGrid
+DAT_00a51bc0	g_Pills
+DAT_00a51bc4	g_PillCnt
+DAT_00a1c840	g_PointLightCnt
+DAT_00a1c880	g_PointLightRecords
