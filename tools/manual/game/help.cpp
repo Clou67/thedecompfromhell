@@ -195,7 +195,7 @@ int Help_FindIndex(int id)
 // 0x007b740 (0x94 bytes)
 char *help_msg_string_by_index(StringId helpmsg)
 {
-    if (g_Language == 3 && helpmsg == STR_JUMP_THEN_PRESS_AND_0x1773)
+    if (g_Language == LANG_GERMAN && helpmsg == STR_JUMP_THEN_PRESS_AND_0x1773)
         helpmsg = STR_TRY_USING_THE_GLIDE_0x0BB8;
     int i = Help_FindIndex(helpmsg);
     if (i >= 0) return HelpMsgs[i].text;
@@ -426,14 +426,14 @@ void Help_Draw(void)
         FontWindow win;
         g_Help.curHalfW = g_Help.boxHalfW;
         g_Help.curHalfH = g_Help.boxHalfH;
-        DrawRoundedRect(300, 380, g_Language == 2 ? 30 : 40, g_Language == 2 ? 477 : 472, 96);
+        DrawRoundedRect(300, 380, g_Language == LANG_FRENCH ? 30 : 40, g_Language == LANG_FRENCH ? 477 : 472, 96);
         u32 color = HELP_TEXT_COLOR;
         if (g_Help.state == HELP_FADE_IN) color = (u32)t << 29 | 0xffa888;
         else if (g_Help.state == HELP_FADE_OUT) color = (u32)(4 - t) << 29 | 0xffa888;
         char *text = HelpMsgs[g_Help.message_index].text;
-        int indent = g_Language > 1 && g_Language <= 5 ? 10 : 0;
+        int indent = g_Language >= LANG_FRENCH && g_Language <= LANG_ITALIAN ? 10 : 0;   /* European languages */
         SetFontWindow(&win, 300, 380, indent + 40, 472, 250, 340, 18, 3);
-        FontPrintOpt(g_Language == 3 ? 0.85f : 1.0f, &win, color, text, -1);
+        FontPrintOpt(g_Language == LANG_GERMAN ? 0.85f : 1.0f, &win, color, text, -1);
         break;
     }
 

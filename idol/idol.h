@@ -46,7 +46,7 @@ void FUN_00503f8c(undefined8 param_1,undefined8 param_2,longlong param_3);
 void FUN_005040f4(int param_1);
 undefined8 GetFileSize(undefined8 param_1);
 void FUN_00504218(undefined8 param_1,undefined8 param_2,int param_3,int param_4);
-longlong FUN_0050436c(longlong param_1);
+void *FUN_0050436c(void *param_1);
 void FUN_00504374(longlong param_1,undefined8 param_2,undefined4 param_3);
 void FUN_005043b0(longlong param_1);
 namespace idol { void InitGameGraphics(int param_1); } 

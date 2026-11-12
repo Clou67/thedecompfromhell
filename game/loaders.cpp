@@ -1295,8 +1295,8 @@ ulonglong NAVG_LoadFile(int param_1)
   }
   uVar13 = _ZN4cell4fios9scheduler10statCommonEPKNS0_8opattr_tEPKcPvNS0_2op10e_OPSTAGESE(uVar12,0,acStack_140,&local_150,3);
   _ZN4cell4fios2op8syncWaitEPx(uVar13,0);
-  if ((DAT_00a108f4 == 0) || (local_c0 = ZEXT48(&DAT_00a108d8), param_1 != 0)) {
-    local_c0 = ZEXT48(&DAT_00a108d8);
+  if ((DAT_00a108f4 == 0) || (local_c0 = ZEXT48(&g_MemSlotsBase), param_1 != 0)) {
+    local_c0 = ZEXT48(&g_MemSlotsBase);
     uVar31 = idol::kalloc(TEX_BASE,(int)local_150);
     DAT_00a108f4 = (uint)uVar31;
   }
@@ -2370,8 +2370,8 @@ undefined8 LoadLevelFiles(void)
       }
       idol::m_LoadGameFileS(DAT_0096456c,"space_ships");
       LoadAssetFromFile("rc1/ps3data/japan_font.ps3",&g_JapanFontTex,0x24);
-      LoadAssetFromFile("rc1/ps3data/japan_font.vram",DAT_00a10930,0x80000);
-      g_JapanFontTex = g_JapanFontTex + (DAT_00a10930 - *(int *)(g_viewMtxPtr + 0x4ac));
+      LoadAssetFromFile("rc1/ps3data/japan_font.vram",g_FontVram,0x80000);
+      g_JapanFontTex = g_JapanFontTex + (g_FontVram - *(int *)(g_viewMtxPtr + 0x4ac));
       sVar1 = g_LoadingStage + 1;
     }
     else if ((g_LoadingStage == 0) && (DAT_00a204b0 == 0)) {
@@ -2443,8 +2443,8 @@ int LoadAllMobys(int param_1,int param_2)
   ulonglong local_a0;
   
   piVar17 = g_EngineData;
-  uVar5 = DAT_00a108ec;
-  uVar21 = (ulonglong)DAT_00a108ec;
+  uVar5 = g_GameplayBuffer;
+  uVar21 = (ulonglong)g_GameplayBuffer;
   local_b0 = param_1;
   local_a8 = param_2;
   if ((int)param_1 != 0) {
@@ -3112,7 +3112,7 @@ void LoadGadgetModel(int oClass,int t_target)
     }
     uVar3 = (ulonglong)(LZCOUNT(t_target) << 0x20) >> 0x25;
     DAT_00a4daec = (t_target == 0);
-    pClass = (MobyClass *)(DAT_00a108e8 + ((int)(uVar3 << 0x12) - (int)(uVar3 << 0x10)));
+    pClass = (MobyClass *)(g_MobyClassBuffer + ((int)(uVar3 << 0x12) - (int)(uVar3 << 0x10)));
     bVar1 = (&MobyClassLookup)[oClass];
     memcpy(pClass,(void *)(&DAT_00a4d5a0)[g_gadgetIdx],(&DAT_00a4d600)[g_gadgetIdx]);
     MobyClasses[bVar1] = pClass;

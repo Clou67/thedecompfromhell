@@ -302,7 +302,7 @@ longlong FUN_004fe06c(int param_1);
 namespace idol { ulonglong AllocateMemAlign(int param_1,longlong param_2,longlong param_3); } 
 void FUN_004fe218(undefined4 param_1,undefined8 param_2);
 void FUN_004fe248(undefined4 param_1,undefined4 param_2,undefined8 param_3);
-void FUN_004fe27c(undefined4 param_1,undefined8 param_2);
+void *FUN_004fe27c(int param_1,void *param_2,int param_3);
 void FUN_004fe2a8(undefined4 param_1,undefined8 param_2);
 void FUN_004fe2d8(undefined4 param_1,undefined4 param_2,undefined8 param_3);
 void FUN_004fe30c(undefined4 param_1,undefined8 param_2);
@@ -311,16 +311,16 @@ void FUN_004fe33c(void);
 void FUN_004fe340(void);
 void FUN_004fe344(void);
 void FUN_004fe348(int *param_1);
-undefined8 FUN_004fe39c(int *param_1,int param_2,undefined8 param_3,int param_4,int param_5,int param_6);
+void FUN_004fe39c(IMSeqMem *param_1,void *param_2,int param_3,const char *param_4,int param_5,void *param_6);
 ulonglong FUN_004fe3c4(int *param_1,ulonglong param_2,int param_3,int param_4,int param_5);
 int FUN_004fe44c(int param_1,int param_2);
 double FUN_004fe4d0(int param_1);
 undefined4 FUN_004fe524(undefined4 *param_1);
 namespace idol { ulonglong kalloc(int param_1,longlong param_2); } 
 void FUN_004fe5c8(int param_1,int param_2);
-undefined4 FUN_004fe5ec(int param_1);
+void *FUN_004fe5ec(IMSeqMem *param_1);
 uint FUN_004fe5f4(int param_1,int param_2);
-ulonglong FUN_004fe61c(uint *param_1,ulonglong param_2);
+void FUN_004fe61c(IMSeqMem *param_1,u32 param_2);
 ulonglong FUN_004fe68c(int param_1,ulonglong param_2);
 void FUN_004fe6ec(int param_1,int param_2);
 int FUN_004fe734(int *param_1);

@@ -181,8 +181,8 @@ int RegisterHeroHealthHUDCallbacks(void)
 void HudScratch_Reset(void)
 
 {
-  DAT_00a1bfd0 = DAT_00a108e4;
-  DAT_00a1bfd4 = DAT_00a108e4 + 0x64000;
+  DAT_00a1bfd0 = g_HudBuffer;
+  DAT_00a1bfd4 = g_HudBuffer + 0x64000;
   return;
 }
 
@@ -194,8 +194,8 @@ int HudScratch_Alloc(int size)
   int iVar1;
   
   if (DAT_00a1bfd0 == 0) {
-    DAT_00a1bfd4 = DAT_00a108e4 + 0x64000;
-    DAT_00a1bfd0 = DAT_00a108e4;
+    DAT_00a1bfd4 = g_HudBuffer + 0x64000;
+    DAT_00a1bfd0 = g_HudBuffer;
   }
   if (DAT_00a1bfd4 - DAT_00a1bfd0 < size) {
     iVar1 = 0;
@@ -236,8 +236,8 @@ void Hud_InitBanks(void)
   paVar1 = DAT_00a1bfd0;
   if (HudBankMain == (astruct *)0x0) {
     if (DAT_00a1bfd0 == (astruct *)0x0) {
-      DAT_00a1bfd4 = &DAT_00a108e4[0x307c].field_0x4;
-      DAT_00a1bfd0 = DAT_00a108e4;
+      DAT_00a1bfd4 = &g_HudBuffer[0x307c].field_0x4;
+      DAT_00a1bfd0 = g_HudBuffer;
     }
     HudBankMain = (astruct *)0x0;
     paVar1 = DAT_00a1bfd0;
@@ -247,8 +247,8 @@ void Hud_InitBanks(void)
     }
     DAT_00a1bfd0 = paVar1;
     if (DAT_00a1bfd0 == (astruct *)0x0) {
-      DAT_00a1bfd4 = &DAT_00a108e4[0x307c].field_0x4;
-      DAT_00a1bfd0 = DAT_00a108e4;
+      DAT_00a1bfd4 = &g_HudBuffer[0x307c].field_0x4;
+      DAT_00a1bfd0 = g_HudBuffer;
     }
     DAT_00a1bff8 = (astruct *)0x0;
     paVar1 = DAT_00a1bfd0;

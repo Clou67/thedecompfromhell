@@ -3364,6 +3364,7 @@ extern undefined4 DAT_00a1de5c; /* 0xa1de5c */
 extern undefined4 DAT_00a1e124; /* no defined data */
 extern undefined4 DAT_00a1e128; /* no defined data */
 extern undefined4 DAT_00a1e12c; /* no defined data */
+extern undefined4 DAT_00ec4080; /* no defined data */
 extern undefined4 g_Manipulator; /* 0x96c07b */
 extern undefined4 _DAT_000e93b0; /* direct read */
 extern undefined4 _DAT_000e93c0; /* direct read */
@@ -3372,5 +3373,6 @@ extern undefined4 _DAT_000e93e0; /* direct read */
 extern undefined4 _DAT_000e9420; /* direct read */
 extern undefined4 _DAT_000e9430; /* direct read */
 extern undefined4 _DAT_000e9450; /* direct read */
+extern undefined4 japanese_mode; /* 0xd9208 */
 extern char s_MESSAGE_DOES_NOT_EXIST_00720b94[23]; /* 0x720b94 */
 extern undefined1 stack0xffffffd0[16]; /* stack slot, not a real global */

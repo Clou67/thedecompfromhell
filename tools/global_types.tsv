@@ -59,3 +59,11 @@ g_HelpIdPairs	short NAME[150][2] /* 0x7208cc */
 g_HelpTextOn	bool NAME /* 0x71fb59: options, help text */
 g_HelpVoiceOn	bool NAME /* 0x71fb58: options, help voice (guess) */
 HelpLogPos	int NAME /* 0x71fb5c: entries in HelpLog (DL name) */
+g_MemSlotsCreated	bool NAME /* 0x724634 */
+MemSlots_IMSeqMem_descriptor	IMSeqMem *NAME /* 0xa1091c: the pool InitMemSlots allocates from (DL keeps these pointers in a MEMSLOTS struct, MemSlots) */
+g_MemSlotsBase	void *NAME /* 0xa108d8: start of the MemSlots pool */
+g_HudBuffer	u8 *NAME /* 0xa108e4: 0x64000 bytes (guess: HUD) */
+g_MobyClassBuffer	u8 *NAME /* 0xa108e8: 0x60000 bytes, moby classes 0x30000 each */
+g_GameplayBuffer	u8 *NAME /* 0xa108ec: 0x200000 bytes, the level's gameplay file (Gameplay points into it) */
+g_FontVram	u8 *NAME /* 0xa10930: 0x100000 bytes, the Japanese font texture */
+DAT_00927204	u32 *NAME /* 0x927204: set to 130 at start-up, next to g_pFrameTicks */

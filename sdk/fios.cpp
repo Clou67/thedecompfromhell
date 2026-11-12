@@ -5,6 +5,7 @@
 #include "sdk/fios.h"
 #include "game/draw.h"
 #include "game/hero.h"
+#include "game/initonce.h"
 #include "game/pause.h"
 #include "game/vendor.h"
 #include "idol/idol.h"
@@ -211,7 +212,7 @@ void FUN_0050851c(undefined4 *param_1)
 
 
 // 0x0508578 (0x54 bytes)
-void FUN_00508578(undefined4 *param_1,undefined8 param_2,undefined4 param_3)
+void FUN_00508578(void *param_1,void *param_2,void *param_3)
 
 {
   undefined4 uVar1;

@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "idol/idol.h"
+#include "game/initonce.h"
 #include "game/water.h"
 #include "idol/idol_draw.h"
 #include "idol/mUnk.h"
@@ -618,7 +619,7 @@ void FUN_00504218(undefined8 param_1,undefined8 param_2,int param_3,int param_4)
 
 
 // 0x050436c (0x8 bytes)
-longlong FUN_0050436c(longlong param_1)
+void *FUN_0050436c(void *param_1)
 
 {
   return param_1 + 0x58;

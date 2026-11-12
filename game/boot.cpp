@@ -843,8 +843,8 @@ void Load_Front_End(void)
   load_engine_vram_pair
             (&TEX_BASE,"rc1/ps3data/global/boot/engine.ps3","rc1/ps3data/global/boot/vram.ps3");
   LoadAssetFromFile("rc1/ps3data/japan_font.ps3",&g_JapanFontTex,0x24);
-  LoadAssetFromFile("rc1/ps3data/japan_font.vram",DAT_00a10930,0x80000);
-  g_JapanFontTex = g_JapanFontTex + (DAT_00a10930 - *(int *)(g_viewMtxPtr + 0x4ac));
+  LoadAssetFromFile("rc1/ps3data/japan_font.vram",g_FontVram,0x80000);
+  g_JapanFontTex = g_JapanFontTex + (g_FontVram - *(int *)(g_viewMtxPtr + 0x4ac));
   LoadMusic2(1);
   piVar7 = g_EngineData;
   DAT_00a1bfd8 = g_EngineData[0x1d] + (int)g_EngineData;

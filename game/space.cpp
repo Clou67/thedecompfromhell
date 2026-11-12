@@ -3602,7 +3602,7 @@ void SpaceTransition_LoadWad(void)
   InitViewContext();
   UpdateViewContext();
   VU1_initChain();
-  idol::m_LoadGameFileS(DAT_00a108ec,"space_wad");
+  idol::m_LoadGameFileS(g_GameplayBuffer,"space_wad");
   iVar6 = LoadAssetFromFile
                     ("rc1/ps3data/global/space_wad.ps3",DAT_00a10920,0xffffffffffffffff);
   random = LoadAssetFromFile
@@ -3853,7 +3853,7 @@ void LoadSpacePlate
   int *piVar4;
   char acStack_c0 [128];
   
-  idol::m_LoadGameFileS(DAT_00a108ec + 0x100000,"space_plates");
+  idol::m_LoadGameFileS(g_GameplayBuffer + 0x100000,"space_plates");
   snprintf(acStack_c0,"/rc1/ps3data/global/space_plates/plate%d.ps3",param_1);
   lVar3 = LoadAssetFromFile(acStack_c0,DAT_00a10920,0xffffffffffffffff);
   snprintf(acStack_c0,"/rc1/ps3data/global/space_plates/plate%d.vram",param_1);

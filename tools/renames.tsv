@@ -112,3 +112,10 @@ DAT_0071fb59	g_HelpTextOn
 DAT_0071fb58	g_HelpVoiceOn
 g_HelpLog	HelpLog
 g_HelpLogCount	HelpLogPos
+DAT_00724634	g_MemSlotsCreated
+DAT_00a108d8	g_MemSlotsBase
+DAT_00a108e4	g_HudBuffer
+DAT_00a108e8	g_MobyClassBuffer
+DAT_00a108ec	g_GameplayBuffer
+DAT_00a10930	g_FontVram
+____Unused_InitOnce_RunSysCallWait	InitOnce_RunSysCallWait

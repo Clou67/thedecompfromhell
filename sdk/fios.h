@@ -20,7 +20,7 @@ void FUN_005084b8(void *param_1);
 void FUN_005084bc(void);
 void FUN_005084c0(undefined4 *param_1);
 void FUN_0050851c(undefined4 *param_1);
-void FUN_00508578(undefined4 *param_1,undefined8 param_2,undefined4 param_3);
+void FUN_00508578(void *param_1,void *param_2,void *param_3);
 void LoadAssetAsync(undefined4 *param_1,char *param_2,char *param_3,undefined4 param_4);
 void FUN_005086b0(void);
 void FUN_00508738(int param_1,undefined4 *param_2);

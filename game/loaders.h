@@ -104,6 +104,7 @@ extern undefined4 g_GsRamAlloc; /* 0x966ad0 */
 extern HeroCollHeader * g_HeroCollision; /* 0xa15c00 */
 extern undefined4 g_IsPal; /* 0x966ae8 */
 extern undefined2 g_LoadingStage; /* 0x964560 */
+extern void *g_MemSlotsBase; /* 0xa108d8: start of the MemSlots pool */ /* type set in global_types.tsv */
 extern undefined4 g_NpcChunkLoadHandle; /* 0x7247f0 */
 extern int g_PartTexBaseIndex; /* 0xa52b38 */
 extern undefined g_PifLoadQueue; /* 0x95d2cc */

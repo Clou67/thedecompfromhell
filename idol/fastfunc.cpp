@@ -3493,7 +3493,7 @@ void FUN_00503068(void)
 
 
 // 0x050306c (0x4 bytes)
-void sceGsExecLoadImage(void)
+void sceGsExecLoadImage(void *param_1,void *param_2)
 
 {
   return;
@@ -3509,7 +3509,7 @@ void STUB_00503070(...)
 
 
 // 0x0503074 (0x4 bytes)
-void sceGsSyncPath(void)
+void sceGsSyncPath(int param_1,int param_2)
 
 {
   return;
@@ -3541,7 +3541,7 @@ void STUB_00503080(...)
 
 
 // 0x0503084 (0x4 bytes)
-void sceGsSetDefLoadImage(void)
+void sceGsSetDefLoadImage(void *param_1,int param_2,int param_3,int param_4,int param_5,int param_6,int param_7,int param_8)
 
 {
   return;
@@ -3782,7 +3782,7 @@ undefined8 FUN_0050314c(undefined4 *param_1)
 
 
 // 0x050315c (0x8 bytes)
-undefined8 FUN_0050315c_RET_0(void)
+int FUN_0050315c_RET_0(int param_1)
 
 {
   return 0;
@@ -3790,7 +3790,7 @@ undefined8 FUN_0050315c_RET_0(void)
 
 
 // 0x0503164 (0x8 bytes)
-undefined8 FUN_00503164(void)
+int FUN_00503164(int param_1,int param_2,int param_3)
 
 {
   return 0;
@@ -3878,7 +3878,7 @@ void STUB_005031a4(...)
 
 
 // 0x05031a8 (0x8 bytes)
-undefined8 FUN_005031a8(void)
+int FUN_005031a8(int param_1)
 
 {
   return 0;
@@ -3902,7 +3902,7 @@ void STUB_005031b8(...)
 
 
 // 0x05031bc (0x38 bytes)
-undefined8 FUN_005031bc(undefined4 *param_1)
+int FUN_005031bc(void *param_1,int param_2)
 
 {
   memcpy((void *)param_1[1],(void *)*param_1,param_1[2]);
@@ -3967,7 +3967,7 @@ undefined8 FUN_0050320c(void)
 
 
 // 0x0503214 (0x4 bytes)
-void FUN_00503214(void)
+void FUN_00503214(int param_1)
 
 {
   return;
@@ -4031,7 +4031,7 @@ void FUN_00503240(void)
 
 
 // 0x0503244 (0x4 bytes)
-void FlushCache(void)
+void FlushCache(int param_1)
 
 {
   return;

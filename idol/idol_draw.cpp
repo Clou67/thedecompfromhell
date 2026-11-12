@@ -6,6 +6,7 @@
 #include "idol/idol_draw.h"
 #include "game/boot.h"
 #include "game/hero.h"
+#include "game/initonce.h"
 #include "game/update/moby458.h"
 #include "idol/idol.h"
 #include "idol/mUnk.h"
@@ -6742,7 +6743,7 @@ void FUN_004fe248(undefined4 param_1,undefined4 param_2,undefined8 param_3)
 
 
 // 0x04fe27c (0x2c bytes)
-void FUN_004fe27c(undefined4 param_1,undefined8 param_2)
+void *FUN_004fe27c(int param_1,void *param_2,int param_3)
 
 {
   idol::AllocateMemAlign(param_2,param_1);
@@ -6825,8 +6826,7 @@ void FUN_004fe348(int *param_1)
 
 
 // 0x04fe39c (0x28 bytes)
-undefined8
-FUN_004fe39c(int *param_1,int param_2,undefined8 param_3,int param_4,int param_5,int param_6)
+void FUN_004fe39c(IMSeqMem *param_1,void *param_2,int param_3,const char *param_4,int param_5,void *param_6)
 
 {
   int iVar1;
@@ -6957,7 +6957,7 @@ void FUN_004fe5c8(int param_1,int param_2)
 
 
 // 0x04fe5ec (0x8 bytes)
-undefined4 FUN_004fe5ec(int param_1)
+void *FUN_004fe5ec(IMSeqMem *param_1)
 
 {
   return *(undefined4 *)(param_1 + 4);
@@ -6984,7 +6984,7 @@ uint FUN_004fe5f4(int param_1,int param_2)
 // 0x04fe61c (0x70 bytes)
 // strings: 0065f514: 'Tried to set memory pointer to an invalid address [%s, line %d]\n' | 0065f55c: 'j:/Ratchet/Source/CommonRC1/Game/IMMemory/IMSeqMem.cpp'
 
-ulonglong FUN_004fe61c(uint *param_1,ulonglong param_2)
+void FUN_004fe61c(IMSeqMem *param_1,u32 param_2)
 
 {
   if ((uint)param_2 == 0) {

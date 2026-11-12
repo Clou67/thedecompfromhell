@@ -322,7 +322,6 @@ extern undefined4 DAT_0096a3cc; /* 0x96a3cc */
 extern undefined4 DAT_0096a3e0; /* 0x96a3e0 */
 extern undefined4 DAT_0096a3e4; /* 0x96a3e4 */
 extern undefined4 DAT_0096a3e8; /* 0x96a3e8 */
-extern undefined4 DAT_00a108e4; /* 0xa108e4 */
 extern undefined4 DAT_00a15c84; /* 0xa15c84 */
 extern undefined4 DAT_00a15c88; /* 0xa15c88 */
 extern undefined1 DAT_00a15cdc; /* 0xa15cdc */
@@ -397,6 +396,7 @@ extern pointer32 PTR_HudEntry_InitCounter_007056a0; /* 0x7056a0 */
 extern pointer32 PTR_HudEntry_UpdateCounter_007056c8; /* 0x7056c8 */
 extern undefined4 TexturePointerArray; /* 0xa1bfe0 */
 extern int g_HudAmmoEntryId; /* 0x724530 */
+extern u8 *g_HudBuffer; /* 0xa108e4: 0x64000 bytes (guess: HUD) */ /* type set in global_types.tsv */
 extern int g_HudHideCounter; /* 0x724528 */
 extern int g_toastMsgTimer; /* 0xa15c80 */
 
