@@ -62,6 +62,18 @@ written in `.cpp` files, Idol's PS3 layer may use C++ features. Examples: `game/
 - 4-space indent, braces on the same line for control flow, function braces on their own line.
 - The body of an `if`/`for`/`while`, and each `case` body, goes on its own line, never after the
   condition (`if (!m)\n    return 0;`, not `if (!m) return 0;`).
-- Separate the steps of a function with blank lines: after the locals, around each `if`/loop
-  block, before and after a call that does the main work, and after a local declared inside a
-  block before the code that uses it.
+- Separate the steps of a function with blank lines. A step is a group of lines doing one thing:
+  a run of related declarations (`float midX/midY/midZ`), the calls that use them, a pointer
+  advance. So: a blank line between each group of declarations that compute a different thing,
+  before and after every `if`/loop block, between a run of assignments and a run of calls, and
+  before a closing statement like `quad += 4;` or `return`. When in doubt, add the blank line.
+  Example:
+  ```
+  float cornerX = x0 - normalX * 0.5f;
+  float cornerY = y0 - normalY * 0.5f;
+
+  SetCorner(&quad[1], cornerX, cornerY, cornerZ);
+  SetCorner(&quad[0], cornerX + dirX, cornerY + dirY, cornerZ + dirZ);
+
+  quad += 4;
+  ```
