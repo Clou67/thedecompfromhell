@@ -336,3 +336,30 @@ g_TieTexStateSave	u8 NAME[0x200] /* 0xe5a020 */
 g_TieDrawPacket	u8 NAME[0x1210] /* 0xe59010: up to g_TieDrawStateSave */
 g_TieTexPacket	u8 NAME[0x3600] /* 0xe5a220 */
 g_FrameTimeSq	float NAME /* 0x71f418: g_FrameTime squared */
+g_ShipTakeoffPending	int NAME /* 0xa15c74: the ship takes off at the end of the frame */
+g_SpaceCutscene	int NAME /* 0x964590: PlaySpaceCutscene's argument; 3 once a level change is queued */
+g_ShipBoardOffsets	Vec4 NAME[3] /* 0x731c60: where the hero boards, per ship variant (ship space) */
+g_ShipEngineGlows	Vec4 NAME[12] /* 0x731dc0: engine glows (xyz, size in w): 8 for variant 0, 2 each for 1 and 2 */
+g_ShipEngineGlowCnt	int NAME[3] /* 0x731dac */
+g_ShipGlowSt	float NAME[8] /* 0x731d8c: QuadDef.st of the engine glow */
+g_ShipGlowCorners	Vec4 NAME[4] /* 0x731e80 */
+g_ShipLeaveFrames	int NAME[3] /* 0x731d80: frame of the arrival cutscene the ship leaves at, per variant */
+g_SpaceSceneCameraFrames	SceneCameraFrame *NAME /* 0x95cda4 */
+g_SpaceshipVariant	short NAME /* 0x964596: 0-2, the ship's oClass - GREEN_SHIP_0213 */
+g_cutsceneCameraFrame	int NAME /* 0x95cd88 */
+g_spaceArrivalPending	short NAME /* 0x96459c */
+g_ShipTrails	Vec4 NAME[2][32] /* 0x964630: the two engine trails' points, a ring from g_ShipTrailHead */
+g_ShipTrailHead	int NAME /* 0x9645c0 */
+g_ShipTrailLen	int NAME /* 0x9645c4: points in use */
+g_ShipTrailSt	float NAME[8] /* 0x731f20 */
+g_ShipTrailColors	u32 NAME[3][2] /* 0x731f40: trail colour at the ship and at the end, per variant */
+g_ShipTrailWidths	float NAME[3] /* 0x731f58 */
+g_TransitionUv	float NAME[4][2] /* 0x731c98 */
+g_TransitionCorners	Vec4 NAME[4] /* 0x731f80 */
+g_TransitionScales	float NAME[19] /* 0x731fd0: per level */
+g_TransitionCenter	Vec4 NAME /* 0xa561e0 */
+g_TransitionCenterStart	Vec4 NAME /* 0x731f70 */
+g_TransitionDrift	Vec4 NAME /* 0x731fc0: how far the centre moves over loading screen 4 */
+g_LoadScreenSkyDirs	Vec4 NAME[5] /* 0x732020: per loading screen, the direction the sky scrolls (w copied) */
+g_LoadScreenSkyAngles	float NAME[5] /* 0x732070 */
+g_LoadScreenXRatios	float NAME[5] /* 0x732084: the least view xratio of each loading screen */

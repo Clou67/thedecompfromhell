@@ -1,6 +1,3 @@
-// game/space.cpp -- reconstructed from NPEA00385 EBOOT
-// STATUS: NOT STARTED (raw Ghidra output)
-// 28 functions, 0x15da00-0x165588
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,6 +33,7 @@
 #include "game/update/camera5.h"
 #include "game/update/moby1118.h"
 #include "game/update/moby998.h"
+#include "game/vendor.h"
 #include "game/vuchain.h"
 #include "idol/fastfunc.h"
 #include "idol/idol.h"
@@ -48,1700 +46,952 @@
 #include "sdk/mUnk4.h"
 #include "sdk/sce.h"
 #include "sdk/xUnk5.h"
+#include "idol/fastinline.h"
+#include <cell/gcm/gcm_macros.h>
+#include <cell/gcm/gcm_enum.h>
+// MERGE (17 of 28 functions cleaned; the rest are generated)
+
+#define SHIP_STATE_SCENES 42          /* moby->state while the ship's intro scenes play */
+#define SHIP_PROMPT_BOARD 0x53e4      /* "press triangle to board" */
+#define SHIP_GREEN_0215 0x215         /* the variant whose glows are yellower */
+
+/* the ship's pVar */
+typedef struct ShipVars {
+    int splinePath;                   /* 0x00 */
+    int cameraStartCuboid;            /* 0x04 */
+    int cameraEndCuboid;              /* 0x08 */
+    short heroNear;                   /* 0x0c  the hero stands at the boarding point */
+} ShipVars;
+
+static inline float DistXY(Vec4 *a, Vec4 *b)
+{
+    float dx = a->x - b->x;
+    float dy = a->y - b->y;
+
+    return sqrtf(dx * dx + dy * dy);
+}
+
+static inline float DistXYZ(Vec4 *a, Vec4 *b)
+{
+    float dx = a->x - b->x;
+    float dy = a->y - b->y;
+    float dz = a->z - b->z;
+
+    return sqrtf(dz * dz + dx * dx + dy * dy);
+}
+
+/* where the hero boards: the variant's offset in the ship's frame */
+static inline void ShipBoardPoint(Vec4 *out, MobyInstance *ship)
+{
+    Vec4 *ofs = &g_ShipBoardOffsets[g_SpaceshipVariant];
+    Mtx4 *m = &ship->transform;
+
+    out->x = m->v1.x * ofs->y + m->v2.x * ofs->z + m->v0.x * ofs->x + ship->pos.x;
+    out->y = m->v1.y * ofs->y + m->v2.y * ofs->z + m->v0.y * ofs->x + ship->pos.y;
+    out->z = m->v2.z * ofs->z + m->v0.z * ofs->x + m->v1.z * ofs->y + ship->pos.z;
+}
+
+/* the buffers a space cutscene loads into */
+static inline void SpaceSceneBuffers(void)
+{
+    VU1_setBufSizeByLevel();
+    DAT_00e5aa64 -= 0x60000;
+    g_SceneLoadBuffer = g_NpcBuffer + 0x200000;
+    DAT_0095cda8 = g_NpcBuffer;
+}
 
 // 0x015da00 (0x14 bytes)
 void SECTION_HEADER_SPACE(void)
-
 {
-  DAT_00731bc4 = 0x10000;
-  return;
+    DAT_00731bc4 = 0x10000;
 }
 
 
 // 0x015da58 (0x588 bytes)
+/* the parked ship: plays the intro scenes it owes, pulses its glow, and takes off when the
+   hero presses triangle at the boarding point */
 void UpdateMoby_Spaceship(MobyInstance *moby)
-
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  void *pvVar6;
-  uint uVar7;
-  uint uVar8;
-  float fVar9;
-  short sVar11;
-  int iVar10;
-  byte bVar12;
-  ulonglong uVar13;
-  double dVar14;
-  
-  pvVar6 = moby->pVar;
-  if (moby->state == '*') {
-    if (g_gameMode != GAME_MODE_SCENE) {
-      if ((g_MiscLevelFlags.SpaceshipRelated1 == 0) && (UnlockableItems.magneboots != '\0')) {
-        mode_sceneInit(4);
-        g_MiscLevelFlags.SpaceshipRelated1 = 1;
-      }
-      else if ((g_MiscLevelFlags.SpaceshipRelated2 == 0) && (g_SeenPlanets.Pokitaru != 0)) {
-        mode_sceneInit(5);
-        g_MiscLevelFlags.SpaceshipRelated2 = 1;
-      }
-      else if ((g_MiscLevelFlags.SpaceshipRelated3 == 0) && (g_SeenPlanets.Pokitaru != 0)) {
-        PlayInfobotMovie(0xb);
-        g_MiscLevelFlags.SpaceshipRelated3 = 1;
-      }
-      else if ((g_MiscLevelFlags.SpaceShipRelated4 == 0) && (g_SeenPlanets.Pokitaru != 0)) {
-        mode_sceneInit(6);
-        g_MiscLevelFlags.SpaceShipRelated4 = 1;
-      }
-      else {
-        moby->state = '\0';
-        moby->modeBits =
-             moby->modeBits &
-             (MIRROR|CAN_BE_DAMAGED|HIDE_BACKFACES|CAN_BE_AUTO_TARGETED|DISABLE_Z_WRITE|DRAW_SHADOW|
-              DRAW_TRANSPARENT_WEIRD|LOCK_ROTATION|NO_DRAW|HAS_SPECIAL_VARS|HAS_GLOW|TRANSPARENT|
-              NO_POST_UPDATE|NO_UPDATE);
-        DAT_00a15c74 = 1;
-        DAT_00964598 = 1;
-      }
-    }
-  }
-  else {
-    if (moby->enabled != '\0') {
-      bVar12 = moby->setByGroup + 2;
-      moby->setByGroup = bVar12;
-      dVar14 = (double)FastIntToDouble((ulonglong)bVar12 - 0x80);
-      fVar1 = (float)(dVar14 * 0.02454369328916073 + 1.570796251296997);
-      fVar2 = 3.1415925 - fVar1;
-      if (fVar1 - (3.1415925 - fVar1) < 0.0) {
-        fVar2 = fVar1;
-      }
-      fVar3 = -3.1415925 - fVar1;
-      if ((-3.1415925 - fVar1) - fVar2 < 0.0) {
-        fVar3 = fVar2;
-      }
-      fVar1 = fVar3 * fVar3;
-      fVar2 = fVar1 * fVar1 * fVar3;
-      fVar4 = fVar1 * fVar2;
-      uVar13 = (ulonglong)
-               (uint)(int)((fVar1 * fVar4 * 2.601887e-06 +
-                           fVar4 * -0.0001980741 +
-                           fVar2 * 0.0083330255 + fVar1 * fVar3 * -0.16666657 + fVar3) * 50.0) +
-               0x96;
-      uVar8 = (uint)((uVar13 & 0xffffff) << 8);
-      uVar7 = (uint)uVar13 | uVar8;
-      moby->glowRgba =
-           uVar7 + ((uint)(ZERO_MASK((0x215 - (uint)moby->oClass))) &
-                   ((int)(uint)uVar13 >> 1 | uVar8) - uVar7) | (uint)((uVar13 & 0xffffffff) << 0x10)
-      ;
-      RegisterPostDraw(&PTR_Space_DrawShipEffects_00707cd8,moby);
-      fVar1 = (moby->pos).y - GameCamera.posY;
-      fVar2 = (moby->pos).x - GameCamera.posX;
-      if (SQRT(fVar2 * fVar2 + fVar1 * fVar1) < 32.0) {
-        RegisterFuncForMoby(&PTR_STUB_0015e2c0_00707c68,moby);
-      }
-    }
-    sVar11 = *(short *)((int)pvVar6 + 0xc);
-    if (sVar11 == 0) {
-      fVar1 = (moby->pos).y;
-      fVar2 = (moby->pos).x;
-      fVar3 = fVar1 - g_heroPosition.y;
-      fVar4 = fVar2 - g_heroPosition.x;
-      if (SQRT(fVar4 * fVar4 + fVar3 * fVar3) < 6.0) {
-        iVar10 = (int)((longlong)g_SpaceshipVariant << 4);
-        fVar3 = *(float *)(&DAT_00731c60 + iVar10);
-        fVar4 = *(float *)(iVar10 + 0x731c64);
-        fVar5 = *(float *)(iVar10 + 0x731c68);
-        fVar9 = ((moby->transform).v1.y * fVar4 +
-                (moby->transform).v2.y * fVar5 + (moby->transform).v0.y * fVar3 + fVar1) -
-                g_heroPosition.y;
-        fVar1 = ((moby->transform).v1.x * fVar4 +
-                (moby->transform).v2.x * fVar5 + (moby->transform).v0.x * fVar3 + fVar2) -
-                g_heroPosition.x;
-        fVar2 = ((moby->transform).v2.z * fVar5 +
-                 (moby->transform).v0.z * fVar3 + (moby->transform).v1.z * fVar4 + (moby->pos).z) -
-                g_heroPosition.z;
-        if (SQRT(fVar2 * fVar2 + fVar1 * fVar1 + fVar9 * fVar9) < 4.0) {
-          sVar11 = 1;
-          *(undefined2 *)((int)pvVar6 + 0xc) = 1;
+    ShipVars *vars = (ShipVars *)moby->pVar;
+
+    if (moby->state == SHIP_STATE_SCENES) {
+        if (g_gameMode == GAME_MODE_SCENE) {
+            return;
         }
-      }
-    }
-    else {
-      iVar10 = (int)((longlong)g_SpaceshipVariant << 4);
-      fVar1 = *(float *)(iVar10 + 0x731c64);
-      fVar2 = *(float *)(&DAT_00731c60 + iVar10);
-      fVar3 = *(float *)(iVar10 + 0x731c68);
-      fVar4 = ((moby->transform).v2.y * fVar3 +
-               (moby->transform).v0.y * fVar2 + (moby->transform).v1.y * fVar1 + (moby->pos).y) -
-              g_heroPosition.y;
-      fVar5 = ((moby->transform).v2.x * fVar3 +
-               (moby->transform).v0.x * fVar2 + (moby->transform).v1.x * fVar1 + (moby->pos).x) -
-              g_heroPosition.x;
-      fVar1 = ((moby->transform).v2.z * fVar3 +
-               (moby->transform).v0.z * fVar2 + (moby->transform).v1.z * fVar1 + (moby->pos).z) -
-              g_heroPosition.z;
-      if (4.1 < SQRT(fVar1 * fVar1 + fVar5 * fVar5 + fVar4 * fVar4)) {
-        sVar11 = 0;
-        *(undefined2 *)((int)pvVar6 + 0xc) = 0;
-      }
-    }
-    if ((moby->modeBits & DISABLED) == NONE) {
-      if (((sVar11 != 0) &&
-          (iVar10 = MB_ShowPersistentMessage(2,0x53e4),
-          (g_Pad.buttonsPressedThisFrame & TRIANGLE) != 0)) && (iVar10 != 0)) {
-        if ((Level == Orxon) && (g_heroType == '\x01')) {
-          moby->state = '*';
-          moby->modeBits = moby->modeBits | (UNK_40|DISABLED);
-          mode_sceneInit(9);
+
+        if (g_MiscLevelFlags.SpaceshipRelated1 == 0 && UnlockableItems.magneboots != 0) {
+            mode_sceneInit(4);
+            g_MiscLevelFlags.SpaceshipRelated1 = 1;
+        }
+        else if (g_MiscLevelFlags.SpaceshipRelated2 == 0 && g_SeenPlanets.Pokitaru != 0) {
+            mode_sceneInit(5);
+            g_MiscLevelFlags.SpaceshipRelated2 = 1;
+        }
+        else if (g_MiscLevelFlags.SpaceshipRelated3 == 0 && g_SeenPlanets.Pokitaru != 0) {
+            PlayInfobotMovie(0xb);
+            g_MiscLevelFlags.SpaceshipRelated3 = 1;
+        }
+        else if (g_MiscLevelFlags.SpaceShipRelated4 == 0 && g_SeenPlanets.Pokitaru != 0) {
+            mode_sceneInit(6);
+            g_MiscLevelFlags.SpaceShipRelated4 = 1;
         }
         else {
-          MB_ClearHelpMessage((MobyInstance *)0x2);
-          DAT_00a15c74 = 1;
-          DAT_00964598 = 0;
+            moby->state = 0;
+            moby->modeBits &= ~(UNK_40 | DISABLED);
+            g_ShipTakeoffPending = 1;
+            DAT_00964598 = 1;
         }
-      }
+        return;
+    }
+
+    if (moby->enabled != 0) {
+        moby->setByGroup += 2;
+
+        float angle = (float)FastIntToDouble((u8)moby->setByGroup - 0x80) * 0.024543693f;
+        int level = (int)(FastCosInline(angle) * 50.0f) + 150;
+        u32 red = (moby->oClass == SHIP_GREEN_0215) ? (u32)(level >> 1) : (u32)level;
+        moby->glowRgba = (red | (u32)level << 8) | (u32)level << 16;
+
+        RegisterPostDraw((void *)Space_DrawShipEffects, moby);
+
+        float dx = moby->pos.x - GameCamera.posX;
+        float dy = moby->pos.y - GameCamera.posY;
+        if (sqrtf(dx * dx + dy * dy) < 32.0f) {
+            RegisterFuncForMoby((void **)STUB_0015e2c0, moby);
+        }
+    }
+
+    Vec4 board;
+    if (vars->heroNear == 0) {
+        if (DistXY(&moby->pos, &g_heroPosition) < 6.0f) {
+            ShipBoardPoint(&board, moby);
+            if (DistXYZ(&board, &g_heroPosition) < 4.0f) {
+                vars->heroNear = 1;
+            }
+        }
     }
     else {
-      *(undefined2 *)((int)pvVar6 + 0xc) = 0;
+        ShipBoardPoint(&board, moby);
+        if (DistXYZ(&board, &g_heroPosition) > 4.1f) {
+            vars->heroNear = 0;
+        }
     }
-  }
-  return;
+
+    if (moby->modeBits & DISABLED) {
+        vars->heroNear = 0;
+        return;
+    }
+
+    if (vars->heroNear == 0) {
+        return;
+    }
+
+    int shown = (int)MB_ShowPersistentMessage(2, (StringId)SHIP_PROMPT_BOARD);
+    if ((g_Pad.buttonsPressedThisFrame & TRIANGLE) == 0 || shown == 0) {
+        return;
+    }
+
+    if (Level == Orxon && g_heroType == 1) {
+        /* Clank can't fly it: play the scene instead */
+        moby->state = SHIP_STATE_SCENES;
+        moby->modeBits |= UNK_40 | DISABLED;
+        mode_sceneInit(9);
+    }
+    else {
+        MB_ClearHelpMessage((MobyInstance *)2);
+        g_ShipTakeoffPending = 1;
+        DAT_00964598 = 0;
+    }
 }
 
 
 // 0x015dfe0 (0x2e0 bytes)
-// strings: 0096c074: 'None'
-
-
+/* points GameCamera along the ship cutscene's camera track; returns the frame's first flag */
 char Space_SetCutsceneCamera(void)
-
 {
-  char cVar1;
-  float *pfVar2;
-  void *pvVar4;
-  undefined8 uVar3;
-  double extraout_f1;
-  double extraout_f1_00;
-  double extraout_f1_01;
-  double extraout_f1_02;
-  double extraout_f1_03;
-  double dVar5;
-  double dVar6;
-  double dVar7;
-  double dVar8;
-  double dVar9;
-  double dVar10;
-  double dVar11;
-  double dVar12;
-  float local_e0;
-  float local_dc;
-  float local_d8;
-  float local_d0;
-  float local_cc;
-  float local_c8;
-  float local_c0;
-  float local_bc;
-  float local_b8;
-  float local_a0;
-  float local_9c;
-  float local_98;
-  float local_90;
-  float local_8c;
-  float local_88;
-  float local_80;
-  float local_7c;
-  float local_78;
-  
-  pfVar2 = (float *)((int)g_SpaceSceneCameraFrames + g_cutsceneCameraFrame * 0x20);
-  g_ViewContext.xratio = pfVar2[7];
-  cVar1 = *(char *)(pfVar2 + 3);
-  UpdateViewContext();
-  GameCamera.posX = *pfVar2;
-  GameCamera.posY = pfVar2[1];
-  GameCamera.posZ = pfVar2[2];
-  GameCamera.field8_0x14c = *(char (*) [4])(pfVar2 + 3);
-  pvVar4 = memcpy(&local_e0,&DAT_00653758,0x40);
-  uVar3 = _FSin((double)pfVar2[4],pvVar4,0);
-  dVar12 = extraout_f1;
-  uVar3 = _FSin((double)pfVar2[4],uVar3,1);
-  dVar11 = extraout_f1_00;
-  uVar3 = _FSin((double)pfVar2[5],uVar3,0);
-  dVar10 = extraout_f1_01;
-  uVar3 = _FSin((double)pfVar2[5],uVar3,1);
-  dVar9 = extraout_f1_02;
-  uVar3 = _FSin((double)pfVar2[6],uVar3,0);
-  dVar8 = extraout_f1_03;
-  dVar5 = (double)_FSin((double)pfVar2[6],uVar3,1);
-  dVar7 = (double)(float)(dVar10 * dVar8);
-  dVar6 = (double)(float)(dVar5 * dVar10);
-  memcpy(&local_a0,&DAT_00734b00,0x40);
-  local_a0 = (float)(dVar9 * dVar5);
-  local_9c = (float)(dVar9 * dVar8);
-  local_88 = (float)(dVar9 * dVar12);
-  local_78 = (float)(dVar11 * dVar9);
-  local_90 = (float)(dVar12 * dVar6 - (double)(float)(dVar11 * dVar8));
-  local_8c = (float)(dVar12 * dVar7 + (double)(float)(dVar11 * dVar5));
-  local_80 = (float)(dVar11 * dVar6 + (double)(float)(dVar12 * dVar8));
-  local_7c = (float)(dVar11 * dVar7 - (double)(float)(dVar5 * dVar12));
-  local_98 = (float)-dVar10;
-  memcpy(&local_e0,&local_a0,0x40);
-  GameCamera.orientMtx.right.x = -local_e0;
-  GameCamera.orientMtx.right.y = -local_dc;
-  GameCamera.orientMtx.right.z = -local_d8;
-  GameCamera.orientMtx.up.x = local_d0;
-  GameCamera.orientMtx.forward.x = -local_c0;
-  GameCamera.orientMtx.up.y = local_cc;
-  GameCamera.orientMtx.forward.y = -local_bc;
-  GameCamera.orientMtx.forward.z = -local_b8;
-  GameCamera.orientMtx.up.z = local_c8;
-  if (Cheats[4] != '\0') {
-    GameCamera.orientMtx.right.w = 0.0;
-    GameCamera.orientMtx.right.x = -(local_bc * local_c8) - -(local_b8 * local_cc);
-    GameCamera.orientMtx.right.y = -(local_b8 * local_d0) - -(local_c0 * local_c8);
-    GameCamera.orientMtx.right.z = -(local_c0 * local_cc) - -(local_bc * local_d0);
-  }
-  return cVar1;
+    SceneCameraFrame *frame = &g_SpaceSceneCameraFrames[g_cutsceneCameraFrame];
+    char flag = frame->flags[0];
+    Mtx4 rot;
+    Mtx4 copy;
+
+    g_ViewContext.xratio = frame->xratio;
+    UpdateViewContext();
+
+    GameCamera.posX = frame->x;
+    GameCamera.posY = frame->y;
+    GameCamera.posZ = frame->z;
+    memcpy(&GameCamera.field8_0x14c, frame->flags, 4);
+
+    memcpy(&copy, &DAT_00653758, sizeof(Mtx4));
+    float sinX = std::_FSin(frame->rotX, 0);
+    float cosX = std::_FSin(frame->rotX, 1);
+    float sinY = std::_FSin(frame->rotY, 0);
+    float cosY = std::_FSin(frame->rotY, 1);
+    float sinZ = std::_FSin(frame->rotZ, 0);
+    float cosZ = std::_FSin(frame->rotZ, 1);
+    float sinYsinZ = sinY * sinZ;
+    float cosZsinY = cosZ * sinY;
+
+    /* the X, Y, Z euler rotation, starting from the identity at 0x734b00 */
+    memcpy(&rot, &DAT_00734b00, sizeof(Mtx4));
+    rot.v0.x = cosY * cosZ;
+    rot.v0.y = cosY * sinZ;
+    rot.v0.z = -sinY;
+    rot.v1.x = sinX * cosZsinY - cosX * sinZ;
+    rot.v1.y = sinX * sinYsinZ + cosX * cosZ;
+    rot.v1.z = cosY * sinX;
+    rot.v2.x = cosX * cosZsinY + sinX * sinZ;
+    rot.v2.y = cosX * sinYsinZ - cosZ * sinX;
+    rot.v2.z = cosX * cosY;
+    memcpy(&copy, &rot, sizeof(Mtx4));
+
+    GameCamera.orientMtx.up.x = copy.v1.x;
+    GameCamera.orientMtx.forward.x = -copy.v2.x;
+    GameCamera.orientMtx.right.x = -copy.v0.x;
+    GameCamera.orientMtx.up.y = copy.v1.y;
+    GameCamera.orientMtx.forward.y = -copy.v2.y;
+    GameCamera.orientMtx.right.y = -copy.v0.y;
+    GameCamera.orientMtx.up.z = copy.v1.z;
+    GameCamera.orientMtx.forward.z = -copy.v2.z;
+    GameCamera.orientMtx.right.z = -copy.v0.z;
+
+    if (Cheats[4] != 0) {
+        /* mirrored: right = forward x up */
+        GameCamera.orientMtx.right.w = 0.0f;
+        GameCamera.orientMtx.right.x = -(copy.v2.y * copy.v1.z) - -(copy.v2.z * copy.v1.y);
+        GameCamera.orientMtx.right.y = -(copy.v2.z * copy.v1.x) - -(copy.v2.x * copy.v1.z);
+        GameCamera.orientMtx.right.z = -(copy.v2.x * copy.v1.y) - -(copy.v2.y * copy.v1.x);
+    }
+
+    return flag;
 }
 
 
 // 0x015e2c0 (0x4 bytes)
 void STUB_0015e2c0(...)
-
 {
-  return;
 }
 
 
 // 0x015e2c4 (0x28 bytes)
 void Space_DisableShip(void)
-
 {
-  MobyModeBit *pMVar1;
-  MobyInstance *pMVar2;
-  
-  pMVar2 = g_SpaceshipPtr;
-  if (g_SpaceshipPtr != (MobyInstance *)0x0) {
-    pMVar1 = &g_SpaceshipPtr->modeBits;
-    g_SpaceshipPtr->collision = (ushort *)0x0;
-    pMVar2->modeBits = *pMVar1 | (NO_UPDATE|DISABLED);
-  }
-  return;
+    MobyInstance *ship = g_SpaceshipPtr;
+
+    if (ship != NULL) {
+        ship->collision = NULL;
+        ship->modeBits |= NO_UPDATE | DISABLED;
+    }
 }
 
 
 // 0x015e2ec (0x114 bytes)
+/* a ship moby spawned: it becomes the level's ship (disabling the previous one) */
 void SetupSpaceShipVars(MobyInstance *moby)
-
 {
-  undefined4 *pvars;
-  
-  DAT_00a561c0 = 1;
-  if (g_SpaceshipPtr != (MobyInstance *)0x0) {
-    g_SpaceshipPtr->collision = (ushort *)0x0;
-    g_SpaceshipPtr->modeBits = g_SpaceshipPtr->modeBits | (NO_UPDATE|DISABLED);
-  }
-  if (Level == Gemlik) {
-    g_heroSpawnPosition.z = 316.72;
-    g_heroSpawnRot.z = 2.77;
-    g_heroSpawnPosition.x = 464.66;
-    g_heroSpawnPosition.y = 580.68;
-  }
-  g_SpaceshipVariant = moby->oClass - GREEN_SHIP_0213;
-  g_SpaceshipPtr = moby;
-  moby->pUpdate = &PTR_UpdateMoby_Spaceship_00707c58;
-  moby->modeBits =
-       moby->modeBits &
-       (MIRROR|CAN_BE_DAMAGED|HIDE_BACKFACES|CAN_BE_AUTO_TARGETED|DISABLE_Z_WRITE|DRAW_SHADOW|
-        DRAW_TRANSPARENT_WEIRD|LOCK_ROTATION|NO_DRAW|UNK_40|HAS_SPECIAL_VARS|HAS_GLOW|TRANSPARENT|
-       NO_POST_UPDATE);
-  moby->collision = moby->pClass->collision;
-  MB_SetAnimationNoBlend(moby,1,0);
-  pvars = (undefined4 *)moby->pVar;
-  g_shipSplinePath = *pvars;
-  g_shipCameraStartCuboid = pvars[1];
-  g_shipCameraEndCuboid = pvars[2];
-  return;
+    DAT_00a561c0 = 1;
+
+    if (g_SpaceshipPtr != NULL) {
+        g_SpaceshipPtr->collision = NULL;
+        g_SpaceshipPtr->modeBits |= NO_UPDATE | DISABLED;
+    }
+
+    if (Level == Gemlik) {
+        g_heroSpawnPosition.z = 316.72f;
+        g_heroSpawnRot.z = 2.77f;
+        g_heroSpawnPosition.x = 464.66f;
+        g_heroSpawnPosition.y = 580.68f;
+    }
+
+    g_SpaceshipVariant = moby->oClass - GREEN_SHIP_0213;
+    g_SpaceshipPtr = moby;
+    moby->pUpdate = &PTR_UpdateMoby_Spaceship_00707c58;
+    moby->modeBits &= ~(NO_UPDATE | DISABLED);
+    moby->collision = moby->pClass->collision;
+    MB_SetAnimationNoBlend(moby, 1, 0);
+
+    ShipVars *vars = (ShipVars *)moby->pVar;
+    g_shipSplinePath = vars->splinePath;
+    g_shipCameraStartCuboid = vars->cameraStartCuboid;
+    g_shipCameraEndCuboid = vars->cameraEndCuboid;
 }
 
 
 // 0x015e400 (0x2c bytes)
 void Space_EnableShip(void)
-
 {
-  u16 *puVar1;
-  MobyInstance *pMVar2;
-  
-  pMVar2 = g_SpaceshipPtr;
-  if (g_SpaceshipPtr != (MobyInstance *)0x0) {
-    puVar1 = g_SpaceshipPtr->pClass->collision;
-    g_SpaceshipPtr->modeBits =
-         g_SpaceshipPtr->modeBits &
-         (MIRROR|CAN_BE_DAMAGED|HIDE_BACKFACES|CAN_BE_AUTO_TARGETED|DISABLE_Z_WRITE|DRAW_SHADOW|
-          DRAW_TRANSPARENT_WEIRD|LOCK_ROTATION|NO_DRAW|UNK_40|HAS_SPECIAL_VARS|HAS_GLOW|TRANSPARENT|
-         NO_POST_UPDATE);
-    pMVar2->collision = puVar1;
-  }
-  return;
+    MobyInstance *ship = g_SpaceshipPtr;
+
+    if (ship != NULL) {
+        ship->modeBits &= ~(NO_UPDATE | DISABLED);
+        ship->collision = ship->pClass->collision;
+    }
 }
 
 
 // 0x015e430 (0x3b8 bytes)
+/* starts a ship cutscene: 0 takes off, anything else lands; loads the scene and its speech */
 void PlaySpaceCutscene(int cutscene)
-
 {
-  u8 uVar1;
-  MobyInstance *pMVar2;
-  MobyInstance *pMVar3;
-  int fade;
-  int iVar4;
-  int iVar5;
-  
-  g_CutscenePlaying = 1;
-  DAT_00964594 = 0xffff;
-  DAT_00964578 = 0;
-  DAT_00964590 = cutscene;
-  FastMemSet(&DAT_0095cd50,0,0x1c0);
-  FastMemSet(&DAT_00a1be80,0,0x40);
-  FastMemSet(&DAT_00a1bec0,0,0x40);
-  VU1_setBufSizeByLevel();
-  DAT_00e5aa64 = DAT_00e5aa64 + -0x60000;
-  g_SceneLoadBuffer = g_NpcBuffer + 0x200000;
-  DAT_0095cda8 = g_NpcBuffer;
-  SceneScreenFade = 1.0;
-  DAT_0095cf14 = 0;
-  g_gameMode = GAME_MODE_SPACE;
-  TransitionMovement(100,2);
-  g_heroInvisible = 1;
-  Hero_MakeInvisible();
-  pMVar3 = MobyInstancePermEnd;
-  g_SpaceshipPtr->modeBits = g_SpaceshipPtr->modeBits | DISABLED;
-  uVar1 = pMVar3->state;
-  while (uVar1 != 0xff) {
-    if (((pMVar3->state & 0x80) == 0) &&
-       ((pMVar3->oClass == MINE_004A || (pMVar3->oClass == DECOY)))) {
-      pMVar3->modeBits = pMVar3->modeBits | NO_DRAW;
+    g_CutscenePlaying = 1;
+    DAT_00964594 = 0xffff;
+    DAT_00964578 = 0;
+    g_SpaceCutscene = cutscene;
+    FastMemSet(&DAT_0095cd50, 0, 0x1c0);
+    FastMemSet(&DAT_00a1be80, 0, 0x40);
+    FastMemSet(&DAT_00a1bec0, 0, 0x40);
+    VU1_setBufSizeByLevel();
+    DAT_00e5aa64 -= 0x60000;
+    g_SceneLoadBuffer = g_NpcBuffer + 0x200000;
+    DAT_0095cda8 = g_NpcBuffer;
+    SceneScreenFade = 1.0f;
+    DAT_0095cf14 = 0;
+    g_gameMode = GAME_MODE_SPACE;
+    TransitionMovement(100, 2);
+    g_heroInvisible = 1;
+    Hero_MakeInvisible();
+
+    g_SpaceshipPtr->modeBits |= DISABLED;
+    for (MobyInstance *moby = MobyInstancePermEnd; moby->state != 0xff; moby++) {
+        if ((moby->state & 0x80) == 0 && (moby->oClass == MINE_004A || moby->oClass == DECOY)) {
+            moby->modeBits |= NO_DRAW;
+        }
     }
-    pMVar2 = pMVar3 + 1;
-    pMVar3 = pMVar3 + 1;
-    uVar1 = pMVar2->state;
-  }
-  if (cutscene == 0) {
-    iVar4 = g_SpaceshipVariant + 1;
-    iVar5 = g_SpaceshipVariant + 6;
-    if ((Level == Orxon && g_SpaceshipVariant == 1) && (UnlockableItems.o2Mask == '\0')) {
-      iVar5 = 0xb;
-      iVar4 = 0;
+
+    int scene;
+    int speech;
+    int odd = (Level == Orxon && g_SpaceshipVariant == 1) && UnlockableItems.o2Mask == 0;
+    int oltanis = Level == Oltanis && g_SpaceshipVariant == 2;
+
+    if (cutscene == 0) {
+        scene = g_SpaceshipVariant + 1;
+        speech = g_SpaceshipVariant + 6;
+        if (odd) {
+            speech = 0xb;
+            scene = 0;
+        }
+        else if (oltanis) {
+            scene = 8;
+            speech = 0xe;
+        }
+
+        LoadSpaceScene(scene, (int)(animationSpeed * 6.5f));
     }
-    else if ((Level == Oltanis) && (g_SpaceshipVariant == 2)) {
-      iVar4 = 8;
-      iVar5 = 0xe;
+    else {
+        int first = g_spaceArrivalPending == 0;
+
+        scene = g_SpaceshipVariant + 5;
+        speech = g_SpaceshipVariant + (first ? 3 : 0);
+        if (odd) {
+            scene = 4;
+            speech = (first ? 1 : 0) + 9;
+        }
+        else if (oltanis) {
+            scene = 9;
+            speech = (first ? 1 : 0) + 0xc;
+        }
+
+        LoadSpaceScene(scene, first ? (int)(animationSpeed * 6.5f) : 0);
     }
-    LoadSpaceScene(iVar4,(int)(animationSpeed * 6.5));
-  }
-  else {
-    iVar4 = g_SpaceshipVariant + 5;
-    iVar5 = (int)g_SpaceshipVariant +
-            ((uint)(ZERO_MASK((uint)g_spaceArrivalPending.piece<0,2>())) & 3);
-    if (((Level == Orxon) && (g_SpaceshipVariant == 1)) && (UnlockableItems.o2Mask == '\0')) {
-      iVar4 = 4;
-      iVar5 = ((uint)(ZERO_MASK((uint)g_spaceArrivalPending.piece<0,2>())) & 1) + 9;
+
+    g_PendingSpeech = speech + 40000;
+    ParseSpaceSceneChunk(0);
+
+    while (g_SpeechPlaying.status != 3) {
+        sound_Update();
+        STUB_00503078(0);
     }
-    else if ((Level == Oltanis) && (g_SpaceshipVariant == 2)) {
-      iVar4 = 9;
-      iVar5 = ((uint)(ZERO_MASK((uint)g_spaceArrivalPending.piece<0,2>())) & 1) + 0xc;
-    }
-    fade = 0;
-    if (g_spaceArrivalPending.piece<0,2>() == 0) {
-      fade = (int)(animationSpeed * 6.5);
-    }
-    LoadSpaceScene(iVar4,fade);
-  }
-  g_PendingSpeech = iVar5 + 40000;
-  ParseSpaceSceneChunk(0);
-  while (g_SpeechPlaying.status != 3) {
-    sound_Update();
-    STUB_00503078(0);
-  }
-  music_PlayPreseekedSpeech();
-  return;
+
+    music_PlayPreseekedSpeech();
 }
 
 
 // 0x015e7e8 (0xb0 bytes)
 void Space_StartTakeoffCutscene(void)
-
 {
-  g_CutscenePlaying = 1;
-  g_heroHealth = g_heroHealth + ((uint)((longlong)g_heroHealth + -1 >> 0x3f) & 1U - g_heroHealth);
-  music_Pause(0);
-  if ((g_SpeechPlaying.status != 6) && (g_SpeechPlaying.status != 7)) {
-    g_SpeechPlaying.status = 5;
-  }
-  sound_Update();
-  Help_Kill();
-  PlaySpaceCutscene(0);
-  g_spaceArrivalPending.piece<0,2>() = 0;
-  return;
+    g_CutscenePlaying = 1;
+    if (g_heroHealth < 1) {
+        g_heroHealth = 1;
+    }
+
+    music_Pause(0);
+    if (g_SpeechPlaying.status != 6 && g_SpeechPlaying.status != 7) {
+        g_SpeechPlaying.status = 5;
+    }
+
+    sound_Update();
+    Help_Kill();
+    PlaySpaceCutscene(0);
+    g_spaceArrivalPending = 0;
 }
 
 
 // 0x015e8a0 (0x1e4 bytes)
-void StartLeaveLevelCutscene(LevelId param_1)
-
+/* to the same level: the arrival cutscene from where the ship leaves; else save and
+   queue the level change */
+void StartLeaveLevelCutscene(LevelId level)
 {
-  int iVar1;
-  undefined8 in_LR;
-  GPiece<16> auVar2;
-  GPiece<16> auVar3;
-  GPiece<16> auVar4;
-  
-  g_CutscenePlaying = 1;
-  g_gameMode = GAME_MODE_SPACE;
-  DAT_0095cf14 = 0;
-  SceneScreenFade = 1.0;
-  DAT_00964590 = 0;
-  DAT_00964594 = 0xffff;
-  VU1_setBufSizeByLevel();
-  DAT_00e5aa64 = DAT_00e5aa64 + -0x60000;
-  g_SceneLoadBuffer = g_NpcBuffer + 0x200000;
-  DAT_0095cda8 = g_NpcBuffer;
-  if (Level == param_1) {
-    PlaySpaceCutscene(8);
-    auVar2 = loadVectorLeftIndexed((longlong)g_SpaceshipVariant << 2,0x731d80);
-    auVar3 = vectorConvertFromSignedFixedPointWord(auVar2,0);
-    auVar2 = loadVectorLeftIndexed(in_LR,0x15e898);
-    auVar2 = auVar2 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar4 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
-    auVar3 = vectorAddFloatingPoint
-                       (auVar3,auVar2 | auVar2 << 0x20 | auVar2 << 0x40 | auVar2 << 0x60);
-    auVar2 = ZEXT416(0xffffffff);
-    auVar2 = auVar2 | auVar2 << 0x20 | auVar2 << 0x40 | auVar2 << 0x60;
-    auVar2 = vectorShiftLeftIntegerWord(auVar2,auVar2);
-    iVar1 = ((uint)(ZERO_MASK(g_IsPal)) & 0x10) + 0x50;
-    auVar2 = vectorMultiplyAddFloatingPoint(auVar4,auVar3,auVar2);
-    auVar2 = vectorConvertToSignedFixedPointWordSaturate(auVar2,0);
-    auVar2 = auVar2 >> 0x60 & (GPiece<16>)0xffffffff;
-    g_SpaceSceneFrame =
-         storeVectorElementWordIndexed
-                   (auVar2 | auVar2 << 0x20 | auVar2 << 0x40 | auVar2 << 0x60,0x34,0x95cd50);
-    g_SpaceSceneChunk =
-         (int)(animationSpeed *
-              ((float)(longlong)*(int *)(&DAT_00731d80 + (int)((longlong)g_SpaceshipVariant << 2)) +
-              0.5)) / iVar1;
-    ParseSpaceSceneChunk(g_SpaceSceneChunk);
-    g_cutsceneCameraFrame = g_SpaceSceneFrame - (g_SpaceSceneFrame / iVar1) * iVar1;
-  }
-  else {
-    memcard_Save(0,param_1);
-    DAT_00964590 = 3;
+    g_CutscenePlaying = 1;
+    g_gameMode = GAME_MODE_SPACE;
+    DAT_0095cf14 = 0;
+    SceneScreenFade = 1.0f;
+    g_SpaceCutscene = 0;
     DAT_00964594 = 0xffff;
-    g_newlevelnum = param_1;
-  }
-  return;
+    SpaceSceneBuffers();
+
+    if (Level != level) {
+        memcard_Save(0, level);
+        g_SpaceCutscene = 3;
+        DAT_00964594 = 0xffff;
+        g_newlevelnum = level;
+        return;
+    }
+
+    PlaySpaceCutscene(8);
+
+    int chunkLen = g_IsPal ? 0x50 : 0x60;
+    int frame = (int)(animationSpeed * ((float)g_ShipLeaveFrames[g_SpaceshipVariant] + 0.5f));
+
+    g_SpaceSceneFrame = frame;
+    g_SpaceSceneChunk = frame / chunkLen;
+    ParseSpaceSceneChunk(g_SpaceSceneChunk);
+    g_cutsceneCameraFrame = g_SpaceSceneFrame % chunkLen;
 }
 
 
 // 0x015ea84 (0x20 bytes)
 void ChangeLevel(LevelId level)
-
 {
-  g_loadingPlanet = 1;
-  g_newlevelnum = level;
-  g_CutscenePlaying = 1;
-  return;
+    g_loadingPlanet = 1;
+    g_newlevelnum = level;
+    g_CutscenePlaying = 1;
 }
 
 
 // 0x015eaa4 (0x120 bytes)
+/* a level just loaded from space: play the landing cutscene, except on the levels that
+   start on foot */
 void Space_StartLevelArrival(void)
-
 {
-  g_spaceArrivalPending.piece<0,2>() = 1;
-  if (DAT_0096459a != 0) {
-    DAT_0096459a = 0;
-  }
-  if ((Level == Novalis) && (g_SeenPlanets.Kerwan == '\0')) {
-    g_gameMode = GAME_MODE_NORMAL;
-  }
-  else if ((Level == Veldin) ||
-          (((Level == Oltanis && (g_MiscLevelFlags.field104_0x68 == 0)) || (0x13 < (int)Level)))) {
-    g_gameMode = GAME_MODE_NORMAL;
-  }
-  else {
-    g_gameMode = GAME_MODE_SPACE;
-    DAT_00964590 = 0;
-    DAT_00964594 = 0xffff;
-    SceneScreenFade = 1.0;
-    VU1_setBufSizeByLevel();
-    DAT_00e5aa64 = DAT_00e5aa64 + -0x60000;
-    DAT_0095cda8 = g_NpcBuffer;
-    g_SceneLoadBuffer = g_NpcBuffer + 0x200000;
-    PlaySpaceCutscene(8);
-  }
-  return;
+    g_spaceArrivalPending = 1;
+    if (DAT_0096459a != 0) {
+        DAT_0096459a = 0;
+    }
+
+    if (Level == Novalis && g_SeenPlanets.Kerwan == 0) {
+        g_gameMode = GAME_MODE_NORMAL;
+    }
+    else if (Level == Veldin || (Level == Oltanis && g_MiscLevelFlags.field104_0x68 == 0) || (int)Level > 0x13) {
+        g_gameMode = GAME_MODE_NORMAL;
+    }
+    else {
+        g_gameMode = GAME_MODE_SPACE;
+        g_SpaceCutscene = 0;
+        DAT_00964594 = 0xffff;
+        SceneScreenFade = 1.0f;
+        VU1_setBufSizeByLevel();
+        DAT_00e5aa64 -= 0x60000;
+        DAT_0095cda8 = g_NpcBuffer;
+        g_SceneLoadBuffer = g_NpcBuffer + 0x200000;
+        PlaySpaceCutscene(8);
+    }
 }
 
 
 // 0x015ebd0 (0x3bc bytes)
-void Space_DrawShipEngineGlow(float *pos)
-
+/* the engine glows of the parked ship: a flickering quad per glow (alpha from the ship's
+   pulse, plus a random jitter of up to `uid`) */
+void Space_DrawShipEngineGlow(MobyInstance *moby)
 {
-  longlong lVar1;
-  bool bVar2;
-  float fVar3;
-  byte bVar4;
-  undefined4 uVar5;
-  undefined4 uVar6;
-  float fVar7;
-  float fVar8;
-  float fVar9;
-  float fVar10;
-  float fVar11;
-  float fVar12;
-  float fVar13;
-  float fVar14;
-  float fVar15;
-  float fVar16;
-  float fVar17;
-  float fVar18;
-  float fVar19;
-  float fVar20;
-  float fVar21;
-  float fVar22;
-  ushort uVar23;
-  ulonglong *puVar24;
-  float fVar25;
-  float fVar26;
-  float fVar27;
-  short sVar28;
-  ulonglong uVar29;
-  ulonglong uVar30;
-  int iVar31;
-  longlong lVar32;
-  float *pfVar33;
-  undefined4 *puVar34;
-  float *pfVar35;
-  undefined4 *puVar36;
-  longlong lVar37;
-  longlong lVar38;
-  ulonglong unaff_r25;
-  ulonglong unaff_r26;
-  ulonglong unaff_r27;
-  ulonglong unaff_r28;
-  ulonglong unaff_r29;
-  int iVar39;
-  ulonglong unaff_r30;
-  float *pfVar40;
-  ulonglong unaff_r31;
-  ulonglong in_LR;
-  longlong lVar41;
-  double dVar42;
-  ulonglong in_f19;
-  ulonglong in_f20;
-  ulonglong in_f21;
-  ulonglong in_f22;
-  ulonglong in_f23;
-  ulonglong in_f24;
-  ulonglong in_f25;
-  ulonglong in_f26;
-  ulonglong in_f27;
-  ulonglong in_f28;
-  double dVar43;
-  ulonglong in_f29;
-  double dVar44;
-  ulonglong in_f30;
-  double dVar45;
-  ulonglong in_f31;
-  double dVar46;
-  
-  uVar29 = ZEXT48(&stack0x00000000);
-  lVar1 = uVar29 - 0x1a0;
-  puVar24 = (ulonglong *)lVar1;
-  *puVar24 = uVar29;
-  puVar24[0x36] = in_LR;
-  puVar24[0x27] = in_f19;
-  puVar24[0x28] = in_f20;
-  puVar24[0x29] = in_f21;
-  puVar24[0x2a] = in_f22;
-  puVar24[0x2b] = in_f23;
-  puVar24[0x2c] = in_f24;
-  puVar24[0x2d] = in_f25;
-  puVar24[0x2e] = in_f26;
-  puVar24[0x2f] = in_f27;
-  puVar24[0x30] = in_f28;
-  puVar24[0x31] = in_f29;
-  puVar24[0x32] = in_f30;
-  puVar24[0x33] = in_f31;
-  puVar24[0x21] = unaff_r26;
-  puVar24[0x26] = unaff_r31;
-  puVar24[0x22] = unaff_r27;
-  puVar24[0x25] = unaff_r30;
-  sVar28 = g_SpaceshipVariant;
-  pfVar40 = (float *)0x731dc0;
-  bVar2 = g_SpaceshipVariant == 1;
-  puVar24[0x24] = unaff_r29;
-  puVar24[0x23] = unaff_r28;
-  puVar24[0x20] = unaff_r25;
-  if (bVar2) {
-    pfVar40 = (float *)&DAT_00731e40;
-  }
-  else if (sVar28 == 2) {
-    pfVar40 = (float *)0x731e60;
-  }
-  uVar30 = GetEffectTex(5);
-  puVar24[0x1d] = uVar30;
-  uVar30 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
-  puVar24[0x1e] = uVar30;
-  uVar30 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
-  puVar24[0x1c] = uVar30;
-  uVar30 = idol_draw::PackCmd(0,2,0,1,0x80);
-  puVar24[0x1f] = uVar30;
-  sVar28 = g_SpaceshipVariant;
-  dVar45 = (double)*pos;
-  dVar44 = (double)pos[1];
-  dVar43 = (double)pos[2];
-  puVar34 = &DAT_00731d8c;
-  puVar36 = &DAT_00731d90;
-  lVar37 = uVar29 - 0xe0;
-  lVar38 = uVar29 - 0xdc;
-  lVar41 = 2;
-  lVar32 = lVar1;
-  do {
-    uVar5 = *puVar36;
-    *(undefined4 *)((int)lVar32 + 0xc0) = *puVar34;
-    uVar6 = puVar34[2];
-    *(undefined4 *)((int)lVar32 + 0xc4) = uVar5;
-    uVar5 = puVar36[2];
-    puVar34 = puVar34 + 4;
-    *(undefined4 *)((int)lVar37 + 8) = uVar6;
-    puVar36 = puVar36 + 4;
-    *(undefined4 *)((int)lVar38 + 8) = uVar5;
-    lVar37 = lVar37 + 0x10;
-    lVar38 = lVar38 + 0x10;
-    lVar32 = lVar32 + 0x10;
-    lVar41 = lVar41 + -1;
-  } while (lVar41 != 0);
-  dVar46 = 0.0009765625;
-  iVar39 = 0;
-  if (0 < *(int *)(&DAT_00731dac + (int)((longlong)sVar28 << 2))) {
-    do {
-      bVar4 = *(byte *)(pos + 0x2f);
-      uVar30 = (ulonglong)bVar4;
-      if (*(short *)((int)pos + 0xb2) != 0) {
-        iVar31 = MB_randInt(*(short *)((int)pos + 0xb2));
-        uVar30 = (ulonglong)(int)((uint)bVar4 + iVar31);
-      }
-      dVar42 = (double)FastIntToDouble(uVar30);
-      uVar23 = *(ushort *)((int)pos + 0xa6);
-      fVar7 = *pfVar40;
-      fVar8 = pfVar40[1];
-      fVar9 = pfVar40[2];
-      fVar10 = (g_SpaceshipPtr->transform).v0.x;
-      fVar11 = (g_SpaceshipPtr->transform).v1.x;
-      fVar12 = (g_SpaceshipPtr->transform).v2.x;
-      fVar3 = (float)(dVar42 * (double)(pfVar40[3] * 0.025));
-      fVar13 = (g_SpaceshipPtr->transform).v0.y;
-      fVar14 = (g_SpaceshipPtr->transform).v1.y;
-      fVar15 = (g_SpaceshipPtr->transform).v2.y;
-      fVar16 = (g_SpaceshipPtr->transform).v0.z;
-      fVar17 = (g_SpaceshipPtr->transform).v1.z;
-      fVar18 = (g_SpaceshipPtr->transform).v2.z;
-      fVar19 = (g_SpaceshipPtr->transform).v0.w;
-      pfVar35 = (float *)&DAT_00731e80;
-      fVar20 = (g_SpaceshipPtr->transform).v1.w;
-      lVar38 = 4;
-      fVar21 = (g_SpaceshipPtr->transform).v2.w;
-      lVar37 = uVar29 - 0x130;
-      lVar32 = lVar1;
-      do {
-        *(uint *)((int)lVar32 + 0xb0) =
-             (uint)((uVar30 & 0xffffffff) << 0x18) |
-             ((uint)(ZERO_MASK((0x215 - (uint)uVar23))) & 0x102750) + 0x2058b0;
-        fVar22 = *pfVar35;
-        lVar32 = lVar32 + 4;
-        pfVar33 = (float *)lVar37;
-        *pfVar33 = fVar22 * fVar3;
-        fVar25 = fVar22 * fVar3 + fVar7;
-        fVar26 = pfVar35[1] * fVar3 + fVar8;
-        pfVar33[1] = pfVar35[1] * fVar3;
-        fVar27 = pfVar35[2] * fVar3 + fVar9;
-        pfVar33[2] = pfVar35[2] * fVar3;
-        fVar22 = pfVar35[3];
-        pfVar35 = pfVar35 + 4;
-        *pfVar33 = (float)(dVar45 * dVar46 +
-                          (double)(fVar12 * fVar27 + fVar10 * fVar25 + fVar26 * fVar11));
-        pfVar33[1] = (float)(dVar44 * dVar46 +
-                            (double)(fVar15 * fVar27 + fVar13 * fVar25 + fVar26 * fVar14));
-        pfVar33[2] = (float)(dVar43 * dVar46 +
-                            (double)(fVar18 * fVar27 + fVar16 * fVar25 + fVar26 * fVar17));
-        pfVar33[3] = fVar20 * fVar26 + fVar21 * fVar27 + fVar19 * fVar25 + fVar22;
-        lVar37 = lVar37 + 0x10;
-        lVar38 = lVar38 + -1;
-      } while (lVar38 != 0);
-      FastDrawQuad(uVar29 - 0x130,0,0,EffectTexHeaders,9);
-      iVar39 = iVar39 + 1;
-      pfVar40 = pfVar40 + 4;
-    } while (iVar39 < *(int *)(&DAT_00731dac + (int)((longlong)g_SpaceshipVariant << 2)));
-  }
-  return;
+    Vec4 *glow = &g_ShipEngineGlows[0];
+    QuadDef q;
+
+    if (g_SpaceshipVariant == 1) {
+        glow = &g_ShipEngineGlows[8];
+    }
+    else if (g_SpaceshipVariant == 2) {
+        glow = &g_ShipEngineGlows[10];
+    }
+
+    q.tex0 = (u64)GetEffectTex(5);
+    q.tex1 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
+    q.clamp = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
+    q.alpha = idol_draw::PackCmd(0, 2, 0, 1, 0x80);
+    for (int i = 0; i < 8; i++) {
+        (&q.st[0][0])[i] = g_ShipGlowSt[i];
+    }
+
+    for (int i = 0; i < g_ShipEngineGlowCnt[g_SpaceshipVariant]; i++, glow++) {
+        int alpha = (u8)moby->setByGroup;
+        if (moby->uid != 0) {
+            alpha += MB_randInt((short)moby->uid);
+        }
+
+        float size = (float)FastIntToDouble(alpha) * (glow->w * 0.025f);
+        u32 rgb = (moby->oClass == SHIP_GREEN_0215) ? 0x308000 : 0x2058b0;
+        Mtx4 *m = &g_SpaceshipPtr->transform;
+
+        for (int j = 0; j < 4; j++) {
+            Vec4 *corner = &g_ShipGlowCorners[j];
+            float cx = corner->x * size + glow->x;
+            float cy = corner->y * size + glow->y;
+            float cz = corner->z * size + glow->z;
+
+            q.rgba[j] = (int)((u32)alpha << 24 | rgb);
+            q.xyzw[j].x = m->v2.x * cz + m->v0.x * cx + m->v1.x * cy + moby->bSphere.x * 0.0009765625f;
+            q.xyzw[j].y = m->v2.y * cz + m->v0.y * cx + m->v1.y * cy + moby->bSphere.y * 0.0009765625f;
+            q.xyzw[j].z = m->v2.z * cz + m->v0.z * cx + m->v1.z * cy + moby->bSphere.z * 0.0009765625f;
+            q.xyzw[j].w = m->v1.w * cy + m->v2.w * cz + m->v0.w * cx + corner->w;
+        }
+
+        FastDrawQuad((undefined4 *)&q, 0, 0, (longlong)EffectTexHeaders, 9);
+    }
+}
+
+/* one trail quad's corners: from trail point (cur + j / 2) out along dirs[j], tapering
+   with the distance from the ship */
+static inline void ShipTrailQuad(QuadDef *q, Vec4 *trail, int cur, int seg, Vec4 *dirs)
+{
+    for (int j = 0; j < 4; j++) {
+        float t = (float)FastIntToDouble(seg - (j >> 1) + 1) * 0.03125f;
+        float width = (1.0f - t * t) * g_ShipTrailWidths[g_SpaceshipVariant];
+        Vec4 *dir = &dirs[j];
+        float len = sqrtf(dir->z * dir->z + dir->x * dir->x + dir->y * dir->y);
+        Vec4 ofs = { 0.0f, 0.0f, 0.0f, 0.0f };
+
+        if (len != 0.0f) {
+            ofs.x = dir->x * (width / len);
+            ofs.y = dir->y * (width / len);
+            ofs.z = dir->z * (width / len);
+        }
+
+        Vec4 *pnt = &trail[(cur + (j >> 1)) & 31];
+        q->xyzw[j].x = ofs.x + pnt->x;
+        q->xyzw[j].y = ofs.y + pnt->y;
+        q->xyzw[j].w = dir->w;
+        q->xyzw[j].z = ofs.z + pnt->z;
+    }
+}
+
+static inline void Cross(Vec4 *out, Vec4 *a, Vec4 *b)
+{
+    out->x = a->y * b->z - a->z * b->y;
+    out->y = a->z * b->x - a->x * b->z;
+    out->z = a->x * b->y - a->y * b->x;
+    out->w = 0.0f;
+}
+
+static inline void Sub(Vec4 *out, Vec4 *a, Vec4 *b)
+{
+    out->x = a->x - b->x;
+    out->y = a->y - b->y;
+    out->z = a->z - b->z;
 }
 
 
 // 0x015ef98 (0x6e8 bytes)
+/* the ship's two engine trails as ribbons: per segment, one quad spread across the pair of
+   trails and one spread out of their plane, fading out toward the end */
 void Space_DrawTransitionOverlay(void)
-
 {
-  longlong lVar1;
-  float fVar2;
-  undefined4 uVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  undefined4 uVar7;
-  ulonglong *puVar8;
-  float fVar9;
-  float fVar10;
-  float fVar11;
-  float fVar12;
-  float fVar13;
-  float fVar14;
-  float fVar15;
-  float fVar16;
-  float fVar17;
-  float fVar18;
-  float fVar19;
-  float fVar20;
-  float fVar21;
-  float fVar22;
-  uint uVar23;
-  int iVar24;
-  gameMode_t gVar25;
-  ulonglong uVar26;
-  ulonglong uVar27;
-  longlong lVar28;
-  float *pfVar29;
-  undefined4 uVar30;
-  undefined4 *puVar31;
-  undefined4 *puVar32;
-  float *pfVar33;
-  longlong lVar34;
-  float *pfVar35;
-  longlong lVar36;
-  uint uVar37;
-  ulonglong unaff_r14;
-  ulonglong unaff_r15;
-  ulonglong unaff_r16;
-  int iVar38;
-  ulonglong unaff_r17;
-  ulonglong unaff_r18;
-  ulonglong unaff_r19;
-  ulonglong unaff_r20;
-  ulonglong unaff_r21;
-  ulonglong unaff_r22;
-  ulonglong unaff_r23;
-  ulonglong unaff_r24;
-  ulonglong unaff_r25;
-  int iVar39;
-  ulonglong unaff_r26;
-  int iVar40;
-  ulonglong unaff_r27;
-  ulonglong unaff_r28;
-  uint uVar41;
-  ulonglong unaff_r29;
-  int iVar42;
-  ulonglong unaff_r30;
-  ulonglong unaff_r31;
-  ulonglong in_LR;
-  longlong lVar43;
-  double dVar44;
-  double dVar45;
-  ulonglong in_f19;
-  ulonglong in_f20;
-  ulonglong in_f21;
-  ulonglong in_f22;
-  ulonglong in_f23;
-  ulonglong in_f24;
-  ulonglong in_f25;
-  ulonglong in_f26;
-  ulonglong in_f27;
-  ulonglong in_f28;
-  double dVar46;
-  ulonglong in_f29;
-  double dVar47;
-  ulonglong in_f30;
-  double dVar48;
-  ulonglong in_f31;
-  double dVar49;
-  
-  uVar26 = ZEXT48(&stack0x00000000);
-  lVar1 = uVar26 - 0x280;
-  puVar8 = (ulonglong *)lVar1;
-  *puVar8 = uVar26;
-  puVar8[0x52] = in_LR;
-  puVar8[0x43] = in_f19;
-  puVar8[0x44] = in_f20;
-  puVar8[0x45] = in_f21;
-  puVar8[0x46] = in_f22;
-  puVar8[0x47] = in_f23;
-  puVar8[0x48] = in_f24;
-  puVar8[0x49] = in_f25;
-  puVar8[0x4a] = in_f26;
-  puVar8[0x4b] = in_f27;
-  puVar8[0x4c] = in_f28;
-  puVar8[0x4d] = in_f29;
-  puVar8[0x4e] = in_f30;
-  puVar8[0x4f] = in_f31;
-  gVar25 = g_gameMode;
-  puVar8[0x42] = unaff_r31;
-  puVar8[0x41] = unaff_r30;
-  puVar8[0x40] = unaff_r29;
-  puVar8[0x3f] = unaff_r28;
-  puVar8[0x3e] = unaff_r27;
-  puVar8[0x3d] = unaff_r26;
-  puVar8[0x3c] = unaff_r25;
-  puVar8[0x3b] = unaff_r24;
-  puVar8[0x3a] = unaff_r23;
-  puVar8[0x39] = unaff_r22;
-  puVar8[0x38] = unaff_r21;
-  puVar8[0x37] = unaff_r20;
-  puVar8[0x36] = unaff_r19;
-  puVar8[0x35] = unaff_r18;
-  puVar8[0x34] = unaff_r17;
-  puVar8[0x33] = unaff_r16;
-  puVar8[0x32] = unaff_r15;
-  puVar8[0x31] = unaff_r14;
-  uVar7 = EffectTexHeaders;
-  if ((gVar25 == GAME_MODE_SPACE) && (DAT_00964590 == 4)) {
-    uVar7 = *(undefined4 *)(DAT_00a10920 + 0xc);
-    puVar8[0x2d] = (ulonglong)**(uint **)(DAT_00a10920 + 0x1c);
-  }
-  else {
-    uVar27 = GetEffectTex(0x13);
-    puVar8[0x2d] = uVar27;
-  }
-  uVar27 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
-  puVar8[0x2e] = uVar27;
-  uVar27 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
-  puVar8[0x2c] = uVar27;
-  uVar27 = idol_draw::PackCmd(0,2,0,1,0x80);
-  puVar8[0x2f] = uVar27;
-  lVar34 = uVar26 - 0x140;
-  lVar36 = uVar26 - 0x13c;
-  puVar31 = &DAT_00731f20;
-  puVar32 = &DAT_00731f24;
-  lVar43 = 2;
-  lVar28 = lVar1;
-  do {
-    uVar30 = *puVar32;
-    *(undefined4 *)((int)lVar28 + 0x140) = *puVar31;
-    uVar3 = puVar31[2];
-    *(undefined4 *)((int)lVar28 + 0x144) = uVar30;
-    puVar31 = puVar31 + 4;
-    uVar30 = puVar32[2];
-    lVar28 = lVar28 + 0x10;
-    *(undefined4 *)((int)lVar34 + 8) = uVar3;
-    puVar32 = puVar32 + 4;
-    *(undefined4 *)((int)lVar36 + 8) = uVar30;
-    lVar34 = lVar34 + 0x10;
-    lVar36 = lVar36 + 0x10;
-    lVar43 = lVar43 + -1;
-  } while (lVar43 != 0);
-  iVar42 = 0;
-  if (0 < g_LoadScreenRelated + -1) {
-    do {
-      iVar40 = 0;
-      iVar38 = 0;
-      uVar41 = (DAT_009645c0 - iVar42) + 0x1f;
-      uVar23 = uVar41 & 0x1f;
-      do {
-        iVar39 = (uVar41 & 0x1f) * 0x10;
-        fVar4 = *(float *)(iVar39 + 0x964630);
-        uVar37 = (uVar23 + 1) * 0x10 & 0x1f0;
-        fVar6 = *(float *)(&DAT_00964830 + iVar39) - fVar4;
-        fVar4 = fVar4 - *(float *)(&DAT_00964830 + iVar39);
-        pfVar29 = (float *)(iVar39 + 0x964630 + iVar38);
-        *(float *)(puVar8 + 0xe) = fVar6;
-        fVar11 = *(float *)(iVar39 + 0x964834) - *(float *)(iVar39 + 0x964634);
-        fVar12 = *(float *)(iVar39 + 0x964634) - *(float *)(iVar39 + 0x964834);
-        *(float *)((int)puVar8 + 0x74) = fVar11;
-        fVar13 = *(float *)(iVar39 + 0x964838) - *(float *)(iVar39 + 0x964638);
-        fVar14 = *(float *)(iVar39 + 0x964638) - *(float *)(iVar39 + 0x964838);
-        *(float *)(puVar8 + 0xf) = fVar13;
-        uVar30 = *(undefined4 *)(iVar39 + 0x96483c);
-        *(float *)(puVar8 + 0x10) = fVar4;
-        *(undefined4 *)((int)puVar8 + 0x7c) = uVar30;
-        *(float *)((int)puVar8 + 0x84) = fVar12;
-        *(float *)(puVar8 + 0x11) = fVar14;
-        *(undefined4 *)((int)puVar8 + 0x8c) = *(undefined4 *)(iVar39 + 0x96463c);
-        fVar5 = *(float *)(uVar37 + 0x964630);
-        pfVar33 = (float *)((int)(uVar37 + 0x964630) + iVar38);
-        fVar15 = *(float *)(&DAT_00964830 + uVar37) - fVar5;
-        fVar5 = fVar5 - *(float *)(&DAT_00964830 + uVar37);
-        pfVar35 = (float *)(((uVar23 + 2) * 0x10 & 0x1f0) + 0x964630 + iVar38);
-        *(float *)(puVar8 + 0x12) = fVar15;
-        fVar16 = *(float *)(uVar37 + 0x964834) - *(float *)(uVar37 + 0x964634);
-        fVar17 = *(float *)(uVar37 + 0x964634) - *(float *)(uVar37 + 0x964834);
-        *(float *)((int)puVar8 + 0x94) = fVar16;
-        fVar18 = *(float *)(uVar37 + 0x964838) - *(float *)(uVar37 + 0x964638);
-        fVar19 = *(float *)(uVar37 + 0x964638) - *(float *)(uVar37 + 0x964838);
-        *(float *)(puVar8 + 0x13) = fVar18;
-        uVar30 = *(undefined4 *)(uVar37 + 0x96483c);
-        *(float *)(puVar8 + 0x14) = fVar5;
-        *(undefined4 *)((int)puVar8 + 0x9c) = uVar30;
-        *(float *)((int)puVar8 + 0xa4) = fVar17;
-        *(float *)(puVar8 + 0x15) = fVar19;
-        *(undefined4 *)((int)puVar8 + 0xac) = *(undefined4 *)(uVar37 + 0x96463c);
-        fVar20 = *pfVar33 - *pfVar29;
-        fVar21 = pfVar33[1] - pfVar29[1];
-        fVar22 = pfVar33[2] - pfVar29[2];
-        fVar2 = *pfVar35 - *pfVar33;
-        fVar9 = pfVar35[2] - pfVar33[2];
-        fVar10 = pfVar35[1] - pfVar33[1];
-        if (iVar42 == 0) {
-          fVar2 = fVar20;
-          fVar9 = fVar22;
-          fVar10 = fVar21;
+    u32 texHeaders = EffectTexHeaders;
+    QuadDef q;
+
+    if (g_gameMode == GAME_MODE_SPACE && g_SpaceCutscene == 4) {
+        texHeaders = *(u32 *)(DAT_00a10920 + 0xc);
+        q.tex0 = **(u32 **)(DAT_00a10920 + 0x1c);
+    }
+    else {
+        q.tex0 = (u64)GetEffectTex(0x13);
+    }
+
+    q.tex1 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
+    q.clamp = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
+    q.alpha = idol_draw::PackCmd(0, 2, 0, 1, 0x80);
+    for (int i = 0; i < 8; i++) {
+        (&q.st[0][0])[i] = g_ShipTrailSt[i];
+    }
+
+    for (int seg = 0; seg < g_ShipTrailLen - 1; seg++) {
+        int cur = (g_ShipTrailHead - seg + 31) & 31;
+        int next = (cur + 1) & 31;
+        int next2 = (cur + 2) & 31;
+
+        for (int trail = 0; trail < 2; trail++) {
+            Vec4 *pts = g_ShipTrails[trail];
+            Vec4 sides[4];
+            Vec4 normals[4];
+            Vec4 dir;
+            Vec4 dirNext;
+
+            /* across the pair of trails, both ways, here and at the next point */
+            Sub(&sides[0], &g_ShipTrails[1][cur], &g_ShipTrails[0][cur]);
+            sides[0].w = g_ShipTrails[1][cur].w;
+            Sub(&sides[1], &g_ShipTrails[0][cur], &g_ShipTrails[1][cur]);
+            sides[1].w = g_ShipTrails[0][cur].w;
+            Sub(&sides[2], &g_ShipTrails[1][next], &g_ShipTrails[0][next]);
+            sides[2].w = g_ShipTrails[1][next].w;
+            Sub(&sides[3], &g_ShipTrails[0][next], &g_ShipTrails[1][next]);
+            sides[3].w = g_ShipTrails[0][next].w;
+
+            Sub(&dir, &pts[next], &pts[cur]);
+            Sub(&dirNext, &pts[next2], &pts[next]);
+            if (seg == 0) {
+                dirNext = dir;
+            }
+
+            Cross(&normals[0], &dir, &sides[0]);
+            Cross(&normals[1], &dir, &sides[1]);
+            Cross(&normals[2], &dirNext, &sides[2]);
+            Cross(&normals[3], &dirNext, &sides[3]);
+
+            for (int j = 0; j < 4; j++) {
+                float t = (float)FastIntToDouble(seg - (j >> 1) + 1) * 0.03125f;
+
+                q.rgba[j] = (int)FastLerpColor(t, g_ShipTrailColors[g_SpaceshipVariant][0],
+                                               g_ShipTrailColors[g_SpaceshipVariant][1]);
+            }
+
+            ShipTrailQuad(&q, pts, cur, seg, normals);
+            FastDrawQuad((undefined4 *)&q, 0, 0, (longlong)texHeaders, 9);
+            ShipTrailQuad(&q, pts, cur, seg, sides);
+            FastDrawQuad((undefined4 *)&q, 0, 0, (longlong)texHeaders, 9);
         }
-        lVar43 = uVar26 - 400;
-        iVar39 = 0;
-        lVar36 = uVar26 - 0x1d0;
-        *(float *)(puVar8 + 0x16) = fVar21 * fVar13 - fVar22 * fVar11;
-        *(float *)((int)puVar8 + 0xb4) = fVar22 * fVar6 - fVar20 * fVar13;
-        *(float *)(puVar8 + 0x17) = fVar20 * fVar11 - fVar21 * fVar6;
-        dVar49 = 0.0;
-        *(undefined4 *)((int)puVar8 + 0xbc) = 0;
-        *(float *)(puVar8 + 0x18) = fVar21 * fVar14 - fVar22 * fVar12;
-        *(float *)((int)puVar8 + 0xc4) = fVar22 * fVar4 - fVar20 * fVar14;
-        *(float *)(puVar8 + 0x19) = fVar20 * fVar12 - fVar21 * fVar4;
-        *(undefined4 *)((int)puVar8 + 0xcc) = 0;
-        *(float *)(puVar8 + 0x1a) = fVar10 * fVar18 - fVar9 * fVar16;
-        *(float *)((int)puVar8 + 0xd4) = fVar9 * fVar15 - fVar2 * fVar18;
-        *(float *)(puVar8 + 0x1b) = fVar2 * fVar16 - fVar10 * fVar15;
-        *(undefined4 *)((int)puVar8 + 0xdc) = 0;
-        *(undefined4 *)((int)puVar8 + 0xec) = 0;
-        *(float *)(puVar8 + 0x1c) = fVar10 * fVar19 - fVar9 * fVar17;
-        *(float *)((int)puVar8 + 0xe4) = fVar9 * fVar5 - fVar2 * fVar19;
-        *(float *)(puVar8 + 0x1d) = fVar2 * fVar17 - fVar10 * fVar5;
-        dVar48 = 0.03125;
-        dVar47 = 1.0;
-        lVar28 = lVar43;
-        lVar34 = lVar1;
-        do {
-          dVar44 = (double)FastIntToDouble((iVar42 - (iVar39 >> 1)) + 1);
-          dVar46 = (double)(float)(dVar44 * dVar48);
-          iVar24 = (int)((longlong)g_SpaceshipVariant << 3);
-          uVar30 = FastLerpColor
-                             (dVar46,*(undefined4 *)((int)&DAT_00731f40 + iVar24),
-                              *(undefined4 *)((int)&DAT_00731f44 + iVar24));
-          *(undefined4 *)((int)lVar34 + 0x130) = uVar30;
-          pfVar29 = (float *)lVar36;
-          fVar4 = pfVar29[1];
-          fVar5 = *pfVar29;
-          fVar6 = pfVar29[2];
-          dVar44 = (double)SQRT(fVar6 * fVar6 + fVar5 * fVar5 + fVar4 * fVar4);
-          if (dVar44 == dVar49) {
-            fVar4 = pfVar29[3];
-            dVar44 = dVar49;
-            dVar46 = dVar49;
-            dVar45 = dVar49;
-          }
-          else {
-            fVar2 = (float)((double)(-(float)(dVar46 * dVar46 - dVar47) *
-                                    *(float *)(&DAT_00731f58 +
-                                              (int)((longlong)g_SpaceshipVariant << 2))) / dVar44);
-            dVar46 = (double)(fVar4 * fVar2);
-            dVar44 = (double)(fVar5 * fVar2);
-            fVar4 = pfVar29[3];
-            dVar45 = (double)(fVar6 * fVar2);
-          }
-          pfVar29 = (float *)(((iVar39 >> 1) + uVar23 & 0x1f) * 0x10 + 0x964630 + iVar38);
-          iVar39 = iVar39 + 1;
-          lVar36 = lVar36 + 0x10;
-          lVar34 = lVar34 + 4;
-          pfVar33 = (float *)lVar28;
-          *pfVar33 = (float)(dVar44 + (double)*pfVar29);
-          pfVar33[1] = (float)(dVar46 + (double)pfVar29[1]);
-          fVar5 = pfVar29[2];
-          pfVar33[3] = fVar4;
-          pfVar33[2] = (float)(dVar45 + (double)fVar5);
-          lVar28 = lVar28 + 0x10;
-        } while (iVar39 < 4);
-        FastDrawQuad(uVar26 - 400,0,0,uVar7,9);
-        iVar39 = 0;
-        lVar28 = uVar26 - 0x210;
-        do {
-          dVar44 = (double)FastIntToDouble((iVar42 - (iVar39 >> 1)) + 1);
-          pfVar29 = (float *)lVar28;
-          fVar4 = pfVar29[1];
-          fVar5 = *pfVar29;
-          fVar6 = pfVar29[2];
-          dVar46 = (double)SQRT(fVar6 * fVar6 + fVar5 * fVar5 + fVar4 * fVar4);
-          if (dVar46 == dVar49) {
-            fVar4 = pfVar29[3];
-            dVar44 = dVar49;
-            dVar46 = dVar49;
-            dVar45 = dVar49;
-          }
-          else {
-            fVar2 = (float)((double)(-(float)((double)(float)(dVar44 * dVar48) *
-                                              (double)(float)(dVar44 * dVar48) - dVar47) *
-                                    *(float *)(&DAT_00731f58 +
-                                              (int)((longlong)g_SpaceshipVariant << 2))) / dVar46);
-            dVar46 = (double)(fVar4 * fVar2);
-            dVar44 = (double)(fVar5 * fVar2);
-            fVar4 = pfVar29[3];
-            dVar45 = (double)(fVar6 * fVar2);
-          }
-          pfVar29 = (float *)(((iVar39 >> 1) + uVar23 & 0x1f) * 0x10 + 0x964630 + iVar38);
-          iVar39 = iVar39 + 1;
-          lVar28 = lVar28 + 0x10;
-          pfVar33 = (float *)lVar43;
-          *pfVar33 = (float)(dVar44 + (double)*pfVar29);
-          pfVar33[1] = (float)(dVar46 + (double)pfVar29[1]);
-          fVar5 = pfVar29[2];
-          pfVar33[3] = fVar4;
-          pfVar33[2] = (float)(dVar45 + (double)fVar5);
-          lVar43 = lVar43 + 0x10;
-        } while (iVar39 < 4);
-        FastDrawQuad(uVar26 - 400,0,0,uVar7,9);
-        iVar40 = iVar40 + 1;
-        iVar38 = iVar38 + 0x200;
-      } while (iVar40 < 2);
-      iVar42 = iVar42 + 1;
-    } while (iVar42 < g_LoadScreenRelated + -1);
-  }
-  return;
+    }
+}
+
+#define VTX_FORMAT(size, type) ((24 << 8) | ((size) << 4) | (type))
+#define VTX_DISABLED CELL_GCM_VERTEX_F
+#define MAIN_MEMORY 0x80000000
+
+typedef struct TransitionVertex {
+    float pos[3];
+    float uv[2];
+    u32 color;
+} TransitionVertex;
+
+static inline void Emit(RenderingStep *pass, u32 word)
+{
+    *pass->command++ = (RsxCmd)word;
+}
+
+static inline void EmitMethod(RenderingStep *pass, u32 method, u32 value)
+{
+    Emit(pass, CELL_GCM_METHOD(method, 1));
+    Emit(pass, value);
+}
+
+static inline u32 SwapBytes(u32 value)
+{
+    return value >> 24 | (value >> 8 & 0xff00) | (value & 0xff00) << 8 | value << 24;
 }
 
 
 // 0x015f6d0 (0x5e0 bytes)
+/* unused: draws the level's transition quad (scaled per level, around g_TransitionCenter)
+   as an RSX triangle strip */
 void ____Space_TransitionDrawPass(void)
-
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  undefined4 uVar5;
-  float fVar6;
-  uint uVar7;
-  RsxCmd *pRVar8;
-  RsxCmd *pRVar9;
-  ulonglong *puVar10;
-  int iVar11;
-  RsxCmd RVar12;
-  RenderingStep *pRVar13;
-  int iVar14;
-  ulonglong uVar15;
-  undefined8 uVar16;
-  ulonglong uVar17;
-  float *pfVar19;
-  undefined4 *puVar20;
-  longlong lVar18;
-  longlong lVar21;
-  float *pfVar22;
-  RsxCmd *pRVar23;
-  undefined4 *puVar24;
-  longlong lVar25;
-  ulonglong unaff_r28;
-  RsxCmd *pRVar26;
-  ulonglong unaff_r29;
-  ulonglong unaff_r30;
-  ulonglong unaff_r31;
-  ulonglong in_LR;
-  longlong lVar27;
-  
-  uVar15 = ZEXT48(&stack0x00000000);
-  lVar18 = uVar15 - 0x170;
-  puVar10 = (ulonglong *)lVar18;
-  *puVar10 = uVar15;
-  puVar10[0x30] = in_LR;
-  puVar10[0x2d] = unaff_r31;
-  puVar10[0x2c] = unaff_r30;
-  puVar10[0x2b] = unaff_r29;
-  puVar10[0x2a] = unaff_r28;
-  uVar16 = idol_draw::Blend(1,0,0x80,1,0,0,1,1);
-  SetGSReg(0x16,uVar16);
-  puVar10[0x25] = DAT_00a561c8;
-  uVar17 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
-  puVar10[0x26] = uVar17;
-  uVar17 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
-  puVar10[0x24] = uVar17;
-  uVar17 = idol_draw::PackCmd(0,1,0,1,0x80);
-  puVar10[0x27] = uVar17;
-  FastMemCopy(uVar15 - 0x70,&DAT_00731c98,0x20);
-  fVar6 = 1.0;
-  if ((-1 < (int)Level) && ((int)Level < 0x13)) {
-    fVar6 = *(float *)(&DAT_00731fd0 + Level * 4);
-  }
-  lVar27 = 4;
-  lVar21 = uVar15 - 0xc0;
-  pfVar19 = (float *)&DAT_00731f80;
-  lVar25 = lVar18;
-  do {
-    fVar1 = *pfVar19;
-    pfVar22 = (float *)lVar21;
-    *pfVar22 = fVar1 * fVar6;
-    fVar2 = pfVar19[1];
-    *(undefined4 *)((int)lVar25 + 0xf0) = 0x80808080;
-    lVar25 = lVar25 + 4;
-    pfVar22[1] = fVar2 * fVar6;
-    fVar3 = pfVar19[2];
-    pfVar22[2] = fVar3 * fVar6;
-    fVar4 = pfVar19[3];
-    pfVar22[3] = fVar4;
-    pfVar19 = pfVar19 + 4;
-    *pfVar22 = fVar1 * fVar6 + DAT_00a561e0;
-    pfVar22[1] = fVar2 * fVar6 + DAT_00a561e4;
-    fVar1 = DAT_00a561e8;
-    pfVar22[3] = fVar4;
-    pfVar22[2] = fVar3 * fVar6 + fVar1;
-    iVar14 = g_pIdolDraw;
-    lVar21 = lVar21 + 0x10;
-    lVar27 = lVar27 + -1;
-  } while (lVar27 != 0);
-  idol_draw::BindVertexProgram(g_pIdolDraw,ForwardPass,5);
-  idol_draw::BindFragmentProgram(iVar14,ForwardPass,2);
-  puVar20 = (undefined4 *)idol::AllocateMemAlign(FrameHeap,0x60,0x10);
-  lVar27 = 4;
-  lVar25 = lVar18;
-  lVar21 = lVar18;
-  puVar24 = puVar20;
-  do {
-    iVar11 = (int)lVar21;
-    uVar7 = *(uint *)((int)lVar18 + 0xf0);
-    *puVar24 = *(undefined4 *)(iVar11 + 0xb0);
-    lVar18 = lVar18 + 4;
-    puVar24[1] = *(undefined4 *)(iVar11 + 0xb4);
-    puVar24[2] = *(undefined4 *)(iVar11 + 0xb8);
-    lVar21 = lVar21 + 0x10;
-    puVar24[3] = *(undefined4 *)((int)lVar25 + 0x100);
-    uVar5 = *(undefined4 *)((int)lVar25 + 0x104);
-    puVar24[5] = uVar7 >> 0x18 | uVar7 >> 8 & 0xff00 | uVar7 << 0x18 | (uVar7 & 0xff00) << 8;
-    lVar25 = lVar25 + 8;
-    puVar24[4] = uVar5;
-    puVar24 = puVar24 + 6;
-    lVar27 = lVar27 + -1;
-  } while (lVar27 != 0);
-  if (puVar10[0x27] != 0) {
-    idol_draw::DrawDepth(ForwardPass,puVar10[0x27]);
-  }
-  FUN_004d6704(puVar10[0x24],uVar15 - 0x30,uVar15 - 0x2c);
-  FUN_004d676c(ForwardPass,0,
-               (ulonglong)*(uint *)(DAT_00a10920 + 0xc) + puVar10[0x25] * 0x24 & 0xffffffff,
-               *(undefined4 *)(puVar10 + 0x28),*(undefined4 *)((int)puVar10 + 0x144));
-  idol_draw::ResetPassState(ForwardPass);
-  pRVar8 = ForwardPass->command;
-  ForwardPass->command = pRVar8 + 2;
-  pRVar26 = ForwardPass->command;
-  ForwardPass->command = pRVar26 + 2;
-  pRVar13 = ForwardPass;
-  pRVar23 = ForwardPass->command;
-  *pRVar8 = NV4097_SET_VERTEX_DATA_ARRAY_FORMAT_x1;
-  pRVar13->command = pRVar23 + 2;
-  pRVar13 = ForwardPass;
-  pRVar8[1] = 0x1832;
-  pRVar8 = pRVar13->command;
-  *pRVar26 = 0x41744;
-  pRVar26[1] = 0x1822;
-  pRVar23[1] = 0x1844;
-  pRVar13->command = pRVar8 + 2;
-  pRVar13 = ForwardPass;
-  *pRVar23 = 0x4174c;
-  RVar12 = (int)puVar20 - *(int *)(iVar14 + 0x4a8);
-  pRVar26 = pRVar13->command;
-  pRVar13->command = pRVar26 + 2;
-  pRVar13 = ForwardPass;
-  *pRVar8 = NV4097_SET_VERTEX_DATA_ARRAY_OFFSET_x1;
-  pRVar8[1] = RVar12 | 0x80000000;
-  pRVar8 = pRVar13->command;
-  *pRVar26 = 0x41684;
-  pRVar26[1] = RVar12 + 0xc | 0x80000000;
-  pRVar13->command = pRVar8 + 2;
-  *pRVar8 = 0x4168c;
-  pRVar8[1] = RVar12 + 0x14 | 0x80000000;
-  pRVar13 = ForwardPass;
-  *(undefined4 *)((int)puVar10 + 0x7c) = 0;
-  *(undefined4 *)(puVar10 + 0xf) = 0;
-  *(undefined4 *)((int)puVar10 + 0x74) = 0;
-  *(undefined4 *)(puVar10 + 0xe) = 0x3f800000;
-  *(undefined4 *)((int)puVar10 + 0x8c) = 0;
-  *(undefined4 *)(puVar10 + 0x11) = 0;
-  *(undefined4 *)((int)puVar10 + 0x84) = 0x3f800000;
-  *(undefined4 *)(puVar10 + 0x10) = 0;
-  pRVar8 = pRVar13->command;
-  *(undefined4 *)((int)puVar10 + 0x9c) = 0;
-  *(undefined4 *)(puVar10 + 0x13) = 0x3f800000;
-  *(undefined4 *)((int)puVar10 + 0x94) = 0;
-  *(undefined4 *)(puVar10 + 0x12) = 0;
-  pRVar26 = pRVar8 + 2;
-  *(undefined4 *)((int)puVar10 + 0xac) = 0x3f800000;
-  *(undefined4 *)(puVar10 + 0x15) = 0;
-  *(undefined4 *)((int)puVar10 + 0xa4) = 0;
-  *(undefined4 *)(puVar10 + 0x14) = 0;
-  lVar18 = uVar15 - 0x100;
-  *pRVar8 = 0x441efc;
-  pRVar8[1] = 4;
-  lVar25 = 8;
-  pRVar13->command = pRVar26;
-  do {
-    pRVar8 = pRVar13->command;
-    pRVar23 = (RsxCmd *)lVar18;
-    RVar12 = *pRVar23;
-    pRVar13->command = pRVar8 + 1;
-    *pRVar26 = RVar12;
-    lVar18 = lVar18 + 8;
-    pRVar8[1] = pRVar23[1];
-    pRVar26 = pRVar13->command + 1;
-    pRVar13->command = pRVar26;
-    lVar25 = lVar25 + -1;
-  } while (lVar25 != 0);
-  pRVar8 = ForwardPass->command;
-  ForwardPass->command = pRVar8 + 6;
-  pRVar13 = ForwardPass;
-  pRVar26 = ForwardPass->command;
-  ForwardPass->command = pRVar26 + 1;
-  *pRVar8 = 0x400c1714;
-  pRVar8[1] = 0;
-  pRVar8[2] = 0;
-  pRVar8[3] = 0;
-  pRVar8[5] = 6;
-  pRVar8[4] = NV4097_SET_BEGIN_END_x1;
-  pRVar8 = pRVar13->command;
-  pRVar13->command = pRVar8 + 1;
-  pRVar23 = ForwardPass->command;
-  ForwardPass->command = pRVar23 + 2;
-  pRVar13 = ForwardPass;
-  pRVar9 = ForwardPass->command;
-  *pRVar26 = 0x40041814;
-  *pRVar8 = 0x3000000;
-  pRVar13->command = pRVar9 + 2;
-  pRVar13 = ForwardPass;
-  *pRVar23 = NV4097_SET_BEGIN_END_x1;
-  pRVar23[1] = 0;
-  pRVar9[1] = 2;
-  pRVar8 = pRVar13->command;
-  *pRVar9 = NV4097_SET_VERTEX_DATA_ARRAY_FORMAT_x1;
-  pRVar13->command = pRVar8 + 2;
-  pRVar13 = ForwardPass;
-  *pRVar8 = 0x41744;
-  pRVar8[1] = 2;
-  pRVar8 = pRVar13->command;
-  *pRVar8 = 0x4174c;
-  pRVar8[1] = 2;
-  pRVar13->command = pRVar8 + 2;
-  uVar16 = FUN_00502f98(1,5,0x60,3,0,0,1,2);
-  SetGSReg(0x16,uVar16);
-  return;
+    QuadDef q;
+    Mtx4 world;
+    float uv[4][2];
+
+    SetGSReg(0x16, idol_draw::Blend(1, 0, 0x80, 1, 0, 0, 1, 1));
+    q.tex0 = DAT_00a561c8;
+    q.tex1 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
+    q.clamp = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
+    q.alpha = idol_draw::PackCmd(0, 1, 0, 1, 0x80);
+    FastMemCopy(uv, g_TransitionUv, sizeof(uv));
+
+    float scale = 1.0f;
+    if ((int)Level >= 0 && (int)Level < 0x13) {
+        scale = g_TransitionScales[Level];
+    }
+
+    for (int i = 0; i < 4; i++) {
+        q.rgba[i] = (int)0x80808080;
+        q.xyzw[i].x = g_TransitionCorners[i].x * scale + g_TransitionCenter.x;
+        q.xyzw[i].y = g_TransitionCorners[i].y * scale + g_TransitionCenter.y;
+        q.xyzw[i].z = g_TransitionCorners[i].z * scale + g_TransitionCenter.z;
+        q.xyzw[i].w = g_TransitionCorners[i].w;
+    }
+
+    RenderingStep *pass = ForwardPass;
+    int idolDraw = g_pIdolDraw;
+
+    idol_draw::BindVertexProgram(g_pIdolDraw, (int)pass, 5);
+    idol_draw::BindFragmentProgram(idolDraw, (int)pass, 2);
+
+    TransitionVertex *verts = (TransitionVertex *)idol::AllocateMemAlign((int)FrameHeap, 4 * sizeof(TransitionVertex), 16);
+    for (int i = 0; i < 4; i++) {
+        verts[i].pos[0] = q.xyzw[i].x;
+        verts[i].pos[1] = q.xyzw[i].y;
+        verts[i].pos[2] = q.xyzw[i].z;
+        verts[i].uv[0] = uv[i][0];
+        verts[i].uv[1] = uv[i][1];
+        verts[i].color = SwapBytes((u32)q.rgba[i]);
+    }
+
+    if (q.alpha != 0) {
+        idol_draw::DrawDepth(ForwardPass, q.alpha);
+    }
+
+    int sampler0;
+    int sampler1;
+    FUN_004d6704(q.clamp, &sampler0, &sampler1);
+    FUN_004d676c(ForwardPass, 0, (u8 *)(*(u32 *)(DAT_00a10920 + 0xc) + (u32)q.tex0 * 0x24), sampler0, sampler1);
+    idol_draw::ResetPassState(ForwardPass);
+
+    EmitMethod(ForwardPass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 0 * 4, VTX_FORMAT(3, CELL_GCM_VERTEX_F));
+    EmitMethod(ForwardPass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 1 * 4, VTX_FORMAT(2, CELL_GCM_VERTEX_F));
+    EmitMethod(ForwardPass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 3 * 4, VTX_FORMAT(4, CELL_GCM_VERTEX_UB));
+
+    u32 offset = (u32)(uintptr_t)verts - *(u32 *)(idolDraw + 0x4a8);
+    EmitMethod(ForwardPass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_OFFSET + 0 * 4, offset | MAIN_MEMORY);
+    EmitMethod(ForwardPass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_OFFSET + 1 * 4, (offset + 12) | MAIN_MEMORY);
+    EmitMethod(ForwardPass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_OFFSET + 3 * 4, (offset + 20) | MAIN_MEMORY);
+
+    FastMemSet(&world, 0, sizeof(world));
+    world.v0.x = 1.0f;
+    world.v1.y = 1.0f;
+    world.v2.z = 1.0f;
+    world.v3.w = 1.0f;
+
+    const u32 *words = (const u32 *)&world;
+    Emit(ForwardPass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_TRANSFORM_CONSTANT_LOAD, 17));
+    Emit(ForwardPass, 4);
+    for (int i = 0; i < 16; i++) {
+        Emit(ForwardPass, words[i]);
+    }
+
+    Emit(ForwardPass, CELL_GCM_METHOD_FLAG_NON_INCREMENT | CELL_GCM_METHOD(CELL_GCM_NV4097_INVALIDATE_VERTEX_FILE, 3));
+    Emit(ForwardPass, 0);
+    Emit(ForwardPass, 0);
+    Emit(ForwardPass, 0);
+    EmitMethod(ForwardPass, CELL_GCM_NV4097_SET_BEGIN_END, CELL_GCM_PRIMITIVE_TRIANGLE_STRIP);
+    Emit(ForwardPass, CELL_GCM_METHOD_FLAG_NON_INCREMENT | CELL_GCM_METHOD(CELL_GCM_NV4097_DRAW_ARRAYS, 1));
+    Emit(ForwardPass, (4 - 1) << 24 | 0);
+    EmitMethod(ForwardPass, CELL_GCM_NV4097_SET_BEGIN_END, 0);
+
+    EmitMethod(ForwardPass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 0 * 4, VTX_DISABLED);
+    EmitMethod(ForwardPass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 1 * 4, VTX_DISABLED);
+    EmitMethod(ForwardPass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 3 * 4, VTX_DISABLED);
+
+    SetGSReg(0x16, FUN_00502f98(1, 5, 0x60, 3, 0, 0, 1, 2));
 }
 
 
 // 0x015fcb0 (0x130 bytes)
-void Space_DrawLoadingBanner(void)
-
+/* the banner across the bottom of the loading screen, at `alpha` */
+void Space_DrawLoadingBanner(int alpha)
 {
-  undefined8 uVar1;
-  
-  uVar1 = idol_draw::Blend(1,0,0x80,1,0,0,1,1);
-  SetGSReg(0x16,uVar1);
-  uVar1 = idol_draw::PackCmd(0,1,0,1,0x80);
-  SetGSReg(3,uVar1);
-  Sprite_DrawShape(0x20,0x168,0x100,0x20,0,0,0x100,0x20);
-  uVar1 = FUN_00502f98(1,5,0x60,3,0,0,1,2);
-  SetGSReg(0x16,uVar1);
-  return;
+    SetGSReg(0x16, idol_draw::Blend(1, 0, 0x80, 1, 0, 0, 1, 1));
+    SetGSReg(3, idol_draw::PackCmd(0, 1, 0, 1, 0x80));
+    Sprite_DrawShape(0x20, 0x168, 0x100, 0x20, 0, 0, 0x100, 0x20, (u32)alpha << 24 | 0x808080,
+                     (void *)(uintptr_t)(*(u32 *)(DAT_00a10920 + 0xc) + (u32)DAT_00a561d0 * 0x24));
+    SetGSReg(0x16, FUN_00502f98(1, 5, 0x60, 3, 0, 0, 1, 2));
+}
+
+#define LOADSCREEN_ARRIVAL 4          /* the one played after the random ones */
+#define SCENE_CHUNK_FRAMES 0x60
+
+static inline int ScaledFrames(float frames)
+{
+    return (int)(animationSpeed * frames);
+}
+
+/* the loading screens play the intro of a planet the player hasn't seen */
+static inline int SpaceIsIntro(void)
+{
+    return Level == Veldin || (Level == Novalis && g_SeenPlanets.Kerwan == 0);
+}
+
+/* moves a scene moby half a key (two sub steps per frame) and records its engine bones
+   in the trails */
+static inline void SpaceSceneMobyStep(MobyInstance *moby, int sub)
+{
+    MobyClass *cls = moby->pClass;
+    MobySeq *seq = cls->seqs[cls->seq_cnt - 1];
+    int key = (int)g_cutsceneCameraFrame >> 1;
+    u8 *frameA = *(u8 **)((u8 *)seq + 0x1c + key * 4);
+    u8 *frameB = *(u8 **)((u8 *)seq + 0x1c + (key + 1) * 4);
+    Vec4 *from = &((Vec4 *)moby->pVar)[key];
+    Vec4 *to = &((Vec4 *)moby->pVar)[key + 1];
+    float blend = (float)FastIntToDouble(g_cutsceneCameraFrame & 1) * 0.5f + (float)sub * 0.25f;
+    float invBlend = 1.0f - blend;
+
+    moby->animationBlend = blend;
+    moby->updateId = 2;
+    moby->pos.w = from->w;
+    moby->animationId = 2;
+    moby->previousAnimationFrame = 0;
+    moby->animationFrame = 0;
+    moby->pos.x = from->x * invBlend + to->x * blend;
+    moby->pos.y = from->y * invBlend + to->y * blend;
+    moby->pos.z = from->z * invBlend + to->z * blend;
+    UpdateMobyFrameData(moby);
+    FastMemCopy((u8 *)moby->pPreviousAnimationData + 0x10, frameA + 0x10, 0x20);
+    FastMemCopy((u8 *)moby->pCurrentAnimationData + 0x10, frameB + 0x10, 0x20);
+    moby->drawDistance = 0x1ff;
+    moby->unk72 = -1;
+    moby->unk71 = -1;
+    UpdateMobyTransform(moby);
+    moby->updateId = moby->pClass->seq_cnt - 1;
+    moby->animationId = moby->pClass->seq_cnt - 1;
+
+    Mtx4 left;
+    Mtx4 right;
+    GetBoneTransformations(moby, 1, &left);
+    GetBoneTransformations(moby, 2, &right);
+
+    g_ShipTrailHead = (g_ShipTrailHead + 1) & 31;
+    if (g_ShipTrailLen < 32) {
+        g_ShipTrailLen++;
+    }
+
+    g_ShipTrails[0][g_ShipTrailHead] = left.v3;
+    g_ShipTrails[1][g_ShipTrailHead] = right.v3;
 }
 
 
 // 0x015fe00 (0x9a4 bytes)
-// strings: 0015fed8: 'H:`y`' (raw)
-
+/* one frame of the space loading screens: plays the scene's chunks, and at its end picks the
+   next screen (random first, then LOADSCREEN_ARRIVAL) or, after two, lets the level go on */
 void ChooseLoadingScreen(void)
-
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  float fVar7;
-  float fVar8;
-  MobyInstance *pMVar9;
-  MobyClass *pMVar10;
-  uint uVar11;
-  undefined4 uVar12;
-  uint uVar13;
-  int iVar14;
-  short sVar18;
-  int *piVar15;
-  float *pfVar16;
-  uint *puVar17;
-  int *piVar19;
-  int iVar20;
-  float *pfVar21;
-  undefined4 *puVar22;
-  undefined4 *puVar23;
-  int iVar25;
-  ulonglong uVar24;
-  int iVar26;
-  undefined8 in_LR;
-  longlong lVar27;
-  double dVar28;
-  double dVar29;
-  double dVar30;
-  GPiece<16> auVar31;
-  GPiece<16> auVar32;
-  GPiece<16> auVar33;
-  GPiece<16> auVar34;
-  GPiece<16> auVar35;
-  GPiece<16> auVar36;
-  GPiece<16> auVar37;
-  GPiece<16> auVar38;
-  GPiece<16> auVar39;
-  GPiece<16> auVar40;
-  GPiece<16> auVar41;
-  GPiece<16> auVar42;
-  GPiece<48> auStack_100;
-  undefined4 local_d0;
-  undefined4 local_cc;
-  undefined4 local_c8;
-  undefined4 local_c4;
-  GPiece<48> auStack_c0;
-  undefined4 local_90;
-  undefined4 local_8c;
-  undefined4 local_88;
-  undefined4 local_84;
-  
-  ResetGameCounters();
-  puVar22 = &DAT_0095cd50;
-  g_cutsceneCameraFrame = g_cutsceneCameraFrame + 1;
-  g_SpaceSceneFrame = g_SpaceSceneFrame + 1;
-  dVar29 = 0.25;
-  SceneScreenFade = SceneScreenFade - 0.25;
-  if (SceneScreenFade < 0.0) {
-    SceneScreenFade = 0.0;
-  }
-  if (((g_SpaceSceneFrame == 1) && (Level != Veldin)) &&
-     ((Level != Novalis || (g_SeenPlanets.Kerwan != '\0')))) {
-    STUB_00505f50();
-    snd_PlaySoundVolPanPMPB_CB(g_BootSoundBank,g_currentLoadingScreen,0x400,0,0,0,0,g_SoundChannels);
-    STUB_00505f4c();
-    STUB_00505d20();
-  }
-  if (g_SpaceSceneFrame < g_SpaceSceneNumFrames.piece<0,2>()) {
-    if (0x5f < (int)g_cutsceneCameraFrame) {
-      g_SpaceSceneChunk = g_SpaceSceneChunk + 1;
-      ParseSpaceSceneChunk(g_SpaceSceneChunk);
+    short numFrames;
+
+    ResetGameCounters();
+    g_cutsceneCameraFrame++;
+    g_SpaceSceneFrame++;
+    SceneScreenFade -= 0.25f;
+    if (SceneScreenFade < 0.0f) {
+        SceneScreenFade = 0.0f;
     }
-  }
-  else {
-    iVar26 = 0;
-    iVar25 = 0;
-    sVar18 = g_SpaceSceneMobyCnt.piece<0,2>();
-    puVar23 = puVar22;
-    if (0 < g_SpaceSceneMobyCnt.piece<0,2>()) {
-      do {
-        pMVar9 = (MobyInstance *)puVar23[0x5e];
-        if (pMVar9 != (MobyInstance *)0x0) {
-          pMVar9->pClass->seq_cnt = pMVar9->pClass->seq_cnt + 0xff;
-          *(undefined4 *)(&pMVar9->pClass->type + (uint)pMVar9->pClass->seq_cnt * 4) = 0;
-          DeleteMoby(pMVar9);
-          sVar18 = g_SpaceSceneMobyCnt.piece<0,2>();
+
+    if (g_SpaceSceneFrame == 1 && !SpaceIsIntro()) {
+        STUB_00505f50();
+        snd_PlaySoundVolPanPMPB_CB(g_BootSoundBank, g_currentLoadingScreen, 0x400, 0, 0, 0, NULL, (u64)(uintptr_t)g_SoundChannels);
+        STUB_00505f4c();
+        STUB_00505d20();
+    }
+
+    numFrames = *(short *)&g_SpaceSceneNumFrames;
+    if (g_SpaceSceneFrame < numFrames) {
+        if ((int)g_cutsceneCameraFrame >= SCENE_CHUNK_FRAMES) {
+            g_SpaceSceneChunk++;
+            ParseSpaceSceneChunk(g_SpaceSceneChunk);
         }
-        iVar26 = iVar26 + 1;
-        puVar23 = puVar23 + 1;
-      } while (iVar26 < sVar18);
     }
-    if ((Level != Veldin) &&
-       (((Level != Novalis || (g_SeenPlanets.Kerwan != '\0')) && (g_LoadingStage < 3)))) {
-      g_loadingCount = 0;
-    }
-    if (1 < g_loadingCount) {
-      if (DAT_00964562 != 0) {
-        DAT_00964562 = 0;
-      }
-      g_CutscenePlaying = 1;
-      return;
-    }
-    uVar13 = 4;
-    if (g_loadingCount == 0) {
-      iVar14 = rand();
-      iVar26 = (iVar14 >> 0x10) / 3 + (iVar14 >> 0x1f);
-      uVar13 = g_currentLoadingScreen + (iVar14 >> 0x10) + (iVar26 - (iVar26 >> 0x1f)) * -3 + 1 & 3;
-    }
-    g_loadingCount = g_loadingCount + 1;
-    DAT_009645c0 = 0;
-    g_LoadScreenRelated = 0;
-    DAT_00a561e0 = DAT_00731f70;
-    DAT_00a561e4 = DAT_00731f74;
-    DAT_00a561e8 = DAT_00731f78;
-    DAT_00a561ec = DAT_00731f7c;
-    g_currentLoadingScreen = uVar13;
-    FastMemSet(&DAT_0095cd50,0,0x1c0);
-    iVar26 = DAT_00a10920;
-    g_SceneLoadBuffer = g_NpcBuffer + 0x200000;
-    DAT_0095cda8 = g_NpcBuffer;
-    piVar19 = &g_SceneChunkPtrs;
-    piVar15 = (int *)(DAT_00a10920 + *(int *)(DAT_00a10920 + g_currentLoadingScreen * 4 + 0x28));
-    do {
-      if (piVar15[1] == 0) break;
-      iVar14 = *piVar15;
-      iVar25 = iVar25 + 1;
-      piVar15 = piVar15 + 2;
-      *piVar19 = iVar26 + iVar14;
-      piVar19 = piVar19 + 1;
-    } while (iVar25 < 0x46);
-    ParseSpaceSceneChunk(0);
-  }
-  Space_SetCutsceneCamera();
-  uVar13 = (int)*(uint *)(&DAT_00732084 + g_currentLoadingScreen * 4) >> 0x1f;
-  if ((int)(((uint)((int)g_ViewContext.xratio >> 0x1f) >> 1 ^ (uint)g_ViewContext.xratio) -
-           ((int)g_ViewContext.xratio >> 0x1f)) <
-      (int)((uVar13 >> 1 ^ *(uint *)(&DAT_00732084 + g_currentLoadingScreen * 4)) - uVar13)) {
-    g_ViewContext.xratio = *(float *)(&DAT_00732084 + g_currentLoadingScreen * 4);
-  }
-  UpdateViewContext();
-  dVar30 = 1.0;
-  auVar32 = loadVectorLeftIndexed(8,0x15fde0);
-  auVar31 = loadVectorLeftIndexed(0x34,0x95cd50);
-  auVar32 = auVar32 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar32 = auVar32 | auVar32 << 0x20 | auVar32 << 0x40 | auVar32 << 0x60;
-  if (g_currentLoadingScreen == 4) {
-    auVar32 = ZEXT416(0xfffffff0);
-    auVar33 = ZEXT416(0xffffffff);
-    auVar36 = auVar33 | auVar33 << 0x20 | auVar33 << 0x40 | auVar33 << 0x60;
-    auVar33 = ZEXT416(0xffffffff);
-    auVar39 = auVar33 | auVar33 << 0x20 | auVar33 << 0x40 | auVar33 << 0x60;
-    auVar33 = loadVectorLeftIndexed(0x40,0x95cd50);
-    auVar34 = loadVectorLeftIndexed(0xc,0x15fde0);
-    auVar33 = vectorShiftRightAlgebraicWord
-                        (auVar33,auVar32 | auVar32 << 0x20 | auVar32 << 0x40 | auVar32 << 0x60);
-    auVar32 = auVar34 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar35 = auVar32 | auVar32 << 0x20 | auVar32 << 0x40 | auVar32 << 0x60;
-    auVar36 = vectorShiftLeftIntegerWord(auVar36,auVar36);
-    auVar34 = vectorConvertFromSignedFixedPointWord(auVar33,0);
-    auVar32 = ZEXT416(0xffffffff);
-    auVar37 = auVar32 | auVar32 << 0x20 | auVar32 << 0x40 | auVar32 << 0x60;
-    auVar33 = vectorSubtractUnsignedWordModulo(auVar33,auVar31);
-    auVar32 = ZEXT416(0xffffffff);
-    auVar40 = auVar32 | auVar32 << 0x20 | auVar32 << 0x40 | auVar32 << 0x60;
-    auVar38 = vectorShiftLeftIntegerWord(auVar37,auVar37);
-    auVar32 = vectorConvertFromSignedFixedPointWord(auVar33,0);
-    auVar33 = vectorReciprocalEstimateFloatingPoint(auVar34);
-    auVar37 = vectorNegativeMultiplySubtractFloatingPoint(auVar33,auVar34,auVar35);
-    auVar33 = vectorMultiplyAddFloatingPoint(auVar33,auVar37,auVar36);
-    auVar37 = vectorShiftLeftIntegerWord(auVar39,auVar39);
-    auVar39 = vectorShiftLeftIntegerWord(auVar40,auVar40);
-    auVar41 = loadVectorLeftIndexed(0x1fc0,0x730000);
-    auVar36 = vectorNegativeMultiplySubtractFloatingPoint(auVar33,auVar34,auVar35);
-    auVar36 = vectorMultiplyAddFloatingPoint(auVar33,auVar36,auVar38);
-    auVar38 = loadVectorLeftIndexed(4,0x731fc0);
-    auVar40 = loadVectorLeftIndexed(4,0xa561e0);
-    auVar42 = loadVectorLeftIndexed(8,0x731fc0);
-    auVar33 = vectorNegativeMultiplySubtractFloatingPoint(auVar36,auVar34,auVar35);
-    auVar34 = loadVectorLeftIndexed(0x61e0,0xa50000);
-    auVar35 = loadVectorLeftIndexed(8,0xa561e0);
-    auVar33 = vectorMultiplyAddFloatingPoint(auVar36,auVar33,auVar37);
-    auVar32 = vectorMultiplyAddFloatingPoint(auVar33,auVar32,auVar39);
-    auVar33 = vectorMultiplyAddFloatingPoint(auVar41,auVar32,auVar34);
-    auVar34 = vectorMultiplyAddFloatingPoint(auVar38,auVar32,auVar40);
-    auVar35 = vectorMultiplyAddFloatingPoint(auVar42,auVar32,auVar35);
-    auVar33 = auVar33 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar34 = auVar34 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar35 = auVar35 >> 0x60 & (GPiece<16>)0xffffffff;
-    DAT_00a561e0 = storeVectorElementWordIndexed
-                             (auVar33 | auVar33 << 0x20 | auVar33 << 0x40 | auVar33 << 0x60,0x61e0,
-                              0xa50000);
-    DAT_00a561e4 = storeVectorElementWordIndexed
-                             (auVar34 | auVar34 << 0x20 | auVar34 << 0x40 | auVar34 << 0x60,4,
-                              0xa561e0);
-    DAT_00a561e8 = storeVectorElementWordIndexed
-                             (auVar35 | auVar35 << 0x20 | auVar35 << 0x40 | auVar35 << 0x60,8,
-                              0xa561e0);
-  }
-  auVar33 = ZEXT416(0xffffffff);
-  auVar33 = auVar33 | auVar33 << 0x20 | auVar33 << 0x40 | auVar33 << 0x60;
-  auVar35 = vectorShiftLeftIntegerWord(auVar33,auVar33);
-  auVar33 = loadVectorLeftIndexed(0x10,0x15fde0);
-  auVar34 = auVar33 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar36 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
-  auVar33 = ZEXT416(0xffffffff);
-  auVar37 = auVar33 | auVar33 << 0x20 | auVar33 << 0x40 | auVar33 << 0x60;
-  auVar34 = vectorMultiplyAddFloatingPoint
-                      (auVar36,auVar34 | auVar34 << 0x20 | auVar34 << 0x40 | auVar34 << 0x60,auVar35
-                      );
-  auVar33 = auVar32 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar32 = ZEXT416(0xffffffff);
-  auVar35 = auVar32 | auVar32 << 0x20 | auVar32 << 0x40 | auVar32 << 0x60;
-  auVar37 = vectorShiftLeftIntegerWord(auVar37,auVar37);
-  auVar36 = loadVectorLeftIndexed(0x14,0x15fde0);
-  auVar32 = ZEXT416(0xffffffff);
-  auVar38 = auVar32 | auVar32 << 0x20 | auVar32 << 0x40 | auVar32 << 0x60;
-  auVar35 = vectorShiftLeftIntegerWord(auVar35,auVar35);
-  auVar32 = auVar36 >> 0x60 & (GPiece<16>)0xffffffff;
-  uVar24 = (ulonglong)(g_currentLoadingScreen * 0x10 + 0x732020);
-  auVar34 = vectorConvertToSignedFixedPointWordSaturate(auVar34,0);
-  auVar31 = vectorSubtractUnsignedWordModulo(auVar31,auVar34);
-  auVar34 = vectorShiftLeftIntegerWord(auVar38,auVar38);
-  auVar36 = loadVectorLeftIndexed(in_LR,uVar24);
-  auVar31 = vectorConvertFromSignedFixedPointWord(auVar31,0);
-  auVar31 = vectorMultiplyAddFloatingPoint
-                      (auVar31,auVar32 | auVar32 << 0x20 | auVar32 << 0x40 | auVar32 << 0x60,auVar35
-                      );
-  auVar32 = ZEXT416(0xffffffff);
-  auVar32 = auVar32 | auVar32 << 0x20 | auVar32 << 0x40 | auVar32 << 0x60;
-  auVar35 = vectorShiftLeftIntegerWord(auVar32,auVar32);
-  auVar31 = vectorMultiplyAddFloatingPoint
-                      (auVar31,auVar33 | auVar33 << 0x20 | auVar33 << 0x40 | auVar33 << 0x60,auVar37
-                      );
-  auVar32 = ZEXT416(0xffffffff);
-  auVar32 = auVar32 | auVar32 << 0x20 | auVar32 << 0x40 | auVar32 << 0x60;
-  auVar33 = vectorShiftLeftIntegerWord(auVar32,auVar32);
-  auVar32 = vectorMultiplyAddFloatingPoint(auVar36,auVar31,auVar34);
-  auVar32 = auVar32 >> 0x60 & (GPiece<16>)0xffffffff;
-  g_SkyOrigin.x = storeVectorElementWordIndexed
-                           (auVar32 | auVar32 << 0x20 | auVar32 << 0x40 | auVar32 << 0x60,0x6150,
-                            0xa50000);
-  auVar32 = loadVectorLeftIndexed(4,uVar24);
-  auVar32 = vectorMultiplyAddFloatingPoint(auVar32,auVar31,auVar35);
-  iVar25 = 0;
-  g_SpaceSkyAngle = *(undefined4 *)(&DAT_00732070 + g_currentLoadingScreen * 4);
-  auVar32 = auVar32 >> 0x60 & (GPiece<16>)0xffffffff;
-  g_SkyOrigin.y = storeVectorElementWordIndexed
-                           (auVar32 | auVar32 << 0x20 | auVar32 << 0x40 | auVar32 << 0x60,4,0xa56150
-                           );
-  auVar32 = loadVectorLeftIndexed(8,uVar24);
-  auVar32 = vectorMultiplyAddFloatingPoint(auVar32,auVar31,auVar33);
-  auVar32 = auVar32 >> 0x60 & (GPiece<16>)0xffffffff;
-  g_SkyOrigin.z = storeVectorElementWordIndexed
-                           (auVar32 | auVar32 << 0x20 | auVar32 << 0x40 | auVar32 << 0x60,8,0xa56150
-                           );
-  g_SkyOrigin.w = *(undefined4 *)(g_currentLoadingScreen * 0x10 + 0x73202c);
-  if (0 < g_SpaceSceneMobyCnt.piece<0,2>()) {
-    do {
-      iVar26 = 0;
-      pMVar9 = (MobyInstance *)puVar22[0x5e];
-      uVar24 = ZEXT48(pMVar9);
-      do {
-        pMVar10 = pMVar9->pClass;
-        iVar14 = (int)g_cutsceneCameraFrame >> 1;
-        uVar13 = *(uint *)((&pMVar10->mode_bits)[pMVar10->seq_cnt] + iVar14 * 4 + 0x1c);
-        uVar11 = *(uint *)((&pMVar10->mode_bits)[pMVar10->seq_cnt] +
-                           (int)(((longlong)iVar14 + 1U & 0xffffffff) << 2) + 0x1c);
-        dVar28 = (double)FastIntToDouble(g_cutsceneCameraFrame & 1);
-        pfVar21 = (float *)((int)pMVar9->pVar + (int)((longlong)iVar14 + 1U) * 0x10);
-        pfVar16 = (float *)((int)pMVar9->pVar + iVar14 * 0x10);
-        fVar1 = (float)(dVar28 * 0.5 + (double)(float)((double)(longlong)iVar26 * dVar29));
-        dVar28 = (double)fVar1;
-        fVar2 = (float)(dVar30 - dVar28);
-        pMVar9->animationBlend = fVar1;
-        fVar1 = *pfVar21;
-        fVar3 = pfVar21[1];
-        fVar4 = pfVar21[2];
-        fVar5 = *pfVar16;
-        fVar6 = pfVar16[1];
-        fVar7 = pfVar16[2];
-        fVar8 = pfVar16[3];
-        pMVar9->updateId = '\x02';
-        (pMVar9->pos).w = fVar8;
-        pMVar9->animationId = '\x02';
-        pMVar9->previousAnimationFrame = '\0';
-        pMVar9->animationFrame = '\0';
-        (pMVar9->pos).x = fVar5 * fVar2 + (float)((double)fVar1 * dVar28);
-        (pMVar9->pos).y = fVar6 * fVar2 + (float)((double)fVar3 * dVar28);
-        (pMVar9->pos).z = fVar7 * fVar2 + (float)((double)fVar4 * dVar28);
-        UpdateMobyFrameData(pMVar9);
-        FastMemCopy
-                  (ZEXT48(pMVar9->pPreviousAnimationData) + 0x10,(ulonglong)uVar13 + 0x10,0x20);
-        FastMemCopy
-                  (ZEXT48(pMVar9->pCurrentAnimationData) + 0x10,(ulonglong)uVar11 + 0x10,0x20);
-        pMVar9->drawDistance = 0x1ff;
-        pMVar9->unk72 = -1;
-        pMVar9->unk71 = -1;
-        UpdateMobyTransform(pMVar9);
-        pMVar9->updateId = pMVar9->pClass->seq_cnt + 0xff;
-        pMVar9->animationId = pMVar9->pClass->seq_cnt + 0xff;
-        GetBoneTransformations(uVar24,1,auStack_100);
-        GetBoneTransformations(uVar24,2,auStack_c0);
-        uVar13 = DAT_009645c0 + 1;
-        DAT_009645c0 = uVar13 & 0x1f;
-        if (g_LoadScreenRelated < 0x20) {
-          g_LoadScreenRelated = g_LoadScreenRelated + 1;
+    else {
+        /* the scene is over: drop its mobys and their extra sequence */
+        for (int i = 0; i < g_SpaceSceneMobyCnt; i++) {
+            MobyInstance *moby = g_SpaceSceneMobys[i];
+
+            if (moby != NULL) {
+                moby->pClass->seq_cnt--;
+                moby->pClass->seqs[moby->pClass->seq_cnt] = NULL;
+                DeleteMoby(moby);
+            }
         }
-        iVar14 = (uVar13 & 0x1f) * 0x10;
-        iVar20 = (uVar13 & 0x1f) * 0x10;
-        *(undefined4 *)(iVar14 + 0x964630) = local_d0;
-        *(undefined4 *)(iVar14 + 0x964634) = local_cc;
-        *(undefined4 *)(iVar14 + 0x964638) = local_c8;
-        *(undefined4 *)(iVar14 + 0x96463c) = local_c4;
-        uVar13 = g_currentLoadingScreen;
-        *(undefined4 *)(&DAT_00964830 + iVar20) = local_90;
-        *(undefined4 *)(iVar20 + 0x964834) = local_8c;
-        *(undefined4 *)(iVar20 + 0x964838) = local_88;
-        *(undefined4 *)(iVar20 + 0x96483c) = local_84;
-        if (uVar13 == 4) {
-          if ((Level == Veldin) || ((Level == Novalis && (g_SeenPlanets.Kerwan == '\0')))) {
-            g_LoadScreenRelated = 0;
-            pMVar9->modeBits = pMVar9->modeBits | DISABLED;
-          }
-          auVar32 = ZEXT416(0xfffffff0);
-          auVar31 = loadVectorLeftIndexed(0x34,0x95cd50);
-          auVar33 = loadVectorLeftIndexed(0x40,0x95cd50);
-          auVar32 = vectorShiftRightAlgebraicWord
-                              (auVar33,auVar32 | auVar32 << 0x20 | auVar32 << 0x40 | auVar32 << 0x60
-                              );
-          if (g_SpaceSceneNumFrames.piece<0,2>() + -0x38 < g_SpaceSceneFrame) {
-            auVar31 = vectorSubtractUnsignedWordModulo(auVar32,auVar31);
-            auVar32 = ZEXT416(0xffffffff);
-            auVar33 = auVar32 | auVar32 << 0x20 | auVar32 << 0x40 | auVar32 << 0x60;
-            auVar32 = ZEXT416(0xffffffff);
-            auVar34 = auVar32 | auVar32 << 0x20 | auVar32 << 0x40 | auVar32 << 0x60;
-            auVar31 = vectorConvertFromSignedFixedPointWord(auVar31,0);
-            auVar32 = loadVectorLeftIndexed(0x1c,0x15fde0);
-            auVar33 = vectorShiftLeftIntegerWord(auVar33,auVar33);
-            auVar32 = auVar32 >> 0x60 & (GPiece<16>)0xffffffff;
-            auVar34 = vectorShiftLeftIntegerWord(auVar34,auVar34);
-            auVar35 = loadVectorLeftIndexed(0x24,ZEXT48(pMVar9->pClass));
-            auVar32 = vectorMultiplyAddFloatingPoint
-                                (auVar31,auVar32 | auVar32 << 0x20 | auVar32 << 0x40 |
-                                         auVar32 << 0x60,auVar33);
-            iVar14 = 0;
-            iVar20 = g_SpaceSceneNumFrames.piece<0,2>() - g_SpaceSceneFrame;
-            puVar17 = &DAT_00731f40;
-            auVar32 = vectorMultiplyAddFloatingPoint(auVar35,auVar32,auVar34);
-            auVar32 = auVar32 >> 0x60 & (GPiece<16>)0xffffffff;
-            uVar12 = storeVectorElementWordIndexed
-                               (auVar32 | auVar32 << 0x20 | auVar32 << 0x40 | auVar32 << 0x60,0x2c,
-                                uVar24);
-            *(undefined4 *)((uint)&pMVar9->scale & 0xfffffffc) = uVar12;
-            do {
-              iVar14 = iVar14 + 1;
-              *puVar17 = *puVar17 & 0xffffff | iVar20 * 0x1000000;
-              puVar17 = puVar17 + 2;
-            } while (iVar14 < 3);
-          }
-          else {
-            puVar17 = &DAT_00731f40;
-            lVar27 = 3;
-            do {
-              *puVar17 = *puVar17 & 0xffffff | 0x38000000;
-              puVar17 = puVar17 + 2;
-              lVar27 = lVar27 + -1;
-            } while (lVar27 != 0);
-          }
+
+        if (!SpaceIsIntro() && (short)g_LoadingStage < 3) {
+            g_loadingCount = 0;
         }
-        iVar26 = iVar26 + 1;
-      } while (iVar26 < 2);
-      iVar25 = iVar25 + 1;
-      puVar22 = puVar22 + 1;
-    } while (iVar25 < g_SpaceSceneMobyCnt.piece<0,2>());
-  }
-  UpdateGameCounters();
-  return;
+
+        if ((int)g_loadingCount >= 2) {
+            if (DAT_00964562 != 0) {
+                DAT_00964562 = 0;
+            }
+
+            g_CutscenePlaying = 1;
+            return;
+        }
+
+        int screen = LOADSCREEN_ARRIVAL;
+        if (g_loadingCount == 0) {
+            int r = rand() >> 16;
+
+            screen = (g_currentLoadingScreen + r % 3 + 1) & 3;
+        }
+
+        g_currentLoadingScreen = screen;
+        g_loadingCount++;
+        g_ShipTrailHead = 0;
+        g_ShipTrailLen = 0;
+        g_TransitionCenter = g_TransitionCenterStart;
+        FastMemSet(&DAT_0095cd50, 0, 0x1c0);
+        g_SceneLoadBuffer = g_NpcBuffer + 0x200000;
+        DAT_0095cda8 = g_NpcBuffer;
+
+        /* the screen's chunk table: (offset, size) pairs up to a 0 size */
+        int *chunks = (int *)(DAT_00a10920 + *(int *)(DAT_00a10920 + 0x28 + g_currentLoadingScreen * 4));
+        for (int i = 0; i < 0x46 && chunks[1] != 0; i++, chunks += 2) {
+            (&g_SceneChunkPtrs)[i] = DAT_00a10920 + chunks[0];
+        }
+
+        ParseSpaceSceneChunk(0);
+    }
+
+    Space_SetCutsceneCamera();
+    if (g_ViewContext.xratio < g_LoadScreenXRatios[g_currentLoadingScreen]) {
+        g_ViewContext.xratio = g_LoadScreenXRatios[g_currentLoadingScreen];
+    }
+    UpdateViewContext();
+
+    /* the arrival screen drifts its centre in as the scene runs out */
+    numFrames = *(short *)&g_SpaceSceneNumFrames;
+    float remaining = 1.0f;
+    if (g_currentLoadingScreen == LOADSCREEN_ARRIVAL) {
+        remaining = (float)(numFrames - g_SpaceSceneFrame) / (float)numFrames;
+        g_TransitionCenter.x = g_TransitionDrift.x * remaining + g_TransitionCenter.x;
+        g_TransitionCenter.y = g_TransitionDrift.y * remaining + g_TransitionCenter.y;
+        g_TransitionCenter.z = g_TransitionDrift.z * remaining + g_TransitionCenter.z;
+    }
+
+    /* the sky scrolls past */
+    float scroll = (float)(g_SpaceSceneFrame - ScaledFrames(120.5f)) * 20.0f * remaining;
+    Vec4 *dir = &g_LoadScreenSkyDirs[g_currentLoadingScreen];
+    g_SkyOrigin.x = dir->x * scroll;
+    g_SpaceSkyAngle = g_LoadScreenSkyAngles[g_currentLoadingScreen];
+    g_SkyOrigin.y = dir->y * scroll;
+    g_SkyOrigin.z = dir->z * scroll;
+    g_SkyOrigin.w = dir->w;
+
+    for (int i = 0; i < g_SpaceSceneMobyCnt; i++) {
+        MobyInstance *moby = g_SpaceSceneMobys[i];
+
+        for (int sub = 0; sub < 2; sub++) {
+            SpaceSceneMobyStep(moby, sub);
+
+            if (g_currentLoadingScreen != LOADSCREEN_ARRIVAL) {
+                continue;
+            }
+
+            if (SpaceIsIntro()) {
+                g_ShipTrailLen = 0;
+                moby->modeBits |= DISABLED;
+            }
+
+            /* the last 56 frames: the ship shrinks and its trails fade */
+            numFrames = *(short *)&g_SpaceSceneNumFrames;
+            if (g_SpaceSceneFrame > numFrames - 0x38) {
+                int left = numFrames - g_SpaceSceneFrame;
+
+                moby->scale = moby->pClass->gScale * ((float)(numFrames - g_SpaceSceneFrame) * 0.017857144f);
+                for (int v = 0; v < 3; v++) {
+                    g_ShipTrailColors[v][0] = (g_ShipTrailColors[v][0] & 0xffffff) | (u32)left << 24;
+                }
+            }
+            else {
+                for (int v = 0; v < 3; v++) {
+                    g_ShipTrailColors[v][0] = (g_ShipTrailColors[v][0] & 0xffffff) | 0x38000000;
+                }
+            }
+        }
+    }
+
+    UpdateGameCounters();
 }
 
 
@@ -1876,7 +1126,7 @@ void Space_DrawShipEffects(int param_1)
   uVar18 = EffectTexHeaders;
   iVar39 = DAT_00a10920;
   psVar43 = (short *)(&PTR_DAT_00734a80)[iVar40];
-  if ((g_gameMode == GAME_MODE_SPACE) && (DAT_00964590 == 4)) {
+  if ((g_gameMode == GAME_MODE_SPACE) && (g_SpaceCutscene == 4)) {
     puVar21[0x25] = (ulonglong)*(uint *)(*(int *)(DAT_00a10920 + 0x1c) + 4);
     uVar18 = *(undefined4 *)(iVar39 + 0xc);
   }
@@ -1903,7 +1153,7 @@ void Space_DrawShipEffects(int param_1)
       (ABS(GameCamera.posY - *(float *)(param_1 + 0x14)) < 16.0)))) {
     bVar22 = true;
   }
-  if ((((g_gameMode != GAME_MODE_SPACE) || (DAT_00964590 != 4)) && (bVar22)) || (DAT_00731c90 == 1))
+  if ((((g_gameMode != GAME_MODE_SPACE) || (g_SpaceCutscene != 4)) && (bVar22)) || (DAT_00731c90 == 1))
   {
     DAT_00731c94 = 1;
     FastDecTimerS32(&DAT_00a561c4);
@@ -2409,13 +1659,13 @@ void UpdateSpace(void)
   puVar19[1] = in_vr31_32_1;
   *puVar19 = in_vr31_32_0;
   DAT_00964594 = DAT_00964594 + 1;
-  bVar34 = (DAT_00964590 == -1) << 1;
-  if (DAT_00964590 < 4) {
-    if (0 < DAT_00964590) {
-      if (DAT_00964590 < 2) {
+  bVar34 = (g_SpaceCutscene == -1) << 1;
+  if (g_SpaceCutscene < 4) {
+    if (0 < g_SpaceCutscene) {
+      if (g_SpaceCutscene < 2) {
         return;
       }
-      if (DAT_00964590 < 3) {
+      if (g_SpaceCutscene < 3) {
         return;
       }
       ResetGameCounters();
@@ -2527,8 +1777,8 @@ void UpdateSpace(void)
           DAT_009645ac = 0.0;
           DAT_009645b0 = 0.0;
           fVar5 = fVar5 - DAT_00964600;
-          DAT_009645c0 = 0;
-          g_LoadScreenRelated = 0;
+          g_ShipTrailHead = 0;
+          g_ShipTrailLen = 0;
           DAT_009645b4 = SQRT(fVar8 * fVar8 + fVar7 * fVar7 + fVar6 * fVar6);
           DAT_009645f0 = (g_SpaceshipPtr->pos).x;
           DAT_009645f4 = (g_SpaceshipPtr->pos).y;
@@ -2741,22 +1991,22 @@ void UpdateSpace(void)
             MB_PathEvalSpline
                       ((double)fVar2,uVar30,uVar33,1,&g_SpaceshipPtr->pos,&g_SpaceshipPtr->rotation,
                        0);
-            iVar31 = g_LoadScreenRelated;
+            iVar31 = g_ShipTrailLen;
             sVar25 = g_SpaceshipVariant;
             pMVar12 = g_SpaceshipPtr;
-            uVar33 = DAT_009645c0 + 1;
-            bVar1 = g_LoadScreenRelated < 0x20;
-            DAT_009645c0 = uVar33 & 0x1f;
+            uVar33 = g_ShipTrailHead + 1;
+            bVar1 = g_ShipTrailLen < 0x20;
+            g_ShipTrailHead = uVar33 & 0x1f;
             (g_SpaceshipPtr->rotation).x = (g_SpaceshipPtr->rotation).w;
             if (bVar1) {
-              g_LoadScreenRelated = iVar31 + 1;
+              g_ShipTrailLen = iVar31 + 1;
             }
             FUN_005e7d64((uVar33 & 0x1f) * 0x10 + 0x964630,sVar25 * 0x20 + 0x731ec0,
                          &pMVar12->transform);
             pMVar12 = g_SpaceshipPtr;
-            iVar32 = DAT_009645c0 * 0x10;
-            iVar31 = DAT_009645c0 * 0x10;
-            iVar22 = DAT_009645c0 * 0x10;
+            iVar32 = g_ShipTrailHead * 0x10;
+            iVar31 = g_ShipTrailHead * 0x10;
+            iVar22 = g_ShipTrailHead * 0x10;
             iVar28 = (int)g_SpaceshipVariant;
             pMVar26 = &g_SpaceshipPtr->transform;
             *(float *)(iVar32 + 0x964630) = *(float *)(iVar32 + 0x964630) + (g_SpaceshipPtr->pos).x;
@@ -2765,8 +2015,8 @@ void UpdateSpace(void)
             *(undefined4 *)(iVar31 + 0x96463c) = 0x3f800000;
             FUN_005e7d64(&DAT_00964830 + iVar22,&DAT_00731ed0 + iVar28 * 0x20,pMVar26);
             pMVar12 = g_SpaceshipPtr;
-            iVar32 = DAT_009645c0 * 0x10;
-            iVar31 = DAT_009645c0 * 0x10;
+            iVar32 = g_ShipTrailHead * 0x10;
+            iVar31 = g_ShipTrailHead * 0x10;
             fVar2 = *(float *)(iVar32 + 0x964834);
             fVar5 = *(float *)(iVar32 + 0x964838);
             *(float *)(&DAT_00964830 + iVar32) =
@@ -2828,22 +2078,22 @@ LAB_0016388c:
       UpdateGameCounters();
       return;
     }
-    if (DAT_00964590 < 0) {
+    if (g_SpaceCutscene < 0) {
       return;
     }
   }
   else {
-    if (DAT_00964590 < 7) {
-      if (4 < DAT_00964590) {
+    if (g_SpaceCutscene < 7) {
+      if (4 < g_SpaceCutscene) {
         return;
       }
       ChooseLoadingScreen();
       return;
     }
-    if (DAT_00964590 < 8) {
+    if (g_SpaceCutscene < 8) {
       return;
     }
-    if (8 < DAT_00964590) {
+    if (8 < g_SpaceCutscene) {
       return;
     }
   }
@@ -2870,7 +2120,7 @@ LAB_00161a78:
     iVar32 = (int)(animationSpeed * 30.5);
     local_1d0 = (longlong)iVar32;
     if (SceneScreenFade != 0.0 || g_SpaceSceneFrame <= iVar32) goto LAB_00161a78;
-    if ((DAT_00964590 == 0) &&
+    if ((g_SpaceCutscene == 0) &&
        (iVar22 = (int)(animationSpeed *
                       ((float)(longlong)
                               (*(int *)(&DAT_00732220 + (int)((longlong)g_SpaceshipVariant << 2)) +
@@ -2878,14 +2128,14 @@ LAB_00161a78:
        g_SpaceSceneFrame < iVar22)) {
       sVar25 = 1;
     }
-    if ((DAT_00964590 != 8) ||
+    if ((g_SpaceCutscene != 8) ||
        (g_SpaceSceneNumFrames.piece<0,2>() - iVar32 <= g_SpaceSceneFrame)) goto LAB_00161a78;
   }
   local_1d8 = 0.0;
   if (g_SpeechPlaying.status != 7 && g_SpeechPlaying.status != 6) {
     g_SpeechPlaying.status = 5;
   }
-  if (DAT_00964590 == 0) {
+  if (g_SpaceCutscene == 0) {
     auVar57 = loadVectorLeftIndexed((longlong)g_SpaceshipVariant << 2,0x732220);
     auVar58 = vectorConvertFromSignedFixedPointWord(auVar57,0);
     auVar57 = loadVectorLeftIndexed(0xc,0x1616c4);
@@ -3067,7 +2317,7 @@ LAB_00161ba8:
         auVar59 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
         dVar40 = (double)animationSpeed;
         if (MVar29 == RATCHET) {
-          if (DAT_00964590 == 0) {
+          if (g_SpaceCutscene == 0) {
             if ((Level == Orxon) && (UnlockableItems.o2Mask == '\0')) {
               uVar27 = 0;
               auVar74 = ZEXT416(0);
@@ -3131,7 +2381,7 @@ LAB_00161ba8:
             auVar74 = vectorCompareEqualToUnsignedWord
                                 (auVar62,auVar74 | auVar74 << 0x20 | auVar74 << 0x40 |
                                          auVar74 << 0x60);
-            iVar32 = -DAT_00964590;
+            iVar32 = -g_SpaceCutscene;
             auVar74 = vectorConditionalSelect(auVar61,auVar59,auVar74);
             uVar27 = (int)(dVar40 * (double)local_1e8) - lVar18 >> 0x3f & 0x18;
             auVar74 = auVar74 >> 0x60 & (GPiece<16>)0xff;
@@ -3176,7 +2426,7 @@ LAB_00161ba8:
           RegisterPostDraw(&PTR_Space_DrawShipEffects_00707cd8,pMVar12);
           RegisterFuncForMoby(&PTR_STUB_0015e2c0_00707c68,pMVar12);
           pMVar21 = g_SpaceshipPtr;
-          if (DAT_00964590 == 0) {
+          if (g_SpaceCutscene == 0) {
             dVar40 = (double)animationSpeed;
             auVar74 = loadVectorLeftIndexed(0x34,0x95cd50);
             auVar59 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
@@ -3485,7 +2735,7 @@ LAB_00161ba8:
       uVar3 = pMVar12[1].state;
       pMVar12 = pMVar12 + 1;
     }
-    if (DAT_00964590 == 0) {
+    if (g_SpaceCutscene == 0) {
       BeginMenu(0);
       g_MenuScreen = 0xe;
       g_CutscenePlaying = 1;
@@ -3515,12 +2765,12 @@ void DisplayLoadingScreen(void)
   if (g_CutscenePlaying != 0) {
     return;
   }
-  if (DAT_00964590 < 4) {
-    if (0 < DAT_00964590) {
-      if (DAT_00964590 < 2) {
+  if (g_SpaceCutscene < 4) {
+    if (0 < g_SpaceCutscene) {
+      if (g_SpaceCutscene < 2) {
         return;
       }
-      if (DAT_00964590 < 3) {
+      if (g_SpaceCutscene < 3) {
         return;
       }
 LAB_00163a44:
@@ -3530,13 +2780,13 @@ LAB_00163a44:
       Render_DispatchJob();
       return;
     }
-    if (DAT_00964590 < 0) {
+    if (g_SpaceCutscene < 0) {
       return;
     }
   }
   else {
-    if (DAT_00964590 < 7) {
-      if (4 < DAT_00964590) {
+    if (g_SpaceCutscene < 7) {
+      if (4 < g_SpaceCutscene) {
         return;
       }
       UpdateOcclusion(0);
@@ -3544,8 +2794,8 @@ LAB_00163a44:
       Render_DispatchJob();
       return;
     }
-    if (DAT_00964590 < 8) goto LAB_00163a44;
-    if (8 < DAT_00964590) {
+    if (g_SpaceCutscene < 8) goto LAB_00163a44;
+    if (8 < g_SpaceCutscene) {
       return;
     }
   }
@@ -3584,7 +2834,7 @@ void SpaceTransition_LoadWad(void)
   int iVar18;
   char acStack_170 [272];
   
-  DAT_00964590 = 4;
+  g_SpaceCutscene = 4;
   DAT_00964594 = 0xffff;
   iVar15 = 0;
   SceneScreenFade = 1.0;
@@ -3734,9 +2984,9 @@ void SpaceTransition_LoadWad(void)
   random = rand();
   g_currentLoadingScreen = random >> 0x10 & 3;
   g_loadingCount = 0;
-  DAT_009645c0 = 0;
-  g_LoadScreenRelated = 0;
-  DAT_00a561e0 = DAT_00731f70;
+  g_ShipTrailHead = 0;
+  g_ShipTrailLen = 0;
+  g_TransitionCenter = g_TransitionCenterStart;
   DAT_00a561e4 = DAT_00731f74;
   DAT_00a561e8 = DAT_00731f78;
   DAT_00a561ec = DAT_00731f7c;

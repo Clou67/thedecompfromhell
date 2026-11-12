@@ -8,7 +8,7 @@
 #include "game/hud.h"
 #include "game/pause.h"
 #include "game/rUnk.h"
-#include "game/space.h"
+#include "game/vendor.h"
 #include "idol/fastfunc.h"
 #include "idol/mUnk.h"
 

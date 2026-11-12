@@ -85,3 +85,4 @@ SoundInstance	game/sound
 CardStateFunc	game/mcstate
 PathFollower	game/path
 PosRing	game/path
+SceneCameraFrame	game/space

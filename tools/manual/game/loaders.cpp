@@ -2127,7 +2127,7 @@ void ParseNpcChunk(void)
 
     g_cutsceneCameraFrame = 0;
     *(short *)&g_SpaceSceneNumFrames = (short)chunk->numFrames;
-    g_SpaceSceneCameraFrames = base + chunk->cameraFrames;
+    g_SpaceSceneCameraFrames = (SceneCameraFrame *)(base + chunk->cameraFrames);
     ((short *)&g_SpaceSceneMobyCnt)[1] = (short)chunk->unk08;
     g_SpaceSceneMobyCnt = (short)chunk->mobyCnt;
     g_SubtitleTable = chunk->subtitles >= SUBTITLE_MIN_OFFSET ? (u32)(base + chunk->subtitles) : 0;

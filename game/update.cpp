@@ -226,7 +226,7 @@ void UpdateGameplay(void)
                 CHAR_ARRAY_00a0feec.piece<76,4>() =
                      CHAR_ARRAY_00a0feec.piece<76,4>() | 1 << (Level & 0x3f) | 0x80000000;
               }
-              if ((DAT_00a15c74 == 0) || (DAT_00a15c74 = 0, g_heroHealth == 0)) {
+              if ((g_ShipTakeoffPending == 0) || (g_ShipTakeoffPending = 0, g_heroHealth == 0)) {
                 if (((DebugUpdate & UPDATE_MOBYS) != NONE) ||
                    (((DebugUpdate & ENABLE_STEPPING) != NONE &&
                     ((g_Pad.buttonsPressedThisFrame & L3) != 0)))) {

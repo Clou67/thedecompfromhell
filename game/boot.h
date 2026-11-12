@@ -22,6 +22,7 @@ extern undefined4 DAT_0071cc2c; /* no defined data */
 extern undefined4 DAT_0071ccc0; /* 0x71ccc0 */
 extern undefined4 DAT_0071cce4; /* no defined data */
 extern undefined4 DAT_0071ccf4; /* no defined data */
+extern undefined4 DAT_00731f40; /* 0x731f40 */
 extern undefined4 DAT_00731f44; /* 0x731f44 */
 extern undefined4 DAT_00731f48; /* 0x731f48 */
 extern undefined4 DAT_00731f4c; /* 0x731f4c */
@@ -119,6 +120,7 @@ extern undefined4 DAT_00a10680; /* no defined data */
 extern undefined4 DAT_00a10724; /* 0xa10724 */
 extern int *DAT_00a108fc; /* 0xa108fc: the level's gameplay file */ /* type set in global_types.tsv */
 extern undefined4 DAT_00a10908; /* 0xa10908 */
+extern undefined4 DAT_00a15c74; /* 0xa15c74 */
 extern undefined4 DAT_00a15f7c; /* 0xa15f7c */
 extern undefined4 DAT_00a15f80; /* 0xa15f80 */
 extern undefined4 DAT_00a1a7b8; /* 0xa1a7b8 */

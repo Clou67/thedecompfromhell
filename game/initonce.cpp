@@ -23,6 +23,7 @@
 #include "game/sound.h"
 #include "game/space.h"
 #include "game/update/moby998.h"
+#include "game/vendor.h"
 #include "game/vuchain.h"
 #include "idol/fastfunc.h"
 #include "idol/idol.h"

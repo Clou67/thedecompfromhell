@@ -3257,7 +3257,7 @@ u8 *MB_BuildDrawEntry(MobyInstance *param_1,u8 *param_2,int param_3,int param_4)
   puVar5[0x42] = unaff_r17;
   puVar5[0x40] = unaff_r15;
   iVar15 = DAT_00a15f64;
-  if ((gVar11 == GAME_MODE_SPACE) && (DAT_00964590 == 4)) {
+  if ((gVar11 == GAME_MODE_SPACE) && (g_SpaceCutscene == 4)) {
     *(undefined4 *)((int)puVar5 + 0x8c) = 0;
     *(undefined4 *)(puVar5 + 0x11) = 0;
     *(undefined4 *)((int)puVar5 + 0x84) = 0;

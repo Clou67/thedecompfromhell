@@ -38,7 +38,7 @@ errors	file
 0	game/skyfunc.cpp
 0	game/skyproc.cpp
 0	game/sound.cpp
-202	game/space.cpp
+124	game/space.cpp
 0	game/tieproc.cpp
 124	game/update.cpp
 568	game/update/camera0.cpp

@@ -186,6 +186,7 @@ extern undefined1 DAT_00e5aa38; /* 0xe5aa38 */
 extern undefined1 DAT_00e5aa40; /* 0xe5aa40 */
 extern undefined1 DAT_00e5aa41; /* 0xe5aa41 */
 extern undefined1 DAT_00e5aa42; /* 0xe5aa42 */
+extern undefined4 DAT_00e5aa64; /* 0xe5aa64 */
 extern pointer32 PTR_Draw_AmmoCounter_00705888; /* 0x705888 */
 extern pointer32 PTR_Vendor_DrawMobyHighlight_00707f60; /* 0x707f60 */
 extern undefined4 _DAT_00e5a960; /* direct read */

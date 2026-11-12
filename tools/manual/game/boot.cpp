@@ -41,13 +41,6 @@
 /* a 2-short vertex attribute word: first value in the low half */
 #define PACK2S(lo, hi)          ((u32)(hi) << 16 | ((u32)(lo) & 0xffff))
 
-/* one camera frame of the title screen's space scene */
-typedef struct SceneCameraFrame {
-    float x, y, z;
-    u8 flags[4];                /* 0x0c  copied to GameCamera; the first byte is returned */
-    float rotX, rotY, rotZ;     /* 0x10 */
-    float pad;
-} SceneCameraFrame;
 
 
 extern sys_process_param_t __sys_process_param;     /* the SDK's, in .sys_proc_param */

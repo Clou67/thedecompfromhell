@@ -2657,6 +2657,9 @@ extern undefined4 DAT_00724870; /* 0x724870 */
 extern undefined2 DAT_0072b33c; /* 0x72b33c */
 extern undefined2 DAT_0072b348; /* 0x72b348 */
 extern undefined2 DAT_0072b354; /* 0x72b354 */
+extern undefined4 DAT_00731d90; /* 0x731d90 */
+extern undefined4 DAT_00731e40; /* 0x731e40 */
+extern undefined4 DAT_00731f24; /* 0x731f24 */
 extern undefined8 DAT_007359f0; /* 0x7359f0 */
 extern undefined8 DAT_007359f8; /* 0x7359f8 */
 extern undefined8 DAT_00735a00; /* 0x735a00 */

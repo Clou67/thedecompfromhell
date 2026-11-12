@@ -40,12 +40,12 @@ double UpdateMoby_55(MobyInstance *moby)
   if (g_gameMode == GAME_MODE_SPACE) {
     if (piVar4[4] == 0) {
       piVar4[4] = 0;
-      if (DAT_00964590 == 8) {
+      if (g_SpaceCutscene == 8) {
         piVar4[5] = 0;
         piVar4[4] = 1;
         piVar4[6] = 0x3eb2b8c2;
       }
-      else if (DAT_00964590 == 3) {
+      else if (g_SpaceCutscene == 3) {
         piVar4[4] = 1;
         piVar4[6] = 0;
         piVar4[5] = 0x3eb2b8c2;
