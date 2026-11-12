@@ -8,7 +8,6 @@
 #include "game/camera.h"
 #include "game/draw.h"
 #include "game/hero.h"
-#include "game/skyfunc.h"
 #include "game/space.h"
 #include "idol/tiefunc.h"
 #include "sdk/cell.h"

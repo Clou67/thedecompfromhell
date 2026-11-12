@@ -193,6 +193,7 @@ extern undefined4 DAT_0159c348; /* 0x159c348 */
 extern undefined4 DAT_0159c34c; /* 0x159c34c */
 extern undefined4 DAT_70001000; /* no defined data */
 extern undefined4 DAT_70002000; /* no defined data */
+extern RenderingStep * DepthPass; /* 0x8fa414 */
 extern float FLOAT_0095d1c8; /* 0x95d1c8 */
 extern undefined4 FrameHeap; /* 0x8fa440 */
 extern undefined Glyphs; /* 0x736c50 */

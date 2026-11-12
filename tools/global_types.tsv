@@ -241,3 +241,12 @@ g_Pills	u32 NAME /* 0xa51bc0: gameplay section 0x6c, 0x90 bytes each (collision 
 g_PillCnt	int NAME /* 0xa51bc4 */
 g_PointLightCnt	int NAME /* 0xa1c840: gameplay section 0x7c */
 g_PointLightRecords	u32 NAME /* 0xa1c880: 0x20 bytes each */
+outMatrix	Mtx4 NAME /* 0xa56180: the matrix the sky shells are drawn with */
+g_SkyOrigin	Vec4 NAME /* 0xa56150: centre of the scaled sky shells (Level 19, space); set by space.cpp */
+g_SkyShellSpeed	float NAME /* 0xa56160: how fast Level 19's shells turn */
+g_SpaceSkyAngle	float NAME /* 0xa56164 */
+g_SkyVuBuffer	int NAME /* 0xa56170: which of the two VU1 buffers the PS2 shell draw fills */
+g_SkyVuBufferAddrs	int NAME[2] /* 0x731a90 */
+g_CometColors	u32 NAME[4] /* 0x731aec: Levels 6 and 17 */
+g_SkyLightColors	u32 NAME[3] /* 0x731ae0: Level 6's blinking lights */
+g_SkyLightPositions	Vec4 NAME[3] /* 0x731ab0: their positions (w: scale) */

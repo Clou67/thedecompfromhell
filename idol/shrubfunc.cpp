@@ -1049,9 +1049,7 @@ void FUN_0050a4ec(int param_1)
 // 0x050a538 (0x82c bytes)
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void idol_draw::DrawSkyShell
-               (SKY *sky,longlong id,undefined8 param_3,undefined8 param_4,undefined8 param_5,
-               undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void idol_draw::DrawSkyShell(SKY *sky,int shell,Mtx4 mtx)
 
 {
   void *pvVar1;

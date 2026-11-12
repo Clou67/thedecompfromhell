@@ -4,18 +4,19 @@
 #include "game/pause.h"
 
 // ---- types
+/* the level's sky as the game draws it (Sky, set up by Idol); Ghidra's SKY with the sprite list
+   and the texture base corrected from how skyfunc / skyproc use them */
 struct SKY {
-    int pad;
-    short clear_screen;
-    short shell_cnt;
-    short sprite_cnt;
-    short sprite_max;
-    short tex_cnt;
-    short fx_cnt;
-    void *tex_defs;
-    void *vtx_data;
-    void *idx_data;
-    struct sky_shell *shells[8];
+    int pad;                 /* 0x00 */
+    short clear_screen;      /* 0x04 */
+    u16 shell_cnt;           /* 0x06 */
+    u16 sprite_cnt;          /* 0x08 */
+    short sprite_max;        /* 0x0a */
+    int texBase;             /* 0x0c  EffectTex index of the sky's first texture */
+    struct sky_sprite *sprites; /* 0x10 */
+    void *vtx_data;          /* 0x14 */
+    void *idx_data;          /* 0x18 */
+    void *shells[8];         /* 0x1c */
 };
 
 struct sky_cluster {
@@ -48,40 +49,21 @@ typedef char sky_sprite_size_check[sizeof(struct sky_sprite) == 0x20 ? 1 : -1];
 
 // ---- globals
 extern undefined4 DAT_00731a6c; /* 0x731a6c */
-extern undefined4 DAT_00731a90; /* no defined data */
-extern undefined4 DAT_00731ae0; /* no defined data */
-extern undefined4 DAT_00731aec; /* no defined data */
-extern undefined4 DAT_00a56150; /* 0xa56150 */
-extern undefined4 DAT_00a56154; /* 0xa56154 */
-extern undefined4 DAT_00a56158; /* 0xa56158 */
-extern undefined4 DAT_00a5615c; /* 0xa5615c */
-extern undefined4 DAT_00a56160; /* 0xa56160 */
-extern undefined4 DAT_00a56164; /* 0xa56164 */
-extern undefined4 DAT_00a56170; /* 0xa56170 */
-extern undefined4 DAT_00a56184; /* 0xa56184 */
-extern undefined4 DAT_00a56188; /* 0xa56188 */
-extern undefined4 DAT_00a5618c; /* 0xa5618c */
-extern undefined4 DAT_00a56190; /* 0xa56190 */
-extern undefined4 DAT_00a56194; /* 0xa56194 */
-extern undefined4 DAT_00a56198; /* 0xa56198 */
-extern undefined4 DAT_00a5619c; /* 0xa5619c */
-extern undefined4 DAT_00a561a0; /* 0xa561a0 */
-extern undefined4 DAT_00a561a4; /* 0xa561a4 */
-extern undefined4 DAT_00a561a8; /* 0xa561a8 */
-extern undefined4 DAT_00a561ac; /* 0xa561ac */
-extern undefined4 DAT_00a561b0; /* 0xa561b0 */
-extern undefined4 DAT_00a561b4; /* 0xa561b4 */
-extern undefined4 DAT_00a561b8; /* 0xa561b8 */
-extern undefined4 DAT_00a561bc; /* 0xa561bc */
-extern RenderingStep * DepthPass; /* 0x8fa414 */
 extern SKY * Sky; /* 0xa1a79c */
-extern undefined4 outMatrix; /* 0xa56180 */
+extern u32 g_CometColors[4]; /* 0x731aec: Levels 6 and 17 */ /* type set in global_types.tsv */
+extern u32 g_SkyLightColors[3]; /* 0x731ae0: Level 6's blinking lights */ /* type set in global_types.tsv */
+extern Vec4 g_SkyLightPositions[3]; /* 0x731ab0: their positions (w: scale) */ /* type set in global_types.tsv */
+extern Vec4 g_SkyOrigin; /* 0xa56150: centre of the scaled sky shells (Level 19, space); set by space.cpp */ /* type set in global_types.tsv */
+extern float g_SkyShellSpeed; /* 0xa56160: how fast Level 19's shells turn */ /* type set in global_types.tsv */
+extern int g_SkyVuBuffer; /* 0xa56170: which of the two VU1 buffers the PS2 shell draw fills */ /* type set in global_types.tsv */
+extern int g_SkyVuBufferAddrs[2]; /* 0x731a90 */ /* type set in global_types.tsv */
+extern Mtx4 outMatrix; /* 0xa56180: the matrix the sky shells are drawn with */ /* type set in global_types.tsv */
 
 // ---- functions
 void SECTION_HEADER_SKYFUNC(void);
-void SkyInitNightSprites(int param_1,int param_2);
+void SkyInitNightSprites(int stars, int comets);
 void SkyUpdateNightSprites(void);
-void SkyDrawShell(undefined8 param_1);
+void SkyDrawShell(int shell);
 void SkyLevelNone(void);
 void SkyLevel_00(void);
 void SkyLevel_01(void);
@@ -108,6 +90,6 @@ void DoSkyGifPaging(void);
 void SetupGifPaging(void);
 void Space_DrawSkyShell(void);
 int GetSkyTex(int idx);
-int GetSkyShellTexIndex(int param_1);
-void SkyDrawShellTextured(int *param_1);
-void SkyDrawShellGouraud(int *param_1);
+int GetSkyShellTexIndex(int shell);
+void SkyDrawShellTextured(int *shell);
+void SkyDrawShellGouraud(int *shell);

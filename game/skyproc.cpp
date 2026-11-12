@@ -115,7 +115,7 @@ void SkySpriteProc(void)
     float camY = cameraPos[1];
     float camZ = cameraPos[2];
 
-    sky_sprite *sprite = (sky_sprite *)Sky->tex_defs;
+    sky_sprite *sprite = Sky->sprites;
 
     for (int i = 0; i < Sky->sprite_cnt; i++, sprite++) {
         QuadDef quad;

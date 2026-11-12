@@ -6,7 +6,6 @@
 #include "game/draw.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
-#include "game/skyfunc.h"
 #include "game/update.h"
 #include "game/vuchain.h"
 #include "game/water.h"

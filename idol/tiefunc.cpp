@@ -3,7 +3,6 @@
 // 24 functions, 0x50c5e0-0x50e7f8
 #include "idol/tiefunc.h"
 #include "game/draw.h"
-#include "game/skyfunc.h"
 #include "idol/mUnk.h"
 #include "idol/mathfunc.h"
 #include "sdk/libgcm_cmd/marker.h"

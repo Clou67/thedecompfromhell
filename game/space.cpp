@@ -1603,24 +1603,24 @@ void ChooseLoadingScreen(void)
   auVar33 = vectorShiftLeftIntegerWord(auVar32,auVar32);
   auVar32 = vectorMultiplyAddFloatingPoint(auVar36,auVar31,auVar34);
   auVar32 = auVar32 >> 0x60 & (GPiece<16>)0xffffffff;
-  DAT_00a56150 = storeVectorElementWordIndexed
+  g_SkyOrigin.x = storeVectorElementWordIndexed
                            (auVar32 | auVar32 << 0x20 | auVar32 << 0x40 | auVar32 << 0x60,0x6150,
                             0xa50000);
   auVar32 = loadVectorLeftIndexed(4,uVar24);
   auVar32 = vectorMultiplyAddFloatingPoint(auVar32,auVar31,auVar35);
   iVar25 = 0;
-  DAT_00a56164 = *(undefined4 *)(&DAT_00732070 + g_currentLoadingScreen * 4);
+  g_SpaceSkyAngle = *(undefined4 *)(&DAT_00732070 + g_currentLoadingScreen * 4);
   auVar32 = auVar32 >> 0x60 & (GPiece<16>)0xffffffff;
-  DAT_00a56154 = storeVectorElementWordIndexed
+  g_SkyOrigin.y = storeVectorElementWordIndexed
                            (auVar32 | auVar32 << 0x20 | auVar32 << 0x40 | auVar32 << 0x60,4,0xa56150
                            );
   auVar32 = loadVectorLeftIndexed(8,uVar24);
   auVar32 = vectorMultiplyAddFloatingPoint(auVar32,auVar31,auVar33);
   auVar32 = auVar32 >> 0x60 & (GPiece<16>)0xffffffff;
-  DAT_00a56158 = storeVectorElementWordIndexed
+  g_SkyOrigin.z = storeVectorElementWordIndexed
                            (auVar32 | auVar32 << 0x20 | auVar32 << 0x40 | auVar32 << 0x60,8,0xa56150
                            );
-  DAT_00a5615c = *(undefined4 *)(g_currentLoadingScreen * 0x10 + 0x73202c);
+  g_SkyOrigin.w = *(undefined4 *)(g_currentLoadingScreen * 0x10 + 0x73202c);
   if (0 < g_SpaceSceneMobyCnt.piece<0,2>()) {
     do {
       iVar26 = 0;

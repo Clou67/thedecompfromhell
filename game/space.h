@@ -107,6 +107,7 @@ extern int g_SpaceSceneFrame; /* 0x95cd84 */
 extern short g_SpaceSceneMobyCnt; /* 0x95cd94: entries in g_SpaceSceneMobys (read as a halfword) */ /* type set in global_types.tsv */
 extern MobyInstance *g_SpaceSceneMobys[8]; /* 0x95cec8: the mobys of the playing space (ship) cutscene */ /* type set in global_types.tsv */
 extern int g_SpaceSceneNumFrames; /* 0x95cd90 */
+extern float g_SpaceSkyAngle; /* 0xa56164 */ /* type set in global_types.tsv */
 extern MobyInstance * g_SpaceshipPtr; /* 0x964570 */
 extern undefined2 g_SpaceshipVariant; /* 0x964596 */
 extern undefined4 g_currentLoadingScreen; /* 0x9645c8 */

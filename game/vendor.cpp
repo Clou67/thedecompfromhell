@@ -23,7 +23,6 @@
 #include "game/partproc.h"
 #include "game/partupd.h"
 #include "game/pause.h"
-#include "game/skyfunc.h"
 #include "game/sound.h"
 #include "game/space.h"
 #include "game/update.h"

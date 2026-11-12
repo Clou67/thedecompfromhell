@@ -35,7 +35,7 @@ errors	file
 5	game/rUnk.cpp
 0	game/respawn.cpp
 4	game/sUnk.cpp
-124	game/skyfunc.cpp
+0	game/skyfunc.cpp
 0	game/skyproc.cpp
 27	game/sound.cpp
 203	game/space.cpp
@@ -1032,7 +1032,7 @@ errors	file
 41	idol/mUnk2.cpp
 1099	idol/mathfunc.cpp
 359	idol/sUnk.cpp
-209	idol/shrubfunc.cpp
+216	idol/shrubfunc.cpp
 58	idol/sound.cpp
 115	idol/tfragfunc.cpp
 196	idol/tiefunc.cpp

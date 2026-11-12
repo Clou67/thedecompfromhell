@@ -352,3 +352,14 @@ DAT_00a51bc0	g_Pills
 DAT_00a51bc4	g_PillCnt
 DAT_00a1c840	g_PointLightCnt
 DAT_00a1c880	g_PointLightRecords
+DAT_00a56150	g_SkyOrigin.x
+DAT_00a56154	g_SkyOrigin.y
+DAT_00a56158	g_SkyOrigin.z
+DAT_00a5615c	g_SkyOrigin.w
+DAT_00a56160	g_SkyShellSpeed
+DAT_00a56164	g_SpaceSkyAngle
+DAT_00a56170	g_SkyVuBuffer
+DAT_00731a90	g_SkyVuBufferAddrs
+DAT_00731aec	g_CometColors
+DAT_00731ae0	g_SkyLightColors
+DAT_00731ab0	g_SkyLightPositions
