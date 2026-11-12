@@ -183,7 +183,6 @@ extern undefined8 DAT_0073b490; /* 0x73b490 */
 extern undefined8 DAT_0073b4a0; /* 0x73b4a0 */
 extern undefined8 DAT_0073b4b0; /* 0x73b4b0 */
 extern undefined4 DAT_0073b50c; /* 0x73b50c */
-extern undefined4 DAT_0073b58c; /* 0x73b58c */
 extern undefined4 DAT_00e5aaa4; /* 0xe5aaa4 */
 extern undefined4 DAT_00e5aad0; /* 0xe5aad0 */
 extern undefined4 DAT_00e5aad4; /* 0xe5aad4 */
@@ -197,7 +196,6 @@ extern undefined4 DAT_00e5aef4; /* 0xe5aef4 */
 extern undefined4 DAT_00e5aef8; /* 0xe5aef8 */
 extern undefined2 DAT_00e5aefc; /* 0xe5aefc */
 extern undefined2 DAT_00e5aefe; /* 0xe5aefe */
-extern undefined4 DAT_00e5af00; /* 0xe5af00 */
 extern undefined4 LevelFogMode; /* 0x95ea10 */
 extern undefined4 OceanFogB; /* 0xe5aed0 */
 extern undefined4 OceanFogFarDist; /* 0xe5aebc */
@@ -263,11 +261,3 @@ void IcePass(int param_1,int param_2,undefined8 param_3,undefined8 param_4);
 void Water_StaticInitGsPackets(void);
 void WaterDrift_Set (double param_1,double param_2,int param_3,undefined8 param_4,undefined8 param_5, undefined2 param_6);
 void WaterDrift_Update(void);
-void UpdateSound_0(void *param_1);
-void UpdateSound_1(void *param_1);
-void UpdateSound_2(void *param_1);
-void UpdateSound_3(int param_1);
-void Water_StaticInit2(void);
-void UpdateSound_4(void *param_1);
-void UpdateSound_5(void *param_1);
-void UpdateSound_6(int param_1);

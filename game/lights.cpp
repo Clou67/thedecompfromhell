@@ -11,10 +11,10 @@
 #include "game/boot.h"
 #include "game/camera.h"
 #include "game/loaders.h"
+#include "game/tieproc.h"
 #include "idol/fastfunc.h"
 #include "idol/shrubfunc.h"
 #include "idol/tfragfunc.h"
-#include "idol/tiefunc.h"
 #include "idol/fastinline.h"
 
 #define MAX_POINT_LIGHTS      8

@@ -5,7 +5,7 @@ Evidence: SECTION_HEADER_* starts a file; moby helpers come first and the `Updat
 Unknown objects are named `<first letter of the previous linked object>Unk.cpp`. Folders follow link position: everything up to the end of the moby sea is `game/`; game-labelled code after it is `idol/`.
 Shared update functions are named `UpdateMoby_<first oClass>`, with every registered oClass in a comment.
 
-11433 functions, 1182 files: 947 `game/update/moby*.cpp`, 24 `game/update/camera*.cpp`.
+11433 functions, 1190 files: 947 `game/update/moby*.cpp`, 24 `game/update/camera*.cpp`.
 
 | file | funcs | start | end |
 |---|---|---|---|
@@ -50,13 +50,14 @@ Shared update functions are named `UpdateMoby_<first oClass>`, with every regist
 | game/skyproc.cpp | 6 | 0x15aa0c | 0x15b574 |
 | game/sound.cpp | 30 | 0x15b590 | 0x15da00 |
 | game/space.cpp | 28 | 0x15da00 | 0x165588 |
-| game/sUnk.cpp | 15 | 0x165588 | 0x166e08 |
+| game/sUnk.cpp | 8 | 0x165588 | 0x1658d8 |
+| game/tieproc.cpp | 7 | 0x1658d8 | 0x166e08 |
 | game/update.cpp | 22 | 0x166e08 | 0x16a0d8 |
 | game/vendor.cpp | 33 | 0x16a0d8 | 0x174b0c |
 | game/vuchain.cpp | 29 | 0x174b0c | 0x175558 |
 | game/walk.cpp | 15 | 0x175558 | 0x17b214 |
-| game/water.cpp | 45 | 0x17b214 | 0x18095c |
-| *update files* | 3369 | 0x18095c | 0x4d27a4 |
+| game/water.cpp | 37 | 0x17b214 | 0x17f7c0 |
+| *update files* | 3377 | 0x17f7d0 | 0x4d27a4 |
 | idol/mUnk.cpp | 245 | 0x4d27b0 | 0x4efdf4 |
 | sdk/mUnk.cpp | 2 | 0x4efdf4 | 0x4eff54 |
 | idol/mUnk2.cpp | 47 | 0x4eff54 | 0x4f14c8 |

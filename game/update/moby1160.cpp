@@ -18,7 +18,7 @@
 #include "game/pad.h"
 #include "game/partupd.h"
 #include "game/rUnk.h"
-#include "game/sUnk.h"
+#include "game/tieproc.h"
 #include "game/update.h"
 #include "game/update/camera5.h"
 #include "game/update/moby1009.h"

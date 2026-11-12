@@ -7,8 +7,8 @@
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
-#include "game/sUnk.h"
 #include "game/space.h"
+#include "game/tieproc.h"
 #include "game/update/moby1584.h"
 
 // 0x0266f20 (0x140 bytes)

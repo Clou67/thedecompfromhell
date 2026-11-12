@@ -10,3 +10,13 @@ crt0::_init	game/boot.cpp
 # effects that follow, no header of their own. Names guesses that fit the link order.
 0xd93a8-0xd9668	game/initsky.cpp
 0xd9668-0xda2e0	game/initspace.cpp
+# the sound-emitter update functions at the end of water.cpp: one update file each
+0x17f7d0-0x17fa08	game/update/sound0.cpp
+0x17fa08-0x17fee0	game/update/sound1.cpp
+0x17fee0-0x180210	game/update/sound2.cpp
+0x180210-0x180408	game/update/sound3.cpp
+0x180408-0x1806e8	game/update/sound4.cpp
+0x1806e8-0x1807e8	game/update/sound5.cpp
+0x1807e8-0x18095c	game/update/sound6.cpp
+# the tie drawing half of sUnk (GS presets, DrawTies): fits the link order between space and update
+0x1658d8-0x166e08	game/tieproc.cpp
