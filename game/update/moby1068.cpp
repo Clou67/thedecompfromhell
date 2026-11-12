@@ -1423,7 +1423,7 @@ void UpdateMoby_1068(MobyInstance *moby)
       dVar27 = (double)FUN_005e8338((double)(*(float *)(iVar6 + 0x10) - (moby->pos).x),
                                     (double)(*(float *)(iVar6 + 0x14) - (moby->pos).y));
       fVar32 = OrganicDeltAng
-                         ((float)dVar27,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+                         ((float)dVar27,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
                           g_FrameTime * 3.1415927,&(moby->rotation).z,0x720000,
                           (float *)((int)pvVar5 + 0x18c));
       GetBonePosition((double)fVar32,lVar13,0,&local_170);
@@ -1492,7 +1492,7 @@ void UpdateMoby_1068(MobyInstance *moby)
       dVar26 = (double)FUN_005e8338((double)(*(float *)(iVar6 + 0x10) - (moby->pos).x),
                                     (double)(*(float *)(iVar6 + 0x14) - (moby->pos).y));
       fVar32 = OrganicDeltAng
-                         ((float)dVar26,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+                         ((float)dVar26,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
                           g_FrameTime * 3.1415927,&(moby->rotation).z,0x720000,
                           (float *)((int)pvVar5 + 0x18c));
       iVar15 = FastDecTimerS32((double)fVar32,uVar19 + 0x19c);
@@ -1563,7 +1563,7 @@ void UpdateMoby_1068(MobyInstance *moby)
       dVar26 = (double)FUN_005e8338((double)(*(float *)(iVar6 + 0x10) - (moby->pos).x),
                                     (double)(*(float *)(iVar6 + 0x14) - (moby->pos).y));
       fVar32 = OrganicDeltAng
-                         ((float)dVar26,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+                         ((float)dVar26,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
                           g_FrameTime * 3.1415927,&(moby->rotation).z,0x720000,
                           (float *)((int)pvVar5 + 0x18c));
       if ((moby->field43_0x70 & 2U) != 0) {
@@ -1592,7 +1592,7 @@ void UpdateMoby_1068(MobyInstance *moby)
       dVar26 = (double)FUN_005e8338((double)(*(float *)(iVar6 + 0x10) - (moby->pos).x),
                                     (double)(*(float *)(iVar6 + 0x14) - (moby->pos).y));
       OrganicDeltAng
-                ((float)dVar26,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+                ((float)dVar26,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
                  g_FrameTime * 3.1415927,&(moby->rotation).z,0x720000,
                  (float *)((int)pvVar5 + 0x18c));
       if (*(int *)((int)pvVar5 + 0x164) == 2) {

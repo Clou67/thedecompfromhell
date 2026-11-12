@@ -84,8 +84,8 @@ void M861_00497c48(MobyInstance *param_1)
       else {
         *(undefined4 *)((int)pvVar6 + 0x80) = 0x200;
         *(undefined4 *)((int)pvVar6 + 0x88) = 0x3f000000;
-        fVar4 = DAT_0071f418;
-        *(float *)((int)pvVar6 + 0x70) = DAT_0071f418 * 10.0;
+        fVar4 = g_FrameTimeSq;
+        *(float *)((int)pvVar6 + 0x70) = g_FrameTimeSq * 10.0;
         *(undefined1 *)((int)pvVar6 + 0x9d) = 0;
         MVar5 = param_1->modeBits;
         *(undefined4 *)((int)pvVar6 + 0x84) = 0x29;

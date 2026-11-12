@@ -211,8 +211,8 @@ void UpdateMoby_1667(MobyInstance *moby)
     MB_PathEvalSpline((double)(float)piVar3[1],pSVar4);
     (moby->pos).z = (moby->pos).z + (float)piVar3[5];
     piVar3[1] = (int)((float)piVar3[1] + (float)piVar3[2]);
-    Delt((float)piVar3[6],DAT_007b5a90 * DAT_0071f418,(float *)(piVar3 + 2));
-    fVar1 = DAT_0071f418;
+    Delt((float)piVar3[6],DAT_007b5a90 * g_FrameTimeSq,(float *)(piVar3 + 2));
+    fVar1 = g_FrameTimeSq;
     dVar11 = (double)(*(float *)(iVar8 + 4) - (float)piVar3[1]);
     dVar12 = 0.0;
     if (dVar11 < 0.0) {

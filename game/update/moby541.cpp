@@ -46,7 +46,7 @@ M541_003ac678
   _fStack00000040 = param_4;
   _fStack00000048 = param_5;
   OrganicDeltAng
-            ((float)param_1,DAT_0071f418 * 12.566371,DAT_0071f418 * 12.566371,
+            ((float)param_1,g_FrameTimeSq * 12.566371,g_FrameTimeSq * 12.566371,
              g_FrameTime * 25.132742,(float *)(param_2 + 0x48),0xd0,
              (float *)(iVar1 + 0x100));
   dVar12 = (double)(fStack00000044 - *(float *)(param_2 + 0x14));
@@ -58,7 +58,7 @@ M541_003ac678
                        (double)(float)(dVar11 * dVar11 + (double)(float)(dVar12 * dVar12))));
   dVar9 = (double)target;
   OrganicDelt
-            (target,DAT_0071f418 * 12.0,DAT_0071f418 * 12.0,g_FrameTime * 6.0,local_60,
+            (target,g_FrameTimeSq * 12.0,g_FrameTimeSq * 12.0,g_FrameTime * 6.0,local_60,
              unused,(float *)(iVar1 + 0xfc));
   dVar4 = (double)(float)((double)*(float *)(iVar1 + 0xfc) / dVar9);
   dVar6 = dVar8;
@@ -635,10 +635,10 @@ void UpdateMoby_541(MobyInstance *moby)
       }
       else {
         dVar41 = (double)(float)((double)DAT_00845590 * (double)g_FrameTime);
-        dVar40 = (double)(float)((double)DAT_0071f418 * 10.0);
+        dVar40 = (double)(float)((double)g_FrameTimeSq * 10.0);
         dVar39 = (double)GetGroundZ
                                    (0x3fe0000000000000,0x4024000000000000,
-                                    (double)g_FrameTime,(double)DAT_0071f418,
+                                    (double)g_FrameTime,(double)g_FrameTimeSq,
                                     uVar23 - 0x260,0);
         uVar29 = *(undefined4 *)((int)pvVar15 + 0x104);
         lVar26 = uVar23 - 0x250;
@@ -1097,7 +1097,7 @@ void UpdateMoby_541(MobyInstance *moby)
     uVar29 = storeVectorElementWordIndexed
                        (auVar42 | auVar42 << 0x20 | auVar42 << 0x40 | auVar42 << 0x60,0xf0,uVar36);
     *(undefined4 *)((int)pvVar15 + 0xf0U & 0xfffffffc) = uVar29;
-    fVar48 = DAT_0071f418;
+    fVar48 = g_FrameTimeSq;
     puVar17[0xe] = ZEXT48(&DAT_00a15d30);
     dVar38 = (double)(fVar48 * 12.0);
     puVar17[0xf] = ZEXT48(&DAT_00a15d30);
@@ -1564,7 +1564,7 @@ void UpdateMoby_541(MobyInstance *moby)
       fVar48 = (fVar48 + 0.7853982) * fVar5 + fVar11;
     }
     fVar48 = OrganicDeltAng
-                       (fVar48,DAT_0071f418 * 12.566371,DAT_0071f418 * 12.566371,
+                       (fVar48,g_FrameTimeSq * 12.566371,g_FrameTimeSq * 12.566371,
                         g_FrameTime * 25.132742,&(moby->rotation).z,0x3ad0e8,
                         (float *)((int)pvVar15 + 0xfc));
     iVar31 = FastDecTimerS32((double)fVar48,uVar36 + 0xf0);

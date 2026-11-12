@@ -516,7 +516,7 @@ void UpdateMoby_186(MobyInstance *moby)
       pfVar5[0x17] = (float)((double)(fVar14 * 0.066) * dVar18);
       DAT_0096bbc8 = 0x40490fdb;
       DAT_0096bbe4 = fVar14 * 0.045;
-      DAT_0096bc0c = DAT_0071f418 * 29.7;
+      DAT_0096bc0c = g_FrameTimeSq * 29.7;
       DAT_0096bc14 = 0x40f00000;
       DAT_0096bc18 = 0x41380000;
       _DAT_0096bc1c = 0x2030400;
@@ -994,7 +994,7 @@ LAB_002cc0e0:
         }
         pfVar16 = pfVar5 + 4;
         DAT_0096bbb0 = pfVar5[0x10];
-        pfVar5[6] = -(DAT_0071f418 * 9.0 - pfVar5[6]);
+        pfVar5[6] = -(g_FrameTimeSq * 9.0 - pfVar5[6]);
         DAT_0096bbb4 = pfVar5[0x11];
         DAT_0096bbb8 = pfVar5[0x12];
         DAT_0096bbe8 = pfVar5[0x13];
@@ -1035,7 +1035,7 @@ LAB_002cc0e0:
     if (bVar2 < 9) {
       pfVar16 = pfVar5 + 4;
       DAT_0096bbb0 = pfVar5[0x10];
-      pfVar5[6] = -(DAT_0071f418 * 9.0 - pfVar5[6]);
+      pfVar5[6] = -(g_FrameTimeSq * 9.0 - pfVar5[6]);
       DAT_0096bbb4 = pfVar5[0x11];
       DAT_0096bbb8 = pfVar5[0x12];
       DAT_0096bbe8 = pfVar5[0x13];

@@ -176,7 +176,7 @@ void M1199_001f6fe0(MobyInstance *param_1)
           MB_SetAnimation(param_1,4,0,*(undefined4 *)((int)puVar13 + 0xcc));
         }
         param_1->state = '\r';
-        fVar2 = DAT_0071f418 * 26.0;
+        fVar2 = g_FrameTimeSq * 26.0;
         *(undefined1 *)((int)pvVar6 + 0x9d) = 3;
         *(undefined4 *)((int)pvVar6 + 0x74) = 0x3a03126f;
         *(undefined4 *)((int)pvVar6 + 0x84) = 9;
@@ -599,7 +599,7 @@ void UpdateMoby_1199(MobyInstance *moby)
       dVar28 = (double)SQRT(fVar7 * fVar7 + fVar8 * fVar8 + fVar34 * fVar34);
       dVar26 = (double)FUN_005e8338();
       OrganicDeltAng
-                ((float)dVar26,DAT_0071f418 * 25.132742,DAT_0071f418 * 25.132742,
+                ((float)dVar26,g_FrameTimeSq * 25.132742,g_FrameTimeSq * 25.132742,
                  g_FrameTime * 50.265484,&(moby->rotation).z,0x720000,
                  (float *)((int)pvVar11 + 0x170));
       dVar26 = (double)FUN_005e8338((double)(*(float *)((int)pvVar11 + 0x140) - (moby->pos).x),
@@ -613,7 +613,7 @@ void UpdateMoby_1199(MobyInstance *moby)
       }
       else {
         OrganicDelt
-                  ((float)dVar28,DAT_0071f418 * 20.0,DAT_0071f418 * 20.0,
+                  ((float)dVar28,g_FrameTimeSq * 20.0,g_FrameTimeSq * 20.0,
                    g_FrameTime * 20.0,&local_6c,0x720000,&local_70);
         *(float *)((int)pvVar11 + 0x120) = *(float *)((int)pvVar11 + 0x140) - (moby->pos).x;
         *(float *)((int)pvVar11 + 0x124) = *(float *)((int)pvVar11 + 0x144) - (moby->pos).y;
@@ -664,8 +664,8 @@ void UpdateMoby_1199(MobyInstance *moby)
     else if (bVar1 == 2) {
       moby->unk58 = 4.0;
       fVar34 = OrganicDelt
-                         (*(float *)((int)pvVar11 + 0x138) + 2.0,DAT_0071f418 * 18.0,
-                          DAT_0071f418 * 18.0,g_FrameTime * 6.0,&(moby->pos).z,0x720000,
+                         (*(float *)((int)pvVar11 + 0x138) + 2.0,g_FrameTimeSq * 18.0,
+                          g_FrameTimeSq * 18.0,g_FrameTime * 6.0,&(moby->pos).z,0x720000,
                           (float *)((int)pvVar11 + 0x128));
       if (fVar34 == 0.0) {
         moby->state = '\x03';

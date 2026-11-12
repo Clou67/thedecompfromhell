@@ -827,8 +827,8 @@ void M1843_002c2230(int param_1)
   fVar2 = (float)((double)fVar12 - dVar35);
   fVar4 = (float)((double)fVar11 - dVar42);
   OrganicDelt
-            (SQRT(fVar2 * fVar2 + fVar4 * fVar4 + fVar1 * fVar1),DAT_0071f418 * 10.0,
-             DAT_0071f418 * 10.0,g_FrameTime * 20.0,(float *)(puVar18 + 0x18),0x720000,
+            (SQRT(fVar2 * fVar2 + fVar4 * fVar4 + fVar1 * fVar1),g_FrameTimeSq * 10.0,
+             g_FrameTimeSq * 10.0,g_FrameTime * 20.0,(float *)(puVar18 + 0x18),0x720000,
              (float *)(iVar15 + 0x80));
   fVar2 = (float)(dVar45 - (double)*(float *)(param_1 + 0x14));
   fVar4 = (float)(dVar42 - (double)*(float *)(param_1 + 0x10));
@@ -1332,18 +1332,18 @@ void UpdateMoby_1843(MobyInstance *moby)
       if ((bVar3 & 2) == 0) {
         if (moby->setByGroup == '\0') {
           OrganicDelt
-                    (fVar5,DAT_0071f418 * 2.0,DAT_0071f418 * 20.0,g_FrameTime * 5.0,
+                    (fVar5,g_FrameTimeSq * 2.0,g_FrameTimeSq * 20.0,g_FrameTime * 5.0,
                      (float *)(puVar21 + 0x1c),0x720000,pfVar34);
         }
         else {
           OrganicDelt
-                    (fVar5,DAT_0071f418 * 2.0,DAT_0071f418 * 20.0,g_FrameTime * 15.0,
+                    (fVar5,g_FrameTimeSq * 2.0,g_FrameTimeSq * 20.0,g_FrameTime * 15.0,
                      (float *)(puVar21 + 0x1c),0x720000,pfVar34);
         }
       }
       else {
         OrganicDelt
-                  (fVar5,DAT_0071f418 * 2.0,DAT_0071f418 * 20.0,g_FrameTime,
+                  (fVar5,g_FrameTimeSq * 2.0,g_FrameTimeSq * 20.0,g_FrameTime,
                    (float *)(puVar21 + 0x1c),0x720000,pfVar34);
       }
       ClampVec3Magnitude((double)*(float *)((int)pvVar19 + 0x6c),(Vec4 *)(puVar21 + 0xe));
@@ -1357,7 +1357,7 @@ void UpdateMoby_1843(MobyInstance *moby)
       (moby->pos).x = fVar5;
       (moby->pos).y = fVar6;
       (moby->pos).z = fVar7;
-      fVar5 = DAT_0071f418;
+      fVar5 = g_FrameTimeSq;
       if (cVar4 == '\0') {
         dVar46 = (double)g_heroPosition.y;
         dVar41 = (double)(float)((double)g_heroPosition.x - dVar49);
@@ -1442,7 +1442,7 @@ void UpdateMoby_1843(MobyInstance *moby)
                    (float *)((int)pvVar19 + 0x8c));
         *(float *)(puVar21 + 0x1f) = (float)dVar52;
         dVar51 = (double)g_FrameTime;
-        dVar44 = (double)DAT_0071f418;
+        dVar44 = (double)g_FrameTimeSq;
         fVar5 = SQRT((float)(dVar41 * dVar41 + (double)(float)(dVar50 * dVar50)));
         dVar41 = ABS((double)fVar5);
         *(float *)((int)puVar21 + 0xf4) = fVar5;

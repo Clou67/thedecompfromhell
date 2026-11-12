@@ -388,7 +388,7 @@ void UpdateMoby_1158(MobyInstance *moby)
     moby->setByGroup = '\x02';
     if (speed[2] != 0.0) {
       OrganicDelt
-                (137.0,DAT_0071f418 * 4.0,DAT_0071f418 * 4.0,g_FrameTime * 4.0,
+                (137.0,g_FrameTimeSq * 4.0,g_FrameTimeSq * 4.0,g_FrameTime * 4.0,
                  &(moby->pos).z,0x720000,speed);
       puVar20 = (ushort *)(&g_MobyGroups)[(byte)moby->group];
       pMVar8 = g_MobyInstance;
@@ -423,7 +423,7 @@ void UpdateMoby_1158(MobyInstance *moby)
     moby->setByGroup = '\x01';
     if (speed[2] != 0.0) {
       OrganicDelt
-                (132.36,DAT_0071f418 * 4.0,DAT_0071f418 * 4.0,g_FrameTime * 4.0,
+                (132.36,g_FrameTimeSq * 4.0,g_FrameTimeSq * 4.0,g_FrameTime * 4.0,
                  &(moby->pos).z,0x720000,speed);
       puVar20 = (ushort *)(&g_MobyGroups)[(byte)moby->group];
       pMVar8 = g_MobyInstance;

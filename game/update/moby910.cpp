@@ -466,7 +466,7 @@ void M910_004aa510(MobyInstance *param_1)
     uVar13 = FastDoubleToInt(0x4088000000000000);
     *(undefined4 *)((int)pvVar5 + 0x98) = 0x3f400000;
     fVar1 = DAT_008f3fb8;
-    fVar3 = DAT_0071f418;
+    fVar3 = g_FrameTimeSq;
     *(undefined4 *)((int)pvVar5 + 0x90) = uVar13;
     *(undefined4 *)((int)pvVar5 + 0x84) = 0x3a03126f;
     *(undefined1 *)((int)pvVar5 + 0xad) = 0;
@@ -772,10 +772,10 @@ void UpdateMoby_910(MobyInstance *moby)
       fVar4 = (moby->pos).x - *(float *)(iVar15 + 0x10);
       fVar5 = (moby->pos).z - *(float *)(iVar15 + 0x18);
       if (SQRT(fVar5 * fVar5 + fVar4 * fVar4 + fVar1 * fVar1) <= DAT_008f3fc8) {
-        Delt(0.0,DAT_0071f418 * 20.0,(float *)((int)pvVar8 + 0xf4));
+        Delt(0.0,g_FrameTimeSq * 20.0,(float *)((int)pvVar8 + 0xf4));
       }
       else {
-        Delt(*(float *)((int)pvVar8 + 0x1a4) * g_FrameTime,DAT_0071f418 * 6.0,
+        Delt(*(float *)((int)pvVar8 + 0x1a4) * g_FrameTime,g_FrameTimeSq * 6.0,
                        (float *)((int)pvVar8 + 0xf4));
       }
       uVar21 = FUN_005e8338((double)(*(float *)(iVar15 + 0x10) - (moby->pos).x),
@@ -1059,7 +1059,7 @@ void UpdateMoby_910(MobyInstance *moby)
     }
   }
   else if (bVar2 == 9) {
-    Delt(*(float *)((int)pvVar8 + 0x1a4) * 3.0 * g_FrameTime,DAT_0071f418 * 20.0
+    Delt(*(float *)((int)pvVar8 + 0x1a4) * 3.0 * g_FrameTime,g_FrameTimeSq * 20.0
                    ,(float *)((int)pvVar8 + 0xf4));
     uVar21 = FUN_005e8338((double)(*(float *)(iVar15 + 0x10) - (moby->pos).x),
                           (double)(*(float *)(iVar15 + 0x14) - (moby->pos).y));
@@ -1127,7 +1127,7 @@ void UpdateMoby_910(MobyInstance *moby)
     }
   }
   else if (bVar2 == 8) {
-    Delt(*(float *)((int)pvVar8 + 0x1a4) * g_FrameTime,DAT_0071f418 * 6.0,
+    Delt(*(float *)((int)pvVar8 + 0x1a4) * g_FrameTime,g_FrameTimeSq * 6.0,
                    (float *)((int)pvVar8 + 0xf4));
     uVar21 = FUN_005e8338((double)(*(float *)((int)pvVar8 + 0x170) - (moby->pos).x),
                           (double)(*(float *)((int)pvVar8 + 0x174) - (moby->pos).y));

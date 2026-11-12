@@ -118,8 +118,8 @@ void UpdateMoby_604(MobyInstance *moby)
         (UnlockableItems.sonicSummoner != '\0')) && (DAT_0096ae38 == 5)) {
       dVar5 = (double)MB_DeltAngSpeed
                                 ((double)(moby->rotation).z,(double)*pfVar4,
-                                 (double)(DAT_0071f418 * 6.2831855),
-                                 (double)(DAT_0071f418 * 5.7595863),0,&DAT_003d8c88,&DAT_00720000,
+                                 (double)(g_FrameTimeSq * 6.2831855),
+                                 (double)(g_FrameTimeSq * 5.7595863),0,&DAT_003d8c88,&DAT_00720000,
                                  pfVar4 + 1);
       (moby->rotation).z = (float)dVar5;
     }

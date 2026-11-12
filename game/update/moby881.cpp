@@ -333,7 +333,7 @@ void UpdateMoby_881(MobyInstance *moby)
           fVar3 = (moby->pos).y;
           fVar7 = (moby->pos).z;
           *(float *)((int)puVar14 + 0xfc) = fVar4;
-          fVar4 = DAT_0071f418;
+          fVar4 = g_FrameTimeSq;
           *(float *)(puVar14 + 0x1a) = fVar15 + fVar2;
           *(float *)((int)puVar14 + 0xd4) = fVar16 + fVar3;
           *(float *)(puVar14 + 0x1b) = fVar8 + fVar7;

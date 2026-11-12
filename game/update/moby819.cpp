@@ -699,15 +699,15 @@ void UpdateMoby_819(MobyInstance *moby)
         dVar32 = 6.2831854820251465;
         dVar31 = 3.1415927410125732;
         dVar30 = (double)MB_DeltAngSpeed
-                                   ((double)fVar10,dVar34,(double)(DAT_0071f418 * 6.2831855),
-                                    (double)(DAT_0071f418 * 3.1415927),
+                                   ((double)fVar10,dVar34,(double)(g_FrameTimeSq * 6.2831855),
+                                    (double)(g_FrameTimeSq * 3.1415927),
                                     (double)(g_FrameTime * 6.2831855),&DAT_00470b74,uVar26
                                     ,out + 10);
         (moby->rotation).z = (float)dVar30;
         dVar30 = (double)MB_DeltAngSpeed
                                    ((double)(moby->rotation).y,dVar37,
-                                    (double)(float)((double)DAT_0071f418 * dVar32),
-                                    (double)(float)((double)DAT_0071f418 * dVar31),
+                                    (double)(float)((double)g_FrameTimeSq * dVar32),
+                                    (double)(float)((double)g_FrameTimeSq * dVar31),
                                     (double)(float)((double)g_FrameTime * dVar32));
         (moby->rotation).y = (float)dVar30;
         dVar30 = (double)FastWrapRot

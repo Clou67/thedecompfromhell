@@ -233,7 +233,7 @@ undefined8 M160_002a1a48(float *param_1,MobyInstance *param_2,int param_3)
       *(float *)((int)puVar17 + 0x84) = *(float *)((int)puVar17 + 0x74);
       *(float *)(puVar17 + 0x11) = *(float *)(puVar17 + 0xf);
       *(undefined4 *)((int)puVar17 + 0x8c) = *(undefined4 *)((int)puVar17 + 0x7c);
-      dVar36 = (double)DAT_0071f418;
+      dVar36 = (double)g_FrameTimeSq;
       *(float *)(puVar17 + 0xe) = (float)((double)*(float *)(puVar17 + 0xe) + dVar31);
       *(float *)((int)puVar17 + 0x74) = (float)((double)*(float *)((int)puVar17 + 0x74) + dVar42);
       *(float *)(puVar17 + 0xf) = (float)((double)*(float *)(puVar17 + 0xf) + dVar41);
@@ -671,11 +671,11 @@ void UpdateMoby_160(MobyInstance *moby)
     (moby->pos).y = fVar2 + pfVar3[1];
     (moby->pos).z = (moby->pos).z + pfVar3[2];
     if (fVar4 == 0.0) {
-      pfVar3[2] = -(DAT_0071f418 * 9.8 - pfVar3[2]);
+      pfVar3[2] = -(g_FrameTimeSq * 9.8 - pfVar3[2]);
     }
     else {
       dVar40 = 0.10000000149011612;
-      pfVar3[2] = -(DAT_0071f418 * 9.8 * 0.1 - pfVar3[2]);
+      pfVar3[2] = -(g_FrameTimeSq * 9.8 * 0.1 - pfVar3[2]);
       local_100 = (longlong)(int)(animationSpeed * 6.5);
       iVar12 = MB_randInt((int)(animationSpeed * 6.5) + -1);
       if (iVar12 == 0) {
@@ -796,7 +796,7 @@ LAB_002a2e58:
             (moby->pos).y = g_CollOutput.ip.y;
             (moby->pos).z = g_CollOutput.ip.z;
             (moby->pos).w = g_CollOutput.ip.w;
-            FUN_005e7f98((double)(DAT_0071f418 * 9.7),&local_280,0xa10980);
+            FUN_005e7f98((double)(g_FrameTimeSq * 9.7),&local_280,0xa10980);
             (moby->pos).x = (moby->pos).x + local_280;
             (moby->pos).y = (moby->pos).y + local_27c;
             (moby->pos).z = (moby->pos).z + local_278;
@@ -864,7 +864,7 @@ LAB_002a2e58:
           (moby->pos).y = g_CollOutput.ip.y;
           (moby->pos).z = g_CollOutput.ip.z;
           (moby->pos).w = g_CollOutput.ip.w;
-          FUN_005e7f98((double)(DAT_0071f418 * 9.7),&local_290,0xa10980);
+          FUN_005e7f98((double)(g_FrameTimeSq * 9.7),&local_290,0xa10980);
           (moby->pos).x = (moby->pos).x + local_290;
           (moby->pos).y = (moby->pos).y + local_28c;
           (moby->pos).z = (moby->pos).z + local_288;
@@ -913,7 +913,7 @@ LAB_002a31a4:
       dVar34 = (double)GetGroundZ(0x3fe0000000000000,lVar11 + 0x10,0);
       fVar46 = pfVar3[0x18];
       if (fVar46 == 0.0) {
-        if (DAT_0071f418 * 40.0 <= (float)((double)(moby->pos).z - dVar34)) {
+        if (g_FrameTimeSq * 40.0 <= (float)((double)(moby->pos).z - dVar34)) {
           auVar43 = ZEXT416(0xffffffff);
           auVar44 = auVar43 | auVar43 << 0x20 | auVar43 << 0x40 | auVar43 << 0x60;
           moby->state = '\x01';

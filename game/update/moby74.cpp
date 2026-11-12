@@ -208,7 +208,7 @@ void FUN_0043ce28(undefined4 *param_1,int param_2,float *param_3)
     dVar13 = (double)SQRT(g_CollOutput.normal.z * g_CollOutput.normal.z +
                           g_CollOutput.normal.x * g_CollOutput.normal.x +
                           g_CollOutput.normal.y * g_CollOutput.normal.y);
-    fVar2 = (float)((double)(DAT_0071f418 * 9.7) / dVar13);
+    fVar2 = (float)((double)(g_FrameTimeSq * 9.7) / dVar13);
     dVar17 = dVar19;
     if (dVar19 - dVar13 < 0.0) {
       dVar17 = (double)(g_CollOutput.normal.z * fVar2);
@@ -608,7 +608,7 @@ undefined8 M74_0043d268(float *param_1,MobyInstance *param_2,int param_3)
         fVar2 = (float)((double)fVar2 + dVar32);
         fVar10 = (float)((double)fVar10 + dVar41);
         fVar8 = (float)((double)fVar8 + dVar33);
-        dVar33 = -(double)(float)((double)DAT_0071f418 * 9.800000190734863 - dVar33);
+        dVar33 = -(double)(float)((double)g_FrameTimeSq * 9.800000190734863 - dVar33);
         *(float *)(puVar13 + 0xe) = fVar2;
         *(float *)((int)puVar13 + 0x74) = fVar10;
         *(float *)(puVar13 + 0xf) = fVar8;
@@ -963,11 +963,11 @@ void UpdateMoby_74(MobyInstance *moby)
   if ((moby->state & 4) == 0) {
     FUN_005e7f54(lVar20,lVar20,uVar22);
     if (*(short *)(puVar4 + 0x14) == 0) {
-      puVar4[2] = -(DAT_0071f418 * 9.8 - (float)puVar4[2]);
+      puVar4[2] = -(g_FrameTimeSq * 9.8 - (float)puVar4[2]);
     }
     else {
       dVar23 = 0.10000000149011612;
-      puVar4[2] = -(DAT_0071f418 * 9.8 * 0.1 - (float)puVar4[2]);
+      puVar4[2] = -(g_FrameTimeSq * 9.8 * 0.1 - (float)puVar4[2]);
       local_140 = (longlong)(int)(animationSpeed * 6.5);
       iVar9 = MB_randInt((int)(animationSpeed * 6.5) + -1);
       if (iVar9 == 0) {
@@ -1070,7 +1070,7 @@ LAB_0043e670:
           FUN_005e81f0(0xa10980,lVar20,&(g_CollOutput.pMoby)->pos);
           if (g_FrameTime * -9.8 <= (float)puVar4[2]) {
             FUN_005e7e98(lVar20,0xa10960);
-            FUN_005e7f98((double)(DAT_0071f418 * 9.7),auStack_440,0xa10980);
+            FUN_005e7f98((double)(g_FrameTimeSq * 9.7),auStack_440,0xa10980);
             FUN_005e7f54(lVar20,lVar20,auStack_440);
             FastVecReflect(uVar22,uVar22,0xa10980);
             FUN_005e822c(dVar34,uVar22,uVar22);
@@ -1129,7 +1129,7 @@ LAB_0043e670:
         (moby->pos).y = g_CollOutput.ip.y;
         (moby->pos).z = g_CollOutput.ip.z;
         (moby->pos).w = g_CollOutput.ip.w;
-        FUN_005e7f98((double)(DAT_0071f418 * 9.7),auStack_420,0xa10980);
+        FUN_005e7f98((double)(g_FrameTimeSq * 9.7),auStack_420,0xa10980);
         FUN_005e7f54(lVar20,lVar20,auStack_420);
         iVar12 = puVar4[2];
         dVar37 = (double)(float)puVar4[2];
@@ -1196,7 +1196,7 @@ LAB_0043e670:
   dVar23 = (double)GetGroundZ(0x3fe0000000000000,lVar20,0);
   if (puVar4[0x13] == 0) {
     if ((moby->state & 0x10) == 0) {
-      if (DAT_0071f418 * 40.0 <= (float)((double)(moby->pos).z - dVar23)) {
+      if (g_FrameTimeSq * 40.0 <= (float)((double)(moby->pos).z - dVar23)) {
         moby->state = '\x01';
         iVar9 = puVar4[0x1a];
         if (((iVar9 != -1) && (g_SoundChannels[iVar9].pMoby == moby)) &&
@@ -1307,7 +1307,7 @@ LAB_0043ed14:
         iVar9 = PlayMobySound(1,4,moby);
         puVar4[0x1a] = iVar9;
       }
-      fVar49 = DAT_0071f418 * 15.0 + (float)puVar4[0x10];
+      fVar49 = g_FrameTimeSq * 15.0 + (float)puVar4[0x10];
       puVar4[0x10] = fVar49;
       if (g_FrameTime * 4.0 < fVar49) {
         puVar4[0x10] = g_FrameTime * 4.0;
@@ -1784,7 +1784,7 @@ LAB_0043f4c8:
                             (double)local_368);
         uVar28 = MB_randRangeFloat((float)dVar40,(float)dVar23);
         SpawnPart_64
-                  (uVar28,dVar31,(double)(float)((double)DAT_0071f418 * dVar43),&local_360,
+                  (uVar28,dVar31,(double)(float)((double)g_FrameTimeSq * dVar43),&local_360,
                    &local_370,0);
         iVar9 = iVar9 + 1;
       } while (iVar9 < 0x96);

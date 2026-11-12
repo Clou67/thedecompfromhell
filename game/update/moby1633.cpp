@@ -137,15 +137,15 @@ void UpdateMoby_1633(MobyInstance *moby)
   dVar12 = 4.71238899230957;
   dVar11 = 3.1415927410125732;
   dVar9 = (double)MB_DeltAngSpeed
-                            (dVar9,dVar10,(double)(DAT_0071f418 * 4.712389),
-                             (double)(DAT_0071f418 * 3.1415927),
+                            (dVar9,dVar10,(double)(g_FrameTimeSq * 4.712389),
+                             (double)(g_FrameTimeSq * 3.1415927),
                              (double)(g_FrameTime * 3.1415927),0x2a0000,
                              *(short *)((int)pvVar2 + 0x14),uVar8);
   (moby->rotation).z = (float)dVar9;
   dVar9 = (double)MB_DeltAngSpeed
                             ((double)(moby->rotation).y,dVar13,
-                             (double)(float)((double)DAT_0071f418 * dVar12),
-                             (double)(float)((double)DAT_0071f418 * dVar11),
+                             (double)(float)((double)g_FrameTimeSq * dVar12),
+                             (double)(float)((double)g_FrameTimeSq * dVar11),
                              (double)(float)((double)g_FrameTime * dVar11));
   (moby->rotation).y = (float)dVar9;
   MB_SphericalToVector

@@ -182,7 +182,7 @@ void M1274_00017fc8(MobyInstance *param_1,longlong param_2)
   if ((int)param_2 != 0x11) {
     param_1 = g_MobyInstance + *(int *)((int)&DAT_0092713c + (int)(param_2 << 2));
   }
-  dVar4 = (double)MB_randRangeFloat(DAT_0071f418 * 3.7,DAT_0071f418 * 5.0);
+  dVar4 = (double)MB_randRangeFloat(g_FrameTimeSq * 3.7,g_FrameTimeSq * 5.0);
   iVar3 = (int)(param_2 << 2);
   *(float *)((int)pvVar1 + iVar3 + 0x570) = (float)dVar4;
   dVar5 = 0.05235987901687622;
@@ -198,11 +198,11 @@ void M1274_00017fc8(MobyInstance *param_1,longlong param_2)
   if (param_1->oClass == PLANETBUSTER_MAXIMUS_PART_04FD) {
     dVar4 = (double)MB_randRangeFloat(0.001,0.0045);
     *(float *)((int)pvVar1 + iVar2 + 0x45c) = (float)dVar4;
-    dVar4 = (double)MB_randRangeFloat(DAT_0071f418 * 5.5,DAT_0071f418 * 9.0);
+    dVar4 = (double)MB_randRangeFloat(g_FrameTimeSq * 5.5,g_FrameTimeSq * 9.0);
     *(float *)((int)pvVar1 + iVar3 + 0x570) = (float)dVar4;
   }
   else if (param_1->oClass == PLANETBUSTER_MAXIMUS_PART_0500) {
-    *(float *)((int)pvVar1 + iVar3 + 0x570) = DAT_0071f418 * 13.0;
+    *(float *)((int)pvVar1 + iVar3 + 0x570) = g_FrameTimeSq * 13.0;
   }
   return;
 }
@@ -1382,7 +1382,7 @@ void UpdateMoby_1274(MobyInstance *moby)
         uVar12 = (int)*(uint *)((int)pvVar10 + 0x610) >> 0x1f;
         if ((int)((uVar12 >> 1 ^ *(uint *)((int)pvVar10 + 0x610)) - uVar12) < 0x3f800000) {
           OrganicDelt
-                    (1.0,DAT_0071f418 * 0.666,DAT_0071f418 * 0.666,g_FrameTime * 0.4,
+                    (1.0,g_FrameTimeSq * 0.666,g_FrameTimeSq * 0.666,g_FrameTime * 0.4,
                      (float *)((int)pvVar10 + 0x610),0x720000,(float *)((int)pvVar10 + 0x614));
           pCVar15 = Cuboids;
           iVar20 = *(int *)((int)pvVar10 + 0x608);
@@ -1747,11 +1747,11 @@ void UpdateMoby_1274(MobyInstance *moby)
              uVar29 + 0x5e8);
   pSVar11 = Splines[*(int *)((int)pvVar10 + 0x5c0)];
   if ((int)*(short *)((int)pvVar10 + 0x5f8) < pSVar11->cnt + -0xb) {
-    Delt(g_FrameTime * 8.0,DAT_0071f418 * 10.0,(float *)((int)pvVar10 + 0x5f0));
+    Delt(g_FrameTime * 8.0,g_FrameTimeSq * 10.0,(float *)((int)pvVar10 + 0x5f0));
     fVar3 = *(float *)((int)pvVar10 + 0x5f0);
   }
   else {
-    Delt(0.0,DAT_0071f418 * 8.0,(float *)((int)pvVar10 + 0x5f0));
+    Delt(0.0,g_FrameTimeSq * 8.0,(float *)((int)pvVar10 + 0x5f0));
     fVar3 = *(float *)((int)pvVar10 + 0x5f0);
     if (*(int *)((int)pvVar10 + 0x5f0) == 0) {
       moby->state = '\x03';

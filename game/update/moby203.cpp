@@ -1212,7 +1212,7 @@ LAB_002e835c:
             fVar2 = (float)((double)fVar2 + dVar33);
             fVar10 = (float)((double)fVar10 + dVar42);
             fVar8 = (float)((double)fVar8 + dVar34);
-            dVar34 = -(double)(float)((double)DAT_0071f418 * 9.0 - dVar34);
+            dVar34 = -(double)(float)((double)g_FrameTimeSq * 9.0 - dVar34);
             *(float *)(puVar13 + 0xe) = fVar2;
             *(float *)((int)puVar13 + 0x74) = fVar10;
             *(float *)(puVar13 + 0xf) = fVar8;
@@ -1346,7 +1346,7 @@ void M1900_002e86b8(int param_1)
     MB_MoveAndCollide(0x3fe0000000000000,0x3fd99999a0000000,uVar7,param_1,local_40);
     dVar6 = (double)GetGroundZ(0x3fe0000000000000,param_1 + 0x10,0);
     if (dVar6 <= (double)*(float *)(param_1 + 0x18)) {
-      fVar3 = -(DAT_0071f418 * 24.0 - *(float *)(iVar2 + 100));
+      fVar3 = -(g_FrameTimeSq * 24.0 - *(float *)(iVar2 + 100));
       *(float *)(iVar2 + 100) = fVar3;
       fVar3 = *(float *)(param_1 + 0x18) + fVar3;
       *(float *)(param_1 + 0x18) = fVar3;
@@ -1563,7 +1563,7 @@ void UpdateMoby_203(MobyInstance *moby)
           moby->scale = DAT_0071f408 * 0.02 + moby->scale;
         }
         iVar33 = 1;
-        *(float *)((int)pvVar10 + 0x18) = -(DAT_0071f418 * 9.0 - *(float *)((int)pvVar10 + 0x18));
+        *(float *)((int)pvVar10 + 0x18) = -(g_FrameTimeSq * 9.0 - *(float *)((int)pvVar10 + 0x18));
         if (0 < DAT_00a51f68) {
           psVar36 = &DAT_00a51f6a;
           dVar47 = 1.7999999523162842;
@@ -2172,7 +2172,7 @@ void UpdateMoby_203(MobyInstance *moby)
             }
             else {
               *(float *)((int)pvVar10 + 0x18) =
-                   -(DAT_0071f418 * 9.8 - *(float *)((int)pvVar10 + 0x18));
+                   -(g_FrameTimeSq * 9.8 - *(float *)((int)pvVar10 + 0x18));
               (moby->pos).x = (moby->pos).x + *(float *)((int)pvVar10 + 0x10);
               (moby->pos).y = (moby->pos).y + *(float *)((int)pvVar10 + 0x14);
               (moby->pos).z = (moby->pos).z + *(float *)((int)pvVar10 + 0x18);

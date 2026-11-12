@@ -147,7 +147,7 @@ MiscLevelFlags * UpdateMoby_1118(MobyInstance *moby)
   uVar12 = ZEXT48(piVar2);
   if (bVar1 == 6) {
     OrganicDelt
-              (2.0,DAT_0071f418,DAT_0071f418,g_FrameTime * 2.0,(float *)(piVar2 + 0xb),
+              (2.0,g_FrameTimeSq,g_FrameTimeSq,g_FrameTime * 2.0,(float *)(piVar2 + 0xb),
                0x720000,(float *)(piVar2 + 0xc));
     iVar11 = piVar2[1];
     local_70 = Cuboids[iVar11].pos.x;
@@ -197,7 +197,7 @@ MiscLevelFlags * UpdateMoby_1118(MobyInstance *moby)
     }
     dVar16 = (double)(float)piVar2[0xb];
     OrganicDelt
-              (2.0,DAT_0071f418,DAT_0071f418,g_FrameTime * 0.5,(float *)(piVar2 + 0xb),
+              (2.0,g_FrameTimeSq,g_FrameTimeSq,g_FrameTime * 0.5,(float *)(piVar2 + 0xb),
                0x720000,(float *)(piVar2 + 0xc));
     iVar11 = *piVar2;
     local_b0 = Cuboids[iVar11].pos.x;
@@ -311,7 +311,7 @@ MiscLevelFlags * UpdateMoby_1118(MobyInstance *moby)
   }
   else if (bVar1 == 2) {
     OrganicDelt
-              (1.0,DAT_0071f418,DAT_0071f418,g_FrameTime,(float *)(piVar2 + 0xb),0x720000,
+              (1.0,g_FrameTimeSq,g_FrameTimeSq,g_FrameTime,(float *)(piVar2 + 0xb),0x720000,
                (float *)(piVar2 + 0xc));
     dVar16 = (double)((float)piVar2[0xc] * 0.7853982);
     dVar13 = (double)FastWrapRot((moby->rotation).x,(float)piVar2[0xc] * 0.7853982);

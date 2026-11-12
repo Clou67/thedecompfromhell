@@ -46,7 +46,7 @@ undefined8 M1392_00268a48(double param_1,int param_2,float *param_3)
   dVar7 = (double)target;
   iVar1 = *(int *)(param_2 + 0x78);
   OrganicDelt
-            (target,DAT_0071f418 * 10.0,DAT_0071f418 * 10.0,(float)param_1,local_40,0,
+            (target,g_FrameTimeSq * 10.0,g_FrameTimeSq * 10.0,(float)param_1,local_40,0,
              (float *)(iVar1 + 0x324));
   dVar4 = (double)(float)((double)*(float *)(iVar1 + 0x324) / dVar7);
   dVar9 = (double)(float)(dVar9 * dVar4);
@@ -606,11 +606,11 @@ double M1392_00269938(int param_1)
     fVar8 = DAT_0079ca54;
   }
   OrganicDelt
-            (fVar8,DAT_0079ca38 * DAT_0071f418,DAT_0079ca38 * DAT_0071f418,
+            (fVar8,DAT_0079ca38 * g_FrameTimeSq,DAT_0079ca38 * g_FrameTimeSq,
              DAT_0079ca34 * g_FrameTime,(float *)(iVar3 + 0x34),(int)unused,
              (float *)(iVar2 + 0x328));
   fVar8 = OrganicDelt
-                    ((float)dVar7,DAT_0079ca38 * DAT_0071f418,DAT_0079ca38 * DAT_0071f418,
+                    ((float)dVar7,DAT_0079ca38 * g_FrameTimeSq,DAT_0079ca38 * g_FrameTimeSq,
                      DAT_0079ca34 * g_FrameTime,(float *)(iVar3 + 0x38),(int)unused,
                      (float *)(iVar2 + 0x32c));
   return (double)fVar8;

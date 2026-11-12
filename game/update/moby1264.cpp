@@ -210,13 +210,13 @@ void M1264_00230bb8(MobyInstance *param_1)
         pvVar8 = &param_1->rotation;
         dVar16 = 12.0;
         MB_SpawnDebrisMoby
-                  ((double)(DAT_0071f418 * 12.0),param_1,0x602,pvVar14,pvVar8,
+                  ((double)(g_FrameTimeSq * 12.0),param_1,0x602,pvVar14,pvVar8,
                    (int)(animationSpeed * 90.5),0);
         MB_SpawnDebrisMoby
-                  ((double)(float)((double)DAT_0071f418 * dVar16),param_1,0x603,pvVar14,pvVar8,
+                  ((double)(float)((double)g_FrameTimeSq * dVar16),param_1,0x603,pvVar14,pvVar8,
                    (int)((double)animationSpeed * dVar17),0);
         MB_SpawnDebrisMoby
-                  ((double)(float)((double)DAT_0071f418 * dVar16),param_1,0x784,pvVar14,pvVar8,
+                  ((double)(float)((double)g_FrameTimeSq * dVar16),param_1,0x784,pvVar14,pvVar8,
                    (int)((double)animationSpeed * dVar17),0);
         DeleteMoby(param_1);
       }

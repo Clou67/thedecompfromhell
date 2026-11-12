@@ -385,8 +385,8 @@ bool M1356_00258440(int param_1,uint *param_2)
     fVar5 = *(float *)(param_1 + 0x10) - *pfVar6;
     fVar7 = *(float *)(param_1 + 0x18) - pfVar6[2];
     OrganicDelt
-              (SQRT(fVar7 * fVar7 + fVar5 * fVar5 + fVar4 * fVar4),DAT_0079bd4c * DAT_0071f418,
-               DAT_0079bd4c * DAT_0071f418,DAT_0079bd48 * g_FrameTime,local_40,0x7a0000,
+              (SQRT(fVar7 * fVar7 + fVar5 * fVar5 + fVar4 * fVar4),DAT_0079bd4c * g_FrameTimeSq,
+               DAT_0079bd4c * g_FrameTimeSq,DAT_0079bd48 * g_FrameTime,local_40,0x7a0000,
                (float *)(iVar2 + 0x170));
   }
   return bVar1;
@@ -811,7 +811,7 @@ void UpdateMoby_1356(MobyInstance *moby)
                    auVar38 | auVar38 << 0x20 | auVar38 << 0x40 | auVar38 << 0x60);
         if ((bool)(in_cr6 >> 1 & 1)) {
           fVar43 = OrganicDelt
-                             (1.5707964,DAT_0071f418 * 12.566371,DAT_0071f418 * 12.566371,
+                             (1.5707964,g_FrameTimeSq * 12.566371,g_FrameTimeSq * 12.566371,
                               g_FrameTime * 6.2831855,(float *)((int)pvVar7 + 0x17c),
                               0x720000,(float *)((int)pvVar7 + 0x180));
           dVar30 = (double)fVar43;
@@ -871,7 +871,7 @@ void UpdateMoby_1356(MobyInstance *moby)
       fVar43 = Splines[*(int *)((int)pvVar7 + 0xdc)]->points[0].w;
       dVar30 = (double)fVar43;
       OrganicDelt
-                (fVar43,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+                (fVar43,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
                  g_FrameTime * 6.2831855,&(moby->rotation).z,
                  (int)Splines[*(int *)((int)pvVar7 + 0xdc)],(float *)((int)pvVar7 + 0x178));
       dVar30 = (double)FastSubRots((moby->rotation).z,(float)dVar30);
@@ -883,7 +883,7 @@ void UpdateMoby_1356(MobyInstance *moby)
     }
     else if (bVar1 < 6) {
       fVar43 = OrganicDelt
-                         (0.0,DAT_0071f418 * 12.566371,DAT_0071f418 * 12.566371,
+                         (0.0,g_FrameTimeSq * 12.566371,g_FrameTimeSq * 12.566371,
                           g_FrameTime * 6.2831855,(float *)((int)pvVar7 + 0x17c),0x720000,
                           (float *)((int)pvVar7 + 0x180));
       iVar18 = M1356_00258440
@@ -900,7 +900,7 @@ void UpdateMoby_1356(MobyInstance *moby)
       dVar36 = 0.0;
       dVar34 = 6.2831854820251465;
       OrganicDelt
-                (0.0,DAT_0071f418 * 12.566371,DAT_0071f418 * 12.566371,
+                (0.0,g_FrameTimeSq * 12.566371,g_FrameTimeSq * 12.566371,
                  g_FrameTime * 6.2831855,(float *)((int)pvVar7 + 0x17c),0x258be0,
                  (float *)((int)pvVar7 + 0x180));
       fVar43 = *(float *)((int)pvVar7 + 0x70) - (moby->pos).x;
@@ -910,7 +910,7 @@ void UpdateMoby_1356(MobyInstance *moby)
       *(float *)(puVar12 + 0x1e) = fVar43;
       *(float *)((int)puVar12 + 0xf4) = fVar2;
       *(float *)(puVar12 + 0x1f) = (float)(dVar31 - dVar33);
-      fVar43 = DAT_0071f418;
+      fVar43 = g_FrameTimeSq;
       dVar32 = (double)g_FrameTime;
       uVar26 = (ulonglong)(*(uint *)(puVar12 + 0x1e) >> 0x1c) & 8 |
                (ulonglong)(*(uint *)(puVar12 + 0x1f) >> 0x1e) & 2 |
@@ -983,7 +983,7 @@ void UpdateMoby_1356(MobyInstance *moby)
                 ((float)dVar31,fVar43 * 3.1415927,fVar43 * 3.1415927,(float)(dVar32 * dVar34),
                  &(moby->rotation).z,0x260000,(float *)((int)pvVar7 + 0x178));
       fVar43 = OrganicDelt
-                         ((float)dVar36,DAT_0071f418 * 1.5707964,DAT_0071f418 * 1.5707964,
+                         ((float)dVar36,g_FrameTimeSq * 1.5707964,g_FrameTimeSq * 1.5707964,
                           (float)((double)g_FrameTime * dVar34),&(moby->rotation).x,
                           0x720000,(float *)((int)pvVar7 + 0x188));
       iVar18 = FastDecTimerS32((double)fVar43,uVar28 + 0x164);

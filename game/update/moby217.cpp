@@ -172,7 +172,7 @@ void M217_002f1c10(MobyInstance *param_1)
   FastMemCopy32((int)pvVar1 + 0x23c,local_f0,0x50);
   FastMemCopy32((int)pvVar1 + 0x240,local_f0,0x50);
   walk_SetupTwistVals(param_1,(w_2legData *)((int)pvVar1 + 0x1a0));
-  dVar4 = (double)DAT_0071f418;
+  dVar4 = (double)g_FrameTimeSq;
   *(float *)((int)pvVar1 + 0x27c) = (float)(dVar4 * 9.800000190734863);
   *(float *)((int)pvVar1 + 0x26c) = (float)(dVar4 * 3.1415927410125732);
   *(float *)((int)pvVar1 + 0x270) = (float)(dVar4 * 6.2831854820251465);
@@ -365,9 +365,9 @@ void UpdateMoby_217(MobyInstance *moby)
         dVar28 = (double)FUN_005e8338((double)((moby->pos).x - (pMVar5->pos).x),
                                       (double)((moby->pos).y - (pMVar5->pos).y));
       }
-      fVar2 = DAT_0071f418;
+      fVar2 = g_FrameTimeSq;
       local_a8 = (float)dVar28;
-      *(float *)((int)pvVar4 + 0xd4) = DAT_0071f418 * 12.0;
+      *(float *)((int)pvVar4 + 0xd4) = g_FrameTimeSq * 12.0;
       *(float *)((int)pvVar4 + 0xd0) = fVar2 * 35.0;
       fVar2 = g_FrameTime;
       dVar28 = 7.0;
@@ -538,8 +538,8 @@ LAB_002f252c:
       else {
         if ((moby->setByGroup & 0x10U) == 0) {
           dVar24 = (double)MB_DeltAngSpeed
-                                     (dVar27,dVar25,(double)(DAT_0071f418 * 3.1415927),
-                                      (double)(DAT_0071f418 * 6.2831855),
+                                     (dVar27,dVar25,(double)(g_FrameTimeSq * 3.1415927),
+                                      (double)(g_FrameTimeSq * 6.2831855),
                                       (double)(g_FrameTime * 4.1887903),&DAT_002f2000,
                                       &DAT_00720000,uVar23 + 0x410);
         }
@@ -547,8 +547,8 @@ LAB_002f252c:
           uVar13 = FUN_005e8338((double)(*(float *)((int)pvVar4 + 0x3f0) - fVar2),
                                 (double)(*(float *)((int)pvVar4 + 0x3f4) - fVar3));
           dVar24 = (double)MB_DeltAngSpeed
-                                     (dVar27,uVar13,(double)(DAT_0071f418 * 3.1415927),
-                                      (double)(DAT_0071f418 * 6.2831855),
+                                     (dVar27,uVar13,(double)(g_FrameTimeSq * 3.1415927),
+                                      (double)(g_FrameTimeSq * 6.2831855),
                                       (double)(g_FrameTime * 4.1887903),&DAT_002f2000,
                                       &DAT_00720000,uVar23 + 0x410);
         }
@@ -564,15 +564,15 @@ LAB_002f252c:
               *(undefined2 *)((int)pvVar4 + 0x402) = 0;
             }
             else {
-              fVar2 = -(DAT_0071f418 * 200.0 - *(float *)((int)pvVar4 + 0x418));
+              fVar2 = -(g_FrameTimeSq * 200.0 - *(float *)((int)pvVar4 + 0x418));
               *(float *)((int)pvVar4 + 0x418) = fVar2;
               MB_SphericalToVector
                         (fVar2,*(float *)((int)pvVar4 + 0x414),(moby->rotation).y,afStack_1d0);
               FUN_005e7f54(lVar22,lVar22,afStack_1d0);
               dVar24 = (double)MB_DeltAngSpeed
                                          ((double)(moby->rotation).z,dVar25,
-                                          (double)(DAT_0071f418 * 3.1415927),
-                                          (double)(DAT_0071f418 * 6.2831855),
+                                          (double)(g_FrameTimeSq * 3.1415927),
+                                          (double)(g_FrameTimeSq * 6.2831855),
                                           (double)(g_FrameTime * 4.1887903));
               (moby->rotation).z = (float)dVar24;
             }
@@ -580,7 +580,7 @@ LAB_002f252c:
           else {
             fVar2 = DAT_0071f408 * 0.11111111;
             if (*(float *)((int)pvVar4 + 0x418) < fVar2) {
-              fVar2 = DAT_0071f418 * 20.0 + *(float *)((int)pvVar4 + 0x418);
+              fVar2 = g_FrameTimeSq * 20.0 + *(float *)((int)pvVar4 + 0x418);
             }
             *(float *)((int)pvVar4 + 0x418) = fVar2;
             MB_SphericalToVector
@@ -588,8 +588,8 @@ LAB_002f252c:
             FUN_005e7f54(lVar22,lVar22,afStack_1d0);
             dVar24 = (double)MB_DeltAngSpeed
                                        ((double)(moby->rotation).z,dVar25,
-                                        (double)(DAT_0071f418 * 3.1415927),
-                                        (double)(DAT_0071f418 * 6.2831855),
+                                        (double)(g_FrameTimeSq * 3.1415927),
+                                        (double)(g_FrameTimeSq * 6.2831855),
                                         (double)(g_FrameTime * 4.1887903),&DAT_002f2000,
                                         &DAT_00720000,uVar23 + 0x410);
             (moby->rotation).z = (float)dVar24;
@@ -694,11 +694,11 @@ LAB_002f252c:
         uVar13 = FUN_005e8338((double)(*(float *)((int)pvVar4 + 0x3f0) - fVar2),
                               (double)(*(float *)((int)pvVar4 + 0x3f4) - fVar3));
         dVar24 = (double)MB_DeltAngSpeed
-                                   (dVar27,uVar13,(double)(DAT_0071f418 * 6.2831855),
-                                    (double)(DAT_0071f418 * 125.663704),
+                                   (dVar27,uVar13,(double)(g_FrameTimeSq * 6.2831855),
+                                    (double)(g_FrameTimeSq * 125.663704),
                                     (double)(g_FrameTime * 12.566371));
         *(float *)((int)pvVar4 + 0x414) = (float)dVar24;
-        walk_Update((double)(g_FrameTime * 4.0),dVar24,(double)(DAT_0071f418 * 20.0)
+        walk_Update((double)(g_FrameTime * 4.0),dVar24,(double)(g_FrameTimeSq * 20.0)
                           ,lVar11,uVar23 + 0x1a0);
         dVar24 = (double)FUN_005e8588(lVar22,uVar23 + 0x3f0);
         dVar26 = 2.0;
@@ -754,11 +754,11 @@ LAB_002f252c:
         dVar27 = (double)(moby->rotation).z;
       }
       dVar26 = (double)MB_DeltAngSpeed
-                                 (dVar27,dVar25,(double)(DAT_0071f418 * 6.2831855),
-                                  (double)(DAT_0071f418 * 125.663704),
+                                 (dVar27,dVar25,(double)(g_FrameTimeSq * 6.2831855),
+                                  (double)(g_FrameTimeSq * 125.663704),
                                   (double)(g_FrameTime * 12.566371));
       *(float *)((int)pvVar4 + 0x414) = (float)dVar26;
-      walk_Update((double)(g_FrameTime * 4.0),dVar26,(double)(DAT_0071f418 * 20.0),
+      walk_Update((double)(g_FrameTime * 4.0),dVar26,(double)(g_FrameTimeSq * 20.0),
                         lVar11,uVar23 + 0x1a0);
       if (4.5 <= dVar24) {
         if (*(int *)((int)pvVar4 + 0x41c) != -1) {
@@ -928,8 +928,8 @@ LAB_002f252c:
                             ,(double)(*(float *)((int)&pSVar8->points[0].y + iVar14) - (moby->pos).y
                                      ));
       dVar24 = (double)MB_DeltAngSpeed
-                                 (dVar24,uVar13,(double)(DAT_0071f418 * 12.566371),
-                                  (double)(DAT_0071f418 * 6.2831855),
+                                 (dVar24,uVar13,(double)(g_FrameTimeSq * 12.566371),
+                                  (double)(g_FrameTimeSq * 6.2831855),
                                   (double)(g_FrameTime * 3.1415927));
       (moby->rotation).z = (float)dVar24;
       dVar24 = (double)cosf((float)dVar24);
@@ -1083,7 +1083,7 @@ LAB_002f4034:
   if (moby->state != '\b') {
     *(u8 *)((int)pvVar4 + 0x401) = moby->state;
   }
-  fVar2 = DAT_0071f418 * 29.8 + *(float *)((int)pvVar4 + 0x420);
+  fVar2 = g_FrameTimeSq * 29.8 + *(float *)((int)pvVar4 + 0x420);
   *(float *)((int)pvVar4 + 0x420) = fVar2;
   dVar26 = 2.0;
   (moby->pos).z = (moby->pos).z - (fVar2 - 2.0);

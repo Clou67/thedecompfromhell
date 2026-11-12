@@ -487,7 +487,7 @@ LAB_00441668:
         MB_SetAnimation(lVar12,0,0,(int)(animationSpeed * 3.5));
       }
       dVar30 = (double)GetGroundZ(0x3fe0000000000000,lVar12 + 0x10,0);
-      fVar5 = -(DAT_0071f418 * 9.8 - pfVar7[0x5e]);
+      fVar5 = -(g_FrameTimeSq * 9.8 - pfVar7[0x5e]);
       pfVar7[0x5e] = fVar5;
       fVar5 = (moby->pos).z + fVar5;
       (moby->pos).z = fVar5;
@@ -590,7 +590,7 @@ LAB_00441668:
       (moby->pos).z = (float)dVar22;
       (moby->pos).w = local_84;
       dVar30 = (double)GetGroundZ(0x3fe0000000000000,lVar12 + 0x10,0);
-      fVar5 = -(DAT_0071f418 * 9.8 - pfVar7[0x5e]);
+      fVar5 = -(g_FrameTimeSq * 9.8 - pfVar7[0x5e]);
       pfVar7[0x5e] = fVar5;
       fVar5 = (moby->pos).z + fVar5;
       (moby->pos).z = fVar5;

@@ -92,11 +92,11 @@ void M233_00300950
   fVar4 = (param_1->pos).w;
   puVar10[0x28] = unaff_r30;
   *(f32 *)((int)puVar10 + 0x8c) = fVar4;
-  fVar12 = DAT_0071f418;
+  fVar12 = g_FrameTimeSq;
   pvVar7 = param_1->pVar;
   dVar28 = 10.0;
   fStack00000040 = (float)((ulonglong)param_3 >> 0x20);
-  fVar6 = DAT_0071f418 * 10.0;
+  fVar6 = g_FrameTimeSq * 10.0;
   fVar1 = fVar1 - fStack00000040;
   fStack00000048 = (float)((ulonglong)param_4 >> 0x20);
   uVar29 = 0x4000000000000000;
@@ -364,14 +364,14 @@ void M233_00300950
                                        (fVar6 * fVar2 * 2.601887e-06 +
                                        fVar2 * -0.0001980741 +
                                        fVar5 * 0.0083330255 + fVar6 * fVar3 * -0.16666657 + fVar3))
-                                      / fVar1),(double)(DAT_0071f418 * 0.5235988),
-                              (double)(DAT_0071f418 * 1.0471976),
+                                      / fVar1),(double)(g_FrameTimeSq * 0.5235988),
+                              (double)(g_FrameTimeSq * 1.0471976),
                               (double)(float)((double)g_FrameTime * dVar30));
   (param_1->rotation).y = (float)dVar28;
   dVar28 = (double)MB_DeltAngSpeed
                              ((double)(param_1->rotation).x,dVar26,
-                              (double)(float)((double)DAT_0071f418 * dVar23),
-                              (double)(float)((double)DAT_0071f418 * 2.094395160675049),
+                              (double)(float)((double)g_FrameTimeSq * dVar23),
+                              (double)(float)((double)g_FrameTimeSq * 2.094395160675049),
                               (double)(g_FrameTime * 1.5707964));
   (param_1->rotation).x = (float)dVar28;
   return;
@@ -1214,15 +1214,15 @@ void UpdateMoby_233(MobyInstance *moby)
       fVar5 = (moby->pos).z - pVVar18->z;
       dVar35 = (double)((float)(dVar35 * (double)pSVar16->points[0].w + (double)local_c0) + 2.0);
       if ((*(float *)((int)pvVar15 + 0x170) * *(float *)((int)pvVar15 + 0x170)) /
-          (DAT_0071f418 * 10.0 * 2.0) < SQRT(fVar5 * fVar5 + fVar3 * fVar3 + fVar2 * fVar2)) {
-        fVar2 = DAT_0071f418 * 10.0 + *(float *)((int)pvVar15 + 0x170);
+          (g_FrameTimeSq * 10.0 * 2.0) < SQRT(fVar5 * fVar5 + fVar3 * fVar3 + fVar2 * fVar2)) {
+        fVar2 = g_FrameTimeSq * 10.0 + *(float *)((int)pvVar15 + 0x170);
         *(float *)((int)pvVar15 + 0x170) = fVar2;
         if (g_FrameTime * 10.0 < fVar2) {
           *(float *)((int)pvVar15 + 0x170) = g_FrameTime * 10.0;
         }
       }
       else {
-        dVar44 = -(double)(DAT_0071f418 * 10.0 - *(float *)((int)pvVar15 + 0x170));
+        dVar44 = -(double)(g_FrameTimeSq * 10.0 - *(float *)((int)pvVar15 + 0x170));
         *(float *)((int)pvVar15 + 0x170) = (float)dVar44;
         if (dVar44 < dVar40) {
           *(undefined4 *)((int)pvVar15 + 0x170) = 0;
@@ -1356,15 +1356,15 @@ void UpdateMoby_233(MobyInstance *moby)
                                            fVar3 * -0.0001980741 +
                                            fVar6 * 0.0083330255 +
                                            fVar7 * fVar5 * -0.16666657 + fVar5)) / fVar2),
-                                  (double)(DAT_0071f418 * 0.5235988),
-                                  (double)(DAT_0071f418 * 1.0471976),
+                                  (double)(g_FrameTimeSq * 0.5235988),
+                                  (double)(g_FrameTimeSq * 1.0471976),
                                   (double)(float)((double)g_FrameTime * 0.7853981852531433
                                                  ));
       (moby->rotation).y = (float)dVar35;
       dVar35 = (double)MB_DeltAngSpeed
                                  ((double)(moby->rotation).x,dVar40,
-                                  (double)(float)((double)DAT_0071f418 * dVar33),
-                                  (double)(float)((double)DAT_0071f418 * 2.094395160675049),
+                                  (double)(float)((double)g_FrameTimeSq * dVar33),
+                                  (double)(float)((double)g_FrameTimeSq * 2.094395160675049),
                                   (double)(g_FrameTime * 1.5707964));
       (moby->rotation).x = (float)dVar35;
     }
@@ -1496,7 +1496,7 @@ void UpdateMoby_233(MobyInstance *moby)
       }
       iVar24 = FastDecTimerS16(uVar29 + 0x16a);
       if (iVar24 == 0) {
-        fVar2 = -(DAT_0071f418 * 4.0 - *(float *)((int)pvVar15 + 0x170));
+        fVar2 = -(g_FrameTimeSq * 4.0 - *(float *)((int)pvVar15 + 0x170));
         *(float *)((int)pvVar15 + 0x170) = fVar2;
         if (fVar2 < 0.0) {
           *(undefined4 *)((int)pvVar15 + 0x170) = 0;
@@ -1585,14 +1585,14 @@ void UpdateMoby_233(MobyInstance *moby)
                                                                                   (double)(float)((
                                                   double)(float)(dVar42 * dVar31) * dVar44 + dVar31)
                                                   )))) / (g_FrameTime * 10.0)),
-                                    (double)(DAT_0071f418 * 0.5235988),
-                                    (double)(DAT_0071f418 * 1.0471976),
+                                    (double)(g_FrameTimeSq * 0.5235988),
+                                    (double)(g_FrameTimeSq * 1.0471976),
                                     (double)(g_FrameTime * 0.7853982));
         (moby->rotation).y = (float)dVar35;
         dVar35 = (double)MB_DeltAngSpeed
                                    ((double)(moby->rotation).x,dVar34,
-                                    (double)(float)((double)DAT_0071f418 * dVar39),
-                                    (double)(float)((double)DAT_0071f418 * 2.094395160675049),
+                                    (double)(float)((double)g_FrameTimeSq * dVar39),
+                                    (double)(float)((double)g_FrameTimeSq * 2.094395160675049),
                                     (double)(g_FrameTime * 1.5707964));
         (moby->rotation).x = (float)dVar35;
       }
@@ -1727,16 +1727,16 @@ LAB_00303278:
     dVar33 = (double)*(float *)((int)pvVar15 + 0x180);
     uVar32 = FUN_005e8338((double)local_170,(double)local_16c);
     dVar35 = (double)MB_DeltAngSpeed
-                               (dVar33,uVar32,(double)(float)((double)DAT_0071f418 * dVar42),
-                                (double)(float)((double)DAT_0071f418 * dVar35),
+                               (dVar33,uVar32,(double)(float)((double)g_FrameTimeSq * dVar42),
+                                (double)(float)((double)g_FrameTimeSq * dVar35),
                                 (double)(float)((double)g_FrameTime * dVar42));
     *(float *)((int)pvVar15 + 0x180) = (float)dVar35;
     dVar33 = (double)*(float *)((int)pvVar15 + 0x188);
     dVar35 = (double)FUN_005e8338((double)SQRT(local_170 * local_170 + local_16c * local_16c),
                                   (double)local_168);
     dVar45 = (double)MB_DeltAngSpeed
-                               (dVar33,-dVar35,(double)(float)((double)DAT_0071f418 * dVar45),
-                                (double)(float)((double)DAT_0071f418 * dVar42),
+                               (dVar33,-dVar35,(double)(float)((double)g_FrameTimeSq * dVar45),
+                                (double)(float)((double)g_FrameTimeSq * dVar42),
                                 (double)(g_FrameTime * 1.5707964));
     *(float *)((int)pvVar15 + 0x188) = (float)dVar45;
     FastQuaternionToEuler((double)*(float *)((int)pvVar15 + 0x180),uVar29 + 0xe0,2);
@@ -1751,16 +1751,16 @@ LAB_00303278:
     dVar33 = (double)*(float *)((int)pvVar15 + 0x180);
     uVar32 = FUN_005e8338((double)local_160,(double)local_15c);
     dVar35 = (double)MB_DeltAngSpeed
-                               (dVar33,uVar32,(double)(float)((double)DAT_0071f418 * dVar42),
-                                (double)(float)((double)DAT_0071f418 * dVar35),
+                               (dVar33,uVar32,(double)(float)((double)g_FrameTimeSq * dVar42),
+                                (double)(float)((double)g_FrameTimeSq * dVar35),
                                 (double)(float)((double)g_FrameTime * dVar42));
     *(float *)((int)pvVar15 + 0x180) = (float)dVar35;
     dVar33 = (double)*(float *)((int)pvVar15 + 0x188);
     dVar35 = (double)FUN_005e8338((double)SQRT(local_160 * local_160 + local_15c * local_15c),
                                   (double)local_158);
     dVar45 = (double)MB_DeltAngSpeed
-                               (dVar33,-dVar35,(double)(float)((double)DAT_0071f418 * dVar45),
-                                (double)(float)((double)DAT_0071f418 * dVar42),
+                               (dVar33,-dVar35,(double)(float)((double)g_FrameTimeSq * dVar45),
+                                (double)(float)((double)g_FrameTimeSq * dVar42),
                                 (double)(g_FrameTime * 1.5707964));
     *(float *)((int)pvVar15 + 0x188) = (float)dVar45;
     FastQuaternionToEuler((double)*(float *)((int)pvVar15 + 0x180),uVar29 + 0xe0,2);

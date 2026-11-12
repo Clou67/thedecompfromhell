@@ -419,7 +419,7 @@ void UpdateMoby_107(MobyInstance *moby)
       dVar28 = (double)(float)(dVar27 * dVar27);
       dVar30 = (double)(g_FrameTime * 6.0);
       fVar36 = (moby->pos).z;
-      dVar29 = (double)(DAT_0071f418 * 10.0);
+      dVar29 = (double)(g_FrameTimeSq * 10.0);
       fVar5 = fVar4 * fVar4;
       dVar31 = (double)(float)(dVar28 * (double)(float)(dVar28 * dVar27));
       fVar2 = (moby->pos).x;

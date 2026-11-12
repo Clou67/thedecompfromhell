@@ -129,7 +129,7 @@ void UpdateMoby_568(MobyInstance *moby)
         if ((double)SQRT(fVar4 * fVar4 + fVar3 * fVar3) < dVar21) {
           fVar4 = (float)(dVar18 - dVar19);
           fVar1 = (float)(dVar17 - dVar20);
-          dVar17 = (double)DAT_0071f418;
+          dVar17 = (double)g_FrameTimeSq;
           dVar18 = (double)(moby->pos).z;
           fVar3 = (float)(dVar17 * dVar21);
           dVar21 = (double)(g_FrameTime * 3.0);
@@ -195,7 +195,7 @@ void UpdateMoby_568(MobyInstance *moby)
     }
   }
   else if (uVar2 == '\x02') {
-    fVar22 = Delt(0.0,DAT_00845d40 * 2.0 * DAT_0071f418,(float *)((int)pvVar6 + 0x188));
+    fVar22 = Delt(0.0,DAT_00845d40 * 2.0 * g_FrameTimeSq,(float *)((int)pvVar6 + 0x188));
     fVar3 = (moby->rotation).z;
     fVar4 = fVar3 + 1.5707963;
     fVar1 = 3.1415925 - fVar3;
@@ -244,7 +244,7 @@ void UpdateMoby_568(MobyInstance *moby)
     (moby->pos).y = (moby->pos).y + *(float *)((int)pvVar6 + 0x184);
     (moby->pos).z = (moby->pos).z + *(float *)((int)pvVar6 + 0x188);
     uVar8 = (int)*(uint *)((int)pvVar6 + 0x178) >> 0x1f;
-    *(float *)((int)pvVar6 + 0x188) = -(DAT_0071f418 * 10.0 - *(float *)((int)pvVar6 + 0x188));
+    *(float *)((int)pvVar6 + 0x188) = -(g_FrameTimeSq * 10.0 - *(float *)((int)pvVar6 + 0x188));
     fVar7 = (moby->pos).z;
     uVar9 = (int)fVar7 >> 0x1f;
     if ((int)((uVar9 >> 1 ^ (uint)fVar7) - uVar9) <

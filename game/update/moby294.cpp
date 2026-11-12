@@ -226,7 +226,7 @@ double M294_00331708(double param_1,double param_2,int param_3,float *param_4)
         fVar29 = (fVar29 + 0.7853982) * fVar3 + fVar1;
       }
       OrganicDeltAng
-                (fVar29,DAT_0071f418 * 15.707963,DAT_0071f418 * 12.566371,
+                (fVar29,g_FrameTimeSq * 15.707963,g_FrameTimeSq * 12.566371,
                  g_FrameTime * 25.132742,(float *)(param_3 + 0x48),0x3316d4,
                  (float *)(iVar5 + 0x23c));
     }
@@ -303,7 +303,7 @@ double M294_00331708(double param_1,double param_2,int param_3,float *param_4)
       }
       dVar21 = (double)FastWrapRot(fVar4,(float)param_1);
       OrganicDeltAng
-                ((float)dVar21,DAT_0071f418 * 15.707963,DAT_0071f418 * 12.566371,
+                ((float)dVar21,g_FrameTimeSq * 15.707963,g_FrameTimeSq * 12.566371,
                  g_FrameTime * 25.132742,(float *)(param_3 + 0x48),0x3316d4,
                  (float *)(iVar5 + 0x23c));
     }
@@ -385,17 +385,17 @@ double M294_00331708(double param_1,double param_2,int param_3,float *param_4)
       }
       dVar26 = (double)FastSubRots(fVar29,(float)dVar25);
       if ((1.5707963705062866 <= dVar26) || (dVar24 <= 6.0)) {
-        fVar29 = Delt(g_FrameTime,DAT_0071f418 * 7.0,(float *)(iVar5 + 0xf4));
+        fVar29 = Delt(g_FrameTime,g_FrameTimeSq * 7.0,(float *)(iVar5 + 0xf4));
         dVar26 = (double)fVar29;
       }
       else {
-        fVar29 = Delt(g_FrameTime * 7.0,DAT_0071f418 * 7.0,
+        fVar29 = Delt(g_FrameTime * 7.0,g_FrameTimeSq * 7.0,
                                 (float *)(iVar5 + 0xf4));
         dVar26 = (double)fVar29;
       }
     }
     else {
-      fVar29 = Delt((float)param_2,DAT_0071f418 * 7.0,(float *)(iVar5 + 0xf4));
+      fVar29 = Delt((float)param_2,g_FrameTimeSq * 7.0,(float *)(iVar5 + 0xf4));
       dVar26 = (double)fVar29;
     }
     dVar28 = (double)*(float *)(param_3 + 0x10);
@@ -547,7 +547,7 @@ double M294_00331708(double param_1,double param_2,int param_3,float *param_4)
       fVar29 = (fVar29 + 0.7853982) * fVar4 + fVar1;
     }
     fVar29 = OrganicDeltAng
-                       (fVar29,DAT_0071f418 * 15.707963,DAT_0071f418 * 12.566371,
+                       (fVar29,g_FrameTimeSq * 15.707963,g_FrameTimeSq * 12.566371,
                         g_FrameTime * 25.132742,(float *)(param_3 + 0x48),0x3316d4,
                         (float *)(iVar5 + 0x23c));
     dVar26 = (double)fVar29;
@@ -564,7 +564,7 @@ double M294_00332230(longlong param_1)
   float fVar2;
   
   dVar1 = (double)GetGroundZ(0x3fe0000000000000,param_1 + 0x10,0);
-  fVar2 = Delt((float)dVar1,DAT_0071f418 * 27.0,(float *)((int)param_1 + 0x18));
+  fVar2 = Delt((float)dVar1,g_FrameTimeSq * 27.0,(float *)((int)param_1 + 0x18));
   return (double)fVar2;
 }
 
@@ -839,7 +839,7 @@ void M294_00332560
         }
         fVar1 = *(float *)((int)pvVar5 + 0x20) - local_7c;
         *(float *)((int)pvVar5 + 0x20) = fVar1;
-        fVar7 = DAT_0071f418;
+        fVar7 = g_FrameTimeSq;
         *(undefined1 *)((int)pvVar5 + 0xad) = 0;
         *(undefined4 *)((int)pvVar5 + 0x94) = 9;
         *(undefined4 *)((int)pvVar5 + 0xa0) = 0x3f800000;
@@ -1574,7 +1574,7 @@ void UpdateMoby_294(MobyInstance *moby)
       }
       M294_003322b0(lVar22,&pMVar13->pos);
       dVar38 = (double)GetGroundZ(0x3fe0000000000000,lVar22 + 0x10,0);
-      Delt((float)dVar38,DAT_0071f418 * 27.0,&(moby->pos).z);
+      Delt((float)dVar38,g_FrameTimeSq * 27.0,&(moby->pos).z);
       uVar36 = moby->animationId;
       if ((uVar36 != '\x02') && (moby->updateId == uVar36)) {
         puVar16[0x45] = (longlong)(int)(animationSpeed * 8.5);
@@ -1592,7 +1592,7 @@ void UpdateMoby_294(MobyInstance *moby)
     else if (bVar1 < 7) {
       M294_003322b0(lVar22,&pMVar13->pos);
       dVar38 = (double)GetGroundZ(0x3fe0000000000000,lVar22 + 0x10,0);
-      Delt((float)dVar38,DAT_0071f418 * 27.0,&(moby->pos).z);
+      Delt((float)dVar38,g_FrameTimeSq * 27.0,&(moby->pos).z);
       if (*(int *)((int)pvVar9 + 0x248) != 0) {
         dVar38 = 0.0;
         iVar25 = MB_MayaFrameTrigger(0.0,moby);
@@ -1781,7 +1781,7 @@ void UpdateMoby_294(MobyInstance *moby)
     else {
       M294_003322b0(lVar22,&pMVar13->pos);
       dVar38 = (double)GetGroundZ(0x3fe0000000000000,lVar22 + 0x10,0);
-      Delt((float)dVar38,DAT_0071f418 * 27.0,&(moby->pos).z);
+      Delt((float)dVar38,g_FrameTimeSq * 27.0,&(moby->pos).z);
       uVar36 = moby->animationId;
       if ((((uVar36 != '\x05') || ((moby->field43_0x70 & 2U) != 0)) && (uVar36 != '\0')) &&
          (moby->updateId == uVar36)) {

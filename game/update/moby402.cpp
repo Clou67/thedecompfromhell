@@ -139,7 +139,7 @@ void UpdateMoby_402(MobyInstance *moby)
         fVar2 = (float)((double)pfVar4[1] * dVar16);
         *pfVar4 = fVar1;
         pfVar4[1] = fVar2;
-        fVar5 = (float)(dVar14 * dVar16 - (double)(DAT_0071f418 * 9.8));
+        fVar5 = (float)(dVar14 * dVar16 - (double)(g_FrameTimeSq * 9.8));
         pfVar4[2] = fVar5;
         fVar6 = SQRT(fVar5 * fVar5 + fVar1 * fVar1 + fVar2 * fVar2);
         if (0.6 < fVar6) {

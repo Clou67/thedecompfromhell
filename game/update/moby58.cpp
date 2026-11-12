@@ -182,8 +182,8 @@ void UpdateMoby_58(MobyInstance *moby)
         (moby->pos).z = (float)(dVar23 - dVar27);
       }
     }
-    piVar9[6] = (int)-(DAT_0071f418 * 4.9 - (float)piVar9[6]);
-    fVar8 = DAT_0071f418;
+    piVar9[6] = (int)-(g_FrameTimeSq * 4.9 - (float)piVar9[6]);
+    fVar8 = g_FrameTimeSq;
     fVar5 = (moby->pos).y;
     fVar7 = (moby->pos).z;
     fVar4 = (moby->pos).w;
@@ -278,10 +278,10 @@ void UpdateMoby_58(MobyInstance *moby)
   else if (uVar3 == '\x02') {
     dVar28 = 0.0;
     dVar23 = 24.0;
-    Delt(0.0,DAT_0071f418 * 24.0,(float *)(piVar9 + 9));
+    Delt(0.0,g_FrameTimeSq * 24.0,(float *)(piVar9 + 9));
     (moby->pos).z = (moby->pos).z + (float)piVar9[9];
     fVar5 = g_FrameTime;
-    dVar27 = (double)DAT_0071f418;
+    dVar27 = (double)g_FrameTimeSq;
     *(float *)((int)puVar14 + 0x94) =
          SQRT((float)piVar9[6] * (float)piVar9[6] +
               (float)piVar9[4] * (float)piVar9[4] + (float)piVar9[5] * (float)piVar9[5]);

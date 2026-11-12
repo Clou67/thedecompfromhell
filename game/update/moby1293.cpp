@@ -166,12 +166,12 @@ void UpdateMoby_1293(MobyInstance *moby)
       if (*(float *)((int)pvVar5 + 0x84) - 2.0 <= fVar4) {
         dVar18 = 0.01745329238474369;
         AccelDeltAng
-                  (0,(double)(DAT_0078dfe4 * 0.017453292 * DAT_0071f418),
+                  (0,(double)(DAT_0078dfe4 * 0.017453292 * g_FrameTimeSq),
                    (double)(DAT_0078dfe8 * DAT_0071f40c),
                    (double)(DAT_0078dfec * 0.017453292 * g_FrameTime),uVar13 + 0x60,
                    &DAT_00720000,uVar13 + 0x70);
         AccelDeltAng
-                  (uVar15,(double)((float)((double)DAT_0078dfe4 * dVar18) * DAT_0071f418),
+                  (uVar15,(double)((float)((double)DAT_0078dfe4 * dVar18) * g_FrameTimeSq),
                    (double)(DAT_0078dfe8 * DAT_0071f40c),
                    (double)((float)((double)DAT_0078dfec * dVar18) * g_FrameTime),
                    uVar13 + 100);
@@ -182,12 +182,12 @@ void UpdateMoby_1293(MobyInstance *moby)
         dVar14 = 3.0;
         dVar18 = 1.5707963705062866;
         AccelDeltAng
-                  (0,(double)(DAT_0078dfe4 * 0.017453292 * DAT_0071f418 * 3.0),
+                  (0,(double)(DAT_0078dfe4 * 0.017453292 * g_FrameTimeSq * 3.0),
                    (double)(DAT_0078dfe8 * DAT_0071f40c),(double)(g_FrameTime * 1.5707964)
                    ,uVar13 + 0x60,&DAT_0023efd8,uVar13 + 0x70);
         AccelDeltAng
                   (uVar15,(double)(float)((double)((float)((double)DAT_0078dfe4 * dVar19) *
-                                                  DAT_0071f418) * dVar14),
+                                                  g_FrameTimeSq) * dVar14),
                    (double)(DAT_0078dfe8 * DAT_0071f40c),
                    (double)(float)((double)g_FrameTime * dVar18),uVar13 + 100);
       }
@@ -222,12 +222,12 @@ void UpdateMoby_1293(MobyInstance *moby)
                 (-(double)(DAT_0078dfc8 *
                           ((float)((double)g_heroPosition.z - dVar19) * (moby->transform).v1.z +
                           fVar9 * (moby->transform).v1.x + fVar4 * (moby->transform).v1.y)),
-                 (double)(DAT_0078dfd8 * 0.017453292 * DAT_0071f418),
+                 (double)(DAT_0078dfd8 * 0.017453292 * g_FrameTimeSq),
                  (double)(DAT_0078dfdc * DAT_0071f40c),
                  (double)(DAT_0078dfe0 * 0.017453292 * g_FrameTime),uVar13 + 0x60,0x790000
                  ,uVar13 + 0x70);
       AccelDeltAng
-                (dVar18,(double)((float)((double)DAT_0078dfd8 * dVar14) * DAT_0071f418),
+                (dVar18,(double)((float)((double)DAT_0078dfd8 * dVar14) * g_FrameTimeSq),
                  (double)(DAT_0078dfdc * DAT_0071f40c),
                  (double)((float)((double)DAT_0078dfe0 * dVar14) * g_FrameTime),
                  uVar13 + 100);

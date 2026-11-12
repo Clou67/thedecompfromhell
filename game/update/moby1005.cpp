@@ -240,7 +240,7 @@ void UpdateMoby_1005(MobyInstance *moby)
     dVar10 = 270.2099914550781;
     dVar9 = 64.8499984741211;
     OrganicDelt
-              (1.0,DAT_0071f418 * 0.15,DAT_0071f418 * 0.15,g_FrameTime * 0.15,
+              (1.0,g_FrameTimeSq * 0.15,g_FrameTimeSq * 0.15,g_FrameTime * 0.15,
                (float *)((int)pvVar2 + 0x40),0x720000,(float *)((int)pvVar2 + 0x44));
     dVar8 = (double)*(float *)((int)pvVar2 + 0x40);
     dVar12 = 0.0;

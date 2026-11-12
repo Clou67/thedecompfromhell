@@ -134,7 +134,7 @@ double M238_00305b50(int param_1)
   GPiece<16> local_20;
   
   dVar1 = (double)GetGroundZ(local_20,0);
-  fVar2 = Delt((float)dVar1,DAT_0071f418 * 27.0,(float *)(param_1 + 0x18));
+  fVar2 = Delt((float)dVar1,g_FrameTimeSq * 27.0,(float *)(param_1 + 0x18));
   return (double)fVar2;
 }
 
@@ -321,7 +321,7 @@ void M238_00306148(int param_1)
                                        (double)(float)((double)(float)(dVar20 * dVar17) *
                                                        -0.16666656732559204 + dVar17))));
       local_b4 = local_c4;
-      local_b8 = -(DAT_007ff4b0 * DAT_0071f418 *
+      local_b8 = -(DAT_007ff4b0 * g_FrameTimeSq *
                    (float)(longlong)(animationSpeed * (float)((double)local_b0 + 0.5)) - local_c8);
       local_c0 = local_d0;
       local_bc = local_cc;
@@ -437,7 +437,7 @@ undefined8 M238_00306888(undefined8 param_1,MobyInstance *param_2)
   pvVar5 = param_2->pVar;
   local_78 = (float)(dVar19 + 0.5);
   dVar12 = (double)GetGroundZ(0x3fe0000000000000,&local_80,0);
-  Delt((float)dVar12,DAT_0071f418 * 27.0,&(param_2->pos).z);
+  Delt((float)dVar12,g_FrameTimeSq * 27.0,&(param_2->pos).z);
   dVar12 = 0.05000000074505806;
   OrganicDeltAngSpeed
             (param_1,0x3fa99999a0000000,0x3fd3333340000000,0x3fc99999a0000000,param_2);
@@ -1217,11 +1217,11 @@ LAB_0030776c:
         }
         local_48 = (longlong)(int)(animationSpeed * 20.5);
         if ((int)(animationSpeed * 20.5) < (int)*(short *)((int)pvVar8 + 0x2cc)) {
-          Delt(g_FrameTime * 2.5,DAT_0071f418 * 7.0,
+          Delt(g_FrameTime * 2.5,g_FrameTimeSq * 7.0,
                          (float *)((int)pvVar8 + 0x1e4));
         }
         else {
-          Delt(0.0,DAT_0071f418 * 7.0,(float *)((int)pvVar8 + 0x1e4));
+          Delt(0.0,g_FrameTimeSq * 7.0,(float *)((int)pvVar8 + 0x1e4));
         }
         moby->unk58 = 0.8;
         DoMeander(0x3fd6666660000000,0x3fd0000000000000,lVar18,(int)pvVar8 + 0x1d0);
@@ -1406,7 +1406,7 @@ LAB_00307d44:
         MB_SetGroupField(moby->group,2);
       }
       dVar29 = (double)DAT_007ff528;
-      dVar28 = (double)DAT_0071f418;
+      dVar28 = (double)g_FrameTimeSq;
       *(undefined4 *)((int)pvVar8 + 0x134) = 0;
       moby->drawDistance = 0x40;
       *(float *)((int)pvVar8 + 0x130) = (float)(dVar29 * dVar28);

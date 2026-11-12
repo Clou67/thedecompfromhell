@@ -82,8 +82,8 @@ void M622_003e2b88(MobyInstance *param_1)
   *(short **)((int)pvVar1 + 0xac) = param_1->pClass->seqs->trigs;
   *(short **)((int)pvVar1 + 0xb0) = param_1->pClass->seqs->trigs;
   walk_SetupTwistVals(param_1,(w_2legData *)((int)pvVar1 + 0x10));
-  fVar2 = DAT_0071f418;
-  *(float *)((int)pvVar1 + 0xec) = DAT_0071f418 * 9.8;
+  fVar2 = g_FrameTimeSq;
+  *(float *)((int)pvVar1 + 0xec) = g_FrameTimeSq * 9.8;
   *(float *)((int)pvVar1 + 0xdc) = fVar2 * 0.7853982;
   *(float *)((int)pvVar1 + 0xe0) = fVar2 * 6.2831855;
   *(float *)((int)pvVar1 + 0xe4) = g_FrameTime * 1.0471976;

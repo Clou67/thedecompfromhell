@@ -332,7 +332,7 @@ void UpdateMoby_19(MobyInstance *moby)
     moby->setByGroup = '\x01';
     if (piVar9[5] != 0) {
       OrganicDelt
-                ((float)piVar9[4],DAT_0071f418 * 4.0,DAT_0071f418 * 4.0,g_FrameTime * 4.0,
+                ((float)piVar9[4],g_FrameTimeSq * 4.0,g_FrameTimeSq * 4.0,g_FrameTime * 4.0,
                  &(moby->pos).z,0x720000,(float *)(piVar9 + 2));
       puVar21 = (ushort *)(&g_MobyGroups)[(byte)moby->group];
       pMVar11 = g_MobyInstance;

@@ -230,7 +230,7 @@ void UpdateMoby_877(MobyInstance *moby)
         *(int *)((int)pvVar6 + 0x74) = iVar15;
       }
       fVar4 = g_FrameTime;
-      fVar5 = DAT_0071f418;
+      fVar5 = g_FrameTimeSq;
       if (moby->setByGroup != '\0') {
         DAT_0096bfba = (undefined2)*(undefined4 *)((int)pvVar6 + 0x68);
         Delt(0.0,0.133,(float *)((int)pvVar6 + 0x78));
@@ -246,7 +246,7 @@ void UpdateMoby_877(MobyInstance *moby)
           fVar3 = 6.0;
         }
         fVar4 = g_FrameTime * fVar3 * fVar5;
-        fVar5 = DAT_0071f418 * fVar3 * fVar5;
+        fVar5 = g_FrameTimeSq * fVar3 * fVar5;
       }
       fVar3 = 0.0;
       if (moby->state == 2) {

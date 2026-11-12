@@ -58,11 +58,11 @@ void UpdateMoby_1381(MobyInstance *moby)
   pvVar7 = moby->pVar;
   uVar18 = ZEXT48(pvVar7);
   if (pvVar7 != (void *)0x0) {
-    dVar19 = (double)(DAT_0079c814 * DAT_0071f418);
+    dVar19 = (double)(DAT_0079c814 * g_FrameTimeSq);
     uVar1 = moby->state;
     if (uVar1 == '\x04') {
       (moby->pos).z = (moby->pos).z + *(float *)((int)pvVar7 + 0x340);
-      *(float *)((int)pvVar7 + 0x340) = -(DAT_0071f418 * 5.0 - *(float *)((int)pvVar7 + 0x340));
+      *(float *)((int)pvVar7 + 0x340) = -(g_FrameTimeSq * 5.0 - *(float *)((int)pvVar7 + 0x340));
       fVar8 = (moby->pos).z;
       uVar9 = (int)fVar8 >> 0x1f;
       if ((int)((uVar9 >> 1 ^ (uint)fVar8) - uVar9) < 0x41a00000) {
@@ -84,14 +84,14 @@ void UpdateMoby_1381(MobyInstance *moby)
         iVar15 = (int)pvVar7 + 0x334;
         if ((int)((uVar9 >> 1 ^ *(uint *)((int)pvVar7 + 0x330)) - uVar9) < 0x3fc00000) {
           fVar27 = OrganicDelt
-                             (1.5,DAT_0079c814 * DAT_0071f418,DAT_0079c818 * DAT_0071f418,
+                             (1.5,DAT_0079c814 * g_FrameTimeSq,DAT_0079c818 * g_FrameTimeSq,
                               DAT_0079c81c * g_FrameTime,(float *)((int)pvVar7 + 0x330U),
                               iVar15,(float *)iVar15);
           dVar19 = (double)fVar27;
         }
         else {
           fVar27 = OrganicDelt
-                             (2.0,DAT_0079c820 * DAT_0071f418,DAT_0079c824 * DAT_0071f418,
+                             (2.0,DAT_0079c820 * g_FrameTimeSq,DAT_0079c824 * g_FrameTimeSq,
                               DAT_0079c828 * g_FrameTime,(float *)((int)pvVar7 + 0x330U),
                               iVar15,(float *)iVar15);
           dVar19 = (double)fVar27;

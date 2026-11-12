@@ -62,7 +62,7 @@ MobyInstance * UpdateMoby_852(MobyInstance *moby)
       iVar5 = FastDecTimerS32(piVar4 + 1);
       if ((iVar5 != 0) &&
          (OrganicDelt
-                    ((float)piVar4[3],DAT_008ad3d0 * DAT_0071f418,DAT_008ad3d4 * DAT_0071f418,
+                    ((float)piVar4[3],DAT_008ad3d0 * g_FrameTimeSq,DAT_008ad3d4 * g_FrameTimeSq,
                      DAT_008ad3d8 * g_FrameTime,&(moby->pos).z,0x8b0000,
                      (float *)(piVar4 + 4)), moby->oClass == BRIDGE_PILE)) {
         fVar2 = (moby->pos).z;
@@ -81,8 +81,8 @@ MobyInstance * UpdateMoby_852(MobyInstance *moby)
       }
       else {
         OrganicDeltAng
-                  (0.0,DAT_008ad3dc * 0.017453292 * DAT_0071f418,
-                   DAT_008ad3e0 * 0.017453292 * DAT_0071f418,
+                  (0.0,DAT_008ad3dc * 0.017453292 * g_FrameTimeSq,
+                   DAT_008ad3e0 * 0.017453292 * g_FrameTimeSq,
                    DAT_008ad3e4 * 0.017453292 * g_FrameTime,&(moby->rotation).y,0x720000,
                    (float *)(piVar4 + 5));
         pMVar6 = (MobyInstance *)(moby->rotation).y;

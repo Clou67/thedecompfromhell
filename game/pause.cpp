@@ -10261,7 +10261,7 @@ void MenuHero_MobyUpdateF(MobyInstance *param_1)
   uVar13 = (uint)(byte)param_1->setByGroup;
   if ((float)(&DAT_00a52e6c)[uVar13] != 0.0) {
     OrganicDelt
-              (0.0,1.0,DAT_0071f418 * 6.0,g_FrameTime * 6.0,
+              (0.0,1.0,g_FrameTimeSq * 6.0,g_FrameTime * 6.0,
                (float *)(&DAT_00a52e6c + (byte)param_1->setByGroup),uVar13 * 4,
                (float *)(&DAT_00a52e84 + uVar13));
   }

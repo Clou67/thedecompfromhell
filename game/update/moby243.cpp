@@ -153,7 +153,7 @@ void UpdateMoby_243(MobyInstance *moby)
       (moby->pos).x = (moby->pos).x + *pfVar4;
       (moby->pos).y = (moby->pos).y + pfVar4[1];
       (moby->pos).z = (moby->pos).z + pfVar4[2];
-      pfVar4[2] = -(DAT_0071f418 * 9.8 - pfVar4[2]);
+      pfVar4[2] = -(g_FrameTimeSq * 9.8 - pfVar4[2]);
       dVar29 = 290.5;
       local_100 = (longlong)(int)(animationSpeed * 290.5);
       lVar15 = lVar11 + 0x10;

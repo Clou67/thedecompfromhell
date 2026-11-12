@@ -30,7 +30,7 @@ errors	file
 0	game/pad.cpp
 0	game/partproc.cpp
 445	game/partupd.cpp
-26	game/path.cpp
+15	game/path.cpp
 629	game/pause.cpp
 4	game/rUnk.cpp
 0	game/respawn.cpp
@@ -441,7 +441,7 @@ errors	file
 5	game/update/moby18.cpp
 4	game/update/moby180.cpp
 15	game/update/moby1805.cpp
-5	game/update/moby181.cpp
+4	game/update/moby181.cpp
 7	game/update/moby1811.cpp
 7	game/update/moby1812.cpp
 4	game/update/moby1813.cpp

@@ -337,7 +337,7 @@ void UpdateMoby_248(MobyInstance *moby)
       (moby->pos).y = (moby->pos).y + *(float *)((int)pvVar6 + 0x14);
       (moby->pos).z = (moby->pos).z + *(float *)((int)pvVar6 + 0x18);
       *(float *)((int)pvVar6 + 0x18) =
-           -(DAT_007ffa88 * DAT_0071f418 - *(float *)((int)pvVar6 + 0x18));
+           -(DAT_007ffa88 * g_FrameTimeSq - *(float *)((int)pvVar6 + 0x18));
       iVar14 = CollLine(local_f0,local_e0,0,lVar12,0);
       if (iVar14 == 0) {
         iVar14 = FastDecTimerS32(uVar15 + 0x20);

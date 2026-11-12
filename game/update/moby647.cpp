@@ -36,7 +36,7 @@ void UpdateMoby_647(MobyInstance *moby)
     (moby->pos).z = pfVar5[2];
     (moby->pos).w = pfVar5[3];
     OrganicDelt
-              (pfVar5[5],DAT_0071f418 * 4.0,DAT_0071f418 * 4.0,g_FrameTime * 8.0,
+              (pfVar5[5],g_FrameTimeSq * 4.0,g_FrameTimeSq * 4.0,g_FrameTime * 8.0,
                pfVar5 + 6,0x720000,pfVar5 + 4);
     fVar1 = (moby->transform).v0.y;
     fVar2 = (moby->transform).v0.x;

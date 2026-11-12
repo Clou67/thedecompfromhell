@@ -439,7 +439,7 @@ void UpdateMoby_856(MobyInstance *moby)
       dVar24 = (double)((float)(dVar24 + 0.7853981852531433) * fVar5 + fVar2);
     }
     OrganicDeltAng
-              ((float)dVar24,DAT_0071f418 * 25.132742,DAT_0071f418 * 25.132742,
+              ((float)dVar24,g_FrameTimeSq * 25.132742,g_FrameTimeSq * 25.132742,
                g_FrameTime * 25.132742,&(moby->rotation).z,0x48f610,(float *)(puVar15 + 6)
               );
     fVar1 = *(float *)(puVar7 + 0x16) - (moby->pos).x;

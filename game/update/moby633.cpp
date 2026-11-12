@@ -117,7 +117,7 @@ void UpdateMoby_633(MobyInstance *moby)
     (moby->pos).y = (moby->pos).y + pfVar7[0x11];
     (moby->pos).z = (moby->pos).z + pfVar7[0x12];
     dVar27 = 10.800000190734863;
-    pfVar7[0x12] = -(DAT_0071f418 * 10.8 - pfVar7[0x12]);
+    pfVar7[0x12] = -(g_FrameTimeSq * 10.8 - pfVar7[0x12]);
     iVar16 = FastDecTimerS32(ZEXT48(pfVar7) + 0x68);
     pvVar8 = moby->pVar;
     if (iVar16 == 0) {
@@ -181,7 +181,7 @@ void UpdateMoby_633(MobyInstance *moby)
         pfVar7[1] = (float)((double)fVar3 * dVar30 + (double)pfVar7[1]);
         pfVar7[2] = (float)((double)fVar4 * dVar30 + (double)pfVar7[2]);
       }
-      pfVar7[0x12] = (float)((double)DAT_0071f418 * dVar27) *
+      pfVar7[0x12] = (float)((double)g_FrameTimeSq * dVar27) *
                      (float)(longlong)((int)(float)uVar15 >> 1) + pfVar7[0x12];
       return;
     }
@@ -251,14 +251,14 @@ void UpdateMoby_633(MobyInstance *moby)
         local_f0.x = local_100 - *(float *)((int)pvVar8 + 0x40);
         local_f0.y = local_fc - *(float *)((int)pvVar8 + 0x44);
         local_f0.z = local_f8 - *(float *)((int)pvVar8 + 0x48);
-        ClampVec3Magnitude((double)(DAT_00854460 * DAT_0071f418),&local_f0);
+        ClampVec3Magnitude((double)(DAT_00854460 * g_FrameTimeSq),&local_f0);
         *(float *)((int)pvVar8 + 0x40) = *(float *)((int)pvVar8 + 0x40) + local_f0.x;
         *(float *)((int)pvVar8 + 0x44) = *(float *)((int)pvVar8 + 0x44) + local_f0.y;
         *(float *)((int)pvVar8 + 0x48) = *(float *)((int)pvVar8 + 0x48) + local_f0.z;
       }
       else {
-        Delt((float)dVar27,DAT_00854460 * DAT_0071f418,(float *)((int)pvVar8 + 0x70));
-        Delt(DAT_0085445c * g_FrameTime,DAT_00854460 * DAT_0071f418,
+        Delt((float)dVar27,DAT_00854460 * g_FrameTimeSq,(float *)((int)pvVar8 + 0x70));
+        Delt(DAT_0085445c * g_FrameTime,DAT_00854460 * g_FrameTimeSq,
                        (float *)((int)pvVar8 + 0x74));
       }
       dVar28 = (double)*(float *)((int)pvVar8 + 0x74);
@@ -634,7 +634,7 @@ LAB_003f4428:
   (moby->pos).y = (moby->pos).y + *(float *)((int)pvVar8 + 0x44);
   (moby->pos).z = (moby->pos).z + *(float *)((int)pvVar8 + 0x48);
   dVar27 = 10.800000190734863;
-  *(float *)((int)pvVar8 + 0x48) = -(DAT_0071f418 * 10.8 - *(float *)((int)pvVar8 + 0x48));
+  *(float *)((int)pvVar8 + 0x48) = -(g_FrameTimeSq * 10.8 - *(float *)((int)pvVar8 + 0x48));
   FastVecMtx4MultBatch3(lVar20,pvVar8,lVar20);
   fVar9 = (moby->pos).z;
   fVar17 = (moby->pos).z;
@@ -740,7 +740,7 @@ LAB_003f4428:
       pfVar7[2] = (float)((double)fVar4 * dVar30 + (double)pfVar7[2]);
     }
     local_70 = (longlong)((int)(float)uVar15 >> 1);
-    pfVar7[0x12] = (float)((double)DAT_0071f418 * dVar27) * (float)local_70 + pfVar7[0x12];
+    pfVar7[0x12] = (float)((double)g_FrameTimeSq * dVar27) * (float)local_70 + pfVar7[0x12];
     dVar27 = (double)FastDiffRots((double)pfVar7[0xc],(double)(moby->rotation).x);
     pfVar7[0x14] = (float)(dVar27 * dVar28);
     dVar27 = (double)FastDiffRots((double)pfVar7[0xd],(double)(moby->rotation).y);

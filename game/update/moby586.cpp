@@ -94,8 +94,8 @@ void UpdateMoby_586(MobyInstance *moby)
     if (uVar1 != '\x03') {
       if (uVar1 == '\x02') {
         OrganicDelt
-                  (*(float *)((int)pvVar2 + 100) + DAT_00846674,DAT_0071f418 * 5.0,
-                   DAT_0071f418 * 10.0,g_FrameTime * 20.0,&(moby->pos).z,0x840000,
+                  (*(float *)((int)pvVar2 + 100) + DAT_00846674,g_FrameTimeSq * 5.0,
+                   g_FrameTimeSq * 10.0,g_FrameTime * 20.0,&(moby->pos).z,0x840000,
                    (float *)((int)pvVar2 + 0x68));
         if (((g_framesNotGrounded == 0) && (g_standingOnMoby == moby)) &&
            (g_heroState == THRUSTER_PACK_BONK_JUMP)) {
@@ -136,7 +136,7 @@ void UpdateMoby_586(MobyInstance *moby)
       }
     }
     OrganicDelt
-              (*(float *)((int)pvVar2 + 100) + DAT_00846678,DAT_0071f418 * 20.0,DAT_0071f418 * 40.0,
+              (*(float *)((int)pvVar2 + 100) + DAT_00846678,g_FrameTimeSq * 20.0,g_FrameTimeSq * 40.0,
                g_FrameTime * 20.0,&(moby->pos).z,0x840000,(float *)((int)pvVar2 + 0x68));
   }
   return;

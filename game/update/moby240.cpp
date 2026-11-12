@@ -160,11 +160,11 @@ void M240_0030bbd0
     fVar1 = *(float *)(iVar2 + 0xd0) * g_FrameTime;
     if (fVar1 <= fVar6) {
       if (fVar1 < fVar6) {
-        fVar6 = -(*(float *)(iVar2 + 0xd4) * DAT_0071f418 - fVar6);
+        fVar6 = -(*(float *)(iVar2 + 0xd4) * g_FrameTimeSq - fVar6);
       }
     }
     else {
-      fVar6 = *(float *)(iVar2 + 0xd4) * DAT_0071f418 + fVar6;
+      fVar6 = *(float *)(iVar2 + 0xd4) * g_FrameTimeSq + fVar6;
     }
   }
   else {
@@ -172,13 +172,13 @@ void M240_0030bbd0
       fVar6 = g_FrameTime * 0.01;
     }
     fVar1 = *(float *)(iVar2 + 0xd4);
-    if ((fVar6 * fVar6) / (fVar7 * 2.0) <= fVar1 * DAT_0071f418) {
+    if ((fVar6 * fVar6) / (fVar7 * 2.0) <= fVar1 * g_FrameTimeSq) {
       if (fVar6 < *(float *)(iVar2 + 0xd0) * g_FrameTime) {
-        fVar6 = fVar1 * DAT_0071f418 + fVar6;
+        fVar6 = fVar1 * g_FrameTimeSq + fVar6;
       }
     }
     else {
-      fVar6 = -(fVar1 * DAT_0071f418 - fVar6);
+      fVar6 = -(fVar1 * g_FrameTimeSq - fVar6);
     }
   }
   fVar6 = fVar6 / fVar7;
@@ -392,7 +392,7 @@ void UpdateMoby_240(MobyInstance *moby)
           DeleteMoby(moby);
           return;
         }
-        *(float *)((int)pvVar11 + 0x48) = -(DAT_0071f418 * 7.0 - *(float *)((int)pvVar11 + 0x48));
+        *(float *)((int)pvVar11 + 0x48) = -(g_FrameTimeSq * 7.0 - *(float *)((int)pvVar11 + 0x48));
         dVar36 = (double)FastWrapRot(*(float *)((int)pvVar11 + 0xe8),(moby->rotation).x);
         (moby->rotation).x = (float)dVar36;
         dVar36 = (double)FastWrapRot(*(float *)((int)pvVar11 + 0xec),(moby->rotation).y);
@@ -474,7 +474,7 @@ LAB_0030cf34:
                (float)(dVar30 * dVar30 +
                       (double)(*(float *)((int)pvVar11 + 0x44) * *(float *)((int)pvVar11 + 0x44))))
           < g_FrameTime * 6.0) {
-        *(float *)((int)pvVar11 + 0x48) = DAT_0071f418 * 6.0 + fVar3;
+        *(float *)((int)pvVar11 + 0x48) = g_FrameTimeSq * 6.0 + fVar3;
         dVar36 = (double)(moby->pos).x;
         dVar34 = (double)(moby->pos).y;
         dVar32 = (double)(moby->pos).z;

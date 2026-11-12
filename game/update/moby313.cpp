@@ -130,7 +130,7 @@ void UpdateMoby_313(MobyInstance *moby)
     (moby->rotation).z = (float)dVar8;
     dVar8 = (double)FastWrapRot((moby->rotation).y,pfVar4[5]);
     (moby->rotation).y = (float)dVar8;
-    pfVar4[2] = -(DAT_0071f418 * 9.8 - pfVar4[2]);
+    pfVar4[2] = -(g_FrameTimeSq * 9.8 - pfVar4[2]);
     iVar7 = FastDecTimerS32(pfVar4 + 7);
     if (iVar7 == 0) {
       iVar7 = CollLine(local_a0,lVar5 + 0x10,2,lVar5,0);
@@ -143,7 +143,7 @@ void UpdateMoby_313(MobyInstance *moby)
         *pfVar4 = fVar2;
         pfVar4[1] = fVar1;
         pfVar4[2] = fVar3;
-        if (SQRT(fVar3 * fVar3 + fVar2 * fVar2 + fVar1 * fVar1) < DAT_0071f418 * 10.0) {
+        if (SQRT(fVar3 * fVar3 + fVar2 * fVar2 + fVar1 * fVar1) < g_FrameTimeSq * 10.0) {
           pfVar4[3] = 0.0;
           pfVar4[2] = 0.0;
           pfVar4[1] = 0.0;

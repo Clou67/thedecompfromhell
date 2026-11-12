@@ -76,8 +76,8 @@ void M862_00499010(MobyInstance *param_1)
         *(undefined4 *)((int)pvVar6 + 0x80) = 0x200;
         *(undefined4 *)((int)pvVar6 + 0x88) = 0x3f000000;
         *(float *)((int)pvVar6 + 0x20) = *(float *)((int)pvVar6 + 0x20) - fVar2;
-        fVar2 = DAT_0071f418;
-        *(float *)((int)pvVar6 + 0x70) = DAT_0071f418 * 10.0;
+        fVar2 = g_FrameTimeSq;
+        *(float *)((int)pvVar6 + 0x70) = g_FrameTimeSq * 10.0;
         *(undefined1 *)((int)pvVar6 + 0x9d) = 0;
         *(undefined4 *)((int)pvVar6 + 0x84) = 0x29;
         *(float *)((int)pvVar6 + 0x74) = fVar2 * 1.5;

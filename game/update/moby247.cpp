@@ -214,7 +214,7 @@ void UpdateMoby_247(MobyInstance *moby)
           else if ((int)(FLOAT_ORDER(uVar5)) <
                    0x3f800000) {
             OrganicDelt
-                      (1.0,DAT_0071f418 * 0.666,DAT_0071f418 * 0.666,g_FrameTime * 0.5,
+                      (1.0,g_FrameTimeSq * 0.666,g_FrameTimeSq * 0.666,g_FrameTime * 0.5,
                        (float *)(puVar3 + 4),0x3147fc,(float *)(puVar3 + 5));
             iVar8 = puVar3[2];
             iVar6 = puVar3[3];

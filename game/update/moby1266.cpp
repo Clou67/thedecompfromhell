@@ -115,13 +115,13 @@ void M1266_00232b90(MobyInstance *moby)
     dVar7 = 90.5;
     dVar6 = 12.0;
     MB_SpawnDebrisMoby
-              ((double)(DAT_0071f418 * 12.0),lVar2,0x785,lVar5,lVar4,(int)(animationSpeed * 90.5),0,
+              ((double)(g_FrameTimeSq * 12.0),lVar2,0x785,lVar5,lVar4,(int)(animationSpeed * 90.5),0,
                in_r9,local_70);
     MB_SpawnDebrisMoby
-              ((double)(float)((double)DAT_0071f418 * dVar6),lVar2,0x786,lVar5,lVar4,
+              ((double)(float)((double)g_FrameTimeSq * dVar6),lVar2,0x786,lVar5,lVar4,
                (int)((double)animationSpeed * dVar7),0,in_r9,local_70);
     MB_SpawnDebrisMoby
-              ((double)(float)((double)DAT_0071f418 * dVar6),lVar2,0x787,lVar5,lVar4,
+              ((double)(float)((double)g_FrameTimeSq * dVar6),lVar2,0x787,lVar5,lVar4,
                (int)((double)animationSpeed * dVar7),0,in_r9,local_70);
     moby->state = '\x02';
     moby->enabled = '\0';
@@ -624,7 +624,7 @@ void UpdateMoby_1266(MobyInstance *moby)
           MB_SetAnimation(lVar11,2,0,(int)(animationSpeed * 3.5));
         }
         dVar26 = (double)GetGroundZ(0x3fe0000000000000,lVar18,0x120);
-        fVar3 = -(DAT_0071f418 * 9.8 - *(float *)((int)pvVar5 + 0x198));
+        fVar3 = -(g_FrameTimeSq * 9.8 - *(float *)((int)pvVar5 + 0x198));
         *(float *)((int)pvVar5 + 0x198) = fVar3;
         fVar3 = (moby->pos).z + fVar3;
         (moby->pos).z = fVar3;
@@ -771,7 +771,7 @@ void UpdateMoby_1266(MobyInstance *moby)
       }
       else if (bVar1 < 0x11) {
         dVar26 = (double)GetGroundZ(0x3fe0000000000000,lVar18,0x120);
-        Delt(g_FrameTime * 8.0,DAT_0071f418 * 10.8,(float *)((int)pvVar5 + 0x48)
+        Delt(g_FrameTime * 8.0,g_FrameTimeSq * 10.8,(float *)((int)pvVar5 + 0x48)
                       );
         fVar3 = (moby->pos).z + *(float *)((int)pvVar5 + 0x48);
         (moby->pos).z = fVar3;
@@ -783,7 +783,7 @@ void UpdateMoby_1266(MobyInstance *moby)
       }
       else {
         dVar26 = (double)GetGroundZ(0x3fe0000000000000,lVar18,0x120);
-        Delt(g_FrameTime * -8.0,DAT_0071f418 * 10.8,
+        Delt(g_FrameTime * -8.0,g_FrameTimeSq * 10.8,
                        (float *)((int)pvVar5 + 0x48));
         uVar2 = moby->animationId;
         fVar3 = (moby->pos).z + *(float *)((int)pvVar5 + 0x48);
@@ -1093,7 +1093,7 @@ void UpdateMoby_1266(MobyInstance *moby)
   (moby->pos).z = local_f8;
   (moby->pos).w = local_f4;
   dVar26 = (double)GetGroundZ(0x3fe0000000000000,lVar18,0x120);
-  fVar3 = -(DAT_0071f418 * 9.8 - *(float *)((int)pvVar5 + 0x198));
+  fVar3 = -(g_FrameTimeSq * 9.8 - *(float *)((int)pvVar5 + 0x198));
   *(float *)((int)pvVar5 + 0x198) = fVar3;
   fVar3 = (moby->pos).z + fVar3;
   (moby->pos).z = fVar3;

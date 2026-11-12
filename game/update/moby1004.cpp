@@ -197,7 +197,7 @@ bool M1004_00181f00(double param_1,int param_2,int param_3,float *param_4)
     fVar5 = fVar5 * 0.5;
     *(float *)(param_3 + 0x78) = fVar5;
   }
-  fVar3 = DAT_0071f418 * 30.0;
+  fVar3 = g_FrameTimeSq * 30.0;
   *(float *)(puVar12 + 0xe) = SQRT(fVar5 * fVar5 + fVar7 * fVar7 + fVar8 * fVar8);
   Delt(fVar6,fVar3,(float *)(puVar12 + 0xe));
   dVar25 = (double)FastWrapRot
@@ -210,7 +210,7 @@ bool M1004_00181f00(double param_1,int param_2,int param_3,float *param_4)
   dVar30 = (double)(param_4[2] - *(float *)(param_2 + 0x18));
   dVar28 = (double)(fVar3 * fVar3 + fVar4 * fVar4);
   *(float *)((int)puVar12 + 0x94) = ABS(fVar3) - ABS(fVar4);
-  fVar7 = DAT_0071f418;
+  fVar7 = g_FrameTimeSq;
   fVar6 = g_FrameTime;
   dVar25 = 0.0;
   uVar20 = (ulonglong)(*(uint *)((int)puVar12 + 0x8c) >> 0x1c) & 8 |
@@ -288,7 +288,7 @@ bool M1004_00181f00(double param_1,int param_2,int param_3,float *param_4)
   *(float *)((int)puVar12 + 0x84) = (float)dVar30;
   fVar4 = g_FrameTime;
   fVar3 = *(float *)(param_2 + 0x44);
-  dVar26 = (double)DAT_0071f418;
+  dVar26 = (double)g_FrameTimeSq;
   dVar27 = ABS((double)(float)SQRT(dVar28));
   *(float *)(puVar12 + 0x10) = (float)SQRT(dVar28);
   *(float *)(puVar12 + 0x11) = (float)(dVar27 - ABS(dVar30));

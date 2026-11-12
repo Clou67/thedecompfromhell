@@ -68,7 +68,7 @@ void UpdateMoby_650(MobyInstance *moby)
       fVar1 = *pfVar2;
     }
     OrganicDelt
-              (fVar1,DAT_0071f418 * 10.0,DAT_0071f418 * 10.0,g_FrameTime * 10.0,
+              (fVar1,g_FrameTimeSq * 10.0,g_FrameTimeSq * 10.0,g_FrameTime * 10.0,
                &(moby->pos).z,0x720000,pfVar2 + 1);
   }
   return;

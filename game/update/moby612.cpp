@@ -83,9 +83,9 @@ void M612_003dae98(MobyInstance *param_1)
     uVar13 = FastDoubleToInt(0x4083333340000000);
     *(undefined4 *)((int)pvVar6 + 0x90) = uVar13;
     *(undefined4 *)((int)pvVar6 + 0x98) = 0x3f19999a;
-    fVar3 = DAT_0071f418;
+    fVar3 = g_FrameTimeSq;
     if (*(int *)((int)pvVar6 + 0x20) < 1) {
-      *(float *)((int)pvVar6 + 0x80) = DAT_00853a00 * DAT_0071f418;
+      *(float *)((int)pvVar6 + 0x80) = DAT_00853a00 * g_FrameTimeSq;
       *(float *)((int)pvVar6 + 0x84) = DAT_008539f0 * fVar3;
       fVar3 = g_FrameTime;
       *(float *)((int)pvVar6 + 0x88) = DAT_008539e0 * g_FrameTime;
@@ -186,8 +186,8 @@ void M612_003dae98(MobyInstance *param_1)
       }
       else {
         *(undefined1 *)((int)pvVar6 + 0x67) = 0x78;
-        fVar3 = DAT_0071f418;
-        *(float *)((int)pvVar6 + 0x80) = DAT_00853a00 * DAT_0071f418;
+        fVar3 = g_FrameTimeSq;
+        *(float *)((int)pvVar6 + 0x80) = DAT_00853a00 * g_FrameTimeSq;
         *(float *)((int)pvVar6 + 0x84) = DAT_008539f4 * fVar3;
         fVar3 = g_FrameTime;
         *(float *)((int)pvVar6 + 0x88) = DAT_008539e8 * g_FrameTime;
@@ -628,7 +628,7 @@ void UpdateMoby_612(MobyInstance *moby)
       ClampVec3Magnitude((double)(fVar3 * 6.0),(Vec4 *)lVar31);
       FUN_005e7f54(lVar30,lVar30,lVar31);
       dVar33 = (double)GetGroundZ(0x3fe0000000000000,lVar30,0);
-      Delt(g_FrameTime * 40.0,DAT_00853a00 * DAT_0071f418,
+      Delt(g_FrameTime * 40.0,DAT_00853a00 * g_FrameTimeSq,
                      (float *)((int)pvVar14 + 0x48));
       Delt((float)dVar33,*(float *)((int)pvVar14 + 0x48),&(moby->pos).z);
       if (((double)(moby->pos).z == dVar33) && (moby->state = '\x04', moby->animationId != '\x05'))

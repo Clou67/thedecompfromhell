@@ -251,8 +251,8 @@ void UpdateMoby_666(MobyInstance *moby)
         *(float *)((int)pvVar46 + 0x14) = pCVar35[*(int *)((int)pvVar46 + 0x24)].rot.y;
         dVar51 = (double)MB_DeltAngSpeed
                                    ((double)GameCamera.rot.radius,dVar50,
-                                    (double)(DAT_0071f418 * 12.566371),
-                                    (double)(DAT_0071f418 * 125.663704),
+                                    (double)(g_FrameTimeSq * 12.566371),
+                                    (double)(g_FrameTimeSq * 125.663704),
                                     (double)(g_FrameTime * 3.1415927),&DAT_00720000,
                                     &DAT_00409170,(int)pvVar11 + 0x18c);
         *(float *)((int)pvVar46 + 0x18) = (float)dVar51;

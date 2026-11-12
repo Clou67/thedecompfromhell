@@ -1257,7 +1257,7 @@ void UpdateMoby_31(MobyInstance *moby)
         auVar45 = auVar44 >> 0x60 & (GPiece<16>)0xffffffff;
         auVar44 = loadVectorLeftIndexed(0x20,0x33daa0);
         auVar44 = auVar44 >> 0x60 & (GPiece<16>)0xffffffff;
-        fVar3 = DAT_0071f418 * DAT_00811ea0;
+        fVar3 = g_FrameTimeSq * DAT_00811ea0;
         uVar24 = (ulonglong)DAT_00811ea4;
         auVar45 = vectorMultiplyAddFloatingPoint
                             (auVar47,auVar45 | auVar45 << 0x20 | auVar45 << 0x40 | auVar45 << 0x60,

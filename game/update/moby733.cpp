@@ -94,7 +94,7 @@ undefined4 * UpdateMoby_733(MobyInstance *moby)
   }
   else if (bVar1 < 2) {
     dVar6 = 0.01745329238474369;
-    accel = DAT_0085a1f8 * 0.017453292 * DAT_0071f418;
+    accel = DAT_0085a1f8 * 0.017453292 * g_FrameTimeSq;
     OrganicDeltAng
               (speed[1],accel,accel,DAT_0085a1fc * 0.017453292 * g_FrameTime,
                &(moby->rotation).z,0x860000,speed);

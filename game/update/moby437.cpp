@@ -273,7 +273,7 @@ void M437_00376538(undefined8 param_1,int param_2)
 {
   undefined4 uVar1;
   
-  *(float *)(param_2 + 0x18) = -(DAT_0071f418 * 29.7 - *(float *)(param_2 + 0x18));
+  *(float *)(param_2 + 0x18) = -(g_FrameTimeSq * 29.7 - *(float *)(param_2 + 0x18));
   uVar1 = DAT_010c5154;
   *(float *)(param_2 + 0x10) = *(float *)(param_2 + 0x10) * (DAT_0071f408 * -0.050000012 + 1.0);
   *(float *)(param_2 + 0x14) = *(float *)(param_2 + 0x14) * (DAT_0071f408 * -0.050000012 + 1.0);
@@ -1282,7 +1282,7 @@ void M437_003777f8(int param_1,float *param_2)
         dVar28 = (double)((float)(dVar28 + 0.7853981852531433) * fVar4 + fVar3);
       }
       OrganicDeltAngSpeed
-                (dVar28,(double)(DAT_0071f418 * 11.519173),(double)(DAT_0071f418 * 3.1415927),
+                (dVar28,(double)(g_FrameTimeSq * 11.519173),(double)(g_FrameTimeSq * 3.1415927),
                  (double)(g_FrameTime * 11.519173),param_1,&DAT_00720000,&DAT_010c5168);
       if ((*(byte *)(param_1 + 0x70) & 2) != 0) {
         *(undefined4 *)(param_1 + 0x58) = 0x3f800000;
@@ -1379,7 +1379,7 @@ void M437_003777f8(int param_1,float *param_2)
         dVar23 = (double)((float)(dVar23 + 0.7853981852531433) * fVar4 + fVar3);
       }
       OrganicDeltAngSpeed
-                (dVar23,(double)(DAT_0071f418 * 11.519173),(double)(DAT_0071f418 * 3.1415927),
+                (dVar23,(double)(g_FrameTimeSq * 11.519173),(double)(g_FrameTimeSq * 3.1415927),
                  (double)(g_FrameTime * 11.519173),param_1,&DAT_00720000,&DAT_010c5168);
     }
     else {
@@ -1458,8 +1458,8 @@ void M437_003777f8(int param_1,float *param_2)
         dVar24 = (double)((float)(dVar24 + 0.7853981852531433) * fVar5 + fVar4);
       }
       OrganicDeltAngSpeed
-                (dVar24,(double)(DAT_008418b4 * 0.017453292 * DAT_0071f418),
-                 (double)(DAT_008418b8 * 0.017453292 * DAT_0071f418),
+                (dVar24,(double)(DAT_008418b4 * 0.017453292 * g_FrameTimeSq),
+                 (double)(DAT_008418b8 * 0.017453292 * g_FrameTimeSq),
                  (double)(DAT_008418bc * 0.017453292 * g_FrameTime),param_1,&DAT_00720000,
                  &DAT_010c5168);
     }
@@ -1906,7 +1906,7 @@ void UpdateMoby_437(MobyInstance *moby)
     if ((0xf < bVar1) && (0x12 < bVar1)) {
       if (bVar1 < 0x14) {
         fVar11 = DAT_0071f408 * -0.050000012 + 1.0;
-        pfVar10[6] = -(DAT_0071f418 * 29.7 - pfVar10[6]);
+        pfVar10[6] = -(g_FrameTimeSq * 29.7 - pfVar10[6]);
         pfVar10[4] = pfVar10[4] * fVar11 * fVar11;
         pfVar10[5] = pfVar10[5] * fVar11 * fVar11;
         uVar21 = MB_MoveAndCollide2
@@ -2014,7 +2014,7 @@ void UpdateMoby_437(MobyInstance *moby)
           dVar31 = (double)((float)(dVar31 + 0.7853981852531433) * fVar4 + fVar2);
         }
         OrganicDeltAngSpeed
-                  (dVar31,(double)(DAT_0071f418 * 11.519173),(double)(DAT_0071f418 * 3.1415927),
+                  (dVar31,(double)(g_FrameTimeSq * 11.519173),(double)(g_FrameTimeSq * 3.1415927),
                    (double)(g_FrameTime * 11.519173),moby,&DAT_00720000,&DAT_010c5168);
         dVar31 = (double)(moby->pos).z;
         uVar21 = MB_UpdateNavMoveTurning(moby,&DAT_010c5154,uVar27,uVar27 + 0x10);
@@ -2117,7 +2117,7 @@ void UpdateMoby_437(MobyInstance *moby)
           uVar22 = MB_randRange(DAT_00841898,DAT_0084189c);
           uVar29 = MB_randRangeFloat(DAT_008418a4,DAT_008418a8);
           SpawnPart_53
-                    (uVar29,0x3f50624de0000000,(double)(DAT_008418b0 * DAT_0071f418),uVar21 - 0x160,
+                    (uVar29,0x3f50624de0000000,(double)(DAT_008418b0 * g_FrameTimeSq),uVar21 - 0x160,
                      uVar22);
           iVar23 = 0x80 / DAT_00841894;
           moby->modeBits = moby->modeBits | DRAW_TRANSPARENT_WEIRD;
@@ -2247,13 +2247,13 @@ void UpdateMoby_437(MobyInstance *moby)
     DAT_010c518c = DAT_010c518c | 8;
     DAT_010c5158 = 0x3e99999a;
     DAT_010c5184 = 0.005;
-    DAT_010c5190 = DAT_0071f418 * 11.519173;
+    DAT_010c5190 = g_FrameTimeSq * 11.519173;
     DAT_010c5198 = g_FrameTime * 11.519173;
     auVar32 = ZEXT416(0xffffffff);
     auVar32 = auVar32 | auVar32 << 0x20 | auVar32 << 0x40 | auVar32 << 0x60;
     auVar34 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
     auVar33 = vectorShiftLeftIntegerWord(auVar32,auVar32);
-    DAT_010c5194 = DAT_0071f418 * 3.1415927;
+    DAT_010c5194 = g_FrameTimeSq * 3.1415927;
     auVar32 = loadVectorLeftIndexed(0x28,0x37871c);
     auVar32 = auVar32 >> 0x60 & (GPiece<16>)0xffffffff;
     auVar32 = vectorMultiplyAddFloatingPoint
@@ -2377,7 +2377,7 @@ void UpdateMoby_437(MobyInstance *moby)
           dVar30 = (double)((float)(dVar30 + 0.7853981852531433) * fVar4 + fVar2);
         }
         OrganicDeltAngSpeed
-                  (dVar30,(double)(DAT_0071f418 * 11.519173),(double)(DAT_0071f418 * 3.1415927),
+                  (dVar30,(double)(g_FrameTimeSq * 11.519173),(double)(g_FrameTimeSq * 3.1415927),
                    (double)(g_FrameTime * 11.519173),moby,&DAT_00720000,&DAT_010c5168);
         pMVar17 = g_MobyInstance;
         fVar6 = g_heroPosition.y;
@@ -2510,7 +2510,7 @@ void UpdateMoby_437(MobyInstance *moby)
     dVar31 = (double)((float)(dVar31 + 0.7853981852531433) * fVar4 + fVar2);
   }
   OrganicDeltAngSpeed
-            (dVar31,(double)(DAT_0071f418 * 11.519173),(double)(DAT_0071f418 * 3.1415927),
+            (dVar31,(double)(g_FrameTimeSq * 11.519173),(double)(g_FrameTimeSq * 3.1415927),
              (double)(g_FrameTime * 11.519173),moby,&DAT_00720000,&DAT_010c5168);
   uVar21 = MB_UpdateNavMoveTurning(moby,&DAT_010c5154,uVar27,uVar27 + 0x10);
   if ((uVar21 & 6) == 0) {

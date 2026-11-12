@@ -996,7 +996,7 @@ void UpdateMoby_820(MobyInstance *moby)
   if (1 < local_70) {
     FUN_005e8338((double)((moby->pos).x - *pfVar9),(double)((moby->pos).y - pfVar9[1]));
     *(undefined4 *)((int)pvVar3 + 0x90) = 0x3e75c28f;
-    fVar23 = DAT_0071f418 * 32.0;
+    fVar23 = g_FrameTimeSq * 32.0;
     *(undefined4 *)((int)pvVar3 + 0x74) = 0x3a03126f;
     *(float *)((int)pvVar3 + 0x70) = fVar23;
     fVar23 = g_FrameTime;

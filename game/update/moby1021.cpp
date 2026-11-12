@@ -166,8 +166,8 @@ void UpdateMoby_1021(MobyInstance *moby)
         return;
       }
       OrganicDeltAng
-                (0.0,DAT_0073f864 * 0.017453292 * DAT_0071f418,
-                 DAT_0073f868 * 0.017453292 * DAT_0071f418,
+                (0.0,DAT_0073f864 * 0.017453292 * g_FrameTimeSq,
+                 DAT_0073f868 * 0.017453292 * g_FrameTimeSq,
                  DAT_0073f86c * 0.017453292 * g_FrameTime,pfVar14 + 5,0x720000,pfVar14 + 8
                 );
       dVar17 = (double)FastDiffRots((double)pfVar14[4],(double)pfVar14[5]);
@@ -180,8 +180,8 @@ void UpdateMoby_1021(MobyInstance *moby)
     }
     if (3 < bVar1) {
       OrganicDeltAng
-                (1.0471976,DAT_0073f864 * 0.017453292 * DAT_0071f418,
-                 DAT_0073f868 * 0.017453292 * DAT_0071f418,
+                (1.0471976,DAT_0073f864 * 0.017453292 * g_FrameTimeSq,
+                 DAT_0073f868 * 0.017453292 * g_FrameTimeSq,
                  DAT_0073f86c * 0.017453292 * g_FrameTime,pfVar14 + 5,0x720000,pfVar14 + 8
                 );
       dVar17 = (double)FastDiffRots((double)pfVar14[4],(double)pfVar14[5]);

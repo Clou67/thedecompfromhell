@@ -140,7 +140,7 @@ void M940_004c4df8(MobyInstance *param_1)
     uVar14 = FastDoubleToInt(0x4080000000000000);
     *(undefined4 *)((int)pvVar5 + 0x98) = 0x3f000000;
     fVar1 = DAT_008f4d70;
-    fVar4 = DAT_0071f418;
+    fVar4 = g_FrameTimeSq;
     *(undefined4 *)((int)pvVar5 + 0x90) = uVar14;
     *(undefined4 *)((int)pvVar5 + 0x84) = 0x3a03126f;
     *(undefined1 *)((int)pvVar5 + 0xad) = 0;
@@ -149,7 +149,7 @@ void M940_004c4df8(MobyInstance *param_1)
     fVar4 = g_FrameTime;
     if (iVar13 < 3) {
       if ((-1 < iVar13) && (0 < iVar13)) {
-        fVar4 = DAT_008f4d70 * DAT_0071f418;
+        fVar4 = DAT_008f4d70 * g_FrameTimeSq;
         param_1->modeBits =
              param_1->modeBits &
              (MIRROR|CAN_BE_DAMAGED|HIDE_BACKFACES|DISABLE_Z_WRITE|DRAW_SHADOW|
@@ -627,7 +627,7 @@ void UpdateMoby_940(MobyInstance *moby)
     dVar43 = 8.726646423339844;
     dVar42 = 12.566370964050293;
     OrganicDeltAng
-              ((float)dVar40,DAT_0071f418 * 8.726646,DAT_0071f418 * 8.726646,
+              ((float)dVar40,g_FrameTimeSq * 8.726646,g_FrameTimeSq * 8.726646,
                g_FrameTime * 12.566371,(float *)((int)pvVar8 + 0x19c),0x4c55c0,
                (float *)((int)pvVar8 + 0x1a0));
     fVar1 = (victim->pos).x - (moby->pos).x;
@@ -638,7 +638,7 @@ void UpdateMoby_940(MobyInstance *moby)
     *(float *)((int)puVar14 + 0x14c) = fVar2;
     dVar36 = (double)g_FrameTime;
     *(float *)(puVar14 + 0x2a) = (float)(dVar38 - dVar39);
-    dVar37 = (double)DAT_0071f418;
+    dVar37 = (double)g_FrameTimeSq;
     uVar26 = (ulonglong)(*(uint *)(puVar14 + 0x29) >> 0x1c) & 8 |
              (ulonglong)(*(uint *)(puVar14 + 0x2a) >> 0x1e) & 2 |
              (ulonglong)(*(uint *)((int)puVar14 + 0x14c) >> 0x1d) & 4;
@@ -1166,7 +1166,7 @@ void UpdateMoby_940(MobyInstance *moby)
       fVar1 = (fVar1 + 0.7853982) * fVar7 + fVar4;
     }
     OrganicDeltAng
-              (fVar1,DAT_0071f418 * 8.726646,DAT_0071f418 * 8.726646,
+              (fVar1,g_FrameTimeSq * 8.726646,g_FrameTimeSq * 8.726646,
                g_FrameTime * 12.566371,&(moby->rotation).z,0x720000,
                (float *)((int)pvVar8 + 0x18c));
     fVar1 = (moby->rotation).z;

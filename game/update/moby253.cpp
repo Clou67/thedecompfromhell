@@ -865,11 +865,11 @@ ulonglong M253_0031a070(MobyInstance *param_1,longlong param_2)
     dVar29 = (double)((float)(dVar29 + 0.7853981852531433) * fVar2 + fVar3);
   }
   OrganicDeltAng
-            ((float)dVar29,DAT_0071f418 * 4.712389,DAT_0071f418 * 4.712389,
+            ((float)dVar29,g_FrameTimeSq * 4.712389,g_FrameTimeSq * 4.712389,
              g_FrameTime * 3.1415927,&(param_1->rotation).z,0x320000,
              (float *)((int)pvVar5 + 0x158));
   dVar29 = 2.0;
-  Delt(*(float *)((int)pvVar5 + 0x16c),DAT_0071f418 * 2.0,(float *)((int)pvVar5 + 0x180));
+  Delt(*(float *)((int)pvVar5 + 0x16c),g_FrameTimeSq * 2.0,(float *)((int)pvVar5 + 0x180));
   fVar1 = (param_1->rotation).z;
   fVar2 = fVar1 + 1.5707963;
   fVar4 = 3.1415925 - fVar1;
@@ -1874,12 +1874,12 @@ void M253_0031b438(MobyInstance *param_1)
     dVar31 = 12.566370964050293;
     dVar32 = 9.42477798461914;
     OrganicDeltAng
-              ((float)dVar36,DAT_0071f418 * 12.566371,DAT_0071f418 * 12.566371,
+              ((float)dVar36,g_FrameTimeSq * 12.566371,g_FrameTimeSq * 12.566371,
                g_FrameTime * 9.424778,(float *)((int)pvVar10 + 0x170),(int)unused_00,
                (float *)((int)pvVar10 + 0x174));
     OrganicDeltAng
-              ((float)dVar36,(float)((double)DAT_0071f418 * dVar31),
-               (float)((double)DAT_0071f418 * dVar31),
+              ((float)dVar36,(float)((double)g_FrameTimeSq * dVar31),
+               (float)((double)g_FrameTimeSq * dVar31),
                (float)((double)g_FrameTime * dVar32),(float *)((int)pvVar10 + 0x178),
                (int)unused_00,(float *)((int)pvVar10 + 0x17c));
   }
@@ -2042,12 +2042,12 @@ void M253_0031b438(MobyInstance *param_1)
     dVar33 = 12.566370964050293;
     dVar31 = 9.42477798461914;
     OrganicDeltAng
-              ((float)dVar36,DAT_0071f418 * 12.566371,DAT_0071f418 * 12.566371,
+              ((float)dVar36,g_FrameTimeSq * 12.566371,g_FrameTimeSq * 12.566371,
                g_FrameTime * 9.424778,(float *)((int)pvVar10 + 0x170),0x31b3f4,
                (float *)((int)pvVar10 + 0x174));
     OrganicDeltAng
-              ((float)dVar32,(float)((double)DAT_0071f418 * dVar33),
-               (float)((double)DAT_0071f418 * dVar33),
+              ((float)dVar32,(float)((double)g_FrameTimeSq * dVar33),
+               (float)((double)g_FrameTimeSq * dVar33),
                (float)((double)g_FrameTime * dVar31),(float *)((int)pvVar10 + 0x178),
                (int)unused,(float *)((int)pvVar10 + 0x17c));
   }

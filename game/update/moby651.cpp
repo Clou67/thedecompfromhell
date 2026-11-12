@@ -204,8 +204,8 @@ void UpdateMoby_651(MobyInstance *moby)
   if (iVar11 == 0) {
 LAB_00402554:
     local_30.z = OrganicDelt
-                           (*(float *)((int)pvVar5 + 0xa8),DAT_008548fc * DAT_0071f418,
-                            DAT_008548fc * DAT_0071f418,DAT_008548f8 * g_FrameTime,val,
+                           (*(float *)((int)pvVar5 + 0xa8),DAT_008548fc * g_FrameTimeSq,
+                            DAT_008548fc * g_FrameTimeSq,DAT_008548f8 * g_FrameTime,val,
                             speed,(float *)speed);
   }
   else {
@@ -216,7 +216,7 @@ LAB_00402554:
        (uVar8 = (int)*(uint *)((int)pvVar5 + 0xa8) >> 0x1f,
        (int)((uVar7 >> 1 ^ (uint)fVar6) - uVar7) <
        (int)((uVar8 >> 1 ^ *(uint *)((int)pvVar5 + 0xa8)) - uVar8))) goto LAB_00402554;
-    fVar3 = DAT_008548fc * 4.0 * DAT_0071f418;
+    fVar3 = DAT_008548fc * 4.0 * g_FrameTimeSq;
     local_30.z = OrganicDelt
                            (fVar2,fVar3,fVar3,DAT_008548f8 * g_FrameTime,val,speed,
                             (float *)speed);

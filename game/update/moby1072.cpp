@@ -370,7 +370,7 @@ void UpdateMoby_1072(MobyInstance *moby)
     moby->setByGroup = '\x02';
     if (pfVar8[7] != 0.0) {
       OrganicDelt
-                (*pfVar8,DAT_0071f418 * 4.0,DAT_0071f418 * 4.0,g_FrameTime * 4.0,
+                (*pfVar8,g_FrameTimeSq * 4.0,g_FrameTimeSq * 4.0,g_FrameTime * 4.0,
                  &(moby->pos).z,0x720000,pfVar8 + 5);
       puVar21 = (ushort *)(&g_MobyGroups)[(byte)moby->group];
       pMVar9 = g_MobyInstance;
@@ -406,7 +406,7 @@ void UpdateMoby_1072(MobyInstance *moby)
     moby->setByGroup = '\x01';
     if (pfVar8[7] != 0.0) {
       OrganicDelt
-                (pfVar8[1],DAT_0071f418 * 4.0,DAT_0071f418 * 4.0,g_FrameTime * 4.0,
+                (pfVar8[1],g_FrameTimeSq * 4.0,g_FrameTimeSq * 4.0,g_FrameTime * 4.0,
                  &(moby->pos).z,0x720000,pfVar8 + 5);
       puVar21 = (ushort *)(&g_MobyGroups)[(byte)moby->group];
       pMVar9 = g_MobyInstance;

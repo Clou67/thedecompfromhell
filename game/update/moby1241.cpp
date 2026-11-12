@@ -335,7 +335,7 @@ void UpdateMoby_1241(MobyInstance *moby)
     if ((bVar1) && (bVar1)) {
       MB_SetAnimation(moby,3,0,6);
     }
-    pfVar11[6] = -(DAT_0071f418 * 9.8 - pfVar11[6]);
+    pfVar11[6] = -(g_FrameTimeSq * 9.8 - pfVar11[6]);
     (moby->pos).x = (moby->pos).x + pfVar11[4];
     (moby->pos).y = (moby->pos).y + pfVar11[5];
     (moby->pos).z = (moby->pos).z + pfVar11[6];
@@ -348,7 +348,7 @@ void UpdateMoby_1241(MobyInstance *moby)
       pfVar11[4] = fVar12 * 0.9;
       pfVar11[5] = fVar5 * 0.9;
       fVar6 = *pfVar11 + fVar12 * 0.9;
-      fVar12 = DAT_0071f418 * 9.8;
+      fVar12 = g_FrameTimeSq * 9.8;
       pfVar11[1] = pfVar11[1] + fVar5 * 0.9;
       *pfVar11 = fVar6;
       fVar12 = pfVar11[6] * 0.9 - fVar12;
@@ -409,7 +409,7 @@ void UpdateMoby_1241(MobyInstance *moby)
   fVar12 = *pfVar11;
   pfVar11[4] = fVar5;
   pfVar11[5] = fVar6;
-  fVar7 = DAT_0071f418 * 9.8;
+  fVar7 = g_FrameTimeSq * 9.8;
   *pfVar11 = fVar12 + fVar5;
   pfVar11[1] = pfVar11[1] + fVar6;
   fVar7 = pfVar11[6] * 0.6 - fVar7;

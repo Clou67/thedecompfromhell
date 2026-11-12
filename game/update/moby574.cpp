@@ -829,10 +829,10 @@ void M574_003c2a58(MobyInstance *param_1)
   *(float *)(puVar9 + 0xf) = (float)dVar28;
   fVar1 = *(float *)((int)pvVar6 + 0x20) - *(float *)((int)puVar9 + 0x74);
   *(float *)((int)pvVar6 + 0x20) = fVar1;
-  fVar2 = DAT_0071f418;
+  fVar2 = g_FrameTimeSq;
   if ((double)fVar1 <= dVar27) {
 LAB_003c34cc:
-    fVar1 = DAT_0071f418 * 40.0;
+    fVar1 = g_FrameTimeSq * 40.0;
     *(float *)((int)pvVar6 + 0x80) = fVar1;
     fVar2 = fVar2 * DAT_00845fe0;
     *(float *)((int)pvVar6 + 0x84) = fVar2;
@@ -875,8 +875,8 @@ LAB_003c34cc:
     else if (iVar15 < 4) {
 LAB_003c32ac:
       *(undefined1 *)((int)pvVar6 + 0x67) = 0x78;
-      fVar2 = DAT_0071f418;
-      fVar1 = DAT_0071f418 * 80.0;
+      fVar2 = g_FrameTimeSq;
+      fVar1 = g_FrameTimeSq * 80.0;
       *(float *)((int)pvVar6 + 0x80) = fVar1;
       fVar2 = fVar2 * DAT_00845fe0;
       *(float *)((int)pvVar6 + 0x84) = fVar2;
@@ -902,8 +902,8 @@ LAB_003c32ac:
     }
     else {
       *(undefined1 *)((int)pvVar6 + 0x67) = 0x78;
-      fVar2 = DAT_0071f418;
-      fVar1 = DAT_0071f418 * 80.0;
+      fVar2 = g_FrameTimeSq;
+      fVar1 = g_FrameTimeSq * 80.0;
       *(float *)((int)pvVar6 + 0x80) = fVar1;
       fVar2 = fVar2 * DAT_00845fe0;
       *(float *)((int)pvVar6 + 0x84) = fVar2;
@@ -931,8 +931,8 @@ LAB_003c32ac:
   else if (iVar15 < 9) {
     if (6 < iVar15) goto LAB_003c32ac;
     *(undefined1 *)((int)pvVar6 + 0x67) = 0x78;
-    fVar3 = DAT_0071f418;
-    fVar1 = DAT_0071f418 * 80.0;
+    fVar3 = g_FrameTimeSq;
+    fVar1 = g_FrameTimeSq * 80.0;
     *(float *)((int)pvVar6 + 0x80) = fVar1;
     fVar12 = DAT_00845fe0;
     fVar4 = DAT_00845fdc;
@@ -1522,8 +1522,8 @@ void UpdateMoby_574(MobyInstance *moby)
           moby->color = uVar18;
           moby->light = uVar12;
           MB_InitDefaultParams((float *)((int)pvVar5 + 0xd0));
-          fVar2 = DAT_0071f418;
-          *(float *)((int)pvVar5 + 0x10c) = DAT_0071f418 * 6.2831855;
+          fVar2 = g_FrameTimeSq;
+          *(float *)((int)pvVar5 + 0x10c) = g_FrameTimeSq * 6.2831855;
           *(float *)((int)pvVar5 + 0x110) = fVar2 * 12.566371;
           fVar3 = g_FrameTime;
           *(float *)((int)pvVar5 + 0x114) = g_FrameTime * 3.1415927;
@@ -2005,7 +2005,7 @@ LAB_003c5f48:
         dVar30 = 0.0;
         dVar29 = dVar30;
         if (uVar24 != '\n') {
-          dVar29 = (double)(DAT_0071f418 * 9.8 + *(float *)((int)pvVar5 + 0xe8));
+          dVar29 = (double)(g_FrameTimeSq * 9.8 + *(float *)((int)pvVar5 + 0xe8));
         }
         *(float *)((int)pvVar5 + 0xe8) = (float)dVar29;
         (moby->pos).z = (moby->pos).z - (float)(dVar29 - dVar32);
@@ -2020,7 +2020,7 @@ LAB_003c5f48:
             moby->state = '\v';
             FUN_005e7e70((int)pvVar5 + 0x70);
             *(float *)((int)pvVar5 + 0x78) = -*(float *)((int)pvVar5 + 0xe8);
-            *(float *)((int)pvVar5 + 0x80) = DAT_0071f418 * 19.6;
+            *(float *)((int)pvVar5 + 0x80) = g_FrameTimeSq * 19.6;
           }
         }
         else {

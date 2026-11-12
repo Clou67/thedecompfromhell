@@ -148,8 +148,8 @@ LAB_002f8d38:
     dVar16 = (double)MB_DeltAngSpeed
                                ((double)*(float *)((int)pvVar3 + 0x84),
                                 (double)*(float *)((int)pvVar3 + 0x8c),
-                                (double)(DAT_0071f418 * 1.5707964),
-                                (double)(DAT_0071f418 * 0.7853982),
+                                (double)(g_FrameTimeSq * 1.5707964),
+                                (double)(g_FrameTimeSq * 0.7853982),
                                 (double)(g_FrameTime * 0.7853982),&DAT_002f8c08,
                                 &DAT_00720000,uVar14 + 0x88);
     *(float *)((int)pvVar3 + 0x84) = (float)dVar16;

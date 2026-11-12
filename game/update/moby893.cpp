@@ -120,8 +120,8 @@ void UpdateMoby_893(MobyInstance *moby)
     dVar18 = 0.0;
     local_40[0] = 0.0;
     OrganicDelt
-              (SQRT(fVar7 * fVar7 + fVar5 * fVar5 + fVar6 * fVar6),DAT_0071f418 * 6.0,
-               DAT_0071f418 * 12.0,g_FrameTime * 10.0,local_40,0,pfVar9 + 0x17);
+              (SQRT(fVar7 * fVar7 + fVar5 * fVar5 + fVar6 * fVar6),g_FrameTimeSq * 6.0,
+               g_FrameTimeSq * 12.0,g_FrameTime * 10.0,local_40,0,pfVar9 + 0x17);
     dVar20 = (double)(moby->pos).y;
     dVar13 = (double)(moby->pos).x;
     fVar6 = (float)(dVar21 - dVar20);
@@ -180,7 +180,7 @@ void UpdateMoby_893(MobyInstance *moby)
       fVar5 = 1.1868238;
     }
     OrganicDeltAng
-              (fVar5,DAT_0071f418 * 4.1887903,DAT_0071f418 * 4.1887903,
+              (fVar5,g_FrameTimeSq * 4.1887903,g_FrameTimeSq * 4.1887903,
                g_FrameTime * 12.566371,pfVar9 + 0x18,0x4a3be0,pfVar9 + 0x19);
     uVar10 = (int)pfVar9[0x18] >> 0x1f;
     iVar11 = (uVar10 >> 1 ^ (uint)pfVar9[0x18]) - uVar10;

@@ -450,13 +450,13 @@ void UpdateMoby_1213(MobyInstance *moby)
     dVar23 = 90.5;
     dVar22 = 12.0;
     MB_SpawnDebrisMoby
-              ((double)(DAT_0071f418 * 12.0),lVar13,0x5f6,lVar20,lVar18,(int)(animationSpeed * 90.5)
+              ((double)(g_FrameTimeSq * 12.0),lVar13,0x5f6,lVar20,lVar18,(int)(animationSpeed * 90.5)
                ,0,in_r9,local_70);
     MB_SpawnDebrisMoby
-              ((double)(float)((double)DAT_0071f418 * dVar22),lVar13,0x5f8,lVar20,lVar18,
+              ((double)(float)((double)g_FrameTimeSq * dVar22),lVar13,0x5f8,lVar20,lVar18,
                (int)((double)animationSpeed * dVar23),0,in_r9,local_70);
     MB_SpawnDebrisMoby
-              ((double)(float)((double)DAT_0071f418 * dVar22),lVar13,0x5f9,lVar20,lVar18,
+              ((double)(float)((double)g_FrameTimeSq * dVar22),lVar13,0x5f9,lVar20,lVar18,
                (int)((double)animationSpeed * dVar23),0,in_r9,local_70);
     DeleteMoby(moby);
     return;

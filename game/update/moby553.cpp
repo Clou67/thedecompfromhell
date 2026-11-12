@@ -167,7 +167,7 @@ void UpdateMoby_466(MobyInstance *moby)
         uVar14 = (int)*(uint *)((int)pvVar11 + 0x138) >> 0x1f;
         if (((int)((uVar22 >> 1 ^ *(uint *)((int)pvVar11 + 0xfc)) - uVar22) <
              (int)((uVar14 >> 1 ^ *(uint *)((int)pvVar11 + 0x138)) - uVar14)) &&
-           (fVar1 = DAT_0071f418 * 20.0 + *(float *)((int)pvVar11 + 0xfc),
+           (fVar1 = g_FrameTimeSq * 20.0 + *(float *)((int)pvVar11 + 0xfc),
            *(float *)((int)pvVar11 + 0xfc) = fVar1, *(float *)((int)pvVar11 + 0x138) < fVar1)) {
           *(float *)((int)pvVar11 + 0xfc) = *(float *)((int)pvVar11 + 0x138);
         }
@@ -213,7 +213,7 @@ void UpdateMoby_466(MobyInstance *moby)
       else {
         OrganicDeltAngSpeed
                   ((double)Cuboids[*(byte *)((int)pvVar11 + 0x148)].rot.z,
-                   (double)(DAT_0071f418 * 1.0471976),(double)(DAT_0071f418 * 3.1415927),
+                   (double)(g_FrameTimeSq * 1.0471976),(double)(g_FrameTimeSq * 3.1415927),
                    (double)(g_FrameTime * 3.1415927),lVar20,&DAT_00720000,uVar30 + 0x7c);
         bVar6 = *(byte *)((int)pvVar11 + 0x148);
         fVar1 = (moby->pos).y - Cuboids[bVar6].pos.y;
@@ -279,8 +279,8 @@ void UpdateMoby_466(MobyInstance *moby)
     }
     else if (bVar6 < 4) {
       OrganicDeltAngSpeed
-                ((double)*(float *)((int)pvVar11 + 0x14c),(double)(DAT_0071f418 * 1.0471976),
-                 (double)(DAT_0071f418 * 3.1415927),(double)(g_FrameTime * 3.1415927),
+                ((double)*(float *)((int)pvVar11 + 0x14c),(double)(g_FrameTimeSq * 1.0471976),
+                 (double)(g_FrameTimeSq * 3.1415927),(double)(g_FrameTime * 3.1415927),
                  lVar20,&DAT_00720000,uVar30 + 0x7c);
       fVar1 = (moby->pos).y - *(float *)((int)pvVar11 + 0x164);
       fVar2 = (moby->pos).x - *(float *)((int)pvVar11 + 0x160);
@@ -620,7 +620,7 @@ LAB_00397770:
   *(float *)((int)puVar17 + 0xd4) = fVar2 * fVar4;
   *(float *)(puVar17 + 0x1b) = fVar3;
   *(float *)(puVar17 + 0x1b) = fVar9 * 0.08 + fVar3;
-  fVar1 = DAT_0071f418;
+  fVar1 = g_FrameTimeSq;
   dVar33 = 90.5;
   dVar32 = 12.0;
   if (MVar10 == SNOW_PLOW) {
@@ -632,7 +632,7 @@ LAB_00397770:
               ((double)(fVar1 * 12.0),lVar20,0x63f,lVar27,lVar29,
                *(undefined4 *)((int)puVar17 + 0x1b4),0);
     dVar35 = (double)animationSpeed;
-    dVar37 = (double)DAT_0071f418;
+    dVar37 = (double)g_FrameTimeSq;
     puVar17[0xe] = ZEXT48(&DAT_00a15d30);
     puVar17[0xf] = ZEXT48(&DAT_00a15d30);
     puVar17[0x36] = (longlong)(int)(dVar35 * dVar33);
@@ -640,7 +640,7 @@ LAB_00397770:
               ((double)(float)(dVar37 * dVar32),lVar20,0x641,lVar27,lVar29,
                *(undefined4 *)((int)puVar17 + 0x1b4),0);
     dVar35 = (double)animationSpeed;
-    dVar37 = (double)DAT_0071f418;
+    dVar37 = (double)g_FrameTimeSq;
     puVar17[0xe] = ZEXT48(&DAT_00a15d30);
     puVar17[0xf] = ZEXT48(&DAT_00a15d30);
     puVar17[0x36] = (longlong)(int)(dVar35 * dVar33);
@@ -657,7 +657,7 @@ LAB_00397770:
               ((double)(fVar1 * 12.0),lVar20,0x642,lVar27,lVar29,
                *(undefined4 *)((int)puVar17 + 0x1b4),0);
     dVar35 = (double)animationSpeed;
-    dVar37 = (double)DAT_0071f418;
+    dVar37 = (double)g_FrameTimeSq;
     puVar17[0xe] = ZEXT48(&DAT_00a15d30);
     puVar17[0xf] = ZEXT48(&DAT_00a15d30);
     puVar17[0x36] = (longlong)(int)(dVar35 * dVar33);
@@ -665,7 +665,7 @@ LAB_00397770:
               ((double)(float)(dVar37 * dVar32),lVar20,0x643,lVar27,lVar29,
                *(undefined4 *)((int)puVar17 + 0x1b4),0);
     dVar35 = (double)animationSpeed;
-    dVar37 = (double)DAT_0071f418;
+    dVar37 = (double)g_FrameTimeSq;
     puVar17[0xe] = ZEXT48(&DAT_00a15d30);
     puVar17[0xf] = ZEXT48(&DAT_00a15d30);
     puVar17[0x36] = (longlong)(int)(dVar35 * dVar33);
@@ -684,7 +684,7 @@ LAB_00397770:
     iVar24 = 0;
     do {
       dVar35 = (double)animationSpeed;
-      dVar37 = (double)DAT_0071f418;
+      dVar37 = (double)g_FrameTimeSq;
       puVar17[0xe] = ZEXT48(&DAT_00a15d30);
       puVar17[0xf] = ZEXT48(&DAT_00a15d30);
       puVar17[0x36] = (longlong)(int)(dVar35 * dVar33);
@@ -703,7 +703,7 @@ LAB_00397770:
               ((double)(fVar1 * 12.0),lVar20,0x647,lVar27,lVar29,
                *(undefined4 *)((int)puVar17 + 0x1b4),0);
     dVar35 = (double)animationSpeed;
-    dVar37 = (double)DAT_0071f418;
+    dVar37 = (double)g_FrameTimeSq;
     puVar17[0xe] = ZEXT48(&DAT_00a15d30);
     puVar17[0xf] = ZEXT48(&DAT_00a15d30);
     puVar17[0x36] = (longlong)(int)(dVar35 * dVar33);
@@ -711,7 +711,7 @@ LAB_00397770:
               ((double)(float)(dVar37 * dVar32),lVar20,0x648,lVar27,lVar29,
                *(undefined4 *)((int)puVar17 + 0x1b4),0);
     dVar35 = (double)animationSpeed;
-    dVar37 = (double)DAT_0071f418;
+    dVar37 = (double)g_FrameTimeSq;
     puVar17[0xe] = ZEXT48(&DAT_00a15d30);
     puVar17[0xf] = ZEXT48(&DAT_00a15d30);
     puVar17[0x36] = (longlong)(int)(dVar35 * dVar33);
@@ -728,7 +728,7 @@ LAB_00397770:
               ((double)(fVar1 * 12.0),lVar20,0x64d,lVar27,lVar29,
                *(undefined4 *)((int)puVar17 + 0x1b4),0);
     dVar35 = (double)animationSpeed;
-    dVar37 = (double)DAT_0071f418;
+    dVar37 = (double)g_FrameTimeSq;
     puVar17[0xe] = ZEXT48(&DAT_00a15d30);
     puVar17[0xf] = ZEXT48(&DAT_00a15d30);
     puVar17[0x36] = (longlong)(int)(dVar35 * dVar33);
@@ -745,7 +745,7 @@ LAB_00397770:
               ((double)(fVar1 * 12.0),lVar20,0x64f,lVar27,lVar29,
                *(undefined4 *)((int)puVar17 + 0x1b4),0);
     dVar35 = (double)animationSpeed;
-    dVar37 = (double)DAT_0071f418;
+    dVar37 = (double)g_FrameTimeSq;
     puVar17[0xe] = ZEXT48(&DAT_00a15d30);
     puVar17[0xf] = ZEXT48(&DAT_00a15d30);
     puVar17[0x36] = (longlong)(int)(dVar35 * dVar33);
@@ -753,7 +753,7 @@ LAB_00397770:
               ((double)(float)(dVar37 * dVar32),lVar20,0x650,lVar27,lVar29,
                *(undefined4 *)((int)puVar17 + 0x1b4),0);
     dVar35 = (double)animationSpeed;
-    dVar37 = (double)DAT_0071f418;
+    dVar37 = (double)g_FrameTimeSq;
     puVar17[0xe] = ZEXT48(&DAT_00a15d30);
     puVar17[0xf] = ZEXT48(&DAT_00a15d30);
     puVar17[0x36] = (longlong)(int)(dVar35 * dVar33);
@@ -761,7 +761,7 @@ LAB_00397770:
               ((double)(float)(dVar37 * dVar32),lVar20,0x651,lVar27,lVar29,
                *(undefined4 *)((int)puVar17 + 0x1b4),0);
     dVar35 = (double)animationSpeed;
-    dVar37 = (double)DAT_0071f418;
+    dVar37 = (double)g_FrameTimeSq;
     puVar17[0xe] = ZEXT48(&DAT_00a15d30);
     puVar17[0xf] = ZEXT48(&DAT_00a15d30);
     puVar17[0x36] = (longlong)(int)(dVar35 * dVar33);
@@ -778,7 +778,7 @@ LAB_00397770:
               ((double)(fVar1 * 12.0),lVar20,0x652,lVar27,lVar29,
                *(undefined4 *)((int)puVar17 + 0x1b4),0);
     dVar35 = (double)animationSpeed;
-    dVar37 = (double)DAT_0071f418;
+    dVar37 = (double)g_FrameTimeSq;
     puVar17[0xe] = ZEXT48(&DAT_00a15d30);
     puVar17[0xf] = ZEXT48(&DAT_00a15d30);
     puVar17[0x36] = (longlong)(int)(dVar35 * dVar33);
@@ -786,7 +786,7 @@ LAB_00397770:
               ((double)(float)(dVar37 * dVar32),lVar20,0x653,lVar27,lVar29,
                *(undefined4 *)((int)puVar17 + 0x1b4),0);
     dVar35 = (double)animationSpeed;
-    dVar37 = (double)DAT_0071f418;
+    dVar37 = (double)g_FrameTimeSq;
     puVar17[0xe] = ZEXT48(&DAT_00a15d30);
     puVar17[0xf] = ZEXT48(&DAT_00a15d30);
     puVar17[0x36] = (longlong)(int)(dVar35 * dVar33);
@@ -803,7 +803,7 @@ LAB_00397770:
               ((double)(fVar1 * 12.0),lVar20,0x793,lVar27,lVar29,
                *(undefined4 *)((int)puVar17 + 0x1b4),0);
     dVar35 = (double)animationSpeed;
-    dVar37 = (double)DAT_0071f418;
+    dVar37 = (double)g_FrameTimeSq;
     puVar17[0xe] = ZEXT48(&DAT_00a15d30);
     puVar17[0xf] = ZEXT48(&DAT_00a15d30);
     puVar17[0x36] = (longlong)(int)(dVar35 * dVar33);
@@ -814,7 +814,7 @@ LAB_00397770:
     iVar24 = 0;
     do {
       dVar35 = (double)animationSpeed;
-      dVar37 = (double)DAT_0071f418;
+      dVar37 = (double)g_FrameTimeSq;
       puVar17[0xe] = ZEXT48(&DAT_00a15d30);
       puVar17[0xf] = ZEXT48(&DAT_00a15d30);
       puVar17[0x36] = (longlong)(int)(dVar35 * dVar33);
@@ -825,7 +825,7 @@ LAB_00397770:
     } while (iVar23 < 3);
     do {
       dVar35 = (double)animationSpeed;
-      dVar37 = (double)DAT_0071f418;
+      dVar37 = (double)g_FrameTimeSq;
       puVar17[0xe] = ZEXT48(&DAT_00a15d30);
       puVar17[0xf] = ZEXT48(&DAT_00a15d30);
       puVar17[0x36] = (longlong)(int)(dVar35 * dVar33);

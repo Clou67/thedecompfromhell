@@ -518,28 +518,28 @@ LAB_000edea4:
   if (fVar5 == 0.0) {
     dVar32 = 4.71238899230957;
     dVar19 = (double)MB_DeltAngSpeed
-                               ((double)(moby->rotation).z,dVar19,(double)(DAT_0071f418 * 6.2831855)
-                                ,(double)(DAT_0071f418 * 3.1415927),
+                               ((double)(moby->rotation).z,dVar19,(double)(g_FrameTimeSq * 6.2831855)
+                                ,(double)(g_FrameTimeSq * 3.1415927),
                                 (double)(g_FrameTime * 4.712389),pfVar14,&DAT_000ed88c,
                                 pfVar14);
     (moby->rotation).z = (float)dVar19;
     dVar19 = (double)MB_DeltAngSpeed
                                ((double)(moby->rotation).y,dVar20,
-                                (double)(float)((double)DAT_0071f418 * dVar31),
-                                (double)(float)((double)DAT_0071f418 * dVar30),
+                                (double)(float)((double)g_FrameTimeSq * dVar31),
+                                (double)(float)((double)g_FrameTimeSq * dVar30),
                                 (double)(float)((double)g_FrameTime * dVar32));
   }
   else {
     dVar19 = (double)MB_DeltAngSpeed
-                               ((double)(moby->rotation).z,dVar19,(double)(DAT_0071f418 * 6.2831855)
-                                ,(double)(DAT_0071f418 * 3.1415927),
+                               ((double)(moby->rotation).z,dVar19,(double)(g_FrameTimeSq * 6.2831855)
+                                ,(double)(g_FrameTimeSq * 3.1415927),
                                 (double)(g_FrameTime * 6.2831855),pfVar14,&DAT_000ed88c,
                                 pfVar14);
     (moby->rotation).z = (float)dVar19;
     dVar19 = (double)MB_DeltAngSpeed
                                ((double)(moby->rotation).y,dVar20,
-                                (double)(float)((double)DAT_0071f418 * dVar31),
-                                (double)(float)((double)DAT_0071f418 * dVar30),
+                                (double)(float)((double)g_FrameTimeSq * dVar31),
+                                (double)(float)((double)g_FrameTimeSq * dVar30),
                                 (double)(float)((double)g_FrameTime * dVar31));
   }
   (moby->rotation).y = (float)dVar19;

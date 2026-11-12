@@ -501,7 +501,7 @@ void UpdateMoby_1085(MobyInstance *moby)
   
   pfVar4 = (float *)moby->pVar;
   moby->scale = moby->pClass->gScale * DAT_00763ae0;
-  pfVar4[2] = -(DAT_0071f418 * 15.0 - pfVar4[2]);
+  pfVar4[2] = -(g_FrameTimeSq * 15.0 - pfVar4[2]);
   fVar1 = (moby->rotation).x;
   fVar2 = (moby->rotation).y;
   (moby->pos).x = (moby->pos).x + *pfVar4;

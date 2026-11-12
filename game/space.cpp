@@ -2548,7 +2548,7 @@ void UpdateSpace(void)
       }
       if (-1 < (int)(g_shipCameraStartCuboid | g_shipCameraEndCuboid)) {
         OrganicDelt
-                  (1.0,DAT_0071f418 * 0.666,DAT_0071f418 * 0.666,g_FrameTime * 0.5,
+                  (1.0,g_FrameTimeSq * 0.666,g_FrameTimeSq * 0.666,g_FrameTime * 0.5,
                    &DAT_009645b8,0x720000,(float *)&DAT_009645bc);
         local_270 = Cuboids[g_shipCameraStartCuboid].pos.x;
         local_264 = Cuboids[g_shipCameraEndCuboid].pos.w;

@@ -178,7 +178,7 @@ void UpdateMoby_471(MobyInstance *moby)
   }
   else if (bVar1 < 2) {
     if (*(float *)((int)pvVar5 + 0x6c) != DAT_00842e90 * g_FrameTime) {
-      Delt(DAT_00842e90 * g_FrameTime,DAT_0071f418 * 12.0,
+      Delt(DAT_00842e90 * g_FrameTime,g_FrameTimeSq * 12.0,
                      (float *)((int)pvVar5 + 0x6c));
       local_30.y = (moby->transform).v0.y;
       fVar2 = (moby->transform).v0.x;
@@ -219,7 +219,7 @@ void UpdateMoby_471(MobyInstance *moby)
   }
   else if (bVar1 < 3) {
     if (*(float *)((int)pvVar5 + 0x6c) != -(DAT_00842e90 * g_FrameTime)) {
-      Delt(-(DAT_00842e90 * g_FrameTime),DAT_0071f418 * 12.0,
+      Delt(-(DAT_00842e90 * g_FrameTime),g_FrameTimeSq * 12.0,
                      (float *)((int)pvVar5 + 0x6c));
       local_40.y = (moby->transform).v0.y;
       fVar2 = (moby->transform).v0.x;

@@ -190,14 +190,14 @@ void M326_0001bbd8(int param_1)
                                        (fVar12 * fVar5 * 2.601887e-06 +
                                        fVar5 * -0.0001980741 +
                                        fVar4 * 0.0083330255 + fVar12 * fVar3 * -0.16666657 + fVar3))
-                                      / fVar1),(double)(DAT_0071f418 * 0.5235988),
-                              (double)(DAT_0071f418 * 1.0471976),
+                                      / fVar1),(double)(g_FrameTimeSq * 0.5235988),
+                              (double)(g_FrameTimeSq * 1.0471976),
                               (double)(float)((double)g_FrameTime * dVar25));
   *(float *)(param_1 + 0x44) = (float)dVar22;
   dVar22 = (double)MB_DeltAngSpeed
                              ((double)*(float *)(param_1 + 0x40),dVar24,
-                              (double)(float)((double)DAT_0071f418 * dVar21),
-                              (double)(float)((double)DAT_0071f418 * 2.094395160675049),
+                              (double)(float)((double)g_FrameTimeSq * dVar21),
+                              (double)(float)((double)g_FrameTimeSq * 2.094395160675049),
                               (double)(g_FrameTime * 1.2217305));
   *(float *)(param_1 + 0x40) = (float)dVar22;
   return;
@@ -354,7 +354,7 @@ undefined8 M326_0001bf50(int param_1,longlong param_2)
                                 (double)(float)((double)g_FrameTime * dVar25),0x20000,
                                 &DAT_00720000,iVar6 + 0x88);
     *(float *)(param_1 + 0x48) = (float)dVar22;
-    Delt((float)dVar21,DAT_0071f418 * 9.0,(float *)(iVar6 + 0x94));
+    Delt((float)dVar21,g_FrameTimeSq * 9.0,(float *)(iVar6 + 0x94));
     fVar1 = *(float *)(iVar6 + 0x94);
     if (*(int *)(iVar6 + 0x94) == 0) {
       return 1;
@@ -441,7 +441,7 @@ undefined8 M326_0001bf50(int param_1,longlong param_2)
                                 (double)(g_FrameTime * 0.7853982),0x20000,uVar13,
                                 iVar6 + 0x88);
     *(float *)(param_1 + 0x48) = (float)dVar22;
-    Delt(g_FrameTime * 10.0,DAT_0071f418 * 7.0,(float *)(iVar6 + 0x94));
+    Delt(g_FrameTime * 10.0,g_FrameTimeSq * 7.0,(float *)(iVar6 + 0x94));
     fVar1 = *(float *)(iVar6 + 0x94);
   }
   iVar12 = *(int *)(iVar6 + 0xb4);
@@ -940,7 +940,7 @@ void UpdateMoby_326(MobyInstance *moby)
   else if (uVar2 == '\x05') {
     iVar24 = FastDecTimerS16(uVar35 + 0x8e);
     if (iVar24 == 0) {
-      fVar1 = -(DAT_0071f418 * 4.0 - *(float *)((int)pvVar10 + 0x94));
+      fVar1 = -(g_FrameTimeSq * 4.0 - *(float *)((int)pvVar10 + 0x94));
       *(float *)((int)pvVar10 + 0x94) = fVar1;
       if (fVar1 < 0.0) {
         *(undefined4 *)((int)pvVar10 + 0x94) = 0;
@@ -1096,7 +1096,7 @@ void UpdateMoby_326(MobyInstance *moby)
                                  (double)(float)(dVar42 * dVar42 + (double)(float)(dVar43 * dVar43))
                                  ));
     if (dVar46 <= 5.5) {
-      Delt((float)dVar41,DAT_0071f418 * 9.0,(float *)((int)pvVar10 + 0x94));
+      Delt((float)dVar41,g_FrameTimeSq * 9.0,(float *)((int)pvVar10 + 0x94));
       fVar1 = *(float *)((int)pvVar10 + 0x94);
       if (*(int *)((int)pvVar10 + 0x94) == 0) {
         auVar51 = ZEXT416(0xffffffff);
@@ -1119,7 +1119,7 @@ void UpdateMoby_326(MobyInstance *moby)
       }
     }
     else {
-      Delt(g_FrameTime * 10.0,DAT_0071f418 * 7.0,(float *)((int)pvVar10 + 0x94))
+      Delt(g_FrameTime * 10.0,g_FrameTimeSq * 7.0,(float *)((int)pvVar10 + 0x94))
       ;
       fVar1 = *(float *)((int)pvVar10 + 0x94);
     }

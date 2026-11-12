@@ -872,7 +872,7 @@ void M717_00432a70(undefined8 param_1)
         *(undefined2 *)((int)pvVar3 + 0x272) = 0xffff;
       }
     }
-    dVar10 = (double)(DAT_0071f418 * 21.0 * -0.5);
+    dVar10 = (double)(g_FrameTimeSq * 21.0 * -0.5);
     iVar7 = MB_SolveQuad
                       (dVar10,(double)(float)((double)*(float *)((int)pvVar3 + 0x24c) - dVar10),
                        (double)(*(float *)((int)pvVar3 + 0x208) - *(float *)((int)pvVar3 + 0x218)));
@@ -1475,11 +1475,11 @@ void UpdateMoby_717(MobyInstance *moby)
             } while (iVar19 < iVar20);
             sVar21 = *(short *)((int)pvVar8 + 600);
           }
-          fVar7 = DAT_0071f418;
+          fVar7 = g_FrameTimeSq;
           fVar53 = (float)(dVar32 / (double)*(float *)((int)pvVar8 + 0x240));
           fVar4 = (float)path[iVar20 * 4 + 6];
           fVar6 = *(float *)((int)path + (int)((longlong)sVar21 << 4) + 0x18);
-          fVar5 = DAT_0071f418 * 21.0;
+          fVar5 = g_FrameTimeSq * 21.0;
           uVar10 = (int)*(uint *)((int)pvVar8 + 0x24c) >> 0x1f;
           if ((int)((uVar10 >> 1 ^ *(uint *)((int)pvVar8 + 0x24c)) - uVar10) < 0) {
             *(float *)((int)pvVar8 + 0x24c) = (float)dVar43;
@@ -1652,7 +1652,7 @@ void UpdateMoby_717(MobyInstance *moby)
       dVar34 = (double)*(float *)((int)pvVar8 + 0x208);
       dVar44 = (double)(float)(dVar34 - dVar41);
       if ((dVar32 < dVar44) || (0 < *(int *)((int)pvVar8 + 0x24c))) {
-        dVar33 = -(double)(DAT_0071f418 * 21.0 - *(float *)((int)pvVar8 + 0x24c));
+        dVar33 = -(double)(g_FrameTimeSq * 21.0 - *(float *)((int)pvVar8 + 0x24c));
         *(float *)((int)pvVar8 + 0x24c) = (float)dVar33;
       }
       else {
@@ -1670,7 +1670,7 @@ void UpdateMoby_717(MobyInstance *moby)
       iVar20 = g_RaceTime;
       fVar53 = g_FrameTime;
       if (iVar19 == 0) {
-        Delt(*(float *)((int)pvVar8 + 0x23c),DAT_0071f418 * 20.0,
+        Delt(*(float *)((int)pvVar8 + 0x23c),g_FrameTimeSq * 20.0,
                        (float *)((int)pvVar8 + 0x240));
       }
       else {
@@ -1687,10 +1687,10 @@ void UpdateMoby_717(MobyInstance *moby)
           fVar6 = -(fVar53 * 1.5 - fVar4);
         }
         if (*(float *)((int)pvVar8 + 0x240) <= fVar6) {
-          Delt(fVar6,DAT_0071f418 * 15.0,(float *)((int)pvVar8 + 0x240));
+          Delt(fVar6,g_FrameTimeSq * 15.0,(float *)((int)pvVar8 + 0x240));
         }
         else {
-          Delt(fVar6,DAT_0071f418 * 7.0,(float *)((int)pvVar8 + 0x240));
+          Delt(fVar6,g_FrameTimeSq * 7.0,(float *)((int)pvVar8 + 0x240));
         }
       }
       if ((dVar44 < 0.20000000298023224) && (*(int *)((int)pvVar8 + 0x24c) < 0)) {

@@ -258,7 +258,7 @@ void UpdateMoby_21(MobyInstance *moby)
       dVar18 = 1.0;
       dVar17 = (double)*(float *)((int)pvVar6 + 0x70);
       OrganicDelt
-                (1.0,DAT_0071f418 * 4.0,DAT_0071f418 * 4.0,g_FrameTime * 4.0,
+                (1.0,g_FrameTimeSq * 4.0,g_FrameTimeSq * 4.0,g_FrameTime * 4.0,
                  (float *)((int)pvVar6 + 0x70),0x720000,(float *)((int)pvVar6 + 0x74));
       uVar7 = (int)*(uint *)((int)pvVar6 + 0x70) >> 0x1f;
       if ((int)((uVar7 >> 1 ^ *(uint *)((int)pvVar6 + 0x70)) - uVar7) < 0x3f800000) {
@@ -329,7 +329,7 @@ void UpdateMoby_21(MobyInstance *moby)
     }
     dVar17 = (double)fVar4;
     OrganicDelt
-              (fVar4,DAT_0071f418 * 8.0,DAT_0071f418 * 8.0,g_FrameTime * 40.0,
+              (fVar4,g_FrameTimeSq * 8.0,g_FrameTimeSq * 8.0,g_FrameTime * 40.0,
                &(moby->pos).z,0x720000,(float *)((int)pvVar6 + 0x68));
     if ((ABS((float)((double)(moby->pos).z - dVar17)) == 0.0) &&
        (moby->state = (char)(ZERO_MASK((2 - (uint)moby->state))) + '\a',

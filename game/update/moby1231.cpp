@@ -143,7 +143,7 @@ void M1231_00214198(MobyInstance *param_1)
     uVar19 = FastDoubleToInt(0x4080000000000000);
     *(undefined4 *)((int)pvVar8 + 0x98) = 0x3f000000;
     fVar2 = DAT_007685bc;
-    fVar1 = DAT_0071f418;
+    fVar1 = g_FrameTimeSq;
     *(undefined4 *)((int)pvVar8 + 0x90) = uVar19;
     *(undefined4 *)((int)pvVar8 + 0x84) = 0x3a03126f;
     *(undefined1 *)((int)pvVar8 + 0xad) = 0;
@@ -152,7 +152,7 @@ void M1231_00214198(MobyInstance *param_1)
     fVar1 = g_FrameTime;
     if (iVar18 < 3) {
       if ((-1 < iVar18) && (0 < iVar18)) {
-        fVar1 = DAT_007685bc * DAT_0071f418;
+        fVar1 = DAT_007685bc * g_FrameTimeSq;
         param_1->modeBits =
              param_1->modeBits &
              (MIRROR|CAN_BE_DAMAGED|HIDE_BACKFACES|DISABLE_Z_WRITE|DRAW_SHADOW|
@@ -578,7 +578,7 @@ void UpdateMoby_1231(MobyInstance *moby)
       dVar26 = (double)((float)(dVar26 + 0.7853981852531433) * fVar6 + fVar5);
     }
     OrganicDeltAng
-              ((float)dVar26,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+              ((float)dVar26,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
                g_FrameTime * 6.2831855,&(moby->rotation).z,0x720000,
                (float *)((int)pvVar9 + 0x14c));
     if ((*(int *)((int)pvVar9 + 0x160) != 0) &&
@@ -688,7 +688,7 @@ void UpdateMoby_1231(MobyInstance *moby)
       dVar26 = (double)((float)(dVar26 + 0.7853981852531433) * fVar6 + fVar5);
     }
     OrganicDeltAng
-              ((float)dVar26,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+              ((float)dVar26,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
                g_FrameTime * 6.2831855,&(moby->rotation).z,0x720000,
                (float *)((int)pvVar9 + 0x14c));
     iVar15 = MB_MayaFrameTrigger(15.0,moby);
@@ -802,7 +802,7 @@ void UpdateMoby_1231(MobyInstance *moby)
       fVar3 = (fVar3 + 0.7853982) * fVar8 + fVar4;
     }
     OrganicDeltAng
-              (fVar3,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+              (fVar3,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
                g_FrameTime * 6.2831855,&(moby->rotation).z,0x214a64,
                (float *)((int)pvVar9 + 0x14c));
     if ((*(int *)((int)pvVar9 + 0x114) != 2) && (moby->state = '\x04', moby->animationId != '\x02'))

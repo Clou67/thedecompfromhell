@@ -410,8 +410,8 @@ void UpdateMoby_1346(MobyInstance *moby)
         }
         dVar30 = (double)MB_DeltAngSpeed
                                    (dVar29,dVar30,
-                                    (double)(float)((double)DAT_0071f418 * 1.5707963705062866),
-                                    (double)(float)((double)DAT_0071f418 * dVar35),
+                                    (double)(float)((double)g_FrameTimeSq * 1.5707963705062866),
+                                    (double)(float)((double)g_FrameTimeSq * dVar35),
                                     (double)(g_FrameTime * 0.7853982),&DAT_002526d0,
                                     &DAT_00720000,piVar13 + 4);
         fVar2 = (moby->pos).x;

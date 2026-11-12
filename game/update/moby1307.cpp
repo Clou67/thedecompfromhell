@@ -281,7 +281,7 @@ void UpdateMoby_1307(MobyInstance *moby)
     }
   }
   else if (bVar1 < 5) {
-    pfVar4[2] = -(DAT_0071f418 * 10.8 - pfVar4[2]);
+    pfVar4[2] = -(g_FrameTimeSq * 10.8 - pfVar4[2]);
     fVar3 = (moby->rotation).x;
     (moby->pos).x = (moby->pos).x + *pfVar4;
     (moby->pos).y = (moby->pos).y + pfVar4[1];
@@ -396,7 +396,7 @@ void UpdateMoby_1307(MobyInstance *moby)
     }
   }
   else if (bVar1 < 6) {
-    pfVar4[2] = -(DAT_0071f418 * 10.8 * 0.5 - pfVar4[2]);
+    pfVar4[2] = -(g_FrameTimeSq * 10.8 * 0.5 - pfVar4[2]);
     fVar3 = (moby->rotation).x;
     (moby->pos).x = (moby->pos).x + *pfVar4;
     (moby->pos).y = (moby->pos).y + pfVar4[1];

@@ -1,6 +1,4 @@
-// game/path.cpp -- reconstructed from NPEA00385 EBOOT
-// STATUS: NOT STARTED (raw Ghidra output)
-// 39 functions, 0x136368-0x13a9c4
+#include <math.h>
 #include <stdio.h>
 #include "game/path.h"
 #include "game/camera.h"
@@ -12,1475 +10,769 @@
 #include "game/partupd.h"
 #include "game/walk.h"
 #include "idol/fastfunc.h"
+#include "idol/fastinline.h"
+// MERGE (16 of 39 functions cleaned; the rest are generated)
+
+/* PathFollower.state */
+enum {
+    PATH_FOLLOW_START = 0,
+    PATH_FOLLOW_WALK = 2,
+    PATH_FOLLOW_DONE = 7,
+};
+
+/* PathFollower.flags & 3: what happens at the last node */
+enum {
+    PATH_MODE_LOOP = 0,
+    PATH_MODE_PINGPONG = 1,
+    PATH_MODE_ONCE = 2,
+};
+
+/* w_2legData.flags: measure node distances flat */
+#define WALK_FLAG_FLAT 0x2
+
+/* DrawPathDebug flags */
+enum {
+    PATH_DRAW_MODE = 0x07,         /* 1, 2: a marker per node; 4: the node number */
+    PATH_DRAW_NO_FADE = 0x40,
+    PATH_DRAW_LINES = 0x80,
+};
+
+#define PATH_FAR 1e11f
+
+static inline float PathDist(Vec4 *a, Vec4 *b)
+{
+    float dx = a->x - b->x;
+    float dy = a->y - b->y;
+    float dz = a->z - b->z;
+
+    return sqrtf(dz * dz + dx * dx + dy * dy);
+}
+
+static inline int PathCollLine(Vec4 *from, Vec4 *to, int flags, MobyInstance *ignore)
+{
+    return (int)CollLine(&from->x, &to->x, flags, (undefined8)ignore, 0);
+}
+
+/* the node after `node` going `dir` (+1 / -1) along a closed path */
+static inline int PathWrapNode(int node, int dir, int cnt)
+{
+    return (node + cnt + dir) % cnt;
+}
+
+static inline float PathHeadingTo(Vec4 *to, Vec4 *from)
+{
+    return FastAtan2Inline(to->y - from->y, to->x - from->x);
+}
 
 // 0x0136368 (0x14 bytes)
-/* PATH SECTION HEAD */
-
 void SECTION_HEADER_PATH(void)
-
 {
-  DAT_007297a8 = 0x10000;
-  return;
+    DAT_007297a8 = 0x10000;
 }
 
 
 // 0x0136390 (0x394 bytes)
-// strings: 0065323c: 'tried to draw path -1 \n'
-
-ulonglong DrawPathDebug(float size,void *cam,int splineIdx,ABGR color,undefined8 param_5,
-                             uint flags,int step)
-
+/* draws a marker (or the node number) at each `step`th node, lifted along the camera's up */
+int DrawPathDebug(float size, void *cam, int splineIdx, ABGR color, undefined8 unused, uint flags, int step)
 {
-  double dVar1;
-  uint *puVar2;
-  float fVar3;
-  bool bVar4;
-  float fVar5;
-  int32_t iVar7;
-  ulonglong uVar6;
-  longlong lVar8;
-  longlong lVar9;
-  float *pfVar10;
-  uint uVar12;
-  longlong lVar11;
-  short sVar13;
-  double dVar14;
-  double dVar15;
-  double dVar16;
-  double dVar17;
-  GPiece<16> local_b0;
-  float local_a0;
-  float local_9c;
-  float local_98;
-  float local_94;
-  
-  dVar14 = (double)size;
-  lVar8 = (longlong)(int)flags;
-  if (splineIdx == -1) {
-    iVar7 = printf("tried to draw path -1 \n");
-    uVar6 = (ulonglong)iVar7;
-  }
-  else {
-    lVar9 = 0;
-    puVar2 = *(uint **)((int)Splines + (int)((longlong)splineIdx << 2));
-    sVar13 = ((ushort)(ZERO_MASK((flags & 0x40))) & 3) - 1;
-    uVar6 = (ulonglong)*puVar2;
-    if (0 < (int)*puVar2) {
-      do {
-        if (0 < (int)lVar9 && (flags & 0x80) != 0) {
-          STUB_00065468(local_b0,lVar9 * 0x10 + ZEXT48(puVar2) + 0x10 & 0xffffffff);
-        }
-        dVar17 = 0.0;
-        pfVar10 = (float *)((int)puVar2 + (int)(lVar9 << 4) + 0x10);
-        uVar12 = flags & 7;
-        bVar4 = true;
-        local_a0 = *pfVar10;
-        fVar3 = SQRT(GameCamera.orientMtx.up.z * GameCamera.orientMtx.up.z +
-                     GameCamera.orientMtx.up.x * GameCamera.orientMtx.up.x +
-                     GameCamera.orientMtx.up.y * GameCamera.orientMtx.up.y);
-        local_9c = pfVar10[1];
-        local_98 = pfVar10[2];
-        local_94 = pfVar10[3];
-        fVar5 = (float)(dVar14 * 1.2000000476837158) / fVar3;
-        dVar15 = dVar17;
-        if (0.0 - fVar3 < 0.0) {
-          dVar15 = (double)(GameCamera.orientMtx.up.z * fVar5);
-        }
-        dVar16 = dVar17;
-        if (0.0 - fVar3 < 0.0) {
-          dVar16 = (double)(GameCamera.orientMtx.up.y * fVar5);
-        }
-        if (0.0 - fVar3 < 0.0) {
-          dVar17 = (double)(GameCamera.orientMtx.up.x * fVar5);
-        }
-        if (fVar3 - 0.0 < 0.0) {
-          dVar15 = (double)(GameCamera.orientMtx.up.z * fVar5);
-        }
-        if (fVar3 - 0.0 < 0.0) {
-          dVar16 = (double)(GameCamera.orientMtx.up.y * fVar5);
-        }
-        if (fVar3 - 0.0 < 0.0) {
-          dVar17 = (double)(GameCamera.orientMtx.up.x * fVar5);
-        }
-        if (uVar12 < 3) {
-          if (uVar12 != 0) {
-            if (uVar12 < 2) {
-              SpawnPart_41((float)dVar14,&local_a0,cam,0,color,lVar8,0x7f,sVar13,0xff);
-            }
-            else {
-              SpawnPart_41((float)dVar14,&local_a0,cam,1,color,lVar8,0x7f,sVar13,0xff);
-            }
-          }
-        }
-        else if (uVar12 == 4) {
-          dVar1 = dVar14 * 0.5 + (double)local_98;
-          lVar11 = lVar9;
-          while( true ) {
-            local_98 = (float)dVar1;
-            uVar12 = (uint)lVar11;
-            if ((uVar12 == 0) && (!bVar4)) break;
-            SpawnPart_41
-                      ((float)dVar14,&local_a0,cam,(int)uVar12 % 10 + 2,color,lVar8,0x7f,sVar13,0xff
-                      );
-            local_a0 = (float)((double)local_a0 + dVar17);
-            bVar4 = false;
-            local_9c = (float)((double)local_9c + dVar16);
-            dVar1 = (double)local_98 + dVar15;
-            lVar11 = (longlong)((int)uVar12 / 10 + ((int)uVar12 >> 0x1f)) +
-                     (ulonglong)(uVar12 >> 0x1f);
-          }
-        }
-        lVar9 = lVar9 + step;
-        uVar6 = (ulonglong)*puVar2;
-      } while ((int)lVar9 < (int)*puVar2);
+    if (splineIdx == -1) {
+        return printf("tried to draw path -1 \n");
     }
-  }
-  return uVar6;
+
+    Spline *spline = Splines[splineIdx];
+    short fade = (flags & PATH_DRAW_NO_FADE) ? -1 : 2;
+    Vec4 prev = spline->points[0];
+    Vec4 *up = &GameCamera.orientMtx.up;
+
+    for (int i = 0; i < spline->cnt; i += step) {
+        Vec4 *node = &spline->points[i];
+
+        if (i > 0 && (flags & PATH_DRAW_LINES)) {
+            STUB_00065468(&prev, node);
+        }
+
+        float upLen = sqrtf(up->z * up->z + up->x * up->x + up->y * up->y);
+        float scale = (size * 1.2f) / upLen;
+        Vec4 lift = { 0.0f, 0.0f, 0.0f, 0.0f };
+        if (upLen != 0.0f) {
+            lift.x = up->x * scale;
+            lift.y = up->y * scale;
+            lift.z = up->z * scale;
+        }
+
+        Vec4 pos = *node;
+        uint mode = flags & PATH_DRAW_MODE;
+        if (mode == 1) {
+            SpawnPart_41(size, &pos.x, (int)(uintptr_t)cam, 0, *(uint *)&color, flags, 0x7f, fade, 0xff);
+        }
+        else if (mode == 2) {
+            SpawnPart_41(size, &pos.x, (int)(uintptr_t)cam, 1, *(uint *)&color, flags, 0x7f, fade, 0xff);
+        }
+        else if (mode == 4) {
+            /* the digits of i, lowest first, stacked upward */
+            pos.z += size * 0.5f;
+
+            int number = i;
+            int first = 1;
+            while (number != 0 || first) {
+                SpawnPart_41(size, &pos.x, (int)(uintptr_t)cam, number % 10 + 2, *(uint *)&color, flags, 0x7f, fade, 0xff);
+                pos.x += lift.x;
+                pos.y += lift.y;
+                pos.z += lift.z;
+                first = 0;
+                number /= 10;
+            }
+        }
+
+        prev = *node;
+    }
+
+    return spline->cnt;
 }
 
 
 // 0x0136724 (0xa4 bytes)
+/* binds the follower to Splines[splineIdx]; each node's w becomes the length to the next */
 void InitFollower(PathFollower *follower)
-
 {
-  Spline *pSVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  int iVar5;
-  Spline *pSVar6;
-  int iVar7;
-  
-  follower->state = '\0';
-  follower->timer = 0.0;
-  pSVar1 = Splines[follower->splineIdx];
-  follower->pSpline = pSVar1;
-  iVar5 = pSVar1->cnt;
-  if (0 < iVar5) {
-    iVar7 = 0;
-    pSVar6 = pSVar1;
-    do {
-      iVar7 = iVar7 + 1;
-      iVar5 = iVar7 - (iVar7 / iVar5) * iVar5;
-      fVar2 = pSVar6->points[0].y - *(float *)((int)pSVar1 + iVar5 * 0x10 + 0x14);
-      fVar3 = pSVar6->points[0].x - *(float *)((int)pSVar1 + iVar5 * 0x10 + 0x10);
-      fVar4 = pSVar6->points[0].z - *(float *)((int)pSVar1 + iVar5 * 0x10 + 0x18);
-      pSVar6->points[0].w = SQRT(fVar4 * fVar4 + fVar3 * fVar3 + fVar2 * fVar2);
-      iVar5 = pSVar1->cnt;
-      pSVar6 = (Spline *)pSVar6->points;
-    } while (iVar7 < iVar5);
-  }
-  return;
+    follower->state = PATH_FOLLOW_START;
+    follower->timer = 0.0f;
+
+    Spline *spline = Splines[follower->splineIdx];
+    follower->pSpline = spline;
+
+    for (int i = 0; i < spline->cnt; i++) {
+        int next = (i + 1) % spline->cnt;
+
+        spline->points[i].w = PathDist(&spline->points[i], &spline->points[next]);
+    }
 }
 
 
 // 0x01367d0 (0x9c bytes)
-int PathFindClosestPnt(float distance,Vec4 *position,Spline *spline)
-
+/* the node whose distance from `position` is closest to `distance` (the best is kept as
+   the plain distance, not the difference, as the game does) */
+int PathFindClosestPnt(float distance, Vec4 *position, Spline *spline)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  Vec4 *pVVar5;
-  int iVar6;
-  int iVar7;
-  
-  iVar6 = 0;
-  iVar7 = 0;
-  fVar1 = 1e+11;
-  if (0 < spline->cnt) {
-    do {
-      pVVar5 = spline->points + iVar6;
-      fVar3 = pVVar5->y - position->y;
-      fVar2 = pVVar5->x - position->x;
-      fVar4 = pVVar5->z - position->z;
-      fVar2 = SQRT(fVar4 * fVar4 + fVar2 * fVar2 + fVar3 * fVar3);
-      if (ABS(fVar2 - distance) < fVar1) {
-        fVar1 = fVar2;
-        iVar7 = iVar6;
-      }
-      iVar6 = iVar6 + 1;
-    } while (iVar6 < spline->cnt);
-  }
-  return iVar7;
+    float best = PATH_FAR;
+    int bestIdx = 0;
+
+    for (int i = 0; i < spline->cnt; i++) {
+        float dist = PathDist(&spline->points[i], position);
+
+        if (fabsf(dist - distance) < best) {
+            best = dist;
+            bestIdx = i;
+        }
+    }
+
+    return bestIdx;
 }
 
 
 // 0x0136890 (0x998 bytes)
 // inlined: FastAtan2 @0x136b28, FastAtan2 @0x136d44, FastAtan2 @0x136ef0
-void PathFollowUpdate(float arrive,MobyInstance *moby,PathFollower *follower,int param_4)
-
+/* walks a two-legged moby along follower's spline: picks the start node, then moves on to
+   the next node when the moby is close or the next one is a better heading */
+void PathFollowUpdate(float arrive, MobyInstance *moby, PathFollower *follower, w_2legData *pLD)
 {
-  byte bVar1;
-  u8 uVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  float fVar7;
-  float fVar8;
-  Spline *pSVar9;
-  uint uVar10;
-  ulonglong *puVar11;
-  int iVar12;
-  ushort uVar13;
-  float fVar14;
-  ulonglong uVar15;
-  longlong lVar16;
-  int iVar17;
-  longlong lVar18;
-  longlong lVar19;
-  float *pfVar21;
-  int iVar22;
-  longlong lVar20;
-  ulonglong uVar23;
-  ulonglong uVar24;
-  Spline *pSVar25;
-  ulonglong unaff_r29;
-  ulonglong unaff_r30;
-  ulonglong unaff_r31;
-  ulonglong in_LR;
-  longlong lVar26;
-  double dVar27;
-  double dVar28;
-  double dVar29;
-  double dVar30;
-  ulonglong in_f27;
-  ulonglong in_f28;
-  ulonglong in_f29;
-  ulonglong in_f30;
-  double dVar31;
-  ulonglong in_f31;
-  
-  dVar27 = (double)arrive;
-  uVar15 = ZEXT48(&stack0x00000000);
-  lVar16 = uVar15 - 0x140;
-  puVar11 = (ulonglong *)lVar16;
-  *puVar11 = uVar15;
-  puVar11[0x2a] = in_LR;
-  puVar11[0x23] = in_f27;
-  puVar11[0x24] = in_f28;
-  puVar11[0x25] = in_f29;
-  puVar11[0x26] = in_f30;
-  puVar11[0x27] = in_f31;
-  puVar11[0x20] = unaff_r29;
-  puVar11[0x22] = unaff_r31;
-  bVar1 = follower->state;
-  puVar11[0x21] = unaff_r30;
-  uVar23 = (ulonglong)(uint)follower->idx;
-  if (bVar1 == 0) {
-    pSVar9 = follower->pSpline;
-    if (follower->idx < 1) {
-      iVar17 = pSVar9->cnt;
-      uVar24 = 0;
-      uVar23 = 0;
-      fVar3 = 1e+11;
-      if (0 < iVar17) {
-        pSVar25 = pSVar9;
-        do {
-          fVar7 = pSVar25->points[0].y - (moby->pos).y;
-          fVar4 = pSVar25->points[0].x - (moby->pos).x;
-          fVar5 = pSVar25->points[0].z - (moby->pos).z;
-          pSVar25 = (Spline *)pSVar25->points;
-          fVar4 = SQRT(fVar5 * fVar5 + fVar4 * fVar4 + fVar7 * fVar7);
-          if (ABS(fVar4) < fVar3) {
-            uVar23 = uVar24;
-            fVar3 = fVar4;
-          }
-          uVar24 = uVar24 + 1;
-        } while ((int)uVar24 < iVar17);
-      }
-      follower->idx = (int)uVar23;
-      uVar13 = follower->flags & 3;
-      if ((uVar13 == 1) && ((int)uVar23 == iVar17 + -1)) {
-        follower->direction = -follower->direction;
-      }
-      if (uVar13 != 2) {
-        uVar10 = pSVar9->cnt;
-        lVar19 = uVar23 + uVar10 + (longlong)(char)follower->direction;
-        uVar23 = lVar19 - (longlong)((int)lVar19 / (int)uVar10) * (longlong)(int)uVar10;
-        follower->idx = (s32)uVar23;
-      }
+    if (follower->state == PATH_FOLLOW_START) {
+        Spline *spline = follower->pSpline;
+
+        if (follower->idx < 1) {
+            float best = PATH_FAR;
+            int idx = 0;
+
+            for (int i = 0; i < spline->cnt; i++) {
+                float dist = PathDist(&spline->points[i], &moby->pos);
+
+                if (fabsf(dist) < best) {
+                    idx = i;
+                    best = dist;
+                }
+            }
+
+            follower->idx = idx;
+
+            int mode = follower->flags & 3;
+            if (mode == PATH_MODE_PINGPONG && idx == spline->cnt - 1) {
+                follower->direction = -follower->direction;
+            }
+
+            if (mode != PATH_MODE_ONCE) {
+                follower->idx = PathWrapNode(idx, (s8)follower->direction, spline->cnt);
+            }
+        }
+
+        Vec4 *node = &spline->points[follower->idx];
+        follower->distance = PathDist(&moby->pos, node);
+        follower->head = PathHeadingTo(node, &moby->pos);
+        follower->timer = 0.0f;
+        follower->unk1c = 0;
+        follower->state = PATH_FOLLOW_WALK;
     }
-    iVar17 = (int)((uVar23 & 0xffffffff) << 4);
-    fVar3 = (moby->pos).y;
-    fVar4 = (moby->pos).x;
-    fVar7 = fVar3 - *(float *)((int)&pSVar9->points[0].y + iVar17);
-    fVar5 = fVar4 - *(float *)((int)&pSVar9->points[0].x + iVar17);
-    fVar8 = (moby->pos).z - *(float *)((int)&pSVar9->points[0].z + iVar17);
-    iVar17 = (int)((uVar23 & 0xffffffff) << 4);
-    follower->distance = SQRT(fVar8 * fVar8 + fVar5 * fVar5 + fVar7 * fVar7);
-    fVar4 = *(float *)((int)&pSVar9->points[0].x + iVar17) - fVar4;
-    fVar3 = *(float *)((int)&pSVar9->points[0].y + iVar17) - fVar3;
-    fVar7 = ABS(fVar4);
-    fVar5 = ABS(fVar3);
-    *(float *)(puVar11 + 0x11) = fVar4;
-    *(float *)((int)puVar11 + 0x8c) = fVar3;
-    *(float *)(puVar11 + 0x12) = fVar7 - fVar5;
-    fVar3 = 0.0;
-    uVar24 = (ulonglong)(*(uint *)(puVar11 + 0x11) >> 0x1c) & 8 |
-             (ulonglong)(*(uint *)(puVar11 + 0x12) >> 0x1e) & 2 |
-             (ulonglong)(*(uint *)((int)puVar11 + 0x8c) >> 0x1d) & 4;
-    fVar4 = ABS(*(float *)(puVar11 + 0x11));
-    if (*(float *)(puVar11 + 0x12) - 0.0 < 0.0) {
-      fVar4 = fVar5;
+    else if (follower->state != PATH_FOLLOW_WALK) {
+        return;
     }
-    fVar8 = *(float *)(&g_atanQuadrantTable + (int)(uVar24 << 2));
-    fVar5 = *(float *)(((uint)(uVar24 << 2) | 0x735900) + 4);
-    fVar6 = ABS(*(float *)((int)puVar11 + 0x8c));
-    if (*(float *)(puVar11 + 0x12) - 0.0 < 0.0) {
-      fVar6 = fVar7;
+
+    Spline *spline = follower->pSpline;
+    int next = PathWrapNode(follower->idx, (s8)follower->direction, spline->cnt);
+    float headToNode = PathHeadingTo(&spline->points[follower->idx], &moby->pos);
+    float headToNext = PathHeadingTo(&spline->points[next], &moby->pos);
+    float nodeToNext = FastSubRots(headToNode, headToNext);
+    float nodeToFacing = FastSubRots(headToNode, moby->rotation.z);
+    float nextToFacing = FastSubRots(headToNext, moby->rotation.z);
+    s8 dir = (s8)follower->direction;
+    int idx = follower->idx;
+    Vec4 *node = &spline->points[idx];
+
+    float dist;
+    if ((pLD->flags & WALK_FLAG_FLAT) == 0) {
+        float dx = moby->pos.x - node->x;
+        float dy = moby->pos.y - node->y;
+
+        dist = sqrtf((moby->pos.z - node->z) * (moby->pos.z - node->z) + (dx * dx + dy * dy));
     }
-    if (0.0 < fVar4) {
-      lVar19 = uVar15 - 0x130;
-      lVar20 = uVar15 - 0x5c;
-      lVar18 = uVar15 - 0x6c;
-      lVar26 = 2;
-      fVar4 = (fVar6 - fVar4) / (fVar6 + fVar4);
-      fVar7 = fVar4 * fVar4;
-      *(float *)((int)puVar11 + 0xd4) = fVar4;
-      *(float *)(puVar11 + 0x1b) = fVar4;
-      *(float *)((int)puVar11 + 0xdc) = fVar4;
-      *(float *)(puVar11 + 0x1c) = fVar4;
-      fVar4 = fVar7 * fVar7;
-      *(float *)(puVar11 + 0x1b) = *(float *)(puVar11 + 0x1b) * fVar7;
-      *(float *)((int)puVar11 + 0xdc) = *(float *)((int)puVar11 + 0xdc) * fVar4;
-      *(float *)(puVar11 + 0x1c) = *(float *)(puVar11 + 0x1c) * fVar4 * fVar7;
-      do {
-        *(float *)((int)lVar19 + 0xd4) = *(float *)((int)lVar19 + 0xc4) * fVar4 * fVar4;
-        iVar17 = (int)lVar18;
-        lVar18 = lVar18 + 8;
-        lVar19 = lVar19 + 8;
-        *(float *)((int)lVar20 + 4) = *(float *)(iVar17 + 4) * fVar4 * fVar4;
-        lVar20 = lVar20 + 8;
-        lVar26 = lVar26 + -1;
-      } while (lVar26 != 0);
-      lVar26 = 4;
-      lVar20 = uVar15 - 0x6c;
-      pfVar21 = (float *)&DAT_007358e0;
-      lVar19 = lVar16;
-      lVar18 = lVar20;
-      do {
-        fVar4 = *pfVar21;
-        fVar7 = pfVar21[1];
-        pfVar21 = pfVar21 + 2;
-        *(float *)((int)lVar19 + 0xd4) = *(float *)((int)lVar19 + 0xd4) * fVar4;
-        lVar19 = lVar19 + 8;
-        *(float *)((int)lVar18 + 4) = *(float *)((int)lVar18 + 4) * fVar7;
-        lVar18 = lVar18 + 8;
-        lVar26 = lVar26 + -1;
-      } while (lVar26 != 0);
-      lVar18 = 2;
-      lVar19 = lVar16;
-      do {
-        iVar17 = (int)lVar19;
-        lVar19 = lVar19 + 0x10;
-        iVar22 = (int)lVar20;
-        lVar20 = lVar20 + 0x10;
-        fVar3 = fVar3 + *(float *)(iVar17 + 0xd4) + *(float *)(iVar22 + 4) + *(float *)(iVar22 + 8)
-                + *(float *)(iVar22 + 0xc);
-        lVar18 = lVar18 + -1;
-      } while (lVar18 != 0);
-      fVar3 = (fVar3 + 0.7853982) * fVar8 + fVar5;
+    else {
+        float dy = moby->pos.y - node->y;
+
+        dist = sqrtf((moby->pos.x - node->x) * (moby->pos.x - node->x) + dy * dy);
     }
-    follower->head = fVar3;
-    follower->timer = 0.0;
-    follower[1].idx = 0;
-    follower->state = '\x02';
-  }
-  else {
-    if (2 < bVar1) {
-      return;
-    }
-    if (bVar1 < 2) {
-      return;
-    }
-  }
-  iVar22 = (int)((uVar23 & 0xffffffff) << 4);
-  pSVar9 = follower->pSpline;
-  fVar3 = (moby->pos).x;
-  fVar4 = (moby->pos).y;
-  iVar17 = pSVar9->cnt;
-  fVar7 = *(float *)((int)&pSVar9->points[0].x + iVar22) - fVar3;
-  fVar5 = *(float *)((int)&pSVar9->points[0].y + iVar22) - fVar4;
-  iVar22 = (int)uVar23 + iVar17 + (int)(char)follower->direction;
-  fVar6 = ABS(fVar7);
-  *(float *)((int)puVar11 + 0x7c) = fVar7;
-  fVar8 = ABS(fVar5);
-  *(float *)(puVar11 + 0x10) = fVar5;
-  iVar22 = iVar22 - (iVar22 / iVar17) * iVar17;
-  *(float *)((int)puVar11 + 0x84) = fVar6 - fVar8;
-  dVar31 = 0.0;
-  uVar23 = (ulonglong)(*(uint *)((int)puVar11 + 0x7c) >> 0x1c) & 8 |
-           (ulonglong)(*(uint *)((int)puVar11 + 0x84) >> 0x1e) & 2 |
-           (ulonglong)(*(uint *)(puVar11 + 0x10) >> 0x1d) & 4;
-  fVar7 = ABS(*(float *)((int)puVar11 + 0x7c));
-  if (*(float *)((int)puVar11 + 0x84) - 0.0 < 0.0) {
-    fVar7 = fVar8;
-  }
-  fVar8 = *(float *)(&g_atanQuadrantTable + (int)(uVar23 << 2));
-  fVar5 = *(float *)(((uint)(uVar23 << 2) | 0x735900) + 4);
-  fVar14 = ABS(*(float *)(puVar11 + 0x10));
-  if (*(float *)((int)puVar11 + 0x84) - 0.0 < 0.0) {
-    fVar14 = fVar6;
-  }
-  dVar30 = dVar31;
-  if (0.0 < fVar7) {
-    lVar19 = uVar15 - 0x130;
-    lVar18 = uVar15 - 0x8c;
-    lVar20 = uVar15 - 0x7c;
-    lVar26 = 2;
-    fVar7 = (fVar14 - fVar7) / (fVar14 + fVar7);
-    fVar6 = fVar7 * fVar7;
-    *(float *)((int)puVar11 + 0xb4) = fVar7;
-    *(float *)(puVar11 + 0x17) = fVar7;
-    *(float *)((int)puVar11 + 0xbc) = fVar7;
-    *(float *)(puVar11 + 0x18) = fVar7;
-    fVar7 = fVar6 * fVar6;
-    *(float *)(puVar11 + 0x17) = *(float *)(puVar11 + 0x17) * fVar6;
-    *(float *)((int)puVar11 + 0xbc) = *(float *)((int)puVar11 + 0xbc) * fVar7;
-    *(float *)(puVar11 + 0x18) = *(float *)(puVar11 + 0x18) * fVar7 * fVar6;
-    do {
-      *(float *)((int)lVar19 + 0xb4) = *(float *)((int)lVar19 + 0xa4) * fVar7 * fVar7;
-      iVar17 = (int)lVar18;
-      lVar19 = lVar19 + 8;
-      lVar18 = lVar18 + 8;
-      *(float *)((int)lVar20 + 4) = *(float *)(iVar17 + 4) * fVar7 * fVar7;
-      lVar20 = lVar20 + 8;
-      lVar26 = lVar26 + -1;
-    } while (lVar26 != 0);
-    lVar26 = 4;
-    lVar20 = uVar15 - 0x8c;
-    pfVar21 = (float *)&DAT_007358e0;
-    lVar19 = lVar16;
-    lVar18 = lVar20;
-    do {
-      fVar7 = *pfVar21;
-      fVar6 = pfVar21[1];
-      pfVar21 = pfVar21 + 2;
-      *(float *)((int)lVar19 + 0xb4) = *(float *)((int)lVar19 + 0xb4) * fVar7;
-      lVar19 = lVar19 + 8;
-      *(float *)((int)lVar18 + 4) = *(float *)((int)lVar18 + 4) * fVar6;
-      lVar18 = lVar18 + 8;
-      lVar26 = lVar26 + -1;
-    } while (lVar26 != 0);
-    lVar18 = 2;
-    lVar19 = lVar16;
-    do {
-      iVar17 = (int)lVar19;
-      lVar19 = lVar19 + 0x10;
-      iVar12 = (int)lVar20;
-      lVar20 = lVar20 + 0x10;
-      dVar30 = (double)((float)(dVar30 + (double)*(float *)(iVar17 + 0xb4)) + *(float *)(iVar12 + 4)
-                        + *(float *)(iVar12 + 8) + *(float *)(iVar12 + 0xc));
-      lVar18 = lVar18 + -1;
-    } while (lVar18 != 0);
-    dVar30 = (double)((float)(dVar30 + 0.7853981852531433) * fVar8 + fVar5);
-  }
-  fVar3 = *(float *)((int)pSVar9 + iVar22 * 0x10 + 0x10) - fVar3;
-  fVar4 = *(float *)((int)pSVar9 + iVar22 * 0x10 + 0x14) - fVar4;
-  fVar5 = ABS(fVar3);
-  fVar7 = ABS(fVar4);
-  *(float *)(puVar11 + 0xe) = fVar3;
-  *(float *)((int)puVar11 + 0x74) = fVar4;
-  *(float *)(puVar11 + 0xf) = fVar5 - fVar7;
-  uVar23 = (ulonglong)(*(uint *)(puVar11 + 0xe) >> 0x1c) & 8 |
-           (ulonglong)(*(uint *)(puVar11 + 0xf) >> 0x1e) & 2 |
-           (ulonglong)(*(uint *)((int)puVar11 + 0x74) >> 0x1d) & 4;
-  fVar3 = ABS(*(float *)(puVar11 + 0xe));
-  if (*(float *)(puVar11 + 0xf) - 0.0 < 0.0) {
-    fVar3 = fVar7;
-  }
-  fVar4 = *(float *)(&g_atanQuadrantTable + (int)(uVar23 << 2));
-  fVar7 = ABS(*(float *)((int)puVar11 + 0x74));
-  if (*(float *)(puVar11 + 0xf) - 0.0 < 0.0) {
-    fVar7 = fVar5;
-  }
-  fVar5 = *(float *)(((uint)(uVar23 << 2) | 0x735900) + 4);
-  if (0.0 < fVar3) {
-    lVar26 = 2;
-    fVar3 = (fVar7 - fVar3) / (fVar7 + fVar3);
-    fVar7 = fVar3 * fVar3;
-    *(float *)((int)puVar11 + 0x94) = fVar3;
-    *(float *)(puVar11 + 0x13) = fVar3;
-    *(float *)((int)puVar11 + 0x9c) = fVar3;
-    *(float *)(puVar11 + 0x14) = fVar3;
-    lVar19 = uVar15 - 0x130;
-    fVar3 = fVar7 * fVar7;
-    lVar18 = uVar15 - 0xac;
-    lVar20 = uVar15 - 0x9c;
-    *(float *)(puVar11 + 0x13) = *(float *)(puVar11 + 0x13) * fVar7;
-    *(float *)((int)puVar11 + 0x9c) = *(float *)((int)puVar11 + 0x9c) * fVar3;
-    *(float *)(puVar11 + 0x14) = *(float *)(puVar11 + 0x14) * fVar3 * fVar7;
-    do {
-      *(float *)((int)lVar19 + 0x94) = *(float *)((int)lVar19 + 0x84) * fVar3 * fVar3;
-      iVar17 = (int)lVar18;
-      lVar19 = lVar19 + 8;
-      lVar18 = lVar18 + 8;
-      *(float *)((int)lVar20 + 4) = *(float *)(iVar17 + 4) * fVar3 * fVar3;
-      lVar20 = lVar20 + 8;
-      lVar26 = lVar26 + -1;
-    } while (lVar26 != 0);
-    lVar26 = 4;
-    lVar20 = uVar15 - 0xac;
-    pfVar21 = (float *)&DAT_007358e0;
-    lVar19 = lVar16;
-    lVar18 = lVar20;
-    do {
-      fVar3 = *pfVar21;
-      fVar7 = pfVar21[1];
-      pfVar21 = pfVar21 + 2;
-      *(float *)((int)lVar19 + 0x94) = *(float *)((int)lVar19 + 0x94) * fVar3;
-      lVar19 = lVar19 + 8;
-      *(float *)((int)lVar18 + 4) = *(float *)((int)lVar18 + 4) * fVar7;
-      lVar18 = lVar18 + 8;
-      lVar26 = lVar26 + -1;
-    } while (lVar26 != 0);
-    lVar19 = 2;
-    do {
-      iVar17 = (int)lVar16;
-      iVar22 = (int)lVar20;
-      lVar16 = lVar16 + 0x10;
-      lVar20 = lVar20 + 0x10;
-      dVar31 = (double)((float)(dVar31 + (double)*(float *)(iVar17 + 0x94)) + *(float *)(iVar22 + 4)
-                        + *(float *)(iVar22 + 8) + *(float *)(iVar22 + 0xc));
-      lVar19 = lVar19 + -1;
-    } while (lVar19 != 0);
-    dVar31 = (double)((float)(dVar31 + 0.7853981852531433) * fVar4 + fVar5);
-  }
-  dVar28 = (double)FastSubRots((float)dVar30,(float)dVar31);
-  dVar29 = (double)FastSubRots((float)dVar30,(moby->rotation).z);
-  dVar31 = (double)FastSubRots((float)dVar31,(moby->rotation).z);
-  uVar2 = follower->direction;
-  if ((*(ushort *)(param_4 + 0xee) & 2) == 0) {
-    iVar17 = follower->idx;
-    pSVar9 = follower->pSpline;
-    fVar3 = (moby->pos).z;
-    fVar7 = (moby->pos).y - pSVar9->points[iVar17].y;
-    fVar5 = (moby->pos).x - pSVar9->points[iVar17].x;
-    fVar4 = pSVar9->points[iVar17].z;
-    fVar7 = fVar5 * fVar5 + fVar7 * fVar7;
-  }
-  else {
-    iVar17 = follower->idx;
-    pSVar9 = follower->pSpline;
-    fVar3 = (moby->pos).x;
-    fVar7 = (moby->pos).y - pSVar9->points[iVar17].y;
-    fVar4 = pSVar9->points[iVar17].x;
-    fVar7 = fVar7 * fVar7;
-  }
-  fVar3 = SQRT((fVar3 - fVar4) * (fVar3 - fVar4) + fVar7);
-  follower->distance = fVar3;
-  if ((((fVar3 <= (float)(dVar27 * 20.0)) || (1.5707963705062866 < dVar28)) ||
-      (dVar28 < 0.03490658476948738)) ||
-     ((1.5707963705062866 < dVar29 && (dVar31 < 0.785398006439209)))) {
-    if ((follower->flags & 3) != 0) {
-      iVar22 = 0;
-      if (-1 < (char)uVar2) {
-        iVar22 = pSVar9->cnt + -1;
-      }
-      if (iVar17 == iVar22) {
-        if ((follower->flags & 3) == 1) {
-          follower->direction = -uVar2;
-          iVar22 = pSVar9->cnt;
-          iVar17 = iVar17 + iVar22 + (int)(char)-uVar2;
-          follower->idx = iVar17 - (iVar17 / iVar22) * iVar22;
+
+    follower->distance = dist;
+
+    if (dist <= arrive * 20.0f || nodeToNext > 1.5707964f || nodeToNext < 0.034906585f ||
+        (nodeToFacing > 1.5707964f && nextToFacing < 0.785398f)) {
+        int mode = follower->flags & 3;
+        int last = (dir < 0) ? 0 : spline->cnt - 1;
+
+        if (mode != PATH_MODE_LOOP && idx == last) {
+            if (mode == PATH_MODE_PINGPONG) {
+                follower->direction = -dir;
+                follower->idx = PathWrapNode(idx, -dir, spline->cnt);
+            }
+            else {
+                follower->state = PATH_FOLLOW_DONE;
+            }
         }
         else {
-          follower->state = '\a';
+            follower->idx = PathWrapNode(idx, dir, spline->cnt);
         }
-        goto LAB_001371c4;
-      }
     }
-    iVar22 = pSVar9->cnt;
-    iVar17 = iVar17 + iVar22 + (int)(char)uVar2;
-    follower->idx = iVar17 - (iVar17 / iVar22) * iVar22;
-  }
-LAB_001371c4:
-  follower->head = (float)dVar30;
-  walk_Update(dVar27,dVar30,(double)(DAT_0071f418 * 5.0),moby,param_4);
-  return;
+
+    follower->head = headToNode;
+    walk_Update(arrive, headToNode, g_FrameTimeSq * 5.0f, moby, pLD);
+}
+
+/* how far `pos` is from the circle of `radius` around it crossing segment a-b: the
+   segment parameter of the projection (t) and the two crossings, clamped (t0, t1) */
+typedef struct PathSegHit {
+    Vec4 dir;                /* b - a */
+    float len2;
+    float t;
+    float perp;              /* distance from pos to the line */
+    float t0;
+    float t1;
+} PathSegHit;
+
+static inline float PathClamp01(float t)
+{
+    if (!(t >= 0.0f)) {
+        return 0.0f;
+    }
+
+    if (t > 1.0f) {
+        return 1.0f;
+    }
+
+    return t;
+}
+
+static inline void PathSegProject(PathSegHit *hit, float radius, Vec4 *pos, Vec4 *a, Vec4 *b)
+{
+    hit->dir.x = b->x - a->x;
+    hit->dir.y = b->y - a->y;
+    hit->dir.z = b->z - a->z;
+    hit->len2 = hit->dir.z * hit->dir.z + (hit->dir.x * hit->dir.x + hit->dir.y * hit->dir.y);
+    hit->t = -(hit->dir.z * (a->z - pos->z) + (hit->dir.x * (a->x - pos->x) + hit->dir.y * (a->y - pos->y))) / hit->len2;
+
+    float dx = hit->dir.x * hit->t + a->x - pos->x;
+    float dy = hit->dir.y * hit->t + a->y - pos->y;
+    float dz = hit->dir.z * hit->t + a->z - pos->z;
+    hit->perp = sqrtf(dz * dz + dx * dx + dy * dy);
+
+    if (hit->perp < radius) {
+        float half = sqrtf(radius * radius - hit->perp * hit->perp) / sqrtf(hit->len2);
+
+        hit->t0 = PathClamp01(hit->t - half);
+        hit->t1 = PathClamp01(half + hit->t);
+    }
+}
+
+static inline void PathSegPoint(Vec4 *out, PathSegHit *hit, Vec4 *a, float t)
+{
+    out->x = hit->dir.x * t + a->x;
+    out->y = hit->dir.y * t + a->y;
+    out->z = hit->dir.z * t + a->z;
+}
+
+/* |distance - radius|, snapped to 0 within 1% of radius */
+static inline float PathRadiusError(Vec4 *p, Vec4 *pos, float radius)
+{
+    float err = fabsf(PathDist(p, pos) - radius);
+
+    if (err < radius * 0.01f) {
+        return 0.0f;
+    }
+
+    return err;
 }
 
 
 // 0x0137238 (0x374 bytes)
-double ClosestPntOnSegmentAtDist
-                 (float radius,Vec4 *outPnt,Vec4 *prevPnt,Vec4 *pos,Vec4 *start,Vec4 *end)
-
+/* the point of segment start-end at `radius` from pos (the one nearer prevPnt on a tie);
+   returns how far off radius it is */
+float ClosestPntOnSegmentAtDist(float radius, Vec4 *outPnt, Vec4 *prevPnt, Vec4 *pos, Vec4 *start, Vec4 *end)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  float fVar7;
-  float fVar8;
-  float fVar9;
-  float fVar10;
-  float fVar11;
-  float fVar12;
-  float fVar13;
-  double dVar14;
-  double dVar15;
-  double dVar16;
-  double dVar17;
-  double dVar18;
-  double dVar19;
-  double dVar20;
-  double dVar21;
-  double dVar22;
-  double dVar23;
-  double dVar24;
-  double dVar25;
-  double dVar26;
-  double dVar27;
-  double dVar28;
-  
-  dVar15 = (double)radius;
-  dVar22 = (double)start->y;
-  dVar23 = (double)pos->y;
-  dVar17 = (double)(float)((double)end->y - dVar22);
-  dVar20 = (double)start->x;
-  dVar21 = (double)pos->x;
-  dVar27 = (double)end->x;
-  dVar24 = (double)start->z;
-  dVar16 = (double)(float)(dVar27 - dVar20);
-  dVar25 = (double)pos->z;
-  dVar18 = (double)(float)((double)end->z - dVar24);
-  fVar1 = (float)(dVar18 * dVar18 +
-                 (double)(float)(dVar16 * dVar16 + (double)(float)(dVar17 * dVar17)));
-  fVar13 = end->w;
-  dVar14 = (double)(-(float)(dVar18 * (double)(float)(dVar24 - dVar25) +
-                            (double)(float)(dVar16 * (double)(float)(dVar20 - dVar21) +
-                                           (double)(float)(dVar17 * (double)(float)(dVar22 - dVar23)
-                                                          ))) / fVar1);
-  fVar2 = (float)(dVar17 * dVar14 + dVar22);
-  fVar3 = (float)(dVar16 * dVar14 + dVar20);
-  fVar4 = (float)(dVar18 * dVar14 + dVar24);
-  fVar5 = (float)((double)fVar2 - dVar23);
-  fVar6 = (float)((double)fVar3 - dVar21);
-  fVar7 = (float)((double)fVar4 - dVar25);
-  dVar19 = (double)SQRT(fVar7 * fVar7 + fVar6 * fVar6 + fVar5 * fVar5);
-  if (dVar15 <= dVar19) {
-    if (0.0 <= dVar14) {
-      if (dVar14 <= 1.0) {
-        outPnt->x = fVar3;
-        outPnt->y = fVar2;
-        outPnt->z = fVar4;
-        outPnt->w = fVar13;
-      }
-      else {
-        outPnt->x = end->x;
-        fVar2 = end->y;
-        outPnt->y = fVar2;
-        fVar3 = end->z;
-        outPnt->z = fVar3;
-        outPnt->w = end->w;
-        fVar2 = fVar2 - pos->y;
-        fVar1 = (float)(dVar27 - (double)pos->x);
-        fVar3 = fVar3 - pos->z;
-        dVar19 = ABS((double)(float)((double)SQRT(fVar3 * fVar3 + fVar1 * fVar1 + fVar2 * fVar2) -
-                                    dVar15));
-      }
-    }
-    else {
-      outPnt->x = start->x;
-      fVar2 = start->y;
-      outPnt->y = fVar2;
-      fVar3 = start->z;
-      outPnt->z = fVar3;
-      outPnt->w = start->w;
-      fVar2 = fVar2 - pos->y;
-      fVar1 = (float)(dVar20 - (double)pos->x);
-      fVar3 = fVar3 - pos->z;
-      dVar19 = ABS((double)(float)((double)SQRT(fVar3 * fVar3 + fVar1 * fVar1 + fVar2 * fVar2) -
-                                  dVar15));
-    }
-    if (dVar19 < (double)(float)(dVar15 * 0.009999999776482582)) {
-      dVar19 = 0.0;
-    }
-  }
-  else {
-    dVar26 = 0.0;
-    dVar28 = (double)(SQRT((float)(dVar15 * dVar15 - (double)(float)(dVar19 * dVar19))) /
-                     SQRT(fVar1));
-    dVar27 = (double)(float)(dVar14 - dVar28);
-    dVar19 = dVar26;
-    if ((0.0 <= dVar27) && (dVar19 = dVar27, 1.0 < dVar27)) {
-      dVar19 = 1.0;
-    }
-    dVar27 = (double)(float)(dVar28 + dVar14);
-    dVar14 = dVar26;
-    if ((0.0 <= dVar27) && (dVar14 = dVar27, 1.0 < dVar27)) {
-      dVar14 = 1.0;
-    }
-    fVar1 = (float)(dVar17 * dVar14 + dVar22);
-    fVar2 = (float)(dVar17 * dVar19 + dVar22);
-    fVar3 = (float)(dVar16 * dVar19 + dVar20);
-    fVar4 = (float)(dVar16 * dVar14 + dVar20);
-    fVar5 = (float)(dVar18 * dVar19 + dVar24);
-    fVar6 = (float)(dVar18 * dVar14 + dVar24);
-    fVar7 = (float)((double)fVar2 - dVar23);
-    fVar8 = (float)((double)fVar1 - dVar23);
-    fVar9 = (float)((double)fVar3 - dVar21);
-    fVar10 = (float)((double)fVar4 - dVar21);
-    fVar11 = (float)((double)fVar5 - dVar25);
-    fVar12 = (float)((double)fVar6 - dVar25);
-    dVar14 = ABS((double)(float)((double)SQRT(fVar11 * fVar11 + fVar9 * fVar9 + fVar7 * fVar7) -
-                                dVar15));
-    if (dVar14 - (double)(float)(dVar15 * 0.009999999776482582) < 0.0) {
-      dVar14 = dVar26;
-    }
-    dVar19 = ABS((double)(float)((double)SQRT(fVar12 * fVar12 + fVar10 * fVar10 + fVar8 * fVar8) -
-                                dVar15));
-    if (dVar19 - (double)(float)(dVar15 * 0.009999999776482582) < 0.0) {
-      dVar19 = dVar26;
-    }
-    if (dVar19 <= dVar14) {
-      if (dVar14 == dVar19) {
-        fVar7 = (float)((double)fVar2 - (double)prevPnt->y);
-        fVar8 = (float)((double)fVar1 - (double)prevPnt->y);
-        fVar9 = (float)((double)fVar3 - (double)prevPnt->x);
-        fVar10 = (float)((double)fVar4 - (double)prevPnt->x);
-        fVar11 = (float)((double)fVar5 - (double)prevPnt->z);
-        fVar12 = (float)((double)fVar6 - (double)prevPnt->z);
-        if (SQRT(fVar12 * fVar12 + fVar10 * fVar10 + fVar8 * fVar8) <=
-            SQRT(fVar11 * fVar11 + fVar9 * fVar9 + fVar7 * fVar7)) {
-          outPnt->x = fVar4;
-          outPnt->y = fVar1;
-          outPnt->z = fVar6;
-          outPnt->w = fVar13;
+    PathSegHit hit;
+
+    PathSegProject(&hit, radius, pos, start, end);
+
+    if (radius <= hit.perp) {
+        float err = hit.perp;
+
+        if (hit.t < 0.0f) {
+            *outPnt = *start;
+            err = fabsf(PathDist(start, pos) - radius);
+        }
+        else if (hit.t > 1.0f) {
+            *outPnt = *end;
+            err = fabsf(PathDist(end, pos) - radius);
         }
         else {
-          outPnt->x = fVar3;
-          outPnt->y = fVar2;
-          outPnt->z = fVar5;
-          outPnt->w = fVar13;
-          dVar19 = dVar14;
+            PathSegPoint(outPnt, &hit, start, hit.t);
+            outPnt->w = end->w;
         }
-      }
-      else {
-        outPnt->x = fVar4;
-        outPnt->y = fVar1;
-        outPnt->z = fVar6;
-        outPnt->w = fVar13;
-      }
+
+        if (err < radius * 0.01f) {
+            err = 0.0f;
+        }
+
+        return err;
     }
-    else {
-      outPnt->x = fVar3;
-      outPnt->y = fVar2;
-      outPnt->z = fVar5;
-      outPnt->w = fVar13;
-      dVar19 = dVar14;
+
+    Vec4 p0;
+    Vec4 p1;
+    PathSegPoint(&p0, &hit, start, hit.t0);
+    PathSegPoint(&p1, &hit, start, hit.t1);
+    p0.w = end->w;
+    p1.w = end->w;
+
+    float err0 = PathRadiusError(&p0, pos, radius);
+    float err1 = PathRadiusError(&p1, pos, radius);
+
+    if (err0 < err1 || (err0 == err1 && PathDist(&p1, prevPnt) > PathDist(&p0, prevPnt))) {
+        *outPnt = p0;
+        return err0;
     }
-  }
-  return dVar19;
+
+    *outPnt = p1;
+    return err1;
 }
 
 
 // 0x01375b8 (0x320 bytes)
-double ClosestTOnSegment(float r,float *out_t,Vec4 *prev,Vec4 *pos,Vec4 *a,Vec4 *b)
-
+/* ClosestPntOnSegmentAtDist giving the segment parameter instead; *out_t is left alone
+   when the projection is already inside the segment and outside the radius */
+float ClosestTOnSegment(float r, float *out_t, Vec4 *prev, Vec4 *pos, Vec4 *a, Vec4 *b)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  double dVar7;
-  double dVar8;
-  double dVar9;
-  double dVar10;
-  double dVar11;
-  double dVar12;
-  double dVar13;
-  double dVar14;
-  double dVar15;
-  double dVar16;
-  double dVar17;
-  double dVar18;
-  double dVar19;
-  double dVar20;
-  double dVar21;
-  double dVar22;
-  
-  dVar7 = (double)r;
-  dVar12 = (double)a->y;
-  dVar11 = (double)pos->y;
-  dVar20 = (double)(float)((double)b->y - dVar12);
-  dVar15 = (double)a->x;
-  dVar13 = (double)pos->x;
-  dVar10 = (double)a->z;
-  dVar21 = (double)(float)((double)b->x - dVar15);
-  dVar9 = (double)pos->z;
-  dVar19 = (double)(float)((double)b->z - dVar10);
-  fVar1 = (float)(dVar19 * dVar19 +
-                 (double)(float)(dVar21 * dVar21 + (double)(float)(dVar20 * dVar20)));
-  dVar22 = (double)(-(float)(dVar19 * (double)(float)(dVar10 - dVar9) +
-                            (double)(float)(dVar21 * (double)(float)(dVar15 - dVar13) +
-                                           (double)(float)(dVar20 * (double)(float)(dVar12 - dVar11)
-                                                          ))) / fVar1);
-  fVar2 = (float)((double)(float)(dVar20 * dVar22 + dVar12) - dVar11);
-  fVar3 = (float)((double)(float)(dVar21 * dVar22 + dVar15) - dVar13);
-  fVar4 = (float)((double)(float)(dVar19 * dVar22 + dVar10) - dVar9);
-  dVar8 = (double)SQRT(fVar4 * fVar4 + fVar3 * fVar3 + fVar2 * fVar2);
-  if (dVar7 <= dVar8) {
-    if (0.0 <= dVar22) {
-      if (1.0 < dVar22) {
-        *out_t = 1.0;
-        fVar1 = b->y - pos->y;
-        fVar2 = b->x - pos->x;
-        fVar3 = b->z - pos->z;
-        dVar8 = ABS((double)(float)((double)SQRT(fVar3 * fVar3 + fVar2 * fVar2 + fVar1 * fVar1) -
-                                   dVar7));
-      }
-    }
-    else {
-      *out_t = 0.0;
-      fVar1 = a->y - pos->y;
-      fVar2 = a->x - pos->x;
-      fVar3 = a->z - pos->z;
-      dVar8 = ABS((double)(float)((double)SQRT(fVar3 * fVar3 + fVar2 * fVar2 + fVar1 * fVar1) -
-                                 dVar7));
-    }
-    if (dVar8 < (double)(float)(dVar7 * 0.009999999776482582)) {
-      dVar8 = 0.0;
-    }
-  }
-  else {
-    dVar16 = 0.0;
-    dVar8 = (double)(SQRT((float)(dVar7 * dVar7 - (double)(float)(dVar8 * dVar8))) / SQRT(fVar1));
-    dVar17 = (double)(float)(dVar22 - dVar8);
-    dVar18 = dVar16;
-    if ((0.0 <= dVar17) && (dVar18 = dVar17, 1.0 < dVar17)) {
-      dVar18 = 1.0;
-    }
-    dVar8 = (double)(float)(dVar8 + dVar22);
-    dVar22 = dVar16;
-    if ((0.0 <= dVar8) && (dVar22 = dVar8, 1.0 < dVar8)) {
-      dVar22 = 1.0;
-    }
-    dVar14 = (double)(float)(dVar21 * dVar18 + dVar15);
-    dVar15 = (double)(float)(dVar21 * dVar22 + dVar15);
-    dVar17 = (double)(float)(dVar20 * dVar18 + dVar12);
-    dVar21 = (double)(float)(dVar19 * dVar18 + dVar10);
-    dVar10 = (double)(float)(dVar19 * dVar22 + dVar10);
-    dVar12 = (double)(float)(dVar20 * dVar22 + dVar12);
-    fVar1 = (float)(dVar14 - dVar13);
-    fVar2 = (float)(dVar15 - dVar13);
-    fVar3 = (float)(dVar17 - dVar11);
-    fVar4 = (float)(dVar21 - dVar9);
-    fVar5 = (float)(dVar12 - dVar11);
-    fVar6 = (float)(dVar10 - dVar9);
-    dVar9 = ABS((double)(float)((double)SQRT(fVar4 * fVar4 + fVar1 * fVar1 + fVar3 * fVar3) - dVar7)
-               );
-    if (dVar9 - (double)(float)(dVar7 * 0.009999999776482582) < 0.0) {
-      dVar9 = dVar16;
-    }
-    dVar8 = ABS((double)(float)((double)SQRT(fVar6 * fVar6 + fVar2 * fVar2 + fVar5 * fVar5) - dVar7)
-               );
-    if (dVar8 - (double)(float)(dVar7 * 0.009999999776482582) < 0.0) {
-      dVar8 = dVar16;
-    }
-    if (dVar8 <= dVar9) {
-      if (dVar9 == dVar8) {
-        fVar1 = (float)(dVar17 - (double)prev->y);
-        fVar2 = (float)(dVar12 - (double)prev->y);
-        fVar3 = (float)(dVar14 - (double)prev->x);
-        fVar4 = (float)(dVar15 - (double)prev->x);
-        fVar5 = (float)(dVar21 - (double)prev->z);
-        fVar6 = (float)(dVar10 - (double)prev->z);
-        if (SQRT(fVar6 * fVar6 + fVar4 * fVar4 + fVar2 * fVar2) <=
-            SQRT(fVar5 * fVar5 + fVar3 * fVar3 + fVar1 * fVar1)) {
-          *out_t = (float)dVar22;
+    PathSegHit hit;
+
+    PathSegProject(&hit, r, pos, a, b);
+
+    if (r <= hit.perp) {
+        float err = hit.perp;
+
+        if (hit.t < 0.0f) {
+            *out_t = 0.0f;
+            err = fabsf(PathDist(a, pos) - r);
         }
-        else {
-          *out_t = (float)dVar18;
-          dVar8 = dVar9;
+        else if (hit.t > 1.0f) {
+            *out_t = 1.0f;
+            err = fabsf(PathDist(b, pos) - r);
         }
-      }
-      else {
-        *out_t = (float)dVar22;
-      }
+
+        if (err < r * 0.01f) {
+            err = 0.0f;
+        }
+
+        return err;
     }
-    else {
-      *out_t = (float)dVar18;
-      dVar8 = dVar9;
+
+    Vec4 p0;
+    Vec4 p1;
+    PathSegPoint(&p0, &hit, a, hit.t0);
+    PathSegPoint(&p1, &hit, a, hit.t1);
+
+    float err0 = PathRadiusError(&p0, pos, r);
+    float err1 = PathRadiusError(&p1, pos, r);
+
+    if (err0 < err1 || (err0 == err1 && PathDist(&p1, prev) > PathDist(&p0, prev))) {
+        *out_t = hit.t0;
+        return err0;
     }
-  }
-  return dVar8;
+
+    *out_t = hit.t1;
+    return err1;
 }
 
 
 // 0x01378e0 (0x1b0 bytes)
-double NearestPntOnPathAtDist
-                 (float radius,Vec4 *outPnt,Vec4 *prevPnt,Vec4 *pos,Spline *spline)
-
+/* ClosestPntOnSegmentAtDist over every segment; near ties (within 0.1) go to the point
+   nearer prevPnt */
+float NearestPntOnPathAtDist(float radius, Vec4 *outPnt, Vec4 *prevPnt, Vec4 *pos, Spline *spline)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  int iVar7;
-  Spline *pSVar8;
-  double dVar9;
-  double dVar10;
-  double dVar11;
-  double dVar12;
-  Vec4 local_60;
-  
-  dVar9 = (double)radius;
-  iVar7 = 0;
-  dVar11 = 99999997952.0;
-  if (0 < spline->cnt + -1) {
-    dVar12 = 0.10000000149011612;
-    pSVar8 = spline;
-    do {
-      dVar10 = ClosestPntOnSegmentAtDist
-                         ((float)dVar9,&local_60,prevPnt,pos,pSVar8->points,pSVar8->points + 1);
-      if (dVar11 <= dVar10) {
-        if (ABS((double)(float)(dVar10 - dVar11)) < dVar12) {
-          fVar1 = local_60.y - prevPnt->y;
-          fVar2 = outPnt->y - prevPnt->y;
-          fVar3 = local_60.x - prevPnt->x;
-          fVar4 = outPnt->x - prevPnt->x;
-          fVar5 = local_60.z - prevPnt->z;
-          fVar6 = outPnt->z - prevPnt->z;
-          if (SQRT(fVar5 * fVar5 + fVar3 * fVar3 + fVar1 * fVar1) <
-              SQRT(fVar6 * fVar6 + fVar4 * fVar4 + fVar2 * fVar2)) {
-            outPnt->x = local_60.x;
-            outPnt->y = local_60.y;
-            outPnt->z = local_60.z;
-            outPnt->w = local_60.w;
-            dVar11 = dVar10;
-          }
+    float best = PATH_FAR;
+
+    for (int i = 0; i < spline->cnt - 1; i++) {
+        Vec4 pnt;
+        float err = ClosestPntOnSegmentAtDist(radius, &pnt, prevPnt, pos, &spline->points[i], &spline->points[i + 1]);
+
+        if (err < best) {
+            *outPnt = pnt;
+            best = err;
         }
-      }
-      else {
-        outPnt->x = local_60.x;
-        outPnt->y = local_60.y;
-        outPnt->z = local_60.z;
-        outPnt->w = local_60.w;
-        dVar11 = dVar10;
-      }
-      iVar7 = iVar7 + 1;
-      pSVar8 = (Spline *)pSVar8->points;
-    } while (iVar7 < spline->cnt + -1);
-  }
-  return dVar11;
+        else if (fabsf(err - best) < 0.1f && PathDist(&pnt, prevPnt) < PathDist(outPnt, prevPnt)) {
+            *outPnt = pnt;
+            best = err;
+        }
+    }
+
+    return best;
 }
 
 
 // 0x0137a98 (0xf8 bytes)
-float NearestPntOnPath
-                (float radius,int *outSeg,float *out,Vec4 *prevPnt,Vec4 *pos,Spline *spline)
-
+float NearestPntOnPath(float radius, int *outSeg, float *out, Vec4 *prevPnt, Vec4 *pos, Spline *spline)
 {
-  int iVar1;
-  Spline *pSVar2;
-  double dVar3;
-  double dVar4;
-  double dVar5;
-  float local_50 [2];
-  
-  dVar3 = (double)radius;
-  iVar1 = 0;
-  dVar5 = 99999997952.0;
-  pSVar2 = spline;
-  if (0 < spline->cnt + -1) {
-    do {
-      dVar4 = ClosestTOnSegment((float)dVar3,local_50,prevPnt,pos,pSVar2->points,pSVar2->points + 1)
-      ;
-      if (dVar4 < dVar5) {
-        *outSeg = iVar1;
-        *out = local_50[0];
-        dVar5 = dVar4;
-      }
-      iVar1 = iVar1 + 1;
-      pSVar2 = (Spline *)pSVar2->points;
-    } while (iVar1 < spline->cnt + -1);
-  }
-  return (float)dVar5;
+    float best = PATH_FAR;
+
+    for (int i = 0; i < spline->cnt - 1; i++) {
+        float t;
+        float err = ClosestTOnSegment(radius, &t, prevPnt, pos, &spline->points[i], &spline->points[i + 1]);
+
+        if (err < best) {
+            *outSeg = i;
+            *out = t;
+            best = err;
+        }
+    }
+
+    return best;
 }
 
 
 // 0x0137b90 (0x38 bytes)
-void Path_InitFromMobyInstance(MobyInstance *moby,Spline *spline)
-
+/* starts a recorded path at the moby */
+void Path_InitFromMobyInstance(MobyInstance *moby, Spline *spline)
 {
-  f32 temp;
-  
-  spline->zOff = 0.25;
-  temp = (moby->pos).x;
-  spline->cursor = 0;
-  spline->points[0].x = temp;
-  temp = (moby->pos).y;
-  spline->cnt = 1;
-  spline->points[0].y = temp;
-  temp = (moby->pos).z;
-  spline->points[0].w = 0.0;
-  spline->points[0].z = temp;
-  return;
+    spline->zOff = 0.25f;
+    spline->cursor = 0;
+    spline->points[0].x = moby->pos.x;
+    spline->cnt = 1;
+    spline->points[0].y = moby->pos.y;
+    spline->points[0].w = 0.0f;
+    spline->points[0].z = moby->pos.z;
 }
 
 
 // 0x0137bc8 (0x8c bytes)
-void Path_RaiseCollLine(float zOff,MobyInstance *moby,Vec4 *a,Vec4 *b)
-
+void Path_RaiseCollLine(float zOff, MobyInstance *moby, Vec4 *a, Vec4 *b)
 {
-  double dVar1;
-  
-  dVar1 = (double)zOff;
-  b->z = (float)((double)b->z + dVar1);
-  a->z = (float)((double)a->z + dVar1);
-  CollLine(a,b,4,moby,0);
-  a->z = (float)((double)a->z - dVar1);
-  b->z = (float)((double)b->z - dVar1);
-  return;
+    b->z += zOff;
+    a->z += zOff;
+    PathCollLine(a, b, 4, moby);
+    a->z -= zOff;
+    b->z -= zOff;
+}
+
+/* can the moby see `point`, both raised by zOff */
+static inline int PathCanSee(MobyInstance *moby, Spline *spline, Vec4 *point)
+{
+    float zOff = spline->zOff;
+
+    point->z += zOff;
+    moby->pos.z += zOff;
+
+    int hit = PathCollLine(&moby->pos, point, 4, moby);
+
+    moby->pos.z -= zOff;
+    point->z -= zOff;
+
+    return hit == 0;
 }
 
 
 // 0x0137c54 (0x190 bytes)
-int PathTryStep(MobyInstance *moby,Spline *spline)
-
+/* moves the cursor on and returns a recorded node the moby can still see (cutting the
+   path there), or -1 */
+int PathTryStep(MobyInstance *moby, Spline *spline)
 {
-  float fVar1;
-  int iVar2;
-  longlong lVar3;
-  int iVar4;
-  uint uVar5;
-  longlong lVar6;
-  ulonglong uVar7;
-  ulonglong uVar8;
-  int iVar9;
-  double dVar10;
-  
-  lVar3 = (longlong)(int)moby;
-  iVar2 = spline->cnt;
-  iVar9 = -1;
-  if (iVar2 != 0) {
-    uVar5 = spline->cursor;
-    lVar6 = (ulonglong)uVar5 + 1;
-    uVar8 = (longlong)((int)lVar6 / iVar2) * (longlong)iVar2;
-    uVar7 = lVar6 - uVar8;
-    iVar2 = (int)((uVar7 & 0xffffffff) << 4);
-    spline->cursor = (int32_t)uVar7;
-    dVar10 = (double)spline->zOff;
-    *(float *)((int)&spline->points[0].z + iVar2) =
-         (float)((double)*(float *)((int)&spline->points[0].z + iVar2) + dVar10);
-    (moby->pos).z = (float)((double)(moby->pos).z + dVar10);
-    iVar4 = CollLine(lVar3 + 0x10,
-                               (longlong)(int)spline + ((ulonglong)uVar5 & 0xfffffff) * 0x10 +
-                               (uVar8 & 0xfffffff) * -0x10 + 0x20 & 0xffffffff,4,lVar3,0);
-    fVar1 = (float)((double)(moby->pos).z - dVar10);
-    (moby->pos).z = fVar1;
-    *(float *)((int)&spline->points[0].z + iVar2) =
-         (float)((double)*(float *)((int)&spline->points[0].z + iVar2) - dVar10);
-    uVar5 = spline->cnt;
-    dVar10 = (double)spline->zOff;
-    iVar2 = spline->cursor;
-    if (iVar4 == 0) {
-      uVar5 = iVar2 + 1;
-      spline->cnt = uVar5;
-      iVar9 = iVar2;
-      if (iVar2 != -1) {
-        return iVar2;
-      }
+    if (spline->cnt == 0) {
+        return -1;
     }
-    if (uVar5 != iVar2 + 1U) {
-      uVar7 = (longlong)(int)spline + ((ulonglong)uVar5 & 0xfffffff) * 0x10;
-      iVar2 = (int)uVar7;
-      *(float *)(iVar2 + 8) = (float)((double)*(float *)(iVar2 + 8) + dVar10);
-      (moby->pos).z = (float)((double)fVar1 + dVar10);
-      iVar4 = CollLine(lVar3 + 0x10,uVar7 & 0xffffffff,4,lVar3,0);
-      (moby->pos).z = (float)((double)(moby->pos).z - dVar10);
-      *(float *)(iVar2 + 8) = (float)((double)*(float *)(iVar2 + 8) - dVar10);
-      if (iVar4 == 0) {
-        iVar9 = spline->cnt + -1;
-      }
+
+    spline->cursor = (spline->cursor + 1) % spline->cnt;
+    if (PathCanSee(moby, spline, &spline->points[spline->cursor])) {
+        spline->cnt = spline->cursor + 1;
+        return spline->cursor;
     }
-  }
-  return iVar9;
+
+    if (spline->cnt != spline->cursor + 1 && PathCanSee(moby, spline, &spline->points[spline->cnt - 1])) {
+        return spline->cnt - 1;
+    }
+
+    return -1;
 }
 
 
 // 0x0137de4 (0xb8 bytes)
-ulonglong path__Path_RecordPnt(MobyInstance *moby,Spline *spline)
-
+/* adds the moby's position to the recorded path; 0 once it is full */
+int path__Path_RecordPnt(MobyInstance *moby, Spline *spline)
 {
-  int iVar1;
-  int iVar2;
-  
-  iVar1 = spline->cnt;
-  if (iVar1 < spline->cap) {
-    spline->points[iVar1].x = (moby->pos).x;
-    spline->points[iVar1].y = (moby->pos).y;
-    spline->points[iVar1].z = (moby->pos).z;
-    spline->points[iVar1].w = (moby->pos).w;
-    spline->points[0].w = 0.0;
-  }
-  iVar1 = PathTryStep(moby,spline);
-  if (iVar1 < 0) {
-    iVar1 = spline->cnt;
-    iVar2 = spline->cap;
-    if (iVar1 <= iVar2) {
-      iVar1 = iVar1 + 1;
-      spline->cnt = iVar1;
+    if (spline->cnt < spline->cap) {
+        spline->points[spline->cnt] = moby->pos;
+        spline->points[0].w = 0.0f;
     }
-  }
-  else {
-    iVar1 = iVar1 + 1;
-    spline->cnt = iVar1;
-    iVar2 = spline->cap;
-  }
-  return (ulonglong)((longlong)iVar2 - (longlong)iVar1) >> 0x3f ^ 1;
+
+    int node = PathTryStep(moby, spline);
+    if (node < 0) {
+        if (spline->cnt <= spline->cap) {
+            spline->cnt++;
+        }
+    }
+    else {
+        spline->cnt = node + 1;
+    }
+
+    return spline->cnt <= spline->cap;
+}
+
+/* moves the cursor node a tenth of the way along `dir` (plus or, as the game has it,
+   minus the node itself) if the moby can see the result */
+static inline int PathTryNudge(MobyInstance *moby, Spline *spline, Vec4 *dir, float w, int subtract)
+{
+    Vec4 *node = &spline->points[spline->cursor];
+    float zOff = spline->zOff;
+    Vec4 probe;
+
+    if (subtract) {
+        probe.x = dir->x * 0.1f - node->x;
+        probe.y = dir->y * 0.1f - node->y;
+        probe.z = (dir->z * 0.1f - node->z) + zOff;
+    }
+    else {
+        probe.x = dir->x * 0.1f + node->x;
+        probe.y = dir->y * 0.1f + node->y;
+        probe.z = (dir->z * 0.1f + node->z) + zOff;
+    }
+    probe.w = w;
+
+    moby->pos.z += zOff;
+    int hit = PathCollLine(&moby->pos, &probe, 4, moby);
+    moby->pos.z -= zOff;
+
+    if (hit != 0) {
+        return 0;
+    }
+
+    node = &spline->points[spline->cursor];
+    node->x = probe.x;
+    node->z = probe.z - zOff;
+    node->y = probe.y;
+    node->w = probe.w;
+
+    return 1;
 }
 
 
 // 0x0137ea0 (0x38c bytes)
-int32_t Path_TryExtrapolate(MobyInstance *moby,Spline *spline)
-
+/* PathTryStep that, at the end of the path, also tries nudging the last node */
+int32_t Path_TryExtrapolate(MobyInstance *moby, Spline *spline)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  longlong lVar4;
-  int iVar5;
-  longlong lVar6;
-  ulonglong uVar7;
-  uint uVar8;
-  Vec4 *pVVar9;
-  ulonglong uVar10;
-  int32_t iVar11;
-  double dVar12;
-  double dVar13;
-  double dVar14;
-  double dVar15;
-  double dVar16;
-  double dVar17;
-  double dVar18;
-  GPiece<24> local_70;
-  int idx;
-  
-  lVar4 = (longlong)(int)moby;
-  idx = spline->cnt;
-  iVar11 = -1;
-  if (idx != 0) {
-    uVar8 = spline->cursor;
-    lVar6 = (ulonglong)uVar8 + 1;
-    uVar10 = (longlong)((int)lVar6 / idx) * (longlong)idx;
-    uVar7 = lVar6 - uVar10;
-    idx = (int)((uVar7 & 0xffffffff) << 4);
-    spline->cursor = (int32_t)uVar7;
-    dVar18 = (double)spline->zOff;
-    lVar6 = lVar4 + 0x10;
-    *(float *)((int)&spline->points[0].z + idx) =
-         (float)((double)*(float *)((int)&spline->points[0].z + idx) + dVar18);
-    (moby->pos).z = (float)((double)(moby->pos).z + dVar18);
-    iVar5 = CollLine(lVar6,(longlong)(int)spline + ((ulonglong)uVar8 & 0xfffffff) * 0x10 +
-                                     (uVar10 & 0xfffffff) * -0x10 + 0x20 & 0xffffffff,4,lVar4,0);
-    fVar1 = (float)((double)(moby->pos).z - dVar18);
-    dVar12 = (double)fVar1;
-    (moby->pos).z = fVar1;
-    *(float *)((int)&spline->points[0].z + idx) =
-         (float)((double)*(float *)((int)&spline->points[0].z + idx) - dVar18);
-    uVar8 = spline->cnt;
-    dVar18 = (double)spline->zOff;
-    idx = spline->cursor;
-    if (iVar5 == 0) {
-      uVar8 = idx + 1;
-      spline->cnt = uVar8;
-      iVar11 = idx;
+    if (spline->cnt == 0) {
+        return -1;
     }
-    if (uVar8 == idx + 1U) {
-      if (2 < (int)uVar8) {
-        pVVar9 = spline->points + idx + -1;
-        dVar14 = (double)(pVVar9->x - pVVar9[1].x);
-        dVar15 = (double)(pVVar9->y - pVVar9[1].y);
-        dVar13 = (double)pVVar9->w;
-        dVar16 = (double)(pVVar9->z - pVVar9[1].z);
-        dVar17 = 0.10000000149011612;
-        if (iVar11 == -1) {
-          iVar5 = MB_randInt(1);
-          idx = spline->cursor;
-          dVar12 = (double)(moby->pos).z;
-          dVar18 = (double)spline->zOff;
-          if (iVar5 != 0) {
-            fVar1 = spline->points[idx].x;
-            fVar2 = spline->points[idx].y;
-            fVar3 = spline->points[idx].z;
-            (moby->pos).z = (float)(dVar12 + dVar18);
-            dVar12 = (double)(float)(dVar16 * dVar17 - (double)fVar3) + dVar18;
-            idx = CollLine(lVar6,local_70,4,lVar4,0);
-            (moby->pos).z = (float)((double)(moby->pos).z - dVar18);
-            if (idx != 0) {
-              return -1;
-            }
-            idx = spline->cursor;
-            spline->points[idx].x = (float)(dVar14 * dVar17 - (double)fVar1);
-            spline->points[idx].z = (float)((double)(float)dVar12 - dVar18);
-            spline->points[idx].y = (float)(dVar15 * dVar17 - (double)fVar2);
-            spline->points[idx].w = (float)dVar13;
-            return spline->cursor;
-          }
+
+    int found = -1;
+
+    spline->cursor = (spline->cursor + 1) % spline->cnt;
+    if (PathCanSee(moby, spline, &spline->points[spline->cursor])) {
+        spline->cnt = spline->cursor + 1;
+        found = spline->cursor;
+    }
+
+    if (spline->cnt != spline->cursor + 1) {
+        if (found == -1 && PathCanSee(moby, spline, &spline->points[spline->cnt - 1])) {
+            found = spline->cnt - 1;
         }
-        fVar1 = spline->points[idx].x;
-        fVar2 = spline->points[idx].y;
-        fVar3 = spline->points[idx].z;
-        (moby->pos).z = (float)(dVar12 + dVar18);
-        dVar12 = (double)(float)(dVar16 * dVar17 + (double)fVar3) + dVar18;
-        idx = CollLine(lVar6,local_70,4,lVar4,0);
-        (moby->pos).z = (float)((double)(moby->pos).z - dVar18);
-        if (idx == 0) {
-          idx = spline->cursor;
-          spline->points[idx].x = (float)(dVar14 * dVar17 + (double)fVar1);
-          spline->points[idx].z = (float)((double)(float)dVar12 - dVar18);
-          spline->points[idx].y = (float)(dVar15 * dVar17 + (double)fVar2);
-          spline->points[idx].w = (float)dVar13;
-          iVar11 = spline->cursor;
+
+        return found;
+    }
+
+    if (spline->cnt <= 2) {
+        return found;
+    }
+
+    Vec4 *prev = &spline->points[spline->cursor - 1];
+    Vec4 dir;
+    dir.x = prev->x - prev[1].x;
+    dir.y = prev->y - prev[1].y;
+    dir.z = prev->z - prev[1].z;
+    float w = prev->w;
+
+    if (found == -1 && MB_randInt(1) != 0) {
+        if (!PathTryNudge(moby, spline, &dir, w, 1)) {
+            return -1;
         }
-      }
+
+        return spline->cursor;
     }
-    else if (iVar11 == -1) {
-      uVar7 = (longlong)(int)spline + ((ulonglong)uVar8 & 0xfffffff) * 0x10;
-      idx = (int)uVar7;
-      *(float *)(idx + 8) = (float)((double)*(float *)(idx + 8) + dVar18);
-      (moby->pos).z = (float)(dVar12 + dVar18);
-      iVar5 = CollLine(lVar6,uVar7 & 0xffffffff,4,lVar4,0);
-      (moby->pos).z = (float)((double)(moby->pos).z - dVar18);
-      *(float *)(idx + 8) = (float)((double)*(float *)(idx + 8) - dVar18);
-      if (iVar5 == 0) {
-        iVar11 = spline->cnt + -1;
-      }
+
+    if (PathTryNudge(moby, spline, &dir, w, 0)) {
+        found = spline->cursor;
     }
-  }
-  return iVar11;
+
+    return found;
+}
+
+/* the node after `node` going `step` (+1 / -1), wrapping at both ends */
+static inline int PathStepNode(int node, int step, int last)
+{
+    int next = node + step;
+
+    if (node == 0) {
+        next = (step > 0) ? node + 1 : last;
+    }
+
+    if (node == last) {
+        next = (step > 0) ? 0 : node - 1;
+    }
+
+    return next;
+}
+
+/* the direction from a to b, normalized (0 if they are the same) */
+static inline float PathDirTo(Vec4 *dir, Vec4 *a, Vec4 *b)
+{
+    float dx = b->x - a->x;
+    float dy = b->y - a->y;
+    float dz = b->z - a->z;
+    float len2 = dz * dz + dx * dx + dy * dy;
+    float len = sqrtf(len2);
+
+    dir->x = 0.0f;
+    dir->y = 0.0f;
+    dir->z = 0.0f;
+    if (len != 0.0f) {
+        float inv = 1.0f / sqrtf(len2);
+
+        dir->x = dx * inv;
+        dir->y = dy * inv;
+        dir->z = dz * inv;
+    }
+
+    return len;
 }
 
 
 // 0x0138238 (0x394 bytes)
 // inlined: FastRSqrt @0x138378, FastRSqrt @0x1384c0
-longlong GetPathPnt(float distance,MobyInstance *moby,Spline *spline,Vec4 *outPos,int segment,
-                         int step)
-
+/* the point `distance` ahead of the moby's projection on segment `segment` (going `step`),
+   running into the next segment if needed; returns the segment it lands on */
+int GetPathPnt(float distance, MobyInstance *moby, Spline *spline, Vec4 *outPos, int segment, int step)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  float fVar7;
-  float fVar8;
-  float fVar9;
-  float fVar10;
-  float fVar11;
-  float fVar12;
-  float fVar13;
-  float fVar14;
-  float fVar15;
-  float fVar16;
-  int iVar17;
-  longlong lVar18;
-  int iVar19;
-  longlong lVar20;
-  longlong lVar21;
-  int idx;
-  
-  lVar20 = (longlong)step;
-  iVar19 = spline->cnt + -1;
-  lVar18 = (longlong)
-           (int)(segment + step +
-                ((uint)(ZERO_MASK(segment)) &
-                (iVar19 + ((uint)(-lVar20 >> 0x3f) & (segment + 1) - iVar19)) - (segment + step)));
-  idx = (int)((longlong)segment << 4);
-  lVar18 = lVar18 + (ZERO_MASK((iVar19 - segment)) &
-                    ((longlong)(segment + -1) + (-lVar20 >> 0x3f & -(longlong)(segment + -1))) -
-                    lVar18);
-  iVar17 = (int)lVar18;
-  fVar1 = *(float *)((int)&spline->points[0].y + idx);
-  fVar2 = *(float *)((int)&spline->points[0].x + idx);
-  fVar3 = spline->points[iVar17].y;
-  fVar4 = spline->points[iVar17].x;
-  fVar12 = fVar3 - fVar1;
-  fVar13 = fVar4 - fVar2;
-  fVar5 = spline->points[iVar17].z;
-  fVar6 = *(float *)((int)&spline->points[0].z + idx);
-  fVar15 = fVar5 - fVar6;
-  fVar7 = 0.0;
-  fVar14 = fVar15 * fVar15 + fVar13 * fVar13 + fVar12 * fVar12;
-  fVar8 = spline->points[iVar17].w;
-  fVar16 = SQRT(fVar14);
-  fVar9 = fVar7;
-  fVar11 = fVar7;
-  fVar10 = fVar7;
-  if (fVar16 != 0.0) {
-    fVar10 = 1.0 / SQRT(fVar14);
-    fVar10 = -(fVar14 * fVar10 * fVar10 - 1.0) * fVar10 * 0.5 + fVar10;
-    fVar10 = -(fVar14 * fVar10 * fVar10 - 1.0) * fVar10 * 0.5 + fVar10;
-    fVar10 = -(fVar14 * fVar10 * fVar10 - 1.0) * fVar10 * 0.5 + fVar10;
-    fVar9 = fVar13 * fVar10;
-    fVar11 = fVar12 * fVar10;
-    fVar10 = fVar15 * fVar10;
-  }
-  fVar1 = fVar11 * ((moby->pos).y - fVar1) +
-          fVar10 * ((moby->pos).z - fVar6) + fVar9 * ((moby->pos).x - fVar2) + distance;
-  lVar21 = (longlong)segment;
-  if (fVar16 < fVar1) {
-    fVar1 = fVar1 - fVar16;
-    idx = iVar17 + step +
-          ((uint)(ZERO_MASK(iVar17)) &
-          (iVar19 + ((uint)(-lVar20 >> 0x3f) & (iVar17 + 1) - iVar19)) - (iVar17 + step));
-    idx = idx + ((uint)(ZERO_MASK((iVar19 - iVar17))) &
-                (iVar17 + -1 + ((uint)(-lVar20 >> 0x3f) & -(iVar17 + -1))) - idx);
-    fVar3 = spline->points[idx].y - fVar3;
-    fVar4 = spline->points[idx].x - fVar4;
-    fVar5 = spline->points[idx].z - fVar5;
-    fVar8 = spline->points[idx].w;
-    fVar2 = fVar5 * fVar5 + fVar4 * fVar4 + fVar3 * fVar3;
-    lVar21 = lVar18;
-    fVar9 = fVar7;
-    fVar10 = fVar7;
-    fVar11 = fVar7;
-    if (SQRT(fVar2) != 0.0) {
-      fVar6 = 1.0 / SQRT(fVar2);
-      fVar6 = -(fVar2 * fVar6 * fVar6 - 1.0) * fVar6 * 0.5 + fVar6;
-      fVar6 = -(fVar2 * fVar6 * fVar6 - 1.0) * fVar6 * 0.5 + fVar6;
-      fVar6 = -(fVar2 * fVar6 * fVar6 - 1.0) * fVar6 * 0.5 + fVar6;
-      fVar9 = fVar4 * fVar6;
-      fVar10 = fVar5 * fVar6;
-      fVar11 = fVar3 * fVar6;
+    int last = spline->cnt - 1;
+    int next = PathStepNode(segment, step, last);
+    Vec4 *a = &spline->points[segment];
+    Vec4 *b = &spline->points[next];
+    Vec4 dir;
+
+    float len = PathDirTo(&dir, a, b);
+    float along = dir.y * (moby->pos.y - a->y) + dir.z * (moby->pos.z - a->z) + dir.x * (moby->pos.x - a->x) + distance;
+    float w = b->w;
+    int base = segment;
+
+    if (len < along) {
+        int after = PathStepNode(next, step, last);
+
+        along -= len;
+        PathDirTo(&dir, b, &spline->points[after]);
+        w = spline->points[after].w;
+        base = next;
     }
-  }
-  idx = (int)(lVar21 << 4);
-  fVar3 = SQRT(fVar10 * fVar10 + fVar9 * fVar9 + fVar11 * fVar11);
-  fVar1 = fVar1 / fVar3;
-  fVar2 = fVar7;
-  if (0.0 - fVar3 < 0.0) {
-    fVar2 = fVar9 * fVar1;
-  }
-  fVar4 = fVar7;
-  if (0.0 - fVar3 < 0.0) {
-    fVar4 = fVar11 * fVar1;
-  }
-  if (0.0 - fVar3 < 0.0) {
-    fVar7 = fVar10 * fVar1;
-  }
-  if (fVar3 - 0.0 < 0.0) {
-    fVar2 = fVar9 * fVar1;
-  }
-  if (fVar3 - 0.0 < 0.0) {
-    fVar4 = fVar11 * fVar1;
-  }
-  if (fVar3 - 0.0 < 0.0) {
-    fVar7 = fVar10 * fVar1;
-  }
-  outPos->x = fVar2 + *(float *)((int)&spline->points[0].x + idx);
-  outPos->y = fVar4 + *(float *)((int)&spline->points[0].y + idx);
-  fVar1 = *(float *)((int)&spline->points[0].z + idx);
-  outPos->w = fVar8;
-  outPos->z = fVar7 + fVar1;
-  return lVar21;
+
+    float dirLen = sqrtf(dir.z * dir.z + dir.x * dir.x + dir.y * dir.y);
+    float scale = along / dirLen;
+    Vec4 ofs = { 0.0f, 0.0f, 0.0f, 0.0f };
+    if (dirLen != 0.0f) {
+        ofs.x = dir.x * scale;
+        ofs.y = dir.y * scale;
+        ofs.z = dir.z * scale;
+    }
+
+    outPos->x = ofs.x + spline->points[base].x;
+    outPos->y = ofs.y + spline->points[base].y;
+    outPos->w = w;
+    outPos->z = ofs.z + spline->points[base].z;
+
+    return base;
 }
 
 
 // 0x01385d0 (0x1d0 bytes)
-longlong Path_PickNextNode(MobyInstance *moby,Spline *spline,Vec4 *ref,Vec4 *out)
-
+/* the node to head for to get from the moby toward `ref`: the neighbour of the moby's
+   nearest node on ref's side; ref itself (and -1) if no node is nearer ref than the moby */
+int Path_PickNextNode(MobyInstance *moby, Spline *spline, Vec4 *ref, Vec4 *out)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  float fVar7;
-  float fVar8;
-  float fVar9;
-  float fVar10;
-  float fVar11;
-  float fVar12;
-  float fVar13;
-  float fVar14;
-  Vec4 *pVVar15;
-  int iVar16;
-  longlong lVar17;
-  float *pfVar18;
-  longlong lVar19;
-  int iVar20;
-  longlong lVar21;
-  int iVar22;
-  
-  fVar1 = (moby->pos).y;
-  fVar2 = (moby->pos).x;
-  fVar6 = fVar1 - ref->y;
-  fVar3 = ref->x;
-  fVar4 = (moby->pos).z;
-  fVar9 = fVar2 - fVar3;
-  lVar17 = -1;
-  fVar12 = fVar4 - ref->z;
-  lVar21 = 0;
-  fVar5 = 10000.0;
-  lVar19 = -1;
-  fVar14 = fVar5;
-  if (0 < spline->cnt) {
-    do {
-      pVVar15 = spline->points + (int)lVar21;
-      fVar7 = pVVar15->y - fVar1;
-      fVar10 = pVVar15->x - fVar2;
-      fVar8 = pVVar15->y - ref->y;
-      fVar13 = pVVar15->z - fVar4;
-      fVar11 = pVVar15->x - fVar3;
-      fVar10 = SQRT(fVar13 * fVar13 + fVar10 * fVar10 + fVar7 * fVar7);
-      fVar7 = pVVar15->z - ref->z;
-      fVar7 = SQRT(fVar7 * fVar7 + fVar11 * fVar11 + fVar8 * fVar8);
-      if (fVar10 < fVar5) {
-        lVar19 = lVar21;
-        fVar5 = fVar10;
-      }
-      if (fVar7 < SQRT(fVar12 * fVar12 + fVar9 * fVar9 + fVar6 * fVar6) && fVar7 < fVar14) {
-        lVar17 = lVar21;
-        fVar14 = fVar7;
-      }
-      iVar22 = (int)lVar21 + 1;
-      lVar21 = (longlong)iVar22;
-    } while (iVar22 < spline->cnt);
-    iVar22 = (int)lVar17;
-    if (iVar22 != -1) {
-      iVar20 = (int)lVar19;
-      iVar16 = (int)(lVar19 << 4);
-      if (iVar20 == iVar22) {
-        out->x = *(float *)((int)&spline->points[0].x + iVar16);
-        out->y = *(float *)((int)&spline->points[0].y + iVar16);
-        out->z = *(float *)((int)&spline->points[0].z + iVar16);
-        out->w = *(float *)((int)&spline->points[0].w + iVar16);
-        return lVar19;
-      }
-      if (iVar22 <= iVar20) {
-        pfVar18 = (float *)((int)&((Spline *)(spline->points + -1))->cnt + iVar16);
-        out->x = *pfVar18;
-        out->y = pfVar18[1];
-        out->z = pfVar18[2];
-        out->w = pfVar18[3];
-        return (longlong)(iVar20 + -1);
-      }
-      out->x = *(float *)((int)&spline->points[1].x + iVar16);
-      out->y = *(float *)((int)&spline->points[1].y + iVar16);
-      out->z = *(float *)((int)&spline->points[1].z + iVar16);
-      out->w = *(float *)((int)&spline->points[1].w + iVar16);
-      return (longlong)(iVar20 + 1);
+    float mobyToRef = PathDist(&moby->pos, ref);
+    float bestMoby = 10000.0f;
+    float bestRef = 10000.0f;
+    int nearMoby = -1;
+    int nearRef = -1;
+
+    for (int i = 0; i < spline->cnt; i++) {
+        float toMoby = PathDist(&spline->points[i], &moby->pos);
+        float toRef = PathDist(&spline->points[i], ref);
+
+        if (toMoby < bestMoby) {
+            nearMoby = i;
+            bestMoby = toMoby;
+        }
+
+        if (toRef < mobyToRef && toRef < bestRef) {
+            nearRef = i;
+            bestRef = toRef;
+        }
     }
-  }
-  out->x = fVar3;
-  out->y = ref->y;
-  out->z = ref->z;
-  out->w = ref->w;
-  return lVar17;
+
+    if (nearRef == -1) {
+        *out = *ref;
+        return -1;
+    }
+
+    if (nearMoby == nearRef) {
+        *out = spline->points[nearMoby];
+        return nearMoby;
+    }
+
+    if (nearRef <= nearMoby) {
+        *out = spline->points[nearMoby - 1];
+        return nearMoby - 1;
+    }
+
+    *out = spline->points[nearMoby + 1];
+    return nearMoby + 1;
 }
 
 

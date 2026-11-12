@@ -377,8 +377,8 @@ undefined8 M1766_002b3778(int param_1)
     *(undefined4 *)((int)puVar12 + 0x84) = 0;
     fVar2 = fVar2 - fVar1;
     OrganicDelt
-              (SQRT(fVar2 * fVar2 + fVar4 * fVar4 + fVar3 * fVar3),DAT_0071f418 * 3.0,
-               DAT_0071f418 * 3.0,g_FrameTime * 10.0,(float *)((int)puVar12 + 0x84),
+              (SQRT(fVar2 * fVar2 + fVar4 * fVar4 + fVar3 * fVar3),g_FrameTimeSq * 3.0,
+               g_FrameTimeSq * 3.0,g_FrameTime * 10.0,(float *)((int)puVar12 + 0x84),
                0x720000,(float *)(iVar10 + 0xa8));
   }
   else {
@@ -402,8 +402,8 @@ undefined8 M1766_002b3778(int param_1)
     *(undefined4 *)(puVar12 + 0x10) = 0;
     fVar2 = fVar2 - fVar1;
     OrganicDelt
-              (SQRT(fVar2 * fVar2 + fVar4 * fVar4 + fVar3 * fVar3),DAT_0071f418 * 3.0,
-               DAT_0071f418 * 3.0,g_FrameTime * 10.0,(float *)(puVar12 + 0x10),0x720000,
+              (SQRT(fVar2 * fVar2 + fVar4 * fVar4 + fVar3 * fVar3),g_FrameTimeSq * 3.0,
+               g_FrameTimeSq * 3.0,g_FrameTime * 10.0,(float *)(puVar12 + 0x10),0x720000,
                (float *)(iVar10 + 0xa8));
   }
   if (*(int *)((int)&pSVar11->points[0].w + (int)((longlong)*(short *)(iVar10 + 0xba) << 4)) ==

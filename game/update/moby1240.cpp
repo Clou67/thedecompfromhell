@@ -120,7 +120,7 @@ void UpdateMoby_1240(MobyInstance *moby)
       uVar10 = FastDoubleToInt
                          ((double)(animationSpeed * (float)((double)pfVar2[2] * dVar14)));
       SpawnPart_64
-                (dVar13,(double)*pfVar2,(double)(DAT_0076c5f0 * DAT_0071f418),local_100,&local_f0,
+                (dVar13,(double)*pfVar2,(double)(DAT_0076c5f0 * g_FrameTimeSq),local_100,&local_f0,
                  uVar10,&PTR_DAT_00770000,&DAT_00720000,uVar8,uVar9,
                  (ulonglong)(lVar7 - lVar11) >> 0x3f);
       iVar12 = iVar12 + 1;

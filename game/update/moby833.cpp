@@ -506,8 +506,8 @@ void UpdateMoby_833(MobyInstance *moby)
           dVar32 = (double)((float)(dVar32 + 0.7853981852531433) * fVar9 + fVar5);
         }
         dVar30 = (double)MB_DeltAngSpeed
-                                   ((double)fVar3,-dVar32,(double)(DAT_0071f418 * 0.7853982),
-                                    (double)(DAT_0071f418 * 3.1415927),(double)(fVar4 * 0.5235988),
+                                   ((double)fVar3,-dVar32,(double)(g_FrameTimeSq * 0.7853982),
+                                    (double)(g_FrameTimeSq * 3.1415927),(double)(fVar4 * 0.5235988),
                                     &DAT_00480870,&DAT_00720000,uVar26 + 0x20);
         dVar32 = -dVar30;
         (moby->rotation).y = (float)dVar30;

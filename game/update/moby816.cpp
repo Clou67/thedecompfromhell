@@ -194,8 +194,8 @@ int M816_MoveAlongSpline(MobyInstance *moby,longlong splineId,int *param_3)
   fVar3 = (moby->pos).x - *pfVar15;
   fVar4 = (moby->pos).z - pfVar15[2];
   OrganicDelt
-            (SQRT(fVar4 * fVar4 + fVar3 * fVar3 + fVar2 * fVar2),DAT_008777d4 * DAT_0071f418,
-             DAT_008777d4 * DAT_0071f418,fVar1,(float *)(puVar9 + 0xe),iVar10,
+            (SQRT(fVar4 * fVar4 + fVar3 * fVar3 + fVar2 * fVar2),DAT_008777d4 * g_FrameTimeSq,
+             DAT_008777d4 * g_FrameTimeSq,fVar1,(float *)(puVar9 + 0xe),iVar10,
              (float *)((int)pvVar7 + 0x60));
   dVar22 = (double)(float)((double)*(float *)((int)pvVar7 + 0x60) / dVar28);
   fVar1 = (moby->pos).x;
@@ -230,7 +230,7 @@ int M816_MoveAlongSpline(MobyInstance *moby,longlong splineId,int *param_3)
   (moby->pos).x = (float)(dVar23 + (double)fVar1);
   (moby->pos).y = (float)(dVar29 + (double)fVar2);
   (moby->pos).z = (float)(dVar25 + (double)fVar3);
-  fVar1 = DAT_0071f418;
+  fVar1 = g_FrameTimeSq;
   fVar2 = g_FrameTime;
   dVar26 = ABS((double)fVar6);
   *(float *)(puVar9 + 0x10) = fVar6;
@@ -319,7 +319,7 @@ int M816_MoveAlongSpline(MobyInstance *moby,longlong splineId,int *param_3)
   dVar30 = ABS((double)fVar2);
   *(float *)((int)puVar9 + 0x74) = fVar1;
   *(float *)(puVar9 + 0xf) = fVar2;
-  fVar1 = DAT_0071f418;
+  fVar1 = g_FrameTimeSq;
   *(float *)((int)puVar9 + 0x7c) = (float)(dVar26 - dVar30);
   dVar25 = (double)g_FrameTime;
   uVar16 = (ulonglong)(*(uint *)((int)puVar9 + 0x74) >> 0x1c) & 8 |
@@ -390,7 +390,7 @@ int M816_MoveAlongSpline(MobyInstance *moby,longlong splineId,int *param_3)
   OrganicDeltAng
             ((float)dVar27,fVar1,fVar1,(float)(dVar25 * dVar29),&(moby->rotation).z,0x870000,
              (float *)((int)pvVar7 + 0x68));
-  fVar1 = (float)((double)DAT_008777e0 * dVar22) * DAT_0071f418;
+  fVar1 = (float)((double)DAT_008777e0 * dVar22) * g_FrameTimeSq;
   OrganicDeltAng
             (*(float *)((int)pvVar7 + 0x68) * *(float *)((int)pvVar7 + 0x60) * DAT_008777e4,fVar1,
              fVar1,(float)((double)g_FrameTime * dVar29),&(moby->rotation).x,0x720000,
@@ -577,11 +577,11 @@ void UpdateMoby_816(MobyInstance *moby)
     dVar32 = 0.01745329238474369;
     dVar31 = 0.0;
     dVar33 = 12.566370964050293;
-    fVar37 = DAT_008777d8 * 0.017453292 * DAT_0071f418;
+    fVar37 = DAT_008777d8 * 0.017453292 * g_FrameTimeSq;
     OrganicDeltAng
               (0.0,fVar37,fVar37,g_FrameTime * 12.566371,&(moby->rotation).y,0x46e404,
                (float *)((int)pvVar10 + 0x6c));
-    fVar37 = (float)((double)DAT_008777e0 * dVar32) * DAT_0071f418;
+    fVar37 = (float)((double)DAT_008777e0 * dVar32) * g_FrameTimeSq;
     OrganicDeltAng
               ((float)dVar31,fVar37,fVar37,(float)((double)g_FrameTime * dVar33),
                &(moby->rotation).x,0x870000,(float *)((int)pvVar10 + 0x70));
@@ -627,11 +627,11 @@ void UpdateMoby_816(MobyInstance *moby)
     dVar32 = 0.01745329238474369;
     dVar31 = 0.0;
     dVar33 = 12.566370964050293;
-    fVar37 = DAT_008777d8 * 0.017453292 * DAT_0071f418;
+    fVar37 = DAT_008777d8 * 0.017453292 * g_FrameTimeSq;
     OrganicDeltAng
               (0.0,fVar37,fVar37,g_FrameTime * 12.566371,&(moby->rotation).y,0x46e404,
                (float *)((int)pvVar10 + 0x6c));
-    fVar37 = (float)((double)DAT_008777e0 * dVar32) * DAT_0071f418;
+    fVar37 = (float)((double)DAT_008777e0 * dVar32) * g_FrameTimeSq;
     fVar37 = OrganicDeltAng
                        ((float)dVar31,fVar37,fVar37,(float)((double)g_FrameTime * dVar33),
                         &(moby->rotation).x,0x870000,(float *)((int)pvVar10 + 0x70));

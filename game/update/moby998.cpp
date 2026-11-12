@@ -460,7 +460,7 @@ void M998_004cfad8(int param_1)
   fVar3 = 1.0 / (SQRT(fVar5 * fVar5 + fVar4 * fVar4 + fVar3 * fVar3) * (float)(longlong)pSVar6->cnt)
   ;
   *(float *)(iVar2 + 0xd4) = g_FrameTime * 20.0 * fVar3;
-  fVar4 = DAT_0071f418;
+  fVar4 = g_FrameTimeSq;
   *(undefined4 *)(iVar2 + 0xc0) = 0;
   *(undefined4 *)(iVar2 + 0xc4) = 0;
   *(float *)(iVar2 + 0xd8) = fVar4 * 5.0 * fVar3;
@@ -545,7 +545,7 @@ void UpdateMoby_998(MobyInstance *moby)
   }
   else if (uVar1 == '\x05') {
     OrganicDelt
-              (1.0,DAT_0071f418,DAT_0071f418,g_FrameTime * 0.5,
+              (1.0,g_FrameTimeSq,g_FrameTimeSq,g_FrameTime * 0.5,
                (float *)((int)pvVar4 + 0xc0),0x4cfcb0,(float *)((int)pvVar4 + 0xc4));
     local_80 = (longlong)**(int **)((int)pvVar4 + 0xac);
     pCVar14 = Cuboids + *(int *)((int)pvVar4 +
@@ -602,7 +602,7 @@ void UpdateMoby_998(MobyInstance *moby)
   }
   else if (uVar1 == '\x03') {
     OrganicDelt
-              (1.0,DAT_0071f418,DAT_0071f418,g_FrameTime * 0.5,
+              (1.0,g_FrameTimeSq,g_FrameTimeSq,g_FrameTime * 0.5,
                (float *)((int)pvVar4 + 0xc0),0x720000,(float *)((int)pvVar4 + 0xc4));
     pCVar14 = Cuboids + *(int *)((int)pvVar4 +
                                 (int)((longlong)*(short *)((int)pvVar4 + 0xb4) << 2) + 0x80);

@@ -938,8 +938,8 @@ void MB_DistributeBolts
         local_160.x = (float)((double)local_160.x + dVar26);
         dVar34 = (double)local_f8;
         if (-1 < (int)param_5) {
-          iVar6 = MB_SolveQuad((double)(float)((double)DAT_0071f418 * dVar34),
-                               (double)(float)(dVar48 - (double)(float)((double)DAT_0071f418 *
+          iVar6 = MB_SolveQuad((double)(float)((double)g_FrameTimeSq * dVar34),
+                               (double)(float)(dVar48 - (double)(float)((double)g_FrameTimeSq *
                                                                        dVar34)),
                                (double)(local_160.z -
                                        *(float *)(*(int *)((int)Splines + (int)(param_5 << 2)) +
@@ -3613,7 +3613,7 @@ ulonglong MB_UpdateNavMove
   *(float *)((int)puVar19 + 0x74) = fVar3;
   if ((uVar18 & 1) == 0) {
     *(float *)(puVar19 + 0xf) = fVar6;
-    (param_3->pos).z = -(DAT_0071f418 * 9.0 - fVar6);
+    (param_3->pos).z = -(g_FrameTimeSq * 9.0 - fVar6);
   }
   else {
     *(undefined4 *)(puVar19 + 0xf) = 0;
@@ -14623,7 +14623,7 @@ void SetNtscPalTiming(void)
     DAT_0071f40c = 1.44;
     animationSpeed = 0.8333333;
     g_FrameTime = 0.020000001;
-    DAT_0071f418 = 0x39d1b718;
+    g_FrameTimeSq = 0x39d1b718;
     DAT_0071f41c = 0x370637bd;
     DAT_0071f424 = 0.02;
   }
@@ -14631,7 +14631,7 @@ void SetNtscPalTiming(void)
     DAT_0071f420 = 5;
     animationSpeed = 1.0;
     DAT_0071f424 = 0.016666668;
-    DAT_0071f418 = 0x3991a2b4;
+    g_FrameTimeSq = 0x3991a2b4;
     DAT_0071f41c = 0x369b5837;
     DAT_0071f408 = animationSpeed;
     DAT_0071f40c = animationSpeed;
@@ -18986,7 +18986,7 @@ void MB_UpdateDebris(double param_1,int *param_2,float *param_3)
     dVar16 = dVar14;
   }
   dVar15 = 1.0;
-  OrganicDelt((float)dVar16,1.0,DAT_0071f418 * 48.0,DAT_007294f4 * g_FrameTime,&local_9c,0x720000,
+  OrganicDelt((float)dVar16,1.0,g_FrameTimeSq * 48.0,DAT_007294f4 * g_FrameTime,&local_9c,0x720000,
               &local_a0);
   iVar7 = DAT_007294f8;
   if (dVar16 < 4.0) {
@@ -19266,7 +19266,7 @@ longlong MB_SpawnDebrisMoby
     if (pfVar4[0xe] == 0.0) {
       iVar9 = rand();
       param_1 = (double)(((float)(longlong)(int)(iVar9 >> 0xf & 0x7fff) * 5.0 * 3.0517578e-05 + 10.0
-                         ) * DAT_0071f418);
+                         ) * g_FrameTimeSq);
     }
     pfVar4[0xe] = (float)param_1;
     fVar1 = *param_9;

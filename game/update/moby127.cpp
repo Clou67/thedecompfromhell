@@ -360,7 +360,7 @@ void M169_002a1698(undefined4 *param_1,int param_2,float *param_3)
     dVar10 = (double)SQRT(g_CollOutput.normal.z * g_CollOutput.normal.z +
                           g_CollOutput.normal.x * g_CollOutput.normal.x +
                           g_CollOutput.normal.y * g_CollOutput.normal.y);
-    fVar2 = (float)((double)(DAT_0071f418 * 9.7) / dVar10);
+    fVar2 = (float)((double)(g_FrameTimeSq * 9.7) / dVar10);
     dVar14 = dVar16;
     if (dVar16 - dVar10 < 0.0) {
       dVar14 = (double)(g_CollOutput.normal.z * fVar2);

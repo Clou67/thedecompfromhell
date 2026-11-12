@@ -697,7 +697,7 @@ void UpdateMoby_113(MobyInstance *moby)
     (moby->pos).z = (moby->pos).z + *(float *)((int)pvVar3 + 0x18);
     *(float *)((int)pvVar3 + 0x10) = *(float *)((int)pvVar3 + 0x10) * 0.99;
     *(float *)((int)pvVar3 + 0x14) = *(float *)((int)pvVar3 + 0x14) * 0.99;
-    *(float *)((int)pvVar3 + 0x18) = *(float *)((int)pvVar3 + 0x18) * 0.99 - DAT_0071f418 * 39.2;
+    *(float *)((int)pvVar3 + 0x18) = *(float *)((int)pvVar3 + 0x18) * 0.99 - g_FrameTimeSq * 39.2;
     iVar8 = CollSphere(0x4000000000000000,lVar6 + 0x10,&DAT_0024ed84,0,lVar6);
     if ((iVar8 != 0) &&
        ((g_CollOutput.pMoby == (MobyInstance *)0x0 ||

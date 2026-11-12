@@ -101,7 +101,7 @@ void M573_003c0528(MobyInstance *param_1)
     }
     *(float *)((int)pvVar6 + 0x20) = *(float *)((int)pvVar6 + 0x20) - *(float *)((int)puVar8 + 0x74)
     ;
-    fVar1 = DAT_0071f418;
+    fVar1 = g_FrameTimeSq;
     *(undefined1 *)((int)pvVar6 + 0x15d) = 0;
     *(undefined4 *)((int)pvVar6 + 0x144) = 9;
     *(float *)((int)pvVar6 + 0x130) = fVar1 * 50.0;
@@ -502,8 +502,8 @@ void UpdateMoby_573(void *this_,MobyInstance *moby)
       *(undefined1 *)(uVar18 + 0x29) = 0;
       *(undefined4 *)(uVar18 + 0x240) = 0;
       MB_InitDefaultParams((float *)(uVar18 + 0x180));
-      fVar4 = DAT_0071f418;
-      *(float *)(uVar18 + 0x1bc) = DAT_0071f418 * 6.2831855;
+      fVar4 = g_FrameTimeSq;
+      *(float *)(uVar18 + 0x1bc) = g_FrameTimeSq * 6.2831855;
       *(float *)(uVar18 + 0x1c0) = fVar4 * 12.566371;
       fVar5 = g_FrameTime;
       *(undefined4 *)(uVar18 + 0x18c) = 0x40000000;

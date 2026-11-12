@@ -175,8 +175,8 @@ void UpdateMoby_1168(MobyInstance *moby)
       dVar28 = (double)SQRT(fVar5 * fVar5 + fVar2 * fVar2 + fVar8 * fVar8);
       if (bVar1) {
         OrganicDelt
-                  (SQRT(fVar6 * fVar6 + fVar4 * fVar4 + fVar3 * fVar3),DAT_00765b34 * DAT_0071f418,
-                   DAT_00765b34 * DAT_0071f418,*(float *)((int)pvVar10 + 0x74),local_90,0x760000,
+                  (SQRT(fVar6 * fVar6 + fVar4 * fVar4 + fVar3 * fVar3),DAT_00765b34 * g_FrameTimeSq,
+                   DAT_00765b34 * g_FrameTimeSq,*(float *)((int)pvVar10 + 0x74),local_90,0x760000,
                    (float *)((int)pvVar10 + 0xa0));
         iVar14 = *(int *)((int)pvVar10 + 0x7c);
         fVar8 = *(float *)((int)pvVar10 + 0xa0);

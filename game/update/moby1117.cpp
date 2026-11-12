@@ -91,7 +91,7 @@ LAB_001d3cb0:
     goto LAB_001d3f9c;
   }
   if (bVar2 < 3) {
-    fVar4 = -(DAT_0071f418 * 2.0 - *(float *)((int)pvVar5 + 0xa4));
+    fVar4 = -(g_FrameTimeSq * 2.0 - *(float *)((int)pvVar5 + 0xa4));
     *(float *)((int)pvVar5 + 0xa4) = fVar4;
     fVar6 = g_FrameTime * -2.0;
     if (fVar4 < fVar6) {
@@ -116,7 +116,7 @@ LAB_001d3cb0:
   fVar4 = *(float *)((int)pvVar5 + 0xa4);
   if (*(int *)((int)pvVar5 + 0xa4) < 0) {
 LAB_001d3f0c:
-    fVar4 = fVar4 + DAT_0071f418;
+    fVar4 = fVar4 + g_FrameTimeSq;
     *(float *)((int)pvVar5 + 0xa4) = fVar4;
     fVar6 = g_FrameTime * 2.0;
     if (fVar6 < fVar4) {
@@ -126,7 +126,7 @@ LAB_001d3f0c:
   }
   else {
     fVar6 = *(float *)((int)pvVar5 + 0xa0) - (moby->pos).z;
-    if ((fVar4 * fVar4) / (DAT_0071f418 * 2.0 * 2.0) < fVar6) goto LAB_001d3f0c;
+    if ((fVar4 * fVar4) / (g_FrameTimeSq * 2.0 * 2.0) < fVar6) goto LAB_001d3f0c;
     if (0.0 < fVar6) {
       fVar4 = fVar4 - (fVar4 * fVar4) / (fVar6 * 2.0);
       *(float *)((int)pvVar5 + 0xa4) = fVar4;

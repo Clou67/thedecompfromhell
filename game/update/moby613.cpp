@@ -96,7 +96,7 @@ void UpdateMoby_613(MobyInstance *moby)
               fVar3 = local_60 - local_70;
               dVar11 = (double)SQRT((local_58 - local_68) * (local_58 - local_68) +
                                     fVar3 * fVar3 + fVar2 * fVar2);
-              fVar1 = (float)((double)(DAT_0071f418 * 7.0) / dVar11);
+              fVar1 = (float)((double)(g_FrameTimeSq * 7.0) / dVar11);
               pfVar5[2] = 0.0;
               dVar10 = (double)(fVar2 * fVar1);
               dVar13 = (double)(fVar3 * fVar1);

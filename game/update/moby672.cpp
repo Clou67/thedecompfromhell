@@ -721,9 +721,9 @@ void UpdateMoby_672(MobyInstance *moby)
           dVar33 = (double)MB_DeltAngSpeed
                                      ((double)fVar3,-dVar33,
                                       (double)((float)((double)(float)(dVar42 * 10.0) * dVar40) *
-                                              DAT_0071f418),
+                                              g_FrameTimeSq),
                                       (double)((float)((double)(float)(dVar42 * 5.0) * dVar40) *
-                                              DAT_0071f418),
+                                              g_FrameTimeSq),
                                       (double)((float)(dVar42 * dVar40) * g_FrameTime),
                                       &DAT_0040dfa4,uVar27,&follower[6].direction);
           (moby->rotation).y = (float)dVar33;
@@ -734,9 +734,9 @@ void UpdateMoby_672(MobyInstance *moby)
           dVar33 = (double)MB_DeltAngSpeed
                                      ((double)(moby->rotation).x,uVar37,
                                       (double)((float)((double)(float)(dVar33 * dVar38) * dVar40) *
-                                              DAT_0071f418),
+                                              g_FrameTimeSq),
                                       (double)((float)((double)(float)(dVar33 * dVar41) * dVar40) *
-                                              DAT_0071f418),
+                                              g_FrameTimeSq),
                                       (double)((float)(dVar33 * dVar40) * g_FrameTime));
           (moby->rotation).x = (float)dVar33;
           pSVar4 = follower[4].pSpline;

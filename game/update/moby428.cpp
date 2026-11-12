@@ -120,7 +120,7 @@ void UpdateMoby_428(MobyInstance *moby)
   fVar2 = pfVar1[1] * DAT_008414f8;
   *pfVar1 = *pfVar1 * DAT_008414f8;
   pfVar1[1] = fVar2;
-  fVar2 = -(DAT_0071f418 * 15.0 - pfVar1[2]);
+  fVar2 = -(g_FrameTimeSq * 15.0 - pfVar1[2]);
   pfVar1[2] = fVar2;
   if (fVar2 < pfVar1[8]) {
     pfVar1[2] = pfVar1[8];

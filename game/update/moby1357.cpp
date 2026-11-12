@@ -314,7 +314,7 @@ bool M1357_00259bf0(undefined8 param_1,float *param_2)
       dVar18 = dVar24;
       dVar19 = dVar24;
       if (dVar20 != dVar24) {
-        fVar5 = (float)((double)(DAT_0079be8c * DAT_0071f418 * g_heroPadMagnitude) / dVar20);
+        fVar5 = (float)((double)(DAT_0079be8c * g_FrameTimeSq * g_heroPadMagnitude) / dVar20);
         dVar18 = (double)(fVar4 * fVar5);
         dVar19 = (double)(fVar3 * fVar5);
       }
@@ -335,7 +335,7 @@ bool M1357_00259bf0(undefined8 param_1,float *param_2)
       fVar25 = (g_heroMobyPtr->transform).v1.z;
       dVar21 = (double)SQRT(fVar25 * fVar25 + fVar5 * fVar5 + fVar4 * fVar4);
       fVar25 = param_2[2];
-      fVar3 = (float)(-(double)(DAT_0079be8c * DAT_0071f418 * g_heroPadStick) / dVar21);
+      fVar3 = (float)(-(double)(DAT_0079be8c * g_FrameTimeSq * g_heroPadStick) / dVar21);
       dVar19 = (double)(fVar4 * fVar3);
       dVar20 = (double)(fVar5 * fVar3);
       dVar18 = dVar24;
@@ -363,7 +363,7 @@ bool M1357_00259bf0(undefined8 param_1,float *param_2)
       dVar18 = dVar24;
       dVar19 = dVar24;
       if (dVar20 != dVar24) {
-        fVar5 = (float)(-(double)(DAT_0079be8c * DAT_0071f418 * DAT_0096ba04) / dVar20);
+        fVar5 = (float)(-(double)(DAT_0079be8c * g_FrameTimeSq * DAT_0096ba04) / dVar20);
         dVar18 = (double)(fVar4 * fVar5);
         dVar19 = (double)(fVar3 * fVar5);
       }
@@ -381,7 +381,7 @@ bool M1357_00259bf0(undefined8 param_1,float *param_2)
       n = (undefined *)param_2[0xf];
       if (0 < (int)n) {
         n = &DAT_007a0000;
-        dVar18 = -(double)(DAT_0079beb8 * DAT_0071f418 - param_2[0xf]);
+        dVar18 = -(double)(DAT_0079beb8 * g_FrameTimeSq - param_2[0xf]);
         param_2[0xf] = (float)dVar18;
         if (dVar18 < dVar24) {
           n = (undefined *)0x0;
@@ -392,12 +392,12 @@ bool M1357_00259bf0(undefined8 param_1,float *param_2)
   }
   else {
     n = &DAT_007a0000;
-    param_2[0xf] = DAT_0079beb4 * DAT_0071f418;
+    param_2[0xf] = DAT_0079beb4 * g_FrameTimeSq;
   }
   fVar25 = MB_EaseOutPow(g_Pad.unk028,(int)n);
   dVar18 = (double)fVar25;
   fVar26 = MB_EaseOutPow(g_Pad.unk02c,(int)n);
-  fVar25 = DAT_0079be9c * DAT_0071f418 * (float)(dVar18 - (double)fVar26) + param_2[0xf] +
+  fVar25 = DAT_0079be9c * g_FrameTimeSq * (float)(dVar18 - (double)fVar26) + param_2[0xf] +
            param_2[2];
   param_2[2] = fVar25;
   fVar5 = (DAT_0079bea4 - 1.0) * DAT_0071f408 + 1.0;
@@ -428,7 +428,7 @@ bool M1357_00259bf0(undefined8 param_1,float *param_2)
   (g_heroMobyPtr->pos).x = g_heroPosition.x;
   (pMVar9->pos).y = g_heroPosition.y;
   (pMVar9->pos).z = g_heroPosition.z;
-  param_2[2] = -(DAT_0079beb0 * DAT_0071f418 - param_2[2]);
+  param_2[2] = -(DAT_0079beb0 * g_FrameTimeSq - param_2[2]);
   fVar25 = param_2[0xd] - DAT_0079be54;
   param_2[0xd] = fVar25;
   fVar25 = fVar25 - (DAT_0079be58 * (float)(dVar18 - (double)fVar26) +
@@ -589,7 +589,7 @@ void UpdateMoby_1357(MobyInstance *moby)
         puVar3[0xe] = 0;
         puVar3[0xf] = 0;
         *(float *)(puVar3 + 8) = DAT_0079be78 * g_FrameTime;
-        *(float *)(puVar3 + 0x3c) = DAT_0079beb4 * DAT_0071f418;
+        *(float *)(puVar3 + 0x3c) = DAT_0079beb4 * g_FrameTimeSq;
         Cam0_SetCamOfsZ(0x3fc99999a0000000,0x3f747ae140000000,&DAT_007a0000,0);
         DAT_00fa3f24 = DAT_0071d508;
         DAT_00fa3f28 = DAT_0071d50c;
@@ -671,7 +671,7 @@ void UpdateMoby_1357(MobyInstance *moby)
         puVar3[0xe] = 0;
         puVar3[0xf] = 0;
         uVar15 = DAT_0079be84;
-        *(float *)(puVar3 + 0x3c) = DAT_0079beb4 * DAT_0071f418;
+        *(float *)(puVar3 + 0x3c) = DAT_0079beb4 * g_FrameTimeSq;
         fVar8 = DAT_0079be80;
         fVar2 = g_FrameTime;
         *(undefined4 *)(puVar3 + 0x30) = uVar15;

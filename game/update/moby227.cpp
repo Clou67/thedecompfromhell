@@ -723,7 +723,7 @@ void UpdateMoby_227(MobyInstance *moby)
       FUN_005e8338((double)((g_heroMobyPtr->pos).x - local_c0),
                    (double)((g_heroMobyPtr->pos).y - local_bc));
       MB_computeLobVelocity
-                ((double)(DAT_010bb46c * 1.3),(double)(DAT_0071f418 * -9.8),&local_c0,
+                ((double)(DAT_010bb46c * 1.3),(double)(g_FrameTimeSq * -9.8),&local_c0,
                  &g_heroMobyPtr->pos);
       pMVar19 = (MobyInstance *)FUN_0030f5c8(moby,&local_c0,local_b0);
       if (pMVar19 != (MobyInstance *)0x0) {

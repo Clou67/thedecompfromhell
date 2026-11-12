@@ -489,7 +489,7 @@ undefined4 * UpdateMoby_1355(MobyInstance *moby)
     (moby->rotation).x = (float)dVar34;
     bVar3 = moby->state;
   }
-  fVar51 = DAT_0071f418;
+  fVar51 = g_FrameTimeSq;
   if ((g_gameMode == GAME_MODE_SCENE) && (g_SceneId == 3)) {
     puVar23 = (undefined4 *)DeleteMoby(moby);
   }
@@ -968,7 +968,7 @@ undefined4 * UpdateMoby_1355(MobyInstance *moby)
     else {
       puVar23 = (undefined4 *)(uint)bVar3;
       if (bVar3 == 0) {
-        *(float *)((int)pvVar11 + 0x150) = DAT_0071f418 * 3.1415927;
+        *(float *)((int)pvVar11 + 0x150) = g_FrameTimeSq * 3.1415927;
         fVar1 = g_FrameTime;
         *(float *)((int)pvVar11 + 0x154) = g_FrameTime * 12.566371;
         *(float *)((int)pvVar11 + 0x158) = fVar51 * 10.0;

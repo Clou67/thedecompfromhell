@@ -490,11 +490,11 @@ void UpdateMoby_1034(MobyInstance *moby)
   dVar33 = 251.32740783691406;
   dVar24 = 2513.274169921875;
   OrganicDeltAng
-            ((moby->rotation).z,DAT_0071f418 * 251.32741,DAT_0071f418 * 251.32741,
+            ((moby->rotation).z,g_FrameTimeSq * 251.32741,g_FrameTimeSq * 251.32741,
              g_FrameTime * 2513.2742,&(moby->rotation).z,unused,out + 0xc);
   OrganicDeltAng
-            ((moby->rotation).y,(float)((double)DAT_0071f418 * dVar33),
-             (float)((double)DAT_0071f418 * dVar33),(float)((double)g_FrameTime * dVar24),
+            ((moby->rotation).y,(float)((double)g_FrameTimeSq * dVar33),
+             (float)((double)g_FrameTimeSq * dVar33),(float)((double)g_FrameTime * dVar24),
              &(moby->rotation).y,unused,out + 0xc);
   out[9] = 0.0;
 LAB_00192e94:

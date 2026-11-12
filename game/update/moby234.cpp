@@ -115,7 +115,7 @@ bool M234_00303a90(int param_1)
   uVar3 = *(uint *)(param_1 + 0x78);
   uVar11 = (ulonglong)uVar3;
   puVar6[0x12] = unaff_r30;
-  fVar10 = DAT_0071f418;
+  fVar10 = g_FrameTimeSq;
   fVar9 = g_FrameTime;
   pSVar4 = Splines[*(int *)(uVar3 + 0xd0)];
   *(float *)(puVar6 + 0xe) = SQRT(fVar8 * fVar8 + fVar7 * fVar7 + fVar22 * fVar22);
@@ -274,7 +274,7 @@ void M234_00303ca8(MobyInstance *param_1)
       *(undefined4 *)(puVar9 + 0xc) = *(undefined4 *)(puVar9 + 0x12);
       CollDamageMobyDirect
                 (pMVar11,0x60,puVar9[8],puVar9[9],puVar9[10],puVar9[0xb],puVar9[0xc],puVar9[0xd]);
-      fVar6 = DAT_007ff37c * DAT_0071f418;
+      fVar6 = DAT_007ff37c * g_FrameTimeSq;
       param_1->modeBits =
            param_1->modeBits &
            (MIRROR|CAN_BE_DAMAGED|HIDE_BACKFACES|DISABLE_Z_WRITE|DRAW_SHADOW|DRAW_TRANSPARENT_WEIRD|
@@ -392,7 +392,7 @@ void M234_00303ca8(MobyInstance *param_1)
     fVar6 = *(float *)((int)pvVar8 + 0x20) - *(float *)((int)puVar9 + 0xa4);
     *(float *)((int)pvVar8 + 0x20) = fVar6;
     if (((double)fVar6 <= dVar29) || (iVar16 == 1)) {
-      fVar6 = DAT_007ff37c * DAT_0071f418;
+      fVar6 = DAT_007ff37c * g_FrameTimeSq;
       param_1->modeBits =
            MVar7 & (MIRROR|CAN_BE_DAMAGED|HIDE_BACKFACES|DISABLE_Z_WRITE|DRAW_SHADOW|
                     DRAW_TRANSPARENT_WEIRD|LOCK_ROTATION|NO_DRAW|UNK_40|HAS_SPECIAL_VARS|HAS_GLOW|

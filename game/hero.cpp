@@ -6983,10 +6983,10 @@ void Hero_MoveWithPlatform(void)
       *(float *)(puVar3 + 0x2c) = SQRT(DAT_0096a030 * DAT_0096a030 + DAT_0096a034 * DAT_0096a034);
       *(float *)((int)puVar3 + 0x164) = DAT_0096a038;
       if ((*(uint *)(iVar14 + 0x3c) & 2) == 0) {
-        Delt((float)dVar28,(float)((double)(DAT_0071f418 * 25.0) * dVar20),
+        Delt((float)dVar28,(float)((double)(g_FrameTimeSq * 25.0) * dVar20),
                        (float *)((int)puVar3 + 0x164));
         dVar18 = dVar28;
-        Delt((float)dVar28,(float)((double)(DAT_0071f418 * 2.0) * dVar20),
+        Delt((float)dVar28,(float)((double)(g_FrameTimeSq * 2.0) * dVar20),
                        (float *)(puVar3 + 0x2c));
         dVar28 = (double)SQRT(DAT_0096a030 * DAT_0096a030 + DAT_0096a034 * DAT_0096a034);
         dVar20 = dVar18;
@@ -16208,7 +16208,7 @@ void Hero_WallSloopMotion(void)
       if (0.0 < fVar1) {
         g_heroVelocity = g_heroVelocity + DAT_00969ee0 * fVar2 * fVar1;
         DAT_00969dc4 = DAT_00969dc4 + DAT_00969ee4 * fVar2 * fVar1;
-        DAT_00969dc8 = (DAT_00969dc8 + fVar2 * 0.0 * fVar1) - DAT_0071f418 * 54.0 * 2.0;
+        DAT_00969dc8 = (DAT_00969dc8 + fVar2 * 0.0 * fVar1) - g_FrameTimeSq * 54.0 * 2.0;
       }
     }
   }
@@ -16831,7 +16831,7 @@ void Hero_JumpThrustGrav(void)
     if (g_heroStateTimer < (int)(animationSpeed * 8.5)) {
       local_50[0] = Hero_RelativeZComponent((float *)&g_heroVelocity);
       if ((double)local_50[0] < dVar4) {
-        Delt((float)dVar4,DAT_0071f418 * 150.0,local_50);
+        Delt((float)dVar4,g_FrameTimeSq * 150.0,local_50);
       }
       Hero_SetRelativeZ(local_50[0],(float *)&g_heroVelocity,(float *)&g_heroVelocity);
     }
@@ -16882,7 +16882,7 @@ LAB_0009db6c:
       DAT_0096a0cc = 0;
       DAT_0096a0c8 = DAT_0096a0c8 + 1;
       if (*(float *)(DAT_0096a0c4 + DAT_0096a0c8 * 0xc) != -999999.0) {
-        DAT_0096a0d0 = *(float *)(DAT_0096a0c4 + DAT_0096a0c8 * 0xc) * DAT_0071f418;
+        DAT_0096a0d0 = *(float *)(DAT_0096a0c4 + DAT_0096a0c8 * 0xc) * g_FrameTimeSq;
       }
       goto LAB_0009db6c;
     }
@@ -16893,7 +16893,7 @@ LAB_0009dc64:
      (int)(animationSpeed * 10.5) <= g_heroStateTimer)) {
     if (g_heroStateTimer < DAT_0096a100) {
       Hero_SetRelativeZ(0.0,(float *)&g_heroVelocity,(float *)&g_heroVelocity);
-      Hero_AddGravity(DAT_0071f418 * 48.0,(float *)&g_heroVelocity,(float *)&g_heroVelocity);
+      Hero_AddGravity(g_FrameTimeSq * 48.0,(float *)&g_heroVelocity,(float *)&g_heroVelocity);
     }
     else {
       Hero_AddGravity(DAT_0096a180,(float *)&g_heroVelocity,(float *)&g_heroVelocity);
@@ -16912,7 +16912,7 @@ LAB_0009dc64:
   return;
 LAB_0009dc24:
   if (0 < DAT_0096a0cc) {
-    DAT_0096a0d0 = DAT_0096a0d0 + *(float *)(DAT_0096a0c4 + 4 + DAT_0096a0c8 * 0xc) * DAT_0071f418;
+    DAT_0096a0d0 = DAT_0096a0d0 + *(float *)(DAT_0096a0c4 + 4 + DAT_0096a0c8 * 0xc) * g_FrameTimeSq;
   }
   Hero_AddRelativeZ(DAT_0096a0d0,(float *)&g_heroVelocity,(float *)&g_heroVelocity);
   goto LAB_0009dc64;
@@ -16962,7 +16962,7 @@ void Hero_JumpTurnTrans(void)
   else if (g_heroState == THRUSTER_PACK_FORWARD_JUMP) {
     local_68 = (longlong)(int)(animationSpeed * 54.5);
     if ((int)(animationSpeed * 54.5) < g_heroStateTimer) {
-      Delt(DAT_0071f418 * 25.0,DAT_0071f418 * 7.0,(float *)&DAT_0096a180);
+      Delt(g_FrameTimeSq * 25.0,g_FrameTimeSq * 7.0,(float *)&DAT_0096a180);
     }
     local_68 = (longlong)(int)(animationSpeed * 55.5);
     g_heroIdealSpeed = DAT_0096a0d4;
@@ -16970,10 +16970,10 @@ void Hero_JumpTurnTrans(void)
       g_heroIdealSpeed = g_FrameTime * 3.5;
     }
     if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
-      Delt(g_heroIdealSpeed,DAT_0071f418 * 45.0,&g_storedNeutralSpeed);
+      Delt(g_heroIdealSpeed,g_FrameTimeSq * 45.0,&g_storedNeutralSpeed);
     }
     else {
-      Delt(g_heroIdealSpeed,DAT_0071f418 * 44.0,&g_storedNeutralSpeed);
+      Delt(g_heroIdealSpeed,g_FrameTimeSq * 44.0,&g_storedNeutralSpeed);
     }
     Hero_ScaleRelativeXY(0.0,&g_heroVelocity,&g_heroVelocity);
     Hero_ForwardThrust(g_storedNeutralSpeed,&g_heroVelocity,&g_heroVelocity);
@@ -16992,14 +16992,14 @@ void Hero_JumpTurnTrans(void)
       else {
         Hero_Turn3D(DAT_0071f40c * 0.04,DAT_0071f40c * 0.2,g_FrameTime * 15.009831);
       }
-      Hero_JumpTranslation(DAT_0071f418 * 20.0);
+      Hero_JumpTranslation(g_FrameTimeSq * 20.0);
     }
     if ((13.0 <= g_heroAnimFrame) && (g_heroAnimFrame <= 30.0)) {
       if (g_heroAnimFrame <= 27.0) {
-        Delt(g_FrameTime * 2.0,DAT_0071f418 * 8.0,&DAT_0096a13c);
+        Delt(g_FrameTime * 2.0,g_FrameTimeSq * 8.0,&DAT_0096a13c);
       }
       else {
-        Delt(0.0,DAT_0071f418 * 8.0,&DAT_0096a13c);
+        Delt(0.0,g_FrameTimeSq * 8.0,&DAT_0096a13c);
       }
     }
     fVar1 = g_heroRotation.z + 1.5707963;
@@ -17032,10 +17032,10 @@ void Hero_JumpTurnTrans(void)
   else if (g_heroState == CLANK_EDGE_JUMP) {
     if ((5.0 <= g_heroAnimFrame) && (g_heroAnimFrame <= 18.0)) {
       if (g_heroAnimFrame <= 15.0) {
-        Delt(g_FrameTime * 1.25,DAT_0071f418 * 8.0,&DAT_0096a13c);
+        Delt(g_FrameTime * 1.25,g_FrameTimeSq * 8.0,&DAT_0096a13c);
       }
       else {
-        Delt(0.0,DAT_0071f418 * 8.0,&DAT_0096a13c);
+        Delt(0.0,g_FrameTimeSq * 8.0,&DAT_0096a13c);
       }
     }
     fVar1 = g_heroRotation.z + 1.5707963;
@@ -17108,10 +17108,10 @@ void Hero_JumpTurnTrans(void)
       if ((DAT_0096a0fe == 0) ||
          (local_68 = (longlong)(int)(animationSpeed * 12.5),
          (int)(animationSpeed * 12.5) <= DAT_0096a12c)) {
-        Delt(g_FrameTime * 4.2,DAT_0071f418 * 8.0,&DAT_0096a138);
+        Delt(g_FrameTime * 4.2,g_FrameTimeSq * 8.0,&DAT_0096a138);
       }
       else {
-        Delt(0.0,DAT_0071f418 * 8.0,&DAT_0096a138);
+        Delt(0.0,g_FrameTimeSq * 8.0,&DAT_0096a138);
       }
     }
     dVar18 = 1.570796251296997;
@@ -17299,12 +17299,12 @@ void Hero_JumpTurnTrans(void)
     DAT_00969e34 = DAT_0096a604;
     DAT_00969e38 = DAT_0096a608;
     DAT_00969e3c = DAT_0096a60c;
-    fVar1 = DAT_0071f418 * 20.0;
+    fVar1 = g_FrameTimeSq * 20.0;
     if (g_heroIdealSpeed < DAT_00723320 * g_FrameTime * 0.2) {
       if (g_heroStateType == 2) {
         fVar1 = DAT_0096a624;
         if (DAT_0096afc2 != '\0') {
-          fVar1 = DAT_0071f418 * 0.17;
+          fVar1 = g_FrameTimeSq * 0.17;
         }
         local_6c = SQRT(g_heroVelocity * g_heroVelocity + DAT_00969dc4 * DAT_00969dc4);
         Delt((float)dVar6,fVar1,&local_6c);
@@ -17320,21 +17320,21 @@ void Hero_JumpTurnTrans(void)
         return;
       }
       if (DAT_00969fea == 0) {
-        fVar1 = DAT_0071f418 * 2.0;
+        fVar1 = g_FrameTimeSq * 2.0;
       }
       else {
-        fVar1 = DAT_0071f418 * 6.0;
+        fVar1 = g_FrameTimeSq * 6.0;
       }
     }
     if ((DAT_0096a188 != 0) && (DAT_0096afc2 != '\0')) {
-      fVar1 = DAT_0071f418 * 0.17;
+      fVar1 = g_FrameTimeSq * 0.17;
       if (g_heroState == HELI_PACK_HIGH_JUMP) {
         Hero_GetIdealThrustFromPad((double)(g_FrameTime * 2.5),&DAT_00720000,0);
-        fVar1 = DAT_0071f418 * 3.0;
+        fVar1 = g_FrameTimeSq * 3.0;
       }
       if (0.2617994 < g_heroGroundSlope) {
         g_heroIdealSpeed = (float)dVar6;
-        fVar1 = DAT_0071f418 * 9.0 * g_heroGroundSlope * 1.2732395;
+        fVar1 = g_FrameTimeSq * 9.0 * g_heroGroundSlope * 1.2732395;
       }
     }
     Hero_JumpTranslation(fVar1);
@@ -18095,19 +18095,19 @@ void Hero_AttackMotion(void)
   if (dVar16 < dVar27) {
     dVar16 = dVar27;
   }
-  fVar1 = DAT_0071f418 * 2.45 * g_heroIdealSpeed + (float)((double)(DAT_0071f418 * 2.0) * dVar16);
+  fVar1 = g_FrameTimeSq * 2.45 * g_heroIdealSpeed + (float)((double)(g_FrameTimeSq * 2.0) * dVar16);
   if (g_Pad.unk0d4 != 0) {
-    fVar1 = DAT_0071f418 * 1.1;
+    fVar1 = g_FrameTimeSq * 1.1;
   }
   dVar25 = (double)fVar1;
   if (((g_heroState == WRENCH_ATTACK) &&
       (puVar3[0x13] = (longlong)(int)(animationSpeed * 15.5), iVar11 < *(int *)((int)puVar3 + 0x9c))
       ) && (DAT_00969e40 < g_FrameTime * 3.0)) {
-    dVar25 = (double)(DAT_0071f418 * 11.0);
+    dVar25 = (double)(g_FrameTimeSq * 11.0);
   }
   fVar1 = g_heroGroundNormal;
   if ((float)((double)g_FrameTime * dVar21) < DAT_00969e40) {
-    dVar25 = (double)(DAT_0071f418 * 13.0);
+    dVar25 = (double)(g_FrameTimeSq * 13.0);
   }
   if (dVar27 < (double)DAT_0096a610) {
     dVar16 = (double)SQRT((float)(dVar30 * dVar30) + (float)(dVar28 * dVar28) +
@@ -18117,7 +18117,7 @@ void Hero_AttackMotion(void)
     if (dVar27 < dVar16) {
       dVar30 = (double)(float)(dVar30 / dVar16);
     }
-    dVar17 = (double)(DAT_0071f418 * 3.0);
+    dVar17 = (double)(g_FrameTimeSq * 3.0);
     dVar33 = (double)SQRT((float)(dVar13 * dVar13) + (float)(dVar33 * dVar33));
     dVar33 = (double)(float)(dVar17 * (double)(float)((double)(float)(dVar33 - dVar30) / dVar33));
     if ((g_heroPadMagnitude < 0.3) && (dVar33 < dVar17)) {
@@ -18203,7 +18203,7 @@ void Hero_AttackMotion(void)
     }
     dVar17 = (double)(float)(dVar30 + dVar23);
     fVar1 = g_FrameTime * 8.0 * g_heroGroundSlope * 1.2732395;
-    dVar13 = (double)(DAT_0071f418 * 8.5 * g_heroGroundSlope * 1.2732395);
+    dVar13 = (double)(g_FrameTimeSq * 8.5 * g_heroGroundSlope * 1.2732395);
     dVar33 = dVar17;
     if ((double)(float)(dVar34 - dVar17) <= dVar17) {
       dVar33 = (double)(float)(dVar34 - dVar17);
@@ -23187,10 +23187,10 @@ void HandleHeroMovement(undefined8 param_1,MobyInstance *param_2,undefined4 *par
                 }
                 if (g_framesNotGrounded == 0) {
                   DAT_00969dc8 = 0.0;
-                  Hero_AddGravity(DAT_0071f418 * 150.0,&g_heroVelocity,&g_heroVelocity);
+                  Hero_AddGravity(g_FrameTimeSq * 150.0,&g_heroVelocity,&g_heroVelocity);
                 }
                 else {
-                  Hero_AddGravity(DAT_0071f418 * 25.0,&g_heroVelocity,&DAT_00969de0);
+                  Hero_AddGravity(g_FrameTimeSq * 25.0,&g_heroVelocity,&DAT_00969de0);
                 }
               }
               else {
@@ -23204,20 +23204,20 @@ void HandleHeroMovement(undefined8 param_1,MobyInstance *param_2,undefined4 *par
                 Hero_GetIdealThrustFromPad(0x3ff0000000000000,uVar7,0);
                 dVar28 = 12.600000381469727;
                 if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
-                  fVar36 = Delt(g_heroIdealSpeed,DAT_0071f418 * 12.6,&g_storedNeutralSpeed
+                  fVar36 = Delt(g_heroIdealSpeed,g_FrameTimeSq * 12.6,&g_storedNeutralSpeed
                                          );
                 }
                 else {
-                  fVar36 = Delt(g_heroIdealSpeed,DAT_0071f418 * 12.6,&g_storedNeutralSpeed
+                  fVar36 = Delt(g_heroIdealSpeed,g_FrameTimeSq * 12.6,&g_storedNeutralSpeed
                                          );
                 }
                 FUN_005e7e70((double)fVar36,&g_heroVelocity);
-                Hero_ApplyTaper((float)((double)DAT_0071f418 * dVar28));
+                Hero_ApplyTaper((float)((double)g_FrameTimeSq * dVar28));
                 if (g_framesNotGrounded == 0) {
-                  Hero_AddGravity(DAT_0071f418 * 54.0,&g_heroVelocity,&g_heroVelocity);
+                  Hero_AddGravity(g_FrameTimeSq * 54.0,&g_heroVelocity,&g_heroVelocity);
                 }
                 else {
-                  Hero_AddGravity(DAT_0071f418 * 25.0,&g_heroVelocity,&DAT_00969de0);
+                  Hero_AddGravity(g_FrameTimeSq * 25.0,&g_heroVelocity,&DAT_00969de0);
                   Hero_WallSloopMotion();
                 }
                 if (((g_heroMobyPtr->field43_0x70 & 2U) != 0) && (g_heroMobyPtr->updateId == '6')) {
@@ -23313,11 +23313,11 @@ void HandleHeroMovement(undefined8 param_1,MobyInstance *param_2,undefined4 *par
               if (DAT_0096a67c != 0) {
                 dVar34 = (double)FUN_005e8588(&g_heroPosition,DAT_0096a674 + 0x10);
                 if (((dVar34 < (double)(DAT_0096a680 * 1.57)) || (1.5 < g_heroGroundDist)) &&
-                   ((Hero_AddGravity(DAT_0071f418 * 40.0,&g_heroVelocity,&DAT_00969de0),
+                   ((Hero_AddGravity(g_FrameTimeSq * 40.0,&g_heroVelocity,&DAT_00969de0),
                     DAT_0096a69e != 0 &&
                     (fVar36 = Hero_RelativeZComponent(&g_heroVelocity), 0.0 < fVar36)))) {
                   FUN_005e81f0(uVar8 - 0x700,&g_heroPosition,DAT_0096a674 + 0x10);
-                  Hero_AddGravity(DAT_0071f418 * 57.0,&g_heroVelocity,&g_heroVelocity);
+                  Hero_AddGravity(g_FrameTimeSq * 57.0,&g_heroVelocity,&g_heroVelocity);
                 }
                 dVar34 = (double)FUN_005e8030(&g_heroVelocity);
                 lVar24 = uVar8 - 0x6f0;
@@ -23332,7 +23332,7 @@ void HandleHeroMovement(undefined8 param_1,MobyInstance *param_2,undefined4 *par
                 dVar34 = (double)FUN_005e8030(&g_heroVelocity);
                 local_f8 = (float)dVar34;
                 if (*(float *)(iVar10 + 0xc) < local_f8) {
-                  Delt(*(float *)(iVar10 + 0xc),DAT_0071f418 * 15.0,&local_f8);
+                  Delt(*(float *)(iVar10 + 0xc),g_FrameTimeSq * 15.0,&local_f8);
                   FUN_005e7f98((double)local_f8,&g_heroVelocity,&g_heroVelocity);
                 }
               }
@@ -23456,7 +23456,7 @@ LAB_000b2028:
             dVar28 = (double)MB_randRangeFloat
                                        (g_FrameTime * 3.0,g_FrameTime * 5.0);
             local_5f8 = (float)dVar28;
-            local_5f4 = DAT_0071f418 * -30.0;
+            local_5f4 = g_FrameTimeSq * -30.0;
             SpawnPart_25(uVar8 - 0x610,uVar8 - 0x600,0);
           }
           uVar25 = (*(undefined4 *)(&DAT_00721018 + g_CurrentWeapon * 0x4c) != 0);
@@ -23498,7 +23498,7 @@ LAB_000b2028:
               Hero_JumpThrustGrav();
             }
             else {
-              DAT_00969dc8 = DAT_00969dc8 - DAT_0071f418 * 24.0;
+              DAT_00969dc8 = DAT_00969dc8 - g_FrameTimeSq * 24.0;
             }
             DAT_0096a250 = DAT_0096a250 + 1;
           }
@@ -23720,7 +23720,7 @@ LAB_000b2028:
                 }
               }
               if (g_heroState == GRINDRAIL_DAMAGE) {
-                DAT_00969dc8 = DAT_00969dc8 - DAT_0071f418 * 23.0;
+                DAT_00969dc8 = DAT_00969dc8 - g_FrameTimeSq * 23.0;
               }
               else {
                 Hero_JumpThrustGrav();
@@ -23767,7 +23767,7 @@ LAB_000b2028:
                         (dVar29,(double)(float)((double)DAT_0071f40c * dVar30),
                          (double)(float)((double)DAT_0071f40c * 0.30000001192092896),dVar26,
                          &DAT_0096a2b0);
-              Delt((float)dVar32,DAT_0071f418 * 15.0,&DAT_0096a290);
+              Delt((float)dVar32,g_FrameTimeSq * 15.0,&DAT_0096a290);
               lVar22 = uVar8 - 0x530;
               local_dc = DAT_0096a244;
               local_d8 = DAT_0096a248;
@@ -23800,10 +23800,10 @@ LAB_000b2028:
                 }
               }
               if (fVar36 <= DAT_0096a28c) {
-                Delt(fVar36,(float)((double)DAT_0071f418 * dVar28),&DAT_0096a28c);
+                Delt(fVar36,(float)((double)g_FrameTimeSq * dVar28),&DAT_0096a28c);
               }
               else {
-                Delt(fVar36,DAT_0071f418 * 8.0,&DAT_0096a28c);
+                Delt(fVar36,g_FrameTimeSq * 8.0,&DAT_0096a28c);
               }
               if ((float)((double)g_FrameTime * dVar34) < DAT_0096a28c) {
                 DAT_0096a28c = (float)((double)g_FrameTime * dVar34);
@@ -23916,10 +23916,10 @@ LAB_000b2028:
             }
             dVar28 = (double)FastSubRots(g_heroRotation.z,(float)dVar32);
             FUN_005e7e70(&g_heroVelocity);
-            Hero_ApplyTaper(DAT_0071f418 * 5.0);
-            DAT_00969dc8 = DAT_00969de8 - DAT_0071f418 * 50.0;
-            if (DAT_0071f418 * -40.0 < DAT_00969dc8) {
-              DAT_00969dc8 = DAT_0071f418 * -40.0;
+            Hero_ApplyTaper(g_FrameTimeSq * 5.0);
+            DAT_00969dc8 = DAT_00969de8 - g_FrameTimeSq * 50.0;
+            if (g_FrameTimeSq * -40.0 < DAT_00969dc8) {
+              DAT_00969dc8 = g_FrameTimeSq * -40.0;
             }
             if ((double)(g_FrameTime * 1.3962634) < dVar28) {
               dVar28 = (double)(g_FrameTime * 1.3962634);
@@ -24234,17 +24234,17 @@ LAB_000b2028:
             }
             if (g_heroState == HYDRO_PACK_MOVING) {
               if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
-                Delt(g_heroIdealSpeed,DAT_0071f418 * 8.0,&g_storedNeutralSpeed);
+                Delt(g_heroIdealSpeed,g_FrameTimeSq * 8.0,&g_storedNeutralSpeed);
               }
               else {
-                Delt(g_heroIdealSpeed,DAT_0071f418 * 13.0,&g_storedNeutralSpeed);
+                Delt(g_heroIdealSpeed,g_FrameTimeSq * 13.0,&g_storedNeutralSpeed);
               }
             }
             else if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
-              Delt(g_heroIdealSpeed,DAT_0071f418 * 4.0,&g_storedNeutralSpeed);
+              Delt(g_heroIdealSpeed,g_FrameTimeSq * 4.0,&g_storedNeutralSpeed);
             }
             else {
-              Delt(g_heroIdealSpeed,DAT_0071f418 * 7.0,&g_storedNeutralSpeed);
+              Delt(g_heroIdealSpeed,g_FrameTimeSq * 7.0,&g_storedNeutralSpeed);
             }
             dVar32 = (double)FastWrapRot(-g_heroRotation.y,(float)dVar28);
             if (g_heroState == HYDRO_PACK_MOVING) {
@@ -24266,10 +24266,10 @@ LAB_000b2028:
               dVar29 = (double)FUN_005e8030(&g_heroExternalMomentum);
               local_110 = (float)dVar29;
               if (DAT_0096bd70 == 0x35) {
-                Delt((float)dVar28,DAT_0071f418 * 8.0,&local_110);
+                Delt((float)dVar28,g_FrameTimeSq * 8.0,&local_110);
               }
               else {
-                Delt((float)dVar28,DAT_0071f418 * 4.0,&local_110);
+                Delt((float)dVar28,g_FrameTimeSq * 4.0,&local_110);
               }
               FUN_005e7f98((double)local_110,&g_heroExternalMomentum,&g_heroExternalMomentum);
               FUN_005e7e98(&g_heroVelocity,&g_heroExternalMomentum);
@@ -24355,10 +24355,10 @@ LAB_000b2028:
                 g_heroIdealSpeed = 0.0;
               }
               if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
-                Delt(g_heroIdealSpeed,DAT_0071f418 * 5.0,&g_storedNeutralSpeed);
+                Delt(g_heroIdealSpeed,g_FrameTimeSq * 5.0,&g_storedNeutralSpeed);
               }
               else {
-                Delt(g_heroIdealSpeed,DAT_0071f418 * 4.0,&g_storedNeutralSpeed);
+                Delt(g_heroIdealSpeed,g_FrameTimeSq * 4.0,&g_storedNeutralSpeed);
               }
               fVar36 = Hero_GetAnimScaledVal((float *)&DAT_00723534,0x1e);
               dVar30 = (double)(g_storedNeutralSpeed * fVar36 * 5.5);
@@ -24376,7 +24376,7 @@ LAB_000b2028:
                 ) && (g_heroAnimFrame < 10.0)) {
               Hero_SpawnWaterBubbles(4,1);
             }
-            Hero_ApplyTaper(DAT_0071f418 * 4.2);
+            Hero_ApplyTaper(g_FrameTimeSq * 4.2);
             Hero_KneeBumpMotion(0);
             Hero_SurfBob();
           }
@@ -24428,11 +24428,11 @@ LAB_000b2028:
                   FUN_005e7e98(&DAT_0096a440,&g_heroPosition);
                   g_heroIdealSpeed = DAT_0096a53c + DAT_0096a548;
                   if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
-                    fVar36 = Delt(g_heroIdealSpeed,DAT_0071f418 * 10.0,
+                    fVar36 = Delt(g_heroIdealSpeed,g_FrameTimeSq * 10.0,
                                             &g_storedNeutralSpeed);
                   }
                   else {
-                    fVar36 = Delt(g_heroIdealSpeed,DAT_0071f418 * 10.0,
+                    fVar36 = Delt(g_heroIdealSpeed,g_FrameTimeSq * 10.0,
                                             &g_storedNeutralSpeed);
                   }
                   Hero_ThrustToMotionFwd((double)fVar36);
@@ -24585,11 +24585,11 @@ LAB_000b2028:
                     }
                   }
                   fVar36 = (float)(dVar30 - (double)DAT_0096a53c);
-                  if (DAT_0071f418 * 9.0 < fVar36) {
-                    fVar36 = DAT_0071f418 * 9.0;
+                  if (g_FrameTimeSq * 9.0 < fVar36) {
+                    fVar36 = g_FrameTimeSq * 9.0;
                   }
-                  if (fVar36 < DAT_0071f418 * -0.7) {
-                    fVar36 = DAT_0071f418 * -0.7;
+                  if (fVar36 < g_FrameTimeSq * -0.7) {
+                    fVar36 = g_FrameTimeSq * -0.7;
                   }
                   DAT_0096a53c = DAT_0096a53c + fVar36;
                 }
@@ -24601,7 +24601,7 @@ LAB_000b2028:
                   }
                 }
                 if (g_framesNotGrounded == 0) {
-                  Hero_AddGravity(DAT_0071f418 * 20.0,&g_heroVelocity,&g_heroVelocity);
+                  Hero_AddGravity(g_FrameTimeSq * 20.0,&g_heroVelocity,&g_heroVelocity);
                 }
                 else {
                   Hero_CancelGravity(&g_heroVelocity,&g_heroVelocity);
@@ -24637,10 +24637,10 @@ LAB_000b2028:
                   Hero_Turn3D(fVar36,DAT_0071f40c * 0.3,fVar2);
                 }
                 if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
-                  Delt(g_heroIdealSpeed,DAT_0071f418 * 8.5,&g_storedNeutralSpeed);
+                  Delt(g_heroIdealSpeed,g_FrameTimeSq * 8.5,&g_storedNeutralSpeed);
                 }
                 else {
-                  Delt(g_heroIdealSpeed,DAT_0071f418 * 7.5,&g_storedNeutralSpeed);
+                  Delt(g_heroIdealSpeed,g_FrameTimeSq * 7.5,&g_storedNeutralSpeed);
                 }
                 Hero_ThrustToMotion(99999.0);
                 if (g_standingOnMoby != 0) {
@@ -24649,10 +24649,10 @@ LAB_000b2028:
                   g_heroGroundDist = 0.0;
                 }
                 if (g_framesNotGrounded == 0) {
-                  Hero_AddGravity(DAT_0071f418 * 54.0,&g_heroVelocity,&g_heroVelocity);
+                  Hero_AddGravity(g_FrameTimeSq * 54.0,&g_heroVelocity,&g_heroVelocity);
                 }
                 else {
-                  Hero_AddGravity(DAT_0071f418 * 24.0,&g_heroVelocity,(float *)&DAT_00969df0);
+                  Hero_AddGravity(g_FrameTimeSq * 24.0,&g_heroVelocity,(float *)&DAT_00969df0);
                 }
               }
               goto LAB_000b703c;
@@ -24683,7 +24683,7 @@ LAB_000b2028:
                 Hero_AddGravity(0.004,&g_heroVelocity,&g_heroVelocity);
               }
               else {
-                Hero_AddGravity(DAT_0071f418 * 24.0,&g_heroVelocity,(float *)&DAT_00969df0);
+                Hero_AddGravity(g_FrameTimeSq * 24.0,&g_heroVelocity,(float *)&DAT_00969df0);
               }
               goto LAB_000b703c;
             }
@@ -24692,7 +24692,7 @@ LAB_000b2028:
               if (DAT_00969ea4 == 0) {
                 Hero_JumpTurnTrans();
               }
-              Hero_AddGravity(DAT_0071f418 * 12.0,&g_heroVelocity,&g_heroVelocity);
+              Hero_AddGravity(g_FrameTimeSq * 12.0,&g_heroVelocity,&g_heroVelocity);
               if (DAT_00969dc8 < g_FrameTime * -10.0) {
                 DAT_00969dc8 = g_FrameTime * -10.0;
               }
@@ -24706,7 +24706,7 @@ LAB_000b2028:
           Hero_GetIdealThrustFromPad(0x3ff0000000000000,uVar7,0);
           g_heroIdealSpeed = (float)dVar28;
           if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
-            fVar36 = Delt(g_heroIdealSpeed,DAT_0071f418 * 12.6,&g_storedNeutralSpeed);
+            fVar36 = Delt(g_heroIdealSpeed,g_FrameTimeSq * 12.6,&g_storedNeutralSpeed);
           }
           else {
             fVar36 = Delt(g_heroIdealSpeed,(float)dVar28,&g_storedNeutralSpeed);
@@ -24714,10 +24714,10 @@ LAB_000b2028:
           FUN_005e7e70((double)fVar36,&g_heroVelocity);
           Hero_KneeBumpMotion(0);
           if (g_framesNotGrounded == 0) {
-            Hero_AddGravity(DAT_0071f418 * 54.0,&g_heroVelocity,&g_heroVelocity);
+            Hero_AddGravity(g_FrameTimeSq * 54.0,&g_heroVelocity,&g_heroVelocity);
           }
           else {
-            Hero_AddGravity(DAT_0071f418 * 25.0,&g_heroVelocity,(float *)&DAT_00969e00);
+            Hero_AddGravity(g_FrameTimeSq * 25.0,&g_heroVelocity,(float *)&DAT_00969e00);
             Hero_WallSloopMotion();
           }
           goto LAB_000b703c;
@@ -24830,10 +24830,10 @@ LAB_000b2028:
                   }
                 }
                 if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
-                  Delt(g_heroIdealSpeed,DAT_0071f418 * 28.0,&g_storedNeutralSpeed);
+                  Delt(g_heroIdealSpeed,g_FrameTimeSq * 28.0,&g_storedNeutralSpeed);
                 }
                 else {
-                  Delt(g_heroIdealSpeed,DAT_0071f418 * 37.0,&g_storedNeutralSpeed);
+                  Delt(g_heroIdealSpeed,g_FrameTimeSq * 37.0,&g_storedNeutralSpeed);
                 }
                 if (DAT_0096a738 == 0) {
                   Hero_ThrustToMotion(99999.0);
@@ -24842,10 +24842,10 @@ LAB_000b2028:
                   Hero_ThrustToMotion(DAT_0096a73c);
                 }
                 if (g_framesNotGrounded == 0) {
-                  Hero_AddGravity(DAT_0071f418 * 54.0,&g_heroVelocity,&g_heroVelocity);
+                  Hero_AddGravity(g_FrameTimeSq * 54.0,&g_heroVelocity,&g_heroVelocity);
                 }
                 else {
-                  Hero_AddGravity(DAT_0071f418 * 25.0,&g_heroVelocity,(float *)&DAT_00969e00);
+                  Hero_AddGravity(g_FrameTimeSq * 25.0,&g_heroVelocity,(float *)&DAT_00969e00);
                 }
                 Hero_EdgeStop(0x400d9999a0000000,dVar28);
               }
@@ -24864,10 +24864,10 @@ LAB_000b2028:
               if (DAT_0096afc2 == '\0') {
                 if (DAT_0096a734 == 0) {
                   if (0.0 <= g_storedNeutralSpeed) {
-                    Delt(0.0,DAT_0071f418 * 15.0,&g_storedNeutralSpeed);
+                    Delt(0.0,g_FrameTimeSq * 15.0,&g_storedNeutralSpeed);
                   }
                   else {
-                    Delt(0.0,DAT_0071f418 * 15.0,&g_storedNeutralSpeed);
+                    Delt(0.0,g_FrameTimeSq * 15.0,&g_storedNeutralSpeed);
                   }
                   Hero_ScaleRelativeXY(g_storedNeutralSpeed,&g_heroVelocity,&g_heroVelocity);
                 }
@@ -24877,10 +24877,10 @@ LAB_000b2028:
                     g_heroIdealSpeed = g_FrameTime * 4.5;
                   }
                   if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
-                    Delt(g_heroIdealSpeed,DAT_0071f418 * 25.0,&g_storedNeutralSpeed);
+                    Delt(g_heroIdealSpeed,g_FrameTimeSq * 25.0,&g_storedNeutralSpeed);
                   }
                   else {
-                    Delt(g_heroIdealSpeed,DAT_0071f418 * 25.0,&g_storedNeutralSpeed);
+                    Delt(g_heroIdealSpeed,g_FrameTimeSq * 25.0,&g_storedNeutralSpeed);
                   }
                   dVar30 = (double)cosf(g_heroRotation.z);
                   g_heroVelocity = (float)(dVar30 * (double)g_storedNeutralSpeed);
@@ -24890,10 +24890,10 @@ LAB_000b2028:
               }
               else if (DAT_0096a734 == 0) {
                 if (0.0 <= g_storedNeutralSpeed) {
-                  Delt(0.0,DAT_0071f418 * 2.0,&g_storedNeutralSpeed);
+                  Delt(0.0,g_FrameTimeSq * 2.0,&g_storedNeutralSpeed);
                 }
                 else {
-                  Delt(0.0,DAT_0071f418 * 2.0,&g_storedNeutralSpeed);
+                  Delt(0.0,g_FrameTimeSq * 2.0,&g_storedNeutralSpeed);
                 }
                 Hero_ScaleRelativeXY(g_storedNeutralSpeed,&g_heroVelocity,&g_heroVelocity);
               }
@@ -24903,10 +24903,10 @@ LAB_000b2028:
                   g_heroIdealSpeed = g_FrameTime * 4.5;
                 }
                 if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
-                  Delt(g_heroIdealSpeed,DAT_0071f418 * 4.0,&g_storedNeutralSpeed);
+                  Delt(g_heroIdealSpeed,g_FrameTimeSq * 4.0,&g_storedNeutralSpeed);
                 }
                 else {
-                  Delt(g_heroIdealSpeed,DAT_0071f418 * 4.0,&g_storedNeutralSpeed);
+                  Delt(g_heroIdealSpeed,g_FrameTimeSq * 4.0,&g_storedNeutralSpeed);
                 }
                 dVar30 = (double)cosf(g_heroRotation.z);
                 g_heroVelocity = (float)(dVar30 * (double)g_storedNeutralSpeed);
@@ -24943,7 +24943,7 @@ LAB_000b2028:
               else {
                 dVar30 = (double)(float)(dVar30 * 0.5);
               }
-              dVar34 = (double)(DAT_0071f418 * 150.0);
+              dVar34 = (double)(g_FrameTimeSq * 150.0);
               iVar15 = idol::GetAnimDuration(0xe);
               if ((((DAT_0096a77c == 0) && (23.5 < g_heroAnimFrame)) &&
                   ((double)DAT_00969de8 < dVar28)) && (g_framesNotGrounded != 0)) {
@@ -24970,7 +24970,7 @@ LAB_000b2028:
                 Hero_SetRelativeZ(local_ec,&g_heroVelocity,&g_heroVelocity);
               }
               else if (iVar15 < g_heroStateTimer) {
-                Hero_AddGravity(DAT_0071f418 * 130.0,&g_heroVelocity,&g_heroVelocity);
+                Hero_AddGravity(g_FrameTimeSq * 130.0,&g_heroVelocity,&g_heroVelocity);
                 fVar36 = Hero_RelativeZComponent(&g_heroVelocity);
                 if ((double)fVar36 < dVar28) {
                   DAT_0096a750 = 0x3f800000;
@@ -25071,17 +25071,17 @@ LAB_000b2028:
             }
             if (DAT_0096afc2 == '\0') {
               if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
-                Delt(g_heroIdealSpeed,DAT_0071f418 * 28.0,&g_storedNeutralSpeed);
+                Delt(g_heroIdealSpeed,g_FrameTimeSq * 28.0,&g_storedNeutralSpeed);
               }
               else {
-                Delt(g_heroIdealSpeed,DAT_0071f418 * 37.0,&g_storedNeutralSpeed);
+                Delt(g_heroIdealSpeed,g_FrameTimeSq * 37.0,&g_storedNeutralSpeed);
               }
               Hero_ThrustToMotion(99999.0);
               if (g_framesNotGrounded == 0) {
-                Hero_AddGravity(DAT_0071f418 * 54.0,&g_heroVelocity,&g_heroVelocity);
+                Hero_AddGravity(g_FrameTimeSq * 54.0,&g_heroVelocity,&g_heroVelocity);
               }
               else {
-                Hero_AddGravity(DAT_0071f418 * 25.0,&g_heroVelocity,(float *)&DAT_00969e00);
+                Hero_AddGravity(g_FrameTimeSq * 25.0,&g_heroVelocity,(float *)&DAT_00969e00);
               }
             }
             else {
@@ -25110,10 +25110,10 @@ LAB_000b2028:
           else {
             dVar28 = (double)FUN_005e7ebc(&g_heroVelocity);
             iVar10 = g_heroStateTimer;
-            dVar30 = (double)(DAT_0071f418 * 4.0);
+            dVar30 = (double)(g_FrameTimeSq * 4.0);
             if ((g_framesNotGrounded == 0) && (iVar15 = idol::GetAnimDuration(10), iVar15 < iVar10))
             {
-              dVar30 = (double)(DAT_0071f418 * 10.0);
+              dVar30 = (double)(g_FrameTimeSq * 10.0);
             }
             dVar34 = (double)(float)(dVar28 - dVar30);
             if ((double)(float)(dVar28 - dVar30) < 0.0) {
@@ -25164,10 +25164,10 @@ LAB_000b2028:
             Hero_Turn3D(DAT_0071f40c * 0.025,DAT_0071f40c * 0.3,g_FrameTime * 12.566371);
           }
           if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
-            Delt(g_heroIdealSpeed,DAT_0071f418 * 7.0,&g_storedNeutralSpeed);
+            Delt(g_heroIdealSpeed,g_FrameTimeSq * 7.0,&g_storedNeutralSpeed);
           }
           else {
-            Delt(g_heroIdealSpeed,DAT_0071f418 * 15.0,&g_storedNeutralSpeed);
+            Delt(g_heroIdealSpeed,g_FrameTimeSq * 15.0,&g_storedNeutralSpeed);
           }
           Hero_ThrustToMotion(99999.0);
           Hero_SetBankTwistSway();
@@ -25234,7 +25234,7 @@ LAB_000b3bd8:
           FUN_005e7e98((double)fVar36,&g_heroVelocity,&DAT_00969de0);
           FUN_005e822c(0x3fecccccc0000000,&g_heroVelocity,&g_heroVelocity);
           lVar22 = uVar8 - 0x780;
-          DAT_00969dc8 = DAT_00969dc8 - DAT_0071f418 * 15.0;
+          DAT_00969dc8 = DAT_00969dc8 - g_FrameTimeSq * 15.0;
           FUN_005e7e98(lVar22,DAT_0096a644 + 0x10);
           dVar28 = (double)FUN_005e8548(&g_heroPosition,lVar22);
           DAT_0096a650 = (float)dVar28;
@@ -25259,7 +25259,7 @@ LAB_000b3bd8:
             DAT_0096a64c = DAT_0096a650 / DAT_00969e40;
           }
           if (DAT_0096bd68 == 0) {
-            Delt(g_FrameTime * 27.0,DAT_0071f418 * 80.0,&DAT_0096a640);
+            Delt(g_FrameTime * 27.0,g_FrameTimeSq * 80.0,&DAT_0096a640);
             dVar30 = (double)FUN_005e8338((double)(*(float *)(DAT_0096a644 + 0x10) - (pMVar5->pos).x
                                                   ),
                                           (double)(*(float *)(DAT_0096a644 + 0x14) - (pMVar5->pos).y
@@ -25278,10 +25278,10 @@ LAB_000b3bd8:
             }
           }
           else if (DAT_0096bd68 == 1) {
-            Delt(0.0,DAT_0071f418 * 42.0,&DAT_0096a640);
+            Delt(0.0,g_FrameTimeSq * 42.0,&DAT_0096a640);
           }
           iVar10 = MB_SolveQuad
-                             ((double)(DAT_0071f418 * -42.0 * 0.5),(double)DAT_0096a640,
+                             ((double)(g_FrameTimeSq * -42.0 * 0.5),(double)DAT_0096a640,
                               -(double)(DAT_0096a650 - 1.9));
           if ((0 < iVar10) && (dVar28 < (double)local_100)) {
             DAT_0096a64c = local_100;
@@ -25323,7 +25323,7 @@ LAB_000b3bd8:
           if (dVar28 < (double)(longlong)local_c8) {
             iVar10 = idol::GetAnimDuration(0x1e);
             DAT_00969dc8 = DAT_00969dc8 -
-                           DAT_0071f418 * 29.0 * ((float)(longlong)iVar10 - DAT_0096a64c);
+                           g_FrameTimeSq * 29.0 * ((float)(longlong)iVar10 - DAT_0096a64c);
           }
           goto LAB_000b703c;
         }
@@ -25349,17 +25349,17 @@ LAB_000b3bd8:
               }
             }
             if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
-              Delt(g_heroIdealSpeed,DAT_0071f418 * 35.0,&g_storedNeutralSpeed);
+              Delt(g_heroIdealSpeed,g_FrameTimeSq * 35.0,&g_storedNeutralSpeed);
             }
             else {
-              Delt(g_heroIdealSpeed,DAT_0071f418 * 30.0,&g_storedNeutralSpeed);
+              Delt(g_heroIdealSpeed,g_FrameTimeSq * 30.0,&g_storedNeutralSpeed);
             }
             Hero_ThrustToMotion(99999.0);
             if (g_framesNotGrounded == 0) {
-              DAT_00969dc8 = DAT_00969dc8 - DAT_0071f418 * 54.0;
+              DAT_00969dc8 = DAT_00969dc8 - g_FrameTimeSq * 54.0;
             }
             else {
-              DAT_00969dc8 = DAT_00969de8 - DAT_0071f418 * 25.0;
+              DAT_00969dc8 = DAT_00969de8 - g_FrameTimeSq * 25.0;
               Hero_WallSloopMotion();
             }
             goto LAB_000b703c;
@@ -25368,14 +25368,14 @@ LAB_000b3bd8:
             dVar28 = 0.0;
             g_heroIdealSpeed = 0.0;
             if (0.0 <= g_storedNeutralSpeed) {
-              Delt(0.0,DAT_0071f418 * 30.0,&g_storedNeutralSpeed);
+              Delt(0.0,g_FrameTimeSq * 30.0,&g_storedNeutralSpeed);
             }
             else {
-              Delt(0.0,DAT_0071f418 * 30.0,&g_storedNeutralSpeed);
+              Delt(0.0,g_FrameTimeSq * 30.0,&g_storedNeutralSpeed);
             }
             Hero_ScaleRelativeXY(g_storedNeutralSpeed,&g_heroVelocity,&g_heroVelocity);
             iVar10 = idol::GetAnimDuration(0xc);
-            dVar30 = (double)(DAT_0071f418 * 70.0);
+            dVar30 = (double)(g_FrameTimeSq * 70.0);
             dVar34 = (double)(g_FrameTime * 5.7);
             iVar15 = idol::GetAnimDuration(0x21);
             if (g_heroStateTimer < iVar10) {
@@ -25419,18 +25419,18 @@ LAB_000aeb2c:
         g_heroIdealSpeed = (float)dVar28;
         dVar28 = 12.600000381469727;
         if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
-          fVar36 = Delt(g_heroIdealSpeed,DAT_0071f418 * 12.6,&g_storedNeutralSpeed);
+          fVar36 = Delt(g_heroIdealSpeed,g_FrameTimeSq * 12.6,&g_storedNeutralSpeed);
         }
         else {
-          fVar36 = Delt(g_heroIdealSpeed,DAT_0071f418 * 12.6,&g_storedNeutralSpeed);
+          fVar36 = Delt(g_heroIdealSpeed,g_FrameTimeSq * 12.6,&g_storedNeutralSpeed);
         }
         FUN_005e7e70((double)fVar36,&g_heroVelocity);
-        Hero_ApplyTaper((float)((double)DAT_0071f418 * dVar28));
+        Hero_ApplyTaper((float)((double)g_FrameTimeSq * dVar28));
         if (g_framesNotGrounded == 0) {
-          Hero_AddGravity(DAT_0071f418 * 54.0,&g_heroVelocity,&g_heroVelocity);
+          Hero_AddGravity(g_FrameTimeSq * 54.0,&g_heroVelocity,&g_heroVelocity);
         }
         else {
-          Hero_AddGravity(DAT_0071f418 * 24.0,&g_heroVelocity,(float *)&DAT_00969df0);
+          Hero_AddGravity(g_FrameTimeSq * 24.0,&g_heroVelocity,(float *)&DAT_00969df0);
           Hero_WallSloopMotion();
         }
         if (DAT_0096a644 != 0) {
@@ -25540,7 +25540,7 @@ LAB_000aeb2c:
                   }
                   local_d0 = DAT_00969e44;
                   fVar36 = Delt(g_heroIdealSpeed * g_FrameTime,
-                                          DAT_0071f418 * 5.0,&local_d0);
+                                          g_FrameTimeSq * 5.0,&local_d0);
                   FUN_005e81f0((double)fVar36,&g_heroVelocity,uVar8 - 0x450,&g_heroPosition);
                   lVar24 = FastDoubleToInt((double)g_heroAnimFrame);
                   FUN_005e84c0((double)(float)((double)*(float *)(&DAT_00737994 + (int)(lVar24 << 2)
@@ -25601,10 +25601,10 @@ LAB_000aeb2c:
           if (DAT_0096afc2 == '\0') {
             if (iVar15 < g_heroStateTimer) {
               if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
-                Delt(g_heroIdealSpeed,DAT_0071f418 * 90.0,&g_storedNeutralSpeed);
+                Delt(g_heroIdealSpeed,g_FrameTimeSq * 90.0,&g_storedNeutralSpeed);
               }
               else {
-                Delt(g_heroIdealSpeed,DAT_0071f418 * 190.0,&g_storedNeutralSpeed);
+                Delt(g_heroIdealSpeed,g_FrameTimeSq * 190.0,&g_storedNeutralSpeed);
               }
             }
             if (DAT_0096a738 == 0) {
@@ -25686,10 +25686,10 @@ LAB_000aeb2c:
           }
           Hero_KneeBumpMotion(1);
           if (g_framesNotGrounded == 0) {
-            Hero_AddGravity(DAT_0071f418 * 54.0,&g_heroVelocity,&g_heroVelocity);
+            Hero_AddGravity(g_FrameTimeSq * 54.0,&g_heroVelocity,&g_heroVelocity);
           }
           else {
-            Hero_AddGravity(DAT_0071f418 * 24.0,&g_heroVelocity,(float *)&DAT_00969df0);
+            Hero_AddGravity(g_FrameTimeSq * 24.0,&g_heroVelocity,(float *)&DAT_00969df0);
             Hero_WallSloopMotion();
           }
           goto LAB_000b703c;
@@ -25769,10 +25769,10 @@ LAB_000aeb2c:
                 }
               }
               if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
-                Delt(g_heroIdealSpeed,DAT_0071f418 * 28.0,&g_storedNeutralSpeed);
+                Delt(g_heroIdealSpeed,g_FrameTimeSq * 28.0,&g_storedNeutralSpeed);
               }
               else {
-                Delt(g_heroIdealSpeed,DAT_0071f418 * 37.0,&g_storedNeutralSpeed);
+                Delt(g_heroIdealSpeed,g_FrameTimeSq * 37.0,&g_storedNeutralSpeed);
               }
               if (DAT_0096a738 == 0) {
                 Hero_ThrustToMotion(99999.0);
@@ -25781,10 +25781,10 @@ LAB_000aeb2c:
                 Hero_ThrustToMotion(DAT_0096a73c);
               }
               if (g_framesNotGrounded == 0) {
-                DAT_00969dc8 = DAT_00969dc8 - DAT_0071f418 * 54.0;
+                DAT_00969dc8 = DAT_00969dc8 - g_FrameTimeSq * 54.0;
               }
               else {
-                DAT_00969dc8 = DAT_00969de8 - DAT_0071f418 * 25.0;
+                DAT_00969dc8 = DAT_00969de8 - g_FrameTimeSq * 25.0;
                 Hero_WallSloopMotion();
               }
               Hero_EdgeStop(0x400d9999a0000000,dVar28);
@@ -25828,10 +25828,10 @@ LAB_000b57b0:
               }
             }
             if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
-              Delt(g_heroIdealSpeed,DAT_0071f418 * 8.5,&g_storedNeutralSpeed);
+              Delt(g_heroIdealSpeed,g_FrameTimeSq * 8.5,&g_storedNeutralSpeed);
             }
             else {
-              Delt(g_heroIdealSpeed,(float)((double)(DAT_0071f418 * 7.5) * dVar28),
+              Delt(g_heroIdealSpeed,(float)((double)(g_FrameTimeSq * 7.5) * dVar28),
                              &g_storedNeutralSpeed);
             }
             if ((DAT_0096a098 == 0) || (g_onMagnerail != 0)) {
@@ -25842,10 +25842,10 @@ LAB_000b57b0:
             }
             Hero_KneeBumpMotion(1);
             if (g_framesNotGrounded == 0) {
-              Hero_AddGravity(DAT_0071f418 * 54.0,&g_heroVelocity,&g_heroVelocity);
+              Hero_AddGravity(g_FrameTimeSq * 54.0,&g_heroVelocity,&g_heroVelocity);
             }
             else {
-              Hero_AddGravity(DAT_0071f418 * 25.0,&g_heroVelocity,(float *)&DAT_00969e00);
+              Hero_AddGravity(g_FrameTimeSq * 25.0,&g_heroVelocity,(float *)&DAT_00969e00);
               Hero_WallSloopMotion();
             }
             goto LAB_000b703c;
@@ -25853,8 +25853,8 @@ LAB_000b57b0:
           if ((int)g_heroState < 0x53) {
             g_heroIdealRotZ = DAT_00969fcc;
             g_heroIdealSpeed = g_FrameTime * 5.5;
-            Hero_JumpTranslation(DAT_0071f418 * 25.0);
-            Hero_AddGravity(DAT_0071f418 * 18.0,&g_heroVelocity,(float *)&DAT_00969e00);
+            Hero_JumpTranslation(g_FrameTimeSq * 25.0);
+            Hero_AddGravity(g_FrameTimeSq * 18.0,&g_heroVelocity,(float *)&DAT_00969e00);
             goto LAB_000b703c;
           }
           if (0x53 < (int)g_heroState) {
@@ -25881,10 +25881,10 @@ LAB_000b57b0:
               Hero_Turn3D(fVar36,DAT_0071f40c * 0.1,fVar2);
             }
             if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
-              Delt(g_heroIdealSpeed,DAT_0071f418 * 8.5,&g_storedNeutralSpeed);
+              Delt(g_heroIdealSpeed,g_FrameTimeSq * 8.5,&g_storedNeutralSpeed);
             }
             else {
-              Delt(g_heroIdealSpeed,(float)((double)(DAT_0071f418 * 7.5) * dVar28),
+              Delt(g_heroIdealSpeed,(float)((double)(g_FrameTimeSq * 7.5) * dVar28),
                              &g_storedNeutralSpeed);
             }
             if ((DAT_0096a098 == 0) || (g_onMagnerail != 0)) {
@@ -25895,10 +25895,10 @@ LAB_000b57b0:
             }
             Hero_KneeBumpMotion(1);
             if (g_framesNotGrounded == 0) {
-              Hero_AddGravity(DAT_0071f418 * 54.0,&g_heroVelocity,&g_heroVelocity);
+              Hero_AddGravity(g_FrameTimeSq * 54.0,&g_heroVelocity,&g_heroVelocity);
             }
             else {
-              Hero_AddGravity(DAT_0071f418 * 25.0,&g_heroVelocity,(float *)&DAT_00969e00);
+              Hero_AddGravity(g_FrameTimeSq * 25.0,&g_heroVelocity,(float *)&DAT_00969e00);
               Hero_WallSloopMotion();
             }
             goto LAB_000b703c;
@@ -25910,19 +25910,19 @@ LAB_000b6bfc:
           g_heroIdealSpeed = (float)dVar28;
           dVar30 = 12.600000381469727;
           if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
-            fVar36 = Delt(g_heroIdealSpeed,DAT_0071f418 * 12.6,&g_storedNeutralSpeed);
+            fVar36 = Delt(g_heroIdealSpeed,g_FrameTimeSq * 12.6,&g_storedNeutralSpeed);
           }
           else {
             fVar36 = Delt(g_heroIdealSpeed,(float)dVar28,&g_storedNeutralSpeed);
           }
           FUN_005e7e70((double)fVar36,&g_heroVelocity);
-          Hero_ApplyTaper((float)((double)DAT_0071f418 * dVar30));
+          Hero_ApplyTaper((float)((double)g_FrameTimeSq * dVar30));
           Hero_KneeBumpMotion(0);
           if (g_framesNotGrounded == 0) {
-            Hero_AddGravity(DAT_0071f418 * 54.0,&g_heroVelocity,&g_heroVelocity);
+            Hero_AddGravity(g_FrameTimeSq * 54.0,&g_heroVelocity,&g_heroVelocity);
           }
           else {
-            Hero_AddGravity(DAT_0071f418 * 25.0,&g_heroVelocity,(float *)&DAT_00969e00);
+            Hero_AddGravity(g_FrameTimeSq * 25.0,&g_heroVelocity,(float *)&DAT_00969e00);
             Hero_WallSloopMotion();
           }
           goto LAB_000b703c;
@@ -25994,7 +25994,7 @@ LAB_000b6bfc:
                   }
                   local_cc = DAT_00969e44;
                   fVar36 = Delt(g_heroIdealSpeed * g_FrameTime,
-                                          DAT_0071f418 * 5.0,&local_cc);
+                                          g_FrameTimeSq * 5.0,&local_cc);
                   FUN_005e81f0((double)fVar36,&g_heroVelocity,uVar8 - 0x350,&g_heroPosition);
                   lVar24 = FastDoubleToInt((double)g_heroAnimFrame);
                   FUN_005e7f98((double)(float)((double)*(float *)(&DAT_007379d0 + (int)(lVar24 << 2)
@@ -26018,10 +26018,10 @@ LAB_000b6bfc:
               Hero_Turn3D(DAT_0071f40c * 0.04,DAT_0071f40c * 0.2,g_FrameTime * 8.726646);
             }
             if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
-              Delt(g_heroIdealSpeed,DAT_0071f418 * 7.0,&g_storedNeutralSpeed);
+              Delt(g_heroIdealSpeed,g_FrameTimeSq * 7.0,&g_storedNeutralSpeed);
             }
             else {
-              Delt(g_heroIdealSpeed,DAT_0071f418 * 15.0,&g_storedNeutralSpeed);
+              Delt(g_heroIdealSpeed,g_FrameTimeSq * 15.0,&g_storedNeutralSpeed);
             }
             Hero_ThrustToMotion(99999.0);
             Hero_CancelGravity(&g_heroVelocity,&g_heroVelocity);
@@ -26060,7 +26060,7 @@ LAB_000b6bfc:
             if (DAT_00969ea4 == 0) {
               Hero_JumpTurnTrans();
             }
-            Hero_AddGravity(DAT_0071f418 * 12.0,&g_heroVelocity,&g_heroVelocity);
+            Hero_AddGravity(g_FrameTimeSq * 12.0,&g_heroVelocity,&g_heroVelocity);
             if (DAT_00969dc8 < g_FrameTime * -10.0) {
               DAT_00969dc8 = g_FrameTime * -10.0;
             }
@@ -26072,8 +26072,8 @@ LAB_000b6bfc:
                 if (g_heroState == UNK_58) {
                   g_heroIdealRotZ = DAT_00969fcc;
                   g_heroIdealSpeed = g_FrameTime * 5.5;
-                  Hero_JumpTranslation(DAT_0071f418 * 25.0);
-                  Hero_AddGravity(DAT_0071f418 * 18.0,&g_heroVelocity,(float *)&DAT_00969e00);
+                  Hero_JumpTranslation(g_FrameTimeSq * 25.0);
+                  Hero_AddGravity(g_FrameTimeSq * 18.0,&g_heroVelocity,(float *)&DAT_00969e00);
                   goto LAB_000b703c;
                 }
                 if (g_heroState != HOLOGUISE_DYING) {
@@ -26092,7 +26092,7 @@ LAB_000b6bfc:
                       Hero_AddGravity(0.004,&g_heroVelocity,&g_heroVelocity);
                     }
                     else {
-                      Hero_AddGravity(DAT_0071f418 * 24.0,&g_heroVelocity,(float *)&DAT_00969df0);
+                      Hero_AddGravity(g_FrameTimeSq * 24.0,&g_heroVelocity,(float *)&DAT_00969df0);
                     }
                   }
                   else if (g_heroState == UNK_55) {
@@ -26100,7 +26100,7 @@ LAB_000b6bfc:
                     if (DAT_00969ea4 == 0) {
                       Hero_JumpTurnTrans();
                     }
-                    Hero_AddGravity(DAT_0071f418 * 21.0,&g_heroVelocity,&g_heroVelocity);
+                    Hero_AddGravity(g_FrameTimeSq * 21.0,&g_heroVelocity,&g_heroVelocity);
                     if (DAT_00969dc8 < g_FrameTime * -15.0) {
                       DAT_00969dc8 = g_FrameTime * -15.0;
                     }
@@ -26159,10 +26159,10 @@ LAB_000b68e8:
             Hero_Turn3D(fVar36,DAT_0071f40c * 0.3,fVar2);
           }
           if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
-            Delt(g_heroIdealSpeed,DAT_0071f418 * 8.5,&g_storedNeutralSpeed);
+            Delt(g_heroIdealSpeed,g_FrameTimeSq * 8.5,&g_storedNeutralSpeed);
           }
           else {
-            Delt(g_heroIdealSpeed,(float)((double)(DAT_0071f418 * 7.5) * dVar28),
+            Delt(g_heroIdealSpeed,(float)((double)(g_FrameTimeSq * 7.5) * dVar28),
                            &g_storedNeutralSpeed);
           }
           fVar36 = 1.7;
@@ -26187,10 +26187,10 @@ LAB_000b68e8:
           }
           Hero_KneeBumpMotion(1);
           if (g_framesNotGrounded == 0) {
-            Hero_AddGravity(DAT_0071f418 * 54.0,&g_heroVelocity,&g_heroVelocity);
+            Hero_AddGravity(g_FrameTimeSq * 54.0,&g_heroVelocity,&g_heroVelocity);
           }
           else {
-            Hero_AddGravity(DAT_0071f418 * 25.0,&g_heroVelocity,(float *)&DAT_00969e00);
+            Hero_AddGravity(g_FrameTimeSq * 25.0,&g_heroVelocity,(float *)&DAT_00969e00);
             Hero_WallSloopMotion();
           }
           goto LAB_000b703c;
@@ -26278,20 +26278,20 @@ LAB_000b68e8:
                 Hero_SetBankTwistSway();
               }
               if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
-                Delt(g_heroIdealSpeed,DAT_0071f418 * 8.5,&g_storedNeutralSpeed);
+                Delt(g_heroIdealSpeed,g_FrameTimeSq * 8.5,&g_storedNeutralSpeed);
               }
               else {
-                Delt(g_heroIdealSpeed,DAT_0071f418 * 7.5,&g_storedNeutralSpeed);
+                Delt(g_heroIdealSpeed,g_FrameTimeSq * 7.5,&g_storedNeutralSpeed);
               }
               Hero_ThrustToMotion(99999.0);
               if (g_heroType == '\0') {
                 Hero_KneeBumpMotion(1);
               }
               if (g_framesNotGrounded == 0) {
-                Hero_AddGravity(DAT_0071f418 * 54.0,&g_heroVelocity,&g_heroVelocity);
+                Hero_AddGravity(g_FrameTimeSq * 54.0,&g_heroVelocity,&g_heroVelocity);
               }
               else {
-                Hero_AddGravity(DAT_0071f418 * 25.0,&g_heroVelocity,&DAT_00969de0);
+                Hero_AddGravity(g_FrameTimeSq * 25.0,&g_heroVelocity,&DAT_00969de0);
                 Hero_WallSloopMotion();
               }
             }
@@ -26302,13 +26302,13 @@ LAB_000b68e8:
                 FUN_005e7e70(&g_heroExternalMomentum);
               }
               FUN_005e7e70(&g_heroVelocity);
-              Hero_ApplyTaper(DAT_0071f418 * 12.0);
+              Hero_ApplyTaper(g_FrameTimeSq * 12.0);
               Hero_KneeBumpMotion(0);
               if (g_framesNotGrounded == 0) {
-                Hero_AddGravity(DAT_0071f418 * 54.0,&g_heroVelocity,&g_heroVelocity);
+                Hero_AddGravity(g_FrameTimeSq * 54.0,&g_heroVelocity,&g_heroVelocity);
               }
               else {
-                Hero_AddGravity(DAT_0071f418 * 25.0,&g_heroVelocity,&DAT_00969de0);
+                Hero_AddGravity(g_FrameTimeSq * 25.0,&g_heroVelocity,&DAT_00969de0);
                 Hero_WallSloopMotion();
               }
             }
@@ -26318,13 +26318,13 @@ LAB_000b68e8:
             g_heroIdealSpeed = 0.0;
             dVar28 = 12.600000381469727;
             if (0.0 <= g_storedNeutralSpeed) {
-              fVar36 = Delt(0.0,DAT_0071f418 * 12.6,&g_storedNeutralSpeed);
+              fVar36 = Delt(0.0,g_FrameTimeSq * 12.6,&g_storedNeutralSpeed);
             }
             else {
               fVar36 = Delt(0.0,0.0,&g_storedNeutralSpeed);
             }
             FUN_005e7e70((double)fVar36,&g_heroVelocity);
-            Hero_ApplyTaper((float)((double)DAT_0071f418 * dVar28));
+            Hero_ApplyTaper((float)((double)g_FrameTimeSq * dVar28));
             if (((DAT_0096a77c != 0) || (g_heroAnimFrame <= 22.0)) || (55.0 <= g_heroAnimFrame)) {
               if ((DAT_0096a77c == 0) && (g_heroAnimFrame <= 22.0)) {
                 FUN_005e7f98(0x4008000000000000,uVar8 - 0x310,&g_heroMtx);
@@ -26338,10 +26338,10 @@ LAB_000b68e8:
               g_heroAnimSpeed = 1.0;
             }
             if (g_framesNotGrounded == 0) {
-              Hero_AddGravity(DAT_0071f418 * 54.0,&g_heroVelocity,&g_heroVelocity);
+              Hero_AddGravity(g_FrameTimeSq * 54.0,&g_heroVelocity,&g_heroVelocity);
             }
             else {
-              Hero_AddGravity(DAT_0071f418 * 25.0,&g_heroVelocity,(float *)&DAT_00969e00);
+              Hero_AddGravity(g_FrameTimeSq * 25.0,&g_heroVelocity,(float *)&DAT_00969e00);
               Hero_WallSloopMotion();
             }
             goto LAB_000b703c;
@@ -26353,19 +26353,19 @@ LAB_000b5dac:
           g_heroIdealSpeed = (float)dVar30;
           dVar28 = 12.600000381469727;
           if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
-            fVar36 = Delt(g_heroIdealSpeed,DAT_0071f418 * 12.6,&g_storedNeutralSpeed);
+            fVar36 = Delt(g_heroIdealSpeed,g_FrameTimeSq * 12.6,&g_storedNeutralSpeed);
           }
           else {
             fVar36 = Delt(g_heroIdealSpeed,(float)dVar30,&g_storedNeutralSpeed);
           }
           FUN_005e7e70((double)fVar36,&g_heroVelocity);
-          Hero_ApplyTaper((float)((double)DAT_0071f418 * dVar28));
+          Hero_ApplyTaper((float)((double)g_FrameTimeSq * dVar28));
           Hero_KneeBumpMotion(0);
           if (g_framesNotGrounded == 0) {
-            Hero_AddGravity(DAT_0071f418 * 54.0,&g_heroVelocity,&g_heroVelocity);
+            Hero_AddGravity(g_FrameTimeSq * 54.0,&g_heroVelocity,&g_heroVelocity);
           }
           else {
-            Hero_AddGravity(DAT_0071f418 * 25.0,&g_heroVelocity,(float *)&DAT_00969e00);
+            Hero_AddGravity(g_FrameTimeSq * 25.0,&g_heroVelocity,(float *)&DAT_00969e00);
             Hero_WallSloopMotion();
           }
           goto LAB_000b703c;
@@ -26376,7 +26376,7 @@ LAB_000b5dac:
             g_heroIdealSpeed = 0.0;
             dVar28 = 12.600000381469727;
             if (0.0 <= g_storedNeutralSpeed) {
-              Delt(0.0,DAT_0071f418 * 12.6,&g_storedNeutralSpeed);
+              Delt(0.0,g_FrameTimeSq * 12.6,&g_storedNeutralSpeed);
             }
             else {
               Delt(0.0,0.0,&g_storedNeutralSpeed);
@@ -26394,7 +26394,7 @@ LAB_000b5dac:
               Hero_Turn3D(DAT_0071f40c * 0.01,DAT_0071f40c * 0.2,g_FrameTime * 1.2217305);
             }
             FUN_005e7e70(&g_heroVelocity);
-            Hero_ApplyTaper((float)((double)DAT_0071f418 * dVar28));
+            Hero_ApplyTaper((float)((double)g_FrameTimeSq * dVar28));
             bVar19 = false;
             if ((4.0 < g_heroAnimFrame) && (g_heroAnimFrame - 4.0 <= DAT_0096a78c)) {
               bVar19 = true;
@@ -26417,10 +26417,10 @@ LAB_000b5dac:
               } while (iVar10 < 2);
             }
             if (g_framesNotGrounded == 0) {
-              Hero_AddGravity(DAT_0071f418 * 54.0,&g_heroVelocity,&g_heroVelocity);
+              Hero_AddGravity(g_FrameTimeSq * 54.0,&g_heroVelocity,&g_heroVelocity);
             }
             else {
-              Hero_AddGravity(DAT_0071f418 * 25.0,&g_heroVelocity,(float *)&DAT_00969e00);
+              Hero_AddGravity(g_FrameTimeSq * 25.0,&g_heroVelocity,(float *)&DAT_00969e00);
               Hero_WallSloopMotion();
             }
           }
@@ -26441,7 +26441,7 @@ LAB_000b5dac:
             dVar30 = 0.0;
             g_heroIdealSpeed = 0.0;
             FUN_005e7e70(&g_heroVelocity);
-            Hero_ApplyTaper(DAT_0071f418 * 12.6);
+            Hero_ApplyTaper(g_FrameTimeSq * 12.6);
             if (DAT_0096a77c == 0) {
               dVar34 = (double)cosf(g_heroRotation.z);
               local_330 = (float)dVar34;
@@ -26494,10 +26494,10 @@ LAB_000b5dac:
                   g_heroIdealSpeed = g_FrameTime * 21.0;
                 }
                 if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
-                  Delt(g_heroIdealSpeed,DAT_0071f418 * 140.0,&g_storedNeutralSpeed);
+                  Delt(g_heroIdealSpeed,g_FrameTimeSq * 140.0,&g_storedNeutralSpeed);
                 }
                 else {
-                  Delt(g_heroIdealSpeed,DAT_0071f418 * 180.0,&g_storedNeutralSpeed);
+                  Delt(g_heroIdealSpeed,g_FrameTimeSq * 180.0,&g_storedNeutralSpeed);
                 }
                 Hero_ThrustToMotion(99999.0);
               }
@@ -26507,19 +26507,19 @@ LAB_000b5dac:
                 g_heroIdealSpeed = g_FrameTime * 30.0;
               }
               if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
-                Delt(g_heroIdealSpeed,DAT_0071f418 * 120.0,&g_storedNeutralSpeed);
+                Delt(g_heroIdealSpeed,g_FrameTimeSq * 120.0,&g_storedNeutralSpeed);
               }
               else {
-                Delt(g_heroIdealSpeed,DAT_0071f418 * 150.0,&g_storedNeutralSpeed);
+                Delt(g_heroIdealSpeed,g_FrameTimeSq * 150.0,&g_storedNeutralSpeed);
               }
               Hero_ThrustToMotion(99999.0);
             }
             Hero_KneeBumpMotion(1);
             if (g_framesNotGrounded == 0) {
-              Hero_AddGravity(DAT_0071f418 * 54.0,&g_heroVelocity,&g_heroVelocity);
+              Hero_AddGravity(g_FrameTimeSq * 54.0,&g_heroVelocity,&g_heroVelocity);
             }
             else {
-              Hero_AddGravity(DAT_0071f418 * 25.0,&g_heroVelocity,(float *)&DAT_00969e00);
+              Hero_AddGravity(g_FrameTimeSq * 25.0,&g_heroVelocity,(float *)&DAT_00969e00);
             }
             Hero_EdgeStop(0x400d9999a0000000,dVar30);
           }
@@ -26540,7 +26540,7 @@ LAB_000b5dac:
             Hero_AddGravity(0.004,&g_heroVelocity,&g_heroVelocity);
           }
           else {
-            Hero_AddGravity(DAT_0071f418 * 24.0,&g_heroVelocity,(float *)&DAT_00969df0);
+            Hero_AddGravity(g_FrameTimeSq * 24.0,&g_heroVelocity,(float *)&DAT_00969df0);
           }
           goto LAB_000b703c;
         }
@@ -26637,14 +26637,14 @@ LAB_000b4328:
         if ((g_heroState == MOVEMENT_JUMP) &&
            (iVar15 = idol::GetAnimDuration(4), iVar10 < DAT_0096a100 + iVar15)) {
           local_c8 = (ulonglong)g_heroStateTimer;
-          Hero_ForwardThrust(DAT_0071f418 * 16.0 * (float)(longlong)local_c8,&g_heroVelocity,
+          Hero_ForwardThrust(g_FrameTimeSq * 16.0 * (float)(longlong)local_c8,&g_heroVelocity,
                              &g_heroVelocity);
         }
         iVar10 = g_heroStateTimer;
         if ((g_heroState == HELI_PACK_FWD_JUMP) &&
            (iVar15 = idol::GetAnimDuration(0x22), iVar10 < iVar15)) {
           local_c8 = (ulonglong)g_heroStateTimer;
-          Hero_ForwardThrust(DAT_0071f418 * 53.0 * (float)(longlong)local_c8,&g_heroVelocity,
+          Hero_ForwardThrust(g_FrameTimeSq * 53.0 * (float)(longlong)local_c8,&g_heroVelocity,
                              &g_heroVelocity);
         }
         iVar10 = g_heroStateTimer;
@@ -26816,7 +26816,7 @@ LAB_000b4328:
                 AccelDelt(1.2217305,DAT_0071f40c * 0.007,DAT_0071f40c * 0.3,
                                     g_FrameTime * 0.5235988,(float *)&DAT_0096a55c,
                                     0x720000,(float *)&DAT_0096a538);
-                fVar36 = Delt(0.0,DAT_0071f418 * 10.0,&DAT_0096a548);
+                fVar36 = Delt(0.0,g_FrameTimeSq * 10.0,&DAT_0096a548);
                 dVar30 = (double)fVar36;
               }
               else {
@@ -26828,7 +26828,7 @@ LAB_000b4328:
                 AccelDelt(1.2217305,DAT_0071f40c * 0.01,DAT_0071f40c * 0.3,
                                     g_FrameTime * 0.6981317,(float *)&DAT_0096a55c,1,
                                     (float *)&DAT_0096a538);
-                fVar36 = Delt(g_FrameTime * 11.0,DAT_0071f418 * 20.0,
+                fVar36 = Delt(g_FrameTime * 11.0,g_FrameTimeSq * 20.0,
                                         &DAT_0096a548);
                 if (DAT_0096a5a4 == 0) {
                   dVar30 = (double)FastDecTimerS32((double)fVar36,&DAT_0096a544);
@@ -26847,28 +26847,28 @@ LAB_000b4328:
                   FUN_005e7e98(&DAT_0096a460,&g_heroGroundNormal);
                   FUN_005e7f98(uVar7,&DAT_0096a460,&DAT_0096a460);
                 }
-                Hero_Turn3D_XYZ((double)(DAT_0071f418 * 52.35988),
-                                (double)(DAT_0071f418 * 0.0034906585),0,&DAT_0096a460,uVar8 - 0x1d0)
+                Hero_Turn3D_XYZ((double)(g_FrameTimeSq * 52.35988),
+                                (double)(g_FrameTimeSq * 0.0034906585),0,&DAT_0096a460,uVar8 - 0x1d0)
                 ;
               }
               else if (DAT_0096a56d == '\0') {
                 FUN_005e7e70(dVar30,&DAT_0096a460);
                 DAT_0096a468 = 0x3f800000;
-                Hero_Turn3D_XYZ((double)(DAT_0071f418 * 43.633232),(double)(DAT_0071f40c * 0.2),0,
+                Hero_Turn3D_XYZ((double)(g_FrameTimeSq * 43.633232),(double)(DAT_0071f40c * 0.2),0,
                                 &DAT_0096a460,uVar8 - 0x1d0);
               }
               if (DAT_00969f37 == '\0') {
-                Delt(g_FrameTime * 15.0,DAT_0071f418 * 17.0,&DAT_0096a53c);
+                Delt(g_FrameTime * 15.0,g_FrameTimeSq * 17.0,&DAT_0096a53c);
               }
               else {
-                Delt(0.0,(float)((double)DAT_0071f418 * dVar28),&DAT_0096a53c);
+                Delt(0.0,(float)((double)g_FrameTimeSq * dVar28),&DAT_0096a53c);
               }
               g_heroIdealSpeed = DAT_0096a53c + DAT_0096a548;
               if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
-                Delt(g_heroIdealSpeed,DAT_0071f418 * 36.0,&g_storedNeutralSpeed);
+                Delt(g_heroIdealSpeed,g_FrameTimeSq * 36.0,&g_storedNeutralSpeed);
               }
               else {
-                Delt(g_heroIdealSpeed,DAT_0071f418 * 36.0,&g_storedNeutralSpeed);
+                Delt(g_heroIdealSpeed,g_FrameTimeSq * 36.0,&g_storedNeutralSpeed);
               }
               if (g_framesNotGrounded == 0) {
                 DAT_0096a554 = g_heroRotation.z;
@@ -26983,7 +26983,7 @@ LAB_000b4328:
               }
               if (((DAT_0096a57c == 0) && (sVar17 = idol::GetAnimDuration(5), sVar16 < sVar17)) &&
                  (g_heroGroundDist < 0.5)) {
-                DAT_00969dc8 = DAT_00969dc8 - DAT_0071f418 * 20.0;
+                DAT_00969dc8 = DAT_00969dc8 - g_FrameTimeSq * 20.0;
               }
               if (g_heroPosition.z < g_heroGroundZ) {
                 g_heroPosition.z = g_heroGroundZ;
@@ -27016,11 +27016,11 @@ LAB_000b4328:
               dVar28 = (double)FUN_005e7ebc(&g_heroVelocity);
               local_104 = (float)dVar28;
               dVar28 = 0.0;
-              Delt(0.0,DAT_0071f418 * 15.0,&local_104);
+              Delt(0.0,g_FrameTimeSq * 15.0,&local_104);
               FUN_005e84c0((double)local_104,&g_heroVelocity,&g_heroVelocity);
               puVar20 = &DAT_00969e00;
-              dVar30 = (double)(DAT_0071f418 * 27.0);
-              Hero_AddGravity(DAT_0071f418 * 27.0,&g_heroVelocity,(float *)&DAT_00969e00);
+              dVar30 = (double)(g_FrameTimeSq * 27.0);
+              Hero_AddGravity(g_FrameTimeSq * 27.0,&g_heroVelocity,(float *)&DAT_00969e00);
               dVar34 = -1.0;
               fVar36 = Hero_PredictLand(60.0,(float)dVar30,-1.0);
               iVar10 = FastDoubleToInt((double)fVar36);
@@ -27053,7 +27053,7 @@ LAB_000acc38:
           dVar28 = (double)FUN_005e8030(&g_heroExternalMomentum);
           local_10c = (float)dVar28;
           dVar28 = 0.0;
-          Delt(0.0,DAT_0071f418 * 4.0,&local_10c);
+          Delt(0.0,g_FrameTimeSq * 4.0,&local_10c);
           FUN_005e7f98((double)local_10c,&g_heroExternalMomentum,&g_heroExternalMomentum);
           FUN_005e7e98(&g_heroVelocity,&g_heroExternalMomentum);
           iVar10 = FastDecTimerS32(&DAT_0096a5d0);
@@ -27089,7 +27089,7 @@ LAB_000acc38:
           if (dVar28 < (double)DAT_0096a5dc) {
             DAT_0096a5dc = (float)dVar28;
           }
-          Delt(g_FrameTime * -1.5,DAT_0071f418 * 1.5,&DAT_0096a5dc);
+          Delt(g_FrameTime * -1.5,g_FrameTimeSq * 1.5,&DAT_0096a5dc);
           DAT_00969dc8 = DAT_0096a5dc;
           goto LAB_000b703c;
         }
@@ -27156,7 +27156,7 @@ LAB_000acc38:
             dVar34 = (double)MB_randRangeFloat
                                        (g_FrameTime * 3.0,g_FrameTime * 5.0);
             local_4d8 = (float)dVar34;
-            local_4d4 = DAT_0071f418 * -35.0;
+            local_4d4 = g_FrameTimeSq * -35.0;
             SpawnPart_25(uVar8 - 0x4f0,uVar8 - 0x4e0,0);
           }
           puVar20 = &DAT_0096a2c0;
@@ -27194,7 +27194,7 @@ LAB_000acc38:
               Hero_Turn3D(DAT_0071f40c * 0.018,DAT_0071f40c * 0.2,g_FrameTime * 6.4577184)
               ;
             }
-            fVar36 = Delt(g_FrameTime * 14.0,DAT_0071f418 * 9.0,&DAT_0096a2e4);
+            fVar36 = Delt(g_FrameTime * 14.0,g_FrameTimeSq * 9.0,&DAT_0096a2e4);
             FUN_005e81f0((double)fVar36,&g_heroVelocity,lVar21,&DAT_0096a2c0);
             lVar22 = uVar8 - 0x4b0;
             FUN_005e81f0(lVar22,&DAT_0096a2c0,lVar24);
@@ -27217,7 +27217,7 @@ LAB_000acc38:
           else {
             FUN_005e7e98(&g_heroVelocity,&DAT_00969df0);
             DAT_0096a2e0 = DAT_0096a2e0 + 1;
-            DAT_00969dc8 = DAT_00969dc8 - DAT_0071f418 * 24.0;
+            DAT_00969dc8 = DAT_00969dc8 - g_FrameTimeSq * 24.0;
           }
           goto LAB_000b703c;
         }
@@ -27314,10 +27314,10 @@ LAB_000b1630:
           fVar36 = 17.0;
         }
         if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
-          Delt(g_heroIdealSpeed,DAT_0071f418 * fVar36,&g_storedNeutralSpeed);
+          Delt(g_heroIdealSpeed,g_FrameTimeSq * fVar36,&g_storedNeutralSpeed);
         }
         else {
-          Delt(g_heroIdealSpeed,(float)((double)(DAT_0071f418 * 7.5) * dVar30),
+          Delt(g_heroIdealSpeed,(float)((double)(g_FrameTimeSq * 7.5) * dVar30),
                          &g_storedNeutralSpeed);
         }
         if ((DAT_0096a098 == 0) || (g_onMagnerail != 0)) {
@@ -27331,10 +27331,10 @@ LAB_000b1630:
           Hero_EdgeStop(0x4014000000000000,0x3fc99999a0000000);
         }
         if (g_framesNotGrounded == 0) {
-          Hero_AddGravity(DAT_0071f418 * 54.0,&g_heroVelocity,&g_heroVelocity);
+          Hero_AddGravity(g_FrameTimeSq * 54.0,&g_heroVelocity,&g_heroVelocity);
         }
         else {
-          Hero_AddGravity(DAT_0071f418 * 25.0,&g_heroVelocity,(float *)&DAT_00969e00);
+          Hero_AddGravity(g_FrameTimeSq * 25.0,&g_heroVelocity,(float *)&DAT_00969e00);
           Hero_WallSloopMotion();
         }
         goto LAB_000b703c;
@@ -27345,7 +27345,7 @@ LAB_000b1630:
           param_2 = pMVar4;
         }
         FUN_005e7e70(&g_heroVelocity);
-        Hero_ApplyTaper(DAT_0071f418 * 4.5);
+        Hero_ApplyTaper(g_FrameTimeSq * 4.5);
         Hero_SurfBob();
         dVar30 = 6.108652114868164;
         dVar28 = 0.0;
@@ -27374,8 +27374,8 @@ LAB_000b1630:
           if ((int)g_heroState < 0x78) {
             DAT_0096bd8c = 1;
             dVar28 = 8.726646423339844;
-            Delt(DAT_0096a630,DAT_0071f418 * 8.726646,&DAT_0096a628);
-            Delt(DAT_0096a634,(float)((double)DAT_0071f418 * dVar28),&DAT_0096a62c);
+            Delt(DAT_0096a630,g_FrameTimeSq * 8.726646,&DAT_0096a628);
+            Delt(DAT_0096a634,(float)((double)g_FrameTimeSq * dVar28),&DAT_0096a62c);
             Hero_RotateAroundCG((double)DAT_0096a628,(double)DAT_0096a62c,0);
             dVar28 = (double)FUN_005e7ebc(&g_heroVelocity);
             FUN_005e7ed8((double)(float)(dVar28 * (double)(DAT_0071f408 * -0.100000024 + 1.0)),
@@ -27389,8 +27389,8 @@ LAB_000b1630:
           else if (0x78 < (int)g_heroState) {
             g_heroIdealRotZ = DAT_00969fcc;
             g_heroIdealSpeed = g_FrameTime * 5.5;
-            Hero_JumpTranslation(DAT_0071f418 * 25.0);
-            Hero_AddGravity(DAT_0071f418 * 18.0,&g_heroVelocity,(float *)&DAT_00969e00);
+            Hero_JumpTranslation(g_FrameTimeSq * 25.0);
+            Hero_AddGravity(g_FrameTimeSq * 18.0,&g_heroVelocity,(float *)&DAT_00969e00);
           }
           goto LAB_000b703c;
         }
@@ -27408,13 +27408,13 @@ LAB_000b1630:
         }
 LAB_000b0c58:
         dVar30 = 0.0;
-        Delt(0.0,DAT_0071f418 * 24.0,&g_storedNeutralSpeed);
+        Delt(0.0,g_FrameTimeSq * 24.0,&g_storedNeutralSpeed);
         dVar28 = (double)cosf(DAT_0096a748);
         g_heroVelocity = (float)(dVar28 * (double)g_storedNeutralSpeed);
         dVar28 = (double)FUN_005e8128((double)DAT_0096a748);
         DAT_00969dc4 = (float)(dVar28 * (double)g_storedNeutralSpeed);
         if (dVar30 < (double)g_heroGroundDist) {
-          dVar30 = (double)(DAT_00969df8 - DAT_0071f418 * 25.0);
+          dVar30 = (double)(DAT_00969df8 - g_FrameTimeSq * 25.0);
         }
         DAT_00969dc8 = (float)dVar30;
         dVar28 = (double)FastWrapRot(DAT_0096a748,3.1415927);
@@ -27475,10 +27475,10 @@ LAB_000b0c58:
         if ((double)g_heroPadMagnitude < dVar28) {
           fVar36 = 3.5;
         }
-        fVar36 = DAT_0071f418 * fVar36;
+        fVar36 = g_FrameTimeSq * fVar36;
         if ((DAT_0096afc2 != '\0') &&
-           (fVar36 = DAT_0071f418 * 3.7, (double)g_heroPadMagnitude < dVar28)) {
-          fVar36 = DAT_0071f418 * 1.2;
+           (fVar36 = g_FrameTimeSq * 3.7, (double)g_heroPadMagnitude < dVar28)) {
+          fVar36 = g_FrameTimeSq * 1.2;
         }
         Hero_JumpTranslation(fVar36);
         Hero_SetBankTwistSway();
@@ -27632,7 +27632,7 @@ LAB_000ab3bc:
       if (dVar28 < (double)(float)((double)DAT_00969e4c + dVar28)) {
         dVar34 = dVar28;
       }
-      DAT_0096bf70 = (float)((double)(DAT_0071f418 * 12.0) * dVar34);
+      DAT_0096bf70 = (float)((double)(g_FrameTimeSq * 12.0) * dVar34);
       dVar34 = (double)DAT_0096bf70;
       if ((g_heroMobyPtr->updateId == g_heroMobyPtr->animationId) &&
          (g_heroMobyPtr->animationId != '\x14')) {
@@ -27660,10 +27660,10 @@ LAB_000ab3bc:
       else {
         fVar36 = 1.7;
       }
-      dVar34 = (double)(DAT_0071f418 * fVar36);
+      dVar34 = (double)(g_FrameTimeSq * fVar36);
     }
     else {
-      dVar34 = (double)(DAT_0071f418 * 12.6);
+      dVar34 = (double)(g_FrameTimeSq * 12.6);
     }
     if (g_heroIdealSpeed <= g_storedNeutralSpeed) {
       fVar36 = Delt(g_heroIdealSpeed,(float)dVar34,&g_storedNeutralSpeed);
@@ -27676,15 +27676,15 @@ LAB_000ab3bc:
     if ((DAT_0096afc7 == '\0') || (UnlockableItems.magneboots == '\0')) {
       Hero_KneeBumpMotion(0);
       if (g_framesNotGrounded == 0) {
-        Hero_AddGravity(DAT_0071f418 * 54.0,&g_heroVelocity,&g_heroVelocity);
+        Hero_AddGravity(g_FrameTimeSq * 54.0,&g_heroVelocity,&g_heroVelocity);
       }
       else {
-        Hero_AddGravity(DAT_0071f418 * 25.0,&g_heroVelocity,(float *)&DAT_00969e00);
+        Hero_AddGravity(g_FrameTimeSq * 25.0,&g_heroVelocity,(float *)&DAT_00969e00);
         Hero_WallSloopMotion();
       }
     }
     else if (g_heroGroundDist <= 0.2) {
-      Hero_AddGravity(DAT_0071f418 * 54.0,&g_heroVelocity,&g_heroVelocity);
+      Hero_AddGravity(g_FrameTimeSq * 54.0,&g_heroVelocity,&g_heroVelocity);
       if (g_standingOnMoby != 0) {
         FUN_005e7e98(&g_heroPosition,&g_heroGroundPoint);
         g_heroGroundDist = (float)dVar30;
@@ -27692,7 +27692,7 @@ LAB_000ab3bc:
       }
     }
     else {
-      Hero_AddGravity(DAT_0071f418 * 24.0,&g_heroVelocity,(float *)&DAT_00969df0);
+      Hero_AddGravity(g_FrameTimeSq * 24.0,&g_heroVelocity,(float *)&DAT_00969df0);
     }
     if (DAT_0096bfd4 != 0) {
       Hero_SpawnLavaDeathParts();
@@ -27879,7 +27879,7 @@ int TransitionMovement(int state,int force)
                 DAT_0096a68c = (float)dVar14;
                 dVar14 = (double)FUN_005e8548(&g_heroPosition,DAT_0096a674 + 0x10);
                 DAT_0096a684 = (float)dVar14;
-                DAT_0096a690 = DAT_0071f418 * 27.0;
+                DAT_0096a690 = g_FrameTimeSq * 27.0;
                 if (DAT_0096bd74 == 4) {
                   DAT_0096a690 = DAT_0096a180;
                 }
@@ -28215,7 +28215,7 @@ int TransitionMovement(int state,int force)
         if (state == 0x45) {
           g_heroStateType = 2;
           g_HeroRequestedCamType = 0;
-          DAT_0096a624 = DAT_0071f418 * 7.0;
+          DAT_0096a624 = g_FrameTimeSq * 7.0;
           FUN_005e7e98(&g_heroVelocity,&DAT_00969df0);
           if (force != 0) {
             iVar10 = idol::GetAnimDuration(8);
@@ -28294,7 +28294,7 @@ int TransitionMovement(int state,int force)
             g_HeroRequestedCamType = 8;
             DAT_0096bd87 = '\x01';
             FUN_005e7e98(&DAT_0096a450,&g_heroMtx);
-            DAT_0096a540 = DAT_0071f418 * 18.0;
+            DAT_0096a540 = g_FrameTimeSq * 18.0;
             if (force != 0) {
               iVar10 = idol::GetAnimDuration(5);
               Hero_TransAnim((float)(longlong)iVar10,0x52,0);
@@ -28617,7 +28617,7 @@ LAB_000b9018:
             g_HeroRequestedCamType = 0x50;
             DAT_0096a1a4 = 0;
             DAT_0096a198 = 0;
-            DAT_0096a190 = DAT_0071f418 * 100.0;
+            DAT_0096a190 = g_FrameTimeSq * 100.0;
             DAT_0096a1a0 = 0x421c0000;
             if (force != 0) {
               iVar10 = idol::GetAnimDuration(6);
@@ -28904,7 +28904,7 @@ LAB_000bbed8:
         else if (state == 0x18) {
           g_heroStateType = 3;
           g_HeroRequestedCamType = 0xd;
-          DAT_0096a1cc = DAT_0071f418 * 24.0;
+          DAT_0096a1cc = g_FrameTimeSq * 24.0;
           DAT_0096a1d0 = g_heroPosition.z;
           if (DAT_0096bd74 == 4) {
             DAT_0096a1cc = DAT_0096a180;
@@ -29017,7 +29017,7 @@ LAB_000bbed8:
         if (state == 0x4a) {
           g_heroStateType = 3;
           g_HeroRequestedCamType = 0xd;
-          DAT_0096a1cc = DAT_0071f418 * 12.0;
+          DAT_0096a1cc = g_FrameTimeSq * 12.0;
           DAT_0096a1d0 = g_heroPosition.z;
           if (DAT_0096bd74 == 4) {
             DAT_0096a1cc = DAT_0096a180;
@@ -29128,8 +29128,8 @@ LAB_000bbed8:
         else if (state == 0x55) {
           g_heroStateType = 2;
           g_HeroRequestedCamType = 0;
-          DAT_0096a620 = DAT_0071f418 * 24.0;
-          DAT_0096a624 = DAT_0071f418 * 7.0;
+          DAT_0096a620 = g_FrameTimeSq * 24.0;
+          DAT_0096a624 = g_FrameTimeSq * 7.0;
           FUN_005e7e98(&g_heroVelocity,&DAT_00969df0);
           if (force != 0) {
             iVar10 = idol::GetAnimDuration(7);
@@ -29190,8 +29190,8 @@ LAB_000bbed8:
         if (state < 0x5d) {
           g_heroStateType = 2;
           g_HeroRequestedCamType = 0;
-          DAT_0096a620 = DAT_0071f418 * 24.0;
-          DAT_0096a624 = DAT_0071f418 * 7.0;
+          DAT_0096a620 = g_FrameTimeSq * 24.0;
+          DAT_0096a624 = g_FrameTimeSq * 7.0;
           FUN_005e7e98(&g_heroVelocity,&DAT_00969df0);
           if (force != 0) {
             if (g_heroGroundDist <= 2.5) {
@@ -29403,8 +29403,8 @@ LAB_000bbed8:
 LAB_000ba4dc:
         g_heroStateType = 2;
         g_HeroRequestedCamType = 0;
-        DAT_0096a620 = DAT_0071f418 * 24.0;
-        DAT_0096a624 = DAT_0071f418 * 7.0;
+        DAT_0096a620 = g_FrameTimeSq * 24.0;
+        DAT_0096a624 = g_FrameTimeSq * 7.0;
         if (g_heroState == DEATH_FALLING) {
           if (g_heroType == '\0') {
             iVar10 = Hero_PlaySound(0x17,0x20);
@@ -29658,7 +29658,7 @@ LAB_000ba14c:
         }
         FastMemSet(&DAT_0096a3a0,0,0x210);
         DAT_0096a570 = g_MobyInstance + *(int *)(*(int *)(iVar10 + 0x78) + 0x28);
-        DAT_0096a540 = DAT_0071f418 * 22.0;
+        DAT_0096a540 = g_FrameTimeSq * 22.0;
         DAT_0096a560 = -1;
         DAT_0096a55c = 0x3f9c61aa;
         g_heroBoardMoby = iVar10;
@@ -29833,16 +29833,16 @@ LAB_000ba7d0:
   DAT_0096a0fe = 0;
   DAT_0096a0f0 = g_heroPosition.z;
   g_DustHoverState = 0;
-  DAT_0096a180 = DAT_0071f418 * 29.7;
+  DAT_0096a180 = g_FrameTimeSq * 29.7;
   dVar15 = 0.0;
   DAT_0096a0fc = 0;
   DAT_0096a0c8 = 0xffffffff;
   DAT_0096a108 = 0;
   DAT_0096a10c = 0;
   dVar17 = 20.0;
-  DAT_0096a160 = DAT_0071f418 * 20.0;
+  DAT_0096a160 = g_FrameTimeSq * 20.0;
   dVar18 = 11.0;
-  DAT_0096a164 = DAT_0071f418 * 11.0;
+  DAT_0096a164 = g_FrameTimeSq * 11.0;
   dVar14 = 2.5;
   DAT_0096a184 = 0;
   DAT_0096a188 = (ushort)DAT_0096afc2;
@@ -29937,7 +29937,7 @@ LAB_000ba7d0:
       }
     }
     DAT_0096a18a = idol::GetAnimDuration(0x96);
-    DAT_0096a180 = DAT_0071f418 * 15.0;
+    DAT_0096a180 = g_FrameTimeSq * 15.0;
     DAT_0096a17c = idol::GetAnimDuration(5);
     DAT_0096a17e = idol::GetAnimDuration(4);
   }
@@ -29971,12 +29971,12 @@ LAB_000ba7d0:
     DAT_0096a16c = 2.45;
     DAT_0096a178 = idol::GetAnimDuration(0x11);
     g_heroStateType = 0xf;
-    DAT_0096a180 = DAT_0071f418 * 27.0;
+    DAT_0096a180 = g_FrameTimeSq * 27.0;
     DAT_0096a2a4 = 0;
     if (DAT_0096afc8 != '\0') {
       DAT_0096a110 = DAT_0096a110 + 4.7;
       DAT_0096a168 = DAT_0096a168 + 4.7;
-      DAT_0096a180 = (float)((double)DAT_0071f418 * dVar16);
+      DAT_0096a180 = (float)((double)g_FrameTimeSq * dVar16);
       DAT_0096a16c = DAT_0096a16c + 4.7;
       dVar14 = (double)FUN_005e8548(&g_heroPosition,local_d0);
       if (dVar14 < 10.0) {
@@ -29998,7 +29998,7 @@ LAB_000ba7d0:
     DAT_0096a178 = idol::GetAnimDuration(10);
     g_heroStateType = 0xf;
     DAT_0096a2a4 = 0;
-    DAT_0096a180 = DAT_0071f418 * 24.0;
+    DAT_0096a180 = g_FrameTimeSq * 24.0;
   }
   else if (g_heroState == MOVEMENT_JUMP) {
     dVar14 = 1.0;
@@ -30027,9 +30027,9 @@ LAB_000ba7d0:
     DAT_0096a168 = (float)dVar14;
     DAT_0096a16c = 4.3;
     DAT_0096a178 = idol::GetAnimDuration(0xf);
-    DAT_0096a180 = DAT_0071f418 * 30.0;
+    DAT_0096a180 = g_FrameTimeSq * 30.0;
     DAT_0096a0f4 = g_FrameTime * 4.363323;
-    DAT_0096a0d8 = DAT_0071f418 * 50.0;
+    DAT_0096a0d8 = g_FrameTimeSq * 50.0;
     DAT_0096a174 = 2.0;
     DAT_0096a104 = g_FrameTime * 4.0;
   }
@@ -30044,8 +30044,8 @@ LAB_000ba7d0:
     DAT_0096a168 = (float)dVar14;
     DAT_0096a16c = 1.35;
     DAT_0096a178 = idol::GetAnimDuration(0xe);
-    DAT_0096a180 = DAT_0071f418 * 25.0;
-    DAT_0096a164 = DAT_0071f418 * 50.0;
+    DAT_0096a180 = g_FrameTimeSq * 25.0;
+    DAT_0096a164 = g_FrameTimeSq * 50.0;
     DAT_0096a104 = g_FrameTime * 2.0;
   }
   else if (g_heroState == HELI_PACK_FWD_JUMP) {
@@ -30059,7 +30059,7 @@ LAB_000ba7d0:
     DAT_0096a168 = (float)dVar14;
     DAT_0096a16c = 1.95;
     DAT_0096a178 = idol::GetAnimDuration(0xe);
-    DAT_0096a180 = (float)((double)DAT_0071f418 * dVar18);
+    DAT_0096a180 = (float)((double)g_FrameTimeSq * dVar18);
     DAT_0096a18e = 1;
     DAT_0096a17a = idol::GetAnimDuration(0x78);
     DAT_0096a18a = idol::GetAnimDuration(0x5a);
@@ -30088,9 +30088,9 @@ LAB_000ba7d0:
     if (1.4 < g_heroGroundDist) {
       DAT_0096a0d4 = (float)((double)g_FrameTime * dVar16);
     }
-    DAT_0096a180 = DAT_0071f418 * 8.5;
-    DAT_0096a160 = DAT_0071f418 * 44.0;
-    DAT_0096a164 = DAT_0071f418 * 50.0;
+    DAT_0096a180 = g_FrameTimeSq * 8.5;
+    DAT_0096a160 = g_FrameTimeSq * 44.0;
+    DAT_0096a164 = g_FrameTimeSq * 50.0;
   }
   else if (g_heroState == EDGE_JUMP) {
     dVar14 = 2.0;
@@ -30106,7 +30106,7 @@ LAB_000ba7d0:
     DAT_0096a13c = (float)dVar15;
     DAT_0096a174 = 1.0;
     DAT_0096bd87 = '\x01';
-    DAT_0096a180 = DAT_0071f418 * 25.0;
+    DAT_0096a180 = g_FrameTimeSq * 25.0;
     DAT_0096a18e = 1;
   }
   else if (g_heroState == CLANK_EDGE_JUMP) {
@@ -30121,7 +30121,7 @@ LAB_000ba7d0:
     DAT_0096a16c = 1.59;
     DAT_0096a178 = idol::GetAnimDuration(1);
     DAT_0096a13c = (float)dVar15;
-    DAT_0096a180 = DAT_0071f418 * 28.0;
+    DAT_0096a180 = g_FrameTimeSq * 28.0;
   }
   else if (g_heroState == WALL_JUMP) {
     dVar14 = 3.299999952316284;
@@ -30135,7 +30135,7 @@ LAB_000ba7d0:
     DAT_0096a16c = 3.35;
     DAT_0096a178 = idol::GetAnimDuration(0xc);
     DAT_0096a18a = idol::GetAnimDuration(0x50);
-    DAT_0096a180 = DAT_0071f418 * 29.0;
+    DAT_0096a180 = g_FrameTimeSq * 29.0;
     FUN_005e7e98(&DAT_0096a150,&DAT_0096a140);
     DAT_0096bf94 = 1;
     DAT_0096bd87 = '\x01';
@@ -32428,8 +32428,8 @@ LAB_000c3190:
             DAT_0096a668 = 1;
           }
           TransitionMovement(0x2d,1);
-          DAT_0096a624 = DAT_0071f418 * 7.0;
-          DAT_0096a620 = DAT_0071f418 * 27.0;
+          DAT_0096a624 = g_FrameTimeSq * 7.0;
+          DAT_0096a620 = g_FrameTimeSq * 27.0;
         }
         goto LAB_000c81a8;
       }
@@ -32761,7 +32761,7 @@ LAB_000c1c40:
       else if (g_heroState == GRINDRAIL_DAMAGE) {
         dVar26 = 0.0;
         if (0.0 < DAT_00969dc8) {
-          Hero_GetJumpPeak(DAT_0071f418 * 23.0,&g_heroPosition.x,&g_heroVelocity,0x720000,&local_fc)
+          Hero_GetJumpPeak(g_FrameTimeSq * 23.0,&g_heroPosition.x,&g_heroVelocity,0x720000,&local_fc)
           ;
           local_b0 = (ulonglong)local_fc;
           Hero_ScaleAnim(9.0,(float)(longlong)local_b0,0.5,-1.0);
@@ -33537,7 +33537,7 @@ LAB_000c03e4:
       }
       if (g_heroState == HYPER_STRIKE) {
         dVar26 = -1.0;
-        fVar34 = Hero_PredictLand(60.0,DAT_0071f418 * 130.0,-1.0);
+        fVar34 = Hero_PredictLand(60.0,g_FrameTimeSq * 130.0,-1.0);
         iVar15 = FastDoubleToInt((double)fVar34);
         if (DAT_0096a750 == 0.0) {
           g_heroAnimSpeed = 0.33;
@@ -34159,8 +34159,8 @@ LAB_000c3ffc:
             Hero_TransAnim((float)(longlong)local_b0,10,0);
           }
           g_HeroRequestedCamType = 0;
-          DAT_0096a624 = DAT_0071f418 * 42.0;
-          DAT_0096a620 = DAT_0071f418 * 29.0;
+          DAT_0096a624 = g_FrameTimeSq * 42.0;
+          DAT_0096a620 = g_FrameTimeSq * 29.0;
         }
         else {
           TransitionMovement(0,0);

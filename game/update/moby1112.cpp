@@ -359,7 +359,7 @@ void UpdateMoby_1112(void *this_,MobyInstance *moby)
         dVar28 = (double)((float)(dVar28 + 0.7853981852531433) * fVar7 + fVar3);
       }
       OrganicDeltAngSpeed
-                (dVar28,(double)(DAT_0071f418 * 6.2831855),
+                (dVar28,(double)(g_FrameTimeSq * 6.2831855),
                  (double)(g_FrameTime * 3.1415927),
                  (double)(g_FrameTime * 6.2831855),this_,&DAT_00720000,uVar25 + 0xa4);
       fVar2 = *(float *)(uVar10 + 0x80);
@@ -611,7 +611,7 @@ void UpdateMoby_1112(void *this_,MobyInstance *moby)
     dVar35 = 3.1415927410125732;
     dVar34 = 6.2831854820251465;
     OrganicDeltAngSpeed
-              (dVar28,(double)(DAT_0071f418 * 3.1415927),(double)(g_FrameTime * 3.1415927)
+              (dVar28,(double)(g_FrameTimeSq * 3.1415927),(double)(g_FrameTime * 3.1415927)
                ,(double)(g_FrameTime * 6.2831855),this_,uVar22,uVar25 + 0xa4);
     fVar2 = *(float *)((int)this_ + 0x14) - *(float *)((int)puVar14 + 0x104);
     fVar3 = *(float *)((int)this_ + 0x10) - *(float *)(puVar14 + 0x20);
@@ -619,7 +619,7 @@ void UpdateMoby_1112(void *this_,MobyInstance *moby)
     dVar33 = ABS((double)fVar7);
     fVar3 = SQRT(fVar3 * fVar3 + fVar2 * fVar2);
     fVar2 = *(float *)((int)this_ + 0x44);
-    dVar29 = (double)DAT_0071f418;
+    dVar29 = (double)g_FrameTimeSq;
     dVar31 = (double)g_FrameTime;
     *(float *)(puVar14 + 0x2b) = fVar7;
     dVar32 = ABS((double)fVar3);
@@ -711,7 +711,7 @@ void UpdateMoby_1112(void *this_,MobyInstance *moby)
     dVar34 = (double)SQRT((float)(dVar28 * dVar28 +
                                  (double)(float)(dVar29 * dVar29 + (double)(float)(dVar31 * dVar31))
                                  ));
-    dVar33 = (double)(float)((double)(DAT_0071f418 * 30.0) / dVar34);
+    dVar33 = (double)(float)((double)(g_FrameTimeSq * 30.0) / dVar34);
     dVar32 = dVar37;
     if (dVar37 - dVar34 < 0.0) {
       dVar32 = (double)(float)(dVar31 * dVar33);

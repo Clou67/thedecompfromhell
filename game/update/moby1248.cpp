@@ -210,7 +210,7 @@ undefined4 * UpdateMoby_1248(MobyInstance *moby)
   }
   else if (bVar2 == 4) {
     OrganicDelt
-              (1.0,DAT_0071f418 * 12.0,DAT_0071f418 * 24.0,g_FrameTime * 12.0,
+              (1.0,g_FrameTimeSq * 12.0,g_FrameTimeSq * 24.0,g_FrameTime * 12.0,
                (float *)(piVar6 + 2),0x720000,(float *)(piVar6 + 3));
     *(float *)(*piVar6 + 0x18) = (float)piVar6[2] * 0.25 + (moby->pos).z;
     *(float *)(piVar6[1] + 0x18) = (float)piVar6[2] * 0.25 + (moby->pos).z;
@@ -230,7 +230,7 @@ undefined4 * UpdateMoby_1248(MobyInstance *moby)
   else if (bVar2 == 3) {
     dVar15 = 1.0;
     OrganicDelt
-              (1.0,DAT_0071f418 * 10.0,DAT_0071f418 * 20.0,g_FrameTime * 10.0,
+              (1.0,g_FrameTimeSq * 10.0,g_FrameTimeSq * 20.0,g_FrameTime * 10.0,
                (float *)(piVar6 + 2),0x720000,(float *)(piVar6 + 3));
     fVar1 = DAT_0076d374 * 0.017453292 * (float)(dVar15 - (double)(float)piVar6[2]);
     *(float *)(*piVar6 + 0x44) = fVar1;
@@ -247,7 +247,7 @@ undefined4 * UpdateMoby_1248(MobyInstance *moby)
   }
   else if (bVar2 == 2) {
     OrganicDelt
-              (1.0,DAT_0071f418 * 8.0,DAT_0071f418 * 16.0,g_FrameTime * 8.0,
+              (1.0,g_FrameTimeSq * 8.0,g_FrameTimeSq * 16.0,g_FrameTime * 8.0,
                (float *)(piVar6 + 2),0x720000,(float *)(piVar6 + 3));
     fVar1 = (moby->transform).v0.y;
     fVar3 = (moby->transform).v0.x;

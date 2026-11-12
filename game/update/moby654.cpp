@@ -530,7 +530,7 @@ void M654_00402f30(int param_1,float *param_2,undefined4 *param_3)
             ((Cuboids[iVar9].imatrix.v2.y * (g_heroPosition.z - Cuboids[iVar9].pos.z) +
               Cuboids[iVar9].imatrix.v0.y * (g_heroPosition.x - Cuboids[iVar9].pos.x) +
               Cuboids[iVar9].imatrix.v1.y * (g_heroPosition.y - Cuboids[iVar9].pos.y) + 1.0) * 0.5,
-             DAT_0071f418,DAT_0071f418,g_FrameTime * 2.0,(float *)(piVar8 + 7),0x720000,
+             g_FrameTimeSq,g_FrameTimeSq,g_FrameTime * 2.0,(float *)(piVar8 + 7),0x720000,
              (float *)(piVar8 + 8));
   fVar1 = pSVar10->points[0].x;
   fVar2 = (float)piVar8[7];

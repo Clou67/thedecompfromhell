@@ -378,7 +378,7 @@ double UpdateMoby_1235(MobyInstance *moby)
       }
       dVar22 = (double)FastWrapRot((float)dVar22,*(float *)((int)pvVar7 + 0xc4));
       fVar24 = OrganicDeltAng
-                         ((float)dVar22,DAT_0071f418 * 12.566371,DAT_0071f418 * 12.566371,
+                         ((float)dVar22,g_FrameTimeSq * 12.566371,g_FrameTimeSq * 12.566371,
                           g_FrameTime * 12.566371,&(moby->rotation).z,0x720000,
                           (float *)((int)pvVar7 + 0xd0));
       dVar22 = (double)M1235_002184d8((double)fVar24,lVar13);
@@ -395,8 +395,8 @@ double UpdateMoby_1235(MobyInstance *moby)
       moby->state = '\x03';
     }
     fVar24 = OrganicDeltAng
-                       (*(float *)((int)pvVar7 + 0xc4),DAT_0071f418 * 12.566371,
-                        DAT_0071f418 * 12.566371,g_FrameTime * 12.566371,
+                       (*(float *)((int)pvVar7 + 0xc4),g_FrameTimeSq * 12.566371,
+                        g_FrameTimeSq * 12.566371,g_FrameTime * 12.566371,
                         &(moby->rotation).z,0x720000,(float *)((int)pvVar7 + 0xd0));
     dVar22 = (double)fVar24;
   }

@@ -262,7 +262,7 @@ void UpdateMoby_410(MobyInstance *moby)
     if (fVar3 - (float)(dVar6 + (double)*pfVar2) < 0.0) {
       fVar1 = ((float)(dVar6 + (double)*pfVar2) - fVar3) * 0.2 + fVar1;
     }
-    fVar1 = -(DAT_0071f418 * 9.8 - fVar1);
+    fVar1 = -(g_FrameTimeSq * 9.8 - fVar1);
     pfVar2[1] = fVar1;
     (moby->pos).z = (moby->pos).z + fVar1;
     dVar6 = (double)FastWrapRot(pfVar2[2],0.01);

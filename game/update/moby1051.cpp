@@ -378,7 +378,7 @@ void M1051_001a2558(int param_1)
     dVar25 = (double)((float)(dVar28 + dVar32) * fVar4 + fVar1);
   }
   OrganicDeltAng
-            ((float)dVar25,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+            ((float)dVar25,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
              g_FrameTime * 3.1415927,(float *)(param_1 + 0x48),(int)pfVar20,
              (float *)(iVar9 + 0xe0));
   fVar1 = (float)((double)*(float *)(param_1 + 0x14) - dVar34);
@@ -389,10 +389,10 @@ void M1051_001a2558(int param_1)
      (fVar1 = (float)((double)*(float *)(param_1 + 0x14) - (double)g_heroPosition.y),
      fVar2 = (float)((double)*(float *)(param_1 + 0x10) - (double)g_heroPosition.x),
      16.0 <= SQRT(fVar2 * fVar2 + fVar1 * fVar1))) {
-    Delt((float)dVar33,DAT_007407c8 * DAT_0071f418,(float *)(iVar9 + 0xe8));
+    Delt((float)dVar33,DAT_007407c8 * g_FrameTimeSq,(float *)(iVar9 + 0xe8));
   }
   else {
-    Delt(DAT_007407c4 * g_FrameTime,DAT_007407c8 * DAT_0071f418,
+    Delt(DAT_007407c4 * g_FrameTime,DAT_007407c8 * g_FrameTimeSq,
                    (float *)(iVar9 + 0xe8));
   }
   if (*(int *)(iVar9 + 0xe8) == 0) {
@@ -569,7 +569,7 @@ undefined8 M1051_001a2fb0(int param_1)
   }
   else {
     OrganicDelt
-              (1.0,DAT_0071f418 * 0.5,DAT_0071f418 * 0.5,g_FrameTime * 0.5,
+              (1.0,g_FrameTimeSq * 0.5,g_FrameTimeSq * 0.5,g_FrameTime * 0.5,
                (float *)(iVar9 + 0x118),0x720000,(float *)(iVar9 + 0x11c));
     acVar12 = DAT_00969cec;
     fVar3 = *(float *)(param_1 + 0xc4);
@@ -904,7 +904,7 @@ undefined8 M1051_001a3680(int param_1)
   }
   else {
     OrganicDelt
-              (1.0,DAT_0071f418 * 0.5,DAT_0071f418 * 0.5,g_FrameTime * 0.5,
+              (1.0,g_FrameTimeSq * 0.5,g_FrameTimeSq * 0.5,g_FrameTime * 0.5,
                (float *)(iVar9 + 0x118),0x720000,(float *)(iVar9 + 0x11c));
     acVar12 = DAT_00969cec;
     fVar3 = *(float *)(param_1 + 0xc4);
@@ -1242,7 +1242,7 @@ undefined8 M1051_001a3d50(int param_1)
   else {
     dVar29 = 2.0;
     OrganicDelt
-              (1.0,DAT_0071f418 * 3.0,DAT_0071f418 * 3.0,g_FrameTime * 2.0,
+              (1.0,g_FrameTimeSq * 3.0,g_FrameTimeSq * 3.0,g_FrameTime * 2.0,
                (float *)(iVar9 + 0x118),0x720000,(float *)(iVar9 + 0x11c));
     acVar12 = DAT_00969cec;
     fVar3 = *(float *)(param_1 + 0xc4);
@@ -2985,7 +2985,7 @@ void UpdateMoby_1051(MobyInstance *moby)
           dVar46 = (double)((float)(dVar40 + 0.7853981852531433) * fVar3 + fVar4);
         }
         OrganicDeltAng
-                  ((float)dVar46,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+                  ((float)dVar46,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
                    g_FrameTime * 3.1415927,&(moby->rotation).z,0x720000,
                    (float *)((int)pvVar11 + 0xe0));
         if (dVar41 < 0.7853981852531433) {
@@ -3137,7 +3137,7 @@ void UpdateMoby_1051(MobyInstance *moby)
         if (bVar1 == 9) {
           FastDecTimerS32(uVar36 + 0x120);
           OrganicDeltAng
-                    ((moby->rotation).z,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+                    ((moby->rotation).z,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
                      g_FrameTime * 3.1415927,&(moby->rotation).z,0x1a5ed4,
                      (float *)((int)pvVar11 + 0xe0));
           if ((moby->field43_0x70 & 2U) == 0) {
@@ -3311,21 +3311,21 @@ void UpdateMoby_1051(MobyInstance *moby)
           dVar46 = (double)((float)(dVar40 + 0.7853981852531433) * fVar3 + fVar4);
         }
         OrganicDeltAng
-                  ((float)dVar46,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+                  ((float)dVar46,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
                    g_FrameTime * 3.1415927,&(moby->rotation).z,0x1a0000,
                    (float *)((int)pvVar11 + 0xe0));
         pfVar30 = (float *)((int)pvVar11 + 0xe8);
         if ((0.7853981852531433 <= dVar41) || (dVar48 <= (double)DAT_007407cc)) {
           if ((double)DAT_007407d0 <= dVar48) {
-            Delt((float)dVar39,DAT_0071f418 * 8.0,pfVar30);
+            Delt((float)dVar39,g_FrameTimeSq * 8.0,pfVar30);
           }
           else {
-            Delt(-(DAT_007407c0 * g_FrameTime),DAT_007407c8 * DAT_0071f418,
+            Delt(-(DAT_007407c0 * g_FrameTime),DAT_007407c8 * g_FrameTimeSq,
                            pfVar30);
           }
         }
         else {
-          Delt(DAT_007407c0 * g_FrameTime,DAT_007407c8 * DAT_0071f418,pfVar30);
+          Delt(DAT_007407c0 * g_FrameTime,DAT_007407c8 * g_FrameTimeSq,pfVar30);
         }
         dVar46 = (double)(moby->pos).y;
         fVar4 = (float)((double)*(float *)(iVar28 + 0x14) - dVar46);
@@ -3497,7 +3497,7 @@ LAB_001a7bb4:
       }
       if (bVar1 == 2) {
         (moby->pos).z = (moby->pos).z + *(float *)((int)pvVar11 + 0x48);
-        fVar4 = -(DAT_0071f418 * 30.0 - *(float *)((int)pvVar11 + 0x48));
+        fVar4 = -(g_FrameTimeSq * 30.0 - *(float *)((int)pvVar11 + 0x48));
         *(float *)((int)pvVar11 + 0x48) = fVar4;
         uVar2 = moby->animationId;
         fVar3 = moby->animationBlend;

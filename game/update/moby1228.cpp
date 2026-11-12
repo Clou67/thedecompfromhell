@@ -134,7 +134,7 @@ void UpdateMoby_1228(MobyInstance *moby)
   }
   else if (uVar1 == '\x04') {
     fVar8 = OrganicDelt
-                      (0.0,DAT_0071f418 * 10.0,DAT_0071f418 * 10.0,g_FrameTime * 10.0,
+                      (0.0,g_FrameTimeSq * 10.0,g_FrameTimeSq * 10.0,g_FrameTime * 10.0,
                        (float *)(piVar2 + 6),0x720000,(float *)(piVar2 + 7));
     M1228_00210cf0((double)fVar8,moby);
     if (piVar2[6] < 1) {
@@ -200,7 +200,7 @@ LAB_00211328:
   }
   else if (uVar1 == '\x02') {
     fVar8 = OrganicDelt
-                      (4.0,DAT_0071f418 * 10.0,DAT_0071f418 * 10.0,g_FrameTime * 10.0,
+                      (4.0,g_FrameTimeSq * 10.0,g_FrameTimeSq * 10.0,g_FrameTime * 10.0,
                        (float *)(piVar2 + 6),0x720000,(float *)(piVar2 + 7));
     M1228_00210cf0((double)fVar8,moby);
     uVar3 = piVar2[6] >> 0x1f;

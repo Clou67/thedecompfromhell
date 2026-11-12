@@ -1091,7 +1091,7 @@ bool M1448_00280fb8(int param_1,longlong param_2)
   uVar19 = (int)*(uint *)(iVar12 + 0xa4) >> 0x1f;
   if (0x3f4ccccd < (int)((uVar19 >> 1 ^ *(uint *)(iVar12 + 0xa4)) - uVar19)) {
     OrganicDeltAng
-              (3.1415927,DAT_0071f418 * 12.566371,DAT_0071f418 * 12.566371,
+              (3.1415927,g_FrameTimeSq * 12.566371,g_FrameTimeSq * 12.566371,
                g_FrameTime * 6.2831855,(float *)(iVar12 + 0x88),0x280f78,
                (float *)(iVar12 + 0x8c));
     fVar1 = *(float *)(iVar12 + 0xa4);

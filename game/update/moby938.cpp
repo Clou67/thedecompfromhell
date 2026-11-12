@@ -176,7 +176,7 @@ M938_004c2ce8
       (param_1->pos).z = g_CollOutput.ip.z;
       (param_1->pos).w = g_CollOutput.ip.w;
       dVar28 = 0.0;
-      fVar5 = (DAT_0071f418 * 9.7) / fVar4;
+      fVar5 = (g_FrameTimeSq * 9.7) / fVar4;
       dVar24 = dVar28;
       if (0.0 - fVar4 < 0.0) {
         dVar24 = (double)(fVar2 * fVar5);
@@ -401,7 +401,7 @@ M938_004c2ce8
       fVar1 = SQRT(g_CollOutput.normal.z * g_CollOutput.normal.z +
                    g_CollOutput.normal.x * g_CollOutput.normal.x +
                    g_CollOutput.normal.y * g_CollOutput.normal.y);
-      fVar6 = (DAT_0071f418 * 9.7) / fVar1;
+      fVar6 = (g_FrameTimeSq * 9.7) / fVar1;
       dVar24 = dVar28;
       if (0.0 - fVar1 < 0.0) {
         dVar24 = (double)(g_CollOutput.normal.z * fVar6);
@@ -757,7 +757,7 @@ LAB_004c3b14:
       (moby->pos).x = (float)(dVar35 + (double)*pfVar10);
       (moby->pos).y = (float)(dVar32 + (double)pfVar10[1]);
       (moby->pos).z = (float)(dVar37 + (double)pfVar10[2]);
-      pfVar10[2] = -(DAT_0071f418 * 9.8 - pfVar10[2]);
+      pfVar10[2] = -(g_FrameTimeSq * 9.8 - pfVar10[2]);
       iVar22 = MB_damage(lVar24,&DAT_00830000,0);
       if (((iVar22 != 0) && (*(int *)(iVar22 + 0x20) != 0)) &&
          (*(MOBY_OCLASSES *)(*(int *)(iVar22 + 0x20) + 0xa6) != moby->oClass)) {
@@ -1112,7 +1112,7 @@ LAB_004c3b14:
   (moby->pos).x = (moby->pos).x + *pfVar10;
   (moby->pos).y = (moby->pos).y + pfVar10[1];
   (moby->pos).z = (moby->pos).z + pfVar10[2];
-  pfVar10[2] = -(DAT_0071f418 * 9.8 - pfVar10[2]);
+  pfVar10[2] = -(g_FrameTimeSq * 9.8 - pfVar10[2]);
   iVar22 = FastDecTimerS16(uVar29 + 0x14);
   if (iVar22 == 0) {
 LAB_004c44cc:

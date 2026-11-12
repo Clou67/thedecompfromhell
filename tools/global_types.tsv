@@ -335,3 +335,4 @@ g_TieDrawStateSave	u8 NAME[0x400] /* 0xe59c20 */
 g_TieTexStateSave	u8 NAME[0x200] /* 0xe5a020 */
 g_TieDrawPacket	u8 NAME[0x1210] /* 0xe59010: up to g_TieDrawStateSave */
 g_TieTexPacket	u8 NAME[0x3600] /* 0xe5a220 */
+g_FrameTimeSq	float NAME /* 0x71f418: g_FrameTime squared */

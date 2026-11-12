@@ -360,10 +360,10 @@ void UpdateMoby_679(MobyInstance *moby)
               DAT_0096a6b0 = (float)dVar27;
               uVar8 = piVar7[0x18] >> 0x1f;
               if ((int)(FLOAT_ORDER(DAT_0096a6bc)) < (int)((uVar8 >> 1 ^ piVar7[0x18]) - uVar8)) {
-                Delt((float)piVar7[0x18],DAT_0071f418 * 6.0,&DAT_0096a6bc);
+                Delt((float)piVar7[0x18],g_FrameTimeSq * 6.0,&DAT_0096a6bc);
               }
               else {
-                Delt((float)piVar7[0x18],DAT_0071f418 * 6.0,&DAT_0096a6bc);
+                Delt((float)piVar7[0x18],g_FrameTimeSq * 6.0,&DAT_0096a6bc);
               }
               if (0.0010000000474974513 < dVar32) {
                 DAT_00969dd8 = 0.0;

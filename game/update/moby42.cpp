@@ -617,9 +617,9 @@ LAB_003a87d8:
           dVar29 = (double)MB_DeltAngSpeed
                                      ((double)(moby->rotation).y,-dVar29,
                                       (double)((float)((double)(float)(dVar38 * 10.0) * dVar36) *
-                                              DAT_0071f418),
+                                              g_FrameTimeSq),
                                       (double)((float)((double)(float)(dVar38 * 5.0) * dVar36) *
-                                              DAT_0071f418),
+                                              g_FrameTimeSq),
                                       (double)((float)(dVar38 * dVar36) * g_FrameTime));
           (moby->rotation).y = (float)dVar29;
           fVar45 = MB_WrapRot((float)(dVar39 * (double)*(float *)((int)pvVar10 + 0x114)));
@@ -629,9 +629,9 @@ LAB_003a87d8:
           dVar29 = (double)MB_DeltAngSpeed
                                      ((double)(moby->rotation).x,(double)fVar45,
                                       (double)((float)((double)(float)(dVar29 * dVar35) * dVar36) *
-                                              DAT_0071f418),
+                                              g_FrameTimeSq),
                                       (double)((float)((double)(float)(dVar29 * dVar34) * dVar36) *
-                                              DAT_0071f418),
+                                              g_FrameTimeSq),
                                       (double)((float)(dVar29 * dVar36) * g_FrameTime));
           (moby->rotation).x = (float)dVar29;
         }

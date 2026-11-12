@@ -381,7 +381,7 @@ void UpdateMoby_542(MobyInstance *moby)
     iVar7 = FastDecTimerS32(uVar12 + 0x34);
     if (iVar7 != 0) {
       fVar19 = OrganicDelt
-                         (1.0,DAT_0071f418 * 2.0,DAT_0071f418 * 2.0,g_FrameTime * 4.0,
+                         (1.0,g_FrameTimeSq * 2.0,g_FrameTimeSq * 2.0,g_FrameTime * 4.0,
                           (float *)(puVar8 + 0x12),0x720000,(float *)(puVar8 + 0x13));
       uVar3 = (int)puVar8[0x12] >> 0x1f;
       if (0x3f7fffff < (int)((uVar3 >> 1 ^ puVar8[0x12]) - uVar3)) {
@@ -409,7 +409,7 @@ void UpdateMoby_542(MobyInstance *moby)
     iVar7 = FastDecTimerS32(uVar12 + 0x34);
     if (iVar7 != 0) {
       fVar19 = OrganicDelt
-                         (1.0,DAT_0071f418 * 2.0,DAT_0071f418 * 2.0,g_FrameTime * 4.0,
+                         (1.0,g_FrameTimeSq * 2.0,g_FrameTimeSq * 2.0,g_FrameTime * 4.0,
                           (float *)(puVar8 + 0x10),0x3af880,(float *)(puVar8 + 0x11));
       uVar3 = (int)puVar8[0x10] >> 0x1f;
       if (0x3f7fffff < (int)((uVar3 >> 1 ^ puVar8[0x10]) - uVar3)) {
@@ -450,7 +450,7 @@ void UpdateMoby_542(MobyInstance *moby)
   }
   else if (uVar1 == '\x02') {
     fVar19 = OrganicDelt
-                       (1.0,DAT_0071f418 * 4.0,DAT_0071f418 * 4.0,g_FrameTime * 8.0,
+                       (1.0,g_FrameTimeSq * 4.0,g_FrameTimeSq * 4.0,g_FrameTime * 8.0,
                         (float *)(puVar8 + 0xe),0x720000,(float *)(puVar8 + 0xf));
     uVar3 = (int)puVar8[0xe] >> 0x1f;
     if (0x3f7fffff < (int)((uVar3 >> 1 ^ puVar8[0xe]) - uVar3)) {

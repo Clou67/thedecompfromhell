@@ -330,7 +330,7 @@ void UpdateMoby_1083(MobyInstance *moby)
         M1083_001b9a20(moby,1);
       }
       OrganicDelt
-                (1.0,DAT_0071f418,DAT_0071f418,g_FrameTime * 1.5,(float *)(piVar10 + 6),
+                (1.0,g_FrameTimeSq,g_FrameTimeSq,g_FrameTime * 1.5,(float *)(piVar10 + 6),
                  0x720000,(float *)(piVar10 + 7));
       pCVar30 = Cuboids;
       fVar23 = DAT_00969ce8;

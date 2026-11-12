@@ -530,7 +530,7 @@ void UpdateMoby_333(MobyInstance *moby)
     moby->modeBits = moby->modeBits | CAN_BE_AUTO_TARGETED;
     *(float *)((int)pvVar11 + 0x20) = fVar4;
     if ((double)fVar4 <= dVar45) {
-      fVar4 = DAT_0071f418 * 30.0;
+      fVar4 = g_FrameTimeSq * 30.0;
       *(undefined4 *)((int)pvVar11 + 0x84) = 0x3a03126f;
       *(float *)((int)pvVar11 + 0x80) = fVar4;
       fVar4 = g_FrameTime;
@@ -633,7 +633,7 @@ void UpdateMoby_333(MobyInstance *moby)
       *(undefined1 *)((int)pvVar11 + 0x67) = 100;
     }
     else {
-      fVar4 = DAT_0071f418 * 30.0;
+      fVar4 = g_FrameTimeSq * 30.0;
       *(undefined4 *)((int)pvVar11 + 0x84) = 0x3a03126f;
       *(float *)((int)pvVar11 + 0x80) = fVar4;
       fVar4 = g_FrameTime;
@@ -980,7 +980,7 @@ void UpdateMoby_333(MobyInstance *moby)
         *(float *)(puVar15 + 0x12) = fVar4;
         fVar5 = (pMVar12->pos).y - *(float *)((int)puVar15 + 0x84);
         *(float *)((int)puVar15 + 0x94) = fVar5;
-        fVar6 = DAT_0071f418;
+        fVar6 = g_FrameTimeSq;
         dVar42 = (double)SQRT(fVar4 * fVar4 + fVar5 * fVar5);
         *(float *)(puVar15 + 0x13) = (pMVar12->pos).z - *(float *)(puVar15 + 0x11);
         *(f32 *)((int)puVar15 + 0x9c) = (pMVar12->pos).w;

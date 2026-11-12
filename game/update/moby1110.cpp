@@ -181,7 +181,7 @@ void UpdateMoby_1110(MobyInstance *moby)
     if (((moby->field43_0x70 & 2U) != 0) && (moby->updateId == '\x01' && uVar3 != '\x02')) {
       MB_SetAnimation(moby,2,0,10);
     }
-    fVar5 = DAT_0071f418 * 30.0 + *(float *)((int)pvVar9 + 0x70);
+    fVar5 = g_FrameTimeSq * 30.0 + *(float *)((int)pvVar9 + 0x70);
     *(float *)((int)pvVar9 + 0x70) = fVar5;
     if (g_FrameTime * 6.0 < fVar5) {
       *(float *)((int)pvVar9 + 0x70) = g_FrameTime * 6.0;

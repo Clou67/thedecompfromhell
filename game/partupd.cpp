@@ -268,7 +268,7 @@ void UpdatePart_0(PartInstance *part)
             return;
           }
         }
-        part->update[6] = (int)-(DAT_0071f418 * 9.8 - (float)part->update[6]);
+        part->update[6] = (int)-(g_FrameTimeSq * 9.8 - (float)part->update[6]);
         part->update[7] = (int)(float)(dVar16 + (double)DAT_00a52b98);
         return;
       }
@@ -2093,7 +2093,7 @@ void UpdatePart_11(PartInstance *part)
     (part->pos).y = (part->pos).y + fVar5;
     (part->pos).z = (part->pos).z + fVar3;
     if ((bVar20 & 4) != 0) {
-      fVar3 = DAT_0071f418 * 9.8 + fVar3;
+      fVar3 = g_FrameTimeSq * 9.8 + fVar3;
     }
     fVar6 = 0.8;
     if ((bVar20 & 2) != 0) {
@@ -2233,7 +2233,7 @@ void UpdatePart_11(PartInstance *part)
     iVar17 = iVar17 + 1;
     iVar18 = FastDoubleToInt((double)((float)*(byte *)((int)part->update + 0x1b) * 0.25));
     fVar3 = (float)part->update[0];
-    fVar5 = DAT_0071f418 * 3.0 + (float)part->update[2];
+    fVar5 = g_FrameTimeSq * 3.0 + (float)part->update[2];
     fVar4 = (float)part->update[1];
     sVar7 = part->timer;
     (part->pos).x = (part->pos).x + fVar3;
@@ -2422,7 +2422,7 @@ void UpdatePart_12(PartInstance *part)
   local_40[0] = -SQRT(fVar4 * fVar4 + fVar3 * fVar3 + fVar2 * fVar2);
   dVar15 = 0.0;
   OrganicDelt
-            (0.0,0.0,DAT_0071f418 * DAT_00729704,local_40[0],(float *)(part->update + 4),0x720000,
+            (0.0,0.0,g_FrameTimeSq * DAT_00729704,local_40[0],(float *)(part->update + 4),0x720000,
              local_40);
   fVar3 = (float)part->update[1];
   fVar4 = (float)part->update[0];
@@ -2881,7 +2881,7 @@ void UpdatePart_15(PartInstance *part)
     (part->pos).y = (part->pos).y + fVar3;
     (part->pos).z = fVar4 + fVar5;
     uVar9 = worldUpdateTime;
-    fVar1 = -(DAT_0071f418 * 14.6 - fVar5);
+    fVar1 = -(g_FrameTimeSq * 14.6 - fVar5);
     if ((sVar6 == 0) || (part->update[2] = (int)fVar1, (uVar9 & 1) == 0)) {
       part->update[0] = (int)(fVar2 * 0.96);
       part->update[1] = (int)(fVar3 * 0.96);
@@ -3011,10 +3011,10 @@ void UpdatePart_16(PartInstance *part)
   longlong local_50;
   
   lVar11 = (longlong)(int)part;
-  local_60[0] = DAT_0071f418 * 4.8;
-  local_60[1] = DAT_0071f418 * 24.5;
-  local_60[2] = DAT_0071f418 * 9.8;
-  local_60[3] = DAT_0071f418 * -0.24;
+  local_60[0] = g_FrameTimeSq * 4.8;
+  local_60[1] = g_FrameTimeSq * 24.5;
+  local_60[2] = g_FrameTimeSq * 9.8;
+  local_60[3] = g_FrameTimeSq * -0.24;
   if (*(short *)((int)part->update + 0x1a) == 3) {
     if (0x3f733333 <
         (int)(FLOAT_ORDER(g_FrameLoad))
@@ -3971,7 +3971,7 @@ void SpawnPart_22
     (pPVar3->pos).y = param_2[1];
     (pPVar3->pos).z = param_2[2];
     (pPVar3->pos).w = param_2[3];
-    pPVar3->update[3] = (int)(DAT_0071f418 * 1.24);
+    pPVar3->update[3] = (int)(g_FrameTimeSq * 1.24);
   }
   return;
 }
@@ -6208,7 +6208,7 @@ void UpdatePart_34(PartInstance *part)
     }
     (part->pos).x = (part->pos).x + fVar7;
     (part->pos).y = (part->pos).y + fVar8;
-    Delt((float)((double)g_FrameTime * dVar17),DAT_0071f418 * 5.0,local_38);
+    Delt((float)((double)g_FrameTime * dVar17),g_FrameTimeSq * 5.0,local_38);
     part->update[0] = (int)fVar7;
     part->update[1] = (int)fVar8;
     part->update[2] = (int)local_38[0];
@@ -6311,7 +6311,7 @@ void SpawnPart_35(Vec4 *param_1,int *param_2,int param_3,int param_4)
     if (param_3 == 2) {
       pPVar3->update[6] = 0;
     }
-    dVar5 = (double)MB_randRangeFloat(DAT_0071f418 * 10.5,DAT_0071f418 * 18.0);
+    dVar5 = (double)MB_randRangeFloat(g_FrameTimeSq * 10.5,g_FrameTimeSq * 18.0);
     pPVar3->update[7] = (int)(float)dVar5;
   }
   return;
@@ -9097,7 +9097,7 @@ void UpdatePart_51(PartInstance *part)
   
   lVar2 = (longlong)(int)part;
   FastVecScaleSelf(0x3fee666660000000,auStack_40,lVar2 + 0x20);
-  part->update[2] = (int)(DAT_0071f418 * 5.0 + (float)part->update[2]);
+  part->update[2] = (int)(g_FrameTimeSq * 5.0 + (float)part->update[2]);
   FastVecAddSelf(auStack_30,lVar2 + 0x10,lVar2 + 0x20);
   uVar4 = part->color + 0xfe000000;
   uVar1 = uVar4 & 0xff000000;
@@ -12040,7 +12040,7 @@ void UpdatePart_73(PartInstance *part)
           return;
         }
       }
-      fVar1 = DAT_0071f418 * -0.5;
+      fVar1 = g_FrameTimeSq * -0.5;
       part->update[3] = 0;
       part->update[2] = (int)(fVar1 + (float)part->update[2]);
       part->update[3] = (int)(float)(dVar12 + (double)DAT_00a52b98);

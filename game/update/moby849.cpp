@@ -3355,14 +3355,14 @@ undefined8 FUN_0048c188(MobyInstance *param_1,longlong param_2)
             }
           }
           if (fVar4 <= 0.0) {
-            FUN_005e7f98((double)(DAT_0071f418 * 90.0),local_280,local_280);
+            FUN_005e7f98((double)(g_FrameTimeSq * 90.0),local_280,local_280);
             pfVar16[4] = pfVar16[4] + fVar1;
             pfVar16[5] = pfVar16[5] + fVar2;
             pfVar16[6] = pfVar16[6] + fVar3;
             FUN_005e7f98(dVar28,pfVar16 + 4,pfVar16 + 4);
           }
           else {
-            FUN_005e7f98((double)(DAT_0071f418 * 90.0),local_270,local_270);
+            FUN_005e7f98((double)(g_FrameTimeSq * 90.0),local_270,local_270);
             pfVar16[4] = pfVar16[4] + fVar4 * fVar5 + fVar1;
             pfVar16[5] = pfVar16[5] + fVar4 * fVar13 + fVar2;
             pfVar16[6] = pfVar16[6] + fVar4 * fVar6 + fVar3;

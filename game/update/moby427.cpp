@@ -464,8 +464,8 @@ void UpdateMoby_427(MobyInstance *moby)
                 DRAW_TRANSPARENT_WEIRD|LOCK_ROTATION|NO_DRAW|UNK_40|HAS_SPECIAL_VARS|HAS_GLOW|
                 TRANSPARENT|NO_POST_UPDATE|NO_UPDATE|DISABLED);
           *(undefined1 *)((int)pvVar9 + 0x67) = 0xfa;
-          fVar1 = DAT_0071f418;
-          *(float *)((int)pvVar9 + 0x80) = DAT_0071f418 * 37.0;
+          fVar1 = g_FrameTimeSq;
+          *(float *)((int)pvVar9 + 0x80) = g_FrameTimeSq * 37.0;
           *(float *)((int)pvVar9 + 0x84) = fVar1 * 20.0;
           fVar1 = g_FrameTime;
           *(float *)((int)pvVar9 + 0x88) = g_FrameTime * 17.0;
@@ -1147,7 +1147,7 @@ LAB_00370a44:
     *(ushort *)(*(int *)((int)pvVar9 + 0xf8) + 0x34) =
          *(ushort *)(*(int *)((int)pvVar9 + 0xf8) + 0x34) | 6;
   }
-  fVar1 = DAT_0071f418 * 9.8 + *(float *)((int)pvVar9 + 0xd0);
+  fVar1 = g_FrameTimeSq * 9.8 + *(float *)((int)pvVar9 + 0xd0);
   *(float *)((int)pvVar9 + 0xd0) = fVar1;
   dVar40 = 2.0;
   (moby->pos).z = (moby->pos).z - (fVar1 - 2.0);

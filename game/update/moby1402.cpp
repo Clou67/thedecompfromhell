@@ -114,7 +114,7 @@ void UpdateMoby_1402(MobyInstance *moby)
       puVar9 = puVar9 + 1;
     } while (-1 < (short)uVar3);
     OrganicDelt
-              (*pfVar4,DAT_0071f418 * 4.0,DAT_0071f418 * 4.0,g_FrameTime * 4.0,
+              (*pfVar4,g_FrameTimeSq * 4.0,g_FrameTimeSq * 4.0,g_FrameTime * 4.0,
                &(moby->pos).z,0x720000,pfVar4 + 6);
     fVar5 = (moby->pos).z;
     fVar7 = (moby->pos).z;
@@ -134,7 +134,7 @@ void UpdateMoby_1402(MobyInstance *moby)
       }
     }
     OrganicDelt
-              (pfVar4[1],DAT_0071f418 * 4.0,DAT_0071f418 * 4.0,g_FrameTime * 4.0,
+              (pfVar4[1],g_FrameTimeSq * 4.0,g_FrameTimeSq * 4.0,g_FrameTime * 4.0,
                &(moby->pos).z,0x720000,pfVar4 + 6);
     puVar9 = (ushort *)(&g_MobyGroups)[(byte)moby->group];
     pMVar8 = g_MobyInstance;

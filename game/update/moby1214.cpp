@@ -493,13 +493,13 @@ void UpdateMoby_1214(MobyInstance *moby)
     dVar50 = 25.132741928100586;
     dVar47 = 6.2831854820251465;
     OrganicDeltAngSpeed
-              (dVar39,(double)(DAT_0071f418 * 25.132742),(double)(DAT_0071f418 * 6.2831855),
+              (dVar39,(double)(g_FrameTimeSq * 25.132742),(double)(g_FrameTimeSq * 6.2831855),
                (double)(g_FrameTime * 25.132742),moby,uVar26,uVar35 + 0x88);
     *(float *)(puVar14 + 0x20) = (float)dVar46;
     *(float *)(puVar14 + 0x21) = (float)dVar43;
     *(float *)((int)puVar14 + 0x104) = (float)dVar49;
     fVar6 = (moby->rotation).y;
-    dVar46 = (double)DAT_0071f418;
+    dVar46 = (double)g_FrameTimeSq;
     dVar43 = (double)g_FrameTime;
     uVar34 = (ulonglong)(*(uint *)(puVar14 + 0x20) >> 0x1c) & 8 |
              (ulonglong)(*(uint *)(puVar14 + 0x21) >> 0x1e) & 2 |

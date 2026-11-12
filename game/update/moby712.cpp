@@ -272,7 +272,7 @@ void M712_0042e360(int param_1)
                       + ((float)piVar3[5] - (float)piVar3[9]) *
                         ((float)piVar3[5] - (float)piVar3[9])) * (float)(longlong)*piVar3);
   *(float *)(iVar2 + 0xd4) = g_FrameTime * 5.0 * fVar4;
-  fVar5 = DAT_0071f418;
+  fVar5 = g_FrameTimeSq;
   *(undefined4 *)(iVar2 + 0xc0) = 0;
   *(undefined4 *)(iVar2 + 0xc4) = 0;
   *(float *)(iVar2 + 0xd8) = fVar5 * 2.5 * fVar4;
@@ -496,7 +496,7 @@ void UpdateMoby_712(MobyInstance *moby)
   if (uVar1 == '\a') {
     uVar22 = 0x3ff0000000000000;
     OrganicDelt
-              (1.0,DAT_0071f418,DAT_0071f418,g_FrameTime * 0.5,
+              (1.0,g_FrameTimeSq,g_FrameTimeSq,g_FrameTime * 0.5,
                (float *)((int)pvVar5 + 0xc0),0x720000,(float *)((int)pvVar5 + 0xc4));
     uVar19 = 0;
     dVar21 = (double)*(float *)((int)pvVar5 + 0xe0);
@@ -543,7 +543,7 @@ void UpdateMoby_712(MobyInstance *moby)
   }
   else if (uVar1 == '\x05') {
     OrganicDelt
-              (1.0,DAT_0071f418,DAT_0071f418,g_FrameTime * 0.25,
+              (1.0,g_FrameTimeSq,g_FrameTimeSq,g_FrameTime * 0.25,
                (float *)((int)pvVar5 + 0xc0),0x720000,(float *)((int)pvVar5 + 0xc4));
     local_80 = (longlong)**(int **)((int)pvVar5 + 0xac);
     pCVar13 = Cuboids + *(int *)((int)pvVar5 +
@@ -651,7 +651,7 @@ void UpdateMoby_712(MobyInstance *moby)
       Cam0_SetCamDist(0x401c000000000000,0x3f60624de0000000,&DAT_0042e8cc,0);
     }
     OrganicDelt
-              (1.0,DAT_0071f418,DAT_0071f418,g_FrameTime * 0.5,
+              (1.0,g_FrameTimeSq,g_FrameTimeSq,g_FrameTime * 0.5,
                (float *)((int)pvVar5 + 0xc0),0x720000,(float *)((int)pvVar5 + 0xc4));
     pCVar13 = Cuboids + *(int *)((int)pvVar5 +
                                 (int)((longlong)*(short *)((int)pvVar5 + 0xb4) << 2) + 0x80);

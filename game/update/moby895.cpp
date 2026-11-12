@@ -56,7 +56,7 @@ void UpdateMoby_895(MobyInstance *moby)
       dVar4 = (double)FastDiffRots((double)(float)piVar3[3],0x3fe6571840000000);
     }
     OrganicDeltAng
-              ((float)dVar4,DAT_0071f418 * 12.566371,DAT_0071f418 * 12.566371,
+              ((float)dVar4,g_FrameTimeSq * 12.566371,g_FrameTimeSq * 12.566371,
                g_FrameTime * 12.566371,&(moby->rotation).z,0x720000,(float *)(piVar3 + 1))
     ;
     return;

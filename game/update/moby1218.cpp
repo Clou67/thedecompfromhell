@@ -215,7 +215,7 @@ LAB_0020b16c:
     }
     if (bVar2 != 4) {
       if (bVar2 == 3) {
-        pfVar8[6] = -(DAT_0071f418 * 9.8 - pfVar8[6]);
+        pfVar8[6] = -(g_FrameTimeSq * 9.8 - pfVar8[6]);
         (moby->pos).x = (moby->pos).x + pfVar8[4];
         (moby->pos).y = (moby->pos).y + pfVar8[5];
         (moby->pos).z = (moby->pos).z + pfVar8[6];
@@ -247,7 +247,7 @@ LAB_0020b16c:
         pfVar8[4] = fVar4;
         pfVar8[5] = fVar5;
         fVar3 = *pfVar8;
-        fVar6 = pfVar8[6] * 0.8 - DAT_0071f418 * 9.8;
+        fVar6 = pfVar8[6] * 0.8 - g_FrameTimeSq * 9.8;
         pfVar8[6] = fVar6;
         if ((dVar22 < 40.0) && (moby->enabled != '\0')) {
           fVar11 = (pMVar19->pos).y - (moby->pos).y;
@@ -301,7 +301,7 @@ LAB_0020b16c:
         pfVar8[4] = fVar3 * 0.9;
         pfVar8[5] = fVar4 * 0.9;
         fVar5 = *pfVar8 + fVar3 * 0.9;
-        fVar3 = DAT_0071f418 * 9.8;
+        fVar3 = g_FrameTimeSq * 9.8;
         pfVar8[1] = pfVar8[1] + fVar4 * 0.9;
         *pfVar8 = fVar5;
         fVar3 = pfVar8[6] * 0.9 - fVar3;

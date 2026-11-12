@@ -450,7 +450,7 @@ void UpdateMoby_1135(MobyInstance *moby)
         dVar15 = 1.0;
         if (iVar10 < 0x3f800000) {
           fVar16 = OrganicDelt
-                             (1.0,DAT_007649ec * DAT_0071f418,DAT_007649f0 * DAT_0071f418,
+                             (1.0,DAT_007649ec * g_FrameTimeSq,DAT_007649f0 * g_FrameTimeSq,
                               DAT_007649f4 * g_FrameTime,(float *)(piVar2 + 8),0x720000,
                               (float *)(piVar2 + 10));
           dVar15 = (double)fVar16;
@@ -459,7 +459,7 @@ void UpdateMoby_1135(MobyInstance *moby)
           uVar4 = piVar2[9] >> 0x1f;
           if ((int)((uVar4 >> 1 ^ piVar2[9]) - uVar4) < 0x3f800000) {
             fVar16 = OrganicDelt
-                               (1.0,DAT_007649ec * DAT_0071f418,DAT_007649f0 * DAT_0071f418,
+                               (1.0,DAT_007649ec * g_FrameTimeSq,DAT_007649f0 * g_FrameTimeSq,
                                 DAT_007649f4 * g_FrameTime,(float *)(piVar2 + 9),0x720000,
                                 (float *)(piVar2 + 0xb));
             dVar15 = (double)fVar16;
@@ -546,7 +546,7 @@ LAB_001db308:
         uVar4 = piVar2[8] >> 0x1f;
         if ((int)((uVar4 >> 1 ^ piVar2[8]) - uVar4) < 0x3f800000) {
           OrganicDelt
-                    (1.0,DAT_007649ec * DAT_0071f418,DAT_007649f0 * DAT_0071f418,
+                    (1.0,DAT_007649ec * g_FrameTimeSq,DAT_007649f0 * g_FrameTimeSq,
                      DAT_007649f4 * g_FrameTime,(float *)(piVar2 + 8),0x760000,
                      (float *)(piVar2 + 10));
         }
@@ -554,7 +554,7 @@ LAB_001db308:
           uVar4 = piVar2[9] >> 0x1f;
           if ((int)((uVar4 >> 1 ^ piVar2[9]) - uVar4) < 0x3f800000) {
             OrganicDelt
-                      (1.0,DAT_007649ec * DAT_0071f418,DAT_007649f0 * DAT_0071f418,
+                      (1.0,DAT_007649ec * g_FrameTimeSq,DAT_007649f0 * g_FrameTimeSq,
                        DAT_007649f4 * g_FrameTime,(float *)(piVar2 + 9),0x760000,
                        (float *)(piVar2 + 0xb));
           }
@@ -586,7 +586,7 @@ LAB_001db308:
         }
         else {
           fVar16 = OrganicDelt
-                             (0.0,DAT_007649ec * DAT_0071f418,DAT_007649f0 * DAT_0071f418,
+                             (0.0,DAT_007649ec * g_FrameTimeSq,DAT_007649f0 * g_FrameTimeSq,
                               DAT_007649f4 * g_FrameTime,(float *)(piVar2 + 8),0x720000,
                               (float *)(piVar2 + 0xb));
           dVar15 = (double)fVar16;
@@ -594,7 +594,7 @@ LAB_001db308:
       }
       else {
         fVar16 = OrganicDelt
-                           (0.0,DAT_007649ec * DAT_0071f418,DAT_007649f0 * DAT_0071f418,
+                           (0.0,DAT_007649ec * g_FrameTimeSq,DAT_007649f0 * g_FrameTimeSq,
                             DAT_007649f4 * g_FrameTime,(float *)(piVar2 + 9),0x760000,
                             (float *)(piVar2 + 10));
         dVar15 = (double)fVar16;

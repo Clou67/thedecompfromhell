@@ -233,7 +233,7 @@ void UpdateMoby_1309(MobyInstance *moby)
       moby->state = '\x04';
     }
     else {
-      *(float *)((int)pvVar3 + 0x78) = -(DAT_0071f418 * 10.8 - *(float *)((int)pvVar3 + 0x78));
+      *(float *)((int)pvVar3 + 0x78) = -(g_FrameTimeSq * 10.8 - *(float *)((int)pvVar3 + 0x78));
       fVar2 = (moby->rotation).x;
       (moby->pos).x = (moby->pos).x + *(float *)((int)pvVar3 + 0x70);
       (moby->pos).y = (moby->pos).y + *(float *)((int)pvVar3 + 0x74);
@@ -352,7 +352,7 @@ void UpdateMoby_1309(MobyInstance *moby)
     }
   }
   else if (bVar1 < 6) {
-    *(float *)((int)pvVar3 + 0x78) = -(DAT_0071f418 * 10.8 * 0.5 - *(float *)((int)pvVar3 + 0x78));
+    *(float *)((int)pvVar3 + 0x78) = -(g_FrameTimeSq * 10.8 * 0.5 - *(float *)((int)pvVar3 + 0x78));
     fVar2 = (moby->rotation).x;
     (moby->pos).x = (moby->pos).x + *(float *)((int)pvVar3 + 0x70);
     (moby->pos).y = (moby->pos).y + *(float *)((int)pvVar3 + 0x74);

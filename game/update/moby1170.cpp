@@ -160,7 +160,7 @@ void UpdateMoby_1170(MobyInstance *moby)
       local_50 = (pSVar3->points[iVar7].x - local_60) * (1.0 / fVar5);
       local_4c = (pSVar3->points[iVar7].y - local_5c) * (1.0 / fVar5);
       *(float *)((int)pvVar2 + 0x48) =
-           -(fVar5 * fVar5 * DAT_00765cbc * DAT_0071f418 * -0.5 +
+           -(fVar5 * fVar5 * DAT_00765cbc * g_FrameTimeSq * -0.5 +
             (local_58 - Splines[*(int *)((int)pvVar2 + 200)]->points[iVar7].z)) / fVar5;
       local_30 = (longlong)(int)(animationSpeed * 120.5);
       FUN_001f29e8(lVar6,&local_60,&local_50,&DAT_001ecad8,(int)(animationSpeed * 120.5));

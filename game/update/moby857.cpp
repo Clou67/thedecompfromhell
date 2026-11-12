@@ -635,7 +635,7 @@ LAB_004918a0:
         uVar13 = ZERO_MASK(iVar10);
         uVar12 = uVar13 & 0xfffffffffffffffe;
         SpawnPart_53
-                  (dVar18,dVar17,(double)(float)((double)DAT_0071f418 * dVar22),local_160,(int)fVar1
+                  (dVar18,dVar17,(double)(float)((double)g_FrameTimeSq * dVar22),local_160,(int)fVar1
                    ,uVar12,uVar13,
                    (uint)((uVar7 & 0xffffffff) << 8) | uVar9 | (uint)((uVar8 & 0xffffffff) << 0x10)
                    | 0x7f000000,0,uVar12 + 1,&local_170);
@@ -741,7 +741,7 @@ LAB_004918a0:
         fVar1 = animationSpeed * (float)((double)(longlong)iVar11 + dVar27);
         MB_randInt(2);
         SpawnPart_53
-                  (dVar32,dVar30,(double)(float)((double)DAT_0071f418 * dVar22),local_130,(int)fVar1
+                  (dVar32,dVar30,(double)(float)((double)g_FrameTimeSq * dVar22),local_130,(int)fVar1
                   );
         iVar15 = iVar15 + 1;
       } while (iVar15 < 10);
@@ -2201,7 +2201,7 @@ void UpdateMoby_857(MobyInstance *moby)
           uVar20 = ZERO_MASK(iVar16);
           uVar19 = uVar20 & 0xfffffffffffffffe;
           SpawnPart_53
-                    (dVar25,dVar29,(double)(float)((double)DAT_0071f418 * dVar23),&local_140,uVar31,
+                    (dVar25,dVar29,(double)(float)((double)g_FrameTimeSq * dVar23),&local_140,uVar31,
                      uVar19,uVar20,
                      (uint)((uVar11 & 0xffffffff) << 8) | uVar15 |
                      (uint)((uVar12 & 0xffffffff) << 0x10) | 0x7f000000,0,uVar19 + 1,auStack_150);
@@ -2466,14 +2466,14 @@ LAB_004936b8:
     val = (float *)((int)pvVar4 + 0x54);
     if (dVar23 <= 2.299999952316284) {
       if (1.2000000476837158 <= dVar23) {
-        Delt(g_FrameTime * 3.0 * 0.95,DAT_0071f418,val);
+        Delt(g_FrameTime * 3.0 * 0.95,g_FrameTimeSq,val);
       }
       else {
-        Delt(g_FrameTime * 3.0 * 0.77,DAT_0071f418 * 2.0,val);
+        Delt(g_FrameTime * 3.0 * 0.77,g_FrameTimeSq * 2.0,val);
       }
     }
     else {
-      Delt(g_FrameTime * 3.0 * 1.35,DAT_0071f418,val);
+      Delt(g_FrameTime * 3.0 * 1.35,g_FrameTimeSq,val);
     }
     fVar37 = g_FrameTime * 3.0 * 1.35;
     if (fVar37 < *(float *)((int)pvVar4 + 0x54)) {
@@ -2626,7 +2626,7 @@ LAB_00494af4:
             *(undefined4 *)((int)pvVar4 + 0x284) = 0;
           }
         }
-        fVar37 = -(DAT_0071f418 * 7.0 - *(float *)((int)pvVar4 + 0x48));
+        fVar37 = -(g_FrameTimeSq * 7.0 - *(float *)((int)pvVar4 + 0x48));
         *(float *)((int)pvVar4 + 0x48) = fVar37;
         if (fVar37 < g_FrameTime * -8.0) {
           *(float *)((int)pvVar4 + 0x48) = g_FrameTime * -8.0;

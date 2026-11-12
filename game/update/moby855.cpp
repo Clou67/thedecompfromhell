@@ -198,11 +198,11 @@ ulonglong UpdateMoby_855(MobyInstance *moby)
           dVar19 = (double)MB_randRangeFloat(0.8,1.2);
           SpawnPart_50
                     ((double)(float)(dVar16 * dVar19),dVar18,
-                     (double)(float)((double)DAT_0071f418 * dVar23),local_130,local_120);
+                     (double)(float)((double)g_FrameTimeSq * dVar23),local_130,local_120);
           iVar13 = MB_randInt(2);
           if ((iVar13 != 0) &&
              (SQRT((float)((double)(float)((double)(moby->pos).z - dVar18) * dVar24) /
-                   (float)((double)DAT_0071f418 * dVar23)) <
+                   (float)((double)g_FrameTimeSq * dVar23)) <
               (float)(longlong)*(int *)((int)pvVar8 + 0x10))) {
             MB_randRot();
             MB_randRangeFloat((float)dVar25,(float)dVar15);

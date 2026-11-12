@@ -40,7 +40,7 @@ void UpdateMoby_136(MobyInstance *moby)
   uVar1 = moby->state;
   if (uVar1 == '\x04') {
     OrganicDelt
-              (0.0,DAT_0071f418 * 8.0,DAT_0071f418 * 8.0,g_FrameTime * 8.0,
+              (0.0,g_FrameTimeSq * 8.0,g_FrameTimeSq * 8.0,g_FrameTime * 8.0,
                (float *)((int)pvVar8 + 0xe8),0x720000,(float *)((int)pvVar8 + 0xec));
     pvVar9 = moby->pVar;
     fVar2 = *(float *)((int)pvVar9 + 0xe8);
@@ -65,7 +65,7 @@ void UpdateMoby_136(MobyInstance *moby)
   }
   else if (uVar1 == '\x03') {
     OrganicDelt
-              (1.0,DAT_0071f418 * 8.0,DAT_0071f418 * 8.0,g_FrameTime * 8.0,
+              (1.0,g_FrameTimeSq * 8.0,g_FrameTimeSq * 8.0,g_FrameTime * 8.0,
                (float *)((int)pvVar8 + 0xe8),0x720000,(float *)((int)pvVar8 + 0xec));
     pvVar9 = moby->pVar;
     fVar2 = *(float *)((int)pvVar9 + 0xe8);

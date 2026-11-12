@@ -104,7 +104,7 @@ M757_0044e100(int param_1,float *param_2,f32 *param_3,undefined4 param_4)
     dVar31 = 0.5;
     *(undefined4 *)((int)pvVar4 + 0x28) = 0x3f000000;
     fVar6 = DAT_00871c88;
-    fVar5 = DAT_0071f418;
+    fVar5 = g_FrameTimeSq;
     *(undefined1 *)((int)pvVar4 + 0x3d) = 0;
     *(undefined4 *)((int)pvVar4 + 0x24) = 1;
     *(undefined4 *)((int)pvVar4 + 0x14) = 0x3a03126f;

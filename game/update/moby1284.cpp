@@ -302,12 +302,12 @@ double M1284_00238e58
   dVar2 = 3.1415927410125732;
   dVar1 = 6.2831854820251465;
   OrganicDeltAngSpeed
-            (param_1,(double)(DAT_0071f418 * 3.1415927),(double)(DAT_0071f418 * 6.2831855),
+            (param_1,(double)(g_FrameTimeSq * 3.1415927),(double)(g_FrameTimeSq * 6.2831855),
              (double)(g_FrameTime * 6.2831855),param_3,param_4,param_4 + 0xb8);
   dVar1 = (double)MB_DeltAngSpeed
                             ((double)*(float *)(param_3 + 0x44),param_2,
-                             (double)(float)((double)DAT_0071f418 * dVar2),
-                             (double)(float)((double)DAT_0071f418 * dVar1),
+                             (double)(float)((double)g_FrameTimeSq * dVar2),
+                             (double)(float)((double)g_FrameTimeSq * dVar1),
                              (double)(float)((double)g_FrameTime * dVar1));
   *(float *)(param_3 + 0x44) = (float)dVar1;
   fVar3 = *(float *)(param_4 + 0xb8) * (1.5707964 - ABS(*(float *)(param_3 + 0x40))) * 0.63661975 *
@@ -2396,12 +2396,12 @@ void UpdateMoby_1284(MobyInstance *moby)
         dVar39 = 6.2831854820251465;
         dVar37 = -dVar37;
         OrganicDeltAngSpeed
-                  (uVar33,(double)(DAT_0071f418 * 3.1415927),(double)(DAT_0071f418 * 6.2831855),
+                  (uVar33,(double)(g_FrameTimeSq * 3.1415927),(double)(g_FrameTimeSq * 6.2831855),
                    (double)(g_FrameTime * 6.2831855),moby);
         dVar37 = (double)MB_DeltAngSpeed
                                    ((double)(moby->rotation).y,dVar37,
-                                    (double)(float)((double)DAT_0071f418 * dVar36),
-                                    (double)(float)((double)DAT_0071f418 * dVar39),
+                                    (double)(float)((double)g_FrameTimeSq * dVar36),
+                                    (double)(float)((double)g_FrameTimeSq * dVar39),
                                     (double)(float)((double)g_FrameTime * dVar39));
         (moby->rotation).y = (float)dVar37;
         fVar3 = (moby->rotation).x;
@@ -2590,7 +2590,7 @@ void UpdateMoby_1284(MobyInstance *moby)
     fVar3 = *(float *)((int)pvVar8 + 0xc0) * 1.025;
     *(float *)((int)pvVar8 + 0xc0) = fVar3;
     *(float *)((int)pvVar8 + 0xc4) = *(float *)((int)pvVar8 + 0xc4) * 1.025;
-    *(float *)((int)pvVar8 + 200) = *(float *)((int)pvVar8 + 200) * 1.025 + DAT_0071f418 * 15.0;
+    *(float *)((int)pvVar8 + 200) = *(float *)((int)pvVar8 + 200) * 1.025 + g_FrameTimeSq * 15.0;
     (moby->pos).x = (moby->pos).x + fVar3;
     (moby->pos).y = (moby->pos).y + *(float *)((int)pvVar8 + 0xc4);
     (moby->pos).z = (moby->pos).z + *(float *)((int)pvVar8 + 200);
@@ -2605,12 +2605,12 @@ void UpdateMoby_1284(MobyInstance *moby)
     dVar39 = 6.2831854820251465;
     dVar37 = -dVar37;
     OrganicDeltAngSpeed
-              (uVar33,(double)(DAT_0071f418 * 3.1415927),(double)(DAT_0071f418 * 6.2831855),
+              (uVar33,(double)(g_FrameTimeSq * 3.1415927),(double)(g_FrameTimeSq * 6.2831855),
                (double)(g_FrameTime * 6.2831855),moby);
     dVar37 = (double)MB_DeltAngSpeed
                                ((double)(moby->rotation).y,dVar37,
-                                (double)(float)((double)DAT_0071f418 * dVar36),
-                                (double)(float)((double)DAT_0071f418 * dVar39),
+                                (double)(float)((double)g_FrameTimeSq * dVar36),
+                                (double)(float)((double)g_FrameTimeSq * dVar39),
                                 (double)(float)((double)g_FrameTime * dVar39));
     (moby->rotation).y = (float)dVar37;
     fVar3 = (moby->rotation).x;

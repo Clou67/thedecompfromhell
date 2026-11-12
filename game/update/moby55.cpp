@@ -57,7 +57,7 @@ double UpdateMoby_55(MobyInstance *moby)
   }
   if (piVar4[6] != piVar4[5]) {
     OrganicDeltAng
-              ((float)piVar4[5],DAT_0071f418 * 1.5707964,DAT_0071f418 * 1.5707964,
+              ((float)piVar4[5],g_FrameTimeSq * 1.5707964,g_FrameTimeSq * 1.5707964,
                g_FrameTime * 1.5707964,(float *)(piVar4 + 6),0x720000,
                (float *)(piVar4 + 2));
   }

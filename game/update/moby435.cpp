@@ -609,7 +609,7 @@ Spline * UpdateMoby_435(MobyInstance *moby)
         local_120.y = local_130.y - *(float *)((int)pvVar11 + 0x24);
         local_120.w = local_130.w;
         local_120.z = local_130.z - *(float *)((int)pvVar11 + 0x28);
-        ClampVec3Magnitude((double)(DAT_00841750 * 4.0 * DAT_0071f418),&local_120);
+        ClampVec3Magnitude((double)(DAT_00841750 * 4.0 * g_FrameTimeSq),&local_120);
         fVar3 = *(float *)((int)pvVar11 + 0x20) + local_120.x;
         *(float *)((int)pvVar11 + 0x20) = fVar3;
         *(float *)((int)pvVar11 + 0x24) = *(float *)((int)pvVar11 + 0x24) + local_120.y;
@@ -755,7 +755,7 @@ Spline * UpdateMoby_435(MobyInstance *moby)
         local_150.y = local_160.y - *(float *)((int)pvVar11 + 0x24);
         local_150.w = local_160.w;
         local_150.z = local_160.z - *(float *)((int)pvVar11 + 0x28);
-        ClampVec3Magnitude((double)(DAT_00841750 * DAT_0071f418),&local_150);
+        ClampVec3Magnitude((double)(DAT_00841750 * g_FrameTimeSq),&local_150);
         fVar3 = *(float *)((int)pvVar11 + 0x20) + local_150.x;
         *(float *)((int)pvVar11 + 0x20) = fVar3;
         *(float *)((int)pvVar11 + 0x24) = *(float *)((int)pvVar11 + 0x24) + local_150.y;

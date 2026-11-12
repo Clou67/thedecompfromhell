@@ -164,7 +164,7 @@ double M576_003c70d8(int param_1,undefined8 param_2,undefined8 param_3)
   _fStack00000040 = param_3;
   dVar22 = (double)FastWrapRot((float)dVar22,fVar1);
   OrganicDeltAng
-            ((float)dVar22,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+            ((float)dVar22,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
              g_FrameTime * 6.2831855,(float *)(param_1 + 0x48),(int)unused,
              (float *)(iVar6 + 0x1e8));
   fVar1 = (float)((double)*(float *)(param_1 + 0x14) - dVar24);
@@ -173,7 +173,7 @@ double M576_003c70d8(int param_1,undefined8 param_2,undefined8 param_3)
   fVar1 = SQRT(fVar2 * fVar2 + fVar1 * fVar1);
   dVar23 = (double)fVar1;
   OrganicDelt
-            (fVar1,DAT_0071f418 * 6.0,DAT_0071f418 * 6.0,g_FrameTime * 5.0,
+            (fVar1,g_FrameTimeSq * 6.0,g_FrameTimeSq * 6.0,g_FrameTime * 5.0,
              (float *)(puVar7 + 0x10),(int)unused,(float *)(iVar6 + 0x1f0));
   fVar3 = g_FrameTime;
   fVar1 = *(float *)(param_1 + 0x48);
@@ -473,7 +473,7 @@ void UpdateMoby_576(MobyInstance *moby)
       fVar5 = (fVar5 + 0.7853982) * fVar9 + fVar8;
     }
     OrganicDeltAng
-              (fVar5,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+              (fVar5,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
                g_FrameTime * 6.2831855,val,(int)val,(float *)((int)pvVar13 + 0x1e8));
     dVar29 = (double)BlendAnimFrame(moby);
     if (((moby->animationBlend == 0.0) && (20.0 <= dVar29)) && (dVar29 <= 25.0)) {
@@ -537,7 +537,7 @@ void UpdateMoby_576(MobyInstance *moby)
     }
   }
   else if (uVar1 == '\x01') {
-    *(float *)((int)pvVar13 + 0x1d8) = -(DAT_0071f418 * 10.0 - *(float *)((int)pvVar13 + 0x1d8));
+    *(float *)((int)pvVar13 + 0x1d8) = -(g_FrameTimeSq * 10.0 - *(float *)((int)pvVar13 + 0x1d8));
     fVar7 = (moby->pos).x + *(float *)((int)pvVar13 + 0x1d0);
     fVar5 = (moby->pos).z;
     fVar2 = (moby->pos).w;

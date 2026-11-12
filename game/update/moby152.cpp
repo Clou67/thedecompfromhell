@@ -93,7 +93,7 @@ void UpdateMoby_152(MobyInstance *moby)
       }
       dVar14 = (double)*(float *)((int)pvVar7 + 0x14);
       dVar19 = (double)*(float *)((int)pvVar7 + 0x10);
-      dVar16 = -(double)(DAT_0071f418 * 9.8 - *(float *)((int)pvVar7 + 0x18));
+      dVar16 = -(double)(g_FrameTimeSq * 9.8 - *(float *)((int)pvVar7 + 0x18));
       *(float *)((int)pvVar7 + 0x18) = (float)dVar16;
       dVar21 = (double)SQRT((float)(dVar16 * dVar16 +
                                    (double)(float)(dVar19 * dVar19 +

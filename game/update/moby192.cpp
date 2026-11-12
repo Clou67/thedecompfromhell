@@ -515,7 +515,7 @@ void UpdateMoby_192(MobyInstance *moby)
       }
       MB_SphericalToVector
                 ((float)(dVar24 + dVar25),(float)dVar12,(float)dVar29,&local_1c0);
-      dVar29 = (double)DAT_0071f418;
+      dVar29 = (double)g_FrameTimeSq;
       dVar27 = 11.0;
       dVar13 = (double)(float)(dVar29 * 11.0);
       dVar28 = (double)SQRT(local_1c0 * local_1c0 + local_1bc * local_1bc);
@@ -530,7 +530,7 @@ void UpdateMoby_192(MobyInstance *moby)
       dVar24 = dVar26;
       if ((g_Pad.downButtons & (L1|L2)) != 0) {
         dVar26 = (double)FastIntToDouble(g_goldWeaponsArray.bombGlove);
-        dVar29 = (double)DAT_0071f418;
+        dVar29 = (double)g_FrameTimeSq;
         dVar26 = (double)(float)(dVar26 * 2.5);
       }
       fVar4 = SQRT((float)(dVar13 * (double)(float)(dVar26 + dVar25)) * 0.5);
@@ -587,7 +587,7 @@ void UpdateMoby_192(MobyInstance *moby)
       }
     }
     uVar14 = 0x3ee4f8b580000000;
-    dVar29 = (double)(DAT_0071f418 * 11.0);
+    dVar29 = (double)(g_FrameTimeSq * 11.0);
     if ((g_Pad.downButtons & (L1|L2)) != 0) {
       dVar24 = (double)FastIntToDouble(g_goldWeaponsArray.bombGlove);
       dVar24 = (double)(float)(dVar24 * 2.5);

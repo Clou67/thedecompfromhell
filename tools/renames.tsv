@@ -437,3 +437,4 @@ DAT_00e59c20	g_TieDrawStateSave
 DAT_00e5a020	g_TieTexStateSave
 DAT_00e59010	g_TieDrawPacket
 DAT_00e5a220	g_TieTexPacket
+DAT_0071f418	g_FrameTimeSq

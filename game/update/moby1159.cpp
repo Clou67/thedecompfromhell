@@ -100,7 +100,7 @@ void UpdateMoby_1159(MobyInstance *moby)
   }
   else if (bVar1 < 3) {
     OrganicDelt
-              (val[4],DAT_0071f418,DAT_0071f418,g_FrameTime * 2.0,val,0x720000,val + 1);
+              (val[4],g_FrameTimeSq,g_FrameTimeSq,g_FrameTime * 2.0,val,0x720000,val + 1);
     fVar2 = (moby->transform).v1.y;
     fVar3 = (moby->transform).v1.x;
     fVar4 = (moby->transform).v1.z;

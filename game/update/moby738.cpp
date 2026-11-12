@@ -774,7 +774,7 @@ void UpdateMoby_738(MobyInstance *moby)
       *(undefined4 *)((int)pvVar9 + 0x10c) = 0x3cf5c28f;
       *(undefined4 *)((int)pvVar9 + 0x110) = 0x3e99999a;
       *(undefined4 *)((int)pvVar9 + 0x114) = 0x3e800000;
-      *(float *)((int)pvVar9 + 0xec) = DAT_0071f418 * 5.0;
+      *(float *)((int)pvVar9 + 0xec) = g_FrameTimeSq * 5.0;
       fVar4 = DAT_0085a370;
       fVar3 = g_FrameTime;
       *(undefined4 *)((int)pvVar9 + 0xdc) = 0x40000000;

@@ -548,7 +548,7 @@ LAB_002ceda0:
           local_5c = (float)dVar31;
           local_58 = (float)dVar32;
           MB_RandomizeVector(0.025,&local_60);
-          MB_computeLobVelocity(dVar34,(double)(DAT_0071f418 * -9.8),local_70,&local_90);
+          MB_computeLobVelocity(dVar34,(double)(g_FrameTimeSq * -9.8),local_70,&local_90);
           uVar19 = M1885_002cf208
                              (lVar14,local_70,local_80,*(undefined1 *)((int)pvVar5 + 0x93),
                               uVar27 & 0xff);

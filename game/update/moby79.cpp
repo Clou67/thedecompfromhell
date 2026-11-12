@@ -923,7 +923,7 @@ void UpdateMoby_79(MobyInstance *moby)
       *(float *)((int)puVar19 + 0x84) = fVar10 * fVar9;
       fVar3 = animationSpeed;
       *(float *)(puVar19 + 0x11) = fVar4 * fVar5 + fVar2;
-      fVar2 = DAT_0071f418;
+      fVar2 = g_FrameTimeSq;
       dVar42 = 90.5;
       puVar19[0xe] = ZEXT48(&DAT_00a15d30);
       puVar19[0xf] = ZEXT48(&DAT_00a15d30);
@@ -933,7 +933,7 @@ void UpdateMoby_79(MobyInstance *moby)
                 ((double)(fVar2 * 12.0),lVar24,0x72e,lVar32,lVar25,
                  *(undefined4 *)((int)puVar19 + 0x19c),0,in_r9,lVar26);
       dVar40 = (double)animationSpeed;
-      dVar46 = (double)DAT_0071f418;
+      dVar46 = (double)g_FrameTimeSq;
       puVar19[0xe] = ZEXT48(&DAT_00a15d30);
       puVar19[0xf] = ZEXT48(&DAT_00a15d30);
       puVar19[0x33] = (longlong)(int)(dVar40 * dVar42);
@@ -941,7 +941,7 @@ void UpdateMoby_79(MobyInstance *moby)
                 ((double)(float)(dVar46 * dVar41),lVar24,0x72e,lVar32,lVar25,
                  *(undefined4 *)((int)puVar19 + 0x19c),0,in_r9,lVar26);
       dVar40 = (double)animationSpeed;
-      dVar46 = (double)DAT_0071f418;
+      dVar46 = (double)g_FrameTimeSq;
       puVar19[0xe] = ZEXT48(&DAT_00a15d30);
       puVar19[0xf] = ZEXT48(&DAT_00a15d30);
       puVar19[0x33] = (longlong)(int)(dVar40 * dVar42);

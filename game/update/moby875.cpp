@@ -174,7 +174,7 @@ void UpdateMoby_875(MobyInstance *moby)
                           fVar5 * -0.0001980741 +
                           fVar22 * 0.0083330255 + fVar23 * fVar4 * -0.16666657 + fVar4) * 2.0 -
                  dVar16);
-    fVar23 = DAT_0071f418 * 9.8 + *(float *)((int)pvVar2 + 0xa4);
+    fVar23 = g_FrameTimeSq * 9.8 + *(float *)((int)pvVar2 + 0xa4);
     *(float *)((int)pvVar2 + 0xa4) = fVar23;
     fVar23 = (moby->pos).z - fVar23;
     (moby->pos).z = fVar23;

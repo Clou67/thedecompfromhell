@@ -127,7 +127,7 @@ void UpdateMoby_867(MobyInstance *moby)
           }
         }
         else if (bVar4 < 3) {
-          fVar1 = DAT_0071f418 * 30.0 + *(float *)((int)pvVar8 + 0x70);
+          fVar1 = g_FrameTimeSq * 30.0 + *(float *)((int)pvVar8 + 0x70);
           *(float *)((int)pvVar8 + 0x70) = fVar1;
           if (g_FrameTime * 6.0 < fVar1) {
             *(float *)((int)pvVar8 + 0x70) = g_FrameTime * 6.0;

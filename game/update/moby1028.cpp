@@ -529,7 +529,7 @@ void UpdateMoby_1028_BlargPlatform(MobyInstance *moby)
       if ((int)(((uint)((int)blargBridgePlatform.x >> 0x1f) >> 1 ^ (uint)blargBridgePlatform.x) -
                ((int)blargBridgePlatform.x >> 0x1f)) < 0x41a00000) {
         OrganicDelt
-                  (20.0,DAT_0073fcd4 * DAT_0071f418,DAT_0073fcd4 * DAT_0071f418,
+                  (20.0,DAT_0073fcd4 * g_FrameTimeSq,DAT_0073fcd4 * g_FrameTimeSq,
                    DAT_0073fcc8 * g_FrameTime,&blargBridgePlatform.x,0x720000,
                    &blargBridgePlatform.w);
       }
@@ -537,7 +537,7 @@ void UpdateMoby_1028_BlargPlatform(MobyInstance *moby)
         if ((int)(((uint)((int)blargBridgePlatform.y >> 0x1f) >> 1 ^ (uint)blargBridgePlatform.y) -
                  ((int)blargBridgePlatform.y >> 0x1f)) < 0x447a0000) {
           OrganicDelt
-                    (1000.0,DAT_0073fcd8 * DAT_0071f418,DAT_0073fcd8 * DAT_0071f418,
+                    (1000.0,DAT_0073fcd8 * g_FrameTimeSq,DAT_0073fcd8 * g_FrameTimeSq,
                      DAT_0073fccc * g_FrameTime,&blargBridgePlatform.y,0x720000,
                      (float *)&DAT_00e5efe0);
         }
@@ -548,7 +548,7 @@ void UpdateMoby_1028_BlargPlatform(MobyInstance *moby)
         if ((int)(((uint)((int)blargBridgePlatform.z >> 0x1f) >> 1 ^ (uint)blargBridgePlatform.z) -
                  ((int)blargBridgePlatform.z >> 0x1f)) < 0x447a0000) {
           OrganicDelt
-                    (1000.0,DAT_0073fcdc * DAT_0071f418,DAT_0073fcdc * DAT_0071f418,
+                    (1000.0,DAT_0073fcdc * g_FrameTimeSq,DAT_0073fcdc * g_FrameTimeSq,
                      DAT_0073fcd0 * g_FrameTime,&blargBridgePlatform.z,0x720000,
                      (float *)&DAT_00e5efe4);
         }

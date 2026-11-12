@@ -480,7 +480,7 @@ void FUN_002fe4e8(undefined4 *param_1,int param_2,float *param_3)
     fVar2 = SQRT(g_CollOutput.normal.z * g_CollOutput.normal.z +
                  g_CollOutput.normal.x * g_CollOutput.normal.x +
                  g_CollOutput.normal.y * g_CollOutput.normal.y);
-    fVar6 = (DAT_0071f418 * 9.0 - DAT_0071f418 * 0.1) / fVar2;
+    fVar6 = (g_FrameTimeSq * 9.0 - g_FrameTimeSq * 0.1) / fVar2;
     fVar4 = fVar3;
     if (0.0 - fVar2 < 0.0) {
       fVar4 = g_CollOutput.normal.z * fVar6;
@@ -930,7 +930,7 @@ LAB_002feeac:
             fVar2 = (float)((double)fVar2 + dVar33);
             fVar10 = (float)((double)fVar10 + dVar42);
             fVar8 = (float)((double)fVar8 + dVar34);
-            dVar34 = -(double)(float)((double)DAT_0071f418 * 9.0 - dVar34);
+            dVar34 = -(double)(float)((double)g_FrameTimeSq * 9.0 - dVar34);
             *(float *)(puVar13 + 0xe) = fVar2;
             *(float *)((int)puVar13 + 0x74) = fVar10;
             *(float *)(puVar13 + 0xf) = fVar8;
@@ -1188,7 +1188,7 @@ void UpdateMoby_230(MobyInstance *moby)
         *(undefined4 *)((uint)(pfVar7 + 0xd) & 0xfffffffc) = uVar13;
         SpawnPart_32(lVar19);
       }
-      fVar3 = -(DAT_0071f418 * 9.0 - pfVar7[2]);
+      fVar3 = -(g_FrameTimeSq * 9.0 - pfVar7[2]);
       pfVar7[2] = fVar3;
       dVar33 = (double)((moby->pos).x + *pfVar7);
       dVar32 = (double)((moby->pos).y + pfVar7[1]);

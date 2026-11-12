@@ -559,11 +559,11 @@ void M822_00476cb0(longlong param_1)
     dVar33 = 0.01745329238474369;
     fVar2 = (*(float *)((int)pvVar11 + 200) * 60.0) / *(float *)((int)pvVar11 + 0xc0);
     dVar42 = (double)MB_DeltAngSpeed
-                               (dVar34,uVar29,(double)(fVar2 * 0.25 * 0.017453292 * DAT_0071f418),
-                                (double)(fVar2 * 0.5 * 0.017453292 * DAT_0071f418),
+                               (dVar34,uVar29,(double)(fVar2 * 0.25 * 0.017453292 * g_FrameTimeSq),
+                                (double)(fVar2 * 0.5 * 0.017453292 * g_FrameTimeSq),
                                 (double)(fVar2 * g_FrameTime));
     (moby->rotation).z = (float)dVar42;
-    fVar7 = DAT_0071f418;
+    fVar7 = g_FrameTimeSq;
     fVar2 = (moby->pos).y - (pMVar16->pos).y;
     fVar3 = (moby->pos).x - (pMVar16->pos).x;
     fVar6 = (pMVar16->pos).z - (moby->pos).z;

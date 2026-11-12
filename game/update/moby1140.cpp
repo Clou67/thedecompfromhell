@@ -1474,7 +1474,7 @@ void M1140_001de6a0(longlong param_1)
             *(undefined4 *)((int)pvVar6 + 0x138U & 0xfffffffc) = uVar7;
             dVar23 = (double)MB_computeLobVelocity
                                        ((double)SQRT(fVar5 * fVar5 + fVar3 * fVar3),
-                                        (double)(DAT_0071f418 * -10.8),param_1 + 0x10,uVar20 + 0x120
+                                        (double)(g_FrameTimeSq * -10.8),param_1 + 0x10,uVar20 + 0x120
                                         ,0x130,0x138,0);
             *(float *)((int)pvVar6 + 0x138) = (float)dVar23;
             pMoby->unk58 = 0.6666667;
@@ -1483,7 +1483,7 @@ void M1140_001de6a0(longlong param_1)
           if (0.0 < SQRT(fVar2 * fVar2 +
                          *(float *)((int)pvVar6 + 0x130) * *(float *)((int)pvVar6 + 0x130) +
                          *(float *)((int)pvVar6 + 0x134) * *(float *)((int)pvVar6 + 0x134))) {
-            *(float *)((int)pvVar6 + 0x138) = -(DAT_0071f418 * 10.8 - fVar2);
+            *(float *)((int)pvVar6 + 0x138) = -(g_FrameTimeSq * 10.8 - fVar2);
           }
           iVar14 = MB_MayaFrameTrigger(29.0,pMoby);
           if (iVar14 == 0) {
@@ -1591,9 +1591,9 @@ void M1140_001de6a0(longlong param_1)
         dVar22 = (double)((float)(dVar22 + 0.7853981852531433) * fVar5 + fVar3);
       }
       OrganicDeltAng
-                ((float)dVar22,DAT_0071f418 * 12.566371,DAT_0071f418 * 25.132742,
+                ((float)dVar22,g_FrameTimeSq * 12.566371,g_FrameTimeSq * 25.132742,
                  g_FrameTime * 12.566371,val,(int)val,(float *)((int)pvVar6 + 0x150));
-      fVar5 = DAT_0071f418;
+      fVar5 = g_FrameTimeSq;
       fVar2 = (pMoby->rotation).z + 1.5707963;
       fVar3 = 3.1415925 - fVar2;
       if (fVar2 - (3.1415925 - fVar2) < 0.0) {

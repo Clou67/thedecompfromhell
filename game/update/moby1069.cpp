@@ -409,7 +409,7 @@ void UpdateMoby_1069(MobyInstance *moby)
         *(float *)((int)pvVar4 + 0xb0) = *(float *)((int)pvVar4 + 0xb0) + fVar37;
       }
       unused1 = &DAT_00720000;
-      fVar37 = -(DAT_0071f418 * 9.8 - *(float *)((int)pvVar4 + 0xb0));
+      fVar37 = -(g_FrameTimeSq * 9.8 - *(float *)((int)pvVar4 + 0xb0));
       *(float *)((int)pvVar4 + 0xb0) = fVar37;
       fVar36 = g_FrameTime * 5.0;
       if (fVar36 < fVar37) {
@@ -550,7 +550,7 @@ void UpdateMoby_1069(MobyInstance *moby)
          -((fVar36 * fVar10 * 2.601887e-06 +
            fVar10 * -0.0001980741 + fVar9 * 0.0083330255 + fVar36 * fVar11 * -0.16666657 + fVar11) *
            3.1 - fVar37);
-    fVar37 = -(*(float *)((int)pvVar4 + 0xb4) * DAT_0071f418 - *(float *)((int)pvVar4 + 0xb0));
+    fVar37 = -(*(float *)((int)pvVar4 + 0xb4) * g_FrameTimeSq - *(float *)((int)pvVar4 + 0xb0));
     *(float *)((int)pvVar4 + 0xb0) = fVar37;
     fVar37 = (moby->pos).z + fVar37;
     (moby->pos).z = fVar37;

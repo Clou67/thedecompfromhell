@@ -124,7 +124,7 @@ void UpdateMoby_320(MobyInstance *moby)
       (moby->rotation).z = (float)dVar8;
       dVar8 = (double)FastWrapRot((moby->rotation).y,pfVar4[5]);
       (moby->rotation).y = (float)dVar8;
-      pfVar4[2] = -(DAT_0071f418 * 12.74 - pfVar4[2]);
+      pfVar4[2] = -(g_FrameTimeSq * 12.74 - pfVar4[2]);
       iVar7 = FastDecTimerS32(pfVar4 + 7);
       if (iVar7 != 0) {
         iVar7 = 0;

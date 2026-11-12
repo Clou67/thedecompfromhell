@@ -413,7 +413,7 @@ void UpdateMoby_739(MobyInstance *moby)
           MB_SetAnimation(lVar8,0,0,(int)(animationSpeed * 3.5));
         }
         dVar25 = (double)GetGroundZ(0x3fe0000000000000,lVar16,0);
-        fVar12 = -(DAT_0071f418 * 9.8 - pfVar4[0x5e]);
+        fVar12 = -(g_FrameTimeSq * 9.8 - pfVar4[0x5e]);
         pfVar4[0x5e] = fVar12;
         fVar12 = (moby->pos).z + fVar12;
         (moby->pos).z = fVar12;
@@ -563,7 +563,7 @@ void UpdateMoby_739(MobyInstance *moby)
       }
       else if (bVar1 < 0x11) {
         dVar25 = (double)GetGroundZ(0x3fe0000000000000,lVar16,0);
-        Delt(g_FrameTime * 8.0,DAT_0071f418 * 10.8,pfVar4 + 10);
+        Delt(g_FrameTime * 8.0,g_FrameTimeSq * 10.8,pfVar4 + 10);
         fVar12 = (moby->pos).z + pfVar4[10];
         (moby->pos).z = fVar12;
         if ((float)(dVar25 + 6.0) <= fVar12) {
@@ -578,7 +578,7 @@ void UpdateMoby_739(MobyInstance *moby)
       }
       else {
         dVar25 = (double)GetGroundZ(0x3fe0000000000000,lVar16,0);
-        Delt(g_FrameTime * -8.0,DAT_0071f418 * 10.8,pfVar4 + 10);
+        Delt(g_FrameTime * -8.0,g_FrameTimeSq * 10.8,pfVar4 + 10);
         fVar12 = (moby->pos).z + pfVar4[10];
         (moby->pos).z = fVar12;
         if ((double)fVar12 <= dVar25) {
@@ -836,7 +836,7 @@ void UpdateMoby_739(MobyInstance *moby)
   (moby->pos).z = local_98;
   (moby->pos).w = local_94;
   dVar25 = (double)GetGroundZ(0x3fe0000000000000,lVar16,0);
-  fVar12 = -(DAT_0071f418 * 9.8 - pfVar4[0x5e]);
+  fVar12 = -(g_FrameTimeSq * 9.8 - pfVar4[0x5e]);
   pfVar4[0x5e] = fVar12;
   fVar12 = (moby->pos).z + fVar12;
   (moby->pos).z = fVar12;

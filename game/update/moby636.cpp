@@ -19,7 +19,7 @@ void UpdateMoby_636(MobyInstance *moby)
   float fVar4;
   
   if ((moby != (MobyInstance *)0x0) && (pfVar1 = (float *)moby->pVar, pfVar1 != (float *)0x0)) {
-    pfVar1[2] = -(DAT_0071f418 * 9.8 - pfVar1[2]);
+    pfVar1[2] = -(g_FrameTimeSq * 9.8 - pfVar1[2]);
     fVar4 = DAT_0071f408 * -0.100000024 + 1.0;
     fVar3 = *pfVar1 * fVar4;
     pfVar1[1] = pfVar1[1] * fVar4;

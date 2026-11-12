@@ -15,7 +15,7 @@ void M1524_002921d0(void)
 
 {
   DAT_007ab4b4 = 0x10000;
-  DAT_00fadb64 = DAT_0071f418 * 20.0;
+  DAT_00fadb64 = g_FrameTimeSq * 20.0;
   return;
 }
 
@@ -252,7 +252,7 @@ void UpdateMoby_1524(MobyInstance *moby)
   bVar1 = moby->state;
   if (bVar1 < 2) {
     if (bVar1 != 0) {
-      pfVar4[2] = -(DAT_007ab4d8 * DAT_0071f418 - pfVar4[2]);
+      pfVar4[2] = -(DAT_007ab4d8 * g_FrameTimeSq - pfVar4[2]);
       if ((*(float *)pfVar4[9] + 3.0 < (moby->pos).z) &&
          (iVar10 = MB_randInt(DAT_007ab4e8), iVar10 == 0)) {
         M1524_002925d0(moby);
@@ -274,7 +274,7 @@ void UpdateMoby_1524(MobyInstance *moby)
   }
   else if (bVar1 < 3) {
     pMVar6 = moby->pClass;
-    pfVar4[2] = -(DAT_007ab4dc * DAT_0071f418 - pfVar4[2]);
+    pfVar4[2] = -(DAT_007ab4dc * g_FrameTimeSq - pfVar4[2]);
     dVar17 = (double)(pMVar6->gScale / (float)(longlong)(animationSpeed * 60.5));
     if (worldUpdateTime ==
         (((int)worldUpdateTime >> 2) +
@@ -304,7 +304,7 @@ void UpdateMoby_1524(MobyInstance *moby)
   (moby->pos).z = (moby->pos).z + pfVar4[2];
   local_50[0] = SQRT(*pfVar4 * *pfVar4 + pfVar4[1] * pfVar4[1]);
   dVar18 = 0.0;
-  Delt(0.0,DAT_007ab4e0 * DAT_0071f418,local_50);
+  Delt(0.0,DAT_007ab4e0 * g_FrameTimeSq,local_50);
   fVar2 = pfVar4[1];
   fVar3 = *pfVar4;
   dVar16 = (double)SQRT(fVar3 * fVar3 + fVar2 * fVar2);

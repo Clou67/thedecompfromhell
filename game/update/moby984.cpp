@@ -945,7 +945,7 @@ void M984_004cc4a8(MobyInstance *param_1)
     uVar15 = FastDoubleToInt(0x4080000000000000);
     *(undefined4 *)((int)pvVar6 + 0x98) = 0x3f000000;
     fVar1 = DAT_008f52f8;
-    fVar4 = DAT_0071f418;
+    fVar4 = g_FrameTimeSq;
     *(undefined4 *)((int)pvVar6 + 0x90) = uVar15;
     *(undefined4 *)((int)pvVar6 + 0x84) = 0x3a03126f;
     *(undefined1 *)((int)pvVar6 + 0xad) = 0;
@@ -954,7 +954,7 @@ void M984_004cc4a8(MobyInstance *param_1)
     fVar4 = g_FrameTime;
     if (iVar14 < 3) {
       if ((-1 < iVar14) && (0 < iVar14)) {
-        fVar4 = DAT_008f52f8 * DAT_0071f418;
+        fVar4 = DAT_008f52f8 * g_FrameTimeSq;
         param_1->modeBits =
              param_1->modeBits &
              (MIRROR|CAN_BE_DAMAGED|HIDE_BACKFACES|DISABLE_Z_WRITE|DRAW_SHADOW|
@@ -1360,7 +1360,7 @@ void M984_004ccd48(MobyInstance *moby)
       dVar32 = (double)((float)(dVar32 + 0.7853981852531433) * fVar4 + fVar3);
     }
     OrganicDeltAng
-              ((float)dVar32,DAT_0071f418 * 8.726646,DAT_0071f418 * 8.726646,
+              ((float)dVar32,g_FrameTimeSq * 8.726646,g_FrameTimeSq * 8.726646,
                g_FrameTime * 12.566371,&(moby->rotation).z,0x720000,
                (float *)((int)pvVar9 + 400));
     dVar32 = (double)BlendAnimFrame(moby);
@@ -1543,7 +1543,7 @@ void M984_004ccd48(MobyInstance *moby)
       dVar32 = (double)((float)(dVar32 + 0.7853981852531433) * fVar4 + fVar3);
     }
     OrganicDeltAng
-              ((float)dVar32,DAT_0071f418 * 8.726646,DAT_0071f418 * 8.726646,
+              ((float)dVar32,g_FrameTimeSq * 8.726646,g_FrameTimeSq * 8.726646,
                g_FrameTime * 12.566371,&(moby->rotation).z,0x720000,
                (float *)((int)pvVar9 + 400));
     dVar32 = (double)BlendAnimFrame(moby);
@@ -1645,7 +1645,7 @@ void M984_004ccd48(MobyInstance *moby)
       fVar38 = (fVar38 + 0.7853982) * fVar8 + fVar2;
     }
     fVar38 = OrganicDeltAng
-                       (fVar38,DAT_0071f418 * 8.726646,DAT_0071f418 * 8.726646,
+                       (fVar38,g_FrameTimeSq * 8.726646,g_FrameTimeSq * 8.726646,
                         g_FrameTime * 12.566371,&(moby->rotation).z,0x720000,
                         (float *)((int)pvVar9 + 400));
     if (((iVar25 != 0) && (*(int *)((int)pvVar9 + 0x164) != 2)) &&

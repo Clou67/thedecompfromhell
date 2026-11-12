@@ -379,7 +379,7 @@ void UpdateMoby_239(MobyInstance *moby)
           local_158 = 0.0;
           FUN_005e7f98(dVar22,auStack_160,auStack_160);
           dVar24 = (double)MB_computeLobVelocity
-                                     (dVar22,-(double)(DAT_007ff5b8 * DAT_0071f418),auStack_170,
+                                     (dVar22,-(double)(DAT_007ff5b8 * g_FrameTimeSq),auStack_170,
                                       &local_150);
           local_158 = (float)dVar24;
           iVar13 = FUN_00315198(lVar12,auStack_170,auStack_160);
@@ -857,7 +857,7 @@ void UpdateMoby_239(MobyInstance *moby)
           FUN_005e7f98((double)(DAT_007ff5b0 * g_FrameTime),auStack_c0,auStack_c0);
           dVar24 = (double)MB_computeLobVelocity
                                      ((double)(DAT_007ff5b0 * g_FrameTime),
-                                      -(double)(DAT_007ff5b8 * DAT_0071f418),auStack_d0,&local_b0);
+                                      -(double)(DAT_007ff5b8 * g_FrameTimeSq),auStack_d0,&local_b0);
           local_b8 = (float)dVar24;
           iVar13 = FUN_00315198(lVar12,auStack_d0,auStack_c0);
           if (iVar13 != 0) {

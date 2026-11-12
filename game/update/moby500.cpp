@@ -450,7 +450,7 @@ LAB_003a5020:
       dVar12 = (double)g_FrameTime;
       *(float *)(iVar6 + 0x18) = (float)(dVar14 * dVar12);
       if (-1 < *(int *)(iVar5 + 0xc0)) {
-        dVar13 = (double)(float)((double)(float)((double)DAT_0071f418 * dVar30) * dVar31);
+        dVar13 = (double)(float)((double)(float)((double)g_FrameTimeSq * dVar30) * dVar31);
         iVar10 = MB_SolveQuad
                            (dVar13,(double)(float)((double)(float)(dVar14 * dVar12) - dVar13),
                             (double)(*(float *)(iVar9 + 0x18) -
@@ -1458,7 +1458,7 @@ void M511_003a6d40(ulonglong param_1)
                                0x25,0);
           M511_003a4da0(uVar13);
         }
-        dVar14 = (double)DAT_0071f418;
+        dVar14 = (double)g_FrameTimeSq;
         dVar15 = -(double)(float)(dVar14 * dVar22 - (double)*(float *)(iVar7 + 0x48));
         if (dVar15 - dVar21 < 0.0) {
           dVar15 = dVar21;

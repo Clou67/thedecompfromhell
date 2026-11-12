@@ -52,7 +52,7 @@ void UpdateMoby_98(MobyInstance *moby)
     }
     if ((float)piVar3[1] != fVar1) {
       OrganicDelt
-                (fVar1,DAT_0071f418 * 4.0,DAT_0071f418 * 4.0,g_FrameTime * 4.0,
+                (fVar1,g_FrameTimeSq * 4.0,g_FrameTimeSq * 4.0,g_FrameTime * 4.0,
                  (float *)(piVar3 + 1),0x720000,(float *)(piVar3 + 2));
       iVar4 = *piVar3;
       fVar1 = (float)piVar3[1];

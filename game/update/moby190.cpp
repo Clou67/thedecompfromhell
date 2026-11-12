@@ -986,10 +986,10 @@ void UpdateMoby_190(MobyInstance *moby)
           fVar2 = 12.0;
         }
       }
-      fVar2 = SQRT(DAT_0071f418 * 9.8 * fVar2 * 0.5);
+      fVar2 = SQRT(g_FrameTimeSq * 9.8 * fVar2 * 0.5);
       dVar48 = (double)((fVar2 * 2.0 * fVar2 *
                         (float)(1.0 - (double)(float)((double)*(float *)(puVar13 + 0x15) / dVar53)))
-                       / (DAT_0071f418 * 9.8));
+                       / (g_FrameTimeSq * 9.8));
       fVar2 = (float)((double)(float)((double)*(float *)(puVar13 + 0x15) / dVar53) * dVar48);
       dVar53 = (double)fVar2;
       if (dVar51 < dVar48) {
@@ -1124,7 +1124,7 @@ void UpdateMoby_190(MobyInstance *moby)
       dVar51 = (double)fVar2;
     }
     M190_002d2308
-              ((double)(DAT_0071f418 * 9.8),0x3ff0000000000000,dVar51,uVar20 - 0x2d0,uVar20 - 0x2c0,
+              ((double)(g_FrameTimeSq * 9.8),0x3ff0000000000000,dVar51,uVar20 - 0x2d0,uVar20 - 0x2c0,
                uVar24);
   }
   uVar1 = moby->state;

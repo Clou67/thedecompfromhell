@@ -707,13 +707,13 @@ void UpdateMoby_457(MobyInstance *moby)
           }
           dVar49 = 188.4955596923828;
           dVar31 = (double)MB_DeltAngSpeed
-                                     ((double)fVar1,dVar47,(double)(DAT_0071f418 * 188.49556),0,0,
+                                     ((double)fVar1,dVar47,(double)(g_FrameTimeSq * 188.49556),0,0,
                                       &DAT_0038d24c,uVar28,pfVar11 + 0xd);
           *(float *)((int)puVar15 + 0x19c) = (float)dVar36;
           (moby->rotation).z = (float)dVar31;
           fVar1 = (moby->rotation).y;
           fVar2 = SQRT((float)(dVar54 * dVar54 + (double)(float)(dVar46 * dVar46)));
-          dVar54 = (double)DAT_0071f418;
+          dVar54 = (double)g_FrameTimeSq;
           dVar51 = ABS((double)fVar2);
           *(float *)(puVar15 + 0x33) = fVar2;
           *(float *)(puVar15 + 0x34) = (float)(dVar51 - ABS(dVar36));

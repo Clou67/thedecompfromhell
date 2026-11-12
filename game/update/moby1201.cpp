@@ -490,8 +490,8 @@ void UpdateMoby_1201(MobyInstance *moby)
       *(float *)(puVar11 + 0x15) = fVar6 * fVar13;
       *(float *)((int)puVar11 + 0xa4) = -(fVar2 * fVar13);
     }
-    fVar6 = DAT_0071f418;
-    fVar4 = *(float *)((int)manipulator + 0x60) + -(DAT_0071f418 * 3.1415927 * fVar4);
+    fVar6 = g_FrameTimeSq;
+    fVar4 = *(float *)((int)manipulator + 0x60) + -(g_FrameTimeSq * 3.1415927 * fVar4);
     *(float *)((int)manipulator + 0x60) = fVar4;
     *(float *)((int)manipulator + 100) =
          *(float *)((int)manipulator + 100) + -(fVar6 * 0.7853982 * *(float *)((int)puVar11 + 0xa4))

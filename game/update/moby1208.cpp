@@ -122,7 +122,7 @@ void UpdateMoby_1208(MobyInstance *moby)
     (moby->pos).y = (moby->pos).y + pfVar9[1];
     (moby->pos).z = (moby->pos).z + pfVar9[2];
     dVar39 = 0.0;
-    Delt(0.0,DAT_007665a8 * DAT_0071f418,pfVar9 + 2);
+    Delt(0.0,DAT_007665a8 * g_FrameTimeSq,pfVar9 + 2);
     fVar8 = SQRT(*pfVar9 * *pfVar9 + pfVar9[1] * pfVar9[1]);
     fVar2 = (moby->pos).x;
     fVar3 = (moby->pos).y;

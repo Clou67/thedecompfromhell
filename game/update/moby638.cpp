@@ -719,7 +719,7 @@ double M638_003fb180(int param_1,float *param_2)
   fVar1 = SQRT(fVar3 * fVar3 + fVar2 * fVar2 + fVar1 * fVar1);
   dVar11 = (double)fVar1;
   OrganicDelt
-            (fVar1,DAT_0071f418 * 4.0,DAT_0071f418 * 4.0,g_FrameTime * 5.0,local_30,
+            (fVar1,g_FrameTimeSq * 4.0,g_FrameTimeSq * 4.0,g_FrameTime * 5.0,local_30,
              0x3fb170,(float *)(iVar5 + 0x2d4));
   fVar2 = (float)((double)param_2[1] - (double)*(float *)(iVar5 + 0x2c4));
   fVar3 = (float)((double)*param_2 - (double)*(float *)(iVar5 + 0x2c0));
@@ -1051,7 +1051,7 @@ void M638_003fb7c8(MobyInstance *param_1)
     *(undefined4 *)((int)pvVar7 + 0x90) = uVar16;
     *(undefined4 *)((int)pvVar7 + 0x98) = 0x3f000000;
     dVar24 = 20.0;
-    fVar1 = DAT_0071f418 * 20.0;
+    fVar1 = g_FrameTimeSq * 20.0;
     *(undefined4 *)((int)pvVar7 + 0x84) = 0;
     *(undefined1 *)((int)pvVar7 + 0xad) = 0;
     *(undefined4 *)((int)pvVar7 + 0x94) = 1;
@@ -1064,7 +1064,7 @@ void M638_003fb7c8(MobyInstance *param_1)
             9 < ShipsKilledCounts.Veldin2)))) {
           MB_UnlockSkillPoint(0x1d);
         }
-        dVar25 = (double)DAT_0071f418;
+        dVar25 = (double)g_FrameTimeSq;
         param_1->modeBits =
              param_1->modeBits &
              (MIRROR|CAN_BE_DAMAGED|HIDE_BACKFACES|DISABLE_Z_WRITE|DRAW_SHADOW|
@@ -1594,7 +1594,7 @@ void UpdateMoby_638(MobyInstance *moby)
             fVar43 = (fVar43 + 0.7853982) * fVar13 + fVar12;
           }
           fVar43 = OrganicDeltAng
-                             (fVar43,DAT_0071f418 * 12.566371,DAT_0071f418 * 12.566371,
+                             (fVar43,g_FrameTimeSq * 12.566371,g_FrameTimeSq * 12.566371,
                               g_FrameTime * 12.566371,&(moby->rotation).z,0x720000,
                               (float *)((int)pvVar15 + 0x2d8));
           dVar35 = (double)M638_003fb180((double)fVar43,moby,uVar32 + 0x2b0,1);
@@ -1750,7 +1750,7 @@ void UpdateMoby_638(MobyInstance *moby)
         fVar43 = (fVar43 + 0.7853982) * fVar13 + fVar12;
       }
       OrganicDeltAng
-                (fVar43,DAT_0071f418 * 12.566371,DAT_0071f418 * 12.566371,
+                (fVar43,g_FrameTimeSq * 12.566371,g_FrameTimeSq * 12.566371,
                  g_FrameTime * 12.566371,&(moby->rotation).z,0x720000,
                  (float *)((int)pvVar15 + 0x2d8));
       if (((moby->field43_0x70 & 2U) != 0) && (moby->state = '\x05', moby->animationId != '\x03')) {
@@ -1949,7 +1949,7 @@ void UpdateMoby_638(MobyInstance *moby)
       dVar34 = (double)((float)(dVar34 + 0.7853981852531433) * fVar11 + fVar10);
     }
     OrganicDeltAng
-              ((float)dVar34,DAT_0071f418 * 12.566371,DAT_0071f418 * 12.566371,
+              ((float)dVar34,g_FrameTimeSq * 12.566371,g_FrameTimeSq * 12.566371,
                g_FrameTime * 12.566371,&(moby->rotation).z,0x720000,
                (float *)((int)pvVar15 + 0x2d8));
     iVar20 = MB_MayaFrameTrigger(2.0,moby);

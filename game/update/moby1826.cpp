@@ -113,12 +113,12 @@ void UpdateMoby_1826(MobyInstance *moby)
        (int)((uVar7 >> 1 ^ (uint)fVar5) - uVar7) <
        (int)((uVar8 >> 1 ^ *(uint *)((int)pvVar6 + 0xa8)) - uVar8))) {
       local_30.z = OrganicDelt
-                             (*(float *)((int)pvVar6 + 0xa8),DAT_007b7f0c * DAT_0071f418,
-                              DAT_007b7f0c * DAT_0071f418,DAT_007b7f08 * g_FrameTime,val,
+                             (*(float *)((int)pvVar6 + 0xa8),DAT_007b7f0c * g_FrameTimeSq,
+                              DAT_007b7f0c * g_FrameTimeSq,DAT_007b7f08 * g_FrameTime,val,
                               iVar11,(float *)iVar11);
     }
     else {
-      fVar3 = DAT_007b7f0c * 4.0 * DAT_0071f418;
+      fVar3 = DAT_007b7f0c * 4.0 * g_FrameTimeSq;
       local_30.z = OrganicDelt
                              (fVar2,fVar3,fVar3,DAT_007b7f08 * g_FrameTime,val,iVar11,
                               (float *)iVar11);

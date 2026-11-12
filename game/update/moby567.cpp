@@ -254,7 +254,7 @@ void UpdateMoby_567(MobyInstance *moby)
       dVar26 = dVar27;
       if (fVar3 <= (float)(dVar25 - dVar24)) {
         if ((double)(DAT_00969f88 + fVar3) <= dVar25) {
-          dVar26 = -(double)(DAT_0071f418 * 10.8 - pfVar8[2]);
+          dVar26 = -(double)(g_FrameTimeSq * 10.8 - pfVar8[2]);
         }
       }
       else {

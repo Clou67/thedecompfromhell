@@ -87,7 +87,7 @@ void UpdateMoby_1180(MobyInstance *moby)
   else if (bVar1 < 3) {
     dVar5 = (double)FastWrapRot((float)piVar3[2],1.0471976);
     fVar6 = OrganicDeltAng
-                      ((float)dVar5,DAT_0071f418 * 0.34906584,DAT_0071f418 * 0.34906584,
+                      ((float)dVar5,g_FrameTimeSq * 0.34906584,g_FrameTimeSq * 0.34906584,
                        g_FrameTime * 0.7853982,&(moby->rotation).z,0x720000,
                        (float *)(piVar3 + 1));
     if (fVar6 == 0.0) {

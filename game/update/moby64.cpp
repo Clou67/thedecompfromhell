@@ -614,9 +614,9 @@ void M795_004482f8(int param_1)
   dVar22 = (double)MB_DeltAngSpeed
                              ((double)fVar27,-dVar22,
                               (double)((float)((double)(float)(dVar19 * 10.0) * dVar23) *
-                                      DAT_0071f418),
+                                      g_FrameTimeSq),
                               (double)((float)((double)(float)(dVar19 * 5.0) * dVar23) *
-                                      DAT_0071f418),
+                                      g_FrameTimeSq),
                               (double)((float)(dVar19 * dVar23) * g_FrameTime),
                               &DAT_004482e0,uVar13,iVar4 + 0x11c);
   *(float *)(param_1 + 0x44) = (float)dVar22;
@@ -627,9 +627,9 @@ void M795_004482f8(int param_1)
   dVar22 = (double)MB_DeltAngSpeed
                              ((double)*(float *)(param_1 + 0x40),(double)fVar27,
                               (double)((float)((double)(float)(dVar22 * dVar25) * dVar23) *
-                                      DAT_0071f418),
+                                      g_FrameTimeSq),
                               (double)((float)((double)(float)(dVar22 * dVar24) * dVar23) *
-                                      DAT_0071f418),
+                                      g_FrameTimeSq),
                               (double)((float)(dVar22 * dVar23) * g_FrameTime));
   *(float *)(param_1 + 0x40) = (float)dVar22;
   return;
@@ -745,79 +745,79 @@ void M795_00448ab0(MobyInstance *param_1,undefined8 param_2,int param_3)
     dVar9 = 90.5;
     if (MVar1 == PURPLE_SHIP_0084) {
       MB_SpawnDebrisMoby
-                ((double)(DAT_0071f418 * 12.0),param_1,0x6bc,pvVar7,pvVar8,
+                ((double)(g_FrameTimeSq * 12.0),param_1,0x6bc,pvVar7,pvVar8,
                  (int)(animationSpeed * 90.5),0);
       MB_SpawnDebrisMoby
-                ((double)(float)((double)DAT_0071f418 * dVar11),param_1,0x6be,pvVar7,pvVar8,
+                ((double)(float)((double)g_FrameTimeSq * dVar11),param_1,0x6be,pvVar7,pvVar8,
                  (int)((double)animationSpeed * dVar9),0);
       MB_SpawnDebrisMoby
-                ((double)(float)((double)DAT_0071f418 * dVar11),param_1,0x6bf,pvVar7,pvVar8,
+                ((double)(float)((double)g_FrameTimeSq * dVar11),param_1,0x6bf,pvVar7,pvVar8,
                  (int)((double)animationSpeed * dVar9),0);
     }
     else if (MVar1 == BEIGE_SHIP) {
       MB_SpawnDebrisMoby
-                ((double)(DAT_0071f418 * 12.0),param_1,0x6b8,pvVar7,pvVar8,
+                ((double)(g_FrameTimeSq * 12.0),param_1,0x6b8,pvVar7,pvVar8,
                  (int)(animationSpeed * 90.5),0);
       MB_SpawnDebrisMoby
-                ((double)(float)((double)DAT_0071f418 * dVar11),param_1,0x6b9,pvVar7,pvVar8,
+                ((double)(float)((double)g_FrameTimeSq * dVar11),param_1,0x6b9,pvVar7,pvVar8,
                  (int)((double)animationSpeed * dVar9),0);
       MB_SpawnDebrisMoby
-                ((double)(float)((double)DAT_0071f418 * dVar11),param_1,0x6ba,pvVar7,pvVar8,
+                ((double)(float)((double)g_FrameTimeSq * dVar11),param_1,0x6ba,pvVar7,pvVar8,
                  (int)((double)animationSpeed * dVar9),0);
     }
     else if (MVar1 == GREEN_SHIP_0077) {
       MB_SpawnDebrisMoby
-                ((double)(DAT_0071f418 * 12.0),param_1,0x6b5,pvVar7,pvVar8,
+                ((double)(g_FrameTimeSq * 12.0),param_1,0x6b5,pvVar7,pvVar8,
                  (int)(animationSpeed * 90.5),0);
       MB_SpawnDebrisMoby
-                ((double)(float)((double)DAT_0071f418 * dVar11),param_1,0x6b6,pvVar7,pvVar8,
+                ((double)(float)((double)g_FrameTimeSq * dVar11),param_1,0x6b6,pvVar7,pvVar8,
                  (int)((double)animationSpeed * dVar9),0);
       MB_SpawnDebrisMoby
-                ((double)(float)((double)DAT_0071f418 * dVar11),param_1,0x6b7,pvVar7,pvVar8,
+                ((double)(float)((double)g_FrameTimeSq * dVar11),param_1,0x6b7,pvVar7,pvVar8,
                  (int)((double)animationSpeed * dVar9),0);
     }
     else if (MVar1 == TRUCK_SHIP) {
       MB_SpawnDebrisMoby
-                ((double)(DAT_0071f418 * 12.0),param_1,0x6b2,pvVar7,pvVar8,
+                ((double)(g_FrameTimeSq * 12.0),param_1,0x6b2,pvVar7,pvVar8,
                  (int)(animationSpeed * 90.5),0);
       MB_SpawnDebrisMoby
-                ((double)(float)((double)DAT_0071f418 * dVar11),param_1,0x6b3,pvVar7,pvVar8,
+                ((double)(float)((double)g_FrameTimeSq * dVar11),param_1,0x6b3,pvVar7,pvVar8,
                  (int)((double)animationSpeed * dVar9),0);
       MB_SpawnDebrisMoby
-                ((double)(float)((double)DAT_0071f418 * dVar11),param_1,0x6b4,pvVar7,pvVar8,
+                ((double)(float)((double)g_FrameTimeSq * dVar11),param_1,0x6b4,pvVar7,pvVar8,
                  (int)((double)animationSpeed * dVar9),0);
     }
     else if (MVar1 == YELLOW_SHIP) {
       MB_SpawnDebrisMoby
-                ((double)(DAT_0071f418 * 12.0),param_1,0x6af,pvVar7,pvVar8,
+                ((double)(g_FrameTimeSq * 12.0),param_1,0x6af,pvVar7,pvVar8,
                  (int)(animationSpeed * 90.5),0);
       MB_SpawnDebrisMoby
-                ((double)(float)((double)DAT_0071f418 * dVar11),param_1,0x6b0,pvVar7,pvVar8,
+                ((double)(float)((double)g_FrameTimeSq * dVar11),param_1,0x6b0,pvVar7,pvVar8,
                  (int)((double)animationSpeed * dVar9),0);
       MB_SpawnDebrisMoby
-                ((double)(float)((double)DAT_0071f418 * dVar11),param_1,0x6b1,pvVar7,pvVar8,
+                ((double)(float)((double)g_FrameTimeSq * dVar11),param_1,0x6b1,pvVar7,pvVar8,
                  (int)((double)animationSpeed * dVar9),0);
     }
     else if (MVar1 == RED_SHIP_2) {
       MB_SpawnDebrisMoby
-                ((double)(DAT_0071f418 * 12.0),param_1,0x6ac,pvVar7,pvVar8,
+                ((double)(g_FrameTimeSq * 12.0),param_1,0x6ac,pvVar7,pvVar8,
                  (int)(animationSpeed * 90.5),0);
       MB_SpawnDebrisMoby
-                ((double)(float)((double)DAT_0071f418 * dVar11),param_1,0x6ad,pvVar7,pvVar8,
+                ((double)(float)((double)g_FrameTimeSq * dVar11),param_1,0x6ad,pvVar7,pvVar8,
                  (int)((double)animationSpeed * dVar9),0);
       MB_SpawnDebrisMoby
-                ((double)(float)((double)DAT_0071f418 * dVar11),param_1,0x6ae,pvVar7,pvVar8,
+                ((double)(float)((double)g_FrameTimeSq * dVar11),param_1,0x6ae,pvVar7,pvVar8,
                  (int)((double)animationSpeed * dVar9),0);
     }
     else if (MVar1 == WHITE_SHIP) {
       MB_SpawnDebrisMoby
-                ((double)(DAT_0071f418 * 12.0),param_1,0x6a9,pvVar7,pvVar8,
+                ((double)(g_FrameTimeSq * 12.0),param_1,0x6a9,pvVar7,pvVar8,
                  (int)(animationSpeed * 90.5),0);
       MB_SpawnDebrisMoby
-                ((double)(float)((double)DAT_0071f418 * dVar11),param_1,0x6aa,pvVar7,pvVar8,
+                ((double)(float)((double)g_FrameTimeSq * dVar11),param_1,0x6aa,pvVar7,pvVar8,
                  (int)((double)animationSpeed * dVar9),0);
       MB_SpawnDebrisMoby
-                ((double)(float)((double)DAT_0071f418 * dVar11),param_1,0x6ab,pvVar7,pvVar8,
+                ((double)(float)((double)g_FrameTimeSq * dVar11),param_1,0x6ab,pvVar7,pvVar8,
                  (int)((double)animationSpeed * dVar9),0);
     }
     if (param_1->oClass == BLIMP) {

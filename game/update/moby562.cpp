@@ -918,10 +918,10 @@ void M562_003b6ca8
       if ((g_Pad.downButtons & (L1|L2)) != 0) {
         dVar43 = dVar45;
       }
-      fVar10 = SQRT(DAT_0071f418 * 9.0 * (float)(dVar43 + dVar29) * 0.5);
+      fVar10 = SQRT(g_FrameTimeSq * 9.0 * (float)(dVar43 + dVar29) * 0.5);
       dVar43 = (double)((fVar10 * 2.0 * fVar10 *
                         (float)(dVar45 - (double)(float)((double)*(float *)(puVar15 + 0x11) / dVar34
-                                                        ))) / (DAT_0071f418 * 9.0));
+                                                        ))) / (g_FrameTimeSq * 9.0));
       fVar10 = (float)((double)(float)((double)*(float *)(puVar15 + 0x11) / dVar34) * dVar43);
       dVar34 = (double)fVar10;
       if (dVar44 < dVar43) {
@@ -1047,7 +1047,7 @@ void M562_003b6ca8
     if ((g_Pad.downButtons & (L1|L2)) != 0) {
       dVar44 = dVar45;
     }
-    M562_003b6708((double)(DAT_0071f418 * 9.0),0x3ee4f8b580000000,(double)(float)(dVar44 + dVar29),
+    M562_003b6708((double)(g_FrameTimeSq * 9.0),0x3ee4f8b580000000,(double)(float)(dVar44 + dVar29),
                   uVar20 + 0x40 & 0xffffffff,uVar20 - 0x260,(ulonglong)uVar12 + 0x10);
   }
   return;

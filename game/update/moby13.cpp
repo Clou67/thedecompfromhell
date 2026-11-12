@@ -732,7 +732,7 @@ void UpdateMoby_13(MobyInstance *moby)
       moby->scale = moby->pClass->gScale * 0.65;
       return;
     }
-    pfVar20[10] = -(DAT_0071f418 * 10.8 - pfVar20[10]);
+    pfVar20[10] = -(g_FrameTimeSq * 10.8 - pfVar20[10]);
     (moby->pos).x = (moby->pos).x + pfVar20[8];
     (moby->pos).y = (moby->pos).y + pfVar20[9];
     (moby->pos).z = (moby->pos).z + pfVar20[10];
@@ -884,20 +884,20 @@ LAB_00241820:
       local_110.y = local_110.y - pfVar20[9];
       local_110.w = DAT_00969d0c;
       local_110.z = fVar4 - pfVar20[10];
-      ClampVec3Magnitude((double)(DAT_0071f418 * 50.0),&local_110);
+      ClampVec3Magnitude((double)(g_FrameTimeSq * 50.0),&local_110);
       pfVar20[8] = pfVar20[8] + local_110.x;
       pfVar20[9] = pfVar20[9] + local_110.y;
       pfVar20[10] = pfVar20[10] + local_110.z;
       goto LAB_002423f0;
     }
   }
-  fVar9 = DAT_0071f418;
+  fVar9 = g_FrameTimeSq;
   fVar4 = pfVar20[9];
   fVar5 = pfVar20[8];
   fVar6 = pfVar20[10];
   fVar8 = SQRT(fVar6 * fVar6 + fVar5 * fVar5 + fVar4 * fVar4);
-  if (DAT_0071f418 * 10.0 < fVar8) {
-    fVar12 = (DAT_0071f418 * 10.0) / fVar8;
+  if (g_FrameTimeSq * 10.0 < fVar8) {
+    fVar12 = (g_FrameTimeSq * 10.0) / fVar8;
     fVar10 = 0.0;
     fVar11 = fVar10;
     if (0.0 - fVar8 < 0.0) {

@@ -838,7 +838,7 @@ void UpdateMoby_1048(MobyInstance *moby)
         uVar14 = FastDoubleToInt(0x4088000000000000);
         *(undefined4 *)((int)pvVar7 + 0x98) = 0x3f400000;
         fVar4 = DAT_00740634;
-        fVar3 = DAT_0071f418;
+        fVar3 = g_FrameTimeSq;
         *(undefined4 *)((int)pvVar7 + 0x90) = uVar14;
         *(undefined4 *)((int)pvVar7 + 0x84) = 0x3a03126f;
         *(undefined1 *)((int)pvVar7 + 0xad) = 0;
@@ -1048,10 +1048,10 @@ void UpdateMoby_1048(MobyInstance *moby)
       fVar3 = (moby->pos).y - *(float *)(iVar15 + 0x14);
       fVar4 = (moby->pos).x - *(float *)(iVar15 + 0x10);
       if (SQRT(fVar4 * fVar4 + fVar3 * fVar3) <= DAT_00740644) {
-        Delt(0.0,DAT_0071f418 * 20.0,(float *)((int)pvVar7 + 0xf4));
+        Delt(0.0,g_FrameTimeSq * 20.0,(float *)((int)pvVar7 + 0xf4));
       }
       else {
-        Delt(*(float *)((int)pvVar7 + 0x1a4) * g_FrameTime,DAT_0071f418 * 6.0,
+        Delt(*(float *)((int)pvVar7 + 0x1a4) * g_FrameTime,g_FrameTimeSq * 6.0,
                        (float *)((int)pvVar7 + 0xf4));
       }
       uVar21 = FUN_005e8338((double)(*(float *)(iVar15 + 0x10) - (moby->pos).x),
@@ -1114,7 +1114,7 @@ void UpdateMoby_1048(MobyInstance *moby)
   else if (bVar1 < 0xe) {
     if (bVar1 < 0xb) {
       if (bVar1 < 10) {
-        Delt(*(float *)((int)pvVar7 + 0x1a4) * g_FrameTime,DAT_0071f418 * 6.0,
+        Delt(*(float *)((int)pvVar7 + 0x1a4) * g_FrameTime,g_FrameTimeSq * 6.0,
                        (float *)((int)pvVar7 + 0xf4));
         uVar21 = FUN_005e8338((double)(*(float *)(iVar15 + 0x10) - (moby->pos).x),
                               (double)(*(float *)(iVar15 + 0x14) - (moby->pos).y));
@@ -1218,7 +1218,7 @@ void UpdateMoby_1048(MobyInstance *moby)
       }
     }
     else if (bVar1 < 0xd) {
-      Delt(*(float *)((int)pvVar7 + 0x1a4) * g_FrameTime,DAT_0071f418 * 6.0,
+      Delt(*(float *)((int)pvVar7 + 0x1a4) * g_FrameTime,g_FrameTimeSq * 6.0,
                      (float *)((int)pvVar7 + 0xf4));
       uVar21 = FUN_005e8338((double)(*(float *)((int)pvVar7 + 0x170) - (moby->pos).x),
                             (double)(*(float *)((int)pvVar7 + 0x174) - (moby->pos).y));
@@ -1256,7 +1256,7 @@ void UpdateMoby_1048(MobyInstance *moby)
     }
     else {
       Delt(*(float *)((int)pvVar7 + 0x1a4) * 3.0 * g_FrameTime,
-                     DAT_0071f418 * 20.0,(float *)((int)pvVar7 + 0xf4));
+                     g_FrameTimeSq * 20.0,(float *)((int)pvVar7 + 0xf4));
       uVar21 = FUN_005e8338((double)(*(float *)(iVar15 + 0x10) - (moby->pos).x),
                             (double)(*(float *)(iVar15 + 0x14) - (moby->pos).y));
       OrganicDeltAngSpeed
@@ -1341,7 +1341,7 @@ void UpdateMoby_1048(MobyInstance *moby)
       dVar20 = (double)FUN_005e8338((double)(g_heroPosition.x - (moby->pos).x),
                                     (double)(g_heroPosition.y - (moby->pos).y));
       OrganicDeltAng
-                ((float)dVar20,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+                ((float)dVar20,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
                  g_FrameTime * 12.566371,&(moby->rotation).z,0x720000,
                  (float *)((int)pvVar7 + 400));
       fVar3 = (moby->pos).y - g_heroPosition.y;
@@ -1357,7 +1357,7 @@ void UpdateMoby_1048(MobyInstance *moby)
     dVar20 = (double)FUN_005e8338((double)(g_heroPosition.x - (moby->pos).x),
                                   (double)(g_heroPosition.y - (moby->pos).y));
     OrganicDeltAng
-              ((float)dVar20,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+              ((float)dVar20,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
                g_FrameTime * 12.566371,&(moby->rotation).z,0x720000,
                (float *)((int)pvVar7 + 400));
     dVar20 = (double)BlendAnimFrame(moby);

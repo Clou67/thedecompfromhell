@@ -923,7 +923,7 @@ void UpdateMoby_270(MobyInstance *moby)
        SQRT(fVar7 * fVar7 + fVar6 * fVar6) <= (float)(dVar25 * 4.0))) {
       dVar29 = 1.5707963705062866;
       OrganicDeltAngSpeed
-                (dVar24,(double)(DAT_0071f418 * 0.7853982),(double)(DAT_0071f418 * 1.5707964),
+                (dVar24,(double)(g_FrameTimeSq * 0.7853982),(double)(g_FrameTimeSq * 1.5707964),
                  (double)(g_FrameTime * 0.7853982),lVar15);
       cosf((moby->rotation).z);
       FUN_005e8128((double)(moby->rotation).z);
@@ -955,7 +955,7 @@ void UpdateMoby_270(MobyInstance *moby)
     else {
       dVar29 = 1.5707963705062866;
       OrganicDeltAngSpeed
-                (dVar24,(double)(DAT_0071f418 * 0.7853982),(double)(DAT_0071f418 * 1.5707964),
+                (dVar24,(double)(g_FrameTimeSq * 0.7853982),(double)(g_FrameTimeSq * 1.5707964),
                  (double)(g_FrameTime * 0.7853982),lVar15);
       cosf((moby->rotation).z);
       FUN_005e8128((double)(moby->rotation).z);
@@ -1004,7 +1004,7 @@ LAB_00323660:
       if ((float)(dVar25 * 3.0) <= fVar6) {
         dVar29 = 1.5707963705062866;
         OrganicDeltAngSpeed
-                  (dVar24,(double)(DAT_0071f418 * 0.7853982),(double)(DAT_0071f418 * 1.5707964),
+                  (dVar24,(double)(g_FrameTimeSq * 0.7853982),(double)(g_FrameTimeSq * 1.5707964),
                    (double)(g_FrameTime * 0.7853982),lVar15,puVar22,uVar23 + 0x68);
         cosf((moby->rotation).z);
         FUN_005e8128((double)(moby->rotation).z);
@@ -1036,7 +1036,7 @@ LAB_00323660:
       else {
         dVar29 = 1.5707963705062866;
         OrganicDeltAngSpeed
-                  (dVar24,(double)(DAT_0071f418 * 0.7853982),(double)(DAT_0071f418 * 1.5707964),
+                  (dVar24,(double)(g_FrameTimeSq * 0.7853982),(double)(g_FrameTimeSq * 1.5707964),
                    (double)(g_FrameTime * 0.7853982),lVar15,puVar22,uVar23 + 0x68);
         cosf((moby->rotation).z);
         FUN_005e8128((double)(moby->rotation).z);
@@ -1082,7 +1082,7 @@ LAB_00323660:
   }
   else if (uVar1 == '\x02') {
     OrganicDeltAngSpeed
-              (dVar24,(double)(DAT_0071f418 * 0.7853982),(double)(DAT_0071f418 * 1.5707964),
+              (dVar24,(double)(g_FrameTimeSq * 0.7853982),(double)(g_FrameTimeSq * 1.5707964),
                (double)(g_FrameTime * 0.7853982),lVar15,&DAT_00720000,uVar23 + 0x68);
     uVar31 = 0x3fe0000000000000;
     CollMovingSphere
@@ -1196,7 +1196,7 @@ LAB_00323660:
     (moby->pos).w = fVar5;
   }
 LAB_00323780:
-  fVar2 = DAT_0071f418 * 9.8 + *(float *)((int)pvVar10 + 0x6c);
+  fVar2 = g_FrameTimeSq * 9.8 + *(float *)((int)pvVar10 + 0x6c);
   *(float *)((int)pvVar10 + 0x6c) = fVar2;
   (moby->pos).z = (moby->pos).z - fVar2;
   dVar24 = (double)GetGroundZ(0x3fe0000000000000,lVar15 + 0x10,0);

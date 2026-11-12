@@ -2686,7 +2686,7 @@ void UpdateMoby_1045(MobyInstance *moby)
     }
     else {
       OrganicDeltAngSpeed
-                (uVar32,(double)(DAT_0071f418 * 2.0943952),(double)(DAT_0071f418 * 0.6981317),
+                (uVar32,(double)(g_FrameTimeSq * 2.0943952),(double)(g_FrameTimeSq * 0.6981317),
                  (double)(g_FrameTime * 2.0943952),lVar13,&DAT_00720000,
                  (int)pvVar5 + 0x168);
       if (moby->updateId == '\x06') {
@@ -2707,7 +2707,7 @@ void UpdateMoby_1045(MobyInstance *moby)
   if (bVar2 < 5) {
     if (bVar2 < 4) {
       OrganicDeltAngSpeed
-                (uVar32,(double)(DAT_0071f418 * 2.0943952),(double)(DAT_0071f418 * 0.6981317),
+                (uVar32,(double)(g_FrameTimeSq * 2.0943952),(double)(g_FrameTimeSq * 0.6981317),
                  (double)(g_FrameTime * 2.0943952),lVar13,&DAT_00720000,
                  (int)pvVar5 + 0x168);
       iVar14 = MB_MayaFrameTrigger((float)dVar36,moby);
@@ -2731,7 +2731,7 @@ void UpdateMoby_1045(MobyInstance *moby)
     }
     else {
       OrganicDeltAngSpeed
-                (uVar32,(double)(DAT_0071f418 * 2.0943952),(double)(DAT_0071f418 * 0.6981317),
+                (uVar32,(double)(g_FrameTimeSq * 2.0943952),(double)(g_FrameTimeSq * 0.6981317),
                  (double)(g_FrameTime * 2.0943952),lVar13,&DAT_00720000,
                  (int)pvVar5 + 0x168);
       if (moby->updateId == '\b') {
@@ -2809,7 +2809,7 @@ void UpdateMoby_1045(MobyInstance *moby)
   if (6 < bVar2) {
     if (bVar2 < 8) {
       OrganicDeltAngSpeed
-                (uVar34,(double)(DAT_0071f418 * 2.0943952),(double)(DAT_0071f418 * 0.6981317),
+                (uVar34,(double)(g_FrameTimeSq * 2.0943952),(double)(g_FrameTimeSq * 0.6981317),
                  (double)(g_FrameTime * 2.0943952),lVar13,&DAT_00720000,
                  (int)pvVar5 + 0x168);
       GetBonePosition(lVar13,4,auStack_1f0);
@@ -2935,7 +2935,7 @@ void UpdateMoby_1045(MobyInstance *moby)
                   FUN_005e7f54(auStack_1c0,auStack_1c0,&g_heroPosition);
                   dVar31 = (double)MB_computeLobVelocity
                                              ((double)(float)((double)g_FrameTime * dVar31
-                                                             ),(double)(DAT_0071f418 * -9.8),
+                                                             ),(double)(g_FrameTimeSq * -9.8),
                                               auStack_1c0,auStack_1b0);
                   local_1c8 = (float)dVar31;
                   dVar31 = (double)MB_randRangeFloat((float)dVar33,2.0);
@@ -2990,7 +2990,7 @@ void UpdateMoby_1045(MobyInstance *moby)
     }
     else {
       OrganicDeltAngSpeed
-                (uVar34,(double)(DAT_0071f418 * 2.0943952),(double)(DAT_0071f418 * 0.6981317),
+                (uVar34,(double)(g_FrameTimeSq * 2.0943952),(double)(g_FrameTimeSq * 0.6981317),
                  (double)(g_FrameTime * 2.0943952),lVar13,&DAT_00720000,
                  (int)pvVar5 + 0x168);
       iVar14 = *(int *)((int)pvVar5 + 0x164);
@@ -3114,7 +3114,7 @@ void UpdateMoby_1045(MobyInstance *moby)
   }
   if (dVar37 <= dVar33) {
     OrganicDeltAngSpeed
-              (uVar34,(double)(DAT_0071f418 * 2.0943952),(double)(DAT_0071f418 * 0.6981317),
+              (uVar34,(double)(g_FrameTimeSq * 2.0943952),(double)(g_FrameTimeSq * 0.6981317),
                (double)(g_FrameTime * 2.0943952),lVar13,&DAT_00720000,(int)pvVar5 + 0x168)
     ;
 LAB_0019c298:

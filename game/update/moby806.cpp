@@ -166,7 +166,7 @@ void M806_00466220(int param_1)
     *(undefined1 *)(param_1 + 0xbc) = 1;
     sVar3 = *(short *)(iVar4 + 10);
     *(float *)(param_1 + 0x18) = (float)(dVar9 - (double)*(float *)(iVar4 + 0x50));
-    fVar1 = DAT_0071f418 * 9.8 + *(float *)(iVar4 + 0x50);
+    fVar1 = g_FrameTimeSq * 9.8 + *(float *)(iVar4 + 0x50);
     if (0.3 - fVar1 < 0.0) {
       fVar1 = 0.3;
     }

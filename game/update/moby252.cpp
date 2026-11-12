@@ -39,7 +39,7 @@ void M252_00316de0(int param_1)
   dVar14 = 3.0;
   fVar1 = SQRT(fVar4 * fVar4 + fVar3 * fVar3 + fVar2 * fVar2);
   fVar6 = g_FrameTime * 3.0;
-  fVar5 = -(DAT_0071f418 * 6.0 - fVar1);
+  fVar5 = -(g_FrameTimeSq * 6.0 - fVar1);
   if ((fVar5 <= fVar6) && (fVar6 = fVar5, fVar5 < 0.0)) {
     fVar6 = 0.0;
   }
@@ -449,7 +449,7 @@ void UpdateMoby_252(MobyInstance *moby)
         if ((-3.1415925 - fVar1) - fVar2 < 0.0) {
           fVar7 = fVar2;
         }
-        fVar11 = DAT_0071f418 * 12.0;
+        fVar11 = g_FrameTimeSq * 12.0;
         fVar1 = fVar7 * fVar7;
         fVar2 = fVar1 * fVar1 * fVar7;
         fVar5 = fVar1 * fVar2;
@@ -588,7 +588,7 @@ void UpdateMoby_252(MobyInstance *moby)
         if ((-3.1415925 - fVar1) - fVar2 < 0.0) {
           fVar7 = fVar2;
         }
-        fVar11 = DAT_0071f418 * 12.0;
+        fVar11 = g_FrameTimeSq * 12.0;
         fVar1 = fVar7 * fVar7;
         fVar2 = fVar1 * fVar1 * fVar7;
         fVar5 = fVar1 * fVar2;
@@ -989,7 +989,7 @@ void UpdateMoby_252(MobyInstance *moby)
         if ((-3.1415925 - fVar1) - fVar2 < 0.0) {
           fVar7 = fVar2;
         }
-        fVar11 = DAT_0071f418 * 12.0;
+        fVar11 = g_FrameTimeSq * 12.0;
         fVar1 = fVar7 * fVar7;
         fVar2 = fVar1 * fVar1 * fVar7;
         fVar5 = fVar1 * fVar2;

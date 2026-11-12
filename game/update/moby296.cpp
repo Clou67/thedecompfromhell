@@ -80,7 +80,7 @@ void UpdateMoby_296(MobyInstance *moby)
                        *(float *)((int)pvVar3 + 0x40) * *(float *)((int)pvVar3 + 0x40) +
                        *(float *)((int)pvVar3 + 0x44) * *(float *)((int)pvVar3 + 0x44));
           if (fVar6 < ABS(DAT_00810930 * g_FrameTime)) {
-            fVar6 = DAT_00810938 * DAT_0071f418 + fVar6;
+            fVar6 = DAT_00810938 * g_FrameTimeSq + fVar6;
           }
           fVar2 = fVar2 + 1.5707963;
           fVar7 = 3.1415925 - fVar2;
@@ -117,7 +117,7 @@ void UpdateMoby_296(MobyInstance *moby)
                 * fVar6);
         }
         else {
-          fVar6 = -(DAT_00810938 * DAT_0071f418 -
+          fVar6 = -(DAT_00810938 * g_FrameTimeSq -
                    SQRT(*(float *)((int)pvVar3 + 0x48) * *(float *)((int)pvVar3 + 0x48) +
                         *(float *)((int)pvVar3 + 0x40) * *(float *)((int)pvVar3 + 0x40) +
                         *(float *)((int)pvVar3 + 0x44) * *(float *)((int)pvVar3 + 0x44)));
@@ -190,7 +190,7 @@ void UpdateMoby_296(MobyInstance *moby)
                      *(float *)((int)pvVar3 + 0x40) * *(float *)((int)pvVar3 + 0x40) +
                      *(float *)((int)pvVar3 + 0x44) * *(float *)((int)pvVar3 + 0x44));
         if (fVar6 < ABS(DAT_00810930 * g_FrameTime)) {
-          fVar6 = DAT_00810938 * DAT_0071f418 + fVar6;
+          fVar6 = DAT_00810938 * g_FrameTimeSq + fVar6;
         }
         fVar2 = fVar2 + 1.5707963;
         fVar7 = 3.1415925 - fVar2;
@@ -227,7 +227,7 @@ void UpdateMoby_296(MobyInstance *moby)
              fVar6;
       }
       else {
-        fVar6 = -(DAT_00810938 * DAT_0071f418 -
+        fVar6 = -(DAT_00810938 * g_FrameTimeSq -
                  SQRT(*(float *)((int)pvVar3 + 0x48) * *(float *)((int)pvVar3 + 0x48) +
                       *(float *)((int)pvVar3 + 0x40) * *(float *)((int)pvVar3 + 0x40) +
                       *(float *)((int)pvVar3 + 0x44) * *(float *)((int)pvVar3 + 0x44)));

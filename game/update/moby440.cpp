@@ -1175,21 +1175,21 @@ void UpdateMoby_440(MobyInstance *moby)
       dVar48 = -(double)(DAT_00841dac * 0.017453292 * g_FrameTime * fVar4);
       if (((-1 < *(int *)((int)pvVar7 + 0x4c)) && (*(float *)((int)pvVar7 + 0x4c) < fVar5)) ||
          ((*(int *)((int)pvVar7 + 0x4c) < 1 && (fVar5 < *(float *)((int)pvVar7 + 0x4c))))) {
-        Delt(fVar5,DAT_00841db0 * 0.017453292 * DAT_0071f418,(float *)((int)pvVar7 + 0x4c)
+        Delt(fVar5,DAT_00841db0 * 0.017453292 * g_FrameTimeSq,(float *)((int)pvVar7 + 0x4c)
                       );
       }
       else {
-        Delt(fVar5,DAT_00841db8 * 0.017453292 * DAT_0071f418,(float *)((int)pvVar7 + 0x4c)
+        Delt(fVar5,DAT_00841db8 * 0.017453292 * g_FrameTimeSq,(float *)((int)pvVar7 + 0x4c)
                       );
       }
       if (((-1 < *(int *)((int)pvVar7 + 0x48)) && ((double)*(float *)((int)pvVar7 + 0x48) < dVar48))
          || ((*(int *)((int)pvVar7 + 0x48) < 1 && (dVar48 < (double)*(float *)((int)pvVar7 + 0x48)))
             )) {
-        Delt((float)dVar48,(float)((double)DAT_00841db4 * dVar47) * DAT_0071f418,
+        Delt((float)dVar48,(float)((double)DAT_00841db4 * dVar47) * g_FrameTimeSq,
                        (float *)((int)pvVar7 + 0x48));
       }
       else {
-        Delt((float)dVar48,(float)((double)DAT_00841dbc * dVar47) * DAT_0071f418,
+        Delt((float)dVar48,(float)((double)DAT_00841dbc * dVar47) * g_FrameTimeSq,
                        (float *)((int)pvVar7 + 0x48));
       }
       dVar47 = (double)FastWrapRot((moby->rotation).z,*(float *)((int)pvVar7 + 0x4c));

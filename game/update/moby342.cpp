@@ -536,7 +536,7 @@ void M342_0034e230(MobyInstance *param_1)
         *(undefined2 *)((int)pfVar5 + 6) = uVar9;
         uVar1 = param_1->state;
         if ((uVar1 != '\x01' && uVar1 != '\x02') && (uVar1 != '\t')) {
-          fVar7 = DAT_00840140 * DAT_0071f418;
+          fVar7 = DAT_00840140 * g_FrameTimeSq;
           pfVar5[0x19] = 0.0005;
           pfVar5[0x18] = fVar7;
           fVar7 = g_FrameTime;
@@ -1447,7 +1447,7 @@ LAB_0034fee0:
     (moby->pos).x = (moby->pos).x + (float)puVar10[8];
     (moby->pos).y = (moby->pos).y + (float)puVar10[9];
     (moby->pos).z = (moby->pos).z + (float)puVar10[10];
-    Delt(g_FrameTime * -10.0,DAT_0071f418 * 10.8,(float *)(puVar10 + 10));
+    Delt(g_FrameTime * -10.0,g_FrameTimeSq * 10.8,(float *)(puVar10 + 10));
     iVar21 = puVar10[0x74];
     if (iVar21 != 0) {
       *(f32 *)(iVar21 + 0x10) = (moby->pos).x;

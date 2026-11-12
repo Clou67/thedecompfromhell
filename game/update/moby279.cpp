@@ -247,7 +247,7 @@ void M279_00326b90(undefined8 param_1,int param_2)
     dVar2 = -1.2217304706573486;
   }
   OrganicDeltAng
-            ((float)dVar2,DAT_0071f418 * 12.566371,DAT_0071f418 * 12.566371,
+            ((float)dVar2,g_FrameTimeSq * 12.566371,g_FrameTimeSq * 12.566371,
              g_FrameTime * 6.2831855,(float *)(iVar1 + 0x270),0x326b7c,
              (float *)(iVar1 + 0x274));
   FastQuaternionToEuler((double)*(float *)(iVar1 + 0x270),iVar1 + 0x130,2);
@@ -322,13 +322,13 @@ void M28_00326c98(undefined8 param_1,int param_2,int param_3,int param_4)
   dVar23 = 12.566370964050293;
   dVar22 = 6.2831854820251465;
   OrganicDeltAng
-            ((float)dVar20,DAT_0071f418 * 12.566371,DAT_0071f418 * 12.566371,
+            ((float)dVar20,g_FrameTimeSq * 12.566371,g_FrameTimeSq * 12.566371,
              g_FrameTime * 6.2831855,(float *)(iVar6 + 0x268),param_3,
              (float *)(iVar6 + 0x26c));
   iVar17 = iVar6 + 0x170;
   FastQuaternionToEuler((double)*(float *)(iVar6 + 0x268),iVar17,2);
   dVar19 = (double)g_FrameTime;
-  dVar21 = (double)DAT_0071f418;
+  dVar21 = (double)g_FrameTimeSq;
   if (param_4 != 0) {
     fVar1 = (pMVar7->pos).z;
     if (g_heroMobyPtr == pMVar7) {

@@ -160,7 +160,7 @@ undefined4 * UpdateMoby_701(MobyInstance *moby)
     Cam0_SetCamDist((double)DAT_00857b04,(double)DAT_00857b10,&DAT_00850000,0);
     Cam0_SetCamHeight((double)DAT_00857b08,(double)DAT_00857b10);
     Cam0_SetCamOfsZ((double)DAT_00857b0c,(double)DAT_00857b10,&DAT_00850000,0);
-    *(float *)((int)pvVar5 + 0x68) = -(DAT_0071f418 * 30.0 - *(float *)((int)pvVar5 + 0x68));
+    *(float *)((int)pvVar5 + 0x68) = -(g_FrameTimeSq * 30.0 - *(float *)((int)pvVar5 + 0x68));
     (moby->pos).x = (moby->pos).x + *(float *)((int)pvVar5 + 0x60);
     (moby->pos).y = (moby->pos).y + *(float *)((int)pvVar5 + 100);
     (moby->pos).z = (moby->pos).z + *(float *)((int)pvVar5 + 0x68);

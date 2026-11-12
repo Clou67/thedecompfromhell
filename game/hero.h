@@ -79,7 +79,6 @@ extern undefined4 DAT_0009bee8; /* 0x9bee8 */
 extern undefined4 DAT_000a52dc; /* 0xa52dc */
 extern undefined1 DAT_0071eed0; /* 0x71eed0 */
 extern undefined4 DAT_0071f40c; /* 0x71f40c */
-extern undefined4 DAT_0071f418; /* 0x71f418 */
 extern undefined4 DAT_0071fb24; /* 0x71fb24 */
 extern undefined4 DAT_00720000; /* no defined data */
 extern undefined4 DAT_00720b70; /* 0x720b70 */
@@ -1069,6 +1068,7 @@ extern float animationSpeed; /* 0x71f410 */
 extern undefined4 g_CurrentWeapon; /* 0x96ad98 */
 extern undefined4 g_DustHoverState; /* 0x96a0f8 */
 extern float g_FrameTime; /* 0x71f414 */
+extern float g_FrameTimeSq; /* 0x71f418: g_FrameTime squared */ /* type set in global_types.tsv */
 extern int g_GameFrameCount; /* 0xa0f6d8 */
 extern undefined4 g_GiantClankHealth; /* 0x96b310 */
 extern undefined1 g_HeroIsOutOfBounds; /* 0x96bd91 */

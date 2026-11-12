@@ -141,7 +141,7 @@ void UpdateMoby_1516(MobyInstance *moby)
   double dVar7;
   
   pvVar4 = moby->pVar;
-  *(float *)((int)pvVar4 + 0x18) = -(DAT_0071f418 * 20.0 - *(float *)((int)pvVar4 + 0x18));
+  *(float *)((int)pvVar4 + 0x18) = -(g_FrameTimeSq * 20.0 - *(float *)((int)pvVar4 + 0x18));
   fVar2 = (moby->rotation).x;
   (moby->pos).x = (moby->pos).x + *(float *)((int)pvVar4 + 0x10);
   (moby->pos).y = (moby->pos).y + *(float *)((int)pvVar4 + 0x14);

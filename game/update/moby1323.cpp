@@ -187,7 +187,7 @@ void UpdateMoby_1323(MobyInstance *moby)
       if (*(int *)pfVar9[5] != worldUpdateTime) {
         *(int *)pfVar9[5] = worldUpdateTime;
         OrganicDelt
-                  (pfVar9[6] - *pfVar9,pfVar9[7] * DAT_0071f418,pfVar9[8] * DAT_0071f418,
+                  (pfVar9[6] - *pfVar9,pfVar9[7] * g_FrameTimeSq,pfVar9[8] * g_FrameTimeSq,
                    pfVar9[9] * g_FrameTime,&(moby->pos).z,iVar23,pfVar9 + 3);
         if (moby->group != 0xff) {
           puVar22 = (ushort *)(&g_MobyGroups)[(byte)moby->group];

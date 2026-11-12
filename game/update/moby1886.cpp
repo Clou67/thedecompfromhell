@@ -672,7 +672,7 @@ void UpdateMoby_1886(MobyInstance *moby)
     moby->collision = pMVar9->collision;
     *(undefined4 *)((int)pfVar7[4] + 0x94) = *(undefined4 *)(*(int *)((int)pfVar7[4] + 0x24) + 0x10)
     ;
-    pfVar7[2] = -(DAT_0071f418 * 9.8 - pfVar7[2]);
+    pfVar7[2] = -(g_FrameTimeSq * 9.8 - pfVar7[2]);
     (moby->rotation).x = DAT_0071f408 * 0.01 + (moby->rotation).x;
     (moby->rotation).y = DAT_0071f408 * 0.02 + (moby->rotation).y;
   }

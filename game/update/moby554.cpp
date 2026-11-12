@@ -350,7 +350,7 @@ undefined8 M554_003b22e0(int param_1)
   }
   dVar26 = (double)FastWrapRot((float)dVar27,fVar1);
   OrganicDeltAng
-            ((float)dVar26,DAT_0071f418 * 2.0943952,DAT_0071f418 * 2.0943952,
+            ((float)dVar26,g_FrameTimeSq * 2.0943952,g_FrameTimeSq * 2.0943952,
              g_FrameTime * 6.2831855,(float *)(param_1 + 0x48),0x720000,
              (float *)(iVar8 + 0xa4));
   if (*(short *)(iVar8 + 0xb8) < 1) {
@@ -368,8 +368,8 @@ undefined8 M554_003b22e0(int param_1)
     *(undefined4 *)((int)puVar10 + 0x74) = 0;
     fVar2 = fVar2 - fVar1;
     OrganicDelt
-              (SQRT(fVar2 * fVar2 + fVar4 * fVar4 + fVar3 * fVar3),DAT_0071f418 * 3.0,
-               DAT_0071f418 * 3.0,g_FrameTime * 10.0,(float *)((int)puVar10 + 0x74),
+              (SQRT(fVar2 * fVar2 + fVar4 * fVar4 + fVar3 * fVar3),g_FrameTimeSq * 3.0,
+               g_FrameTimeSq * 3.0,g_FrameTime * 10.0,(float *)((int)puVar10 + 0x74),
                0x720000,(float *)(iVar8 + 0xa8));
   }
   else {
@@ -393,8 +393,8 @@ undefined8 M554_003b22e0(int param_1)
     *(undefined4 *)(puVar10 + 0xe) = 0;
     fVar2 = fVar2 - fVar1;
     OrganicDelt
-              (SQRT(fVar2 * fVar2 + fVar4 * fVar4 + fVar3 * fVar3),DAT_0071f418 * 3.0,
-               DAT_0071f418 * 3.0,g_FrameTime * 10.0,(float *)(puVar10 + 0xe),0x720000,
+              (SQRT(fVar2 * fVar2 + fVar4 * fVar4 + fVar3 * fVar3),g_FrameTimeSq * 3.0,
+               g_FrameTimeSq * 3.0,g_FrameTime * 10.0,(float *)(puVar10 + 0xe),0x720000,
                (float *)(iVar8 + 0xa8));
   }
   if (*(int *)((int)&pSVar9->points[0].w + (int)((longlong)*(short *)(iVar8 + 0xba) << 4)) ==

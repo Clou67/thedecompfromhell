@@ -47,8 +47,8 @@ void M563_003b8208(MobyInstance *param_1)
   *(undefined4 *)((int)pvVar1 + 0x1fc) = *(undefined4 *)((int)param_1->pClass[1].gif_usage + 0x14);
   *(undefined4 *)((int)pvVar1 + 0x200) = *(undefined4 *)((int)param_1->pClass[1].gif_usage + 0x14);
   walk_SetupTwistVals(param_1,(w_2legData *)((int)pvVar1 + 0x160));
-  fVar2 = DAT_0071f418;
-  *(float *)((int)pvVar1 + 0x23c) = DAT_0071f418 * 9.8;
+  fVar2 = g_FrameTimeSq;
+  *(float *)((int)pvVar1 + 0x23c) = g_FrameTimeSq * 9.8;
   *(float *)((int)pvVar1 + 0x22c) = fVar2 * 3.1415927;
   *(float *)((int)pvVar1 + 0x230) = fVar2 * 6.2831855;
   *(float *)((int)pvVar1 + 0x234) = g_FrameTime * 6.2831855;
@@ -206,9 +206,9 @@ void UpdateMoby_563(void *this_,MobyInstance *moby)
         dVar25 = (double)FUN_005e8338((double)(*(float *)((int)this_ + 0x10) - (pMVar6->pos).x),
                                       (double)(*(float *)((int)this_ + 0x14) - (pMVar6->pos).y));
       }
-      fVar8 = DAT_0071f418;
+      fVar8 = g_FrameTimeSq;
       local_108[0] = (float)dVar25;
-      *(float *)(uVar5 + 0xd0) = DAT_0071f418 * 30.0;
+      *(float *)(uVar5 + 0xd0) = g_FrameTimeSq * 30.0;
       *(float *)(uVar5 + 0xd4) = fVar8 * 10.0;
       fVar3 = g_FrameTime;
       *(undefined1 *)(uVar5 + 0xfd) = 0;
@@ -371,8 +371,8 @@ LAB_003b8a0c:
           uVar10 = FUN_005e8338((double)(*(float *)(uVar5 + 0x3b0) - fVar2),
                                 (double)(*(float *)(uVar5 + 0x3b4) - fVar3));
           dVar23 = (double)MB_DeltAngSpeed
-                                     (dVar27,uVar10,(double)(DAT_0071f418 * 3.1415927),
-                                      (double)(DAT_0071f418 * 6.2831855),
+                                     (dVar27,uVar10,(double)(g_FrameTimeSq * 3.1415927),
+                                      (double)(g_FrameTimeSq * 6.2831855),
                                       (double)(g_FrameTime * 4.1887903),&DAT_00720000,
                                       &DAT_00720000,uVar22 + 0x3d0);
         }
@@ -389,7 +389,7 @@ LAB_003b8a0c:
               *(undefined2 *)(uVar5 + 0x3c2) = 0;
             }
             else {
-              fVar2 = -(DAT_0071f418 * 200.0 - *(float *)(uVar5 + 0x3d8));
+              fVar2 = -(g_FrameTimeSq * 200.0 - *(float *)(uVar5 + 0x3d8));
               *(float *)(uVar5 + 0x3d8) = fVar2;
               MB_SphericalToVector
                         (fVar2,*(float *)(uVar5 + 0x3d4),*(float *)((int)this_ + 0x44),afStack_210);
@@ -398,8 +398,8 @@ LAB_003b8a0c:
               uVar10 = FUN_005e8338((double)(local_1c0[0].x - *(float *)((int)this_ + 0x10)),
                                     (double)(local_1c0[0].y - *(float *)((int)this_ + 0x14)));
               dVar23 = (double)MB_DeltAngSpeed
-                                         (dVar23,uVar10,(double)(DAT_0071f418 * 3.1415927),
-                                          (double)(DAT_0071f418 * 6.2831855),
+                                         (dVar23,uVar10,(double)(g_FrameTimeSq * 3.1415927),
+                                          (double)(g_FrameTimeSq * 6.2831855),
                                           (double)(g_FrameTime * 4.1887903));
               *(float *)((int)this_ + 0x48) = (float)dVar23;
             }
@@ -407,7 +407,7 @@ LAB_003b8a0c:
           else {
             fVar2 = DAT_0071f408 * 0.11111111;
             if (*(float *)(uVar5 + 0x3d8) < fVar2) {
-              fVar2 = DAT_0071f418 * 20.0 + *(float *)(uVar5 + 0x3d8);
+              fVar2 = g_FrameTimeSq * 20.0 + *(float *)(uVar5 + 0x3d8);
             }
             *(float *)(uVar5 + 0x3d8) = fVar2;
             MB_SphericalToVector
@@ -417,8 +417,8 @@ LAB_003b8a0c:
             uVar10 = FUN_005e8338((double)(local_1c0[0].x - *(float *)((int)this_ + 0x10)),
                                   (double)(local_1c0[0].y - *(float *)((int)this_ + 0x14)));
             dVar23 = (double)MB_DeltAngSpeed
-                                       (dVar23,uVar10,(double)(DAT_0071f418 * 3.1415927),
-                                        (double)(DAT_0071f418 * 6.2831855),
+                                       (dVar23,uVar10,(double)(g_FrameTimeSq * 3.1415927),
+                                        (double)(g_FrameTimeSq * 6.2831855),
                                         (double)(g_FrameTime * 4.1887903),&DAT_00720000,
                                         &DAT_00720000,uVar22 + 0x3d0);
             *(float *)((int)this_ + 0x48) = (float)dVar23;
@@ -506,7 +506,7 @@ LAB_003b8a0c:
     }
     else if (bVar17 == 7) {
       if ((3.0 <= dVar30) || (1.5707963705062866 <= dVar23)) {
-        walk_Update(0,dVar27,(double)(DAT_0071f418 * 20.0),lVar9,uVar22 + 0x160);
+        walk_Update(0,dVar27,(double)(g_FrameTimeSq * 20.0),lVar9,uVar22 + 0x160);
         if (*(char *)(uVar5 + 0x217) == '\0') {
           *(byte *)((int)this_ + 0x20) = ((byte)(ZERO_MASK(iVar14)) & 0xfd) + 4;
         }
@@ -536,7 +536,7 @@ LAB_003b8a0c:
           uVar10 = FUN_005e8338((double)(*(float *)(uVar5 + 0x3b0) - *(float *)((int)this_ + 0x10)),
                                 (double)(*(float *)(uVar5 + 0x3b4) - *(float *)((int)this_ + 0x14)),
                                 (double)g_FrameTime,0x4010000000000000);
-          walk_Update(dVar23,uVar10,(double)(DAT_0071f418 * 20.0),lVar9,uVar22 + 0x160);
+          walk_Update(dVar23,uVar10,(double)(g_FrameTimeSq * 20.0),lVar9,uVar22 + 0x160);
           if (*(int *)(uVar5 + 0x3dc) != -1) {
             cosf(*(float *)((int)this_ + 0x48));
             FUN_005e8128((double)*(float *)((int)this_ + 0x48));
@@ -586,7 +586,7 @@ LAB_003b8a0c:
     dVar24 = (double)(float)((double)g_FrameTime * 4.0);
     uVar10 = FUN_005e8338((double)(local_1c0[0].x - fVar2),(double)(local_1c0[0].y - fVar3),
                           0x4010000000000000,(double)g_FrameTime);
-    walk_Update(dVar24,uVar10,(double)(DAT_0071f418 * 20.0),lVar9,lVar21);
+    walk_Update(dVar24,uVar10,(double)(g_FrameTimeSq * 20.0),lVar9,lVar21);
     if ((3.0 <= dVar30) || (1.5707963705062866 <= dVar23)) {
       if (*(int *)(uVar5 + 0x3dc) != -1) {
         cosf(*(float *)((int)this_ + 0x48));
@@ -877,7 +877,7 @@ LAB_003ba494:
     cVar1 = *(char *)((int)this_ + 0x20);
   }
   if ((cVar1 != '\x05') && (*(char *)((int)this_ + 0xbc) != '\x06')) {
-    fVar2 = DAT_0071f418 * 9.8 + *(float *)(uVar5 + 0x3e0);
+    fVar2 = g_FrameTimeSq * 9.8 + *(float *)(uVar5 + 0x3e0);
     *(float *)(uVar5 + 0x3e0) = fVar2;
     dVar24 = 2.0;
     *(float *)((int)this_ + 0x18) = *(float *)((int)this_ + 0x18) - (fVar2 - 2.0);

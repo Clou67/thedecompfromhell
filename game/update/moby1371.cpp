@@ -364,8 +364,8 @@ void FUN_0025ce40(undefined8 param_1,MobyInstance *param_2)
                 DRAW_SHADOW|DRAW_TRANSPARENT_WEIRD|LOCK_ROTATION|NO_DRAW|UNK_40|HAS_SPECIAL_VARS|
                 HAS_GLOW|TRANSPARENT|DISABLED);
   dVar11 = (double)FastWrapRot((param_2->rotation).z,3.1415927);
-  fVar8 = DAT_0071f418;
-  fVar4 = DAT_0071f418 * 40.0;
+  fVar8 = g_FrameTimeSq;
+  fVar4 = g_FrameTimeSq * 40.0;
   fVar1 = (float)(dVar11 + 1.570796251296997);
   *(float *)((int)pvVar3 + 0x30) = fVar4;
   *(float *)((int)pvVar3 + 0x34) = fVar8 * 100.0;

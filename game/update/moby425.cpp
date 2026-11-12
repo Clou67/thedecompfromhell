@@ -235,7 +235,7 @@ void UpdateMoby_425(MobyInstance *moby)
       (moby->pos).x = (moby->pos).x + *pfVar6;
       (moby->pos).y = (moby->pos).y + pfVar6[1];
       (moby->pos).z = (moby->pos).z + pfVar6[2];
-      pfVar6[2] = -(DAT_0071f418 * 10.8 - pfVar6[2]);
+      pfVar6[2] = -(g_FrameTimeSq * 10.8 - pfVar6[2]);
       iVar13 = CollLine(local_170,local_160,0,lVar11,0);
       if (iVar13 == 0) {
         iVar13 = FastDecTimerS32(pfVar6 + 4);

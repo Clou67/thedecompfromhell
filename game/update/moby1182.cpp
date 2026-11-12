@@ -473,10 +473,10 @@ void UpdateMoby_1182(MobyInstance *moby)
       local_a0 = (longlong)(int)dVar27;
       *(short *)((int)pfVar5 + 0x2a) = (short)(int)dVar27;
       dVar27 = (double)MB_randRangeFloat
-                                 (DAT_00765fbc * DAT_0071f418,DAT_00765fc0 * DAT_0071f418);
+                                 (DAT_00765fbc * g_FrameTimeSq,DAT_00765fc0 * g_FrameTimeSq);
       MVar23 = moby->oClass;
       pfVar5[0x19] = (float)dVar27;
-      fVar6 = DAT_0071f418;
+      fVar6 = g_FrameTimeSq;
       if ((MVar23 == AIRSHIP_PART_04A1) || (MVar23 == AIRSHIP_PART_04A2)) {
         auVar29 = loadVectorLeftIndexed(0x20,uVar24);
         auVar30 = loadVectorLeftIndexed(0x2a,uVar24);
@@ -632,7 +632,7 @@ void UpdateMoby_1182(MobyInstance *moby)
     }
   }
   else if (bVar1 < 6) {
-    pfVar5[2] = -(DAT_0071f418 * 10.8 * 0.33333334 - pfVar5[2]);
+    pfVar5[2] = -(g_FrameTimeSq * 10.8 * 0.33333334 - pfVar5[2]);
     fVar6 = (moby->rotation).x;
     (moby->pos).x = (moby->pos).x + *pfVar5;
     (moby->pos).y = (moby->pos).y + pfVar5[1];

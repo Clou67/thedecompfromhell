@@ -719,7 +719,7 @@ void UpdateMoby_1634(MobyInstance *moby)
   (moby->pos).x = (moby->pos).x + *pfVar10;
   (moby->pos).y = (moby->pos).y + pfVar10[1];
   (moby->pos).z = (moby->pos).z + pfVar10[2];
-  pfVar10[2] = -(DAT_0071f418 * 14.6 - pfVar10[2]);
+  pfVar10[2] = -(g_FrameTimeSq * 14.6 - pfVar10[2]);
   if ((((int)(moby->pos).x < 0) || ((int)(moby->pos).y < 0)) || ((int)(moby->pos).z < 0)) {
     DeleteMoby(moby);
   }

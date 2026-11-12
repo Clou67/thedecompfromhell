@@ -119,7 +119,7 @@ void UpdateMoby_1221(MobyInstance *moby)
   GPiece<16> auStack_30;
   
   pvVar1 = moby->pVar;
-  *(float *)((int)pvVar1 + 8) = -(DAT_0071f418 * 9.8 - *(float *)((int)pvVar1 + 8));
+  *(float *)((int)pvVar1 + 8) = -(g_FrameTimeSq * 9.8 - *(float *)((int)pvVar1 + 8));
   FastVecAddSelf(auStack_30,(longlong)(int)moby + 0x10,pvVar1);
   dVar5 = (double)FastWrapRot((moby->rotation).x,*(float *)((int)pvVar1 + 0x10));
   (moby->rotation).x = (float)dVar5;

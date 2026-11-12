@@ -52,7 +52,7 @@ void UpdateMoby_65(MobyInstance *moby)
       dVar4 = (double)FastDiffRots((double)speed[1],0x3fca95b900000000);
     }
     fVar5 = OrganicDeltAng
-                      ((float)dVar4,DAT_0071f418 * 0.34906584,DAT_0071f418 * 0.34906584,
+                      ((float)dVar4,g_FrameTimeSq * 0.34906584,g_FrameTimeSq * 0.34906584,
                        g_FrameTime * 0.7853982,&(moby->rotation).z,0x720000,speed);
     if (fVar5 == 0.0) {
       moby->state = '\x03';

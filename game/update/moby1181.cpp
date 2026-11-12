@@ -414,7 +414,7 @@ void UpdateMoby_1181(MobyInstance *moby)
             dVar34 = (double)(float)(dVar34 + dVar32);
             dVar37 = (double)(float)(dVar37 + dVar33);
           }
-          dVar31 = (double)DAT_0071f418;
+          dVar31 = (double)g_FrameTimeSq;
           (moby->pos).x = (float)(dVar35 + dVar37);
           (moby->pos).y = (float)(dVar29 + dVar34);
           fVar4 = fVar4 + -(float)(dVar31 * 9.800000190734863 - dVar36);
@@ -798,7 +798,7 @@ void UpdateMoby_1181(MobyInstance *moby)
         dVar30 = (double)(fVar7 * fVar15);
       }
       dVar34 = (double)FastIntToDouble((*(int *)((int)puVar13 + 0x1ec) - (int)sVar9) + 3);
-      fVar4 = DAT_0071f418 * 9.8;
+      fVar4 = g_FrameTimeSq * 9.8;
       fVar5 = (float)((double)(moby->pos).x + dVar30);
       fVar7 = (float)((double)(moby->pos).y + dVar29);
       (moby->pos).x = fVar5;

@@ -466,7 +466,7 @@ void UpdateMoby_1041(MobyInstance *moby)
             fVar4 = (moby->pos).y;
             fVar5 = (moby->pos).z;
             *(float *)((int)puVar13 + 0xfc) = fVar6;
-            fVar6 = DAT_0071f418;
+            fVar6 = g_FrameTimeSq;
             *(float *)(puVar13 + 0x1a) = fVar14 + fVar3;
             *(float *)((int)puVar13 + 0xd4) = fVar15 + fVar4;
             *(float *)(puVar13 + 0x1b) = fVar7 + fVar5;

@@ -1100,7 +1100,7 @@ void M1818_002bdc98(int param_1,float *param_2)
       dVar27 = (double)((float)(dVar27 + 0.7853981852531433) * fVar3 + fVar29);
     }
     OrganicDeltAngSpeed
-              (dVar27,(double)(DAT_0071f418 * 6.2831855),(double)(DAT_0071f418 * 3.1415927),
+              (dVar27,(double)(g_FrameTimeSq * 6.2831855),(double)(g_FrameTimeSq * 3.1415927),
                (double)(g_FrameTime * 11.519173),param_1,&DAT_00720000,&DAT_010c5168);
     if (1.2999999523162842 < dVar24) {
       *(undefined1 *)(param_1 + 0xbc) = 2;
@@ -1180,7 +1180,7 @@ void M1818_002bdc98(int param_1,float *param_2)
         dVar22 = (double)((float)(dVar22 + 0.7853981852531433) * fVar3 + fVar29);
       }
       OrganicDeltAngSpeed
-                (dVar22,(double)(DAT_0071f418 * 6.2831855),(double)(DAT_0071f418 * 3.1415927),
+                (dVar22,(double)(g_FrameTimeSq * 6.2831855),(double)(g_FrameTimeSq * 3.1415927),
                  (double)(g_FrameTime * 11.519173),param_1,&DAT_00720000,&DAT_010c5168);
     }
     else {
@@ -1259,8 +1259,8 @@ void M1818_002bdc98(int param_1,float *param_2)
         dVar23 = (double)((float)(dVar23 + 0.7853981852531433) * fVar4 + fVar3);
       }
       OrganicDeltAngSpeed
-                (dVar23,(double)(DAT_007b7e40 * 0.017453292 * DAT_0071f418),
-                 (double)(DAT_007b7e44 * 0.017453292 * DAT_0071f418),
+                (dVar23,(double)(DAT_007b7e40 * 0.017453292 * g_FrameTimeSq),
+                 (double)(DAT_007b7e44 * 0.017453292 * g_FrameTimeSq),
                  (double)(DAT_007b7e48 * 0.017453292 * g_FrameTime),param_1,0x10c0000,
                  &DAT_010c5168);
     }
@@ -1862,7 +1862,7 @@ void UpdateMoby_1818(MobyInstance *moby)
           dVar31 = (double)((float)(dVar31 + 0.7853981852531433) * fVar4 + fVar2);
         }
         OrganicDeltAngSpeed
-                  (dVar31,(double)(DAT_0071f418 * 6.2831855),(double)(DAT_0071f418 * 3.1415927),
+                  (dVar31,(double)(g_FrameTimeSq * 6.2831855),(double)(g_FrameTimeSq * 3.1415927),
                    (double)(g_FrameTime * 11.519173),moby,&DAT_010c5154,&DAT_010c5168);
         if (moby->animationId != '\0') {
           puVar14[0x38] = (longlong)(int)(animationSpeed * 6.5);
@@ -1901,7 +1901,7 @@ void UpdateMoby_1818(MobyInstance *moby)
           uVar20 = MB_randRange(DAT_007b7e24,DAT_007b7e28);
           uVar30 = MB_randRangeFloat(DAT_007b7e30,DAT_007b7e34);
           SpawnPart_53
-                    (uVar30,0x3f50624de0000000,(double)(DAT_007b7e3c * DAT_0071f418),uVar18 - 0x170,
+                    (uVar30,0x3f50624de0000000,(double)(DAT_007b7e3c * g_FrameTimeSq),uVar18 - 0x170,
                      uVar20);
           iVar21 = 0x80 / DAT_007b7e20;
           moby->modeBits = moby->modeBits | DRAW_TRANSPARENT_WEIRD;
@@ -2122,7 +2122,7 @@ void UpdateMoby_1818(MobyInstance *moby)
             dVar31 = (double)((float)(dVar31 + 0.7853981852531433) * fVar4 + fVar2);
           }
           OrganicDeltAngSpeed
-                    (dVar31,(double)(DAT_0071f418 * 6.2831855),(double)(DAT_0071f418 * 3.1415927),
+                    (dVar31,(double)(g_FrameTimeSq * 6.2831855),(double)(g_FrameTimeSq * 3.1415927),
                      (double)(g_FrameTime * 11.519173),moby,&DAT_00720000,&DAT_010c5168);
           pfVar11[6] = 0.0;
           uVar19 = MB_UpdateNavMoveTurning(moby,&DAT_010c5154,uVar27,uVar27 + 0x10);
@@ -2319,7 +2319,7 @@ void UpdateMoby_1818(MobyInstance *moby)
               dVar32 = (double)((float)(dVar32 + 0.7853981852531433) * fVar4 + fVar2);
             }
             OrganicDeltAngSpeed
-                      (dVar32,(double)(DAT_0071f418 * 6.2831855),(double)(DAT_0071f418 * 3.1415927),
+                      (dVar32,(double)(g_FrameTimeSq * 6.2831855),(double)(g_FrameTimeSq * 3.1415927),
                        (double)(g_FrameTime * 11.519173),moby,&DAT_00720000,&DAT_010c5168)
             ;
             pMVar17 = g_MobyInstance;
@@ -2454,9 +2454,9 @@ void UpdateMoby_1818(MobyInstance *moby)
         DAT_010c5154 = 500;
         DAT_010c5158 = 0x3e99999a;
         DAT_010c5184 = 0x3ba3d70a;
-        DAT_010c5190 = DAT_0071f418 * 6.2831855;
+        DAT_010c5190 = g_FrameTimeSq * 6.2831855;
         auVar35 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
-        DAT_010c5194 = DAT_0071f418 * 3.1415927;
+        DAT_010c5194 = g_FrameTimeSq * 3.1415927;
         DAT_010c5198 = g_FrameTime * 11.519173;
         auVar33 = loadVectorLeftIndexed(0x28,0x2beafc);
         auVar33 = auVar33 >> 0x60 & (GPiece<16>)0xffffffff;

@@ -159,7 +159,7 @@ void UpdateMoby_351(MobyInstance *moby)
       uVar13 = ZERO_MASK(iVar11);
       uVar12 = uVar13 & 0xfffffffffffffffe;
       SpawnPart_53
-                (dVar16,dVar15,(double)(float)((double)DAT_0071f418 * dVar31),local_160,(int)fVar1,
+                (dVar16,dVar15,(double)(float)((double)g_FrameTimeSq * dVar31),local_160,(int)fVar1,
                  uVar12,uVar13,
                  (uint)((uVar8 & 0xffffffff) << 8) | uVar10 | (uint)((uVar9 & 0xffffffff) << 0x10) |
                  0x7f000000,0,uVar12 + 1,&local_170);
@@ -217,7 +217,7 @@ void UpdateMoby_351(MobyInstance *moby)
       fVar4 = animationSpeed * (float)((double)(longlong)iVar11 + dVar21);
       MB_randInt(2);
       SpawnPart_53
-                (dVar15,dVar16,(double)(float)((double)DAT_0071f418 * dVar31),local_130,(int)fVar4);
+                (dVar15,dVar16,(double)(float)((double)g_FrameTimeSq * dVar31),local_130,(int)fVar4);
       iVar14 = iVar14 + 1;
     } while (iVar14 < 10);
   }

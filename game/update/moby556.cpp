@@ -726,7 +726,7 @@ void M556_003b3fd0(MobyInstance *param_1)
       MB_SetAnimation(param_1,5,4,*(undefined4 *)((int)puVar7 + 0xac));
       *(undefined2 *)((int)pvVar5 + 0x2fe) = 0xffff;
     }
-    dVar19 = (double)(DAT_0071f418 * 21.0 * -0.5);
+    dVar19 = (double)(g_FrameTimeSq * 21.0 * -0.5);
     iVar12 = MB_SolveQuad
                        (dVar19,(double)(float)((double)*(float *)((int)pvVar5 + 0x2c8) - dVar19),
                         (double)(*(float *)((int)pvVar5 + 0x268) - *(float *)((int)pvVar5 + 0x278)))
@@ -1174,11 +1174,11 @@ void UpdateMoby_556(MobyInstance *moby)
               } while (iVar23 < sVar24);
               sVar28 = *(short *)((int)pvVar9 + 0x2f4);
             }
-            fVar8 = DAT_0071f418;
+            fVar8 = g_FrameTimeSq;
             fVar60 = (float)(dVar36 / (double)*(float *)((int)pvVar9 + 700));
             fVar5 = *(float *)(*(int *)((int)pvVar9 + 0x2c0) + (int)((longlong)sVar28 << 4) + 0x18);
             fVar7 = *(float *)(*(int *)((int)pvVar9 + 0x2c0) + (int)((longlong)sVar24 << 4) + 0x18);
-            fVar6 = DAT_0071f418 * 21.0;
+            fVar6 = g_FrameTimeSq * 21.0;
             if (*(int *)((int)pvVar9 + 0x2c8) < 0) {
               *(undefined4 *)((int)pvVar9 + 0x2c8) = 0;
             }
@@ -1352,7 +1352,7 @@ void UpdateMoby_556(MobyInstance *moby)
         dVar46 = (double)*(float *)((int)pvVar9 + 0x268);
         dVar45 = (double)(float)(dVar46 - dVar50);
         if ((dVar44 < dVar45) || (0 < *(int *)((int)pvVar9 + 0x2c8))) {
-          dVar37 = -(double)(DAT_0071f418 * 21.0 - *(float *)((int)pvVar9 + 0x2c8));
+          dVar37 = -(double)(g_FrameTimeSq * 21.0 - *(float *)((int)pvVar9 + 0x2c8));
           *(float *)((int)pvVar9 + 0x2c8) = (float)dVar37;
         }
         else {
@@ -1369,7 +1369,7 @@ void UpdateMoby_556(MobyInstance *moby)
         iVar33 = g_RacePlace;
         iVar22 = g_RaceTime;
         if (iVar23 == 0) {
-          Delt(*(float *)((int)pvVar9 + 0x2b8),DAT_0071f418 * 20.0,
+          Delt(*(float *)((int)pvVar9 + 0x2b8),g_FrameTimeSq * 20.0,
                          (float *)((int)pvVar9 + 700));
         }
         else {
@@ -1389,10 +1389,10 @@ void UpdateMoby_556(MobyInstance *moby)
           }
           fVar60 = (float)dVar36;
           if (*(float *)((int)pvVar9 + 700) <= fVar60) {
-            Delt(fVar60,DAT_0071f418 * 15.0,(float *)((int)pvVar9 + 700));
+            Delt(fVar60,g_FrameTimeSq * 15.0,(float *)((int)pvVar9 + 700));
           }
           else {
-            Delt(fVar60,DAT_0071f418 * 7.0,(float *)((int)pvVar9 + 700));
+            Delt(fVar60,g_FrameTimeSq * 7.0,(float *)((int)pvVar9 + 700));
           }
         }
         if ((dVar45 < 0.20000000298023224) && (*(int *)((int)pvVar9 + 0x2c8) < 0)) {

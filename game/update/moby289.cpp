@@ -162,7 +162,7 @@ void UpdateMoby_289(MobyInstance *moby)
       }
       else {
         *(float *)(puVar11 + 0x18) = fVar4;
-        Delt(DAT_008007fc * g_FrameTime,DAT_008007f0 * DAT_0071f418,
+        Delt(DAT_008007fc * g_FrameTime,DAT_008007f0 * g_FrameTimeSq,
                        (float *)(puVar11 + 0x18));
         dVar26 = (double)*(float *)(puVar11 + 0x18);
         dVar23 = (double)(float)(dVar26 / dVar25);

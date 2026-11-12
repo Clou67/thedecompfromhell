@@ -119,13 +119,13 @@ void UpdateMoby_868(MobyInstance *moby)
     fVar3 = *(float *)((int)pvVar5 + 0xf4);
     if (fVar3 <= SQRT(fVar11 * fVar11 + fVar10 * fVar10 + fVar4 * fVar4)) {
       fVar4 = *(float *)((int)pvVar5 + 0xec);
-      Delt(fVar4 * g_FrameTime,((fVar4 * fVar4) / fVar3) * DAT_0071f418 * 0.5,
+      Delt(fVar4 * g_FrameTime,((fVar4 * fVar4) / fVar3) * g_FrameTimeSq * 0.5,
                      (float *)((int)pvVar5 + 0xe4U));
     }
     else {
       Delt(g_FrameTime * 0.5,
                      ((*(float *)((int)pvVar5 + 0xec) * *(float *)((int)pvVar5 + 0xec)) / fVar3) *
-                     DAT_0071f418 * 0.5,(float *)((int)pvVar5 + 0xe4U));
+                     g_FrameTimeSq * 0.5,(float *)((int)pvVar5 + 0xe4U));
     }
     ClampVec3Magnitude
               ((double)*(float *)((int)pvVar5 + 0xe4),(Vec4 *)((int)pvVar5 + 0xa0));

@@ -100,7 +100,7 @@ void M52_003a9af8(MobyInstance *param_1)
         uVar15 = FastDoubleToInt(0x4080000000000000);
         *(undefined4 *)((int)pvVar6 + 0x98) = 0;
         fVar2 = DAT_008436a0;
-        fVar5 = DAT_0071f418;
+        fVar5 = g_FrameTimeSq;
         *(undefined4 *)((int)pvVar6 + 0x90) = uVar15;
         *(float *)((int)pvVar6 + 0x80) = fVar2 * fVar5;
         *(undefined1 *)((int)pvVar6 + 0xad) = 0;
@@ -111,7 +111,7 @@ void M52_003a9af8(MobyInstance *param_1)
         fVar5 = g_FrameTime;
         if (iVar14 < 3) {
           if ((-1 < iVar14) && (0 < iVar14)) {
-            fVar5 = DAT_008436a0 * DAT_0071f418;
+            fVar5 = DAT_008436a0 * g_FrameTimeSq;
             param_1->modeBits =
                  param_1->modeBits &
                  (MIRROR|CAN_BE_DAMAGED|HIDE_BACKFACES|DISABLE_Z_WRITE|DRAW_SHADOW|
@@ -646,7 +646,7 @@ void UpdateMoby_52(MobyInstance *moby)
           fVar37 = (fVar37 + 0.7853982) * fVar5 + fVar2;
         }
         fVar37 = OrganicDeltAng
-                           (fVar37,DAT_0071f418 * 8.726646,DAT_0071f418 * 8.726646,
+                           (fVar37,g_FrameTimeSq * 8.726646,g_FrameTimeSq * 8.726646,
                             g_FrameTime * 12.566371,&(moby->rotation).z,0x3aa560,
                             (float *)((int)pvVar6 + 0x18c));
         if ((moby->field43_0x70 & 2U) != 0) {
@@ -782,7 +782,7 @@ void UpdateMoby_52(MobyInstance *moby)
     dVar28 = (double)((float)(dVar28 + 0.7853981852531433) * fVar2 + fVar3);
   }
   OrganicDeltAng
-            ((float)dVar28,DAT_0071f418 * 8.726646,DAT_0071f418 * 8.726646,
+            ((float)dVar28,g_FrameTimeSq * 8.726646,g_FrameTimeSq * 8.726646,
              g_FrameTime * 12.566371,&(moby->rotation).z,0x720000,
              (float *)((int)pvVar6 + 0x18c));
   fVar37 = (moby->pos).y - *(float *)(iVar17 + 0x14);

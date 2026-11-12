@@ -915,7 +915,7 @@ void UpdateMoby_870(MobyInstance *moby)
       uVar16 = FastDoubleToInt(0x4088000000000000);
       *(undefined4 *)((int)pvVar8 + 0x98) = 0x3f400000;
       fVar4 = DAT_008c7f3c;
-      fVar3 = DAT_0071f418;
+      fVar3 = g_FrameTimeSq;
       *(undefined4 *)((int)pvVar8 + 0x90) = uVar16;
       *(undefined4 *)((int)pvVar8 + 0x84) = 0x3a03126f;
       *(undefined1 *)((int)pvVar8 + 0xad) = 0;
@@ -1010,7 +1010,7 @@ void UpdateMoby_870(MobyInstance *moby)
     }
   }
   else if (bVar1 == 0xb) {
-    Delt(*(float *)((int)pvVar8 + 0x1a4) * 3.0 * g_FrameTime,DAT_0071f418 * 20.0
+    Delt(*(float *)((int)pvVar8 + 0x1a4) * 3.0 * g_FrameTime,g_FrameTimeSq * 20.0
                    ,(float *)((int)pvVar8 + 0xf4));
     uVar23 = FUN_005e8338((double)(*(float *)(iVar17 + 0x10) - (moby->pos).x),
                           (double)(*(float *)(iVar17 + 0x14) - (moby->pos).y));
@@ -1078,7 +1078,7 @@ void UpdateMoby_870(MobyInstance *moby)
     }
   }
   else if (bVar1 == 10) {
-    Delt(*(float *)((int)pvVar8 + 0x1a4) * g_FrameTime,DAT_0071f418 * 6.0,
+    Delt(*(float *)((int)pvVar8 + 0x1a4) * g_FrameTime,g_FrameTimeSq * 6.0,
                    (float *)((int)pvVar8 + 0xf4));
     uVar23 = FUN_005e8338((double)(*(float *)((int)pvVar8 + 0x170) - (moby->pos).x),
                           (double)(*(float *)((int)pvVar8 + 0x174) - (moby->pos).y));
@@ -1206,10 +1206,10 @@ void UpdateMoby_870(MobyInstance *moby)
     fVar4 = (moby->pos).x - *(float *)(iVar17 + 0x10);
     fVar5 = (moby->pos).z - *(float *)(iVar17 + 0x18);
     if (SQRT(fVar5 * fVar5 + fVar4 * fVar4 + fVar3 * fVar3) <= DAT_008c7f4c) {
-      Delt(0.0,DAT_0071f418 * 20.0,(float *)((int)pvVar8 + 0xf4));
+      Delt(0.0,g_FrameTimeSq * 20.0,(float *)((int)pvVar8 + 0xf4));
     }
     else {
-      Delt(*(float *)((int)pvVar8 + 0x1a4) * g_FrameTime,DAT_0071f418 * 6.0,
+      Delt(*(float *)((int)pvVar8 + 0x1a4) * g_FrameTime,g_FrameTimeSq * 6.0,
                      (float *)((int)pvVar8 + 0xf4));
     }
     uVar23 = FUN_005e8338((double)(*(float *)(iVar17 + 0x10) - (moby->pos).x),

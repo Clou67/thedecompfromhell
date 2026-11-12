@@ -319,7 +319,7 @@ void UpdateMoby_347(MobyInstance *moby)
         dVar38 = (double)((float)(dVar26 + 0.7853981852531433) * fVar2 + fVar3);
       }
       OrganicDeltAng
-                ((float)dVar38,DAT_0071f418 * 0.5235988,DAT_0071f418 * 0.5235988,
+                ((float)dVar38,g_FrameTimeSq * 0.5235988,g_FrameTimeSq * 0.5235988,
                  g_FrameTime * 1.0471976,&(moby->rotation).z,0x351684,
                  (float *)((int)pvVar8 + 0x78));
       *(float *)((int)puVar11 + 0x19c) = (float)dVar33;
@@ -725,7 +725,7 @@ void UpdateMoby_347(MobyInstance *moby)
       dVar29 = (double)((float)(dVar26 + 0.7853981852531433) * fVar2 + fVar3);
     }
     OrganicDeltAng
-              ((float)dVar29,DAT_0071f418 * 0.5235988,DAT_0071f418 * 0.5235988,
+              ((float)dVar29,g_FrameTimeSq * 0.5235988,g_FrameTimeSq * 0.5235988,
                g_FrameTime * 1.0471976,&(moby->rotation).z,0x351684,
                (float *)((int)pvVar8 + 0x78));
     *(float *)((int)puVar11 + 0x1cc) = (float)dVar33;

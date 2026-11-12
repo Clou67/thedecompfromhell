@@ -217,7 +217,7 @@ void UpdateMoby_318(MobyInstance *moby)
         }
         else {
           fVar15 = OrganicDelt
-                             (0.0,DAT_0083bc50 * DAT_0071f418,DAT_0083bc54 * DAT_0071f418,
+                             (0.0,DAT_0083bc50 * g_FrameTimeSq,DAT_0083bc54 * g_FrameTimeSq,
                               DAT_0083bc58 * g_FrameTime,(float *)(piVar11 + 8),0x840000,
                               (float *)(piVar11 + 0xb));
           dVar14 = (double)fVar15;
@@ -225,7 +225,7 @@ void UpdateMoby_318(MobyInstance *moby)
       }
       else {
         fVar15 = OrganicDelt
-                           (0.0,DAT_0083bc50 * DAT_0071f418,DAT_0083bc54 * DAT_0071f418,
+                           (0.0,DAT_0083bc50 * g_FrameTimeSq,DAT_0083bc54 * g_FrameTimeSq,
                             DAT_0083bc58 * g_FrameTime,(float *)(piVar11 + 9),0x720000,
                             (float *)(piVar11 + 10));
         dVar14 = (double)fVar15;
@@ -297,7 +297,7 @@ void UpdateMoby_318(MobyInstance *moby)
     dVar14 = 1.0;
     if (iVar8 < 0x3f800000) {
       fVar15 = OrganicDelt
-                         (1.0,DAT_0083bc50 * DAT_0071f418,DAT_0083bc54 * DAT_0071f418,
+                         (1.0,DAT_0083bc50 * g_FrameTimeSq,DAT_0083bc54 * g_FrameTimeSq,
                           DAT_0083bc58 * g_FrameTime,(float *)(piVar11 + 8),0x720000,
                           (float *)(piVar11 + 10));
       dVar14 = (double)fVar15;
@@ -306,7 +306,7 @@ void UpdateMoby_318(MobyInstance *moby)
       uVar3 = piVar11[9] >> 0x1f;
       if ((int)((uVar3 >> 1 ^ piVar11[9]) - uVar3) < 0x3f800000) {
         fVar15 = OrganicDelt
-                           (1.0,DAT_0083bc50 * DAT_0071f418,DAT_0083bc54 * DAT_0071f418,
+                           (1.0,DAT_0083bc50 * g_FrameTimeSq,DAT_0083bc54 * g_FrameTimeSq,
                             DAT_0083bc58 * g_FrameTime,(float *)(piVar11 + 9),0x720000,
                             (float *)(piVar11 + 0xb));
         dVar14 = (double)fVar15;

@@ -102,7 +102,7 @@ void UpdateMoby_1257(void *this_,MobyInstance *moby)
   }
   *(undefined1 *)((int)this_ + 0xa4) = 0xff;
   if (*(byte *)((int)this_ + 0x20) == 0) {
-    fVar3 = DAT_0076d4d0 * DAT_0071f418;
+    fVar3 = DAT_0076d4d0 * g_FrameTimeSq;
     *pfVar2 = *pfVar2 * -0.02 + *pfVar2;
     pfVar2[1] = pfVar2[1] * -0.02 + pfVar2[1];
     pfVar2[2] = pfVar2[2] + -fVar3;

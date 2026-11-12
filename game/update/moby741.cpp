@@ -739,7 +739,7 @@ void UpdateMoby_741(void *this_,MobyInstance *moby)
         dVar37 = (double)((float)(dVar37 + 0.7853981852531433) * fVar9 + fVar3);
       }
       *(float *)((int)puVar13 + 0x184) = (float)dVar37;
-      fVar9 = DAT_0071f418;
+      fVar9 = g_FrameTimeSq;
       *(undefined1 *)(uVar23 + 0x9d) = 0;
       *(undefined4 *)(uVar23 + 0x84) = 9;
       *(undefined4 *)(uVar23 + 0x74) = 0x3a03126f;

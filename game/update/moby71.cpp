@@ -678,7 +678,7 @@ ulonglong UpdateMoby_71(MobyInstance *moby)
       dVar30 = (double)(DAT_0096ad54 - (moby->pos).y);
       dVar36 = (double)(DAT_0096ad50 - (moby->pos).x);
       dVar28 = (double)(DAT_0096ad58 - (moby->pos).z);
-      fVar1 = DAT_0071f418 * 0.9 + *(float *)((int)pvVar8 + 100);
+      fVar1 = g_FrameTimeSq * 0.9 + *(float *)((int)pvVar8 + 100);
       dVar39 = (double)SQRT((float)(dVar28 * dVar28 +
                                    (double)(float)(dVar36 * dVar36 +
                                                   (double)(float)(dVar30 * dVar30))));

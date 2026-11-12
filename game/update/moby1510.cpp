@@ -57,7 +57,7 @@ void UpdateMoby_1510(MobyInstance *moby)
   if (0 < (int)pfVar2[2]) {
     fVar1 = fVar1 * ((DAT_007ab1e4 - 1.0) * fVar8 + 1.0);
   }
-  pfVar2[2] = -(DAT_0071f418 * DAT_007ab1e0 - fVar1);
+  pfVar2[2] = -(g_FrameTimeSq * DAT_007ab1e0 - fVar1);
   dVar12 = (double)FastWrapRot((moby->rotation).x,pfVar2[4]);
   (moby->rotation).x = (float)dVar12;
   dVar12 = (double)FastWrapRot((moby->rotation).y,pfVar2[5]);

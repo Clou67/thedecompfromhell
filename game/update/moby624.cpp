@@ -214,7 +214,7 @@ void UpdateMoby_624(MobyInstance *moby)
                                                                            dVar15))) + 1.0) * 0.5),
                             uVar6,uVar7);
         moby->glowRgba = uVar13;
-        pfVar3[2] = -(DAT_0071f418 * 10.0 - pfVar3[2]);
+        pfVar3[2] = -(g_FrameTimeSq * 10.0 - pfVar3[2]);
         (moby->pos).x = (moby->pos).x + *pfVar3;
         (moby->pos).y = (moby->pos).y + pfVar3[1];
         (moby->pos).z = (moby->pos).z + pfVar3[2];

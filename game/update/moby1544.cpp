@@ -120,7 +120,7 @@ void M1544_002967f0
     uVar4 = FastDoubleToInt((double)(float)((double)(longlong)DAT_007ab760 * dVar11));
     uVar5 = FastDoubleToInt
                       ((double)(float)((double)(SQRT((float)(param_1 * 2.0) /
-                                                     (DAT_007ab744 * DAT_0071f418)) * DAT_007ab794)
+                                                     (DAT_007ab744 * g_FrameTimeSq)) * DAT_007ab794)
                                       * dVar11));
     dVar11 = 0.0;
     MB_randSphere(0,(double)(DAT_007ab748 * g_FrameTime),auStack_80);

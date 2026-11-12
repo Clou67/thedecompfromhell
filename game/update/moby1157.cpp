@@ -280,7 +280,7 @@ void UpdateMoby_1157(MobyInstance *moby)
     else if (uVar1 == '\x03') {
       piVar3[0x1d] = piVar3[0x1b];
       OrganicDelt
-                (1.0,DAT_00764eb8 * DAT_0071f418,DAT_00764ebc * DAT_0071f418,
+                (1.0,DAT_00764eb8 * g_FrameTimeSq,DAT_00764ebc * g_FrameTimeSq,
                  DAT_00764ec0 * g_FrameTime,(float *)(piVar3 + 0x1b),0x720000,
                  (float *)(piVar3 + 0x1c));
       iVar7 = piVar3[0x19];

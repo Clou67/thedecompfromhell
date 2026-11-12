@@ -292,7 +292,7 @@ void UpdateMoby_1269(MobyInstance *moby)
       }
       puVar18[0x32] = (longlong)(int)(fVar7 * 15.5);
       if (*(int *)((int)puVar18 + 0x194) < iVar25) {
-        *(float *)((int)pvVar15 + 0x70) = DAT_0071f418 * 30.0 + *(float *)((int)pvVar15 + 0x70);
+        *(float *)((int)pvVar15 + 0x70) = g_FrameTimeSq * 30.0 + *(float *)((int)pvVar15 + 0x70);
       }
       puVar18[0x32] = (longlong)(int)(fVar7 * 30.5);
       if (*(int *)((int)puVar18 + 0x194) < iVar25) {

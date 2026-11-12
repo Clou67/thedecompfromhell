@@ -315,7 +315,7 @@ void UpdateMoby_193(MobyInstance *moby)
           dVar32 = dVar30;
         }
         dVar30 = (double)GetGroundZ(0x3fe0000000000000,lVar13 + 0x10,0);
-        fVar4 = -(DAT_0071f418 * 9.8 - *(float *)((int)pvVar8 + 0x198));
+        fVar4 = -(g_FrameTimeSq * 9.8 - *(float *)((int)pvVar8 + 0x198));
         *(float *)((int)pvVar8 + 0x198) = fVar4;
         fVar4 = (moby->pos).z + fVar4;
         (moby->pos).z = fVar4;
@@ -862,7 +862,7 @@ LAB_002dcf0c:
   (moby->pos).w = local_d4;
   dVar25 = 0.5;
   dVar30 = (double)GetGroundZ(0x3fe0000000000000,lVar13 + 0x10,0);
-  fVar4 = -(DAT_0071f418 * 9.8 - *(float *)((int)pvVar8 + 0x198));
+  fVar4 = -(g_FrameTimeSq * 9.8 - *(float *)((int)pvVar8 + 0x198));
   *(float *)((int)pvVar8 + 0x198) = fVar4;
   fVar4 = (moby->pos).z + fVar4;
   (moby->pos).z = fVar4;

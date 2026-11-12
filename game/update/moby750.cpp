@@ -92,16 +92,16 @@ void M750_0044a708
   fVar3 = *(float *)(param_1 + 0x18) - pfVar23[2];
   dVar27 = (double)((float)(dVar27 * (double)(float)param_2[7] + (double)*(float *)(puVar15 + 0x12))
                    + 2.0);
-  if ((*(float *)(iVar11 + 0x60) * *(float *)(iVar11 + 0x60)) / (DAT_0071f418 * 16.0 * 2.0) <
+  if ((*(float *)(iVar11 + 0x60) * *(float *)(iVar11 + 0x60)) / (g_FrameTimeSq * 16.0 * 2.0) <
       SQRT(fVar3 * fVar3 + fVar2 * fVar2 + fVar1 * fVar1)) {
-    fVar1 = DAT_0071f418 * 16.0 + *(float *)(iVar11 + 0x60);
+    fVar1 = g_FrameTimeSq * 16.0 + *(float *)(iVar11 + 0x60);
     *(float *)(iVar11 + 0x60) = fVar1;
     if (g_FrameTime * 16.0 < fVar1) {
       *(float *)(iVar11 + 0x60) = g_FrameTime * 16.0;
     }
   }
   else {
-    fVar1 = -(DAT_0071f418 * 16.0 - *(float *)(iVar11 + 0x60));
+    fVar1 = -(g_FrameTimeSq * 16.0 - *(float *)(iVar11 + 0x60));
     *(float *)(iVar11 + 0x60) = fVar1;
     if (fVar1 < DAT_0085a81c * g_FrameTime) {
       *(float *)(iVar11 + 0x60) = DAT_0085a81c * g_FrameTime;
@@ -447,14 +447,14 @@ void M750_0044a708
                                        (fVar5 * fVar1 * 2.601887e-06 +
                                        fVar1 * -0.0001980741 +
                                        fVar2 * 0.0083330255 + fVar5 * fVar4 * -0.16666657 + fVar4))
-                                      / fVar3),(double)(DAT_0071f418 * 0.5235988),
-                              (double)(DAT_0071f418 * 1.0471976),
+                                      / fVar3),(double)(g_FrameTimeSq * 0.5235988),
+                              (double)(g_FrameTimeSq * 1.0471976),
                               (double)(float)((double)g_FrameTime * dVar27));
   *(float *)(param_1 + 0x44) = (float)dVar27;
   dVar27 = (double)MB_DeltAngSpeed
                              ((double)*(float *)(param_1 + 0x40),dVar34,
-                              (double)(float)((double)DAT_0071f418 * dVar33),
-                              (double)(float)((double)DAT_0071f418 * 2.094395160675049),
+                              (double)(float)((double)g_FrameTimeSq * dVar33),
+                              (double)(float)((double)g_FrameTimeSq * 2.094395160675049),
                               (double)(g_FrameTime * 1.5707964));
   *(float *)(param_1 + 0x40) = (float)dVar27;
   return;
@@ -957,14 +957,14 @@ void UpdateMoby_750(MobyInstance *moby)
         dVar31 = 1.0471975803375244;
         dVar41 = (double)MB_DeltAngSpeed
                                    ((double)(moby->rotation).y,dVar40,
-                                    (double)(DAT_0071f418 * 0.5235988),
-                                    (double)(DAT_0071f418 * 1.0471976),
+                                    (double)(g_FrameTimeSq * 0.5235988),
+                                    (double)(g_FrameTimeSq * 1.0471976),
                                     (double)(g_FrameTime * 0.7853982));
         (moby->rotation).y = (float)dVar41;
         dVar40 = (double)MB_DeltAngSpeed
                                    ((double)(moby->rotation).x,dVar40,
-                                    (double)(float)((double)DAT_0071f418 * dVar31),
-                                    (double)(float)((double)DAT_0071f418 * 2.094395160675049),
+                                    (double)(float)((double)g_FrameTimeSq * dVar31),
+                                    (double)(float)((double)g_FrameTimeSq * 2.094395160675049),
                                     (double)(g_FrameTime * 1.5707964));
         (moby->rotation).x = (float)dVar40;
         fVar2 = g_heroPosition.y - (moby->pos).y;
@@ -992,14 +992,14 @@ void UpdateMoby_750(MobyInstance *moby)
       dVar39 = 1.0471975803375244;
       dVar31 = (double)MB_DeltAngSpeed
                                  ((double)(moby->rotation).y,dVar40,
-                                  (double)(DAT_0071f418 * 0.5235988),
-                                  (double)(DAT_0071f418 * 1.0471976),
+                                  (double)(g_FrameTimeSq * 0.5235988),
+                                  (double)(g_FrameTimeSq * 1.0471976),
                                   (double)(g_FrameTime * 0.7853982));
       (moby->rotation).y = (float)dVar31;
       dVar40 = (double)MB_DeltAngSpeed
                                  ((double)(moby->rotation).x,dVar40,
-                                  (double)(float)((double)DAT_0071f418 * dVar39),
-                                  (double)(float)((double)DAT_0071f418 * 2.094395160675049),
+                                  (double)(float)((double)g_FrameTimeSq * dVar39),
+                                  (double)(float)((double)g_FrameTimeSq * 2.094395160675049),
                                   (double)(g_FrameTime * 1.5707964));
       (moby->rotation).x = (float)dVar40;
       M750_0044b130(lVar15);
@@ -1177,15 +1177,15 @@ void UpdateMoby_750(MobyInstance *moby)
       }
       dVar39 = 1.0471975803375244;
       dVar41 = (double)MB_DeltAngSpeed
-                                 ((double)fVar2,dVar40,(double)(DAT_0071f418 * 0.5235988),
-                                  (double)(DAT_0071f418 * 1.0471976),
+                                 ((double)fVar2,dVar40,(double)(g_FrameTimeSq * 0.5235988),
+                                  (double)(g_FrameTimeSq * 1.0471976),
                                   (double)(g_FrameTime * 0.7853982),0x450000,pVVar20,
                                   piVar6 + 0x1a);
       (moby->rotation).y = (float)dVar41;
       dVar40 = (double)MB_DeltAngSpeed
                                  ((double)(moby->rotation).x,dVar40,
-                                  (double)(float)((double)DAT_0071f418 * dVar39),
-                                  (double)(float)((double)DAT_0071f418 * 2.094395160675049),
+                                  (double)(float)((double)g_FrameTimeSq * dVar39),
+                                  (double)(float)((double)g_FrameTimeSq * 2.094395160675049),
                                   (double)(float)((double)g_FrameTime * dVar31));
       (moby->rotation).x = (float)dVar40;
     }
@@ -1203,16 +1203,16 @@ void UpdateMoby_750(MobyInstance *moby)
       fVar3 = (moby->pos).z - pVVar20->z;
       dVar41 = (double)((float)(dVar41 * (double)pSVar10->points[0].w +
                                (double)*(float *)(puVar11 + 0x1a)) + 2.0);
-      if (((float)piVar6[0x18] * (float)piVar6[0x18]) / (DAT_0071f418 * 16.0 * 2.0) <
+      if (((float)piVar6[0x18] * (float)piVar6[0x18]) / (g_FrameTimeSq * 16.0 * 2.0) <
           SQRT(fVar3 * fVar3 + fVar5 * fVar5 + fVar2 * fVar2)) {
-        fVar2 = DAT_0071f418 * 16.0 + (float)piVar6[0x18];
+        fVar2 = g_FrameTimeSq * 16.0 + (float)piVar6[0x18];
         piVar6[0x18] = (int)fVar2;
         if (g_FrameTime * 16.0 < fVar2) {
           piVar6[0x18] = (int)(g_FrameTime * 16.0);
         }
       }
       else {
-        dVar39 = -(double)(DAT_0071f418 * 16.0 - (float)piVar6[0x18]);
+        dVar39 = -(double)(g_FrameTimeSq * 16.0 - (float)piVar6[0x18]);
         piVar6[0x18] = (int)(float)dVar39;
         if (dVar39 < dVar40) {
           piVar6[0x18] = 0;
@@ -1228,7 +1228,7 @@ void UpdateMoby_750(MobyInstance *moby)
       *(float *)(puVar11 + 0x1a) = fVar2;
       iVar27 = pSVar10->cnt;
       if (iVar27 + -1 <= iVar18) {
-        if ((float)piVar6[0x18] <= (float)((double)DAT_0071f418 * dVar31)) {
+        if ((float)piVar6[0x18] <= (float)((double)g_FrameTimeSq * dVar31)) {
           pVVar20 = pSVar10->points + iVar27 + -1;
           (moby->pos).x = pVVar20->x;
           (moby->pos).y = pVVar20->y;
@@ -1486,15 +1486,15 @@ void UpdateMoby_750(MobyInstance *moby)
                                            fVar5 * -0.0001980741 +
                                            fVar4 * 0.0083330255 +
                                            fVar12 * fVar3 * -0.16666657 + fVar3)) / fVar2),
-                                  (double)(DAT_0071f418 * 0.5235988),
-                                  (double)(DAT_0071f418 * 1.0471976),
+                                  (double)(g_FrameTimeSq * 0.5235988),
+                                  (double)(g_FrameTimeSq * 1.0471976),
                                   (double)(float)((double)g_FrameTime * 0.7853981852531433
                                                  ));
       (moby->rotation).y = (float)dVar40;
       dVar40 = (double)MB_DeltAngSpeed
                                  ((double)(moby->rotation).x,dVar31,
-                                  (double)(float)((double)DAT_0071f418 * dVar41),
-                                  (double)(float)((double)DAT_0071f418 * 2.094395160675049),
+                                  (double)(float)((double)g_FrameTimeSq * dVar41),
+                                  (double)(float)((double)g_FrameTimeSq * 2.094395160675049),
                                   (double)(g_FrameTime * 1.5707964));
       (moby->rotation).x = (float)dVar40;
     }

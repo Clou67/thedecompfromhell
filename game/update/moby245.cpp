@@ -358,7 +358,7 @@ void UpdateMoby_245(MobyInstance *moby)
             dVar34 = (double)((float)(dVar34 + 0.7853981852531433) * fVar7 + fVar2);
           }
           OrganicDeltAngSpeed
-                    (dVar34,(double)(DAT_0071f418 * 0.7853982),(double)(DAT_0071f418 * 1.5707964),
+                    (dVar34,(double)(g_FrameTimeSq * 0.7853982),(double)(g_FrameTimeSq * 1.5707964),
                      (double)(g_FrameTime * 0.7853982),lVar21,pfVar27,pfVar8 + 0x12);
           fVar7 = g_FrameTime;
           fVar2 = (moby->rotation).z;
@@ -488,7 +488,7 @@ void UpdateMoby_245(MobyInstance *moby)
             dVar34 = (double)((float)(dVar34 + 0.7853981852531433) * fVar7 + fVar2);
           }
           OrganicDeltAngSpeed
-                    (dVar34,(double)(DAT_0071f418 * 0.7853982),(double)(DAT_0071f418 * 1.5707964),
+                    (dVar34,(double)(g_FrameTimeSq * 0.7853982),(double)(g_FrameTimeSq * 1.5707964),
                      (double)(g_FrameTime * 0.7853982),lVar21,pfVar27,pfVar8 + 0x12);
           fVar7 = g_FrameTime;
           fVar2 = (moby->rotation).z;
@@ -631,7 +631,7 @@ void UpdateMoby_245(MobyInstance *moby)
           dVar34 = (double)((float)(dVar34 + 0.7853981852531433) * fVar7 + fVar2);
         }
         OrganicDeltAngSpeed
-                  (dVar34,(double)(DAT_0071f418 * 0.7853982),(double)(DAT_0071f418 * 1.5707964),
+                  (dVar34,(double)(g_FrameTimeSq * 0.7853982),(double)(g_FrameTimeSq * 1.5707964),
                    (double)(g_FrameTime * 0.7853982),lVar21,pfVar27,pfVar8 + 0x12);
         fVar7 = g_FrameTime;
         fVar2 = (moby->rotation).z;
@@ -765,7 +765,7 @@ void UpdateMoby_245(MobyInstance *moby)
           dVar34 = (double)((float)(dVar34 + 0.7853981852531433) * fVar7 + fVar2);
         }
         OrganicDeltAngSpeed
-                  (dVar34,(double)(DAT_0071f418 * 0.7853982),(double)(DAT_0071f418 * 1.5707964),
+                  (dVar34,(double)(g_FrameTimeSq * 0.7853982),(double)(g_FrameTimeSq * 1.5707964),
                    (double)(g_FrameTime * 0.7853982),lVar21,pfVar27,pfVar8 + 0x12);
         fVar7 = g_FrameTime;
         fVar2 = (moby->rotation).z;
@@ -821,7 +821,7 @@ void UpdateMoby_245(MobyInstance *moby)
         }
       }
     }
-    fVar2 = DAT_0071f418 * 9.8 + pfVar8[0x13];
+    fVar2 = g_FrameTimeSq * 9.8 + pfVar8[0x13];
     pfVar8[0x13] = fVar2;
     (moby->pos).z = (moby->pos).z - fVar2;
     dVar36 = (double)GetGroundZ(0x3fe0000000000000,lVar21 + 0x10,0);

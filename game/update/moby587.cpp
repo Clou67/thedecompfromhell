@@ -383,12 +383,12 @@ void UpdateMoby_587(MobyInstance *moby)
         fVar7 = DAT_00846710;
       }
       fVar7 = fVar7 * -(fVar2 * 0.333 - 1.0);
-      fVar2 = DAT_0071f418;
+      fVar2 = g_FrameTimeSq;
     }
     else {
       fVar4 = *(float *)((int)pvVar5 + 0x70);
       fVar2 = 15.0;
-      fVar7 = DAT_0071f418;
+      fVar7 = g_FrameTimeSq;
     }
     fVar2 = -(fVar7 * fVar2 - fVar4);
     *(float *)((int)pvVar5 + 0x70) = fVar2;
@@ -401,7 +401,7 @@ void UpdateMoby_587(MobyInstance *moby)
         TransitionMovement(0x77,1);
         fVar2 = *(float *)((int)pvVar5 + 0x70);
       }
-      *(float *)((int)pvVar5 + 0x70) = -(DAT_0071f418 * 13.7 - fVar2);
+      *(float *)((int)pvVar5 + 0x70) = -(g_FrameTimeSq * 13.7 - fVar2);
       fVar3 = (moby->pos).z;
       uVar6 = (int)fVar3 >> 0x1f;
       if ((int)((uVar6 >> 1 ^ (uint)fVar3) - uVar6) < 0x41700000) {

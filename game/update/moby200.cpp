@@ -93,7 +93,7 @@ FUN_00425540(double param_1,double param_2,double param_3,double param_4,undefin
     puVar2[6] = (float)((double)(float)(dVar6 * (double)fVar1) * param_3);
     uVar5 = FastDoubleToInt((double)(animationSpeed * (float)(param_4 * 60.0)));
     puVar2[7] = uVar5;
-    fVar1 = DAT_0071f418;
+    fVar1 = g_FrameTimeSq;
     puVar2[8] = in_stack_00000084;
     puVar2[9] = (float)(param_2 * 9.800000190734863) * fVar1;
     UpdateMobyTransform(pMVar3);

@@ -174,7 +174,7 @@ void UpdateMoby_487(MobyInstance *moby)
     *(float *)(puVar9 + 0x19) = fVar3;
     fVar23 = 0.0;
     fVar10 = SQRT(fVar3 * fVar3 + fVar5 * fVar5 + fVar7 * fVar7);
-    fVar4 = DAT_00842130 * DAT_0071f418;
+    fVar4 = DAT_00842130 * g_FrameTimeSq;
     fVar2 = fVar2 / fVar10;
     fVar6 = fVar23;
     if (0.0 - fVar10 < 0.0) {

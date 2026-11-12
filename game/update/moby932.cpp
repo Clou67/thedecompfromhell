@@ -98,7 +98,7 @@ void M932_004be908(MobyInstance *param_1)
       uVar14 = FastDoubleToInt(0x4080000000000000);
       *(undefined4 *)((int)pvVar5 + 0x98) = 0x3f000000;
       fVar1 = DAT_008f4a48;
-      fVar4 = DAT_0071f418;
+      fVar4 = g_FrameTimeSq;
       *(undefined4 *)((int)pvVar5 + 0x90) = uVar14;
       *(undefined4 *)((int)pvVar5 + 0x84) = 0x3a03126f;
       *(undefined1 *)((int)pvVar5 + 0xad) = 0;
@@ -107,7 +107,7 @@ void M932_004be908(MobyInstance *param_1)
       fVar4 = g_FrameTime;
       if (iVar13 < 3) {
         if ((-1 < iVar13) && (0 < iVar13)) {
-          fVar4 = DAT_008f4a48 * DAT_0071f418;
+          fVar4 = DAT_008f4a48 * g_FrameTimeSq;
           param_1->modeBits =
                param_1->modeBits &
                (MIRROR|CAN_BE_DAMAGED|HIDE_BACKFACES|DISABLE_Z_WRITE|DRAW_SHADOW|
@@ -490,7 +490,7 @@ void UpdateMoby_932(MobyInstance *moby)
       fVar2 = (fVar2 + 0.7853982) * fVar6 + fVar3;
     }
     OrganicDeltAng
-              (fVar2,DAT_0071f418 * 8.726646,DAT_0071f418 * 8.726646,
+              (fVar2,g_FrameTimeSq * 8.726646,g_FrameTimeSq * 8.726646,
                g_FrameTime * 12.566371,&(moby->rotation).z,0x720000,
                (float *)((int)pvVar7 + 0x18c));
     fVar2 = (moby->rotation).z;

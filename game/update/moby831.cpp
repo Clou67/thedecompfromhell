@@ -384,7 +384,7 @@ void UpdateMoby_831(MobyInstance *moby)
       }
       if (pfVar6[9] != 0.0) {
         fVar39 = OrganicDelt
-                           (pfVar6[1],DAT_008acbc4 * DAT_0071f418,DAT_008acbc4 * DAT_0071f418,
+                           (pfVar6[1],DAT_008acbc4 * g_FrameTimeSq,DAT_008acbc4 * g_FrameTimeSq,
                             DAT_008acbc8 * g_FrameTime,&(moby->pos).z,0x720000,pfVar6 + 8)
         ;
         M831_0047ed20((double)fVar39,moby);
@@ -414,7 +414,7 @@ void UpdateMoby_831(MobyInstance *moby)
       if (pfVar6[9] != 0.0) {
         in_f5 = (double)g_FrameTime;
         OrganicDelt
-                  (*pfVar6,DAT_008acbc4 * DAT_0071f418,DAT_008acbc4 * DAT_0071f418,
+                  (*pfVar6,DAT_008acbc4 * g_FrameTimeSq,DAT_008acbc4 * g_FrameTimeSq,
                    (float)((double)DAT_008acbc8 * in_f5),&(moby->pos).z,0x8b0000,pfVar6 + 8);
         fVar7 = (moby->pos).z;
         fVar39 = (moby->pos).z;

@@ -263,7 +263,7 @@ bool M28_003271f0(int param_1)
     dVar24 = (double)((float)(dVar24 + 0.7853981852531433) * fVar5 + fVar2);
   }
   OrganicDeltAng
-            ((float)dVar24,DAT_0071f418 * 12.566371,DAT_0071f418 * 12.566371,fVar1 * 6.2831855,
+            ((float)dVar24,g_FrameTimeSq * 12.566371,g_FrameTimeSq * 12.566371,fVar1 * 6.2831855,
              (float *)(param_1 + 0x48),0x3271d8,(float *)(iVar6 + 0x23c));
   return iVar12 != 0;
 }
@@ -961,7 +961,7 @@ void UpdateMoby_28(MobyInstance *moby)
         dVar37 = -1.2217304706573486;
       }
       OrganicDeltAng
-                ((float)dVar37,DAT_0071f418 * 12.566371,DAT_0071f418 * 12.566371,
+                ((float)dVar37,g_FrameTimeSq * 12.566371,g_FrameTimeSq * 12.566371,
                  g_FrameTime * 6.2831855,(float *)((int)pvVar9 + 0x270),0x720000,
                  (float *)((int)pvVar9 + 0x274));
       FastQuaternionToEuler((double)*(float *)((int)pvVar9 + 0x270),(int)pvVar9 + 0x130,2)
@@ -1177,7 +1177,7 @@ void UpdateMoby_28(MobyInstance *moby)
         dVar37 = -1.2217304706573486;
       }
       OrganicDeltAng
-                ((float)dVar37,DAT_0071f418 * 12.566371,DAT_0071f418 * 12.566371,
+                ((float)dVar37,g_FrameTimeSq * 12.566371,g_FrameTimeSq * 12.566371,
                  g_FrameTime * 6.2831855,(float *)((int)pvVar9 + 0x270),0x720000,
                  (float *)((int)pvVar9 + 0x274));
       dVar37 = (double)FastQuaternionToEuler
@@ -1276,7 +1276,7 @@ void UpdateMoby_28(MobyInstance *moby)
       dVar45 = 12.566370964050293;
       dVar44 = 6.2831854820251465;
       OrganicDeltAng
-                ((float)dVar46,DAT_0071f418 * 12.566371,DAT_0071f418 * 12.566371,
+                ((float)dVar46,g_FrameTimeSq * 12.566371,g_FrameTimeSq * 12.566371,
                  g_FrameTime * 6.2831855,&(moby->rotation).z,(int)pfVar32,
                  (float *)((int)pvVar9 + 0x23c));
       dVar38 = (double)M28_00326c98((double)(moby->rotation).z,lVar21);
@@ -1289,8 +1289,8 @@ void UpdateMoby_28(MobyInstance *moby)
         dVar37 = -1.2217304706573486;
       }
       OrganicDeltAng
-                ((float)dVar37,(float)((double)DAT_0071f418 * dVar45),
-                 (float)((double)DAT_0071f418 * dVar45),
+                ((float)dVar37,(float)((double)g_FrameTimeSq * dVar45),
+                 (float)((double)g_FrameTimeSq * dVar45),
                  (float)((double)g_FrameTime * dVar44),(float *)((int)pvVar11 + 0x270),
                  (int)pfVar32,(float *)((int)pvVar11 + 0x274));
       dVar37 = (double)FastQuaternionToEuler
@@ -1638,7 +1638,7 @@ void UpdateMoby_28(MobyInstance *moby)
       fVar51 = (fVar51 + 0.7853982) * fVar5 + fVar3;
     }
     fVar51 = OrganicDeltAng
-                       (fVar51,DAT_0071f418 * 12.566371,DAT_0071f418 * 12.566371,
+                       (fVar51,g_FrameTimeSq * 12.566371,g_FrameTimeSq * 12.566371,
                         g_FrameTime * 6.2831855,&(moby->rotation).z,0x720000,
                         (float *)((int)pvVar9 + 0x23c));
     dVar37 = (double)fVar51;
@@ -1787,7 +1787,7 @@ LAB_00329cd8:
       dVar37 = -1.2217304706573486;
     }
     OrganicDeltAng
-              ((float)dVar37,DAT_0071f418 * 12.566371,DAT_0071f418 * 12.566371,
+              ((float)dVar37,g_FrameTimeSq * 12.566371,g_FrameTimeSq * 12.566371,
                g_FrameTime * 6.2831855,(float *)((int)pvVar9 + 0x270),0x720000,
                (float *)((int)pvVar9 + 0x274));
     dVar37 = (double)FastQuaternionToEuler

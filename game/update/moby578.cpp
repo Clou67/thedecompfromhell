@@ -406,7 +406,7 @@ void M578_003cb1b8(MobyInstance *param_1)
   *(float *)((int)pvVar7 + 0x20) = fVar5;
   if ((double)fVar5 <= dVar27) {
 LAB_003cbce4:
-    *(float *)((int)pvVar7 + 0x80) = DAT_00846218 * DAT_0071f418;
+    *(float *)((int)pvVar7 + 0x80) = DAT_00846218 * g_FrameTimeSq;
     MB_SetupJumpArc
               ((double)DAT_00846228,(double)DAT_0084622c,&PTR_DAT_00840000,&PTR_DAT_00840000,
                uVar21 + 0x70);
@@ -511,7 +511,7 @@ LAB_003cbce4:
     if (iVar16 < 6) {
       if (iVar16 < 4) {
 LAB_003cb7f4:
-        *(float *)((int)pvVar7 + 0x80) = DAT_0084621c * DAT_0071f418;
+        *(float *)((int)pvVar7 + 0x80) = DAT_0084621c * g_FrameTimeSq;
         MB_SetupJumpArc
                   ((double)DAT_00846220,(double)DAT_00846224,&PTR_DAT_00840000,&PTR_DAT_00840000,
                    uVar21 + 0x70);
@@ -603,7 +603,7 @@ LAB_003cb7f4:
         param_1->state = '\x04';
       }
       else {
-        *(float *)((int)pvVar7 + 0x80) = DAT_0084621c * DAT_0071f418;
+        *(float *)((int)pvVar7 + 0x80) = DAT_0084621c * g_FrameTimeSq;
         MB_SetupJumpArc
                   ((double)DAT_00846220,(double)DAT_00846224,&PTR_DAT_00840000,&PTR_DAT_00840000,
                    uVar21 + 0x70);
@@ -1162,8 +1162,8 @@ void UpdateMoby_578(MobyInstance *moby)
   }
   else if (uVar3 == '\0') {
     MB_InitDefaultParams((float *)((int)pvVar11 + 0xd0));
-    fVar4 = DAT_0071f418;
-    *(float *)((int)pvVar11 + 0x10c) = DAT_0071f418 * 6.2831855;
+    fVar4 = g_FrameTimeSq;
+    *(float *)((int)pvVar11 + 0x10c) = g_FrameTimeSq * 6.2831855;
     *(float *)((int)pvVar11 + 0x110) = fVar4 * 18.849556;
     fVar4 = g_FrameTime;
     *(float *)((int)pvVar11 + 0x114) = g_FrameTime * 6.2831855;
@@ -1192,7 +1192,7 @@ void UpdateMoby_578(MobyInstance *moby)
     }
   }
   if (moby->state < 4) {
-    fVar4 = DAT_0071f418 * 9.8 + *(float *)((int)pvVar11 + 0xe8);
+    fVar4 = g_FrameTimeSq * 9.8 + *(float *)((int)pvVar11 + 0xe8);
     *(float *)((int)pvVar11 + 0xe8) = fVar4;
     dVar44 = 2.0;
     (moby->pos).z = (moby->pos).z - (fVar4 - 2.0);

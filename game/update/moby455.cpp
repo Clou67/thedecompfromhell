@@ -974,7 +974,7 @@ void UpdateMoby_455(MobyInstance *moby)
       MB_RandomizeVector(0.025,(float *)lVar28);
       FastVecAddSelf(uVar25 - 0xb0,lVar28,uVar25 - 0x120);
       dVar32 = (double)MB_computeLobVelocity
-                                 (dVar45,-(double)(*(float *)((int)pvVar12 + 0xdc) * DAT_0071f418),
+                                 (dVar45,-(double)(*(float *)((int)pvVar12 + 0xdc) * g_FrameTimeSq),
                                   lVar28,uVar25 - 0x100);
       *(float *)(puVar14 + 0x1b) = (float)dVar32;
       iVar19 = FUN_003affa0(lVar18,lVar28,uVar25 - 0x110,*(undefined2 *)((int)pvVar12 + 0x8c),

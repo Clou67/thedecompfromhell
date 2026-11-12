@@ -66,8 +66,8 @@ bool M47_003988e8(int param_1,int *param_2)
     fVar3 = *(float *)(param_1 + 0x10) - (float)param_2[iVar12 * 4 + -4];
     fVar4 = *(float *)(param_1 + 0x18) - (float)param_2[iVar12 * 4 + -2];
     OrganicDelt
-              (SQRT(fVar4 * fVar4 + fVar3 * fVar3 + fVar2 * fVar2),DAT_00842ddc * DAT_0071f418,
-               DAT_00842ddc * DAT_0071f418,DAT_00842dd8 * g_FrameTime,local_40,0x720000,
+              (SQRT(fVar4 * fVar4 + fVar3 * fVar3 + fVar2 * fVar2),DAT_00842ddc * g_FrameTimeSq,
+               DAT_00842ddc * g_FrameTimeSq,DAT_00842dd8 * g_FrameTime,local_40,0x720000,
                (float *)(iVar10 + 0xf0));
   }
   return bVar1;
@@ -337,7 +337,7 @@ void UpdateMoby_47(MobyInstance *moby)
     fVar2 = Splines[*(int *)((int)pvVar3 + 0xd8)]->points[0].w;
     dVar10 = (double)fVar2;
     OrganicDelt
-              (fVar2,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+              (fVar2,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
                g_FrameTime * 6.2831855,&(moby->rotation).z,
                (int)Splines[*(int *)((int)pvVar3 + 0xd8)],(float *)((int)pvVar3 + 0xf8));
     dVar10 = (double)FastSubRots((moby->rotation).z,(float)dVar10);

@@ -649,7 +649,7 @@ bool M424_00369ab0(int param_1)
   iVar1 = *(int *)(param_1 + 0x78);
   piVar2 = *(int **)(iVar1 + 0x120);
   OrganicDelt
-            (*(float *)(iVar1 + 0x104),DAT_0071f418 * 0.1,DAT_0071f418 * 0.1,
+            (*(float *)(iVar1 + 0x104),g_FrameTimeSq * 0.1,g_FrameTimeSq * 0.1,
              g_FrameTime * 0.08,(float *)(iVar1 + 0xe4),0x720000,(float *)(iVar1 + 0xe8));
   dVar4 = (double)FastWrapRot(*(float *)(iVar1 + 0x110),*(float *)(iVar1 + 0xe8) * 50.0);
   iVar3 = *piVar2;
@@ -664,7 +664,7 @@ bool M424_00369ab0(int param_1)
   }
   else {
     OrganicDelt
-              (3.14159,DAT_0071f418 * 2.0943952,DAT_0071f418 * 2.0943952,
+              (3.14159,g_FrameTimeSq * 2.0943952,g_FrameTimeSq * 2.0943952,
                g_FrameTime * 6.2831855,(float *)(iVar1 + 0x108),0x369a8c,
                (float *)(iVar1 + 0x10c));
     dVar4 = (double)*(float *)(iVar1 + 0x104);

@@ -127,7 +127,7 @@ void M912_004ad348(MobyInstance *param_1)
     uVar11 = FastDoubleToInt(0x4088000000000000);
     *(undefined4 *)((int)pvVar5 + 0x98) = 0x3f400000;
     fVar1 = DAT_008f4110;
-    fVar4 = DAT_0071f418;
+    fVar4 = g_FrameTimeSq;
     *(undefined4 *)((int)pvVar5 + 0x90) = uVar11;
     *(undefined4 *)((int)pvVar5 + 0x84) = 0x3a03126f;
     *(undefined1 *)((int)pvVar5 + 0xad) = 0;
@@ -344,10 +344,10 @@ void UpdateMoby_912(MobyInstance *moby)
       fVar2 = (moby->pos).x - (victim->pos).x;
       fVar6 = (moby->pos).z - (victim->pos).z;
       if (SQRT(fVar6 * fVar6 + fVar2 * fVar2 + fVar3 * fVar3) <= DAT_008f4120) {
-        Delt(0.0,DAT_0071f418 * 20.0,(float *)((int)pvVar9 + 0xf4));
+        Delt(0.0,g_FrameTimeSq * 20.0,(float *)((int)pvVar9 + 0xf4));
       }
       else {
-        Delt(*(float *)((int)pvVar9 + 0x1a4) * g_FrameTime,DAT_0071f418 * 6.0,
+        Delt(*(float *)((int)pvVar9 + 0x1a4) * g_FrameTime,g_FrameTimeSq * 6.0,
                        (float *)((int)pvVar9 + 0xf4));
       }
       fVar3 = (victim->pos).x - (moby->pos).x;
@@ -710,7 +710,7 @@ void UpdateMoby_912(MobyInstance *moby)
     }
   }
   else if (bVar1 == 9) {
-    Delt(*(float *)((int)pvVar9 + 0x1a4) * 3.0 * g_FrameTime,DAT_0071f418 * 20.0
+    Delt(*(float *)((int)pvVar9 + 0x1a4) * 3.0 * g_FrameTime,g_FrameTimeSq * 20.0
                    ,(float *)((int)pvVar9 + 0xf4));
     fVar3 = (victim->pos).x - (moby->pos).x;
     fVar2 = (victim->pos).y - (moby->pos).y;
@@ -924,7 +924,7 @@ void UpdateMoby_912(MobyInstance *moby)
     }
   }
   else if (bVar1 == 8) {
-    Delt(*(float *)((int)pvVar9 + 0x1a4) * g_FrameTime,DAT_0071f418 * 6.0,
+    Delt(*(float *)((int)pvVar9 + 0x1a4) * g_FrameTime,g_FrameTimeSq * 6.0,
                    (float *)((int)pvVar9 + 0xf4));
     fVar3 = *(float *)((int)pvVar9 + 0x170) - (moby->pos).x;
     fVar2 = *(float *)((int)pvVar9 + 0x174) - (moby->pos).y;

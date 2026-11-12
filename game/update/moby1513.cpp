@@ -288,7 +288,7 @@ void UpdateMoby_1513(MobyInstance *moby)
   }
   else if (bVar1 < 4) {
     OrganicDelt
-              (1.0,DAT_0071f418 * 2.0,DAT_0071f418 * 4.0,g_FrameTime * 4.0,
+              (1.0,g_FrameTimeSq * 2.0,g_FrameTimeSq * 4.0,g_FrameTime * 4.0,
                (float *)(piVar14 + 0x11),0x720000,(float *)(piVar14 + 0x12));
     iVar9 = 0;
     piVar14[0x10] = (int)(DAT_007ab380 * (float)piVar14[0x11] + (moby->pos).z + DAT_007ab37c);

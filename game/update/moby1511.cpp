@@ -325,7 +325,7 @@ void UpdateMoby_1511(MobyInstance *moby)
         local_100 = (longlong)(int)(animationSpeed * 90.5);
         dVar19 = 12.0;
         iVar12 = MB_SpawnDebrisMoby
-                           ((double)(DAT_0071f418 * 12.0),lVar9,0x5ed,lVar16,lVar17,
+                           ((double)(g_FrameTimeSq * 12.0),lVar9,0x5ed,lVar16,lVar17,
                             (int)(animationSpeed * 90.5),0);
         if (iVar12 != 0) {
           *(undefined8 *)(iVar12 + 0x38) = *(undefined8 *)&moby->color;
@@ -333,7 +333,7 @@ void UpdateMoby_1511(MobyInstance *moby)
         MB_DistributeBoltsNearHero(lVar9);
         local_100 = (longlong)(int)((double)animationSpeed * dVar18);
         iVar12 = MB_SpawnDebrisMoby
-                           ((double)(float)((double)DAT_0071f418 * dVar19),lVar9,0x5ee,lVar16,lVar17
+                           ((double)(float)((double)g_FrameTimeSq * dVar19),lVar9,0x5ee,lVar16,lVar17
                             ,(int)((double)animationSpeed * dVar18),0);
         if (iVar12 != 0) {
           *(undefined8 *)(iVar12 + 0x38) = *(undefined8 *)&moby->color;
@@ -342,7 +342,7 @@ void UpdateMoby_1511(MobyInstance *moby)
         (moby->rotation).z = (float)dVar36;
         local_100 = (longlong)(int)((double)animationSpeed * dVar18);
         iVar12 = MB_SpawnDebrisMoby
-                           ((double)(float)((double)DAT_0071f418 * dVar19),lVar9,0x5ee,lVar16,lVar17
+                           ((double)(float)((double)g_FrameTimeSq * dVar19),lVar9,0x5ee,lVar16,lVar17
                             ,(int)((double)animationSpeed * dVar18),0);
         if (iVar12 != 0) {
           *(undefined8 *)(iVar12 + 0x38) = *(undefined8 *)&moby->color;

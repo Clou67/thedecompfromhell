@@ -449,7 +449,7 @@ void M1169_001ea988(MobyInstance *param_1,float *param_2)
     fVar1 = (fVar1 + 0.7853982) * fVar5 + fVar2;
   }
   OrganicDeltAng
-            (fVar1,DAT_0071f418 * 12.566371,DAT_0071f418 * 12.566371,
+            (fVar1,g_FrameTimeSq * 12.566371,g_FrameTimeSq * 12.566371,
              g_FrameTime * 6.2831855,&(param_1->rotation).z,0x720000,
              (float *)((int)pvVar6 + 0x188));
   fVar1 = (param_1->rotation).z;
@@ -1120,7 +1120,7 @@ void UpdateMoby_1169(MobyInstance *moby)
       (moby->pos).x = (moby->pos).x + *(float *)((int)pvVar12 + 0x40);
       (moby->pos).y = (moby->pos).y + *(float *)((int)pvVar12 + 0x44);
       (moby->pos).z = (moby->pos).z + *(float *)((int)pvVar12 + 0x48);
-      fVar55 = -(DAT_00765c30 * DAT_0071f418 - *(float *)((int)pvVar12 + 0x48));
+      fVar55 = -(DAT_00765c30 * g_FrameTimeSq - *(float *)((int)pvVar12 + 0x48));
       *(float *)((int)pvVar12 + 0x48) = fVar55;
       if ((fVar55 < 0.0) &&
          (fVar13 = (moby->pos).z, uVar36 = (int)fVar13 >> 0x1f,
@@ -1226,7 +1226,7 @@ void UpdateMoby_1169(MobyInstance *moby)
       }
       dVar42 = (double)FastDiffRots(dVar42,0x3fd0c15240000000);
       fVar55 = OrganicDeltAng
-                         ((float)dVar42,DAT_0071f418 * 12.566371,DAT_0071f418 * 12.566371,
+                         ((float)dVar42,g_FrameTimeSq * 12.566371,g_FrameTimeSq * 12.566371,
                           g_FrameTime * 6.2831855,&(moby->rotation).z,0x720000,
                           (float *)((int)pvVar12 + 0x188));
       if (*(int *)((int)pvVar12 + 0x164) == 2) {
@@ -1317,7 +1317,7 @@ void UpdateMoby_1169(MobyInstance *moby)
     (moby->pos).x = (moby->pos).x + *(float *)((int)pvVar12 + 0x40);
     (moby->pos).y = (moby->pos).y + *(float *)((int)pvVar12 + 0x44);
     (moby->pos).z = (moby->pos).z + *(float *)((int)pvVar12 + 0x48);
-    fVar3 = -(DAT_00765c30 * DAT_0071f418 - *(float *)((int)pvVar12 + 0x48));
+    fVar3 = -(DAT_00765c30 * g_FrameTimeSq - *(float *)((int)pvVar12 + 0x48));
     *(float *)((int)pvVar12 + 0x48) = fVar3;
     pCVar25 = Cuboids;
     fVar55 = 0.0;

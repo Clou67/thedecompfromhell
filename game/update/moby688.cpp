@@ -1064,7 +1064,7 @@ void UpdateMoby_689(MobyInstance *moby)
            (iVar19 = (int)(animationSpeed * (float)((double)(longlong)DAT_008574d4 + dVar20)),
            local_50 = (longlong)iVar19, (int)out[0xc] <= iVar19)) {
           M688_00416c90(lVar16,out);
-          fVar3 = DAT_008574e8 * DAT_0071f418 + out[0xd];
+          fVar3 = DAT_008574e8 * g_FrameTimeSq + out[0xd];
           out[0xd] = fVar3;
           fVar9 = g_FrameTime;
           fVar8 = animationSpeed;
@@ -1211,7 +1211,7 @@ void UpdateMoby_689(MobyInstance *moby)
         out[0xc] = DAT_00857578;
         moby->state = '\a';
       }
-      out[2] = out[2] + -(DAT_00857570 * DAT_0071f418);
+      out[2] = out[2] + -(DAT_00857570 * g_FrameTimeSq);
       (moby->pos).x = (moby->pos).x + *out;
       (moby->pos).y = (moby->pos).y + out[1];
       (moby->pos).z = (moby->pos).z + out[2];
@@ -1252,7 +1252,7 @@ void UpdateMoby_689(MobyInstance *moby)
         out[0x11] = 0.0;
         moby->state = '\x05';
       }
-      out[2] = out[2] + -(DAT_00857570 * DAT_0071f418);
+      out[2] = out[2] + -(DAT_00857570 * g_FrameTimeSq);
       (moby->pos).x = (moby->pos).x + *out;
       (moby->pos).y = (moby->pos).y + out[1];
       (moby->pos).z = (moby->pos).z + out[2];
@@ -1278,7 +1278,7 @@ void UpdateMoby_689(MobyInstance *moby)
                                ((moby->rotation).z,
                                 DAT_0085757c * 0.017453292 * g_FrameTime);
     (moby->rotation).z = (float)dVar20;
-    out[2] = out[2] + -(DAT_00857570 * DAT_0071f418);
+    out[2] = out[2] + -(DAT_00857570 * g_FrameTimeSq);
     (moby->pos).x = (moby->pos).x + *out;
     (moby->pos).y = (moby->pos).y + out[1];
     (moby->pos).z = (moby->pos).z + out[2];

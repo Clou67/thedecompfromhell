@@ -83,7 +83,7 @@ void UpdateMoby_735(MobyInstance *moby)
   }
   else if (bVar1 < 3) {
     OrganicDeltAng
-              (1.0,DAT_0071f418 * 0.5,DAT_0071f418 * 0.5,g_FrameTime,pfVar4 + 9,0x720000,
+              (1.0,g_FrameTimeSq * 0.5,g_FrameTimeSq * 0.5,g_FrameTime,pfVar4 + 9,0x720000,
                pfVar4 + 8);
     FastSlerp((double)pfVar4[9],auStack_50,pfVar4,pfVar4 + 4);
     FastQuaternionToMtx4(auStack_50,(longlong)(int)moby + 0xc0);

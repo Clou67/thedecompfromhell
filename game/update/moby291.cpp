@@ -537,7 +537,7 @@ void UpdateMoby_291(MobyInstance *moby)
       pfVar4[0x21] = 0.25;
       pfVar4[0x1f] = fVar2 * 0.4;
       pfVar4[0x22] = fVar2 * -0.00999999 + 1.0;
-      pfVar4[0x23] = DAT_0071f418 * 9.8;
+      pfVar4[0x23] = g_FrameTimeSq * 9.8;
       auVar43 = loadVectorLeftIndexed(0x60,0x32f8c8);
       auVar44 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
       auVar43 = auVar43 >> 0x60 & (GPiece<16>)0xffffffff;

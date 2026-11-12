@@ -66,7 +66,7 @@ MobyInstance * FUN_0045c4e0(double param_1,f32 *param_2)
     fVar1 = -g_FrameTime;
     *(undefined4 *)(puVar2 + 0x14) = 0x78;
     *(float *)(puVar2 + 8) = fVar1;
-    *(float *)(puVar2 + 0x10) = DAT_0071f418 * 15.0;
+    *(float *)(puVar2 + 0x10) = g_FrameTimeSq * 15.0;
     dVar4 = (double)MB_randRangeFloat(0.003141593,0.06283186);
     *(float *)(puVar2 + 0x1c) = (float)dVar4;
     UpdateMobyTransform(pMVar3);
@@ -143,7 +143,7 @@ void UpdateMoby_787(MobyInstance *moby)
     pfVar8[6] = 1.4013e-45;
     pfVar8[5] = 1.68156e-43;
     pfVar8[2] = g_FrameTime * -1.5;
-    pfVar8[4] = DAT_0071f418 * 0.8;
+    pfVar8[4] = g_FrameTimeSq * 0.8;
     dVar17 = 0.0;
     pfVar8[7] = 0.0;
     local_a0.x = (moby->pos).x;

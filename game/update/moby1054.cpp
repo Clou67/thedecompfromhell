@@ -110,11 +110,11 @@ undefined4 * UpdateMoby_1054(MobyInstance *moby)
       dVar25 = 20.0;
       dVar19 = 5.0;
       OrganicDelt
-                (DAT_00740854,DAT_0071f418 * 10.0,DAT_0071f418 * 20.0,g_FrameTime * 5.0,
+                (DAT_00740854,g_FrameTimeSq * 10.0,g_FrameTimeSq * 20.0,g_FrameTime * 5.0,
                  &local_ac,iVar15,(float *)(piVar7 + 2));
       OrganicDelt
-                (DAT_00740858,(float)((double)DAT_0071f418 * dVar27),
-                 (float)((double)DAT_0071f418 * dVar25),
+                (DAT_00740858,(float)((double)g_FrameTimeSq * dVar27),
+                 (float)((double)g_FrameTimeSq * dVar25),
                  (float)((double)g_FrameTime * dVar19),&local_b0,0x740000,
                  (float *)(piVar7 + 0x11));
       fVar2 = (float)piVar7[0xd];
@@ -385,23 +385,23 @@ undefined4 * UpdateMoby_1054(MobyInstance *moby)
   dVar28 = dVar23;
 LAB_001a8438:
   OrganicDelt
-            ((float)dVar25,(float)((double)DAT_0071f418 * dVar21),
-             (float)((double)DAT_0071f418 * dVar22),(float)((double)g_FrameTime * dVar23),
+            ((float)dVar25,(float)((double)g_FrameTimeSq * dVar21),
+             (float)((double)g_FrameTimeSq * dVar22),(float)((double)g_FrameTime * dVar23),
              &local_a4,iVar17,(float *)(piVar7 + 2));
   OrganicDelt
-            ((float)dVar27,(float)((double)DAT_0071f418 * dVar21),
-             (float)((double)DAT_0071f418 * dVar22),(float)((double)g_FrameTime * dVar23),
+            ((float)dVar27,(float)((double)g_FrameTimeSq * dVar21),
+             (float)((double)g_FrameTimeSq * dVar22),(float)((double)g_FrameTime * dVar23),
              &local_a8,iVar17,(float *)(piVar7 + 0x11));
   dVar25 = (double)(float)(dVar24 * 0.01745329238474369);
   dVar27 = (double)(float)(dVar26 * 0.01745329238474369);
   dVar24 = (double)(float)(dVar28 * 0.01745329238474369);
   OrganicDelt
-            ((float)dVar19,(float)(dVar25 * (double)DAT_0071f418),
-             (float)(dVar27 * (double)DAT_0071f418),(float)(dVar24 * (double)g_FrameTime),
+            ((float)dVar19,(float)(dVar25 * (double)g_FrameTimeSq),
+             (float)(dVar27 * (double)g_FrameTimeSq),(float)(dVar24 * (double)g_FrameTime),
              &(moby->rotation).y,iVar17,(float *)(piVar7 + 3));
   OrganicDelt
-            ((float)dVar20,(float)(dVar25 * (double)DAT_0071f418),
-             (float)(dVar27 * (double)DAT_0071f418),(float)(dVar24 * (double)g_FrameTime),
+            ((float)dVar20,(float)(dVar25 * (double)g_FrameTimeSq),
+             (float)(dVar27 * (double)g_FrameTimeSq),(float)(dVar24 * (double)g_FrameTime),
              (float *)(piVar7[0x10] + 0x44),iVar17,(float *)(piVar7 + 0x12));
   fVar2 = (float)piVar7[0xd];
   fVar3 = (float)piVar7[0xc];

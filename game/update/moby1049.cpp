@@ -152,7 +152,7 @@ void UpdateMoby_1049(MobyInstance *moby)
   (moby->pos).y = (moby->pos).y + pfVar3[1];
   pMVar4 = moby->pClass;
   (moby->pos).z = (moby->pos).z + pfVar3[2];
-  pfVar3[2] = -(DAT_0071f418 * 9.8 - pfVar3[2]);
+  pfVar3[2] = -(g_FrameTimeSq * 9.8 - pfVar3[2]);
   fVar1 = moby->scale;
   (moby->rotation).z = g_FrameTime * 6.2831855 + (moby->rotation).z;
   if (fVar1 < pMVar4->gScale * 2.8) {

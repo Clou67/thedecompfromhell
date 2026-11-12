@@ -515,7 +515,7 @@ void M267_0031ea48(MobyInstance *param_1)
     *pfVar5 = fVar1 * fVar6;
     pfVar5[1] = fVar2 * fVar6;
     fVar7 = pfVar5[8] + fVar1 * fVar6;
-    fVar1 = DAT_0071f418 * 20.0;
+    fVar1 = g_FrameTimeSq * 20.0;
     pfVar5[9] = pfVar5[9] + fVar2 * fVar6;
     pfVar5[8] = fVar7;
     fVar1 = pfVar5[2] * fVar6 - fVar1;

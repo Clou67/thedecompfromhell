@@ -156,7 +156,7 @@ void UpdateMoby_843(MobyInstance *moby)
                         (double)(float)(dVar20 * dVar20 + (double)(float)(dVar21 * dVar21))));
     dVar18 = (double)fVar2;
     OrganicDelt
-              (fVar2,DAT_0071f418 * 20.0,DAT_0071f418 * 30.0,g_FrameTime * 10.0,&local_4c,
+              (fVar2,g_FrameTimeSq * 20.0,g_FrameTimeSq * 30.0,g_FrameTime * 10.0,&local_4c,
                0x720000,&local_50);
     dVar17 = (double)(float)((double)local_50 / dVar18);
     pfVar9[3] = (float)dVar23;
@@ -195,7 +195,7 @@ void UpdateMoby_843(MobyInstance *moby)
     fVar2 = pfVar9[4];
     dVar24 = 5.900000095367432;
     OrganicDelt
-              (Cuboids[(int)fVar2].pos.z - 5.9,DAT_0071f418 * 20.0,DAT_0071f418 * 40.0,
+              (Cuboids[(int)fVar2].pos.z - 5.9,g_FrameTimeSq * 20.0,g_FrameTimeSq * 40.0,
                g_FrameTime * 10.0,&(moby->pos).z,0x720000,pfVar9 + 2);
     if ((moby->pos).z < (float)((double)pCVar15[(int)fVar2].pos.z - dVar24)) {
       moby->state = '\x04';

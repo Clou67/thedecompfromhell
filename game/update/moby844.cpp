@@ -107,16 +107,16 @@ double M844_004828f8(double param_1,double param_2,uint param_3)
                                                   ))) * param_1) * DAT_008ad01c);
   dVar15 = 0.01745329238474369;
   OrganicDeltAng
-            ((float)dVar6,(float)((double)DAT_008ad020 * param_2) * 0.017453292 * DAT_0071f418,
-             (float)((double)DAT_008ad024 * param_2) * 0.017453292 * DAT_0071f418,
+            ((float)dVar6,(float)((double)DAT_008ad020 * param_2) * 0.017453292 * g_FrameTimeSq,
+             (float)((double)DAT_008ad024 * param_2) * 0.017453292 * g_FrameTimeSq,
              DAT_008ad028 * 0.017453292 * g_FrameTime,(float *)(param_3 + 0x40),unused,
              (float *)(iVar1 + 0x90));
   fVar16 = OrganicDeltAng
                      ((float)dVar7,
                       (float)((double)(float)((double)DAT_008ad020 * param_2) * dVar15) *
-                      DAT_0071f418,
+                      g_FrameTimeSq,
                       (float)((double)(float)((double)DAT_008ad024 * param_2) * dVar15) *
-                      DAT_0071f418,(float)((double)DAT_008ad028 * dVar15) * g_FrameTime,
+                      g_FrameTimeSq,(float)((double)DAT_008ad028 * dVar15) * g_FrameTime,
                       (float *)(param_3 + 0x44),unused,(float *)(iVar1 + 0x94));
   return (double)fVar16;
 }
@@ -411,7 +411,7 @@ void UpdateMoby_844(MobyInstance *moby)
     (moby->pos).z = (moby->pos).z + *(float *)((int)pvVar10 + 0x68);
     uVar11 = (int)*(uint *)((int)pvVar10 + 0x78) >> 0x1f;
     *(float *)((int)pvVar10 + 0x68) =
-         -(DAT_008acff0 * DAT_0071f418 - *(float *)((int)pvVar10 + 0x68));
+         -(DAT_008acff0 * g_FrameTimeSq - *(float *)((int)pvVar10 + 0x68));
     fVar4 = (moby->pos).z;
     uVar12 = (int)fVar4 >> 0x1f;
     if ((int)((uVar12 >> 1 ^ (uint)fVar4) - uVar12) <
@@ -458,7 +458,7 @@ void UpdateMoby_844(MobyInstance *moby)
     M844_004828f8((double)DAT_008ad018,0x3ff0000000000000,lVar20);
     fVar62 = OrganicDelt
                        (*(float *)((int)pvVar10 + 0x78) + *(float *)((int)pvVar10 + 0x7c),
-                        DAT_008acff4 * DAT_0071f418,DAT_008acff4 * DAT_0071f418,
+                        DAT_008acff4 * g_FrameTimeSq,DAT_008acff4 * g_FrameTimeSq,
                         g_FrameTime * 20.0,&(moby->pos).z,0x8b0000,
                         (float *)((int)pvVar10 + 0x68));
     if (*(int *)((int)pvVar10 + 0x68) == 0) {
@@ -495,7 +495,7 @@ void UpdateMoby_844(MobyInstance *moby)
     (moby->pos).x = (moby->pos).x + *(float *)((int)pvVar10 + 0x60);
     (moby->pos).y = (moby->pos).y + *(float *)((int)pvVar10 + 100);
     (moby->pos).z = (moby->pos).z + *(float *)((int)pvVar10 + 0x68);
-    fVar62 = -(DAT_008acff0 * DAT_0071f418 - *(float *)((int)pvVar10 + 0x68));
+    fVar62 = -(DAT_008acff0 * g_FrameTimeSq - *(float *)((int)pvVar10 + 0x68));
     *(float *)((int)pvVar10 + 0x68) = fVar62;
     if (fVar62 <= 0.0) {
       moby->state = '\x03';
@@ -724,7 +724,7 @@ void UpdateMoby_844(MobyInstance *moby)
       *(undefined4 *)((int)pvVar10 + 100) = 0;
       *(undefined4 *)((int)pvVar10 + 0x60) = 0;
       *(float *)((int)pvVar10 + 0x68) =
-           SQRT(*(float *)((int)pvVar10 + 0x80) * 2.0 * DAT_008acff0 * DAT_0071f418);
+           SQRT(*(float *)((int)pvVar10 + 0x80) * 2.0 * DAT_008acff0 * g_FrameTimeSq);
     }
   }
   else if (uVar1 == '\0') {

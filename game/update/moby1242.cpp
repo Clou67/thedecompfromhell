@@ -1941,7 +1941,7 @@ void M1242_0021ff90(MobyInstance *param_1,longlong param_2)
   }
   dVar34 = 2.0;
   OrganicDelt
-            (fVar42,DAT_0071f418 * 2.0,DAT_0071f418 * 2.0,g_FrameTime * 2.0,
+            (fVar42,g_FrameTimeSq * 2.0,g_FrameTimeSq * 2.0,g_FrameTime * 2.0,
              (float *)(iVar14 + 0xb0),0x720000,(float *)(iVar14 + 0xc0));
   fVar42 = *(float *)(iVar14 + 0xb0) * 0.5;
   fVar3 = fVar42 + 1.5707963;

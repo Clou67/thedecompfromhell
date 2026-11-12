@@ -152,7 +152,7 @@ void UpdateMoby_1475_KaleboRace_Rocket(MobyInstance *moby)
   puVar18[0x37] = unaff_r27;
   puVar18[0x36] = unaff_r26;
   puVar18[0x35] = unaff_r25;
-  fVar3 = DAT_0071f418;
+  fVar3 = g_FrameTimeSq;
   if (bVar1 == 0) {
     *(short *)((int)piVar17 + 6) = *(short *)((int)piVar17 + 6) + 1;
     Delt(g_FrameTime * 30.0,fVar3 * 70.0,(float *)(piVar17 + 4));

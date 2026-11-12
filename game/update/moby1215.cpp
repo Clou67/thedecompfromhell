@@ -266,9 +266,9 @@ bool M1215_002082e8
     dVar20 = (double)((float)(dVar21 + 0.7853981852531433) * fVar5 + fVar1);
   }
   OrganicDeltAngSpeed
-            (dVar20,(double)(DAT_0071f418 * 2.0943952),(double)(DAT_0071f418 * 0.6981317),
+            (dVar20,(double)(g_FrameTimeSq * 2.0943952),(double)(g_FrameTimeSq * 0.6981317),
              (double)(g_FrameTime * 2.0943952),param_2,pfVar16,param_3 + 0x22);
-  fVar3 = DAT_0071f418;
+  fVar3 = g_FrameTimeSq;
   fVar2 = g_FrameTime;
   fVar1 = *(float *)(param_2 + 0x44);
   dVar22 = ABS((double)(float)(dVar26 - dVar24));
@@ -458,7 +458,7 @@ bool M1215_002088c0(double param_1,int param_2,int param_3,float *param_4)
     fVar5 = fVar5 * 0.5;
     *(float *)(param_3 + 0x78) = fVar5;
   }
-  fVar3 = DAT_0071f418;
+  fVar3 = g_FrameTimeSq;
   *(float *)(puVar12 + 0xe) = SQRT(fVar5 * fVar5 + fVar7 * fVar7 + fVar8 * fVar8);
   dVar29 = 45.0;
   Delt(fVar6,fVar3 * 45.0,(float *)(puVar12 + 0xe));
@@ -472,7 +472,7 @@ bool M1215_002088c0(double param_1,int param_2,int param_3,float *param_4)
   dVar31 = (double)(param_4[2] - *(float *)(param_2 + 0x18));
   dVar28 = (double)(fVar3 * fVar3 + fVar4 * fVar4);
   *(float *)((int)puVar12 + 0x94) = ABS(fVar3) - ABS(fVar4);
-  fVar7 = DAT_0071f418;
+  fVar7 = g_FrameTimeSq;
   fVar6 = g_FrameTime;
   dVar25 = 0.0;
   uVar20 = (ulonglong)(*(uint *)((int)puVar12 + 0x8c) >> 0x1c) & 8 |
@@ -550,7 +550,7 @@ bool M1215_002088c0(double param_1,int param_2,int param_3,float *param_4)
   *(float *)((int)puVar12 + 0x84) = (float)dVar31;
   fVar4 = g_FrameTime;
   fVar3 = *(float *)(param_2 + 0x44);
-  dVar26 = (double)DAT_0071f418;
+  dVar26 = (double)g_FrameTimeSq;
   dVar27 = ABS((double)(float)SQRT(dVar28));
   *(float *)(puVar12 + 0x10) = (float)SQRT(dVar28);
   *(float *)(puVar12 + 0x11) = (float)(dVar27 - ABS(dVar31));

@@ -521,7 +521,7 @@ void UpdateMoby_786(MobyInstance *moby)
     dVar37 = 1.0;
     dVar32 = 0.10000000149011612;
     OrganicDelt
-              (1.0,DAT_0071f418 * 0.1,DAT_0071f418 * 0.25,g_FrameTime * 0.5,
+              (1.0,g_FrameTimeSq * 0.1,g_FrameTimeSq * 0.25,g_FrameTime * 0.5,
                (float *)((int)pvVar10 + 0x180),0x720000,(float *)((int)pvVar10 + 0x184));
     pCVar16 = Cuboids;
     iVar22 = *(int *)((int)pvVar10 + 0x158);

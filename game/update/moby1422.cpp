@@ -188,11 +188,11 @@ double M1422_002737b8(int param_1)
     }
   }
   OrganicDelt
-            ((float)dVar10,DAT_007aa01c * DAT_0071f418,DAT_007aa01c * DAT_0071f418,
+            ((float)dVar10,DAT_007aa01c * g_FrameTimeSq,DAT_007aa01c * g_FrameTimeSq,
              DAT_007aa018 * g_FrameTime,(float *)(iVar3 + 0x34),(int)unused,
              (float *)(iVar2 + 0x378));
   fVar12 = OrganicDelt
-                     ((float)dVar11,DAT_007aa01c * DAT_0071f418,DAT_007aa01c * DAT_0071f418,
+                     ((float)dVar11,DAT_007aa01c * g_FrameTimeSq,DAT_007aa01c * g_FrameTimeSq,
                       DAT_007aa018 * g_FrameTime,(float *)(iVar3 + 0x38),(int)unused,
                       (float *)(iVar2 + 0x37c));
   return (double)fVar12;
@@ -223,7 +223,7 @@ undefined8 M1422_00273c08(double param_1,int param_2,float *param_3)
   target = SQRT((float)(dVar8 * dVar8 + (double)(float)(dVar9 * dVar9)));
   dVar7 = (double)target;
   OrganicDelt
-            (target,DAT_0071f418 * 10.0,DAT_0071f418 * 10.0,(float)param_1,local_40,0x720000,
+            (target,g_FrameTimeSq * 10.0,g_FrameTimeSq * 10.0,(float)param_1,local_40,0x720000,
              (float *)(iVar1 + 0x374));
   dVar4 = (double)(float)((double)*(float *)(iVar1 + 0x374) / dVar7);
   uVar2 = (int)*(uint *)(iVar1 + 0x374) >> 0x1f;
@@ -2062,7 +2062,7 @@ void UpdateMoby_1422(MobyInstance *moby)
         dVar21 = (double)FUN_005e8338((double)(g_heroPosition.x - (moby->pos).x),
                                       (double)(g_heroPosition.y - (moby->pos).y));
         fVar26 = OrganicDeltAng
-                           ((float)dVar21,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+                           ((float)dVar21,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
                             g_FrameTime * 6.2831855,&(moby->rotation).z,0x720000,
                             (float *)((int)pvVar3 + 0x370));
         M1422_00273da0((double)fVar26,lVar9);
@@ -2208,7 +2208,7 @@ void UpdateMoby_1422(MobyInstance *moby)
         }
       }
       else {
-        fVar26 = Delt(g_FrameTime * 10.0,DAT_0071f418 * 20.0,
+        fVar26 = Delt(g_FrameTime * 10.0,g_FrameTimeSq * 20.0,
                                 (float *)((int)pvVar3 + 0x374));
         lVar17 = uVar19 + 0x3c0;
         FUN_005e81f0((double)fVar26,auStack_290,
@@ -2228,10 +2228,10 @@ void UpdateMoby_1422(MobyInstance *moby)
       dVar21 = (double)FUN_005e8338((double)(g_heroPosition.x - (moby->pos).x),
                                     (double)(g_heroPosition.y - (moby->pos).y));
       OrganicDeltAng
-                ((float)dVar21,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+                ((float)dVar21,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
                  g_FrameTime * 6.2831855,&(moby->rotation).z,in_r4,
                  (float *)((int)pvVar3 + 0x370));
-      fVar26 = Delt(g_FrameTime * 12.0,DAT_0071f418 * 20.0,
+      fVar26 = Delt(g_FrameTime * 12.0,g_FrameTimeSq * 20.0,
                               (float *)((int)pvVar3 + 0x374));
       if (*(int *)((int)pvVar3 + 0x374) != 0) {
         lVar17 = uVar19 + 0x3c0;
@@ -2274,7 +2274,7 @@ void UpdateMoby_1422(MobyInstance *moby)
       dVar21 = (double)FUN_005e8338((double)(g_heroPosition.x - (moby->pos).x),
                                     (double)(g_heroPosition.y - (moby->pos).y));
       fVar26 = OrganicDeltAng
-                         ((float)dVar21,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+                         ((float)dVar21,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
                           g_FrameTime * 6.2831855,&(moby->rotation).z,0x720000,
                           (float *)((int)pvVar3 + 0x370));
       FUN_005e7e98((double)fVar26,auStack_320,(ulonglong)*(uint *)((int)pvVar3 + 0x340) + 0x10);
@@ -2428,7 +2428,7 @@ void UpdateMoby_1422(MobyInstance *moby)
       dVar21 = (double)FUN_005e8338((double)(*(float *)((int)pvVar3 + 0x70) - (moby->pos).x),
                                     (double)(*(float *)((int)pvVar3 + 0x74) - (moby->pos).y));
       OrganicDeltAng
-                ((float)dVar21,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+                ((float)dVar21,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
                  g_FrameTime * 6.2831855,&(moby->rotation).z,in_r4,
                  (float *)((int)pvVar3 + 0x370));
       iVar12 = M1422_00273c08
@@ -2447,7 +2447,7 @@ void UpdateMoby_1422(MobyInstance *moby)
       dVar21 = (double)FUN_005e8338((double)(g_heroPosition.x - (moby->pos).x),
                                     (double)(g_heroPosition.y - (moby->pos).y));
       fVar26 = OrganicDeltAng
-                         ((float)dVar21,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+                         ((float)dVar21,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
                           g_FrameTime * 6.2831855,&(moby->rotation).z,0x720000,
                           (float *)((int)pvVar3 + 0x370));
       M1422_00273da0((double)fVar26,lVar9);
@@ -2505,7 +2505,7 @@ void UpdateMoby_1422(MobyInstance *moby)
       dVar21 = (double)FUN_005e8338((double)(g_heroPosition.x - (moby->pos).x),
                                     (double)(g_heroPosition.y - (moby->pos).y));
       fVar26 = OrganicDeltAng
-                         ((float)dVar21,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+                         ((float)dVar21,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
                           g_FrameTime * 6.2831855,&(moby->rotation).z,0x720000,
                           (float *)((int)pvVar3 + 0x370));
       M1422_00273da0((double)fVar26,lVar9);
@@ -2544,7 +2544,7 @@ void UpdateMoby_1422(MobyInstance *moby)
       dVar21 = (double)FUN_005e8338((double)(*(float *)(iVar13 + 0x10) - (moby->pos).x),
                                     (double)(*(float *)(iVar13 + 0x14) - (moby->pos).y));
       fVar26 = OrganicDeltAng
-                         ((float)dVar21,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+                         ((float)dVar21,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
                           g_FrameTime * 6.2831855,&(moby->rotation).z,0x720000,
                           (float *)((int)pvVar3 + 0x370));
       M1422_00273da0((double)fVar26,lVar9);
@@ -2625,7 +2625,7 @@ void UpdateMoby_1422(MobyInstance *moby)
       dVar21 = (double)FUN_005e8338((double)(*(float *)((int)pvVar3 + 800) - (moby->pos).x),
                                     (double)(*(float *)((int)pvVar3 + 0x324) - (moby->pos).y));
       fVar26 = OrganicDeltAng
-                         ((float)dVar21,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+                         ((float)dVar21,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
                           g_FrameTime * 6.2831855,&(moby->rotation).z,0x720000,
                           (float *)((int)pvVar3 + 0x370));
       GetBonePosition((double)fVar26,lVar9,0x13,&local_200);
@@ -2687,7 +2687,7 @@ void UpdateMoby_1422(MobyInstance *moby)
       dVar21 = (double)FUN_005e8338((double)(*(float *)(iVar13 + 0x10) - (moby->pos).x),
                                     (double)(*(float *)(iVar13 + 0x14) - (moby->pos).y));
       fVar26 = OrganicDeltAng
-                         ((float)dVar21,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+                         ((float)dVar21,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
                           g_FrameTime * 6.2831855,&(moby->rotation).z,0x720000,
                           (float *)((int)pvVar3 + 0x370));
       M1422_00273da0((double)fVar26,lVar9);
@@ -2755,7 +2755,7 @@ void UpdateMoby_1422(MobyInstance *moby)
       dVar21 = (double)FUN_005e8338((double)(*(float *)(iVar13 + 0x10) - (moby->pos).x),
                                     (double)(*(float *)(iVar13 + 0x14) - (moby->pos).y));
       fVar26 = OrganicDeltAng
-                         ((float)dVar21,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+                         ((float)dVar21,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
                           g_FrameTime * 6.2831855,&(moby->rotation).z,0x720000,
                           (float *)((int)pvVar3 + 0x370));
       M1422_00273da0((double)fVar26,lVar9);
@@ -2931,7 +2931,7 @@ void UpdateMoby_1422(MobyInstance *moby)
     dVar21 = (double)FUN_005e8338((double)(g_heroPosition.x - (moby->pos).x),
                                   (double)(g_heroPosition.y - (moby->pos).y));
     fVar26 = OrganicDeltAng
-                       ((float)dVar21,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+                       ((float)dVar21,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
                         g_FrameTime * 6.2831855,&(moby->rotation).z,0x720000,
                         (float *)((int)pvVar3 + 0x370));
     M1422_00273da0((double)fVar26,lVar9);
@@ -2978,7 +2978,7 @@ void UpdateMoby_1422(MobyInstance *moby)
                                   (double)(*(float *)(*(int *)((int)pvVar3 + 0x330) + 0x14) -
                                           (moby->pos).y));
     fVar26 = OrganicDeltAng
-                       ((float)dVar21,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+                       ((float)dVar21,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
                         g_FrameTime * 6.2831855,&(moby->rotation).z,in_r4,
                         (float *)((int)pvVar3 + 0x370));
     FUN_003d22a0((double)fVar26,*(undefined4 *)((int)pvVar3 + 0x330));
@@ -3034,7 +3034,7 @@ void UpdateMoby_1422(MobyInstance *moby)
     dVar21 = (double)FUN_005e8338((double)(g_heroPosition.x - (moby->pos).x),
                                   (double)(g_heroPosition.y - (moby->pos).y));
     fVar26 = OrganicDeltAng
-                       ((float)dVar21,DAT_0071f418 * 6.2831855,DAT_0071f418 * 6.2831855,
+                       ((float)dVar21,g_FrameTimeSq * 6.2831855,g_FrameTimeSq * 6.2831855,
                         g_FrameTime * 6.2831855,&(moby->rotation).z,0x720000,
                         (float *)((int)pvVar3 + 0x370));
     iVar13 = FastDecTimerS32((double)fVar26,uVar19 + 0x354);
@@ -3100,7 +3100,7 @@ LAB_00279dec:
   dVar21 = (double)FUN_005e8128();
   OrganicDelt
             ((float)((double)*(float *)((int)pvVar3 + 0x3d0) * dVar21 +
-                    (double)*(float *)((int)pvVar3 + 0x3d8)),DAT_0071f418 * 4.0,DAT_0071f418 * 4.0,
+                    (double)*(float *)((int)pvVar3 + 0x3d8)),g_FrameTimeSq * 4.0,g_FrameTimeSq * 4.0,
              g_FrameTime * 4.0,(float *)((int)pvVar3 + 0x3dc),0x720000,
              (float *)((int)pvVar3 + 0x3e0));
   (moby->pos).z = (moby->pos).z + *(float *)((int)pvVar3 + 0x3dc);

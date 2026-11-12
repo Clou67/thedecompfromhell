@@ -76,7 +76,7 @@ undefined8 FUN_002d6f28(double param_1,longlong param_2,float *param_3,float *pa
         *(float *)((int)pvVar3 + 0x1d0) = fVar6;
         *(float *)((int)pvVar3 + 0x1d4) = fVar7;
         dVar11 = (double)MB_computeLobVelocity
-                                   (param_1,(double)(DAT_0071f418 * -10.0),param_3,param_4,param_4,0
+                                   (param_1,(double)(g_FrameTimeSq * -10.0),param_3,param_4,param_4,0
                                     ,0);
         *(float *)((int)pvVar3 + 0x1d8) = (float)dVar11;
         dVar11 = (double)MB_randRangeSigned(0x402e000000000000,0x4046800000000000);

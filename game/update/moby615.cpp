@@ -401,7 +401,7 @@ void UpdateMoby_615(MobyInstance *moby)
     g_heroRotation.z = (float)dVar17;
     M615_003dda00(local_80,&fStack_70,moby);
     OrganicDelt
-              (1.0,DAT_0071f418 * 2.0,DAT_0071f418 * 2.0,g_FrameTime * 2.0,
+              (1.0,g_FrameTimeSq * 2.0,g_FrameTimeSq * 2.0,g_FrameTime * 2.0,
                (float *)((int)pvVar3 + 0x110),0x720000,(float *)((int)pvVar3 + 0x114));
     dVar17 = (double)FastDiffRots
                                ((double)local_68,(double)*(float *)((int)pvVar3 + 0x108));

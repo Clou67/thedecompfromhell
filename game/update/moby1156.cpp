@@ -509,7 +509,7 @@ ulonglong UpdateMoby_1156(MobyInstance *moby)
     dVar23 = 1.0;
     if ((int)(FLOAT_ORDER(DAT_00ef2788)) < 0x3f800000) {
       OrganicDelt
-                (1.0,DAT_0071f418,DAT_0071f418,g_FrameTime,&DAT_00ef2788,0x720000,
+                (1.0,g_FrameTimeSq,g_FrameTimeSq,g_FrameTime,&DAT_00ef2788,0x720000,
                  (float *)&DAT_00ef27a4);
     }
     dVar24 = (double)DAT_00ef2788;
@@ -521,7 +521,7 @@ ulonglong UpdateMoby_1156(MobyInstance *moby)
     if ((dVar25 < dVar24) &&
        ((int)(FLOAT_ORDER(DAT_00ef278c)) < 0x3f800000)) {
       OrganicDelt
-                ((float)dVar23,DAT_0071f418 * 2.0,DAT_0071f418 * 2.0,g_FrameTime * 2.0,
+                ((float)dVar23,g_FrameTimeSq * 2.0,g_FrameTimeSq * 2.0,g_FrameTime * 2.0,
                  &DAT_00ef278c,0x720000,(float *)&DAT_00ef27a8);
     }
     dVar24 = (double)DAT_00ef278c;
@@ -535,7 +535,7 @@ ulonglong UpdateMoby_1156(MobyInstance *moby)
        ((int)(FLOAT_ORDER(DAT_00ef2790))
         < 0x3f800000)) {
       OrganicDelt
-                ((float)dVar23,DAT_0071f418 * 2.0,DAT_0071f418 * 2.0,g_FrameTime * 2.0,
+                ((float)dVar23,g_FrameTimeSq * 2.0,g_FrameTimeSq * 2.0,g_FrameTime * 2.0,
                  (float *)&DAT_00ef2790,0x720000,(float *)&DAT_00ef27ac);
       dVar24 = (double)DAT_00ef278c;
     }
@@ -543,7 +543,7 @@ ulonglong UpdateMoby_1156(MobyInstance *moby)
        ((int)(FLOAT_ORDER(DAT_00ef2794))
         < 0x3f800000)) {
       fVar26 = OrganicDelt
-                         ((float)dVar23,DAT_0071f418 * 2.0,DAT_0071f418 * 2.0,
+                         ((float)dVar23,g_FrameTimeSq * 2.0,g_FrameTimeSq * 2.0,
                           g_FrameTime * 2.0,(float *)&DAT_00ef2794,0x720000,
                           (float *)&DAT_00ef27b0);
       dVar24 = (double)fVar26;
@@ -554,7 +554,7 @@ ulonglong UpdateMoby_1156(MobyInstance *moby)
        ((int)(FLOAT_ORDER(DAT_00ef2798))
         < 0x3f800000)) {
       fVar26 = OrganicDelt
-                         ((float)dVar23,DAT_0071f418 * 2.0,DAT_0071f418 * 2.0,
+                         ((float)dVar23,g_FrameTimeSq * 2.0,g_FrameTimeSq * 2.0,
                           g_FrameTime * 2.0,(float *)&DAT_00ef2798,0x720000,
                           (float *)&DAT_00ef27b4);
       dVar24 = (double)fVar26;
@@ -565,7 +565,7 @@ ulonglong UpdateMoby_1156(MobyInstance *moby)
        ((int)(FLOAT_ORDER(DAT_00ef279c))
         < 0x3f800000)) {
       fVar26 = OrganicDelt
-                         ((float)dVar23,DAT_0071f418 * 2.0,DAT_0071f418 * 4.0,
+                         ((float)dVar23,g_FrameTimeSq * 2.0,g_FrameTimeSq * 4.0,
                           g_FrameTime * 2.0,(float *)&DAT_00ef279c,0x720000,
                           (float *)&DAT_00ef27b8);
       dVar24 = (double)fVar26;
@@ -583,7 +583,7 @@ ulonglong UpdateMoby_1156(MobyInstance *moby)
     }
     SceneScreenFade = (float)piVar20[3];
     OrganicDelt
-              ((float)dVar23,DAT_0071f418 * 0.2,DAT_0071f418 * 0.2,g_FrameTime * 0.2,
+              ((float)dVar23,g_FrameTimeSq * 0.2,g_FrameTimeSq * 0.2,g_FrameTime * 0.2,
                &DAT_00ef27a0,0x720000,(float *)&DAT_00ef27bc);
     fVar11 = DAT_00ef27a0;
     pCVar10 = Cuboids;

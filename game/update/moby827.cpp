@@ -355,7 +355,7 @@ void M827_0047a518(int param_1,float *param_2)
                  + *param_2 * fVar2;
       dVar15 = 0.5;
       iVar12 = 0;
-      local_a8 = -(DAT_00877b40 * DAT_0071f418 *
+      local_a8 = -(DAT_00877b40 * g_FrameTimeSq *
                    (float)(longlong)(animationSpeed * (float)((double)local_a0 + 0.5)) - local_b8);
       local_b0 = local_c0;
       local_ac = local_bc;
@@ -831,7 +831,7 @@ void UpdateMoby_827(MobyInstance *moby)
           *(float *)((int)pvVar8 + 0x244) = (float)dVar20;
           *(undefined4 *)((int)pvVar8 + 0x148) = 0;
           *(undefined4 *)((int)pvVar8 + 0x140) = 0x200;
-          fVar3 = DAT_0071f418;
+          fVar3 = g_FrameTimeSq;
           *(undefined4 *)((int)pvVar8 + 0x134) = 0;
           *(float *)((int)pvVar8 + 0x130) = fVar3 * 20.0;
           dVar20 = (double)MB_randRot();

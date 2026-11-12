@@ -118,7 +118,7 @@ void UpdateMoby_695(MobyInstance *moby)
       moby->state = '\x01';
     }
     else if (moby->state < 2) {
-      fVar5 = DAT_008579d0 * DAT_0071f418;
+      fVar5 = DAT_008579d0 * g_FrameTimeSq;
       fVar25 = pfVar22[4] * (((1.0 - DAT_008579d4) - 1.0) * DAT_0071f408 + 1.0);
       pfVar22[4] = fVar25;
       fVar1 = (moby->pos).x;
@@ -134,7 +134,7 @@ void UpdateMoby_695(MobyInstance *moby)
       }
       pfVar22[4] = fVar7;
       (moby->pos).x = (moby->pos).x + fVar7;
-      fVar7 = DAT_008579d0 * DAT_0071f418;
+      fVar7 = DAT_008579d0 * g_FrameTimeSq;
       fVar25 = pfVar22[5] * (((1.0 - DAT_008579d4) - 1.0) * DAT_0071f408 + 1.0);
       pfVar22[5] = fVar25;
       fVar1 = (moby->pos).y;

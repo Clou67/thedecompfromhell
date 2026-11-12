@@ -150,11 +150,11 @@ double M1445_00280018(int param_1,float *param_2)
   dVar24 = (double)SQRT((float)(dVar22 - (double)fVar1) * (float)(dVar22 - (double)fVar1) +
                         fVar6 * fVar6 + fVar4 * fVar4);
   OrganicDeltAng
-            ((float)dVar19,DAT_0071f418 * 12.566371,DAT_0071f418 * 12.566371,
+            ((float)dVar19,g_FrameTimeSq * 12.566371,g_FrameTimeSq * 12.566371,
              g_FrameTime * 12.566371,(float *)(param_1 + 0x48),0x280000,
              (float *)(iVar7 + 500));
   OrganicDelt
-            ((float)dVar24,DAT_0071f418 * 8.0,DAT_0071f418 * 12.0,g_FrameTime * 4.0,
+            ((float)dVar24,g_FrameTimeSq * 8.0,g_FrameTimeSq * 12.0,g_FrameTime * 4.0,
              (float *)(puVar8 + 0x10),(int)unused,(float *)(iVar7 + 0x204));
   fVar1 = *(float *)(param_1 + 0xc4);
   fVar4 = *(float *)(param_1 + 0xc0);
@@ -177,7 +177,7 @@ double M1445_00280018(int param_1,float *param_2)
   *(float *)((int)puVar8 + 0x74) = (float)dVar20;
   *(float *)(puVar8 + 0xf) = (float)dVar19;
   *(undefined4 *)((int)puVar8 + 0x7c) = uVar5;
-  *(float *)(puVar8 + 0xf) = -(DAT_0071f418 * 10.0 - *(float *)(iVar7 + 0x208));
+  *(float *)(puVar8 + 0xf) = -(g_FrameTimeSq * 10.0 - *(float *)(iVar7 + 0x208));
   MB_MoveAndCollide(0x3fe0000000000000,0x3fe0000000000000,dVar23,param_1,uVar11 - 0x80);
   MB_PushOutOfSplineWalls(0x3fd54fdf40000000,*(undefined4 *)(iVar7 + 0x1f0));
   *(float *)(iVar7 + 0x208) = (float)(dVar22 - (double)*(float *)(param_1 + 0x18));
@@ -204,8 +204,8 @@ void M1445_002803e8(int param_1)
     if (iVar6 != 0) {
       *(undefined4 *)(iVar1 + 0x140) = 0x200;
       *(undefined4 *)(iVar1 + 0x148) = 0x3f000000;
-      fVar3 = DAT_0071f418;
-      *(float *)(iVar1 + 0x130) = DAT_007aab3c * DAT_0071f418;
+      fVar3 = g_FrameTimeSq;
+      *(float *)(iVar1 + 0x130) = DAT_007aab3c * g_FrameTimeSq;
       *(float *)(iVar1 + 0x134) = DAT_007aab40 * fVar3;
       fVar3 = g_FrameTime;
       *(float *)(iVar1 + 0x138) = DAT_007aab48 * g_FrameTime;
@@ -417,7 +417,7 @@ void UpdateMoby_1445(MobyInstance *moby)
       fVar3 = (fVar3 + 0.7853982) * fVar7 + fVar4;
     }
     OrganicDeltAng
-              (fVar3,DAT_0071f418 * 12.566371,DAT_0071f418 * 12.566371,
+              (fVar3,g_FrameTimeSq * 12.566371,g_FrameTimeSq * 12.566371,
                g_FrameTime * 12.566371,val,(int)val,(float *)((int)pvVar8 + 500));
     iVar17 = MB_MayaFrameTrigger(13.0,moby);
     if (iVar17 == 0) {

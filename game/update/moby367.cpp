@@ -69,7 +69,7 @@ void UpdateMoby_367(MobyInstance *moby)
   }
   else if (moby->state == '\x02') {
     OrganicDelt
-              (pfVar7[10],DAT_0071f418 * 10.0,DAT_0071f418 * 10.0,g_FrameTime * 20.0,
+              (pfVar7[10],g_FrameTimeSq * 10.0,g_FrameTimeSq * 10.0,g_FrameTime * 20.0,
                pfVar7 + 8,0x720000,pfVar7 + 9);
     fVar1 = pfVar7[8];
     fVar2 = pfVar7[5];

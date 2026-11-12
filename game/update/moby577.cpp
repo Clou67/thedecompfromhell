@@ -87,7 +87,7 @@ M577_003c8180(double param_1,longlong param_2,float *param_3,float *param_4)
         *(float *)((int)pvVar4 + 0x1d0) = fVar7;
         *(float *)((int)pvVar4 + 0x1d4) = fVar8;
         dVar12 = (double)MB_computeLobVelocity
-                                   (param_1,(double)(DAT_0071f418 * -10.0),param_3,param_4,param_4,0
+                                   (param_1,(double)(g_FrameTimeSq * -10.0),param_3,param_4,param_4,0
                                     ,0);
         *(float *)((int)pvVar4 + 0x1d8) = (float)dVar12;
         dVar12 = (double)MB_randRangeSigned(0x402e000000000000,0x4046800000000000);
@@ -873,7 +873,7 @@ void UpdateMoby_577(MobyInstance *moby)
           MB_SetAnimation(lVar10,2,0,uVar12);
         }
         dVar26 = (double)GetGroundZ(0x3fe0000000000000,lVar18,0);
-        fVar3 = -(DAT_0071f418 * 9.8 - *(float *)((int)pvVar5 + 0x198));
+        fVar3 = -(g_FrameTimeSq * 9.8 - *(float *)((int)pvVar5 + 0x198));
         *(float *)((int)pvVar5 + 0x198) = fVar3;
         fVar3 = (moby->pos).z + fVar3;
         (moby->pos).z = fVar3;
@@ -1026,7 +1026,7 @@ void UpdateMoby_577(MobyInstance *moby)
       }
       else if (bVar1 < 0x11) {
         dVar26 = (double)GetGroundZ(0x3fe0000000000000,lVar18,0);
-        Delt(g_FrameTime * 8.0,DAT_0071f418 * 10.8,(float *)((int)pvVar5 + 0x48)
+        Delt(g_FrameTime * 8.0,g_FrameTimeSq * 10.8,(float *)((int)pvVar5 + 0x48)
                       );
         fVar3 = (moby->pos).z + *(float *)((int)pvVar5 + 0x48);
         (moby->pos).z = fVar3;
@@ -1040,7 +1040,7 @@ void UpdateMoby_577(MobyInstance *moby)
       }
       else {
         dVar26 = (double)GetGroundZ(0x3fe0000000000000,lVar18,0);
-        Delt(g_FrameTime * -8.0,DAT_0071f418 * 10.8,
+        Delt(g_FrameTime * -8.0,g_FrameTimeSq * 10.8,
                        (float *)((int)pvVar5 + 0x48));
         uVar2 = moby->animationId;
         fVar3 = (moby->pos).z + *(float *)((int)pvVar5 + 0x48);
@@ -1346,7 +1346,7 @@ void UpdateMoby_577(MobyInstance *moby)
   (moby->pos).z = local_d8;
   (moby->pos).w = local_d4;
   dVar26 = (double)GetGroundZ(0x3fe0000000000000,lVar18,0);
-  fVar3 = -(DAT_0071f418 * 9.8 - *(float *)((int)pvVar5 + 0x198));
+  fVar3 = -(g_FrameTimeSq * 9.8 - *(float *)((int)pvVar5 + 0x198));
   *(float *)((int)pvVar5 + 0x198) = fVar3;
   fVar3 = (moby->pos).z + fVar3;
   (moby->pos).z = fVar3;

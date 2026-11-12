@@ -31,12 +31,12 @@ double M1109_001ce3f0
   dVar2 = 25.132741928100586;
   dVar1 = 6.2831854820251465;
   OrganicDeltAngSpeed
-            (param_1,(double)(DAT_0071f418 * 25.132742),(double)(DAT_0071f418 * 6.2831855),
+            (param_1,(double)(g_FrameTimeSq * 25.132742),(double)(g_FrameTimeSq * 6.2831855),
              (double)(g_FrameTime * 25.132742),param_3,param_4,param_4 + 0x88);
   dVar1 = (double)MB_DeltAngSpeed
                             ((double)*(float *)(param_3 + 0x44),param_2,
-                             (double)(float)((double)DAT_0071f418 * dVar2),
-                             (double)(float)((double)DAT_0071f418 * dVar1),
+                             (double)(float)((double)g_FrameTimeSq * dVar2),
+                             (double)(float)((double)g_FrameTimeSq * dVar1),
                              (double)(float)((double)g_FrameTime * dVar2));
   *(float *)(param_3 + 0x44) = (float)dVar1;
   fVar3 = *(float *)(param_3 + 0x40) +

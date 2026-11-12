@@ -51,7 +51,7 @@ void UpdateMoby_826(MobyInstance *moby)
     iVar11 = MB_damage(moby,0x330000,0);
     if (iVar11 != 0) {
       kv->zOfs = 0.5;
-      fVar3 = DAT_00877af0 * DAT_0071f418;
+      fVar3 = DAT_00877af0 * g_FrameTimeSq;
       kv->drag = 0.0005;
       kv->radius = 0x200;
       kv->grav = fVar3;

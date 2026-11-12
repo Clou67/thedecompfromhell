@@ -83,7 +83,7 @@ void UpdateMoby_882(MobyInstance *moby)
   (moby->pos).x = (moby->pos).x + *pfVar1;
   (moby->pos).y = (moby->pos).y + pfVar1[1];
   (moby->pos).z = (moby->pos).z + pfVar1[2];
-  pfVar1[2] = -(DAT_0071f418 * 9.8 - pfVar1[2]);
+  pfVar1[2] = -(g_FrameTimeSq * 9.8 - pfVar1[2]);
   dVar9 = (double)FastWrapRot((moby->rotation).y,pfVar1[6]);
   (moby->rotation).y = (float)dVar9;
   dVar9 = (double)FastWrapRot((moby->rotation).z,pfVar1[7]);

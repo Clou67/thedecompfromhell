@@ -363,7 +363,7 @@ void UpdateMoby_176(MobyInstance *moby)
     }
     dVar33 = 1.0;
     OrganicDelt
-              ((float)dVar34,1.0,DAT_0071f418 * DAT_00729704,DAT_007b75d4 * g_FrameTime,
+              ((float)dVar34,1.0,g_FrameTimeSq * DAT_00729704,DAT_007b75d4 * g_FrameTime,
                &local_bc,0x7b0000,&local_c0);
     if ((dVar34 < dVar31) || (iVar21 = DAT_007b75d8, (moby->modeBits & DISABLED) != NONE)) {
       iVar21 = 1;

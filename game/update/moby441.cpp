@@ -96,7 +96,7 @@ void UpdateMoby_441(MobyInstance *moby)
     if (3 < bVar1) {
       return;
     }
-    pfVar3[2] = -(DAT_0071f418 * 10.8 * 0.5 - pfVar3[2]);
+    pfVar3[2] = -(g_FrameTimeSq * 10.8 * 0.5 - pfVar3[2]);
     fVar2 = (moby->rotation).x;
     (moby->pos).x = (moby->pos).x + *pfVar3;
     (moby->pos).y = (moby->pos).y + pfVar3[1];
@@ -119,7 +119,7 @@ void UpdateMoby_441(MobyInstance *moby)
     DeleteMoby(moby);
     return;
   }
-  pfVar3[2] = -(DAT_0071f418 * 10.8 * 0.5 - pfVar3[2]);
+  pfVar3[2] = -(g_FrameTimeSq * 10.8 * 0.5 - pfVar3[2]);
   fVar2 = (moby->rotation).x;
   (moby->pos).x = (moby->pos).x + *pfVar3;
   (moby->pos).y = (moby->pos).y + pfVar3[1];

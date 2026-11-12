@@ -387,7 +387,7 @@ LAB_00452478:
           MB_SetGroupField(moby->group,2);
         }
         dVar26 = (double)DAT_00873564;
-        dVar24 = (double)DAT_0071f418;
+        dVar24 = (double)g_FrameTimeSq;
         *(undefined4 *)((int)pvVar8 + 0x84) = 0;
         moby->drawDistance = 0x40;
         *(float *)((int)pvVar8 + 0x80) = (float)(dVar26 * dVar24);
@@ -915,11 +915,11 @@ LAB_00451fec:
       }
       local_48 = (longlong)(int)(animationSpeed * 20.5);
       if ((int)(animationSpeed * 20.5) < (int)*(short *)((int)pvVar8 + 0x21c)) {
-        Delt(g_FrameTime * 2.5,DAT_0071f418 * 7.0,(float *)((int)pvVar8 + 0x134)
+        Delt(g_FrameTime * 2.5,g_FrameTimeSq * 7.0,(float *)((int)pvVar8 + 0x134)
                       );
       }
       else {
-        Delt(0.0,DAT_0071f418 * 7.0,(float *)((int)pvVar8 + 0x134));
+        Delt(0.0,g_FrameTimeSq * 7.0,(float *)((int)pvVar8 + 0x134));
       }
       moby->unk58 = 0.8;
       DoMeander(0x3fd6666660000000,0x3fd0000000000000,lVar16,(int)pvVar8 + 0x120);

@@ -323,7 +323,7 @@ void UpdateMoby_1270(MobyInstance *moby)
     else {
       dVar16 = (double)*(float *)((int)pvVar6 + 0x70);
       OrganicDelt
-                ((float)dVar19,DAT_0071f418 * 4.0,DAT_0071f418 * 4.0,g_FrameTime * 4.0,
+                ((float)dVar19,g_FrameTimeSq * 4.0,g_FrameTimeSq * 4.0,g_FrameTime * 4.0,
                  (float *)((int)pvVar6 + 0x70),0x720000,(float *)((int)pvVar6 + 0x74));
       uVar7 = (int)*(uint *)((int)pvVar6 + 0x70) >> 0x1f;
       if ((int)((uVar7 >> 1 ^ *(uint *)((int)pvVar6 + 0x70)) - uVar7) < 0x3f800000) {
@@ -372,7 +372,7 @@ void UpdateMoby_1270(MobyInstance *moby)
       }
       dVar16 = (double)fVar4;
       OrganicDelt
-                (fVar4,DAT_0071f418 * 8.0,DAT_0071f418 * 8.0,g_FrameTime * 40.0,
+                (fVar4,g_FrameTimeSq * 8.0,g_FrameTimeSq * 8.0,g_FrameTime * 40.0,
                  &(moby->pos).z,0x720000,(float *)((int)pvVar6 + 0x68));
       if (ABS((float)((double)(moby->pos).z - dVar16)) == 0.0) {
         auVar20 = ZEXT416(0xffffffff);

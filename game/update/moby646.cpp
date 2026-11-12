@@ -70,7 +70,7 @@ void FUN_00400670(int param_1,undefined4 *param_2,undefined4 *param_3,undefined4
   auVar6 = ZEXT416(0xffffffff);
   auVar11 = auVar6 | auVar6 << 0x20 | auVar6 << 0x40 | auVar6 << 0x60;
   auVar10 = vectorShiftLeftIntegerWord(auVar9,auVar9);
-  puVar1[0x1a] = DAT_0071f418 * 0.333;
+  puVar1[0x1a] = g_FrameTimeSq * 0.333;
   auVar6 = loadVectorLeftIndexed(4,0x400660);
   auVar7 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
   auVar6 = auVar6 >> 0x60 & (GPiece<16>)0xffffffff;
@@ -281,13 +281,13 @@ void UpdateMoby_646(MobyInstance *moby)
     fVar2 = *(float *)((int)pvVar4 + 0xf4);
     if (fVar2 <= SQRT(fVar8 * fVar8 + fVar7 * fVar7 + fVar3 * fVar3)) {
       fVar3 = *(float *)((int)pvVar4 + 0xec);
-      Delt(fVar3 * g_FrameTime,((fVar3 * fVar3) / fVar2) * DAT_0071f418 * 0.5,
+      Delt(fVar3 * g_FrameTime,((fVar3 * fVar3) / fVar2) * g_FrameTimeSq * 0.5,
                      (float *)((int)pvVar4 + 0xe4U));
     }
     else {
       Delt(g_FrameTime * 0.5,
                      ((*(float *)((int)pvVar4 + 0xec) * *(float *)((int)pvVar4 + 0xec)) / fVar2) *
-                     DAT_0071f418 * 0.5,(float *)((int)pvVar4 + 0xe4U));
+                     g_FrameTimeSq * 0.5,(float *)((int)pvVar4 + 0xe4U));
     }
     ClampVec3Magnitude
               ((double)*(float *)((int)pvVar4 + 0xe4),(Vec4 *)((int)pvVar4 + 0xa0));

@@ -480,7 +480,7 @@ void M133_0024b718(int param_1,float *param_2)
                 fVar3 * -0.0001980741 + fVar1 * 0.0083330255 + fVar5 * fVar4 * -0.16666657 + fVar4)
                 + (float)((double)*param_2 * dVar15);
     dVar11 = 30.5;
-    local_f8 = -(DAT_0071f418 * 20.0 * (float)(longlong)(animationSpeed * 30.5) - local_108);
+    local_f8 = -(g_FrameTimeSq * 20.0 * (float)(longlong)(animationSpeed * 30.5) - local_108);
     dVar12 = 0.5;
     dVar13 = 1.5;
     dVar14 = 0.125;

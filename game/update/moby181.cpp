@@ -22,8 +22,8 @@ void M181_002bbc28(MobyInstance *moby)
   
   pLD = (w_2legData *)moby->pVar;
   walk_SetupTwistVals(moby,pLD);
-  fVar2 = DAT_0071f418;
-  pLD->grav = DAT_0071f418 * 9.8;
+  fVar2 = g_FrameTimeSq;
+  pLD->grav = g_FrameTimeSq * 9.8;
   fVar1 = DAT_0071f40c;
   pLD->angGain = DAT_0071f40c * 0.02;
   pLD->angDamp = fVar1 * 0.01;

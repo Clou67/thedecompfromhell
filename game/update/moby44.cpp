@@ -292,7 +292,7 @@ bool M44_0037c500(double param_1,int param_2,undefined8 param_3,float *param_4)
     dVar22 = (double)((float)(dVar22 + 0.7853981852531433) * fVar3 + fVar2);
   }
   OrganicDeltAng
-            ((float)dVar22,DAT_0071f418 * 12.566371,DAT_0071f418 * 12.566371,
+            ((float)dVar22,g_FrameTimeSq * 12.566371,g_FrameTimeSq * 12.566371,
              g_FrameTime * 6.981317,(float *)(param_2 + 0x48),0x37c4c4,
              (float *)(iVar6 + 0x138));
   fVar1 = *param_4 - *(float *)(param_2 + 0x10);
@@ -371,10 +371,10 @@ bool M44_0037c500(double param_1,int param_2,undefined8 param_3,float *param_4)
   }
   dVar22 = (double)FastSubRots(fVar1,(float)dVar23);
   if (dVar26 <= dVar22) {
-    Delt((float)dVar25,DAT_0071f418 * 9.0,(float *)(iVar6 + 0x134));
+    Delt((float)dVar25,g_FrameTimeSq * 9.0,(float *)(iVar6 + 0x134));
   }
   else {
-    Delt((float)param_1,DAT_0071f418 * 9.0,(float *)(iVar6 + 0x134));
+    Delt((float)param_1,g_FrameTimeSq * 9.0,(float *)(iVar6 + 0x134));
   }
   fVar4 = g_FrameTime;
   fVar1 = *(float *)(param_2 + 0x48);
@@ -729,14 +729,14 @@ void M44_0037cfe0(MobyInstance *param_1,int param_2)
       uVar18 = FastDoubleToInt(0x4080000000000000);
       *(undefined4 *)((int)pvVar8 + 0x98) = 0x3f000000;
       fVar2 = DAT_00841a88;
-      fVar7 = DAT_0071f418;
+      fVar7 = g_FrameTimeSq;
       *(undefined4 *)((int)pvVar8 + 0x90) = uVar18;
       *(undefined1 *)((int)pvVar8 + 0xad) = 0;
       *(undefined4 *)((int)pvVar8 + 0x94) = 9;
       *(float *)((int)pvVar8 + 0x80) = fVar2 * fVar7;
       if (iVar17 < 3) {
         if ((-1 < iVar17) && (0 < iVar17)) {
-          fVar7 = DAT_00841a8c * DAT_0071f418;
+          fVar7 = DAT_00841a8c * g_FrameTimeSq;
           param_1->modeBits =
                param_1->modeBits &
                (MIRROR|CAN_BE_DAMAGED|HIDE_BACKFACES|DISABLE_Z_WRITE|DRAW_SHADOW|

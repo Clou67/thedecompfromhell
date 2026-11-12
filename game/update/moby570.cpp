@@ -174,7 +174,7 @@ FUN_003bcd40(double param_1,undefined4 param_2,longlong param_3,float *param_4,f
       }
       *(float *)((int)pvVar9 + 0x180) = (float)dVar30;
       *(float *)((int)pvVar9 + 0x184) = (float)dVar29;
-      fVar1 = DAT_0071f418;
+      fVar1 = g_FrameTimeSq;
       *(undefined4 *)((int)pvVar9 + 0x18c) = uVar7;
       dVar28 = (double)MB_computeLobVelocity
                                  (param_1,(double)(fVar1 * -10.0),param_4,uVar17 - 0x70,

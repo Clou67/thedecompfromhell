@@ -1274,7 +1274,7 @@ ulonglong M1109_001cb618(MobyInstance *param_1,longlong param_2)
   uVar18 = (int)*(uint *)((int)pvVar12 + 0xf4) >> 0x1f;
   if (0x3f4ccccd < (int)((uVar18 >> 1 ^ *(uint *)((int)pvVar12 + 0xf4)) - uVar18)) {
     OrganicDeltAng
-              (3.1415927,DAT_0071f418 * 12.566371,DAT_0071f418 * 12.566371,
+              (3.1415927,g_FrameTimeSq * 12.566371,g_FrameTimeSq * 12.566371,
                g_FrameTime * 6.2831855,(float *)((int)pvVar12 + 0xb0),0x1cb5dc,
                (float *)((int)pvVar12 + 0xb4));
   }

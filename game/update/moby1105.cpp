@@ -164,7 +164,7 @@ void UpdateMoby_1105(MobyInstance *moby)
     *(undefined4 *)((int)puVar11 + 0xac) = 0;
     dVar42 = 1.0;
     OrganicDelt
-              (1.0,DAT_0071f418 * 0.1,DAT_0071f418 * 0.1,g_FrameTime * 0.1,
+              (1.0,g_FrameTimeSq * 0.1,g_FrameTimeSq * 0.1,g_FrameTime * 0.1,
                (float *)((int)pvVar8 + 0x178),0x720000,(float *)((int)pvVar8 + 0x17c));
     fVar2 = *(float *)((int)pvVar8 + 0x178);
     uVar9 = (int)*(uint *)((int)pvVar8 + 0x178) >> 0x1f;

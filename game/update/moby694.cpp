@@ -866,7 +866,7 @@ void UpdateMoby_694(MobyInstance *moby)
         pfVar11 = (float *)MB_damage(lVar15,0x330000,0);
         MB_HandleDamage(moby,pfVar11,uVar16 + 0x20,0,&local_60,0,0,4);
         if (1 < local_60) {
-          fVar24 = DAT_0071f418 * 32.0;
+          fVar24 = g_FrameTimeSq * 32.0;
           *(undefined4 *)((int)pvVar6 + 0x114) = 0x3a03126f;
           *(float *)((int)pvVar6 + 0x110) = fVar24;
           fVar24 = g_FrameTime;

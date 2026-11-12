@@ -35,12 +35,12 @@ void M713_0042f968(int param_1,int param_2)
   
   iVar1 = *(int *)(param_1 + 0x78);
   OrganicDelt
-            (*(float *)(param_1 + 0x18) + *(float *)(iVar1 + 0x94),DAT_00859dc4 * DAT_0071f418,
-             DAT_00859dc8 * DAT_0071f418,DAT_00859dc0 * g_FrameTime,
+            (*(float *)(param_1 + 0x18) + *(float *)(iVar1 + 0x94),DAT_00859dc4 * g_FrameTimeSq,
+             DAT_00859dc8 * g_FrameTimeSq,DAT_00859dc0 * g_FrameTime,
              (float *)(*(int *)(iVar1 + 0x84) + 0x18),param_2,(float *)(iVar1 + 0x8c));
   OrganicDelt
-            (*(float *)(param_1 + 0x18) + *(float *)(iVar1 + 0x98),DAT_00859dc4 * DAT_0071f418,
-             DAT_00859dc8 * DAT_0071f418,DAT_00859dc0 * g_FrameTime,
+            (*(float *)(param_1 + 0x18) + *(float *)(iVar1 + 0x98),DAT_00859dc4 * g_FrameTimeSq,
+             DAT_00859dc8 * g_FrameTimeSq,DAT_00859dc0 * g_FrameTime,
              (float *)(*(int *)(iVar1 + 0x88) + 0x18),param_2,(float *)(iVar1 + 0x90));
   dVar3 = 0.01745329238474369;
   dVar2 = (double)FastWrapRot
@@ -483,8 +483,8 @@ void UpdateMoby_713(MobyInstance *moby)
       }
       else {
         fVar37 = OrganicDelt
-                           (Cuboids[*(int *)((int)pvVar9 + 0x60)].pos.z,DAT_00859dc4 * DAT_0071f418,
-                            DAT_00859dc4 * DAT_0071f418,DAT_00859dc0 * g_FrameTime,
+                           (Cuboids[*(int *)((int)pvVar9 + 0x60)].pos.z,DAT_00859dc4 * g_FrameTimeSq,
+                            DAT_00859dc4 * g_FrameTimeSq,DAT_00859dc0 * g_FrameTime,
                             &(moby->pos).z,(int)(Cuboids + *(int *)((int)pvVar9 + 0x60)),
                             (float *)((int)pvVar9 + 0x9c));
         M713_0042faf8((double)fVar37,lVar17);
@@ -677,7 +677,7 @@ void UpdateMoby_713(MobyInstance *moby)
       dVar28 = 6.0;
       fVar37 = OrganicDelt
                          (Cuboids[*(int *)((int)pvVar9 + 0x60)].pos.z - 6.0,
-                          DAT_00859dc4 * DAT_0071f418,DAT_00859dc4 * DAT_0071f418,
+                          DAT_00859dc4 * g_FrameTimeSq,DAT_00859dc4 * g_FrameTimeSq,
                           DAT_00859dc0 * g_FrameTime,&(moby->pos).z,
                           (int)(Cuboids + *(int *)((int)pvVar9 + 0x60)),
                           (float *)((int)pvVar9 + 0x9c));
@@ -859,8 +859,8 @@ void UpdateMoby_713(MobyInstance *moby)
   }
   if (9 < bVar1) {
     fVar37 = OrganicDelt
-                       (Cuboids[*(int *)((int)pvVar9 + 0x60)].pos.z,DAT_00859dc4 * DAT_0071f418,
-                        DAT_00859dc4 * DAT_0071f418,DAT_00859dc0 * g_FrameTime,
+                       (Cuboids[*(int *)((int)pvVar9 + 0x60)].pos.z,DAT_00859dc4 * g_FrameTimeSq,
+                        DAT_00859dc4 * g_FrameTimeSq,DAT_00859dc0 * g_FrameTime,
                         &(moby->pos).z,(int)(Cuboids + *(int *)((int)pvVar9 + 0x60)),
                         (float *)((int)pvVar9 + 0x9c));
     M713_0042faf8((double)fVar37,lVar17);

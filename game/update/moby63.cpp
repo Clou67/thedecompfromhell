@@ -100,7 +100,7 @@ void M63_003ec8c8(int param_1,int param_2)
       *puVar2 = 0;
     }
     else {
-      *(float *)(param_1 + 0x18) = (float)((double)DAT_0071f418 * 9.800000190734863 + dVar4);
+      *(float *)(param_1 + 0x18) = (float)((double)g_FrameTimeSq * 9.800000190734863 + dVar4);
       puVar2 = (undefined4 *)(param_2 + 0x120U & 0xfffffff0);
       puVar2[3] = 0;
       puVar2[2] = 0;
@@ -109,7 +109,7 @@ void M63_003ec8c8(int param_1,int param_2)
     }
   }
   else {
-    dVar5 = -(double)(DAT_0071f418 * 9.8 - *(float *)(param_2 + 0x128));
+    dVar5 = -(double)(g_FrameTimeSq * 9.8 - *(float *)(param_2 + 0x128));
     fVar1 = (float)(dVar4 + dVar5);
     *(float *)(param_2 + 0x128) = (float)dVar5;
     *(float *)(param_1 + 0x18) = fVar1;
@@ -613,7 +613,7 @@ void UpdateMoby_63(MobyInstance *moby)
           MB_SetAnimation(lVar11,5,0,uVar13);
         }
         dVar26 = (double)GetGroundZ(0x3fe0000000000000,lVar22,0x120);
-        fVar4 = -(DAT_0071f418 * 9.8 - *(float *)((int)pvVar6 + 0x198));
+        fVar4 = -(g_FrameTimeSq * 9.8 - *(float *)((int)pvVar6 + 0x198));
         *(float *)((int)pvVar6 + 0x198) = fVar4;
         fVar4 = (moby->pos).z + fVar4;
         (moby->pos).z = fVar4;
@@ -755,10 +755,10 @@ void UpdateMoby_63(MobyInstance *moby)
         uVar13 = 0x3fe0000000000000;
         dVar26 = (double)GetGroundZ(0x3fe0000000000000,lVar22,0x120);
         if (3.0 <= (float)((double)(moby->pos).z - dVar26)) {
-          Delt(g_FrameTime,DAT_0071f418 * 10.8,(float *)((int)pvVar6 + 0x48));
+          Delt(g_FrameTime,g_FrameTimeSq * 10.8,(float *)((int)pvVar6 + 0x48));
         }
         else {
-          Delt(g_FrameTime * 8.0,DAT_0071f418 * 10.8,
+          Delt(g_FrameTime * 8.0,g_FrameTimeSq * 10.8,
                          (float *)((int)pvVar6 + 0x48));
         }
         MB_MoveAndCollide(0x3fe3333340000000,uVar13,dVar30,lVar11,uVar25 + 0x40);
@@ -779,7 +779,7 @@ void UpdateMoby_63(MobyInstance *moby)
       else if (bVar1 < 0x12) {
         uVar13 = 0x3fe0000000000000;
         dVar26 = (double)GetGroundZ(0x3fe0000000000000,lVar22,0x120);
-        Delt(g_FrameTime * -8.0,DAT_0071f418 * 10.8,
+        Delt(g_FrameTime * -8.0,g_FrameTimeSq * 10.8,
                        (float *)((int)pvVar6 + 0x48));
         MB_MoveAndCollide(0x3fe3333340000000,uVar13,dVar30,lVar11,uVar25 + 0x40);
         if (((moby->animationId != '\x02') &&
@@ -1238,10 +1238,10 @@ void UpdateMoby_63(MobyInstance *moby)
       FUN_005e81f0(lVar23,uVar25 + 0x1e0,lVar22);
       dVar30 = (double)FUN_005e8030(lVar23);
       if (dVar30 <= dVar27) {
-        Delt(g_FrameTime,DAT_0071f418 * 8.0,local_b4);
+        Delt(g_FrameTime,g_FrameTimeSq * 8.0,local_b4);
       }
       else {
-        Delt((float)((double)g_FrameTime * dVar26),DAT_0071f418 * 6.0,local_b4);
+        Delt((float)((double)g_FrameTime * dVar26),g_FrameTimeSq * 6.0,local_b4);
       }
       ClampVec3Magnitude((double)local_b4[0],(Vec4 *)lVar23);
       FUN_005e7f54(auStack_270,lVar23,lVar22);
@@ -1316,7 +1316,7 @@ void UpdateMoby_63(MobyInstance *moby)
   }
   FUN_005e7e98(lVar22,auStack_120);
   dVar26 = (double)GetGroundZ(0x3fe0000000000000,lVar22,0x120);
-  fVar4 = -(DAT_0071f418 * 9.8 - *(float *)((int)pvVar6 + 0x198));
+  fVar4 = -(g_FrameTimeSq * 9.8 - *(float *)((int)pvVar6 + 0x198));
   *(float *)((int)pvVar6 + 0x198) = fVar4;
   fVar4 = (moby->pos).z + fVar4;
   (moby->pos).z = fVar4;

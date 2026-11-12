@@ -192,8 +192,8 @@ void UpdateMoby_1178(MobyInstance *moby)
   *(undefined4 *)((int)pvVar3 + 0x5c) = 1;
   dVar11 = 0.01745329238474369;
   bVar1 = g_standingOnMoby == moby;
-  fVar2 = DAT_00765dc4 * 0.017453292 * DAT_0071f418 * DAT_00765db4 * *(float *)((int)pvVar3 + 0x60)
-          + DAT_00765dc0 * 0.017453292 * DAT_0071f418 * DAT_00765db0 * local_ac +
+  fVar2 = DAT_00765dc4 * 0.017453292 * g_FrameTimeSq * DAT_00765db4 * *(float *)((int)pvVar3 + 0x60)
+          + DAT_00765dc0 * 0.017453292 * g_FrameTimeSq * DAT_00765db0 * local_ac +
             *(float *)((int)pvVar3 + 0x60);
   *(float *)((int)pvVar3 + 0x60) = fVar2;
   if ((bVar1) && (g_framesNotGrounded == 0)) {
@@ -205,7 +205,7 @@ void UpdateMoby_1178(MobyInstance *moby)
     dVar5 = (double)(moby->pos).z;
     dVar4 = (double)g_heroPosition.w;
     FastNormalizeRMtx4(ZEXT48(&stack0x00000000) - 0xa0,(longlong)(int)moby + 0xc0);
-    fVar2 = (float)((double)DAT_00765dbc * dVar11) * DAT_0071f418 *
+    fVar2 = (float)((double)DAT_00765dbc * dVar11) * g_FrameTimeSq *
             DAT_00765dac *
             (float)((double)local_70 * dVar4 +
                    (double)(local_80 * (float)(dVar6 - dVar5) +
@@ -214,10 +214,10 @@ void UpdateMoby_1178(MobyInstance *moby)
       fVar2 = fVar2 * 2.0;
     }
     if (0.0 <= fVar2) {
-      fVar2 = (float)((double)DAT_00765db8 * dVar11) * DAT_0071f418 + fVar2;
+      fVar2 = (float)((double)DAT_00765db8 * dVar11) * g_FrameTimeSq + fVar2;
     }
     else {
-      fVar2 = -((float)((double)DAT_00765db8 * dVar11) * DAT_0071f418 - fVar2);
+      fVar2 = -((float)((double)DAT_00765db8 * dVar11) * g_FrameTimeSq - fVar2);
     }
     fVar2 = *(float *)((int)pvVar3 + 0x60) + fVar2;
     *(float *)((int)pvVar3 + 0x60) = fVar2;

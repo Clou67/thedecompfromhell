@@ -51,7 +51,7 @@ void UpdateMoby_189(MobyInstance *moby)
   else {
     fVar1 = pfVar2[2];
     if (SQRT(fVar1 * fVar1 + *pfVar2 * *pfVar2 + pfVar2[1] * pfVar2[1]) != 0.0) {
-      pfVar2[2] = -(DAT_0071f418 * 9.8 - fVar1);
+      pfVar2[2] = -(g_FrameTimeSq * 9.8 - fVar1);
     }
     iVar5 = FastDecTimerS32(pfVar2 + 7);
     if (iVar5 == 0) {
@@ -86,7 +86,7 @@ void UpdateMoby_189(MobyInstance *moby)
         dVar6 = (double)FastAddRots((float)((double)pfVar2[5] * dVar6));
         pfVar2[5] = (float)dVar6;
         if (SQRT(pfVar2[2] * pfVar2[2] + *pfVar2 * *pfVar2 + pfVar2[1] * pfVar2[1]) <
-            DAT_0071f418 * 9.8) {
+            g_FrameTimeSq * 9.8) {
           pfVar2[3] = 0.0;
           pfVar2[2] = 0.0;
           pfVar2[1] = 0.0;

@@ -594,12 +594,12 @@ double M388_0035c3c8
   dVar2 = 3.1415927410125732;
   dVar1 = 6.2831854820251465;
   OrganicDeltAngSpeed
-            (param_1,(double)(DAT_0071f418 * 3.1415927),(double)(DAT_0071f418 * 6.2831855),
+            (param_1,(double)(g_FrameTimeSq * 3.1415927),(double)(g_FrameTimeSq * 6.2831855),
              (double)(g_FrameTime * 6.2831855),param_3,param_4,param_4 + 0xa8);
   dVar1 = (double)MB_DeltAngSpeed
                             ((double)*(float *)(param_3 + 0x44),param_2,
-                             (double)(float)((double)DAT_0071f418 * dVar2),
-                             (double)(float)((double)DAT_0071f418 * dVar1),
+                             (double)(float)((double)g_FrameTimeSq * dVar2),
+                             (double)(float)((double)g_FrameTimeSq * dVar1),
                              (double)(float)((double)g_FrameTime * dVar1));
   *(float *)(param_3 + 0x44) = (float)dVar1;
   fVar3 = *(float *)(param_4 + 0xa8) * (1.5707964 - ABS(*(float *)(param_3 + 0x40))) * 0.63661975 *
@@ -3410,12 +3410,12 @@ void UpdateMoby_388(MobyInstance *moby)
       dVar30 = 3.1415927410125732;
       dVar29 = 6.2831854820251465;
       OrganicDeltAngSpeed
-                (uVar25,(double)(DAT_0071f418 * 3.1415927),(double)(DAT_0071f418 * 6.2831855),
+                (uVar25,(double)(g_FrameTimeSq * 3.1415927),(double)(g_FrameTimeSq * 6.2831855),
                  (double)(g_FrameTime * 6.2831855),lVar10);
       dVar32 = (double)MB_DeltAngSpeed
                                  ((double)(moby->rotation).y,dVar32,
-                                  (double)(float)((double)DAT_0071f418 * dVar30),
-                                  (double)(float)((double)DAT_0071f418 * dVar29),
+                                  (double)(float)((double)g_FrameTimeSq * dVar30),
+                                  (double)(float)((double)g_FrameTimeSq * dVar29),
                                   (double)(float)((double)g_FrameTime * dVar29));
       (moby->rotation).y = (float)dVar32;
       moby->scale = moby->scale * 0.99925;

@@ -2754,7 +2754,7 @@ undefined8 walk_WalkToPos(double x,MobyInstance *moby,float *param_3,w_2legData 
        dVar18 <= -0.03490658476948738)) {
       return 1;
     }
-    walk_Update((double)(float)(x * 0.25),(double)param_3[3],(double)(DAT_0071f418 * 5.0),moby,pLD);
+    walk_Update((double)(float)(x * 0.25),(double)param_3[3],(double)(g_FrameTimeSq * 5.0),moby,pLD);
   }
   else {
     fVar4 = fVar4 - fVar3;
@@ -2829,7 +2829,7 @@ undefined8 walk_WalkToPos(double x,MobyInstance *moby,float *param_3,w_2legData 
       } while (lVar13 != 0);
       dVar18 = (double)((float)(dVar18 + 0.7853981852531433) * fVar3 + fVar2);
     }
-    walk_Update(x,dVar18,(double)(DAT_0071f418 * 5.0),moby,pLD);
+    walk_Update(x,dVar18,(double)(g_FrameTimeSq * 5.0),moby,pLD);
   }
   return 0;
 }
@@ -2848,7 +2848,7 @@ walk_TurnToAngle
   if ((rotZ < 0.03490658476948738) ||
      (rotZ = (double)FastSubRots((float)param_1,(moby->rotation).z),
      -0.03490658476948738 < rotZ)) {
-    walk_Update(param_2,param_1,(double)(DAT_0071f418 * 5.0),moby,pLD);
+    walk_Update(param_2,param_1,(double)(g_FrameTimeSq * 5.0),moby,pLD);
     uVar1 = 0;
   }
   else {

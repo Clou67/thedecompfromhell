@@ -281,7 +281,7 @@ void UpdateMoby_344(MobyInstance *moby)
         moby->alpha = sVar6;
       }
     }
-    puVar5[0xe] = -(DAT_0071f418 * 10.8 - (float)puVar5[0xe]);
+    puVar5[0xe] = -(g_FrameTimeSq * 10.8 - (float)puVar5[0xe]);
     fVar2 = (moby->pos).x + (float)puVar5[0xc];
     (moby->pos).x = fVar2;
     fVar3 = (moby->pos).y + (float)puVar5[0xd];

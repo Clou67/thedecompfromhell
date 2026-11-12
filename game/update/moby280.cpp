@@ -902,7 +902,7 @@ void UpdateMoby_280(MobyInstance *moby)
     fVar2 = fVar7 * fVar6;
     fVar5 = fVar7 * fVar2 * 2.601887e-06 +
             fVar2 * -0.0001980741 + fVar6 * 0.0083330255 + fVar7 * fVar9 * -0.16666657 + fVar9;
-    fVar3 = DAT_0071f418 * 5.5;
+    fVar3 = g_FrameTimeSq * 5.5;
     dVar32 = (double)animationSpeed;
     fVar2 = (fVar5 * (float)((double)*(float *)(puVar12 + 0x16) * dVar24 +
                             (double)(float)((double)*(float *)(puVar12 + 0x14) * in_f27 +
@@ -917,8 +917,8 @@ void UpdateMoby_280(MobyInstance *moby)
     if (fVar3 - fVar2 < 0.0) {
       fVar2 = fVar3;
     }
-    if (fVar2 - DAT_0071f418 * -5.5 < 0.0) {
-      fVar2 = DAT_0071f418 * -5.5;
+    if (fVar2 - g_FrameTimeSq * -5.5 < 0.0) {
+      fVar2 = g_FrameTimeSq * -5.5;
     }
     fVar2 = val[7] + fVar2;
     dVar27 = (double)fVar2;
@@ -1135,7 +1135,7 @@ void UpdateMoby_280(MobyInstance *moby)
     dVar41 = 6.2831854820251465;
     DeltAng((float)dVar27,g_FrameTime * 6.2831855,&g_heroRotation.z,0x720000,
                       (int)unused2,0);
-    fVar2 = DAT_0071f418 * 9.8 + val[9];
+    fVar2 = g_FrameTimeSq * 9.8 + val[9];
     val[9] = fVar2;
     dVar24 = 2.0;
     g_heroPosition.z = g_heroPosition.z - (fVar2 - 2.0);

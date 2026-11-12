@@ -329,7 +329,7 @@ void UpdateMoby_1061(MobyInstance *moby)
         ;
       }
       OrganicDelt
-                ((float)dVar14,DAT_0074099c * DAT_0071f418,DAT_0074099c * DAT_0071f418,
+                ((float)dVar14,DAT_0074099c * g_FrameTimeSq,DAT_0074099c * g_FrameTimeSq,
                  DAT_00740998 * g_FrameTime,&(moby->pos).z,0x740000,
                  (float *)((int)pvVar4 + 0x8c));
       if (ABS((float)((double)(moby->pos).z - dVar14)) < 0.01) {

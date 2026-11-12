@@ -280,7 +280,7 @@ void UpdateMoby_438(MobyInstance *moby)
   else if (1 < bVar1) {
     if (bVar1 < 3) {
       uVar34 = 0x402e000000000000;
-      piVar11[6] = (int)-(DAT_0071f418 * 15.0 - (float)piVar11[6]);
+      piVar11[6] = (int)-(g_FrameTimeSq * 15.0 - (float)piVar11[6]);
       dVar31 = (double)FastWrapRot((moby->rotation).x,g_FrameTime * 7.330383);
       (moby->rotation).x = (float)((double)(moby->rotation).x + dVar31);
       fVar4 = (moby->pos).x;

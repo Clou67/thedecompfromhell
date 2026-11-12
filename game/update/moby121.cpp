@@ -712,7 +712,7 @@ void FUN_00200fd0(float *param_1,int param_2,float *param_3)
           *(undefined4 *)((int)puVar14 + 0x8c) = *(undefined4 *)((int)puVar14 + 0xdc);
         }
         uVar37 = 0x3ee4f8b580000000;
-        dVar32 = (double)(DAT_0071f418 * 11.0);
+        dVar32 = (double)(g_FrameTimeSq * 11.0);
         if ((g_Pad.downButtons & (L1|L2)) != 0) {
           dVar33 = (double)FastIntToDouble(g_goldWeaponsArray.bombGlove);
           dVar36 = (double)(float)(dVar33 * 2.5);
@@ -1249,7 +1249,7 @@ LAB_002025e8:
             fVar11 = (float)((double)fVar11 + dVar36);
             fVar12 = (float)((double)fVar12 + dVar45);
             fVar9 = (float)((double)fVar9 + dVar37);
-            dVar37 = -(double)(float)((double)DAT_0071f418 * dVar40 - dVar37);
+            dVar37 = -(double)(float)((double)g_FrameTimeSq * dVar40 - dVar37);
             *(float *)(puVar16 + 0xe) = fVar11;
             *(float *)((int)puVar16 + 0x74) = fVar12;
             *(float *)(puVar16 + 0xf) = fVar9;
@@ -1646,11 +1646,11 @@ void UpdateMoby_121(MobyInstance *moby)
         (moby->pos).y = (moby->pos).y + pfVar3[1];
         (moby->pos).z = (moby->pos).z + pfVar3[2];
         if (sVar22 == 0) {
-          pfVar3[2] = -(DAT_0071f418 * 11.0 - pfVar3[2]);
+          pfVar3[2] = -(g_FrameTimeSq * 11.0 - pfVar3[2]);
         }
         else {
           dVar27 = 0.10000000149011612;
-          pfVar3[2] = -(DAT_0071f418 * 11.0 * 0.1 - pfVar3[2]);
+          pfVar3[2] = -(g_FrameTimeSq * 11.0 * 0.1 - pfVar3[2]);
           local_108 = (longlong)(int)(animationSpeed * 6.5);
           iVar15 = MB_randInt((int)(animationSpeed * 6.5) + -1);
           if (iVar15 == 0) {
@@ -2090,7 +2090,7 @@ void UpdateMoby_121(MobyInstance *moby)
                                      dVar29 - (double)local_208);
                 uVar9 = MB_randRangeFloat((float)dVar37,(float)dVar42);
                 SpawnPart_64
-                          (uVar9,dVar27,(double)(float)((double)DAT_0071f418 * dVar28),&local_200,
+                          (uVar9,dVar27,(double)(float)((double)g_FrameTimeSq * dVar28),&local_200,
                            &local_210,0);
                 iVar15 = iVar15 + 1;
               } while (iVar15 < 100);

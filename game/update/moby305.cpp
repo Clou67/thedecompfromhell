@@ -897,28 +897,28 @@ void UpdateMoby_305(MobyInstance *moby)
   if (0.1 <= fVar7) {
     dVar48 = 4.71238899230957;
     dVar40 = (double)MB_DeltAngSpeed
-                               (dVar40,dVar52,(double)(DAT_0071f418 * 6.2831855),
-                                (double)(DAT_0071f418 * 3.1415927),
+                               (dVar40,dVar52,(double)(g_FrameTimeSq * 6.2831855),
+                                (double)(g_FrameTimeSq * 3.1415927),
                                 (double)(g_FrameTime * 4.712389),lVar22,&DAT_0033abd4,
                                 lVar22);
     (moby->rotation).z = (float)dVar40;
     dVar34 = (double)MB_DeltAngSpeed
                                ((double)(moby->rotation).y,dVar34,
-                                (double)(float)((double)DAT_0071f418 * dVar51),
-                                (double)(float)((double)DAT_0071f418 * dVar54),
+                                (double)(float)((double)g_FrameTimeSq * dVar51),
+                                (double)(float)((double)g_FrameTimeSq * dVar54),
                                 (double)(float)((double)g_FrameTime * dVar48));
   }
   else {
     dVar40 = (double)MB_DeltAngSpeed
-                               (dVar40,dVar52,(double)(DAT_0071f418 * 6.2831855),
-                                (double)(DAT_0071f418 * 3.1415927),
+                               (dVar40,dVar52,(double)(g_FrameTimeSq * 6.2831855),
+                                (double)(g_FrameTimeSq * 3.1415927),
                                 (double)(g_FrameTime * 6.2831855),lVar22,&DAT_0033abd4,
                                 lVar22);
     (moby->rotation).z = (float)dVar40;
     dVar34 = (double)MB_DeltAngSpeed
                                ((double)(moby->rotation).y,dVar34,
-                                (double)(float)((double)DAT_0071f418 * dVar51),
-                                (double)(float)((double)DAT_0071f418 * dVar54),
+                                (double)(float)((double)g_FrameTimeSq * dVar51),
+                                (double)(float)((double)g_FrameTimeSq * dVar54),
                                 (double)(float)((double)g_FrameTime * dVar51));
   }
   (moby->rotation).y = (float)dVar34;

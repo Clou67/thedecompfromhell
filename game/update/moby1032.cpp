@@ -251,7 +251,7 @@ MobyInstance * UpdateMoby_1032(MobyInstance *moby)
       dVar31 = (double)((float)(dVar31 + 0.7853981852531433) * fVar6 + fVar5);
     }
     OrganicDeltAng
-              ((float)dVar31,DAT_0071f418 * 8.726646,DAT_0071f418 * 8.726646,
+              ((float)dVar31,g_FrameTimeSq * 8.726646,g_FrameTimeSq * 8.726646,
                g_FrameTime * 12.566371,&(moby->rotation).z,0x720000,
                (float *)((int)pvVar11 + 0xf0));
     iVar22 = MB_MayaFrameTrigger(16.0,moby);
@@ -321,12 +321,12 @@ MobyInstance * UpdateMoby_1032(MobyInstance *moby)
     fVar3 = SQRT(fVar5 * fVar5 + fVar3 * fVar3);
     if (fVar3 <= (float)((double)*(float *)((int)pvVar11 + 0x100) + dVar38)) {
       if (fVar3 < (float)((double)*(float *)((int)pvVar11 + 0x100) - dVar38)) {
-        Delt(g_FrameTime * 5.5,DAT_0071f418 * 6.0,(float *)((int)pvVar11 + 0xf4)
+        Delt(g_FrameTime * 5.5,g_FrameTimeSq * 6.0,(float *)((int)pvVar11 + 0xf4)
                       );
       }
     }
     else {
-      Delt(g_FrameTime * 10.0,DAT_0071f418 * 6.0,(float *)((int)pvVar11 + 0xf4))
+      Delt(g_FrameTime * 10.0,g_FrameTimeSq * 6.0,(float *)((int)pvVar11 + 0xf4))
       ;
     }
     dVar32 = (double)(moby->pos).y;
@@ -379,7 +379,7 @@ MobyInstance * UpdateMoby_1032(MobyInstance *moby)
   }
   else if (uVar1 == '\x03') {
     OrganicDelt
-              ((float)dVar38,DAT_0071f418,DAT_0071f418,g_FrameTime * 0.25,
+              ((float)dVar38,g_FrameTimeSq,g_FrameTimeSq,g_FrameTime * 0.25,
                (float *)((int)pvVar11 + 0x108),0x720000,(float *)((int)pvVar11 + 0x10c));
     pCVar19 = Cuboids;
     iVar22 = *(int *)((int)pvVar11 + 0xd8);
@@ -471,8 +471,8 @@ MobyInstance * UpdateMoby_1032(MobyInstance *moby)
     Delt(0.0,g_FrameTime * 6.0,(float *)((int)pvVar13 + 0x104));
     SceneScreenFade = *(float *)((int)pvVar13 + 0x104);
     OrganicDelt
-              ((float)dVar38,(float)((double)DAT_0071f418 * dVar37),
-               (float)((double)DAT_0071f418 * dVar37),g_FrameTime * 0.25,
+              ((float)dVar38,(float)((double)g_FrameTimeSq * dVar37),
+               (float)((double)g_FrameTimeSq * dVar37),g_FrameTime * 0.25,
                (float *)((int)pvVar11 + 0x108),0x960000,(float *)((int)pvVar11 + 0x10c));
     pCVar19 = Cuboids;
     iVar22 = *(int *)((int)pvVar11 + 0xd0);
@@ -614,7 +614,7 @@ MobyInstance * UpdateMoby_1032(MobyInstance *moby)
       fVar3 = (fVar3 + 0.7853982) * fVar9 + fVar4;
     }
     OrganicDeltAng
-              (fVar3,DAT_0071f418 * 8.726646,DAT_0071f418 * 8.726646,
+              (fVar3,g_FrameTimeSq * 8.726646,g_FrameTimeSq * 8.726646,
                g_FrameTime * 12.566371,&(moby->rotation).z,0x190d20,
                (float *)((int)pvVar11 + 0xf0));
     pMVar21 = (MobyInstance *)
