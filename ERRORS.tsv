@@ -18,7 +18,8 @@ errors	file
 186	game/loaders.cpp
 2196	game/mUnk.cpp
 0	game/main.cpp
-100	game/map.cpp
+95	game/map.cpp
+5	game/mcstate.cpp
 0	game/memcard.cpp
 0	game/mesh.cpp
 0	game/mission.cpp

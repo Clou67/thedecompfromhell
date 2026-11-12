@@ -5,7 +5,7 @@ Evidence: SECTION_HEADER_* starts a file; moby helpers come first and the `Updat
 Unknown objects are named `<first letter of the previous linked object>Unk.cpp`. Folders follow link position: everything up to the end of the moby sea is `game/`; game-labelled code after it is `idol/`.
 Shared update functions are named `UpdateMoby_<first oClass>`, with every registered oClass in a comment.
 
-11433 functions, 1190 files: 947 `game/update/moby*.cpp`, 24 `game/update/camera*.cpp`.
+11433 functions, 1191 files: 947 `game/update/moby*.cpp`, 24 `game/update/camera*.cpp`.
 
 | file | funcs | start | end |
 |---|---|---|---|
@@ -30,7 +30,8 @@ Shared update functions are named `UpdateMoby_<first oClass>`, with every regist
 | game/lights.cpp | 9 | 0xda2e0 | 0xdb1e0 |
 | game/loaders.cpp | 41 | 0xdb1e0 | 0xe0e14 |
 | game/main.cpp | 2 | 0xe0e14 | 0xe1b0c |
-| game/map.cpp | 105 | 0xe1b0c | 0xe6b08 |
+| game/map.cpp | 78 | 0xe1b0c | 0xe64fc |
+| game/mcstate.cpp | 27 | 0xe64fc | 0xe6b08 |
 | game/memcard.cpp | 32 | 0xe6b08 | 0xe9114 |
 | game/mesh.cpp | 19 | 0xe9114 | 0xea378 |
 | game/mission.cpp | 19 | 0xea378 | 0xeb288 |

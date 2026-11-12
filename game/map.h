@@ -23,16 +23,6 @@ struct MapIcon {
 typedef char MapIcon_size_check[sizeof(struct MapIcon) == 0x28 ? 1 : -1];
 
 // ---- globals
-extern undefined4 DAT_0071fa40; /* 0x71fa40 */
-extern undefined4 DAT_0071fa60; /* 0x71fa60 */
-extern undefined4 DAT_0071fa7c; /* 0x71fa7c */
-extern undefined4 DAT_0071fa98; /* 0x71fa98 */
-extern undefined4 DAT_0071fab4; /* 0x71fab4 */
-extern undefined4 DAT_0071fad4; /* 0x71fad4 */
-extern undefined4 DAT_0071fae8; /* 0x71fae8 */
-extern undefined4 DAT_0071fb08; /* 0x71fb08 */
-extern undefined4 DAT_0071fb0c; /* 0x71fb0c */
-extern undefined4 DAT_0071fb10; /* 0x71fb10 */
 extern undefined4 DAT_00724acc; /* 0x724acc */
 extern undefined4 DAT_00724af4; /* 0x724af4 */
 extern undefined4 DAT_00724af8; /* 0x724af8 */
@@ -53,7 +43,6 @@ extern undefined4 DAT_007264d8; /* 0x7264d8 */
 extern undefined4 DAT_007264dc; /* 0x7264dc */
 extern undefined4 DAT_007264e0; /* 0x7264e0 */
 extern undefined4 DAT_007264e4; /* 0x7264e4 */
-extern undefined4 DAT_00726534; /* 0x726534 */
 extern undefined1 DAT_0096afc4; /* 0x96afc4 */
 extern undefined4 DAT_0096ca34; /* no defined data */
 extern undefined4 DAT_00a204c0; /* 0xa204c0 */
@@ -83,15 +72,8 @@ extern undefined4 DAT_00a20834; /* 0xa20834 */
 extern undefined4 DAT_00a20838; /* 0xa20838 */
 extern undefined4 DAT_00a2083c; /* 0xa2083c */
 extern undefined4 DAT_00a20840; /* 0xa20840 */
-extern undefined8 DAT_00a20848; /* 0xa20848 */
-extern undefined4 DAT_00a20850; /* 0xa20850 */
-extern undefined4 DAT_00a20854; /* 0xa20854 */
-extern undefined4 DAT_00a20880; /* 0xa20880 */
 extern undefined4 DAT_00a52ca8; /* 0xa52ca8 */
 extern MiscLevelFlags g_MiscLevelFlags; /* 0x96bff0 */
-extern undefined4 g_CardState; /* 0xa0fd1c */
-extern undefined4 g_CardStateFlags; /* 0xa0fd20 */
-extern undefined * g_CardStateFuncs; /* 0x7265bc */
 extern int g_MapAlt; /* 0xa20820: set: the map uses level + 100 (guess: alternate map) */ /* type set in global_types.tsv */
 extern int g_MapAvailable; /* 0xa204e4 */
 extern int g_MapCacheBuf; /* 0xa207a8 */
@@ -110,7 +92,6 @@ extern int g_MapRevealMask; /* 0xa204cc */
 extern float g_MapWorldBounds; /* 0x724af0 */
 extern float g_MapWorldToMap; /* 0x724d50 */
 extern float g_MapZoom; /* 0xa20574 */
-extern int g_SaveCurCard; /* 0x71faf0 */ /* type set in global_types.tsv */
 extern pointer ptr_GalacticMap; /* 0x729970 */
 
 // ---- functions
@@ -192,30 +173,3 @@ ulonglong Map_RegionVisible_e648c(void);
 ulonglong Map_RegionVisible_e64a8(void);
 ulonglong Map_RegionVisible_e64c4(void);
 ulonglong Map_RegionVisible_e64e0(void);
-void Map_InitColors(void);
-void FlowState_Update(void);
-void CardState_INIT(void);
-void CardState_GOOD_SAVE(void);
-void CardState_WARNING(void);
-void CardState_NOCARD(void);
-void CardState_WAIT_FOR_CARD(void);
-void CardState_UNFORMATTED(void);
-void CardState_PROMPT_FORMAT(void);
-void CardState_FORMAT_PENDING(void);
-void CardState_FORMATTING(void);
-void CardState_FORMATTED(void);
-void CardState_CHECK_SAVE(void);
-void CardState_CHECKING_SAVE(void);
-void CardState_NOSAVE(void);
-void CardState_PROMPT_CREATE_SAVE(void);
-void CardState_CREATE_SAVE_PENDING(void);
-void CardState_CREATING_SAVE(void);
-void CardState_NEWCARD(void);
-void CardState_FORMAT_FAILED(void);
-void CardState_CREATE_FAILED(void);
-void CardState_NO_ROOM(void);
-void CardState_LOAD_FAILED(void);
-void CardState_SAVE_FAILED(void);
-void CardState_SAVING(void);
-void CardState_PROMPT_BEGIN_UNFORMATTED(void);
-void CardState_PROMPT_BEGIN_NOSAVE(void);

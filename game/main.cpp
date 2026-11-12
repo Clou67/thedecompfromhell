@@ -13,6 +13,7 @@
 #include "game/initonce.h"
 #include "game/loaders.h"
 #include "game/map.h"
+#include "game/mcstate.h"
 #include "game/memcard.h"
 #include "game/music.h"
 #include "game/pad.h"

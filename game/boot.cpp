@@ -30,6 +30,7 @@
 #include "game/mUnk.h"
 #include "game/main.h"
 #include "game/map.h"
+#include "game/mcstate.h"
 #include "game/memcard.h"
 #include "game/mission.h"
 #include "game/mobyfunc.h"
