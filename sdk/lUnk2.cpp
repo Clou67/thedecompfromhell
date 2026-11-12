@@ -3,8 +3,8 @@
 // 42 functions, 0x61768c-0x61948c
 #include <string.h>
 #include "sdk/lUnk2.h"
-#include "sdk/989snd.h"
 #include "sdk/lUnk.h"
+#include "sdk/libscream/989snd.h"
 #include "sdk/libscream/LFO.h"
 #include "sdk/mUnk4.h"
 #include "sdk/sce.h"

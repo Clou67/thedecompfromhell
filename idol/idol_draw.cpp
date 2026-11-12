@@ -11,13 +11,13 @@
 #include "idol/mUnk.h"
 #include "idol/mUnk2.h"
 #include "idol/mathfunc.h"
-#include "sdk/9Unk2.h"
 #include "sdk/CMediusManager.h"
 #include "sdk/cell.h"
 #include "sdk/lUnk.h"
 #include "sdk/libc/bsearch.h"
 #include "sdk/libc/xstoul.h"
 #include "sdk/mUnk3.h"
+#include "sdk/sUnk2.h"
 #include "sdk/sce.h"
 
 // 0x04f14c8 (0x4c bytes)

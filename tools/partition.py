@@ -99,9 +99,13 @@ def assign(rows):
     n = len(rows); dest = [None] * n; why = [''] * n
     ov = load_overrides()
     # ---- 0. overrides first, so everything that inherits sees them
+    ranges = [(int(k.split('-')[0], 16), int(k.split('-')[1], 16), v) for k, v in ov.items()
+              if re.match(r'^0x[0-9a-fA-F]+-0x[0-9a-fA-F]+$', k)]
     for i, (a, sz, nm) in enumerate(rows):
         for key in (nm, ns_of(nm) + '::'):
             if key in ov: dest[i] = ov[key]; why[i] = 'override'; break
+        for lo, hi, v in ranges:              # address ranges win over names
+            if lo <= a < hi: dest[i] = v; why[i] = 'override'
     # ---- 0b. SDK library objects (only after the game code; crt0/crt1 bits at the start stay in game/)
     for i, (a, sz, nm) in enumerate(rows):
         if a in SDKMATCH and a >= 0x4d0000 and not dest[i]:

@@ -1,5 +1,5 @@
 #pragma once
-// sdk/9Unk.h
+// sdk/libscream/sndhost.h
 #include "types.h"
 
 // ---- globals

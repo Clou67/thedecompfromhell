@@ -1,7 +1,7 @@
-// sdk/9Unk2.cpp -- reconstructed from NPEA00385 EBOOT
+// sdk/sUnk2.cpp -- reconstructed from NPEA00385 EBOOT
 // STATUS: NOT STARTED (raw Ghidra output)
 // 6 functions, 0x64eda4-0x64ee64
-#include "sdk/9Unk2.h"
+#include "sdk/sUnk2.h"
 #include "sdk/sce.h"
 
 // 0x064eda4 (0x20 bytes)

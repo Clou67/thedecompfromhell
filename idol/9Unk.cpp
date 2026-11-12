@@ -2,8 +2,8 @@
 // STATUS: NOT STARTED (raw Ghidra output)
 // 12 functions, 0x63fb20-0x63ff34
 #include "idol/9Unk.h"
-#include "sdk/989snd.h"
 #include "sdk/cell.h"
+#include "sdk/libscream/989snd.h"
 #include "sdk/sys.h"
 
 // 0x063fb20 (0x138 bytes)

@@ -1,4 +1,4 @@
-# sdk/9Unk.cpp -- original instructions (NPEA00385), same functions and order as the .cpp
+# sdk/libscream/sndhost.cpp -- original instructions (NPEA00385), same functions and order as the .cpp
 
 sndHost_FileAsyncIsReadComplete:   # 0x63ff34, 0xcc bytes
   063ff34  stdu 1, -128(1)

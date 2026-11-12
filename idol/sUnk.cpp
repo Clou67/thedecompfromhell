@@ -1,14 +1,14 @@
-// idol/9Unk2.cpp -- reconstructed from NPEA00385 EBOOT
+// idol/sUnk.cpp -- reconstructed from NPEA00385 EBOOT
 // STATUS: NOT STARTED (raw Ghidra output)
 // 91 functions, 0x648b10-0x64eda4
 #include <string.h>
-#include "idol/9Unk2.h"
+#include "idol/sUnk.h"
 #include "game/crt0.h"
 #include "idol/idol_draw.h"
 #include "idol/mUnk2.h"
-#include "sdk/9Unk.h"
 #include "sdk/cell.h"
 #include "sdk/libcgc/libcgc_cell_localize.h"
+#include "sdk/libscream/sndhost.h"
 #include "sdk/libstdc++/throw.h"
 #include "sdk/sce.h"
 #include "sdk/sys.h"

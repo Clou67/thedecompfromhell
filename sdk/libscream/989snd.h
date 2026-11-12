@@ -1,5 +1,5 @@
 #pragma once
-// sdk/989snd.h
+// sdk/libscream/989snd.h
 #include "types.h"
 
 // ---- globals

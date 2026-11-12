@@ -1,4 +1,4 @@
-# idol/9Unk2.cpp -- original instructions (NPEA00385), same functions and order as the .cpp
+# idol/sUnk.cpp -- original instructions (NPEA00385), same functions and order as the .cpp
 
 idol::brbVoice_ConnectPort:   # 0x648b10, 0x27c bytes
   0648b10  cmpwi 7, 5, 1

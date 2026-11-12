@@ -1,4 +1,4 @@
-# sdk/989snd.cpp -- original instructions (NPEA00385), same functions and order as the .cpp
+# sdk/libscream/989snd.cpp -- original instructions (NPEA00385), same functions and order as the .cpp
 
 snd_Printf:   # 0x61948c, 0x68 bytes
   061948c  stdu 1, -144(1)

@@ -1,12 +1,11 @@
-// sdk/989snd.cpp -- reconstructed from NPEA00385 EBOOT
+// sdk/libscream/989snd.cpp -- reconstructed from NPEA00385 EBOOT
 // STATUS: NOT STARTED (raw Ghidra output)
 // 524 functions, 0x61948c-0x63fb20
 #include <stdio.h>
 #include <string.h>
-#include "sdk/989snd.h"
+#include "sdk/libscream/989snd.h"
 #include "idol/9Unk.h"
-#include "idol/9Unk2.h"
-#include "sdk/9Unk.h"
+#include "idol/sUnk.h"
 #include "sdk/cell.h"
 #include "sdk/lUnk.h"
 #include "sdk/lUnk2.h"
@@ -14,6 +13,7 @@
 #include "sdk/libc/xstoul.h"
 #include "sdk/libcgc/libcgc_cell_localize.h"
 #include "sdk/libscream/LFO.h"
+#include "sdk/libscream/sndhost.h"
 #include "sdk/mUnk4.h"
 #include "sdk/sce.h"
 #include "sdk/sys.h"

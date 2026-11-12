@@ -3,9 +3,9 @@
 // 290 functions, 0x604574-0x6169e4
 #include <string.h>
 #include "sdk/mUnk4.h"
-#include "sdk/989snd.h"
 #include "sdk/lUnk2.h"
 #include "sdk/libfios/fios_media.h"
+#include "sdk/libscream/989snd.h"
 #include "sdk/libscream/LFO.h"
 
 // 0x0604574 (0x28 bytes)

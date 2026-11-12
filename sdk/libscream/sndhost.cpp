@@ -1,16 +1,16 @@
-// sdk/9Unk.cpp -- reconstructed from NPEA00385 EBOOT
+// sdk/libscream/sndhost.cpp -- reconstructed from NPEA00385 EBOOT
 // STATUS: NOT STARTED (raw Ghidra output)
 // 161 functions, 0x63ff34-0x648b10
 #include <stdio.h>
 #include <string.h>
-#include "sdk/9Unk.h"
+#include "sdk/libscream/sndhost.h"
 #include "idol/9Unk.h"
-#include "idol/9Unk2.h"
 #include "idol/idol_draw.h"
 #include "idol/mathfunc.h"
-#include "sdk/989snd.h"
+#include "idol/sUnk.h"
 #include "sdk/cell.h"
 #include "sdk/lUnk.h"
+#include "sdk/libscream/989snd.h"
 #include "sdk/mUnk4.h"
 #include "sdk/sce.h"
 #include "sdk/sys.h"

@@ -1,4 +1,4 @@
-# sdk/9Unk2.cpp -- original instructions (NPEA00385), same functions and order as the .cpp
+# sdk/sUnk2.cpp -- original instructions (NPEA00385), same functions and order as the .cpp
 
 cellHttpInit:   # 0x64eda4, 0x20 bytes
   064eda4  li 12, 0

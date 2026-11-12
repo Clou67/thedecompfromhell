@@ -5,7 +5,7 @@
 #include <string.h>
 #include "sdk/libcgc/libcgc_cell_localize.h"
 #include "game/hero.h"
-#include "idol/9Unk2.h"
+#include "idol/sUnk.h"
 #include "sdk/libc/atexit.h"
 #include "sdk/libc/malloc.h"
 #include "sdk/libstdc++/throw.h"

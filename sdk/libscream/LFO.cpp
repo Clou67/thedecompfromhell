@@ -2,8 +2,8 @@
 // STATUS: NOT STARTED (raw Ghidra output)
 // 13 functions, 0x6169e4-0x61768c
 #include "sdk/libscream/LFO.h"
-#include "sdk/989snd.h"
 #include "sdk/lUnk2.h"
+#include "sdk/libscream/989snd.h"
 
 // SDK libscream.a(LFO.ppu.o): snd_LFO_TYPE_SQUARE  [exact match]
 // 0x06169e4 (0x24 bytes)

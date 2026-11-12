@@ -6,9 +6,9 @@
 #include "game/hero.h"
 #include "idol/idol_draw.h"
 #include "idol/mUnk.h"
-#include "sdk/989snd.h"
 #include "sdk/libfios/fios_op.h"
 #include "sdk/libfios/fios_scheduler.h"
+#include "sdk/libscream/989snd.h"
 #include "sdk/mUnk4.h"
 #include "sdk/sce.h"
 

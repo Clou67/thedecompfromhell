@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include "sdk/libc/exit.h"
 #include "game/crt0.h"
-#include "idol/9Unk2.h"
+#include "idol/sUnk.h"
 #include "sdk/libc/abort.h"
 #include "sdk/libc/fclose.h"
 #include "sdk/libc/fs_posix_api.h"

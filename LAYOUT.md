@@ -215,11 +215,11 @@ Shared update functions are named `UpdateMoby_<first oClass>`, with every regist
 | sdk/mUnk4.cpp | 290 | 0x604574 | 0x6169e4 |
 | sdk/libscream/LFO.cpp | 13 | 0x6169e4 | 0x61768c |
 | sdk/lUnk2.cpp | 42 | 0x61768c | 0x61948c |
-| sdk/989snd.cpp | 524 | 0x61948c | 0x63fb20 |
+| sdk/libscream/989snd.cpp | 524 | 0x61948c | 0x63fb20 |
 | idol/9Unk.cpp | 12 | 0x63fb20 | 0x63ff34 |
-| sdk/9Unk.cpp | 161 | 0x63ff34 | 0x648b10 |
-| idol/9Unk2.cpp | 91 | 0x648b10 | 0x64eda4 |
-| sdk/9Unk2.cpp | 6 | 0x64eda4 | 0x64ee64 |
+| sdk/libscream/sndhost.cpp | 161 | 0x63ff34 | 0x648b10 |
+| idol/sUnk.cpp | 91 | 0x648b10 | 0x64eda4 |
+| sdk/sUnk2.cpp | 6 | 0x64eda4 | 0x64ee64 |
 | sdk/sce.cpp | 87 | 0x64ee64 | 0x64f944 |
 | sdk/cell.cpp | 67 | 0x64f944 | 0x6501a4 |
 | sdk/sys.cpp | 54 | 0x6501a4 | 0x650864 |

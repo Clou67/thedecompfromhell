@@ -14,7 +14,7 @@
 #include "idol/fastfunc.h"
 #include "idol/idol.h"
 #include "idol/sound.h"
-#include "sdk/989snd.h"
+#include "sdk/libscream/989snd.h"
 
 // 0x011b944 (0x14 bytes)
 void SECTION_HEADER_MUSIC(void)
