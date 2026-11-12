@@ -1,8 +1,6 @@
-// game/tieproc.cpp -- reconstructed from NPEA00385 EBOOT
-// STATUS: NOT STARTED (raw Ghidra output)
-// 7 functions, 0x1658d8-0x166e08
 #include <stdio.h>
 #include "game/tieproc.h"
+#include "game/boot.h"
 #include "game/debug.h"
 #include "game/loaders.h"
 #include "game/pause.h"
@@ -11,307 +9,235 @@
 #include "game/vuchain.h"
 #include "idol/fastfunc.h"
 
-// 0x01658d8 (0x10c4 bytes)
-void InitGsRegPresets_1658d8(void)
+/* The PS2 packet templates the tie renderer patches each frame. The GS / GIF / VIF code
+   builders are stubs that return 0 in this port, so this only clears the templates. */
 
+#define TIE_CLASS_DRAWN 0x08          /* TieClasses[i] + 0x2a */
+
+/* one group of g_TieGsRegs: two sprites' worth of registers */
+static inline void TieInitGsRegGroup(u64 *regs)
 {
-  DAT_007386a0 = 0x10000;
-  DAT_007359e0 = SCE_GIF_SET_TAG(6,1,0,0,1,10);
-  DAT_007359f0 = SCE_GS_SET_PRIM(0x29,0,0,0,0,0,1,0);
-  DAT_007359f8 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
-  DAT_00735a00 = FUN_00502f74_RET_0(0x80,0x80,0x80,0x80,0);
-  DAT_00735a08 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
-  DAT_00735a10 = FUN_00502e48(0);
-  DAT_00735a18 = SCE_GS_SET_XYZ(0,0,0);
-  DAT_00735a20 = FUN_00502f74_RET_0(0x80,0x80,0x80,0x80,0);
-  DAT_00735a28 = SCE_GS_SET_CLAMP(1,1,0,0,0,0);
-  DAT_00735a30 = FUN_00502e48(1);
-  DAT_00735a38 = SCE_GS_SET_XYZ(0,0,0);
-  DAT_00735a40 = SCE_GS_SET_PRIM(0x29,0,0,0,0,0,1,0);
-  DAT_00735a48 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
-  DAT_00735a50 = FUN_00502f74_RET_0(0x80,0x80,0x80,0x80,0);
-  DAT_00735a58 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
-  DAT_00735a60 = FUN_00502e48(0);
-  DAT_00735a68 = SCE_GS_SET_XYZ(0,0,0);
-  DAT_00735a70 = FUN_00502f74_RET_0(0x80,0x80,0x80,0x80,0);
-  DAT_00735a78 = SCE_GS_SET_CLAMP(1,1,0,0,0,0);
-  DAT_00735a80 = FUN_00502e48(1);
-  DAT_00735a88 = SCE_GS_SET_XYZ(0,0,0);
-  DAT_00735a90 = SCE_GS_SET_PRIM(0x29,0,0,0,0,0,1,0);
-  DAT_00735a98 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
-  DAT_00735aa0 = FUN_00502f74_RET_0(0x80,0x80,0x80,0x80,0);
-  DAT_00735aa8 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
-  DAT_00735ab0 = FUN_00502e48(0);
-  DAT_00735ab8 = SCE_GS_SET_XYZ(0,0,0);
-  DAT_00735ac0 = FUN_00502f74_RET_0(0x80,0x80,0x80,0x80,0);
-  DAT_00735ac8 = SCE_GS_SET_CLAMP(1,1,0,0,0,0);
-  DAT_00735ad0 = FUN_00502e48(1);
-  DAT_00735ad8 = SCE_GS_SET_XYZ(0,0,0);
-  DAT_00735ae0 = SCE_GS_SET_PRIM(0x29,0,0,0,0,0,1,0);
-  DAT_00735ae8 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
-  DAT_00735af0 = FUN_00502f74_RET_0(0x80,0x80,0x80,0x80,0);
-  DAT_00735af8 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
-  DAT_00735b00 = FUN_00502e48(0);
-  DAT_00735b08 = SCE_GS_SET_XYZ(0,0,0);
-  DAT_00735b10 = FUN_00502f74_RET_0(0x80,0x80,0x80,0x80,0);
-  DAT_00735b18 = SCE_GS_SET_CLAMP(1,1,0,0,0,0);
-  DAT_00735b20 = FUN_00502e48(1);
-  DAT_00735b28 = SCE_GS_SET_XYZ(0,0,0);
-  DAT_00735b30 = SCE_GS_SET_PRIM(0x29,0,0,0,0,0,1,0);
-  DAT_00735b38 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
-  DAT_00735b40 = FUN_00502f74_RET_0(0x80,0x80,0x80,0x80,0);
-  DAT_00735b48 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
-  DAT_00735b50 = FUN_00502e48(0);
-  DAT_00735b58 = SCE_GS_SET_XYZ(0,0,0);
-  DAT_00735b60 = FUN_00502f74_RET_0(0x80,0x80,0x80,0x80,0);
-  DAT_00735b68 = SCE_GS_SET_CLAMP(1,1,0,0,0,0);
-  DAT_00735b70 = FUN_00502e48(1);
-  DAT_00735b78 = SCE_GS_SET_XYZ(0,0,0);
-  DAT_00735b80 = SCE_GS_SET_PRIM(0x29,0,0,0,0,0,1,0);
-  DAT_00735b88 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
-  DAT_00735b90 = FUN_00502f74_RET_0(0x80,0x80,0x80,0x80,0);
-  DAT_00735b98 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
-  DAT_00735ba0 = FUN_00502e48(0);
-  DAT_00735ba8 = SCE_GS_SET_XYZ(0,0,0);
-  DAT_00735bb0 = FUN_00502f74_RET_0(0x80,0x80,0x80,0x80,0);
-  DAT_00735bb8 = SCE_GS_SET_CLAMP(1,1,0,0,0,0);
-  DAT_00735bc0 = FUN_00502e48(1);
-  DAT_00735bc8 = SCE_GS_SET_XYZ(0,0,0);
-  DAT_00735ec8 = FUN_005030f4(0,0);
-  DAT_00735ecc = FUN_00503104(0x3c6,9,0xc,0);
-  DAT_00735ed8 = FUN_005030cc(8,0);
-  DAT_00735eec = FUN_005030fc(0);
-  DAT_00735f00 = FUN_005030ac(0,0);
-  DAT_00735f04 = FUN_005030d4(0x2c,0);
-  DAT_00735f08 = FUN_005030f4(0,0);
-  DAT_00735f0c = FUN_00502e98(4,4,0);
-  DAT_00735f18 = FUN_005030b4(0);
-  DAT_00735f2c = Gs_DmaTagByte(2,0);
-  DAT_00735f58 = FUN_005030f4(0,0);
-  DAT_00735f5c = FUN_00503104(0x3c6,10,0xc,0);
-  DAT_00735f68 = FUN_005030cc(8,0);
-  DAT_00735f7c = FUN_005030fc(0);
-  DAT_00735f90 = FUN_005030ac(0,0);
-  DAT_00735f94 = FUN_005030d4(0x2c,0);
-  DAT_00735f98 = FUN_005030f4(0,0);
-  DAT_00735f9c = FUN_00502e98(4,4,0);
-  DAT_00735fa8 = FUN_005030b4(0);
-  DAT_0073608c = Gs_DmaTagByte(2,0);
-  DAT_007360bc = Gs_DmaTagByte(2,0);
-  DAT_007360ec = Gs_DmaTagByte(2,0);
-  DAT_0073611c = Gs_DmaTagByte(3,0);
-  DAT_00736198 = FUN_00502e98(4,4,0);
-  DAT_0073619c = FUN_00503104(0x123,6,0xc,0);
-  DAT_007361a8 = FUN_00502e98(4,4,0);
-  DAT_007361ac = FUN_00503104(0x287,6,0xc,0);
-  DAT_00736318 = FUN_00502e98(4,4,0);
-  DAT_00736328 = FUN_00502e98(4,4,0);
-  DAT_00736510 = SCE_GIF_SET_TAG(1,1,0,0,1,2);
-  DAT_00736520 = SCE_GIF_SET_TAG(2,1,0,0,1,1);
-  DAT_00736530 = SCE_GIF_SET_TAG(1,1,0,0,1,0xb);
-  DAT_00736540 = SCE_GIF_SET_TAG(1,1,0,0,1,0xb);
-  DAT_00736550 = SCE_GIF_SET_TAG(1,1,0,0,1,0xd);
-  DAT_00736560 = SCE_GIF_SET_TAG(1,1,0,0,1,4);
-  DAT_00736570 = SCE_GIF_SET_TAG(1,1,0,0,1,4);
-  DAT_00736580 = SCE_GIF_SET_TAG(1,1,0,0,1,5);
-  DAT_00736590 = SCE_GIF_SET_TAG(1,1,0,0,1,6);
-  DAT_007365a0 = SCE_GIF_SET_TAG(1,1,0,0,1,7);
-  DAT_007365b0 = SCE_GIF_SET_TAG(1,1,0,0,1,6);
-  DAT_007365c0 = SCE_GIF_SET_TAG(1,0,0,0,1,0xf);
-  DAT_007365d0 = SCE_GIF_SET_TAG(1,1,0,0,1,0xf);
-  DAT_007365e0 = SCE_GIF_SET_TAG(1,1,0,0,0,1);
-  DAT_007365f0 = SCE_GIF_SET_TAG(1,1,0,0,0,2);
-  DAT_00736600 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0);
-  DAT_00736610 = idol_draw::PackCmd(0,1,0,1,0x80);
-  DAT_00736620 = SCE_GIF_SET_TAG(1,0,0,0,0,2);
-  DAT_00736630 = SCE_GIF_SET_TAG(1,1,0,0,1,10);
-  DAT_00736640 = SCE_GIF_SET_TAG(1,1,0,0,1,2);
-  DAT_00736650 = SCE_GIF_SET_TAG(1,1,0,0,1,10);
-  DAT_00736660 = SCE_GIF_SET_TAG(1,1,1,0x7c,0,0xc);
-  DAT_0073667c = Gs_DmaTagByte(2,0);
-  DAT_007366d0 = SCE_GS_SET_TEX0(0,1,0x13,4,4,1,0,0);
-  DAT_00736738 = FUN_005030f4(0,0);
-  DAT_0073673c = FUN_00503104(0,1,0xc,0);
-  DAT_00736748 = FUN_005030bc(4,0);
-  DAT_0073674c = FUN_00503104(0x4000,0,0xe,0);
-  DAT_0073675c = FUN_00503104(0x32,0,0xd,0);
-  DAT_00736768 = FUN_005030f4(0,0);
-  DAT_0073676c = FUN_00503104(0x40cc,0,0xe,0);
-  DAT_0073677c = FUN_00503104(0x80c6,6,0xc,0);
-  DAT_00736788 = FUN_005030f4(1,0);
-  DAT_0073678c = FUN_00503104(0x4346,0x40,0xe,0);
-  DAT_00736798 = FUN_005030f4(0,0);
-  DAT_0073679c = FUN_005030bc(0,0);
-  DAT_007367ac = FUN_00503104(0x1e,0,0xe,0);
-  DAT_007367bc = FUN_005030fc(0);
-  DAT_0073684c = Gs_DmaTagByte(4,0);
-  DAT_0073686c = Gs_DmaTagByte(0xd,0);
-  DAT_00736870 = SCE_GIF_SET_TAG(1,1,1,0x7c,0,0xc);
-  DAT_00736888 = FUN_00502e98(4,4,0);
-  DAT_0073688c = FUN_00503104(0,4,0xc,0);
-  DAT_0073689c = FUN_005030c4(10,0);
-  DAT_00737c48 = FUN_00502e98(4,4,0);
-  DAT_00737c74 = FUN_005030dc(0);
-  DAT_00737c88 = FUN_00502e98(1,3,0);
-  DAT_00737ca0 = FUN_005030ec(0);
-  DAT_00737ce0 = FUN_005030ec(0);
-  return;
+    regs[0] = SCE_GS_SET_PRIM(0x29, 0, 0, 0, 0, 0, 1, 0);
+    regs[1] = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
+    regs[2] = FUN_00502f74_RET_0(0x80, 0x80, 0x80, 0x80, 0);
+    regs[3] = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
+    regs[4] = FUN_00502e48(0);
+    regs[5] = SCE_GS_SET_XYZ(0, 0, 0);
+    regs[6] = FUN_00502f74_RET_0(0x80, 0x80, 0x80, 0x80, 0);
+    regs[7] = SCE_GS_SET_CLAMP(1, 1, 0, 0, 0, 0);
+    regs[8] = FUN_00502e48(1);
+    regs[9] = SCE_GS_SET_XYZ(0, 0, 0);
 }
 
-
-// 0x016699c (0x13c bytes)
-// strings: 00653c74: 'tie texture overflow\n'
-
-void DrawTies_CheckTexOverflow(void)
-
+/* one 0x90-byte shell template of g_TieShellVif */
+static inline void TieInitShellVif(u32 *vif, int unpackNum)
 {
-  undefined1 *puVar1;
-  undefined1 *puVar2;
-  longlong lVar3;
-  
-  puVar1 = g_pPacket;
-  g_pPacket = g_pPacket + 0x10;
-  *DAT_00e59c10 = 0;
-  DAT_00e59c10[1] = (char)g_pPacket;
-  DAT_00e59c10[2] = 0;
-  DAT_00e59c10[3] = 0;
-  if ((g_DebugEnables[6] != 0) && (g_DebugEnables[5] != 0)) {
-    lVar3 = STUB_00166e20_RET_0(g_GsRamAlloc);
-    STUB_001754c0();
-    if (0x400000 < (int)lVar3) {
-      printf("tie texture overflow\n");
+    vif[0x00] = FUN_005030f4(0, 0);
+    vif[0x01] = SCE_VIF1_SET_UNPACK(0x3c6, unpackNum, 0xc, 0);
+    vif[0x04] = FUN_005030cc(8, 0);
+    vif[0x09] = FUN_005030fc(0);
+    vif[0x0e] = FUN_005030ac(0, 0);
+    vif[0x0f] = FUN_005030d4(0x2c, 0);
+    vif[0x10] = FUN_005030f4(0, 0);
+    vif[0x11] = SCE_VIF1_SET_STCYCL(4, 4, 0);
+    vif[0x14] = FUN_005030b4(0);
+}
+
+void TieInitPackets(void)
+{
+    g_TiePacketScale = 0x10000;
+
+    g_TieGsRegs[0] = SCE_GIF_SET_TAG(6, 1, 0, 0, 1, 10);
+    for (int i = 0; i < 6; i++) {
+        TieInitGsRegGroup(&g_TieGsRegs[2 + i * 10]);
     }
-    DAT_00e58408 = DAT_00e58408 + ((uint)(DAT_00e58408 - lVar3 >> 0x3f) & (int)lVar3 - DAT_00e58408)
-    ;
-  }
-  *g_pPacket = 0;
-  g_pPacket[1] = (char)DAT_00e59c10 + '\x10';
-  g_pPacket[2] = 0;
-  g_pPacket[3] = 0;
-  g_pPacket = g_pPacket + 0x10;
-  *puVar1 = 0;
-  puVar2 = g_pPacket;
-  puVar1[2] = 0;
-  puVar1[1] = (char)puVar2;
-  puVar1[3] = 0;
-  return;
+
+    /* the shells, 0x735ec8 */
+    TieInitShellVif(&g_TieShellVif[0], 9);
+    g_TieShellVif[0x19] = Gs_DmaTagByte(2, 0);
+    TieInitShellVif(&g_TieShellVif[0x24], 10);
+    g_TieShellVif[0x71] = Gs_DmaTagByte(2, 0);
+    g_TieShellVif[0x7d] = Gs_DmaTagByte(2, 0);
+    g_TieShellVif[0x89] = Gs_DmaTagByte(2, 0);
+    g_TieShellVif[0x95] = Gs_DmaTagByte(3, 0);
+
+    /* 0x736198 */
+    g_TieUnpackVif[0x00] = SCE_VIF1_SET_STCYCL(4, 4, 0);
+    g_TieUnpackVif[0x01] = SCE_VIF1_SET_UNPACK(0x123, 6, 0xc, 0);
+    g_TieUnpackVif[0x04] = SCE_VIF1_SET_STCYCL(4, 4, 0);
+    g_TieUnpackVif[0x05] = SCE_VIF1_SET_UNPACK(0x287, 6, 0xc, 0);
+    g_TieUnpackVif[0x60] = SCE_VIF1_SET_STCYCL(4, 4, 0);
+    g_TieUnpackVif[0x64] = SCE_VIF1_SET_STCYCL(4, 4, 0);
+
+    /* 0x736510: GIF tags */
+    g_TieGifTags[0x00] = SCE_GIF_SET_TAG(1, 1, 0, 0, 1, 2);
+    g_TieGifTags[0x02] = SCE_GIF_SET_TAG(2, 1, 0, 0, 1, 1);
+    g_TieGifTags[0x04] = SCE_GIF_SET_TAG(1, 1, 0, 0, 1, 0xb);
+    g_TieGifTags[0x06] = SCE_GIF_SET_TAG(1, 1, 0, 0, 1, 0xb);
+    g_TieGifTags[0x08] = SCE_GIF_SET_TAG(1, 1, 0, 0, 1, 0xd);
+    g_TieGifTags[0x0a] = SCE_GIF_SET_TAG(1, 1, 0, 0, 1, 4);
+    g_TieGifTags[0x0c] = SCE_GIF_SET_TAG(1, 1, 0, 0, 1, 4);
+    g_TieGifTags[0x0e] = SCE_GIF_SET_TAG(1, 1, 0, 0, 1, 5);
+    g_TieGifTags[0x10] = SCE_GIF_SET_TAG(1, 1, 0, 0, 1, 6);
+    g_TieGifTags[0x12] = SCE_GIF_SET_TAG(1, 1, 0, 0, 1, 7);
+    g_TieGifTags[0x14] = SCE_GIF_SET_TAG(1, 1, 0, 0, 1, 6);
+    g_TieGifTags[0x16] = SCE_GIF_SET_TAG(1, 0, 0, 0, 1, 0xf);
+    g_TieGifTags[0x18] = SCE_GIF_SET_TAG(1, 1, 0, 0, 1, 0xf);
+    g_TieGifTags[0x1a] = SCE_GIF_SET_TAG(1, 1, 0, 0, 0, 1);
+    g_TieGifTags[0x1c] = SCE_GIF_SET_TAG(1, 1, 0, 0, 0, 2);
+    g_TieGifTags[0x1e] = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0);
+    g_TieGifTags[0x20] = idol_draw::PackCmd(0, 1, 0, 1, 0x80);
+    g_TieGifTags[0x22] = SCE_GIF_SET_TAG(1, 0, 0, 0, 0, 2);
+    g_TieGifTags[0x24] = SCE_GIF_SET_TAG(1, 1, 0, 0, 1, 10);
+    g_TieGifTags[0x26] = SCE_GIF_SET_TAG(1, 1, 0, 0, 1, 2);
+    g_TieGifTags[0x28] = SCE_GIF_SET_TAG(1, 1, 0, 0, 1, 10);
+    g_TieGifTags[0x2a] = SCE_GIF_SET_TAG(1, 1, 1, 0x7c, 0, 0xc);
+    ((u32 *)g_TieGifTags)[0x5b] = Gs_DmaTagByte(2, 0);
+    g_TieGifTags[0x38] = SCE_GS_SET_TEX0(0, 1, 0x13, 4, 4, 1, 0, 0, 0x12, 0, 0, 4);
+
+    /* 0x736738: the draw packet */
+    g_TieDrawVif[0x00] = FUN_005030f4(0, 0);
+    g_TieDrawVif[0x01] = SCE_VIF1_SET_UNPACK(0, 1, 0xc, 0);
+    g_TieDrawVif[0x04] = FUN_005030bc(4, 0);
+    g_TieDrawVif[0x05] = SCE_VIF1_SET_UNPACK(0x4000, 0, 0xe, 0);
+    g_TieDrawVif[0x09] = SCE_VIF1_SET_UNPACK(0x32, 0, 0xd, 0);
+    g_TieDrawVif[0x0c] = FUN_005030f4(0, 0);
+    g_TieDrawVif[0x0d] = SCE_VIF1_SET_UNPACK(0x40cc, 0, 0xe, 0);
+    g_TieDrawVif[0x11] = SCE_VIF1_SET_UNPACK(0x80c6, 6, 0xc, 0);
+    g_TieDrawVif[0x14] = FUN_005030f4(1, 0);
+    g_TieDrawVif[0x15] = SCE_VIF1_SET_UNPACK(0x4346, 0x40, 0xe, 0);
+    g_TieDrawVif[0x18] = FUN_005030f4(0, 0);
+    g_TieDrawVif[0x19] = FUN_005030bc(0, 0);
+    g_TieDrawVif[0x1d] = SCE_VIF1_SET_UNPACK(0x1e, 0, 0xe, 0);
+    g_TieDrawVif[0x21] = FUN_005030fc(0);
+    g_TieDrawVif[0x45] = Gs_DmaTagByte(4, 0);
+    g_TieDrawVif[0x4d] = Gs_DmaTagByte(0xd, 0);
+    *(u64 *)&g_TieDrawVif[0x4e] = SCE_GIF_SET_TAG(1, 1, 1, 0x7c, 0, 0xc);
+    g_TieDrawVif[0x54] = SCE_VIF1_SET_STCYCL(4, 4, 0);
+    g_TieDrawVif[0x55] = SCE_VIF1_SET_UNPACK(0, 4, 0xc, 0);
+    g_TieDrawVif[0x59] = FUN_005030c4(10, 0);
+
+    /* 0x737c48: the texture packet */
+    g_TieTexVif[0x00] = SCE_VIF1_SET_STCYCL(4, 4, 0);
+    g_TieTexVif[0x0b] = (u32)FUN_005030dc(0);
+    g_TieTexVif[0x10] = SCE_VIF1_SET_STCYCL(1, 3, 0);
+    g_TieTexVif[0x16] = (u32)FUN_005030ec(0);
+    g_TieTexVif[0x26] = (u32)FUN_005030ec(0);
 }
 
+/* a DMA tag as this port writes it: only the low byte of the address it points to */
+static inline void TieDmaTag(u8 *tag, u8 *next)
+{
+    tag[0] = 0;
+    tag[1] = (u8)(uintptr_t)next;
+    tag[2] = 0;
+    tag[3] = 0;
+}
 
-// 0x0166ad8 (0x4 bytes)
+/* closes the packet section started at g_TieDmaMarker, and with the texture debug
+   on, tracks how much GS memory the tie textures used */
+void DrawTies_CheckTexOverflow(void)
+{
+    u8 *start = g_pPacket;
+
+    g_pPacket += 0x10;
+    TieDmaTag(g_TieDmaMarker, g_pPacket);
+
+    if (g_DebugEnables[6] != 0 && g_DebugEnables[5] != 0) {
+        int used = (int)STUB_00166e20_RET_0(g_GsRamAlloc);
+
+        STUB_001754c0();
+        if (used > 0x400000) {
+            printf("tie texture overflow\n");
+        }
+
+        if (g_TieTexPeak < used) {
+            g_TieTexPeak = used;
+        }
+    }
+
+    TieDmaTag(g_pPacket, g_TieDmaMarker + 0x10);
+    g_pPacket += 0x10;
+    TieDmaTag(start, g_pPacket);
+}
+
 void STUB_00166ad8(...)
-
 {
-  return;
 }
 
-
-// 0x0166adc (0x54 bytes)
-void ____Unused_CopyBuffers_e58810(void)
-
+/* unused */
+void TieSaveDrawState(void)
 {
-  FastMemCopy(&DAT_00e58e10,&DAT_00e5a020,0x200);
-  FastMemCopy(&DAT_00e58810,&DAT_00e59c20,0x400);
-  return;
+    FastMemCopy(g_TieTexState, g_TieTexStateSave, sizeof(g_TieTexState));
+    FastMemCopy(g_TieDrawState, g_TieDrawStateSave, sizeof(g_TieDrawState));
 }
 
-
-// 0x0166b30 (0x3c bytes)
-void ____Unused_StubCall_e59010(void)
-
+/* unused */
+void TieClearPackets(void)
 {
-  STUB_00166e28(&DAT_00e59010);
-  STUB_00166e28(&DAT_00e5a220);
-  return;
+    STUB_00166e28(g_TieDrawPacket);
+    STUB_00166e28(g_TieTexPacket);
 }
 
-
-// 0x0166b6c (0x4 bytes)
 void STUB_00166b6c(...)
-
 {
-  return;
 }
 
+/* sets or clears TIE_CLASS_DRAWN on every other tie class, starting at `first` */
+static inline void TieMarkClasses(int first, int on)
+{
+    for (int i = first; i < TieClassIndex; i += 2) {
+        u16 *flags = (u16 *)(TieClasses[i] + 0x2a);
 
-// 0x0166b70 (0x298 bytes)
-// strings: 00653c8c: 'tie texs' | 00653c9c: 'tie draw'
+        if (on) {
+            *flags |= TIE_CLASS_DRAWN;
+        }
+        else {
+            *flags &= ~TIE_CLASS_DRAWN;
+        }
+    }
+}
 
+/* starts a packet section: a DMA tag that DrawTies_CheckTexOverflow fills in */
+static inline void TieBeginSection(u8 *packet)
+{
+    g_GsRamAlloc = g_GsRamBase;
+    g_TieDmaMarker = g_pPacket;
+    g_pPacket += 0x10;
+
+    if (g_DebugEnables[6] != 0) {
+        FlushCache(0);
+        STUB_00166e1c();
+        STUB_0050045c(packet, 0x3600, 0x40);
+    }
+}
+
+/* two passes, odd then even tie classes: the texture upload, then the draw */
 void DrawTies(void)
-
 {
-  bool bVar1;
-  int iVar2;
-  int *piVar3;
-  int iVar4;
-  
-  iVar4 = 1;
-  if (1 < DAT_00e583f0) {
-    piVar3 = &DAT_00e574f4;
-    do {
-      iVar2 = *piVar3;
-      iVar4 = iVar4 + 2;
-      piVar3 = piVar3 + 2;
-      *(ushort *)(iVar2 + 0x2a) = *(ushort *)(iVar2 + 0x2a) | 8;
-    } while (iVar4 < DAT_00e583f0);
-  }
-  g_GsRamAlloc = DAT_00966ad4;
-  DAT_00e59c10 = g_pPacket;
-  g_pPacket = g_pPacket + 0x10;
-  STUB_00065630("tie texs",1);
-  if (g_DebugEnables[6] != 0) {
-    FlushCache(0);
-    STUB_00166e1c();
-    STUB_0050045c(&DAT_00e5a220,0x3600,0x40);
-  }
-  DrawTies_CheckTexOverflow();
-  FastMemCopy(&DAT_00e5a020,&DAT_00e58e10,0x200);
-  FastMemCopy(&DAT_00e59c20,&DAT_00e58810,0x400);
-  iVar4 = 1;
-  if (1 < DAT_00e583f0) {
-    piVar3 = &DAT_00e574f4;
-    do {
-      iVar2 = *piVar3;
-      iVar4 = iVar4 + 2;
-      piVar3 = piVar3 + 2;
-      *(ushort *)(iVar2 + 0x2a) = *(ushort *)(iVar2 + 0x2a) & 0xfff7;
-    } while (iVar4 < DAT_00e583f0);
-  }
-  iVar4 = 0;
-  if (0 < DAT_00e583f0) {
-    piVar3 = &DAT_00e574f0;
-    do {
-      iVar2 = *piVar3;
-      iVar4 = iVar4 + 2;
-      piVar3 = piVar3 + 2;
-      *(ushort *)(iVar2 + 0x2a) = *(ushort *)(iVar2 + 0x2a) | 8;
-    } while (iVar4 < DAT_00e583f0);
-  }
-  iVar4 = g_pPacket + 0x10;
-  g_GsRamAlloc = DAT_00966ad4;
-  DAT_00e59c10 = g_pPacket;
-  g_pPacket = iVar4;
-  if (g_DebugEnables[6] != 0) {
-    FlushCache(0);
-    STUB_00166e1c();
-    STUB_0050045c(&DAT_00e59010,0x3600,0x40);
-  }
-  STUB_00065630("tie draw",5);
-  DrawTies_CheckTexOverflow();
-  iVar4 = 0;
-  if (0 < DAT_00e583f0) {
-    piVar3 = &DAT_00e574f0;
-    do {
-      iVar2 = *piVar3;
-      iVar4 = iVar4 + 2;
-      piVar3 = piVar3 + 2;
-      bVar1 = iVar4 < DAT_00e583f0;
-      *(ushort *)(iVar2 + 0x2a) = *(ushort *)(iVar2 + 0x2a) & 0xfff7;
-    } while (bVar1);
-  }
-  FastMemCopy(g_pPacket,&DAT_007367b0,0x20);
-  STUB_0006562c("tie draw",5);
-  return;
+    TieMarkClasses(1, 1);
+    g_GsRamAlloc = g_GsRamBase;
+    g_TieDmaMarker = g_pPacket;
+    g_pPacket += 0x10;
+    STUB_00065630("tie texs", 1);
+
+    if (g_DebugEnables[6] != 0) {
+        FlushCache(0);
+        STUB_00166e1c();
+        STUB_0050045c(g_TieTexPacket, 0x3600, 0x40);
+    }
+
+    DrawTies_CheckTexOverflow();
+    FastMemCopy(g_TieTexStateSave, g_TieTexState, sizeof(g_TieTexState));
+    FastMemCopy(g_TieDrawStateSave, g_TieDrawState, sizeof(g_TieDrawState));
+    TieMarkClasses(1, 0);
+
+    TieMarkClasses(0, 1);
+    TieBeginSection(g_TieDrawPacket);
+    STUB_00065630("tie draw", 5);
+    DrawTies_CheckTexOverflow();
+    TieMarkClasses(0, 0);
+
+    FastMemCopy(g_pPacket, &g_TieDrawVif[0x1e], 0x20);
+    STUB_0006562c("tie draw", 5);
 }
-
-

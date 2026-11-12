@@ -76,11 +76,11 @@ void ResetFrameBufferForCutscene(void)
   STUB_0050307c(0,0xb,(ZERO_MASK(Cutscene)) + 0xd,9);
   STUB_00503080();
   VU1_initChain();
-  uVar1 = DAT_00966ad4;
+  uVar1 = g_GsRamBase;
   g_pPacket = 0;
   FlushCache(0);
   SetFrameBufferInfo(0x200,0x1a0,0x200,0x1c0,0,0);
-  DAT_00966ad4 = uVar1;
+  g_GsRamBase = uVar1;
   VU1_initChain();
   STUB_001754dc();
   return;

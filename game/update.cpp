@@ -1124,7 +1124,7 @@ void mode_movieUnInit(void)
     } while (iVar3 < iVar2);
   }
   iVar4 = 0;
-  iVar2 = DAT_00966ad4;
+  iVar2 = g_GsRamBase;
   if (iVar6 != 0) {
     do {
       FUN_00502dfc(auStack_4f,iVar2 >> 8,1,0x12,0,0,0x40,0x40);

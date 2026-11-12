@@ -39,7 +39,7 @@ errors	file
 0	game/skyproc.cpp
 0	game/sound.cpp
 202	game/space.cpp
-61	game/tieproc.cpp
+0	game/tieproc.cpp
 124	game/update.cpp
 568	game/update/camera0.cpp
 13	game/update/camera1.cpp
@@ -298,7 +298,7 @@ errors	file
 130	game/update/moby1379.cpp
 8	game/update/moby1380.cpp
 11	game/update/moby1381.cpp
-1	game/update/moby1387.cpp
+5	game/update/moby1387.cpp
 5	game/update/moby1388.cpp
 22	game/update/moby1389.cpp
 0	game/update/moby1390.cpp
@@ -1020,7 +1020,7 @@ errors	file
 2	game/update/sound5.cpp
 0	game/update/sound6.cpp
 485	game/vendor.cpp
-56	game/vuchain.cpp
+53	game/vuchain.cpp
 131	game/walk.cpp
 0	game/water.cpp
 23	idol/9Unk.cpp

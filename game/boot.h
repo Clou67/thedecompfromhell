@@ -128,8 +128,6 @@ extern undefined1 DAT_00a52e60; /* 0xa52e60 */
 extern undefined4 DAT_00a561c0; /* 0xa561c0 */
 extern undefined4 DAT_00cd4000; /* no defined data */
 extern undefined4 DAT_00cd4070; /* 0xcd4070 */
-extern undefined2 DAT_00e576f0; /* 0xe576f0 */
-extern undefined4 DAT_00e577f0; /* no defined data */
 extern undefined4 DAT_0159b388; /* 0x159b388 */
 extern GSMEM_UNUSED GSmem; /* 0x966ad8 */
 extern undefined4 Gameplay; /* 0xa108f0 */
@@ -148,6 +146,9 @@ extern pointer32 PTR_TOC_BASE_0070379c; /* 0x70379c */
 extern ShrubInstance *ShrubInstanceBase; /* 0xa1a794 */ /* type set in global_types.tsv */
 extern undefined4 ShrubInstanceCnt; /* 0xa1a798 */
 extern ShrubInstance *ShrubInstanceEnd; /* type set in global_types.tsv */
+extern int TieClassIndex; /* 0xe583f0: TieClasses used (DL name) */ /* type set in global_types.tsv */
+extern u8 TieClassLookup[0xc00]; /* 0xe577f0: oClass -> index in TieClasses (DL name) */ /* type set in global_types.tsv */
+extern int TieClassRef[128]; /* 0xe576f0: their oClass (DL name) */ /* type set in global_types.tsv */
 extern undefined4 TieCnt; /* 0xe583fc */
 extern undefined4 TieCntBase; /* 0xa18388 */
 extern TieInstance *TieInstanceBase; /* 0xa18384 */ /* type set in global_types.tsv */

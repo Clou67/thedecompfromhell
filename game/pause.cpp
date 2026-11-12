@@ -483,18 +483,18 @@ void OpenPauseMenu(void)
     STUB_000c8810(0);
   }
   Draw_FlushAndPresent();
-  DAT_00a52bc8 = DAT_00966ad4;
+  DAT_00a52bc8 = g_GsRamBase;
   if ((g_MenuScreen == 0xb) || (g_MenuScreen == 0xf)) {
-    DAT_00a20704 = DAT_00966ad4 + 0x40000;
-    DAT_00a20700 = DAT_00966ad4;
+    DAT_00a20704 = g_GsRamBase + 0x40000;
+    DAT_00a20700 = g_GsRamBase;
     iVar7 = 0;
-    DAT_00966ad4 = DAT_00966ad4 + 0x40400;
+    g_GsRamBase = g_GsRamBase + 0x40400;
     do {
       iVar8 = iVar7 + 1;
-      iVar12 = DAT_00966ad4 + 0x4000;
-      (&DAT_00a20708)[iVar7] = DAT_00966ad4;
+      iVar12 = g_GsRamBase + 0x4000;
+      (&DAT_00a20708)[iVar7] = g_GsRamBase;
       iVar7 = iVar8;
-      DAT_00966ad4 = iVar12;
+      g_GsRamBase = iVar12;
     } while (iVar8 < 4);
   }
   else {
@@ -902,7 +902,7 @@ LAB_0013b904:
       } while (iVar4 < 4);
       iVar9 = 0;
       iVar4 = 0;
-      DAT_00966ad4 = DAT_00a52bc8;
+      g_GsRamBase = DAT_00a52bc8;
       do {
         moby = *(MobyInstance **)((int)g_menuMobys + iVar4);
         if (moby != (MobyInstance *)0x0) {
@@ -1392,7 +1392,7 @@ void FrontEnd_InitMenu(void)
   DAT_00a52cac = g_NpcBuffer + 0x1f1800;
   Menu_InitStreamBuffers(1);
   VU1_initChain();
-  DAT_00a52bc8 = DAT_00966ad4;
+  DAT_00a52bc8 = g_GsRamBase;
   if (g_currentMenuPage != (undefined4 *)0x0) {
     iVar8 = 0;
     iVar9 = 0;
@@ -1468,7 +1468,7 @@ void FrontEnd_ShutdownMenu(void)
     }
     iVar3 = 0;
     iVar4 = 0;
-    DAT_00966ad4 = DAT_00a52bc8;
+    g_GsRamBase = DAT_00a52bc8;
     do {
       moby = *(MobyInstance **)((int)g_menuMobys + iVar4);
       if (moby != (MobyInstance *)0x0) {

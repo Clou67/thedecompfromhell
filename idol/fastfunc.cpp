@@ -3127,7 +3127,7 @@ undefined8 FUN_00502e40(void)
 
 
 // 0x0502e48 (0x8 bytes)
-undefined8 FUN_00502e48(void)
+u64 FUN_00502e48(int param_1)
 
 {
   return 0;
@@ -3207,7 +3207,7 @@ undefined8 FUN_00502e90(void)
 
 
 // 0x0502e98 (0x8 bytes)
-u64 FUN_00502e98(int param_1,int param_2,int param_3)
+u32 SCE_VIF1_SET_STCYCL(int param_1,int param_2,int param_3)
 
 {
   return 0;
@@ -3596,7 +3596,7 @@ undefined8 FUN_005030a4(void)
 
 
 // 0x05030ac (0x8 bytes)
-undefined8 FUN_005030ac(void)
+u32 FUN_005030ac(int param_1,int param_2)
 
 {
   return 0;
@@ -3604,7 +3604,7 @@ undefined8 FUN_005030ac(void)
 
 
 // 0x05030b4 (0x8 bytes)
-undefined8 FUN_005030b4(void)
+u32 FUN_005030b4(int param_1)
 
 {
   return 0;
@@ -3612,7 +3612,7 @@ undefined8 FUN_005030b4(void)
 
 
 // 0x05030bc (0x8 bytes)
-undefined8 FUN_005030bc(void)
+u32 FUN_005030bc(int param_1,int param_2)
 
 {
   return 0;
@@ -3620,7 +3620,7 @@ undefined8 FUN_005030bc(void)
 
 
 // 0x05030c4 (0x8 bytes)
-undefined8 FUN_005030c4(void)
+u32 FUN_005030c4(int param_1,int param_2)
 
 {
   return 0;
@@ -3628,7 +3628,7 @@ undefined8 FUN_005030c4(void)
 
 
 // 0x05030cc (0x8 bytes)
-undefined8 FUN_005030cc(void)
+u32 FUN_005030cc(int param_1,int param_2)
 
 {
   return 0;
@@ -3636,7 +3636,7 @@ undefined8 FUN_005030cc(void)
 
 
 // 0x05030d4 (0x8 bytes)
-undefined8 FUN_005030d4(void)
+u32 FUN_005030d4(int param_1,int param_2)
 
 {
   return 0;
@@ -3668,7 +3668,7 @@ u64 FUN_005030ec(int param_1)
 
 
 // 0x05030f4 (0x8 bytes)
-undefined8 FUN_005030f4(void)
+u32 FUN_005030f4(int param_1,int param_2)
 
 {
   return 0;
@@ -3676,7 +3676,7 @@ undefined8 FUN_005030f4(void)
 
 
 // 0x05030fc (0x8 bytes)
-undefined8 FUN_005030fc(void)
+u32 FUN_005030fc(int param_1)
 
 {
   return 0;
@@ -3684,7 +3684,7 @@ undefined8 FUN_005030fc(void)
 
 
 // 0x0503104 (0x8 bytes)
-undefined8 FUN_00503104(void)
+u32 SCE_VIF1_SET_UNPACK(int param_1,int param_2,int param_3,int param_4)
 
 {
   return 0;

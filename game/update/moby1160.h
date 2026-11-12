@@ -7,6 +7,7 @@ extern undefined4 DAT_001e6dec; /* 0x1e6dec */
 extern undefined4 DAT_001e7050; /* 0x1e7050 */
 extern undefined4 DAT_006548c0; /* no defined data */
 extern undefined4 DAT_006548d8; /* no defined data */
+extern undefined8 DAT_00736520; /* 0x736520 */
 extern undefined4 DAT_00764ff0; /* 0x764ff0 */
 extern undefined4 DAT_00765020; /* 0x765020 */
 extern undefined4 DAT_00765024; /* 0x765024 */

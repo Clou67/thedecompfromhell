@@ -315,3 +315,23 @@ g_CardMsgTextClear	u32 NAME /* 0xa20854 */
 g_CardState	int NAME /* 0xa0fd1c: CARD_STATE_* */
 g_CardStateFlags	u32 NAME /* 0xa0fd20: CARD_FLAG_* */
 g_CardStateFuncs	CardStateFunc NAME[25] /* 0x7265bc: one per CARD_STATE_* */
+g_TiePacketScale	int NAME /* 0x7386a0: 16.16 */
+g_TieGsRegs	u64 NAME[62] /* 0x7359e0: GIF REGLIST tag, then 6 groups of 10 GS registers */
+g_TieShellVif	u32 NAME[150] /* 0x735ec8: VIF code templates for the tie shells (two of 0x90 bytes, then DMA tags) */
+g_TieUnpackVif	u32 NAME[101] /* 0x736198 */
+g_TieGifTags	u64 NAME[57] /* 0x736510: GIF tags (one per 16 bytes) and GS registers */
+g_TieDrawVif	u32 NAME[90] /* 0x736738: [30..37] ends the tie draw packet */
+g_TieTexVif	u32 NAME[40] /* 0x737c48 */
+TieClasses	u8 *NAME[128] /* 0xe574f0: the level's tie classes, 0x40 bytes each (DL name) */
+TieClassRef	int NAME[128] /* 0xe576f0: their oClass (DL name) */
+TieClassLookup	u8 NAME[0xc00] /* 0xe577f0: oClass -> index in TieClasses (DL name) */
+TieClassIndex	int NAME /* 0xe583f0: TieClasses used (DL name) */
+g_TieDmaMarker	u8 *NAME /* 0xe59c10: the DMA tag that jumps over the tie texture upload */
+g_TieTexPeak	int NAME /* 0xe58408: most GS memory the tie textures have used */
+g_GsRamBase	int NAME /* 0x966ad4: where g_GsRamAlloc starts each frame */
+g_TieDrawState	u8 NAME[0x400] /* 0xe58810 */
+g_TieTexState	u8 NAME[0x200] /* 0xe58e10 */
+g_TieDrawStateSave	u8 NAME[0x400] /* 0xe59c20 */
+g_TieTexStateSave	u8 NAME[0x200] /* 0xe5a020 */
+g_TieDrawPacket	u8 NAME[0x1210] /* 0xe59010: up to g_TieDrawStateSave */
+g_TieTexPacket	u8 NAME[0x3600] /* 0xe5a220 */

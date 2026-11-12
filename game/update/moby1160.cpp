@@ -64,8 +64,8 @@ void M1160_DrawShape
   uVar8 = Gs_DmaTagByte(iVar7,0);
   *(undefined1 *)((int)g_pPacket + 3) = uVar8;
   uVar4 = uRam00736518;
-  uVar3 = DAT_00736510.piece<4,4>();
-  uVar2 = DAT_00736510.piece<0,4>();
+  uVar3 = g_TieGifTags.piece<4,4>();
+  uVar2 = g_TieGifTags.piece<0,4>();
   puVar1 = (undefined4 *)((uint)((int)g_pPacket + 0x10) & 0xfffffff0);
   g_pPacket = (undefined2 *)((int)g_pPacket + 0x10);
   puVar1[3] = uRam0073651c;
@@ -136,8 +136,8 @@ void M1160_DrawShapeScaled
   uVar10 = Gs_DmaTagByte(iVar7,0);
   *(undefined1 *)((int)g_pPacket + 3) = uVar10;
   uVar4 = uRam00736518;
-  uVar3 = DAT_00736510.piece<4,4>();
-  uVar2 = DAT_00736510.piece<0,4>();
+  uVar3 = g_TieGifTags.piece<4,4>();
+  uVar2 = g_TieGifTags.piece<0,4>();
   puVar1 = (undefined4 *)((uint)((int)g_pPacket + 0x10) & 0xfffffff0);
   g_pPacket = (undefined2 *)((int)g_pPacket + 0x10);
   puVar1[3] = uRam0073651c;
@@ -222,8 +222,8 @@ void M1160_DrawShapeRotated
   uVar10 = Gs_DmaTagByte(iVar7,0);
   *(undefined1 *)((int)g_pPacket + 3) = uVar10;
   uVar4 = uRam00736518;
-  uVar3 = DAT_00736510.piece<4,4>();
-  uVar2 = DAT_00736510.piece<0,4>();
+  uVar3 = g_TieGifTags.piece<4,4>();
+  uVar2 = g_TieGifTags.piece<0,4>();
   puVar1 = (undefined4 *)((uint)((int)g_pPacket + 0x10) & 0xfffffff0);
   g_pPacket = (undefined2 *)((int)g_pPacket + 0x10);
   puVar1[3] = uRam0073651c;

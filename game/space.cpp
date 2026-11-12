@@ -3594,7 +3594,7 @@ void SpaceTransition_LoadWad(void)
   DAT_00e5aa64 = 0x100000;
   InitMemSlots();
   g_GsRamAlloc = GSmem.base;
-  DAT_00966ad4 = GSmem.base;
+  g_GsRamBase = GSmem.base;
   FastMemSet(&MobyClassRef,0xffffffff87654321,0x10);
   FastMemSet(&MobyClassLookup,0xffffffffffffffff,0x800);
   FastMemSet(&MobyTexLookup,0xffffffffffffffff,0xe00);

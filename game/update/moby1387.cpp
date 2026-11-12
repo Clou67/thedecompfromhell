@@ -25,12 +25,12 @@ void M1387_00266f20(int param_1,longlong param_2)
   int iVar8;
   
   iVar7 = 0;
-  uVar5 = (ulonglong)(byte)(&DAT_00e577f0)[param_1];
-  if (*(short *)((&DAT_00e574f0)[(byte)(&DAT_00e577f0)[param_1]] + 0x24) != 0) {
+  uVar5 = (ulonglong)(byte)(&TieClassLookup)[param_1];
+  if (*(short *)((&TieClasses)[(byte)(&TieClassLookup)[param_1]] + 0x24) != 0) {
     iVar6 = 0;
     iVar4 = (int)(param_2 << 7);
     do {
-      iVar8 = *(int *)(*(int *)((int)&DAT_00e574f0 + (int)(uVar5 << 2)) + 0x20) + iVar6;
+      iVar8 = *(int *)(*(int *)((int)&TieClasses + (int)(uVar5 << 2)) + 0x20) + iVar6;
       fVar1 = *(float *)(iVar8 + 0x44) - *(float *)((int)&(Cuboids->pos).y + iVar4);
       fVar2 = *(float *)(iVar8 + 0x40) - *(float *)((int)&(Cuboids->pos).x + iVar4);
       fVar3 = *(float *)(iVar8 + 0x48) - *(float *)((int)&(Cuboids->pos).z + iVar4);
@@ -42,13 +42,13 @@ void M1387_00266f20(int param_1,longlong param_2)
               *(float *)((int)&(Cuboids->imatrix).v1.y + iVar4) * fVar1) < 1.0)) {
         *(undefined4 *)(iVar8 + 0x4c) = 0;
         *(undefined4 *)
-         (*(int *)((&DAT_00e574f0)[(byte)(&DAT_00e577f0)[param_1]] + 0x20) + iVar6 + 0x54) =
+         (*(int *)((&TieClasses)[(byte)(&TieClassLookup)[param_1]] + 0x20) + iVar6 + 0x54) =
              0x3f800000;
-        uVar5 = (ulonglong)(byte)(&DAT_00e577f0)[param_1];
+        uVar5 = (ulonglong)(byte)(&TieClassLookup)[param_1];
       }
       iVar7 = iVar7 + 1;
       iVar6 = iVar6 + 0x70;
-    } while (iVar7 < (int)(uint)*(ushort *)(*(int *)((int)&DAT_00e574f0 + (int)(uVar5 << 2)) + 0x24)
+    } while (iVar7 < (int)(uint)*(ushort *)(*(int *)((int)&TieClasses + (int)(uVar5 << 2)) + 0x24)
             );
   }
   return;

@@ -153,9 +153,9 @@ void VU1_addDataRefToLoc(undefined8 param_1,undefined1 param_2,undefined8 param_
   
   *g_pPacket = (char)param_3;
   g_pPacket[1] = param_2;
-  uVar1 = FUN_00502e98(4,4,0);
+  uVar1 = SCE_VIF1_SET_STCYCL(4,4,0);
   g_pPacket[2] = uVar1;
-  uVar1 = FUN_00503104(param_1,param_3,0xc,0);
+  uVar1 = SCE_VIF1_SET_UNPACK(param_1,param_3,0xc,0);
   g_pPacket[3] = uVar1;
   g_pPacket = g_pPacket + 0x10;
   return;
@@ -170,9 +170,9 @@ void VU1_addDataDirect(undefined8 param_1,undefined8 param_2,ulonglong param_3)
   
   *g_pPacket = (char)param_3;
   g_pPacket[1] = 0;
-  uVar1 = FUN_00502e98(4,4,0);
+  uVar1 = SCE_VIF1_SET_STCYCL(4,4,0);
   g_pPacket[2] = uVar1;
-  uVar1 = FUN_00503104(param_1,param_3,0xc,0);
+  uVar1 = SCE_VIF1_SET_UNPACK(param_1,param_3,0xc,0);
   g_pPacket[3] = uVar1;
   g_pPacket = g_pPacket + 0x10;
   FastMemCopy(g_pPacket,param_2,(int)((param_3 & 0xffffffff) << 4));
@@ -189,9 +189,9 @@ void VU1_skipData(undefined8 param_1,longlong param_2)
   
   *g_pPacket = (char)param_2;
   g_pPacket[1] = 0;
-  uVar1 = FUN_00502e98(4,4,0);
+  uVar1 = SCE_VIF1_SET_STCYCL(4,4,0);
   g_pPacket[2] = uVar1;
-  uVar1 = FUN_00503104(param_1,param_2,0xc,0);
+  uVar1 = SCE_VIF1_SET_UNPACK(param_1,param_2,0xc,0);
   g_pPacket[3] = uVar1;
   g_pPacket = g_pPacket + (int)(param_2 << 4) + 0x10;
   return;

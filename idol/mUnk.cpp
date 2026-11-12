@@ -250,12 +250,12 @@ void FUN_004d3044(void)
   VU1_setBufSizeByLevel();
   InitMemSlots();
   g_GsRamAlloc = GSmem.base;
-  DAT_00966ad4 = GSmem.base;
+  g_GsRamBase = GSmem.base;
   FastMemSet(&MobyClassRef,0xffffffff87654321,0x10);
   FastMemSet(&MobyClassLookup,0xffffffffffffffff,0x800);
   FastMemSet(&MobyTexLookup,0xffffffffffffffff,0xe00);
   FastMemSet(&MobyMipDists,0,0xe0);
-  FastMemSet(&DAT_00e577f0,0xffffffffffffffff,0xc00);
+  FastMemSet(&TieClassLookup,0xffffffffffffffff,0xc00);
   FastMemSet(&DAT_00e59410,0xffffffffffffffff,0x800);
   FastMemSet(&DAT_00e58c10,0,0x80);
   InitViewContext();

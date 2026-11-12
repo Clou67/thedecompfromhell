@@ -1061,15 +1061,15 @@ u8 *LoadGameplayFile(int reload)
     TieCnt = TieCntBase;
     g_TieInstance = TieInstanceBase;
     TieInstanceEnd = TieInstanceBase + TieCntBase;
-    DAT_00e583f0 = 0;
+    TieClassIndex = 0;
     for (u32 i = 0; i < DAT_00a15f80; i++) {
         u8 *entry = (u8 *)DAT_00a15f7c + i * 0x40;
         u16 id = *(u16 *)(entry + 0x30);
 
-        (&DAT_00e574f0)[i] = (int)entry;
-        (&DAT_00e576f0)[i] = id;
-        (&DAT_00e577f0)[id] = (u8)i;
-        DAT_00e583f0 = i + 1;
+        TieClasses[i] = entry;
+        TieClassRef[i] = id;
+        TieClassLookup[id] = (u8)i;
+        TieClassIndex = i + 1;
     }
     g_ShrubInstance = ShrubInstanceBase;
     ShrubInstanceEnd = ShrubInstanceBase + ShrubInstanceCnt;
