@@ -3,9 +3,10 @@
 // 2 functions, 0x4cf014-0x4cf144
 #include "game/update/moby997.h"
 #include "game/hero.h"
-#include "game/loaders.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
+#include "game/path.h"
+#include "game/respawn.h"
 
 // 0x04cf014 (0x14 bytes)
 void M997_004cf014(void)
@@ -35,8 +36,8 @@ void UpdateMoby_997(MobyInstance *moby)
     pfVar3[2] = (moby->pos).z;
     pfVar3[3] = (moby->pos).w;
     uVar2 = moby->uid;
-    if (((&DAT_00a545c4)[(short)uVar2] != '\0') ||
-       ((*(uint *)(&DAT_00a0cd1c + Level * 0x100 + (int)((longlong)((int)(short)uVar2 >> 5) << 2)) &
+    if (((&g_Checkpoint.objState[0])[(short)uVar2] != '\0') ||
+       ((*(uint *)(&g_LevelObjBits + Level * 0x100 + (int)((longlong)((int)(short)uVar2 >> 5) << 2)) &
         1 << (uVar2 & 0x1f)) != 0)) {
       moby->state = '\x01';
     }

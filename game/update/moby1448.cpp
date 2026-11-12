@@ -5,10 +5,10 @@
 #include "game/camera.h"
 #include "game/draw.h"
 #include "game/hero.h"
-#include "game/loaders.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/pad.h"
+#include "game/path.h"
 #include "game/respawn.h"
 #include "game/sound.h"
 #include "game/space.h"
@@ -1243,8 +1243,8 @@ void UpdateMoby_1448(MobyInstance *moby)
   if (bVar1 < 2) {
     if (bVar1 == 0) {
       uVar15 = moby->uid;
-      if (((&DAT_00a545c4)[(short)uVar15] != '\0') ||
-         ((*(uint *)(&DAT_00a0cd1c + Level * 0x100 + (int)((longlong)((int)(short)uVar15 >> 5) << 2)
+      if (((&g_Checkpoint.objState[0])[(short)uVar15] != '\0') ||
+         ((*(uint *)(&g_LevelObjBits + Level * 0x100 + (int)((longlong)((int)(short)uVar15 >> 5) << 2)
                     ) & 1 << (uVar15 & 0x1f)) != 0)) {
         *(undefined4 *)((int)pvVar16 + 0x94) = 0;
         *(undefined4 *)((int)pvVar16 + 0x80) = 0;
@@ -1313,8 +1313,8 @@ void UpdateMoby_1448(MobyInstance *moby)
       pCVar25 = Cuboids;
       if (*(int *)((int)pvVar16 + 0xa8) == 0) {
         uVar15 = moby->uid;
-        if (((&DAT_00a545c4)[(short)uVar15] != '\0') ||
-           ((*(uint *)(&DAT_00a0cd1c +
+        if (((&g_Checkpoint.objState[0])[(short)uVar15] != '\0') ||
+           ((*(uint *)(&g_LevelObjBits +
                       Level * 0x100 + (int)((longlong)((int)(short)uVar15 >> 5) << 2)) &
             1 << (uVar15 & 0x1f)) != 0)) {
           uVar36 = *(uint *)((int)pvVar16 + 0x94) ^ 1;
@@ -1604,10 +1604,10 @@ void UpdateMoby_1448(MobyInstance *moby)
       uVar15 = moby->uid;
       iVar18 = (int)((longlong)((int)(short)uVar15 >> 5) << 2);
       iVar31 = (int)((longlong)((int)(short)uVar15 >> 5) << 2);
-      uVar36 = *(uint *)(&DAT_00a54dd0 + iVar31);
-      *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar18) =
-           *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar18) | 1 << (uVar15 & 0x1f);
-      *(uint *)(&DAT_00a54dd0 + iVar31) = uVar36 | 1 << (uVar15 & 0x1f);
+      uVar36 = *(uint *)(&g_CheckpointBits + iVar31);
+      *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar18) =
+           *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar18) | 1 << (uVar15 & 0x1f);
+      *(uint *)(&g_CheckpointBits + iVar31) = uVar36 | 1 << (uVar15 & 0x1f);
     }
   }
   else if (bVar1 < 4) {

@@ -5,9 +5,9 @@
 #include "game/update/moby1101.h"
 #include "game/freeze.h"
 #include "game/hero.h"
-#include "game/loaders.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
+#include "game/path.h"
 #include "game/respawn.h"
 #include "game/sound.h"
 #include "game/space.h"
@@ -81,8 +81,8 @@ void UpdateMoby_1101(MobyInstance *moby)
       return;
     }
     uVar2 = moby->uid;
-    if (((&DAT_00a545c4)[(short)uVar2] == '\0') &&
-       ((*(uint *)(&DAT_00a0cd1c + Level * 0x100 + (int)((longlong)((int)(short)uVar2 >> 5) << 2)) &
+    if (((&g_Checkpoint.objState[0])[(short)uVar2] == '\0') &&
+       ((*(uint *)(&g_LevelObjBits + Level * 0x100 + (int)((longlong)((int)(short)uVar2 >> 5) << 2)) &
         1 << (uVar2 & 0x1f)) == 0)) {
       uVar5 = *puVar4;
       iVar9 = (int)(((ulonglong)uVar5 & 0xffffff) << 8);
@@ -150,10 +150,10 @@ LAB_001be2e0:
     iVar8 = (int)((longlong)((int)(short)uVar2 >> 5) << 2);
     iVar9 = (int)((longlong)((int)(short)uVar2 >> 5) << 2);
     MVar3 = moby->oClass;
-    uVar5 = *(uint *)(&DAT_00a54dd0 + iVar9);
-    *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar8) =
-         *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar8) | 1 << (uVar2 & 0x1f);
-    *(uint *)(&DAT_00a54dd0 + iVar9) = uVar5 | 1 << (uVar2 & 0x1f);
+    uVar5 = *(uint *)(&g_CheckpointBits + iVar9);
+    *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar8) =
+         *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar8) | 1 << (uVar2 & 0x1f);
+    *(uint *)(&g_CheckpointBits + iVar9) = uVar5 | 1 << (uVar2 & 0x1f);
     if (MVar3 == UPPER_DOOR_044D) {
       PlayMobySound(1,0,moby);
     }

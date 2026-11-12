@@ -8,9 +8,9 @@
 #include "game/help.h"
 #include "game/hero.h"
 #include "game/initsky.h"
-#include "game/loaders.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
+#include "game/path.h"
 #include "game/respawn.h"
 #include "game/space.h"
 #include "game/update/camera19.h"
@@ -121,8 +121,8 @@ void UpdateMoby_1421(MobyInstance *moby)
   if (bVar1 < 2) {
     if (bVar1 == 0) {
       moby->updateDistance = -1;
-      if (((g_heroType == '\0') && (uVar3 = moby->uid, (&DAT_00a545c4)[(short)uVar3] == '\0')) &&
-         ((*(uint *)(&DAT_00a0cd1c + Level * 0x100 + (int)((longlong)((int)(short)uVar3 >> 5) << 2))
+      if (((g_heroType == '\0') && (uVar3 = moby->uid, (&g_Checkpoint.objState[0])[(short)uVar3] == '\0')) &&
+         ((*(uint *)(&g_LevelObjBits + Level * 0x100 + (int)((longlong)((int)(short)uVar3 >> 5) << 2))
           & 1 << (uVar3 & 0x1f)) == 0)) {
         piVar4[1] = (int)fVar2;
         moby->state = '\x01';
@@ -133,8 +133,8 @@ void UpdateMoby_1421(MobyInstance *moby)
         moby->state = '\x03';
       }
     }
-    else if (((g_heroType == '\0') && (uVar3 = moby->uid, (&DAT_00a545c4)[(short)uVar3] == '\0')) &&
-            ((*(uint *)(&DAT_00a0cd1c +
+    else if (((g_heroType == '\0') && (uVar3 = moby->uid, (&g_Checkpoint.objState[0])[(short)uVar3] == '\0')) &&
+            ((*(uint *)(&g_LevelObjBits +
                        Level * 0x100 + (int)((longlong)((int)(short)uVar3 >> 5) << 2)) &
              1 << (uVar3 & 0x1f)) == 0)) {
       iVar7 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar4[3]);
@@ -142,10 +142,10 @@ void UpdateMoby_1421(MobyInstance *moby)
         uVar3 = moby->uid;
         iVar6 = (int)((longlong)((int)(short)moby->uid >> 5) << 2);
         iVar7 = (int)((longlong)((int)(short)uVar3 >> 5) << 2);
-        uVar5 = *(uint *)(&DAT_00a54dd0 + iVar7);
-        *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar6) =
-             *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar6) | 1 << (moby->uid & 0x1f);
-        *(uint *)(&DAT_00a54dd0 + iVar7) = uVar5 | 1 << (uVar3 & 0x1f);
+        uVar5 = *(uint *)(&g_CheckpointBits + iVar7);
+        *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar6) =
+             *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar6) | 1 << (moby->uid & 0x1f);
+        *(uint *)(&g_CheckpointBits + iVar7) = uVar5 | 1 << (uVar3 & 0x1f);
         iVar7 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar4[3]);
         if (iVar7 != 0) {
           Cam19_Enable(piVar4[4]);
@@ -170,8 +170,8 @@ void UpdateMoby_1421(MobyInstance *moby)
     }
   }
   else if ((((bVar1 < 4) && (g_heroType == '\0')) &&
-           (uVar3 = moby->uid, (&DAT_00a545c4)[(short)uVar3] == '\0')) &&
-          ((*(uint *)(&DAT_00a0cd1c + Level * 0x100 + (int)((longlong)((int)(short)uVar3 >> 5) << 2)
+           (uVar3 = moby->uid, (&g_Checkpoint.objState[0])[(short)uVar3] == '\0')) &&
+          ((*(uint *)(&g_LevelObjBits + Level * 0x100 + (int)((longlong)((int)(short)uVar3 >> 5) << 2)
                      ) & 1 << (uVar3 & 0x1f)) == 0)) {
     dVar8 = (double)FastWrapRot(fVar2,1.3962634);
     (moby->rotation).y = (float)dVar8;

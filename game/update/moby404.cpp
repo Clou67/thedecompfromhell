@@ -543,7 +543,7 @@ void UpdateMoby_404(MobyInstance *moby)
         else {
           pMVar5 = g_MobyInstance + *piVar4;
           if (((pMVar5 == (MobyInstance *)0x0) || (pMVar5->state == 0xfd || pMVar5->state == 0xfe))
-             || ((*(uint *)(&DAT_00a0cd1c +
+             || ((*(uint *)(&g_LevelObjBits +
                            Level * 0x100 + (int)((longlong)((int)(short)pMVar5->uid >> 5) << 2)) &
                  1 << (pMVar5->uid & 0x1f)) != 0)) {
             piVar4[1] = 0x3f800000;

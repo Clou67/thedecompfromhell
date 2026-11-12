@@ -239,7 +239,7 @@ void UpdateMoby_1805(MobyInstance *moby)
   GPiece<16> auStack_60;
   
   lVar8 = (longlong)(int)moby;
-  if ((*(uint *)(&DAT_00a0cd1c + Level * 0x100 + (int)((longlong)((int)(short)moby->uid >> 5) << 2))
+  if ((*(uint *)(&g_LevelObjBits + Level * 0x100 + (int)((longlong)((int)(short)moby->uid >> 5) << 2))
       & 1 << (moby->uid & 0x1f)) == 0) {
     pvVar4 = moby->pVar;
     uVar11 = ZEXT48(pvVar4);
@@ -278,11 +278,11 @@ void UpdateMoby_1805(MobyInstance *moby)
       uVar3 = moby->uid;
       iVar7 = (int)((longlong)((int)(short)uVar3 >> 5) << 2);
       iVar9 = (int)((longlong)((int)(short)uVar3 >> 5) << 2);
-      uVar5 = *(uint *)(&DAT_00a54dd0 + iVar9);
+      uVar5 = *(uint *)(&g_CheckpointBits + iVar9);
       iVar10 = 0;
-      *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar7) =
-           *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar7) | 1 << (uVar3 & 0x1f);
-      *(uint *)(&DAT_00a54dd0 + iVar9) = uVar5 | 1 << (uVar3 & 0x1f);
+      *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar7) =
+           *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar7) | 1 << (uVar3 & 0x1f);
+      *(uint *)(&g_CheckpointBits + iVar9) = uVar5 | 1 << (uVar3 & 0x1f);
       dVar12 = 1.5;
       uVar13 = 0;
       do {

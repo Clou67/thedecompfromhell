@@ -8,6 +8,8 @@
 #include "game/loaders.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
+#include "game/path.h"
+#include "game/respawn.h"
 #include "game/sound.h"
 
 // 0x01ee690 (0x14 bytes)
@@ -44,7 +46,7 @@ char * UpdateMoby_1179(MobyInstance *moby)
     fVar3 = (moby->pos).z;
     *(ushort *)(pcVar7 + 0x3e) = *(ushort *)(pcVar7 + 0x3e) | 8;
     if (((Level == Pokitaru) && (moby->levelFlagIdx != -1)) &&
-       ((uVar4 = moby->uid, (&DAT_00a545c4)[(short)uVar4] != '\0' ||
+       ((uVar4 = moby->uid, (&g_Checkpoint.objState[0])[(short)uVar4] != '\0' ||
         ((*(uint *)((int)((longlong)((int)(short)uVar4 >> 5) << 2) + 0xa0d81c) & 1 << (uVar4 & 0x1f)
          ) != 0)))) {
       moby->state = '\x02';
@@ -63,10 +65,10 @@ char * UpdateMoby_1179(MobyInstance *moby)
         bVar2 = moby->levelFlagIdx;
         if (bVar2 != 0xff) {
           uVar4 = moby->uid;
-          (&DAT_00a53964)[(short)uVar4] = bVar2 + 2;
+          (&g_CheckpointLive.objState[0])[(short)uVar4] = bVar2 + 2;
           if ((bVar2 == 0xff) ||
              (((&DAT_00a202c0)[bVar2] != -1 && (g_LevelFlags[0xb][bVar2] == -1)))) {
-            (&DAT_00a545c4)[(short)uVar4] = bVar2 + 2;
+            (&g_Checkpoint.objState[0])[(short)uVar4] = bVar2 + 2;
           }
         }
       }

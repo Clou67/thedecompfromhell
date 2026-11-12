@@ -15,7 +15,9 @@
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/partupd.h"
+#include "game/path.h"
 #include "game/pause.h"
+#include "game/respawn.h"
 #include "game/sound.h"
 #include "game/update.h"
 #include "game/update/moby987.h"
@@ -360,10 +362,10 @@ LAB_003f4dec:
       if (moby < MobyInstancePermEnd) {
         bVar2 = moby->levelFlagIdx;
         uVar6 = moby->uid;
-        (&DAT_00a53964)[(short)uVar6] = bVar2 + 2;
+        (&g_CheckpointLive.objState[0])[(short)uVar6] = bVar2 + 2;
         if ((bVar2 == 0xff) ||
            (((&DAT_00a202c0)[bVar2] != -1 && (g_LevelFlags[Level][bVar2] == -1)))) {
-          (&DAT_00a545c4)[(short)uVar6] = bVar2 + 2;
+          (&g_Checkpoint.objState[0])[(short)uVar6] = bVar2 + 2;
         }
       }
       DeleteMoby(moby);

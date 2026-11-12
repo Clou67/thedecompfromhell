@@ -8,10 +8,10 @@
 #include "game/collproc.h"
 #include "game/debug.h"
 #include "game/hero.h"
-#include "game/loaders.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/partupd.h"
+#include "game/path.h"
 #include "game/respawn.h"
 #include "game/sound.h"
 #include "game/update/moby819.h"
@@ -965,16 +965,16 @@ void UpdateMoby_491(MobyInstance *moby)
             NO_UPDATE|DISABLED) | (UNK_40|DISABLED);
       *(undefined1 *)((int)pvVar5 + 0x58) = 0;
       uVar3 = moby->uid;
-      (&DAT_00a53964)[(short)uVar3] = 0;
-      (&DAT_00a545c4)[(short)uVar3] = 0;
+      (&g_CheckpointLive.objState[0])[(short)uVar3] = 0;
+      (&g_Checkpoint.objState[0])[(short)uVar3] = 0;
       iVar18 = (int)((longlong)((int)(short)uVar3 >> 5) << 2);
       uVar4 = moby->uid;
       iVar10 = (int)((longlong)((int)(short)uVar4 >> 5) << 2);
-      uVar9 = *(uint *)(&DAT_00a54dd0 + iVar10);
-      *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar18) =
-           *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar18) & ~(1 << (uVar3 & 0x1f));
+      uVar9 = *(uint *)(&g_CheckpointBits + iVar10);
+      *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar18) =
+           *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar18) & ~(1 << (uVar3 & 0x1f));
       bVar1 = g_heroType != '\x02';
-      *(uint *)(&DAT_00a54dd0 + iVar10) = uVar9 & ~(1 << (uVar4 & 0x1f));
+      *(uint *)(&g_CheckpointBits + iVar10) = uVar9 & ~(1 << (uVar4 & 0x1f));
       if (bVar1) {
         moby->state = '\0';
       }

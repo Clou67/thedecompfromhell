@@ -4,11 +4,12 @@
 #include "game/update/moby816.h"
 #include "game/camera.h"
 #include "game/hero.h"
-#include "game/loaders.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/pad.h"
 #include "game/partupd.h"
+#include "game/path.h"
+#include "game/respawn.h"
 #include "game/sound.h"
 #include "idol/mUnk.h"
 
@@ -1034,8 +1035,8 @@ void UpdateMoby_816(MobyInstance *moby)
     *(undefined4 *)((int)pvVar10 + 0x74) = 0xffffffff;
     moby->collision = (ushort *)0x0;
     moby->state = '\x01';
-    if (((&DAT_00a545c4)[(short)uVar9] != '\0') ||
-       ((*(uint *)(&DAT_00a0cd1c + Level * 0x100 + (int)((longlong)((int)(short)uVar9 >> 5) << 2)) &
+    if (((&g_Checkpoint.objState[0])[(short)uVar9] != '\0') ||
+       ((*(uint *)(&g_LevelObjBits + Level * 0x100 + (int)((longlong)((int)(short)uVar9 >> 5) << 2)) &
         1 << (uVar9 & 0x1f)) != 0)) {
       DeleteMoby(moby);
       return;

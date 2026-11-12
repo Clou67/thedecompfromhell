@@ -8,9 +8,10 @@
 #include "game/draw.h"
 #include "game/freeze.h"
 #include "game/hero.h"
-#include "game/loaders.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
+#include "game/path.h"
+#include "game/respawn.h"
 #include "game/space.h"
 #include "game/update.h"
 #include "game/update/camera5.h"
@@ -142,8 +143,8 @@ void UpdateMoby_737(MobyInstance *moby)
     }
     else {
       uVar3 = moby->uid;
-      if (((&DAT_00a545c4)[(short)uVar3] == '\0') &&
-         ((*(uint *)(&DAT_00a0cd1c + Level * 0x100 + (int)((longlong)((int)(short)uVar3 >> 5) << 2))
+      if (((&g_Checkpoint.objState[0])[(short)uVar3] == '\0') &&
+         ((*(uint *)(&g_LevelObjBits + Level * 0x100 + (int)((longlong)((int)(short)uVar3 >> 5) << 2))
           & 1 << (uVar3 & 0x1f)) == 0)) {
         iVar7 = MB_IsPntInCuboid(&g_heroPosition,(longlong)(int)pos[8]);
         if ((iVar7 != 0) || (moby->setByGroup == '\x01')) {

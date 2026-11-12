@@ -12,6 +12,8 @@
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/pad.h"
+#include "game/path.h"
+#include "game/respawn.h"
 #include "game/update/moby751.h"
 #include "game/vendor.h"
 #include "idol/mUnk.h"
@@ -101,10 +103,10 @@ void UpdateMoby_429(MobyInstance *moby)
     else {
       bVar4 = moby->levelFlagIdx;
       uVar8 = moby->uid;
-      (&DAT_00a53964)[(short)uVar8] = bVar4 + 2;
+      (&g_CheckpointLive.objState[0])[(short)uVar8] = bVar4 + 2;
       if ((bVar4 == 0xff) || (((&DAT_00a202c0)[bVar4] != -1 && (g_LevelFlags[Level][bVar4] == -1))))
       {
-        (&DAT_00a545c4)[(short)uVar8] = bVar4 + 2;
+        (&g_Checkpoint.objState[0])[(short)uVar8] = bVar4 + 2;
       }
       if (pfVar9[0x4c] == -NAN) {
         fVar19 = (float)RegisterHUDCallback

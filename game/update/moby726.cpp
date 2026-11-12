@@ -5,9 +5,9 @@
 #include "game/update/moby726.h"
 #include "game/camera.h"
 #include "game/hero.h"
-#include "game/loaders.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
+#include "game/path.h"
 #include "game/respawn.h"
 #include "game/sound.h"
 #include "idol/fastfunc.h"
@@ -91,17 +91,17 @@ void UpdateMoby_726(MobyInstance *moby)
   }
   if ((((*(int *)((int)pvVar9 + 0xc0) == -1) ||
        (iVar19 = MB_IsPntInCuboid(&g_heroPosition,(longlong)*(int *)((int)pvVar9 + 0xc0)),
-       iVar19 != 0)) || (uVar8 = moby->uid, (&DAT_00a545c4)[(short)uVar8] != '\0')) ||
-     ((*(uint *)(&DAT_00a0cd1c + Level * 0x100 + (int)((longlong)((int)(short)uVar8 >> 5) << 2)) &
+       iVar19 != 0)) || (uVar8 = moby->uid, (&g_Checkpoint.objState[0])[(short)uVar8] != '\0')) ||
+     ((*(uint *)(&g_LevelObjBits + Level * 0x100 + (int)((longlong)((int)(short)uVar8 >> 5) << 2)) &
       1 << (uVar8 & 0x1f)) != 0)) {
     if (*(int *)((int)pvVar9 + 0xc0) != -1) {
       uVar8 = moby->uid;
       iVar17 = (int)((longlong)((int)(short)uVar8 >> 5) << 2);
       iVar19 = (int)((longlong)((int)(short)uVar8 >> 5) << 2);
-      uVar12 = *(uint *)(&DAT_00a54dd0 + iVar19);
-      *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar17) =
-           *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar17) | 1 << (uVar8 & 0x1f);
-      *(uint *)(&DAT_00a54dd0 + iVar19) = uVar12 | 1 << (uVar8 & 0x1f);
+      uVar12 = *(uint *)(&g_CheckpointBits + iVar19);
+      *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar17) =
+           *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar17) | 1 << (uVar8 & 0x1f);
+      *(uint *)(&g_CheckpointBits + iVar19) = uVar12 | 1 << (uVar8 & 0x1f);
       *(undefined4 *)((int)pvVar9 + 0xc0) = 0xffffffff;
     }
     bVar18 = true;

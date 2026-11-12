@@ -5,9 +5,9 @@
 #include "game/camera.h"
 #include "game/draw.h"
 #include "game/hero.h"
-#include "game/loaders.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
+#include "game/path.h"
 #include "game/respawn.h"
 #include "game/sound.h"
 #include "game/space.h"
@@ -193,12 +193,12 @@ undefined4 * UpdateMoby_701(MobyInstance *moby)
         PlayMobySound(0,0,moby);
         LVar11 = Level;
         uVar4 = moby->uid;
-        puVar14 = (undefined4 *)(&DAT_00a0cd1c + ((int)(short)uVar4 >> 5) * 4);
+        puVar14 = (undefined4 *)(&g_LevelObjBits + ((int)(short)uVar4 >> 5) * 4);
         (moby->pos).z = (float)((double)*(float *)((int)pvVar5 + 0x78) - dVar27);
         iVar13 = (int)((longlong)((int)(short)uVar4 >> 5) << 2);
-        uVar7 = *(uint *)(&DAT_00a54dd0 + iVar13);
+        uVar7 = *(uint *)(&g_CheckpointBits + iVar13);
         puVar14[LVar11 * 0x40] = puVar14[LVar11 * 0x40] | 1 << (uVar4 & 0x1f);
-        *(uint *)(&DAT_00a54dd0 + iVar13) = uVar7 | 1 << (uVar4 & 0x1f);
+        *(uint *)(&g_CheckpointBits + iVar13) = uVar7 | 1 << (uVar4 & 0x1f);
       }
     }
   }
@@ -307,9 +307,9 @@ undefined4 * UpdateMoby_701(MobyInstance *moby)
       *(f32 *)((int)pvVar5 + 0x78) = (moby->pos).z;
       *(f32 *)((int)pvVar5 + 0x7c) = (moby->pos).w;
       moby->state = '\x01';
-      if (((&DAT_00a545c4)[(short)uVar4] != '\0') ||
+      if (((&g_Checkpoint.objState[0])[(short)uVar4] != '\0') ||
          (puVar14 = (undefined4 *)
-                    (*(uint *)(&DAT_00a0cd1c +
+                    (*(uint *)(&g_LevelObjBits +
                               Level * 0x100 + (int)((longlong)((int)(short)uVar4 >> 5) << 2)) &
                     1 << (uVar4 & 0x1f)), puVar14 != (undefined4 *)0x0)) {
         *(undefined4 *)((int)pvVar5 + 0x6c) = 0;

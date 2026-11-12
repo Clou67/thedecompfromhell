@@ -13,6 +13,7 @@
 #include "game/memcard.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
+#include "game/path.h"
 #include "game/respawn.h"
 #include "game/space.h"
 #include "game/update.h"
@@ -603,12 +604,12 @@ void UpdateMoby_730(MobyInstance *moby)
             NO_POST_UPDATE|NO_UPDATE);
       pMVar18 = g_MobyInstance;
       if (fVar9 != -NAN) {
-        (&DAT_00a53964)[(short)g_MobyInstance[(int)fVar9].uid] =
+        (&g_CheckpointLive.objState[0])[(short)g_MobyInstance[(int)fVar9].uid] =
              g_MobyInstance[(int)fVar9].levelFlagIdx + '\x02';
         bVar1 = pMVar18[(int)pfVar27[1]].levelFlagIdx;
         if ((bVar1 == 0xff) ||
            (((&DAT_00a202c0)[bVar1] != -1 && (g_LevelFlags[Level][bVar1] == -1)))) {
-          (&DAT_00a545c4)[(short)pMVar18[(int)pfVar27[1]].uid] = bVar1 + 2;
+          (&g_Checkpoint.objState[0])[(short)pMVar18[(int)pfVar27[1]].uid] = bVar1 + 2;
         }
       }
       pMVar18 = g_MobyInstance;
@@ -634,10 +635,10 @@ void UpdateMoby_730(MobyInstance *moby)
           g_MobyInstance[(int)pfVar27[0xe]].setByGroup = '\x02';
           SaveCheckpointMobyVar
                     (&g_MobyInstance[(int)pfVar27[0xd]].setByGroup,1,g_MobyInstance + (int)pfVar27[0xd],
-                     1,(int *)&DAT_00a53560);
+                     1,(int *)&g_CheckpointLive.vars);
           SaveCheckpointMobyVar
                     (&g_MobyInstance[(int)pfVar27[0xe]].setByGroup,1,g_MobyInstance + (int)pfVar27[0xe],
-                     1,(int *)&DAT_00a53560);
+                     1,(int *)&g_CheckpointLive.vars);
         }
       }
       SetLevelFlag(moby->levelFlagIdx);

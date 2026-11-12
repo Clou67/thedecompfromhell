@@ -1852,7 +1852,6 @@ extern undefined4 DAT_0095e5f8; /* 0x95e5f8 */
 extern undefined4 DAT_0095e60c; /* no defined data */
 extern undefined4 DAT_0096bda0; /* 0x96bda0 */
 extern undefined4 DAT_0096bda4; /* 0x96bda4 */
-extern undefined4 DAT_00a0cd1c; /* no defined data */
 extern undefined4 DAT_00a15d30; /* 0xa15d30 */
 extern undefined4 DAT_00a15f24; /* 0xa15f24 */
 extern undefined4 DAT_00a20498; /* no defined data */
@@ -1863,7 +1862,6 @@ extern undefined2 DAT_00a51f68; /* 0xa51f68 */
 extern undefined2 DAT_00a51f6a; /* 0xa51f6a */
 extern undefined4 DAT_00a51fb4; /* 0xa51fb4 */
 extern undefined4 DAT_00a51fb8; /* 0xa51fb8 */
-extern undefined1 DAT_00a53964; /* 0xa53964 */
 extern undefined4 DAT_00e5aa90; /* 0xe5aa90 */
 extern undefined4 DAT_00e5aa94; /* 0xe5aa94 */
 extern undefined4 DAT_00e5aa98; /* 0xe5aa98 */
@@ -1888,6 +1886,7 @@ extern undefined2 g_GroupIterIdx; /* 0xa51fac */
 extern undefined4 g_GroupIterMoby; /* 0xa51fb0 */
 extern undefined4 g_GroupIterPtr; /* 0xa51fa8 */
 extern undefined4 g_HelpMsgOwner; /* 0xa15f28 */
+extern u32 g_LevelObjBits[][64]; /* 0xa0cd1c: per level, objects whose state was ever committed at a checkpoint (one bit each); part of the save */ /* type set in global_types.tsv */
 extern undefined4 g_MobyGroups; /* 0xa49184 */
 extern undefined4 g_NumLameShadows; /* 0x95e5e8 */
 extern undefined4 g_NumMobyGroups; /* 0xa49180 */

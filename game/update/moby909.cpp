@@ -11,6 +11,7 @@
 #include "game/mission.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
+#include "game/path.h"
 #include "game/respawn.h"
 #include "game/space.h"
 #include "game/update.h"
@@ -189,12 +190,12 @@ void UpdateMoby_909(MobyInstance *moby)
         (g_MobyInstance[iVar21].oClass == GARAGE_DOOR)) && (g_MobyInstance[iVar21].state == '\0')) {
       g_MobyInstance[iVar21].state = '\x01';
       pMVar16 = g_MobyInstance;
-      (&DAT_00a53964)[(short)g_MobyInstance[*(int *)((int)pvVar9 + 0x144)].uid] =
+      (&g_CheckpointLive.objState[0])[(short)g_MobyInstance[*(int *)((int)pvVar9 + 0x144)].uid] =
            g_MobyInstance[*(int *)((int)pvVar9 + 0x144)].levelFlagIdx + '\x02';
       bVar2 = pMVar16[*(int *)((int)pvVar9 + 0x144)].levelFlagIdx;
       if ((bVar2 == 0xff) || (((&DAT_00a202c0)[bVar2] != -1 && (g_LevelFlags[Level][bVar2] == -1))))
       {
-        (&DAT_00a545c4)[(short)pMVar16[*(int *)((int)pvVar9 + 0x144)].uid] = bVar2 + 2;
+        (&g_Checkpoint.objState[0])[(short)pMVar16[*(int *)((int)pvVar9 + 0x144)].uid] = bVar2 + 2;
       }
     }
     if (((UnlockableItems.heliPack == '\0') || (g_LevelFlags[Level][(byte)moby->levelFlagIdx] != -1)
@@ -232,12 +233,12 @@ void UpdateMoby_909(MobyInstance *moby)
          (g_MobyInstance[iVar21].state == '\0')) {
         g_MobyInstance[iVar21].state = '\x01';
         pMVar16 = g_MobyInstance;
-        (&DAT_00a53964)[(short)g_MobyInstance[*(int *)((int)pvVar9 + 0x144)].uid] =
+        (&g_CheckpointLive.objState[0])[(short)g_MobyInstance[*(int *)((int)pvVar9 + 0x144)].uid] =
              g_MobyInstance[*(int *)((int)pvVar9 + 0x144)].levelFlagIdx + '\x02';
         bVar2 = pMVar16[*(int *)((int)pvVar9 + 0x144)].levelFlagIdx;
         if ((bVar2 == 0xff) ||
            (((&DAT_00a202c0)[bVar2] != -1 && (g_LevelFlags[Level][bVar2] == -1)))) {
-          (&DAT_00a545c4)[(short)pMVar16[*(int *)((int)pvVar9 + 0x144)].uid] = bVar2 + 2;
+          (&g_Checkpoint.objState[0])[(short)pMVar16[*(int *)((int)pvVar9 + 0x144)].uid] = bVar2 + 2;
         }
       }
       iVar21 = *(int *)((int)pvVar9 + 0x14c);

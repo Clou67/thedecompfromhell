@@ -10,6 +10,8 @@
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/partupd.h"
+#include "game/path.h"
+#include "game/respawn.h"
 #include "game/sound.h"
 #include "idol/fastfunc.h"
 
@@ -23,9 +25,9 @@ void M78_00459ff0(MobyInstance *param_1)
   bVar1 = param_1->levelFlagIdx;
   uVar2 = param_1->uid;
   param_1->collision = (ushort *)0x0;
-  (&DAT_00a53964)[(short)uVar2] = bVar1 + 2;
+  (&g_CheckpointLive.objState[0])[(short)uVar2] = bVar1 + 2;
   if ((bVar1 == 0xff) || (((&DAT_00a202c0)[bVar1] != -1 && (g_LevelFlags[Level][bVar1] == -1)))) {
-    (&DAT_00a545c4)[(short)uVar2] = bVar1 + 2;
+    (&g_Checkpoint.objState[0])[(short)uVar2] = bVar1 + 2;
   }
   bVar1 = param_1->setByGroup;
   if (((bVar1 != 0xff) && (g_SoundChannels[bVar1].pMoby == param_1)) &&
@@ -94,8 +96,8 @@ void UpdateMoby_78(MobyInstance *moby)
     uVar8 = moby->uid;
     moby->enabled = '\0';
     moby->modeBits = moby->modeBits | DISABLED;
-    if (((&DAT_00a545c4)[(short)uVar8] == '\0') &&
-       ((*(uint *)(&DAT_00a0cd1c + Level * 0x100 + (int)((longlong)((int)(short)uVar8 >> 5) << 2)) &
+    if (((&g_Checkpoint.objState[0])[(short)uVar8] == '\0') &&
+       ((*(uint *)(&g_LevelObjBits + Level * 0x100 + (int)((longlong)((int)(short)uVar8 >> 5) << 2)) &
         1 << (uVar8 & 0x1f)) == 0)) {
       moby->state = '\x01';
     }

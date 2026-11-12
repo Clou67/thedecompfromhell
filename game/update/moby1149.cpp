@@ -3,9 +3,9 @@
 // 2 functions, 0x1e0448-0x1e05a4
 #include "game/update/moby1149.h"
 #include "game/hero.h"
-#include "game/loaders.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
+#include "game/path.h"
 #include "game/respawn.h"
 #include "game/update.h"
 
@@ -32,18 +32,18 @@ void UpdateMoby_1149(MobyInstance *moby)
   
   uVar1 = moby->uid;
   piVar2 = (int *)moby->pVar;
-  if (((&DAT_00a545c4)[(short)uVar1] == '\0') &&
-     ((*(uint *)(&DAT_00a0cd1c + Level * 0x100 + (int)((longlong)((int)(short)uVar1 >> 5) << 2)) &
+  if (((&g_Checkpoint.objState[0])[(short)uVar1] == '\0') &&
+     ((*(uint *)(&g_LevelObjBits + Level * 0x100 + (int)((longlong)((int)(short)uVar1 >> 5) << 2)) &
       1 << (uVar1 & 0x1f)) == 0)) {
     iVar5 = MB_IsPntInCuboid(&g_heroPosition,(longlong)*piVar2);
     if ((iVar5 != 0) && (piVar2[1] != -1)) {
       uVar1 = moby->uid;
       iVar4 = (int)((longlong)((int)(short)uVar1 >> 5) << 2);
       iVar5 = (int)((longlong)((int)(short)uVar1 >> 5) << 2);
-      uVar3 = *(uint *)(&DAT_00a54dd0 + iVar5);
-      *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar4) =
-           *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar4) | 1 << (uVar1 & 0x1f);
-      *(uint *)(&DAT_00a54dd0 + iVar5) = uVar3 | 1 << (uVar1 & 0x1f);
+      uVar3 = *(uint *)(&g_CheckpointBits + iVar5);
+      *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar4) =
+           *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar4) | 1 << (uVar1 & 0x1f);
+      *(uint *)(&g_CheckpointBits + iVar5) = uVar3 | 1 << (uVar1 & 0x1f);
       mode_sceneInit(piVar2[1]);
     }
   }

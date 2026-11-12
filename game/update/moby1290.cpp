@@ -13,6 +13,8 @@
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/partupd.h"
+#include "game/path.h"
+#include "game/respawn.h"
 #include "game/update.h"
 #include "idol/fastfunc.h"
 
@@ -259,11 +261,11 @@ void UpdateMoby_1290(MobyInstance *moby)
         printf("Moby 1290 %d has no segment switch!\n",moby->uid);
       }
       else {
-        (&DAT_00a53964)[(short)g_MobyInstance[iVar4].uid] = g_MobyInstance[iVar4].levelFlagIdx + '\x02';
+        (&g_CheckpointLive.objState[0])[(short)g_MobyInstance[iVar4].uid] = g_MobyInstance[iVar4].levelFlagIdx + '\x02';
         bVar1 = pMVar6[piVar3[1]].levelFlagIdx;
         if ((bVar1 == 0xff) ||
            (((&DAT_00a202c0)[bVar1] != -1 && (g_LevelFlags[Level][bVar1] == -1)))) {
-          (&DAT_00a545c4)[(short)pMVar6[piVar3[1]].uid] = bVar1 + 2;
+          (&g_Checkpoint.objState[0])[(short)pMVar6[piVar3[1]].uid] = bVar1 + 2;
         }
       }
       if (moby->levelFlagIdx != -1) {

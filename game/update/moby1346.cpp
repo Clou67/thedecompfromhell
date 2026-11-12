@@ -5,9 +5,9 @@
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/hud.h"
-#include "game/loaders.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
+#include "game/path.h"
 #include "game/respawn.h"
 #include "game/update/moby1258.h"
 #include "idol/fastfunc.h"
@@ -282,8 +282,8 @@ void UpdateMoby_1346(MobyInstance *moby)
   if (bVar1 < 2) {
     if (bVar1 == 0) {
       uVar12 = moby->uid;
-      if (((&DAT_00a545c4)[(short)uVar12] == '\0') &&
-         ((*(uint *)(&DAT_00a0cd1c + Level * 0x100 + (int)((longlong)((int)(short)uVar12 >> 5) << 2)
+      if (((&g_Checkpoint.objState[0])[(short)uVar12] == '\0') &&
+         ((*(uint *)(&g_LevelObjBits + Level * 0x100 + (int)((longlong)((int)(short)uVar12 >> 5) << 2)
                     ) & 1 << (uVar12 & 0x1f)) == 0)) {
         if (piVar13[1] == -1) {
           DeleteMoby(moby);
@@ -300,8 +300,8 @@ void UpdateMoby_1346(MobyInstance *moby)
   }
   else if (bVar1 < 3) {
     uVar12 = moby->uid;
-    if (((&DAT_00a545c4)[(short)uVar12] == '\0') &&
-       ((*(uint *)(&DAT_00a0cd1c + Level * 0x100 + (int)((longlong)((int)(short)uVar12 >> 5) << 2))
+    if (((&g_Checkpoint.objState[0])[(short)uVar12] == '\0') &&
+       ((*(uint *)(&g_LevelObjBits + Level * 0x100 + (int)((longlong)((int)(short)uVar12 >> 5) << 2))
         & 1 << (uVar12 & 0x1f)) == 0)) {
       pMVar23 = (MobyInstance *)0x0;
       if (((piVar13[1] != -1) &&
@@ -739,10 +739,10 @@ void UpdateMoby_1346(MobyInstance *moby)
     uVar12 = moby->uid;
     iVar17 = (int)((longlong)((int)(short)uVar12 >> 5) << 2);
     iVar16 = (int)((longlong)((int)(short)uVar12 >> 5) << 2);
-    uVar14 = *(uint *)(&DAT_00a54dd0 + iVar16);
-    *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar17) =
-         *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar17) | 1 << (uVar12 & 0x1f);
-    *(uint *)(&DAT_00a54dd0 + iVar16) = uVar14 | 1 << (uVar12 & 0x1f);
+    uVar14 = *(uint *)(&g_CheckpointBits + iVar16);
+    *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar17) =
+         *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar17) | 1 << (uVar12 & 0x1f);
+    *(uint *)(&g_CheckpointBits + iVar16) = uVar14 | 1 << (uVar12 & 0x1f);
   }
   return;
 }

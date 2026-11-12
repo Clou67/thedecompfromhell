@@ -268,7 +268,7 @@ void UpdateMoby_794(MobyInstance *moby)
            (pMVar10 = g_MobyInstance + (int)pfVar12[6], pMVar10 != (MobyInstance *)0x0)) &&
           ((pMVar10->oClass == *(MOBY_OCLASSES *)(pfVar12 + 7) &&
            ((bVar2 = pMVar10->state, bVar2 != 0xfd && bVar2 != 0xfe &&
-            ((*(uint *)(&DAT_00a0cd1c +
+            ((*(uint *)(&g_LevelObjBits +
                        Level * 0x100 + (int)((longlong)((int)(short)pMVar10->uid >> 5) << 2)) &
              1 << (pMVar10->uid & 0x1f)) == 0)))))) &&
          (((int)*(char *)((int)pfVar12 + 0x1e) == 0xffffffff ||

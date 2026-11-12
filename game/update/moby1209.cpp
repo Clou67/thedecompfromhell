@@ -6,10 +6,10 @@
 #include "game/freeze.h"
 #include "game/hero.h"
 #include "game/hud.h"
-#include "game/loaders.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
+#include "game/path.h"
 #include "game/respawn.h"
 #include "game/sound.h"
 #include "game/update.h"
@@ -330,8 +330,8 @@ void UpdateMoby_1209(MobyInstance *moby)
     }
     else {
       uVar2 = moby->uid;
-      if ((((&DAT_00a545c4)[(short)uVar2] == '\0') &&
-          ((*(uint *)(&DAT_00a0cd1c + Level * 0x100 + (int)((longlong)((int)(short)uVar2 >> 5) << 2)
+      if ((((&g_Checkpoint.objState[0])[(short)uVar2] == '\0') &&
+          ((*(uint *)(&g_LevelObjBits + Level * 0x100 + (int)((longlong)((int)(short)uVar2 >> 5) << 2)
                      ) & 1 << (uVar2 & 0x1f)) == 0)) || (*(int *)(psVar3 + 0xe) == 0)) {
         if (psVar3[2] == 0 && bVar12) {
           iVar13 = *(int *)(psVar3 + 8);
@@ -439,10 +439,10 @@ void UpdateMoby_1209(MobyInstance *moby)
     uVar2 = moby->uid;
     iVar14 = (int)((longlong)((int)(short)uVar2 >> 5) << 2);
     iVar13 = (int)((longlong)((int)(short)uVar2 >> 5) << 2);
-    uVar6 = *(uint *)(&DAT_00a54dd0 + iVar13);
-    *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar14) =
-         *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar14) | 1 << (uVar2 & 0x1f);
-    *(uint *)(&DAT_00a54dd0 + iVar13) = uVar6 | 1 << (uVar2 & 0x1f);
+    uVar6 = *(uint *)(&g_CheckpointBits + iVar13);
+    *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar14) =
+         *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar14) | 1 << (uVar2 & 0x1f);
+    *(uint *)(&g_CheckpointBits + iVar13) = uVar6 | 1 << (uVar2 & 0x1f);
   }
   return;
 }

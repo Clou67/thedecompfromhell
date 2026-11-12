@@ -4,9 +4,9 @@
 #include "game/update/moby805.h"
 #include "game/debug.h"
 #include "game/hero.h"
-#include "game/loaders.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
+#include "game/path.h"
 #include "game/respawn.h"
 
 // 0x0465d10 (0x380 bytes)
@@ -61,8 +61,8 @@ void UpdateMoby_805_CheckpointManager(MobyInstance *moby)
     uVar10 = (uint)(ZERO_MASK(piVar4[5])) & 1;
   }
   piVar4[5] = (uint)(iVar9 != 0);
-  if (((uVar10 == 0) && (uVar2 = moby->uid, (&DAT_00a545c4)[(short)uVar2] == '\0')) &&
-     ((*(uint *)(&DAT_00a0cd1c + LVar7 * 0x100 + (int)((longlong)((int)(short)uVar2 >> 5) << 2)) &
+  if (((uVar10 == 0) && (uVar2 = moby->uid, (&g_Checkpoint.objState[0])[(short)uVar2] == '\0')) &&
+     ((*(uint *)(&g_LevelObjBits + LVar7 * 0x100 + (int)((longlong)((int)(short)uVar2 >> 5) << 2)) &
       1 << (uVar2 & 0x1f)) == 0)) {
     piVar4[3] = 0;
   }
@@ -81,16 +81,16 @@ void UpdateMoby_805_CheckpointManager(MobyInstance *moby)
     }
     SetSpawnPoint(&local_30,(Vec4 *)&moby->rotation);
     uVar2 = moby->uid;
-    (&DAT_00a53964)[(short)uVar2] = 0;
-    (&DAT_00a545c4)[(short)uVar2] = 0;
+    (&g_CheckpointLive.objState[0])[(short)uVar2] = 0;
+    (&g_Checkpoint.objState[0])[(short)uVar2] = 0;
     iVar6 = (int)((longlong)((int)(short)uVar2 >> 5) << 2);
     uVar8 = (ulonglong)Level;
     uVar3 = moby->uid;
     iVar9 = (int)((longlong)((int)(short)uVar3 >> 5) << 2);
-    uVar5 = *(uint *)(&DAT_00a54dd0 + iVar9);
-    *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar6) =
-         *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar6) & ~(1 << (uVar2 & 0x1f));
-    *(uint *)(&DAT_00a54dd0 + iVar9) = uVar5 & ~(1 << (uVar3 & 0x1f));
+    uVar5 = *(uint *)(&g_CheckpointBits + iVar9);
+    *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar6) =
+         *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar6) & ~(1 << (uVar2 & 0x1f));
+    *(uint *)(&g_CheckpointBits + iVar9) = uVar5 & ~(1 << (uVar3 & 0x1f));
   }
   if ((moby->state == '\0') &&
      (g_LevelFlags[0][(int)(uVar8 << 4) + (uint)(byte)moby->levelFlagIdx] == -1)) {

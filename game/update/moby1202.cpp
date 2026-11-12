@@ -1363,7 +1363,7 @@ void UpdateMoby_1202(MobyInstance *moby)
         if ((*(int *)((int)pvVar8 + 0x1bc) != -1) &&
            (((pMVar10 = g_MobyInstance + *(int *)((int)pvVar8 + 0x1bc), pMVar10 == (MobyInstance *)0x0
              || (pMVar10->state == 0xfd || pMVar10->state == 0xfe)) ||
-            ((*(uint *)(&DAT_00a0cd1c +
+            ((*(uint *)(&g_LevelObjBits +
                        Level * 0x100 + (int)((longlong)((int)(short)pMVar10->uid >> 5) << 2)) &
              1 << (pMVar10->uid & 0x1f)) != 0)))) {
           auVar34 = ZEXT416(0xffffffff);
@@ -1441,7 +1441,7 @@ void UpdateMoby_1202(MobyInstance *moby)
         if ((*(int *)((int)pvVar8 + 0x1bc) != -1) &&
            (((pMVar10 = g_MobyInstance + *(int *)((int)pvVar8 + 0x1bc), pMVar10 == (MobyInstance *)0x0
              || (pMVar10->state == 0xfd || pMVar10->state == 0xfe)) ||
-            (((*(uint *)(&DAT_00a0cd1c +
+            (((*(uint *)(&g_LevelObjBits +
                         Level * 0x100 + (int)((longlong)((int)(short)pMVar10->uid >> 5) << 2)) &
               1 << (pMVar10->uid & 0x1f)) != 0 &&
              (g_LevelFlags[Level][(byte)pMVar10->levelFlagIdx] == -1)))))) {

@@ -8,11 +8,11 @@
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/lights.h"
-#include "game/loaders.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
 #include "game/partupd.h"
+#include "game/path.h"
 #include "game/respawn.h"
 #include "game/sound.h"
 #include "game/space.h"
@@ -1052,15 +1052,15 @@ void UpdateMoby_655(MobyInstance *moby)
           }
         }
         else {
-          (&DAT_00a53964)[(short)g_MobyInstance[iVar18].uid] = 0;
-          (&DAT_00a545c4)[(short)pMVar25[*piVar23].uid] = 0;
+          (&g_CheckpointLive.objState[0])[(short)g_MobyInstance[iVar18].uid] = 0;
+          (&g_Checkpoint.objState[0])[(short)pMVar25[*piVar23].uid] = 0;
           iVar18 = (int)((longlong)((int)(short)pMVar25[*piVar23].uid >> 5) << 2);
-          *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar18) =
-               *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar18) &
+          *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar18) =
+               *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar18) &
                ~(1 << (pMVar25[*piVar23].uid & 0x1f));
           iVar18 = (int)((longlong)((int)(short)pMVar25[*piVar23].uid >> 5) << 2);
-          *(uint *)(&DAT_00a54dd0 + iVar18) =
-               *(uint *)(&DAT_00a54dd0 + iVar18) & ~(1 << (pMVar25[*piVar23].uid & 0x1f));
+          *(uint *)(&g_CheckpointBits + iVar18) =
+               *(uint *)(&g_CheckpointBits + iVar18) & ~(1 << (pMVar25[*piVar23].uid & 0x1f));
         }
         iVar17 = iVar17 + 1;
         uVar24 = uVar24 + 4;

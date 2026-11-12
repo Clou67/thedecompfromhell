@@ -5,12 +5,12 @@
 #include "game/debug.h"
 #include "game/draw.h"
 #include "game/hero.h"
-#include "game/loaders.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
 #include "game/music.h"
 #include "game/pad.h"
+#include "game/path.h"
 #include "game/pause.h"
 #include "game/respawn.h"
 #include "game/sound.h"
@@ -95,10 +95,10 @@ void M1135_001da9f8(int param_1)
   uVar1 = *(ushort *)(param_1 + 0xb2);
   iVar4 = (int)((longlong)((int)(short)uVar1 >> 5) << 2);
   iVar3 = (int)((longlong)((int)(short)uVar1 >> 5) << 2);
-  uVar2 = *(uint *)(&DAT_00a54dd0 + iVar3);
-  *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar4) =
-       *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar4) | 1 << (uVar1 & 0x1f);
-  *(uint *)(&DAT_00a54dd0 + iVar3) = uVar2 | 1 << (uVar1 & 0x1f);
+  uVar2 = *(uint *)(&g_CheckpointBits + iVar3);
+  *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar4) =
+       *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar4) | 1 << (uVar1 & 0x1f);
+  *(uint *)(&g_CheckpointBits + iVar3) = uVar2 | 1 << (uVar1 & 0x1f);
   if (*(char *)(param_1 + 0x21) == -1) {
     *(undefined1 *)(param_1 + 0x20) = 1;
   }
@@ -323,8 +323,8 @@ void UpdateMoby_1135(MobyInstance *moby)
   bVar13 = false;
   uVar1 = moby->uid;
   piVar2 = (int *)moby->pVar;
-  if (((&DAT_00a545c4)[(short)uVar1] != '\0') ||
-     ((*(uint *)(&DAT_00a0cd1c + Level * 0x100 + (int)((longlong)((int)(short)uVar1 >> 5) << 2)) &
+  if (((&g_Checkpoint.objState[0])[(short)uVar1] != '\0') ||
+     ((*(uint *)(&g_LevelObjBits + Level * 0x100 + (int)((longlong)((int)(short)uVar1 >> 5) << 2)) &
       1 << (uVar1 & 0x1f)) != 0)) {
     bVar13 = true;
   }
@@ -336,10 +336,10 @@ void UpdateMoby_1135(MobyInstance *moby)
       uVar1 = moby->uid;
       iVar10 = (int)((longlong)((int)(short)uVar1 >> 5) << 2);
       iVar7 = (int)((longlong)((int)(short)uVar1 >> 5) << 2);
-      uVar4 = *(uint *)(&DAT_00a54dd0 + iVar7);
-      *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar10) =
-           *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar10) | 1 << (uVar1 & 0x1f);
-      *(uint *)(&DAT_00a54dd0 + iVar7) = uVar4 | 1 << (uVar1 & 0x1f);
+      uVar4 = *(uint *)(&g_CheckpointBits + iVar7);
+      *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar10) =
+           *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar10) | 1 << (uVar1 & 0x1f);
+      *(uint *)(&g_CheckpointBits + iVar7) = uVar4 | 1 << (uVar1 & 0x1f);
       if (moby->group == -1) {
         moby->state = '\x01';
       }

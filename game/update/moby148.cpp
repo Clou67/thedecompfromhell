@@ -154,7 +154,7 @@ void UpdateMoby_148(MobyInstance *moby)
         moby->state = '\x01';
         iVar13 = Level * 0x100;
         moby->scale = moby->scale * 2.0;
-        if ((*(uint *)(&DAT_00a0cd1c + iVar13 + (int)((longlong)((int)(short)moby->uid >> 5) << 2))
+        if ((*(uint *)(&g_LevelObjBits + iVar13 + (int)((longlong)((int)(short)moby->uid >> 5) << 2))
             & 1 << (moby->uid & 0x1f)) != 0 && g_SeenPlanets.Kalebo != 0) {
           DeleteMoby(moby);
         }

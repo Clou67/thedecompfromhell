@@ -546,7 +546,7 @@ void UpdateMoby_1038(MobyInstance *moby)
   
   pvVar2 = moby->pVar;
   if (moby->state == 0) {
-    if (((*(uint *)(&DAT_00a0cd1c +
+    if (((*(uint *)(&g_LevelObjBits +
                    Level * 0x100 + (int)((longlong)((int)(short)moby->uid >> 5) << 2)) &
          1 << (moby->uid & 0x1f)) == 0) ||
        ((Level == Orxon && (g_LevelFlags[10][(byte)moby->levelFlagIdx] != -1)))) {
@@ -575,10 +575,10 @@ void UpdateMoby_1038(MobyInstance *moby)
       uVar1 = moby->uid;
       iVar5 = (int)((longlong)((int)(short)uVar1 >> 5) << 2);
       iVar4 = (int)((longlong)((int)(short)uVar1 >> 5) << 2);
-      uVar3 = *(uint *)(&DAT_00a54dd0 + iVar4);
-      *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar5) =
-           *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar5) & ~(1 << (uVar1 & 0x1f));
-      *(uint *)(&DAT_00a54dd0 + iVar4) = uVar3 & ~(1 << (uVar1 & 0x1f));
+      uVar3 = *(uint *)(&g_CheckpointBits + iVar4);
+      *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar5) =
+           *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar5) & ~(1 << (uVar1 & 0x1f));
+      *(uint *)(&g_CheckpointBits + iVar4) = uVar3 & ~(1 << (uVar1 & 0x1f));
     }
     else {
       moby->state = '\x02';
@@ -602,10 +602,10 @@ void UpdateMoby_1038(MobyInstance *moby)
       moby->state = '\x02';
       iVar5 = (int)((longlong)((int)(short)uVar1 >> 5) << 2);
       iVar4 = (int)((longlong)((int)(short)uVar1 >> 5) << 2);
-      uVar3 = *(uint *)(&DAT_00a54dd0 + iVar4);
-      *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar5) =
-           *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar5) | 1 << (uVar1 & 0x1f);
-      *(uint *)(&DAT_00a54dd0 + iVar4) = uVar3 | 1 << (uVar1 & 0x1f);
+      uVar3 = *(uint *)(&g_CheckpointBits + iVar4);
+      *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar5) =
+           *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar5) | 1 << (uVar1 & 0x1f);
+      *(uint *)(&g_CheckpointBits + iVar4) = uVar3 | 1 << (uVar1 & 0x1f);
     }
   }
   return;

@@ -10,10 +10,11 @@
 #include "game/draw.h"
 #include "game/freeze.h"
 #include "game/hero.h"
-#include "game/loaders.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/partupd.h"
+#include "game/path.h"
+#include "game/respawn.h"
 #include "game/sound.h"
 #include "game/update/moby1633.h"
 #include "game/update/moby437.h"
@@ -2424,8 +2425,8 @@ void UpdateMoby_1818(MobyInstance *moby)
         (moby->pos).w = pMVar17[(int)fVar22].pos.w;
         uVar9 = moby->uid;
         (moby->pos).z = fVar4 + 0.02;
-        if (((&DAT_00a545c4)[(short)uVar9] != '\0') ||
-           ((*(uint *)(&DAT_00a0cd1c +
+        if (((&g_Checkpoint.objState[0])[(short)uVar9] != '\0') ||
+           ((*(uint *)(&g_LevelObjBits +
                       Level * 0x100 + (int)((longlong)((int)(short)uVar9 >> 5) << 2)) &
             1 << (uVar9 & 0x1f)) != 0)) {
           printf("mouse already completed\n");

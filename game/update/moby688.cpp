@@ -11,11 +11,11 @@
 #include "game/help.h"
 #include "game/hero.h"
 #include "game/hud.h"
-#include "game/loaders.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/pad.h"
 #include "game/partupd.h"
+#include "game/path.h"
 #include "game/respawn.h"
 #include "game/sound.h"
 #include "game/space.h"
@@ -280,8 +280,8 @@ void M688_00415f18(MobyInstance *moby)
                              (&g_heroPosition,(longlong)*(int *)((int)pvVar6 + 0x170)), iVar24 != 0)
          ) {
         uVar35 = moby->uid;
-        if (((&DAT_00a545c4)[(short)uVar35] != '\0') ||
-           ((*(uint *)(&DAT_00a0cd1c +
+        if (((&g_Checkpoint.objState[0])[(short)uVar35] != '\0') ||
+           ((*(uint *)(&g_LevelObjBits +
                       Level * 0x100 + (int)((longlong)((int)(short)uVar35 >> 5) << 2)) &
             1 << (uVar35 & 0x1f)) != 0)) {
           auVar47 = loadVectorLeftIndexed(0x2c,0x415ed8);
@@ -358,10 +358,10 @@ void M688_00415f18(MobyInstance *moby)
           iVar39 = (int)((longlong)((int)(short)uVar35 >> 5) << 2);
           LetterBoxOn = 0;
           iVar24 = (int)((longlong)((int)(short)uVar35 >> 5) << 2);
-          uVar25 = *(uint *)(&DAT_00a54dd0 + iVar24);
-          *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar39) =
-               *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar39) | 1 << (uVar35 & 0x1f);
-          *(uint *)(&DAT_00a54dd0 + iVar24) = uVar25 | 1 << (uVar35 & 0x1f);
+          uVar25 = *(uint *)(&g_CheckpointBits + iVar24);
+          *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar39) =
+               *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar39) | 1 << (uVar35 & 0x1f);
+          *(uint *)(&g_CheckpointBits + iVar24) = uVar25 | 1 << (uVar35 & 0x1f);
           DeleteMoby(moby);
           return;
         }

@@ -3,10 +3,10 @@
 // 4 functions, 0x27b904-0x27c5a4
 #include "game/update/moby1430.h"
 #include "game/hero.h"
-#include "game/loaders.h"
 #include "game/map.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
+#include "game/path.h"
 #include "game/respawn.h"
 #include "game/update/camera19.h"
 #include "game/update/moby1118.h"
@@ -376,10 +376,10 @@ void UpdateMoby_1430(MobyInstance *moby)
         uVar3 = moby->uid;
         iVar6 = (int)((longlong)((int)(short)uVar3 >> 5) << 2);
         iVar13 = (int)((longlong)((int)(short)uVar3 >> 5) << 2);
-        uVar4 = *(uint *)(&DAT_00a54dd0 + iVar13);
-        *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar6) =
-             *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar6) | 1 << (uVar3 & 0x1f);
-        *(uint *)(&DAT_00a54dd0 + iVar13) = uVar4 | 1 << (uVar3 & 0x1f);
+        uVar4 = *(uint *)(&g_CheckpointBits + iVar13);
+        *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar6) =
+             *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar6) | 1 << (uVar3 & 0x1f);
+        *(uint *)(&g_CheckpointBits + iVar13) = uVar4 | 1 << (uVar3 & 0x1f);
         moby->state = '\x04';
       }
     }
@@ -470,8 +470,8 @@ void UpdateMoby_1430(MobyInstance *moby)
   }
   else if (uVar2 == '\0') {
     uVar3 = moby->uid;
-    if (((&DAT_00a545c4)[(short)uVar3] == '\0') &&
-       ((*(uint *)(&DAT_00a0cd1c + Level * 0x100 + (int)((longlong)((int)(short)uVar3 >> 5) << 2)) &
+    if (((&g_Checkpoint.objState[0])[(short)uVar3] == '\0') &&
+       ((*(uint *)(&g_LevelObjBits + Level * 0x100 + (int)((longlong)((int)(short)uVar3 >> 5) << 2)) &
         1 << (uVar3 & 0x1f)) == 0)) {
       iVar13 = 0;
       DAT_00a2082c = 0;

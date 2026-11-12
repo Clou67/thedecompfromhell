@@ -1527,7 +1527,7 @@ LAB_000dd3fc:
   local_d8 = uVar31;
   if (0 < (int)uVar5) {
     iVar35 = 0;
-    local_f0 = ZEXT48(&DAT_00a545c4);
+    local_f0 = ZEXT48(&g_Checkpoint.objState[0]);
     iVar16 = 0;
     uVar12 = 0x3fe0000000000000;
     local_f8 = ZEXT48(&DAT_00a202c0);
@@ -1546,17 +1546,17 @@ LAB_000dd3fc:
       if (uVar27 == 0) goto LAB_000ddaac;
       cVar23 = -1;
       if ((uVar27 & 0x10) != 0) {
-        cVar23 = ____NAVG_AllocSlot_a0e11c(Level,uVar6);
+        cVar23 = NAVG_AllocSlot(Level,uVar6);
       }
       if (*(char *)((int)local_f0 + uVar6) == '\0') {
         iVar24 = (int)uVar6 >> 5;
         if ((uVar27 & 3) == 0) {
           if ((uVar27 & 8) == 0) {
             if ((uVar27 & 0xc) != 4) goto LAB_000ddaac;
-            uVar27 = *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar24 * 4) & 1 << (uVar6 & 0x1f);
+            uVar27 = *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar24 * 4) & 1 << (uVar6 & 0x1f);
           }
           else {
-            uVar27 = *(uint *)(&DAT_00a54dd0 + iVar24 * 4) & 1 << (uVar6 & 0x1f);
+            uVar27 = *(uint *)(&g_CheckpointBits + iVar24 * 4) & 1 << (uVar6 & 0x1f);
           }
           if (uVar27 == 0) goto LAB_000ddaac;
           goto LAB_000ddaa0;
@@ -1565,14 +1565,14 @@ LAB_000dd3fc:
           if ((uVar27 & 2) == 0) goto LAB_000ddaa0;
           uVar33 = uVar17;
           uVar30 = uVar17;
-          if ((*(uint *)(&DAT_00a54dd0 + iVar24 * 4) & 1 << (uVar6 & 0x1f)) != 0) {
+          if ((*(uint *)(&g_CheckpointBits + iVar24 * 4) & 1 << (uVar6 & 0x1f)) != 0) {
             uVar17 = uVar17 + 1;
             uVar33 = ((int)uVar17 >> 1) + (uint)((int)uVar17 < 0 && (uVar17 & 1) != 0);
           }
         }
         else {
           if ((uVar27 & 1) == 0) goto LAB_000ddaa0;
-          if ((*(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar24 * 4) & 1 << (uVar6 & 0x1f)) != 0) {
+          if ((*(uint *)(&g_LevelObjBits + Level * 0x100 + iVar24 * 4) & 1 << (uVar6 & 0x1f)) != 0) {
             uVar27 = uVar30 + 1;
             uVar33 = ((int)uVar27 >> 1) + (uint)((int)uVar27 < 0 && (uVar27 & 1) != 0);
           }

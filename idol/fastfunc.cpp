@@ -199,7 +199,7 @@ void FastSitAndSpin_STUB(void)
 
 
 // 0x05001fc (0x28 bytes)
-void FastMemSet(undefined8 addr,undefined8 val,undefined4 size)
+void FastMemSet(void *param_1,int param_2,int param_3)
 
 {
   memset(addr,val,size);

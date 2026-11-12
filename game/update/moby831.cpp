@@ -12,6 +12,8 @@
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
+#include "game/path.h"
+#include "game/respawn.h"
 #include "game/sound.h"
 #include "game/water.h"
 #include "idol/fastfunc.h"
@@ -31,9 +33,9 @@ void FUN_0047ebac(MobyInstance *param_1)
   if (param_1->state == '\x01') {
     bVar1 = param_1->levelFlagIdx;
     uVar2 = param_1->uid;
-    (&DAT_00a53964)[(short)uVar2] = bVar1 + 2;
+    (&g_CheckpointLive.objState[0])[(short)uVar2] = bVar1 + 2;
     if ((bVar1 == 0xff) || (((&DAT_00a202c0)[bVar1] != -1 && (g_LevelFlags[Level][bVar1] == -1)))) {
-      (&DAT_00a545c4)[(short)uVar2] = bVar1 + 2;
+      (&g_Checkpoint.objState[0])[(short)uVar2] = bVar1 + 2;
     }
     param_1->state = '\x02';
     param_1->setByGroup = '\x01';

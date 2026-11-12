@@ -6,10 +6,10 @@
 #include "game/debug.h"
 #include "game/freeze.h"
 #include "game/hero.h"
-#include "game/loaders.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/music.h"
+#include "game/path.h"
 #include "game/respawn.h"
 #include "game/space.h"
 
@@ -52,8 +52,8 @@ void UpdateMoby_22(MobyInstance *moby)
     }
   }
   uVar1 = moby->uid;
-  if (((&DAT_00a545c4)[(short)uVar1] != '\0') ||
-     ((*(uint *)(&DAT_00a0cd1c + Level * 0x100 + (int)((longlong)((int)(short)uVar1 >> 5) << 2)) &
+  if (((&g_Checkpoint.objState[0])[(short)uVar1] != '\0') ||
+     ((*(uint *)(&g_LevelObjBits + Level * 0x100 + (int)((longlong)((int)(short)uVar1 >> 5) << 2)) &
       1 << (uVar1 & 0x1f)) != 0)) {
     if (UnlockableItems.o2Mask == '\0') {
       if ((g_gameMode == GAME_MODE_NORMAL) &&
@@ -93,10 +93,10 @@ void UpdateMoby_22(MobyInstance *moby)
   uVar1 = moby->uid;
   iVar4 = (int)((longlong)((int)(short)uVar1 >> 5) << 2);
   iVar3 = (int)((longlong)((int)(short)uVar1 >> 5) << 2);
-  uVar7 = *(uint *)(&DAT_00a54dd0 + iVar3);
-  *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar4) =
-       *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar4) | 1 << (uVar1 & 0x1f);
-  *(uint *)(&DAT_00a54dd0 + iVar3) = uVar7 | 1 << (uVar1 & 0x1f);
+  uVar7 = *(uint *)(&g_CheckpointBits + iVar3);
+  *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar4) =
+       *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar4) | 1 << (uVar1 & 0x1f);
+  *(uint *)(&g_CheckpointBits + iVar3) = uVar7 | 1 << (uVar1 & 0x1f);
   if ((piVar2[2] != -1) && (iVar3 = *piVar2, iVar3 != -1)) {
     if (UnlockableItems.o2Mask == '\0') {
       g_MobyInstance[iVar3].collision = (g_MobyInstance[iVar3].pClass)->collision;

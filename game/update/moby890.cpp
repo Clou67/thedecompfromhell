@@ -11,6 +11,7 @@
 #include "game/memcard.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
+#include "game/path.h"
 #include "game/respawn.h"
 #include "game/space.h"
 #include "game/update.h"
@@ -184,7 +185,7 @@ void UpdateMoby_890(MobyInstance *moby)
       if ((iVar20 != -1) && (g_MobyInstance[iVar20].oClass == TAXI_03F4)) {
         pvVar8 = g_MobyInstance[iVar20].pVar;
         *(undefined4 *)((int)pvVar8 + 0x8c) = 1;
-        SaveCheckpointMobyVar((void *)((int)pvVar8 + 0x8c),4,moby,2,(int *)&DAT_00a53560);
+        SaveCheckpointMobyVar((void *)((int)pvVar8 + 0x8c),4,moby,2,(int *)&g_CheckpointLive.vars);
       }
       DeleteMoby(moby);
       return;
@@ -194,7 +195,7 @@ void UpdateMoby_890(MobyInstance *moby)
        (g_MobyInstance[iVar20].oClass == TAXI_03F4)) {
       pvVar9 = g_MobyInstance[iVar20].pVar;
       *(undefined4 *)((int)pvVar9 + 0x8c) = 1;
-      SaveCheckpointMobyVar((void *)((int)pvVar9 + 0x8c),4,moby,2,(int *)&DAT_00a53560);
+      SaveCheckpointMobyVar((void *)((int)pvVar9 + 0x8c),4,moby,2,(int *)&g_CheckpointLive.vars);
     }
     uVar10 = g_heroMobyPtr->color;
     uVar14 = g_heroMobyPtr->light;
@@ -215,7 +216,7 @@ void UpdateMoby_890(MobyInstance *moby)
       if ((iVar20 != -1) && (g_MobyInstance[iVar20].oClass == TAXI_03F4)) {
         pvVar9 = g_MobyInstance[iVar20].pVar;
         *(undefined4 *)((int)pvVar9 + 0x8c) = 1;
-        SaveCheckpointMobyVar((void *)((int)pvVar9 + 0x8c),4,moby,2,(int *)&DAT_00a53560);
+        SaveCheckpointMobyVar((void *)((int)pvVar9 + 0x8c),4,moby,2,(int *)&g_CheckpointLive.vars);
       }
     }
   }
@@ -237,7 +238,7 @@ void UpdateMoby_890(MobyInstance *moby)
         if ((iVar20 != -1) && (g_MobyInstance[iVar20].oClass == TAXI_03F4)) {
           pvVar9 = g_MobyInstance[iVar20].pVar;
           *(undefined4 *)((int)pvVar9 + 0x8c) = 1;
-          SaveCheckpointMobyVar((void *)((int)pvVar9 + 0x8c),4,moby,2,(int *)&DAT_00a53560)
+          SaveCheckpointMobyVar((void *)((int)pvVar9 + 0x8c),4,moby,2,(int *)&g_CheckpointLive.vars)
           ;
         }
         iVar20 = *(int *)((int)pvVar8 + 0xcc);
@@ -252,14 +253,14 @@ void UpdateMoby_890(MobyInstance *moby)
         pMVar16 = g_MobyInstance;
         iVar20 = *(int *)((int)pvVar8 + 0xd0);
         if (iVar20 != -1) {
-          (&DAT_00a53964)[(short)g_MobyInstance[iVar20].uid] =
+          (&g_CheckpointLive.objState[0])[(short)g_MobyInstance[iVar20].uid] =
                g_MobyInstance[iVar20].levelFlagIdx + '\x02';
           uVar10 = *(uint *)((int)pvVar8 + 0xd0);
           uVar26 = (ulonglong)uVar10;
           bVar1 = pMVar16[uVar10].levelFlagIdx;
           if ((bVar1 == 0xff) ||
              (((&DAT_00a202c0)[bVar1] != -1 && (g_LevelFlags[Level][bVar1] == -1)))) {
-            (&DAT_00a545c4)[(short)pMVar16[uVar10].uid] = bVar1 + 2;
+            (&g_Checkpoint.objState[0])[(short)pMVar16[uVar10].uid] = bVar1 + 2;
             uVar26 = (ulonglong)*(uint *)((int)pvVar8 + 0xd0);
           }
           DeleteMoby((MobyInstance *)((int)&(pMVar16->bSphere).x + (int)(uVar26 << 8)));

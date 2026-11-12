@@ -8,11 +8,11 @@
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/hud.h"
-#include "game/loaders.h"
 #include "game/map.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/pad.h"
+#include "game/path.h"
 #include "game/respawn.h"
 #include "game/sound.h"
 #include "game/space.h"
@@ -824,18 +824,18 @@ void UpdateMoby_280(MobyInstance *moby)
       TransitionMovement(0,1);
       if (val[0xe] == 0.0) {
         if (*val == 1.0) {
-          SaveCheckpointMobyVar(val,4,moby,2,(int *)&DAT_00a53560);
+          SaveCheckpointMobyVar(val,4,moby,2,(int *)&g_CheckpointLive.vars);
           uVar10 = moby->uid;
           moby->state = '\x04';
           iVar18 = (int)((longlong)((int)(short)uVar10 >> 5) << 2);
           iVar17 = (int)((longlong)((int)(short)uVar10 >> 5) << 2);
-          uVar11 = *(uint *)(&DAT_00a54dd0 + iVar17);
-          *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar18) =
-               *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar18) | 1 << (uVar10 & 0x1f);
-          *(uint *)(&DAT_00a54dd0 + iVar17) = uVar11 | 1 << (uVar10 & 0x1f);
+          uVar11 = *(uint *)(&g_CheckpointBits + iVar17);
+          *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar18) =
+               *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar18) | 1 << (uVar10 & 0x1f);
+          *(uint *)(&g_CheckpointBits + iVar17) = uVar11 | 1 << (uVar10 & 0x1f);
           PlayMobySound(0,0,moby);
           if ((val[0xd] != -NAN) && (g_LevelFlags[Level][(byte)moby->levelFlagIdx] != -1)) {
-            SaveCheckpointMobyVar(val,4,moby,2,(int *)&DAT_00a53560);
+            SaveCheckpointMobyVar(val,4,moby,2,(int *)&g_CheckpointLive.vars);
             SetLevelFlag(moby->levelFlagIdx);
             fVar2 = val[0xd];
             if (fVar2 != -NAN) {
@@ -1179,8 +1179,8 @@ void UpdateMoby_280(MobyInstance *moby)
   }
   else if (uVar1 == '\x01') {
     uVar10 = moby->uid;
-    if (((&DAT_00a545c4)[(short)uVar10] == '\0') &&
-       ((*(uint *)(&DAT_00a0cd1c + Level * 0x100 + (int)((longlong)((int)(short)uVar10 >> 5) << 2))
+    if (((&g_Checkpoint.objState[0])[(short)uVar10] == '\0') &&
+       ((*(uint *)(&g_LevelObjBits + Level * 0x100 + (int)((longlong)((int)(short)uVar10 >> 5) << 2))
         & 1 << (uVar10 & 0x1f)) == 0)) {
       fVar4 = fVar4 - g_heroPosition.y;
       fVar3 = fVar3 - g_heroPosition.x;
@@ -1310,7 +1310,7 @@ void UpdateMoby_280(MobyInstance *moby)
       }
       else if (val[0xe] != 0.0) {
         if ((val[0xd] != -NAN) && (g_LevelFlags[Level][(byte)moby->levelFlagIdx] != -1)) {
-          SaveCheckpointMobyVar(val,4,moby,2,(int *)&DAT_00a53560);
+          SaveCheckpointMobyVar(val,4,moby,2,(int *)&g_CheckpointLive.vars);
           SetLevelFlag(moby->levelFlagIdx);
           fVar2 = val[0xd];
           if (fVar2 != -NAN) {

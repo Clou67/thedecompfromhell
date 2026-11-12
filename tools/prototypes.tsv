@@ -13,3 +13,8 @@ DrawTextBox	void DrawTextBox(int param_1,int param_2,int param_3,int param_4,u32
 FontPrintMediumCenter	int FontPrintMediumCenter(int param_1,int param_2,u32 param_3,const char *param_4,int param_5)
 FastLerpColor	u32 FastLerpColor(float param_1,u32 param_2,u32 param_3)
 GetEffectTex	void *GetEffectTex(int param_1)
+RestoreMobyVarList	void RestoreMobyVarList(MobyVarList *param_1)
+SaveCheckpointMobyVar	void SaveCheckpointMobyVar(void *data,int size,MobyInstance *moby,int isMoby,MobyVarList *list)
+NAVG_AllocSlot	int NAVG_AllocSlot(int param_1,int param_2)
+Respawn_IncCounter	int Respawn_IncCounter(void)
+FastMemSet	void FastMemSet(void *param_1,int param_2,int param_3)

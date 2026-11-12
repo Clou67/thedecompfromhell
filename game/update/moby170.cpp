@@ -338,7 +338,7 @@ void UpdateMoby_170(MobyInstance *moby)
     }
     uVar5 = moby->uid;
     *(undefined4 *)((int)pvVar6 + 0x70) = 0xffffffff;
-    if ((*(uint *)(&DAT_00a0cd1c + Level * 0x100 + (int)((longlong)((int)(short)uVar5 >> 5) << 2)) &
+    if ((*(uint *)(&g_LevelObjBits + Level * 0x100 + (int)((longlong)((int)(short)uVar5 >> 5) << 2)) &
         1 << (uVar5 & 0x1f)) != 0) {
       if (*(int *)((int)pvVar6 + 0x74) != -1) {
         (&DAT_00a20828)[*(int *)((int)pvVar6 + 0x74)] = 1;

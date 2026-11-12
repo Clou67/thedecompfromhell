@@ -9,6 +9,7 @@
 #include "game/memcard.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
+#include "game/path.h"
 #include "game/respawn.h"
 #include "game/space.h"
 #include "game/update.h"
@@ -197,7 +198,7 @@ void UpdateMoby_774(MobyInstance *moby)
             MB_UnlockLevel(Aridia);
             MB_ToastMessageByIndex(2);
             moby->state = '\x03';
-            SaveCheckpointMobyVar(&moby->state,1,moby,1,(int *)&DAT_00a53560);
+            SaveCheckpointMobyVar(&moby->state,1,moby,1,(int *)&g_CheckpointLive.vars);
             memcard_Save(0,-1);
           }
         }

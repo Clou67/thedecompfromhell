@@ -30,6 +30,7 @@
 #include "game/music.h"
 #include "game/pad.h"
 #include "game/partproc.h"
+#include "game/path.h"
 #include "game/pause.h"
 #include "game/respawn.h"
 #include "game/sUnk.h"
@@ -1898,9 +1899,9 @@ void ResetLevelGlobals(void)
   } while (lVar2 != 0);
   g_toastMsgTimer = 0;
   DAT_00a15c84 = 0;
-  FastMemSet(&DAT_00a53510,0,0xc60);
-  FastMemSet(&g_CheckpointSet,0,0xc60);
-  FastMemSet(&DAT_00a54dd0,0,0x100);
+  FastMemSet(&g_CheckpointLive,0,0xc60);
+  FastMemSet(&g_Checkpoint.set,0,0xc60);
+  FastMemSet(&g_CheckpointBits,0,0x100);
   if ((Level == Oltanis) || ((Level != Blarg && (Level != Aridia)))) {
     DAT_00a1a858 = 0;
   }

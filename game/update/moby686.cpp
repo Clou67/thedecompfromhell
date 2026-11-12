@@ -38,11 +38,11 @@ void FUN_004145d0(int param_1)
   LVar2 = Level;
   *(undefined2 *)(*(int *)(param_1 + 0x78) + 0x124) = 0;
   iVar1 = (int)((longlong)((int)(short)*(ushort *)(param_1 + 0xb2) >> 5) << 2);
-  *(uint *)(&DAT_00a0cd1c + LVar2 * 0x100 + iVar1) =
-       *(uint *)(&DAT_00a0cd1c + LVar2 * 0x100 + iVar1) | 1 << (*(ushort *)(param_1 + 0xb2) & 0x1f);
+  *(uint *)(&g_LevelObjBits + LVar2 * 0x100 + iVar1) =
+       *(uint *)(&g_LevelObjBits + LVar2 * 0x100 + iVar1) | 1 << (*(ushort *)(param_1 + 0xb2) & 0x1f);
   iVar1 = (int)((longlong)((int)(short)*(ushort *)(param_1 + 0xb2) >> 5) << 2);
-  *(uint *)(&DAT_00a54dd0 + iVar1) =
-       *(uint *)(&DAT_00a54dd0 + iVar1) | 1 << (*(ushort *)(param_1 + 0xb2) & 0x1f);
+  *(uint *)(&g_CheckpointBits + iVar1) =
+       *(uint *)(&g_CheckpointBits + iVar1) | 1 << (*(ushort *)(param_1 + 0xb2) & 0x1f);
   return;
 }
 

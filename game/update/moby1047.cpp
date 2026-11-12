@@ -4,9 +4,9 @@
 #include "game/update/moby1047.h"
 #include "game/collproc.h"
 #include "game/hero.h"
-#include "game/loaders.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
+#include "game/path.h"
 #include "game/respawn.h"
 #include "game/sound.h"
 #include "game/update/moby1122.h"
@@ -64,8 +64,8 @@ void UpdateMoby_1047(MobyInstance *moby)
   
   lVar8 = (longlong)(int)moby;
   uVar4 = moby->uid;
-  if (((&DAT_00a545c4)[(short)uVar4] == '\0') &&
-     ((*(uint *)(&DAT_00a0cd1c + Level * 0x100 + (int)((longlong)((int)(short)uVar4 >> 5) << 2)) &
+  if (((&g_Checkpoint.objState[0])[(short)uVar4] == '\0') &&
+     ((*(uint *)(&g_LevelObjBits + Level * 0x100 + (int)((longlong)((int)(short)uVar4 >> 5) << 2)) &
       1 << (uVar4 & 0x1f)) == 0)) {
     iVar9 = MB_damage(lVar8,0x40000,0);
     if (iVar9 == 0) {
@@ -143,10 +143,10 @@ void UpdateMoby_1047(MobyInstance *moby)
     uVar4 = moby->uid;
     iVar10 = (int)((longlong)((int)(short)uVar4 >> 5) << 2);
     iVar9 = (int)((longlong)((int)(short)uVar4 >> 5) << 2);
-    uVar5 = *(uint *)(&DAT_00a54dd0 + iVar9);
-    *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar10) =
-         *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar10) | 1 << (uVar4 & 0x1f);
-    *(uint *)(&DAT_00a54dd0 + iVar9) = uVar5 | 1 << (uVar4 & 0x1f);
+    uVar5 = *(uint *)(&g_CheckpointBits + iVar9);
+    *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar10) =
+         *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar10) | 1 << (uVar4 & 0x1f);
+    *(uint *)(&g_CheckpointBits + iVar9) = uVar5 | 1 << (uVar4 & 0x1f);
     DeleteMoby(moby);
     return;
   }

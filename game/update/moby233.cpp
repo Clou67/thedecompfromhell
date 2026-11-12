@@ -5,10 +5,10 @@
 #include "game/camera.h"
 #include "game/collproc.h"
 #include "game/hero.h"
-#include "game/loaders.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
+#include "game/path.h"
 #include "game/respawn.h"
 #include "game/update/moby1371.h"
 #include "game/update/moby849.h"
@@ -1614,16 +1614,16 @@ void UpdateMoby_233(MobyInstance *moby)
       *(ushort *)(iVar24 + 0x34) = *(ushort *)(iVar24 + 0x34) | 0x41;
     }
     uVar13 = moby->uid;
-    (&DAT_00a53964)[(short)uVar13] = 0;
+    (&g_CheckpointLive.objState[0])[(short)uVar13] = 0;
     iVar26 = (int)((longlong)((int)(short)uVar13 >> 5) << 2);
-    (&DAT_00a545c4)[(short)uVar13] = 0;
+    (&g_Checkpoint.objState[0])[(short)uVar13] = 0;
     uVar14 = moby->uid;
     iVar24 = (int)((longlong)((int)(short)uVar14 >> 5) << 2);
-    uVar25 = *(uint *)(&DAT_00a54dd0 + iVar24);
-    *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar26) =
-         *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar26) & ~(1 << (uVar13 & 0x1f));
+    uVar25 = *(uint *)(&g_CheckpointBits + iVar24);
+    *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar26) =
+         *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar26) & ~(1 << (uVar13 & 0x1f));
     bVar1 = g_heroType == '\x02';
-    *(uint *)(&DAT_00a54dd0 + iVar24) = uVar25 & ~(1 << (uVar14 & 0x1f));
+    *(uint *)(&g_CheckpointBits + iVar24) = uVar25 & ~(1 << (uVar14 & 0x1f));
     if (bVar1) {
       return;
     }

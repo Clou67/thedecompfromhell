@@ -316,7 +316,7 @@ void UpdateMoby_631(MobyInstance *moby)
   }
   dVar29 = 20.0;
   MB_getTarget((double)(float)(dVar25 * 20.0),lVar11,&DAT_003f0530,uVar10 - 0x100);
-  if ((*(uint *)(&DAT_00a54dd0 + (int)((longlong)((int)(short)moby->uid >> 5) << 2)) &
+  if ((*(uint *)(&g_CheckpointBits + (int)((longlong)((int)(short)moby->uid >> 5) << 2)) &
       1 << (moby->uid & 0x1f)) != 0) {
     if (*(int *)((int)pvVar6 + 0x238) != -1) {
       DeleteMoby(g_MobyInstance + *(int *)((int)pvVar6 + 0x238));

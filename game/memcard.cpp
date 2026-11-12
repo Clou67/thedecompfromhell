@@ -342,8 +342,8 @@ void memcard_SetupNewGameGlobals(void)
   do {
     memset(&DAT_0096ca34 + iVar4 * 0x8000,0,0x8000);
     memset(g_LevelFlags[0] + iVar2,0,0x10);
-    memset(&DAT_00a0cd1c + iVar3,0,0x100);
-    memset(&DAT_00a0e11c + iVar3,0,0x100);
+    memset(&g_LevelObjBits + iVar3,0,0x100);
+    memset(&g_NavSlots + iVar3,0,0x100);
     memset(&DAT_00a0cbc4 + iVar2,0,0x10);
     iVar4 = iVar4 + 1;
     iVar3 = iVar3 + 0x100;

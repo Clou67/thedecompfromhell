@@ -8,6 +8,7 @@
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
 #include "game/partupd.h"
+#include "game/path.h"
 #include "game/respawn.h"
 #include "game/sound.h"
 #include "game/update/moby344.h"
@@ -140,7 +141,7 @@ void UpdateMoby_846(MobyInstance *moby)
       iVar5 = iVar5 + 1;
     } while (iVar5 < 6);
     moby->setByGroup = '\x01';
-    SaveCheckpointMobyVar(&moby->setByGroup,1,moby,1,(int *)&DAT_00a53560);
+    SaveCheckpointMobyVar(&moby->setByGroup,1,moby,1,(int *)&g_CheckpointLive.vars);
     DeleteMoby(moby);
   }
   return;

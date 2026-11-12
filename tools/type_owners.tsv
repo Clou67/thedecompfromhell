@@ -20,3 +20,11 @@ g_HideActivityIcon	game/main
 FreezeState	game/freeze
 g_Freeze	game/freeze
 TextLayout	game/draw
+MobyVarEntry	game/respawn
+MobyVarList	game/respawn
+CheckpointData	game/respawn
+NavSlot	game/respawn
+g_Checkpoint	game/respawn
+g_CheckpointLive	game/respawn
+g_CheckpointBits	game/respawn
+g_NavSlots	game/respawn

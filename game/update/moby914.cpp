@@ -6,11 +6,11 @@
 #include "game/collproc.h"
 #include "game/freeze.h"
 #include "game/hero.h"
-#include "game/loaders.h"
 #include "game/map.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/partupd.h"
+#include "game/path.h"
 #include "game/respawn.h"
 #include "game/space.h"
 #include "game/update.h"
@@ -98,8 +98,8 @@ void UpdateMoby_914(MobyInstance *moby)
     moby->shadow = '\x15';
   }
   uVar2 = moby->uid;
-  if ((((&DAT_00a545c4)[(short)uVar2] != '\0') ||
-      ((*(uint *)(&DAT_00a0cd1c + Level * 0x100 + (int)((longlong)((int)(short)uVar2 >> 5) << 2)) &
+  if ((((&g_Checkpoint.objState[0])[(short)uVar2] != '\0') ||
+      ((*(uint *)(&g_LevelObjBits + Level * 0x100 + (int)((longlong)((int)(short)uVar2 >> 5) << 2)) &
        1 << (uVar2 & 0x1f)) != 0)) && (moby->state != '\x03')) {
     moby->state = '\x03';
     MB_SetAnimationNoBlend(lVar10,1,0);
@@ -107,8 +107,8 @@ void UpdateMoby_914(MobyInstance *moby)
   iVar11 = MB_damage(lVar10,0xffffffffffffffff,0);
   if (((iVar11 != 0) && (*(int *)(iVar11 + 0x20) != 0)) &&
      ((*(char *)(iVar11 + 0x28) == '\x03' &&
-      ((uVar2 = moby->uid, (&DAT_00a545c4)[(short)uVar2] == '\0' &&
-       ((*(uint *)(&DAT_00a0cd1c + Level * 0x100 + (int)((longlong)((int)(short)uVar2 >> 5) << 2)) &
+      ((uVar2 = moby->uid, (&g_Checkpoint.objState[0])[(short)uVar2] == '\0' &&
+       ((*(uint *)(&g_LevelObjBits + Level * 0x100 + (int)((longlong)((int)(short)uVar2 >> 5) << 2)) &
         1 << (uVar2 & 0x1f)) == 0)))))) {
     MB_UnlockSkillPoint(5);
     MB_genericExplosion
@@ -119,10 +119,10 @@ void UpdateMoby_914(MobyInstance *moby)
     uVar2 = moby->uid;
     iVar8 = (int)((longlong)((int)(short)uVar2 >> 5) << 2);
     iVar11 = (int)((longlong)((int)(short)uVar2 >> 5) << 2);
-    uVar4 = *(uint *)(&DAT_00a54dd0 + iVar11);
-    *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar8) =
-         *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar8) | 1 << (uVar2 & 0x1f);
-    *(uint *)(&DAT_00a54dd0 + iVar11) = uVar4 | 1 << (uVar2 & 0x1f);
+    uVar4 = *(uint *)(&g_CheckpointBits + iVar11);
+    *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar8) =
+         *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar8) | 1 << (uVar2 & 0x1f);
+    *(uint *)(&g_CheckpointBits + iVar11) = uVar4 | 1 << (uVar2 & 0x1f);
   }
   moby->damage = -1;
   if ((UnlockableItems.swingshot == '\0') || (moby->state == '\x03')) {

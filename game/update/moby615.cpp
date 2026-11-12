@@ -7,10 +7,10 @@
 #include "game/help.h"
 #include "game/hero.h"
 #include "game/hud.h"
-#include "game/loaders.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/pad.h"
+#include "game/path.h"
 #include "game/respawn.h"
 #include "game/sound.h"
 #include "game/space.h"
@@ -310,8 +310,8 @@ void UpdateMoby_615(MobyInstance *moby)
       DAT_010cb020 = 0xc1880000;
       DAT_010cb024 = 0xc1880000;
       if ((moby->levelFlagIdx != -1) &&
-         ((uVar2 = moby->uid, (&DAT_00a545c4)[(short)uVar2] != '\0' ||
-          ((*(uint *)(&DAT_00a0cd1c + Level * 0x100 + (int)((longlong)((int)(short)uVar2 >> 5) << 2)
+         ((uVar2 = moby->uid, (&g_Checkpoint.objState[0])[(short)uVar2] != '\0' ||
+          ((*(uint *)(&g_LevelObjBits + Level * 0x100 + (int)((longlong)((int)(short)uVar2 >> 5) << 2)
                      ) & 1 << (uVar2 & 0x1f)) != 0)))) {
         moby->state = '\x04';
       }
@@ -544,10 +544,10 @@ void UpdateMoby_615(MobyInstance *moby)
       uVar2 = moby->uid;
       iVar11 = (int)((longlong)((int)(short)uVar2 >> 5) << 2);
       iVar13 = (int)((longlong)((int)(short)uVar2 >> 5) << 2);
-      uVar12 = *(uint *)(&DAT_00a54dd0 + iVar13);
-      *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar11) =
-           *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar11) | 1 << (uVar2 & 0x1f);
-      *(uint *)(&DAT_00a54dd0 + iVar13) = uVar12 | 1 << (uVar2 & 0x1f);
+      uVar12 = *(uint *)(&g_CheckpointBits + iVar13);
+      *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar11) =
+           *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar11) | 1 << (uVar2 & 0x1f);
+      *(uint *)(&g_CheckpointBits + iVar13) = uVar12 | 1 << (uVar2 & 0x1f);
     }
     Camera_DeactivateMobyDrivenCam(1);
     TransitionMovement(0,1);

@@ -7,10 +7,10 @@
 #include "game/collproc.h"
 #include "game/debug.h"
 #include "game/hero.h"
-#include "game/loaders.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/partupd.h"
+#include "game/path.h"
 #include "game/respawn.h"
 #include "game/sound.h"
 #include "game/update/camera19.h"
@@ -694,8 +694,8 @@ void UpdateMoby_921(MobyInstance *moby)
   puVar19[0x23] = unaff_r27;
   puVar19[0x22] = unaff_r26;
   if ((uVar1 == '\0') &&
-     ((uVar12 = moby->uid, (&DAT_00a545c4)[(short)uVar12] != '\0' ||
-      ((*(uint *)(&DAT_00a0cd1c + Level * 0x100 + (int)((longlong)((int)(short)uVar12 >> 5) << 2)) &
+     ((uVar12 = moby->uid, (&g_Checkpoint.objState[0])[(short)uVar12] != '\0' ||
+      ((*(uint *)(&g_LevelObjBits + Level * 0x100 + (int)((longlong)((int)(short)uVar12 >> 5) << 2)) &
        1 << (uVar12 & 0x1f)) != 0)))) {
     FUN_004b6304(g_MobyInstance + *(int *)((int)pvVar14 + 0x8c));
     DeleteMoby(moby);
@@ -952,15 +952,15 @@ void UpdateMoby_921(MobyInstance *moby)
         iVar20 = (int)((longlong)((int)(short)uVar12 >> 5) << 2);
         iVar27 = (int)((longlong)((int)(short)uVar12 >> 5) << 2);
         MVar13 = moby->modeBits;
-        uVar16 = *(uint *)(&DAT_00a54dd0 + iVar27);
-        *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar20) =
-             *(uint *)(&DAT_00a0cd1c + Level * 0x100 + iVar20) | 1 << (uVar12 & 0x1f);
+        uVar16 = *(uint *)(&g_CheckpointBits + iVar27);
+        *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar20) =
+             *(uint *)(&g_LevelObjBits + Level * 0x100 + iVar20) | 1 << (uVar12 & 0x1f);
         pMVar15 = moby->pClass;
         moby->modeBits =
              MVar13 & (MIRROR|CAN_BE_DAMAGED|HIDE_BACKFACES|CAN_BE_AUTO_TARGETED|DISABLE_Z_WRITE|
                        DRAW_SHADOW|DRAW_TRANSPARENT_WEIRD|LOCK_ROTATION|NO_DRAW|HAS_SPECIAL_VARS|
                        HAS_GLOW|TRANSPARENT|NO_POST_UPDATE|NO_UPDATE);
-        *(uint *)(&DAT_00a54dd0 + iVar27) = uVar16 | 1 << (uVar12 & 0x1f);
+        *(uint *)(&g_CheckpointBits + iVar27) = uVar16 | 1 << (uVar12 & 0x1f);
         moby->collision = pMVar15->collision;
         pMVar21[iVar26].modeBits =
              pMVar21[iVar26].modeBits &

@@ -43,3 +43,10 @@ g_RaceBadColor1	u32 NAME /* 0x71f388 */
 g_RacePlace	int NAME /* 0x96a5a0: finishing place, 1 = first */
 g_RaceBestTime	int NAME[2] /* 0xa0cd04: best race time in frames, [0] Rilgar, [1] Kalebo (was "BoltsRewardedFromRacePB"; it is compared with g_RaceTime) */
 g_RaceBestScore	int NAME[2] /* 0xa0cd10: best race score, [0] Rilgar, [1] Kalebo; guess */
+g_CheckpointLive	CheckpointData NAME /* 0xa53510 */
+g_Checkpoint	CheckpointData NAME /* 0xa54170 */
+g_CheckpointBits	u32 NAME[64] /* 0xa54dd0: objects changed since the level started, one bit each */
+g_NavSlots	NavSlot NAME[][64] /* 0xa0e11c */
+g_RespawnCount	int NAME /* 0xa53504 */
+g_RespawnTicks	int NAME /* 0xa53508 */
+g_LevelObjBits	u32 NAME[][64] /* 0xa0cd1c: per level, objects whose state was ever committed at a checkpoint (one bit each); part of the save */

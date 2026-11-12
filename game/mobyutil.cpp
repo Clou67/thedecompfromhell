@@ -24,6 +24,7 @@
 #include "game/mobyproc.h"
 #include "game/pad.h"
 #include "game/partupd.h"
+#include "game/path.h"
 #include "game/pause.h"
 #include "game/respawn.h"
 #include "game/sound.h"
@@ -332,7 +333,7 @@ longlong MB_DropAmmo(int param_1,uint *param_2)
   lVar8 = 0;
   if (((int)*param_2 < 1) ||
      ((param_1 != 0 &&
-      ((*(uint *)(&DAT_00a0cd1c +
+      ((*(uint *)(&g_LevelObjBits +
                  Level * 0x100 +
                  (int)((longlong)((int)(short)*(ushort *)(param_1 + 0xb2) >> 5) << 2)) &
        1 << (*(ushort *)(param_1 + 0xb2) & 0x1f)) != 0)))) {
@@ -1062,15 +1063,15 @@ void MB_SpawnBoltsFromCrate(undefined8 param_1,uint param_2,undefined8 param_3)
       uVar3 = *(ushort *)(iVar14 + 0xb2);
       iVar12 = Level * 0x100;
       iVar7 = (int)((longlong)((int)(short)uVar3 >> 5) << 2);
-      uVar17 = *(uint *)(&DAT_00a54dd0 + iVar7);
-      *(uint *)(&DAT_00a0cd1c + iVar12 + iVar8) =
-           *(uint *)(&DAT_00a0cd1c + iVar12 + iVar8) | 1 << (uVar2 & 0x1f);
-      *(uint *)(&DAT_00a54dd0 + iVar7) = uVar17 | 1 << (uVar3 & 0x1f);
+      uVar17 = *(uint *)(&g_CheckpointBits + iVar7);
+      *(uint *)(&g_LevelObjBits + iVar12 + iVar8) =
+           *(uint *)(&g_LevelObjBits + iVar12 + iVar8) | 1 << (uVar2 & 0x1f);
+      *(uint *)(&g_CheckpointBits + iVar7) = uVar17 | 1 << (uVar3 & 0x1f);
       bVar1 = *(byte *)(iVar14 + 0xb0);
-      (&DAT_00a53964)[(short)uVar3] = bVar1 + 2;
+      (&g_CheckpointLive.objState[0])[(short)uVar3] = bVar1 + 2;
       if ((bVar1 == 0xff) || (((&DAT_00a202c0)[bVar1] != -1 && (g_LevelFlags[LVar10][bVar1] == -1)))
          ) {
-        (&DAT_00a545c4)[(short)uVar3] = bVar1 + 2;
+        (&g_Checkpoint.objState[0])[(short)uVar3] = bVar1 + 2;
       }
       if (*(byte *)(iVar14 + 0xb1) < 0x80) {
         auVar20 = ZEXT416(0xfffffff0);

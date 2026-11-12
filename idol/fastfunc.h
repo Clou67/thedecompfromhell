@@ -26,7 +26,7 @@ undefined8 FastDecTimerU8(byte *param_1);
 undefined8 FastDecTimerF32(float *param_1);
 uint FastLog2(uint param_1);
 void FastSitAndSpin_STUB(void);
-void FastMemSet(undefined8 addr,undefined8 val,undefined4 size);
+void FastMemSet(void *param_1,int param_2,int param_3);
 void FastMemSetZero16(void *dst,int size);
 void FastMemSetZero(void *dst,int size);
 void * FastMemCopy32(void *dest,void *src,size_t size);

@@ -7,9 +7,10 @@
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/hud.h"
-#include "game/loaders.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
+#include "game/path.h"
+#include "game/respawn.h"
 #include "game/sound.h"
 #include "game/update/moby684.h"
 #include "idol/fastfunc.h"
@@ -713,9 +714,9 @@ void UpdateMoby_685(MobyInstance *moby)
     (moby->rotation).y = *(f32 *)((int)pvVar3 + 0xd4);
     (moby->rotation).z = *(f32 *)((int)pvVar3 + 0xd8);
     (moby->rotation).w = *(f32 *)((int)pvVar3 + 0xdc);
-    if ((&DAT_00a545c4)[(short)uVar2] == '\0') {
+    if ((&g_Checkpoint.objState[0])[(short)uVar2] == '\0') {
       uVar10 = 0;
-      if (((*(uint *)(&DAT_00a0cd1c + Level * 0x100 + (int)((longlong)((int)(short)uVar2 >> 5) << 2)
+      if (((*(uint *)(&g_LevelObjBits + Level * 0x100 + (int)((longlong)((int)(short)uVar2 >> 5) << 2)
                      ) & 1 << (uVar2 & 0x1f)) == 0) &&
          (uVar10 = 0, g_LevelFlags[Level][*(int *)((int)pvVar3 + 0x110)] == -1)) {
         uVar10 = 1;
