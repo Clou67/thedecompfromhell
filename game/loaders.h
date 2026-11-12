@@ -39,6 +39,8 @@ extern int CuboidCnt; /* 0xa51bdc */
 extern int CylinderCnt; /* 0xa51bd4 */
 extern undefined4 DAT_0071ef00; /* no defined data */
 extern undefined4 DAT_0072479c; /* 0x72479c */
+extern undefined4 DAT_00731c90; /* 0x731c90 */
+extern undefined4 DAT_00731c94; /* 0x731c94 */
 extern undefined4 DAT_007ff23c; /* 0x7ff23c */
 extern int DAT_009636c0; /* 0x9636c0 */ /* type set in global_types.tsv */
 extern undefined4 DAT_00a15c14; /* 0xa15c14 */
@@ -49,6 +51,7 @@ extern undefined4 DAT_00a15f74; /* 0xa15f74 */
 extern undefined4 DAT_00a1a860; /* 0xa1a860 */
 extern undefined4 DAT_00a1c900; /* 0xa1c900 */
 extern undefined4 DAT_00a204ac; /* 0xa204ac */
+extern undefined4 DAT_00a561c4; /* 0xa561c4 */
 extern undefined4 DAT_010bb478; /* 0x10bb478 */
 extern undefined4 DAT_010ea114; /* no defined data */
 extern int OCLASSES_COCKPIT[3]; /* 0x731c4c */

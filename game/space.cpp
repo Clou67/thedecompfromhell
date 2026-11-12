@@ -49,7 +49,7 @@
 #include "idol/fastinline.h"
 #include <cell/gcm/gcm_macros.h>
 #include <cell/gcm/gcm_enum.h>
-// MERGE (17 of 28 functions cleaned; the rest are generated)
+// MERGE (20 of 28 functions cleaned; the rest are generated)
 
 #define SHIP_STATE_SCENES 42          /* moby->state while the ship's intro scenes play */
 #define SHIP_PROMPT_BOARD 0x53e4      /* "press triangle to board" */
@@ -780,16 +780,21 @@ void ____Space_TransitionDrawPass(void)
     SetGSReg(0x16, FUN_00502f98(1, 5, 0x60, 3, 0, 0, 1, 2));
 }
 
+static inline void DrawBanner(u32 color)
+{
+    SetGSReg(0x16, idol_draw::Blend(1, 0, 0x80, 1, 0, 0, 1, 1));
+    SetGSReg(3, idol_draw::PackCmd(0, 1, 0, 1, 0x80));
+    Sprite_DrawShape(0x20, 0x168, 0x100, 0x20, 0, 0, 0x100, 0x20, color,
+                     (void *)(uintptr_t)(*(u32 *)(DAT_00a10920 + 0xc) + (u32)DAT_00a561d0 * 0x24));
+    SetGSReg(0x16, FUN_00502f98(1, 5, 0x60, 3, 0, 0, 1, 2));
+}
+
 
 // 0x015fcb0 (0x130 bytes)
 /* the banner across the bottom of the loading screen, at `alpha` */
 void Space_DrawLoadingBanner(int alpha)
 {
-    SetGSReg(0x16, idol_draw::Blend(1, 0, 0x80, 1, 0, 0, 1, 1));
-    SetGSReg(3, idol_draw::PackCmd(0, 1, 0, 1, 0x80));
-    Sprite_DrawShape(0x20, 0x168, 0x100, 0x20, 0, 0, 0x100, 0x20, (u32)alpha << 24 | 0x808080,
-                     (void *)(uintptr_t)(*(u32 *)(DAT_00a10920 + 0xc) + (u32)DAT_00a561d0 * 0x24));
-    SetGSReg(0x16, FUN_00502f98(1, 5, 0x60, 3, 0, 0, 1, 2));
+    DrawBanner((u32)alpha << 24 | 0x808080);
 }
 
 #define LOADSCREEN_ARRIVAL 4          /* the one played after the random ones */
@@ -994,547 +999,258 @@ void ChooseLoadingScreen(void)
     UpdateGameCounters();
 }
 
+#define SHIP_ENV_CLASS 0x212          /* first ship class with a reflection mesh */
+
+static inline void MtxApply(Vec4 *out, Mtx4 *m, Vec4 *v)
+{
+    out->x = m->v3.x * v->w + m->v2.x * v->z + m->v0.x * v->x + v->y * m->v1.x;
+    out->y = m->v3.y * v->w + m->v2.y * v->z + m->v0.y * v->x + v->y * m->v1.y;
+    out->z = m->v3.z * v->w + m->v2.z * v->z + m->v0.z * v->x + v->y * m->v1.z;
+    out->w = m->v3.w * v->w + m->v2.w * v->z + m->v0.w * v->x + v->y * m->v1.w;
+}
+
+static inline void Normalize(Vec4 *v)
+{
+    float len2 = v->z * v->z + v->x * v->x + v->y * v->y;
+    float x = 0.0f;
+    float y = 0.0f;
+    float z = 0.0f;
+
+    if (sqrtf(len2) != 0.0f) {
+        float inv = 1.0f / sqrtf(len2);
+
+        x = v->x * inv;
+        y = v->y * inv;
+        z = v->z * inv;
+    }
+
+    v->x = x;
+    v->y = y;
+    v->z = z;
+}
+
+/* the sphere-map uv of a vertex: the view ray reflected off its normal */
+static inline void ShipEnvUv(float *uv, Vec4 *world, Mtx4 *m, Vec4 *normal)
+{
+    Vec4 view;
+    view.x = world->x - GameCamera.posX;
+    view.y = world->y - GameCamera.posY;
+    view.z = world->z - GameCamera.posZ;
+    Normalize(&view);
+
+    Vec4 n;
+    n.x = normal->w * m->v3.x + normal->z * m->v2.x + normal->x * m->v0.x + normal->y * m->v1.x;
+    n.y = normal->w * m->v3.y + normal->z * m->v2.y + normal->x * m->v0.y + normal->y * m->v1.y;
+    n.z = normal->w * m->v3.z + normal->z * m->v2.z + normal->x * m->v0.z + normal->y * m->v1.z;
+
+    float len = sqrtf(n.z * n.z + n.x * n.x + n.y * n.y);
+    float scale = 0.1f / len;
+    if (len == 0.0f) {
+        n.x = 0.0f;
+        n.y = 0.0f;
+        n.z = 0.0f;
+    }
+    else {
+        n.x *= scale;
+        n.y *= scale;
+        n.z *= scale;
+    }
+
+    float dot = (n.z * view.z + (n.x * view.x + n.y * view.y)) * 2.0f;
+    Vec4 r;
+    r.x = -(n.x * dot - view.x);
+    r.y = -(n.y * dot - view.y);
+    r.z = -(n.z * dot - view.z);
+    Normalize(&r);
+
+    float m2 = sqrtf((r.z + 1.0f) * 2.0f) * 2.0f;
+    uv[0] = r.x / m2 + 0.5f;
+    uv[1] = r.y / m2 + 0.5f;
+}
+
 
 // 0x01607c0 (0x98c bytes)
 // inlined: FastRSqrt @0x160c1c, FastRSqrt @0x160d20
-void Space_DrawShipEffects(int param_1)
-
+/* the ship's environment-mapped shine: near the camera the reflection uvs follow it (easing in
+   from where they stopped over ~60 frames); away, only the mesh follows the ship */
+void Space_DrawShipEffects(MobyInstance *moby)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  float fVar7;
-  float fVar8;
-  float fVar9;
-  float fVar10;
-  float fVar11;
-  float fVar12;
-  float fVar13;
-  float fVar14;
-  float fVar15;
-  float fVar16;
-  short sVar17;
-  undefined4 uVar18;
-  int iVar19;
-  undefined4 uVar20;
-  ulonglong *puVar21;
-  bool bVar22;
-  float fVar23;
-  int iVar24;
-  ulonglong uVar25;
-  ulonglong uVar26;
-  float *pfVar28;
-  undefined4 *puVar29;
-  longlong lVar27;
-  float *pfVar30;
-  undefined4 *puVar31;
-  short *psVar32;
-  float *pfVar34;
-  undefined4 *puVar35;
-  longlong lVar33;
-  float *pfVar36;
-  undefined4 *puVar37;
-  float *pfVar38;
-  int iVar39;
-  ulonglong unaff_r24;
-  int iVar40;
-  int iVar41;
-  ulonglong unaff_r25;
-  ulonglong unaff_r26;
-  int iVar42;
-  ulonglong unaff_r27;
-  ulonglong unaff_r28;
-  short *psVar43;
-  ulonglong unaff_r29;
-  float *pfVar44;
-  ulonglong unaff_r30;
-  float *pfVar45;
-  ulonglong unaff_r31;
-  ulonglong in_LR;
-  longlong lVar46;
-  double dVar47;
-  double dVar48;
-  double dVar49;
-  double dVar50;
-  double dVar51;
-  double dVar52;
-  double dVar53;
-  ulonglong in_f14;
-  ulonglong in_f15;
-  ulonglong in_f16;
-  ulonglong in_f17;
-  ulonglong in_f18;
-  ulonglong in_f19;
-  ulonglong in_f20;
-  ulonglong in_f21;
-  ulonglong in_f22;
-  ulonglong in_f23;
-  ulonglong in_f24;
-  ulonglong in_f25;
-  ulonglong in_f26;
-  ulonglong in_f27;
-  ulonglong in_f28;
-  double dVar54;
-  ulonglong in_f29;
-  ulonglong in_f30;
-  ulonglong in_f31;
-  double dVar55;
-  GPiece<16> auVar56;
-  GPiece<16> auVar57;
-  GPiece<16> auVar58;
-  
-  uVar25 = ZEXT48(&stack0x00000000);
-  puVar21 = (ulonglong *)(uVar25 - 0x270);
-  *puVar21 = uVar25;
-  puVar21[0x50] = in_LR;
-  puVar21[0x3c] = in_f14;
-  puVar21[0x3d] = in_f15;
-  puVar21[0x3e] = in_f16;
-  puVar21[0x3f] = in_f17;
-  puVar21[0x40] = in_f18;
-  puVar21[0x41] = in_f19;
-  puVar21[0x42] = in_f20;
-  puVar21[0x43] = in_f21;
-  puVar21[0x44] = in_f22;
-  puVar21[0x45] = in_f23;
-  puVar21[0x46] = in_f24;
-  puVar21[0x47] = in_f25;
-  puVar21[0x48] = in_f26;
-  puVar21[0x49] = in_f27;
-  puVar21[0x4a] = in_f28;
-  puVar21[0x4b] = in_f29;
-  puVar21[0x4c] = in_f30;
-  puVar21[0x4d] = in_f31;
-  sVar17 = *(short *)(param_1 + 0xa6);
-  puVar21[0x34] = unaff_r24;
-  iVar40 = sVar17 + -0x212;
-  puVar21[0x3a] = unaff_r30;
-  iVar41 = iVar40 * 4;
-  puVar21[0x37] = unaff_r27;
-  puVar21[0x39] = unaff_r29;
-  puVar21[0x36] = unaff_r26;
-  puVar21[0x38] = unaff_r28;
-  pfVar45 = (float *)(&PTR_DAT_00734a70)[iVar40];
-  iVar19 = *(int *)(&DAT_00734a50 + iVar41);
-  puVar21[0x3b] = unaff_r31;
-  pfVar44 = (float *)(&PTR_DAT_00734a60)[iVar40];
-  iVar42 = *(int *)(&DAT_00734a40 + iVar41);
-  puVar21[0x35] = unaff_r25;
-  uVar18 = EffectTexHeaders;
-  iVar39 = DAT_00a10920;
-  psVar43 = (short *)(&PTR_DAT_00734a80)[iVar40];
-  if ((g_gameMode == GAME_MODE_SPACE) && (g_SpaceCutscene == 4)) {
-    puVar21[0x25] = (ulonglong)*(uint *)(*(int *)(DAT_00a10920 + 0x1c) + 4);
-    uVar18 = *(undefined4 *)(iVar39 + 0xc);
-  }
-  else {
-    uVar26 = GetEffectTex(0x15);
-    puVar21[0x25] = uVar26;
-  }
-  uVar26 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
-  puVar21[0x26] = uVar26;
-  uVar26 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
-  puVar21[0x24] = uVar26;
-  uVar26 = idol_draw::PackCmd(0,1,0,1,0x80);
-  puVar21[0x27] = uVar26;
-  uVar20 = *(undefined4 *)(&DAT_00734a30 + iVar41);
-  *(undefined4 *)((int)puVar21 + 0xfc) = uVar20;
-  *(undefined4 *)(puVar21 + 0x1f) = uVar20;
-  *(undefined4 *)((int)puVar21 + 0xf4) = uVar20;
-  *(undefined4 *)(puVar21 + 0x1e) = uVar20;
-  GetBoneTransformations(param_1,0,uVar25 - 0x200);
-  bVar22 = false;
-  iVar41 = 0;
-  if ((g_gameMode != GAME_MODE_NORMAL) ||
-     ((ABS(GameCamera.posX - *(float *)(param_1 + 0x10)) < 16.0 &&
-      (ABS(GameCamera.posY - *(float *)(param_1 + 0x14)) < 16.0)))) {
-    bVar22 = true;
-  }
-  if ((((g_gameMode != GAME_MODE_SPACE) || (g_SpaceCutscene != 4)) && (bVar22)) || (DAT_00731c90 == 1))
-  {
-    DAT_00731c94 = 1;
-    FastDecTimerS32(&DAT_00a561c4);
-    dVar47 = (double)FastIntToDouble(DAT_00a561c4);
-    puVar21[0x31] = (longlong)(int)(animationSpeed * 60.5);
-    dVar48 = (double)FastIntToDouble(*(undefined4 *)((int)puVar21 + 0x18c));
-    iVar39 = 0;
-    *(float *)(puVar21 + 0x28) = (float)(dVar47 / dVar48);
-    if (0 < iVar42) {
-      dVar54 = 0.0;
-      pfVar30 = (float *)&DAT_00a56850;
-      pfVar38 = (float *)&DAT_00a561f0;
-      fVar5 = *(float *)(puVar21 + 0xe);
-      pfVar28 = (float *)&DAT_00a56b80;
-      fVar6 = *(float *)(puVar21 + 0x10);
-      pfVar36 = (float *)&DAT_00a56854;
-      fVar7 = *(float *)(puVar21 + 0x12);
-      pfVar34 = (float *)&DAT_00a56b84;
-      fVar8 = *(float *)(puVar21 + 0x14);
-      puVar21[0x30] = 0x3fb99999a0000000;
-      fVar9 = *(float *)((int)puVar21 + 0x74);
-      fVar10 = *(float *)((int)puVar21 + 0x84);
-      fVar11 = *(float *)((int)puVar21 + 0x94);
-      fVar12 = *(float *)((int)puVar21 + 0xa4);
-      fVar13 = *(float *)(puVar21 + 0xf);
-      fVar14 = *(float *)(puVar21 + 0x11);
-      fVar15 = *(float *)(puVar21 + 0x13);
-      fVar16 = *(float *)(puVar21 + 0x15);
-      dVar49 = (double)GameCamera.posX;
-      puVar21[0x2f] = (ulonglong)(double)*(float *)((int)puVar21 + 0x7c);
-      dVar47 = (double)GameCamera.posY;
-      puVar21[0x2e] = (ulonglong)(double)*(float *)((int)puVar21 + 0x8c);
-      dVar48 = (double)GameCamera.posZ;
-      puVar21[0x2d] = (ulonglong)(double)*(float *)((int)puVar21 + 0x9c);
-      iVar40 = DAT_00731c90;
-      puVar21[0x2c] = (ulonglong)(double)*(float *)((int)puVar21 + 0xac);
-      puVar21[0x2b] = (ulonglong)dVar49;
-      iVar24 = DAT_00a561c4;
-      puVar21[0x2a] = (ulonglong)dVar47;
-      puVar21[0x29] = (ulonglong)dVar48;
-      do {
-        dVar48 = (double)pfVar45[1];
-        dVar49 = (double)*pfVar45;
-        dVar50 = (double)pfVar45[2];
-        dVar53 = (double)pfVar45[3];
-        dVar51 = (double)puVar21[0x2e];
-        dVar52 = (double)puVar21[0x2f];
-        dVar47 = (double)puVar21[0x2d];
-        dVar55 = (double)puVar21[0x2c];
-        fVar1 = (float)((double)fVar8 * dVar53 +
-                       (double)(float)((double)fVar7 * dVar50 +
-                                      (double)(float)((double)fVar5 * dVar49 +
-                                                     (double)(float)(dVar48 * (double)fVar6))));
-        fVar2 = (float)((double)fVar12 * dVar53 +
-                       (double)(float)((double)fVar11 * dVar50 +
-                                      (double)(float)((double)fVar9 * dVar49 +
-                                                     (double)(float)(dVar48 * (double)fVar10))));
-        fVar3 = (float)((double)fVar16 * dVar53 +
-                       (double)(float)((double)fVar15 * dVar50 +
-                                      (double)(float)((double)fVar13 * dVar49 +
-                                                     (double)(float)(dVar48 * (double)fVar14))));
-        *pfVar38 = fVar1;
-        pfVar38[1] = fVar2;
-        fVar2 = (float)((double)fVar2 - (double)puVar21[0x2a]);
-        fVar1 = (float)((double)fVar1 - (double)puVar21[0x2b]);
-        fVar4 = (float)((double)fVar3 - (double)puVar21[0x29]);
-        pfVar38[2] = fVar3;
-        pfVar38[3] = (float)(dVar55 * dVar53 +
-                            (double)(float)(dVar47 * dVar50 +
-                                           (double)(float)(dVar52 * dVar49 +
-                                                          (double)(float)(dVar48 * dVar51))));
-        dVar52 = (double)*pfVar44;
-        dVar53 = (double)pfVar44[1];
-        dVar50 = (double)pfVar44[2];
-        dVar51 = (double)pfVar44[3];
-        fVar3 = fVar4 * fVar4 + fVar1 * fVar1 + fVar2 * fVar2;
-        dVar47 = dVar54;
-        dVar48 = dVar54;
-        dVar49 = dVar54;
-        if (SQRT(fVar3) != 0.0) {
-          fVar23 = 1.0 / SQRT(fVar3);
-          fVar23 = -(fVar3 * fVar23 * fVar23 - 1.0) * fVar23 * 0.5 + fVar23;
-          fVar23 = -(fVar3 * fVar23 * fVar23 - 1.0) * fVar23 * 0.5 + fVar23;
-          fVar23 = -(fVar3 * fVar23 * fVar23 - 1.0) * fVar23 * 0.5 + fVar23;
-          dVar49 = (double)(fVar1 * fVar23);
-          dVar48 = (double)(fVar2 * fVar23);
-          dVar47 = (double)(fVar4 * fVar23);
+    int cls = moby->oClass - SHIP_ENV_CLASS;
+    Vec4 *verts = g_ShipEnvVerts[cls];
+    Vec4 *normals = g_ShipEnvNormals[cls];
+    short *quads = g_ShipEnvQuads[cls];
+    int vertCnt = g_ShipEnvVertCnt[cls];
+    int quadCnt = g_ShipEnvQuadCnt[cls];
+    u32 texHeaders = EffectTexHeaders;
+    QuadDef q;
+    Mtx4 m;
+
+    if (g_gameMode == GAME_MODE_SPACE && g_SpaceCutscene == 4) {
+        q.tex0 = *(u32 *)(*(u32 *)(DAT_00a10920 + 0x1c) + 4);
+        texHeaders = *(u32 *)(DAT_00a10920 + 0xc);
+    }
+    else {
+        q.tex0 = (u64)GetEffectTex(0x15);
+    }
+
+    q.tex1 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
+    q.clamp = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
+    q.alpha = idol_draw::PackCmd(0, 1, 0, 1, 0x80);
+    for (int i = 0; i < 4; i++) {
+        q.rgba[i] = (int)g_ShipEnvColors[cls];
+    }
+
+    GetBoneTransformations(moby, 0, &m);
+
+    int near = g_gameMode != GAME_MODE_NORMAL ||
+               (fabsf(GameCamera.posX - moby->pos.x) < 16.0f && fabsf(GameCamera.posY - moby->pos.y) < 16.0f);
+
+    if (((g_gameMode != GAME_MODE_SPACE || g_SpaceCutscene != 4) && near) || g_ShipEnvForce == 1) {
+        g_ShipEnvActive = 1;
+        FastDecTimerS32(&g_ShipEnvTimer);
+        float blend = (float)FastIntToDouble(g_ShipEnvTimer) / (float)FastIntToDouble(ScaledFrames(60.5f));
+
+        for (int i = 0; i < vertCnt; i++) {
+            float uv[2];
+
+            MtxApply(&g_ShipEnvWorld[i], &m, &verts[i]);
+            ShipEnvUv(uv, &g_ShipEnvWorld[i], &m, &normals[i]);
+
+            if (g_ShipEnvForce == 1 || g_ShipEnvTimer == 0) {
+                g_ShipEnvUv[i][0] = uv[0];
+                g_ShipEnvUv[i][1] = uv[1];
+            }
+            else {
+                g_ShipEnvUv[i][0] = (g_ShipEnvUvPrev[i][0] - uv[0]) * blend + uv[0];
+                g_ShipEnvUv[i][1] = (g_ShipEnvUvPrev[i][1] - uv[1]) * blend + uv[1];
+            }
         }
-        fVar2 = (float)(dVar51 * (double)fVar12 +
-                       (double)(float)(dVar50 * (double)fVar11 +
-                                      (double)(float)(dVar52 * (double)fVar9 +
-                                                     (double)(float)(dVar53 * (double)fVar10))));
-        fVar3 = (float)(dVar51 * (double)fVar8 +
-                       (double)(float)(dVar50 * (double)fVar7 +
-                                      (double)(float)(dVar52 * (double)fVar5 +
-                                                     (double)(float)(dVar53 * (double)fVar6))));
-        fVar4 = (float)(dVar51 * (double)fVar16 +
-                       (double)(float)(dVar50 * (double)fVar15 +
-                                      (double)(float)(dVar52 * (double)fVar13 +
-                                                     (double)(float)(dVar53 * (double)fVar14))));
-        dVar51 = (double)SQRT(fVar4 * fVar4 + fVar3 * fVar3 + fVar2 * fVar2);
-        fVar1 = (float)((double)puVar21[0x30] / dVar51);
-        dVar50 = dVar54;
-        if (0.0 - dVar51 < 0.0) {
-          dVar50 = (double)(fVar2 * fVar1);
+
+        if (g_ShipEnvForce == 1) {
+            g_ShipEnvForce = 2;
         }
-        dVar52 = dVar54;
-        if (0.0 - dVar51 < 0.0) {
-          dVar52 = (double)(fVar3 * fVar1);
-        }
-        dVar53 = dVar54;
-        if (0.0 - dVar51 < 0.0) {
-          dVar53 = (double)(fVar4 * fVar1);
-        }
-        if (dVar51 - 0.0 < 0.0) {
-          dVar50 = (double)(fVar2 * fVar1);
-        }
-        if (dVar51 - 0.0 < 0.0) {
-          dVar52 = (double)(fVar3 * fVar1);
-        }
-        if (dVar51 - 0.0 < 0.0) {
-          dVar53 = (double)(fVar4 * fVar1);
-        }
-        dVar51 = (double)((float)(dVar53 * dVar47 +
-                                 (double)(float)(dVar52 * dVar49 + (double)(float)(dVar50 * dVar48))
-                                 ) * 2.0);
-        fVar1 = -(float)(dVar50 * dVar51 - dVar48);
-        fVar4 = -(float)(dVar52 * dVar51 - dVar49);
-        fVar2 = -(float)(dVar53 * dVar51 - dVar47);
-        fVar3 = fVar2 * fVar2 + fVar4 * fVar4 + fVar1 * fVar1;
-        dVar47 = dVar54;
-        dVar48 = dVar54;
-        dVar49 = dVar54;
-        if (SQRT(fVar3) != 0.0) {
-          fVar23 = 1.0 / SQRT(fVar3);
-          fVar23 = -(fVar3 * fVar23 * fVar23 - 1.0) * fVar23 * 0.5 + fVar23;
-          fVar23 = -(fVar3 * fVar23 * fVar23 - 1.0) * fVar23 * 0.5 + fVar23;
-          fVar23 = -(fVar3 * fVar23 * fVar23 - 1.0) * fVar23 * 0.5 + fVar23;
-          dVar48 = (double)(fVar23 * fVar4);
-          dVar47 = (double)(fVar23 * fVar1);
-          dVar49 = (double)(fVar23 * fVar2);
-        }
-        dVar49 = (double)(SQRT((float)(dVar49 + 1.0) * 2.0) * 2.0);
-        fVar1 = (float)(dVar47 / dVar49) + 0.5;
-        fVar2 = (float)(dVar48 / dVar49) + 0.5;
-        if ((iVar40 == 1) || (iVar24 == 0)) {
-          *pfVar30 = fVar2;
-          *pfVar36 = fVar1;
+    }
+    else {
+        if (g_ShipEnvActive == 1) {
+            g_ShipEnvActive = 0;
+            for (int i = 0; i < vertCnt; i++) {
+                g_ShipEnvUvPrev[i][0] = g_ShipEnvUv[i][0];
+                g_ShipEnvUvPrev[i][1] = g_ShipEnvUv[i][1];
+                MtxApply(&g_ShipEnvWorld[i], &m, &verts[i]);
+            }
         }
         else {
-          fVar3 = *pfVar34;
-          fVar4 = *(float *)(puVar21 + 0x28);
-          *pfVar30 = (*pfVar28 - fVar2) * fVar4 + fVar2;
-          *pfVar36 = (fVar3 - fVar1) * fVar4 + fVar1;
+            for (int i = 0; i < vertCnt; i++) {
+                MtxApply(&g_ShipEnvWorld[i], &m, &verts[i]);
+            }
         }
-        iVar39 = iVar39 + 1;
-        pfVar28 = pfVar28 + 2;
-        pfVar30 = pfVar30 + 2;
-        pfVar34 = pfVar34 + 2;
-        pfVar36 = pfVar36 + 2;
-        pfVar44 = pfVar44 + 4;
-        pfVar45 = pfVar45 + 4;
-        pfVar38 = pfVar38 + 4;
-      } while (iVar39 < iVar42);
+
+        g_ShipEnvTimer = ScaledFrames(60.5f);
     }
-    if (DAT_00731c90 == 1) {
-      DAT_00731c90 = 2;
+
+    for (int i = 0; i < quadCnt; i++, quads += 8) {
+        for (int j = 0; j < 4; j++) {
+            int vert = quads[j * 2];
+
+            q.xyzw[j] = g_ShipEnvWorld[vert];
+            (&q.st[0][0])[j * 2] = g_ShipEnvUv[vert][0];
+            (&q.st[0][0])[j * 2 + 1] = g_ShipEnvUv[vert][1];
+        }
+
+        FastDrawQuad((undefined4 *)&q, 0, 0, (longlong)texHeaders, 9);
     }
-  }
-  else {
-    if (DAT_00731c94 == 1) {
-      iVar39 = 0;
-      DAT_00731c94 = 0;
-      if (0 < iVar42) {
-        puVar29 = &DAT_00a56850;
-        puVar31 = &DAT_00a56b80;
-        pfVar44 = (float *)&DAT_00a561f0;
-        puVar35 = &DAT_00a56854;
-        puVar37 = &DAT_00a56b84;
-        do {
-          uVar20 = *puVar35;
-          *puVar31 = *puVar29;
-          *puVar37 = uVar20;
-          fVar5 = pfVar45[1];
-          fVar6 = *(float *)((int)puVar21 + 0x84);
-          fVar7 = *pfVar45;
-          fVar8 = *(float *)(puVar21 + 0x11);
-          fVar9 = *(float *)((int)puVar21 + 0x74);
-          fVar10 = *(float *)((int)puVar21 + 0x8c);
-          fVar11 = *(float *)(puVar21 + 0xf);
-          fVar12 = pfVar45[2];
-          fVar13 = *(float *)((int)puVar21 + 0x7c);
-          iVar39 = iVar39 + 1;
-          fVar14 = *(float *)((int)puVar21 + 0x94);
-          fVar15 = *(float *)(puVar21 + 0x13);
-          fVar16 = pfVar45[3];
-          puVar29 = puVar29 + 2;
-          fVar1 = *(float *)((int)puVar21 + 0x9c);
-          puVar31 = puVar31 + 2;
-          puVar35 = puVar35 + 2;
-          puVar37 = puVar37 + 2;
-          fVar2 = *(float *)((int)puVar21 + 0xa4);
-          pfVar45 = pfVar45 + 4;
-          fVar3 = *(float *)(puVar21 + 0x15);
-          fVar4 = *(float *)((int)puVar21 + 0xac);
-          *pfVar44 = *(float *)(puVar21 + 0x14) * fVar16 +
-                     *(float *)(puVar21 + 0x12) * fVar12 +
-                     *(float *)(puVar21 + 0xe) * fVar7 + *(float *)(puVar21 + 0x10) * fVar5;
-          pfVar44[1] = fVar2 * fVar16 + fVar14 * fVar12 + fVar9 * fVar7 + fVar6 * fVar5;
-          pfVar44[2] = fVar3 * fVar16 + fVar15 * fVar12 + fVar11 * fVar7 + fVar8 * fVar5;
-          pfVar44[3] = fVar4 * fVar16 + fVar1 * fVar12 + fVar13 * fVar7 + fVar10 * fVar5;
-          pfVar44 = pfVar44 + 4;
-        } while (iVar39 < iVar42);
-      }
-    }
-    else if (0 < iVar42) {
-      pfVar44 = (float *)&DAT_00a561f0;
-      do {
-        fVar5 = pfVar45[1];
-        fVar6 = *(float *)((int)puVar21 + 0x84);
-        fVar7 = *pfVar45;
-        fVar8 = *(float *)(puVar21 + 0x11);
-        fVar9 = *(float *)((int)puVar21 + 0x74);
-        fVar10 = *(float *)((int)puVar21 + 0x8c);
-        fVar11 = *(float *)(puVar21 + 0xf);
-        fVar12 = pfVar45[2];
-        fVar13 = *(float *)((int)puVar21 + 0x7c);
-        iVar42 = iVar42 + -1;
-        fVar14 = *(float *)((int)puVar21 + 0x94);
-        fVar15 = *(float *)(puVar21 + 0x13);
-        fVar16 = pfVar45[3];
-        fVar1 = *(float *)((int)puVar21 + 0x9c);
-        pfVar45 = pfVar45 + 4;
-        fVar2 = *(float *)((int)puVar21 + 0xa4);
-        fVar3 = *(float *)(puVar21 + 0x15);
-        fVar4 = *(float *)((int)puVar21 + 0xac);
-        *pfVar44 = *(float *)(puVar21 + 0x14) * fVar16 +
-                   *(float *)(puVar21 + 0x12) * fVar12 +
-                   *(float *)(puVar21 + 0xe) * fVar7 + *(float *)(puVar21 + 0x10) * fVar5;
-        pfVar44[1] = fVar2 * fVar16 + fVar14 * fVar12 + fVar9 * fVar7 + fVar6 * fVar5;
-        pfVar44[2] = fVar3 * fVar16 + fVar15 * fVar12 + fVar11 * fVar7 + fVar8 * fVar5;
-        pfVar44[3] = fVar4 * fVar16 + fVar1 * fVar12 + fVar13 * fVar7 + fVar10 * fVar5;
-        pfVar44 = pfVar44 + 4;
-      } while (0 < iVar42);
-    }
-    auVar56 = ZEXT416(0xffffffff);
-    auVar56 = auVar56 | auVar56 << 0x20 | auVar56 << 0x40 | auVar56 << 0x60;
-    auVar57 = vectorShiftLeftIntegerWord(auVar56,auVar56);
-    auVar56 = loadVectorLeftIndexed(4,0x1607a4);
-    auVar56 = auVar56 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar58 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
-    auVar56 = vectorMultiplyAddFloatingPoint
-                        (auVar58,auVar56 | auVar56 << 0x20 | auVar56 << 0x40 | auVar56 << 0x60,
-                         auVar57);
-    auVar56 = vectorConvertToSignedFixedPointWordSaturate(auVar56,0);
-    auVar56 = auVar56 >> 0x60 & (GPiece<16>)0xffffffff;
-    DAT_00a561c4 = storeVectorElementWordIndexed
-                             (auVar56 | auVar56 << 0x20 | auVar56 << 0x40 | auVar56 << 0x60,0x61c4,
-                              0xa50000);
-  }
-  if (0 < iVar19) {
-    do {
-      lVar33 = uVar25 - 0x1c0;
-      lVar46 = 4;
-      lVar27 = uVar25 - 0x270;
-      psVar32 = psVar43;
-      do {
-        sVar17 = *psVar32;
-        psVar32 = psVar32 + 2;
-        iVar39 = (int)((longlong)sVar17 << 4);
-        iVar42 = (int)((longlong)sVar17 << 3);
-        puVar29 = (undefined4 *)lVar33;
-        *puVar29 = *(undefined4 *)((int)&DAT_00a561f0 + iVar39);
-        puVar29[1] = *(undefined4 *)((int)&DAT_00a561f4 + iVar39);
-        puVar29[2] = *(undefined4 *)((int)&DAT_00a561f8 + iVar39);
-        puVar29[3] = *(undefined4 *)((int)&DAT_00a561fc + iVar39);
-        uVar20 = *(undefined4 *)((int)&DAT_00a56854 + iVar42);
-        lVar33 = lVar33 + 0x10;
-        *(undefined4 *)((int)lVar27 + 0x100) = *(undefined4 *)((int)&DAT_00a56850 + iVar42);
-        *(undefined4 *)((int)lVar27 + 0x104) = uVar20;
-        lVar27 = lVar27 + 8;
-        lVar46 = lVar46 + -1;
-      } while (lVar46 != 0);
-      FastDrawQuad(uVar25 - 0x1c0,0,0,uVar18,9);
-      iVar41 = iVar41 + 1;
-      psVar43 = psVar43 + 8;
-    } while (iVar41 < iVar19);
-  }
-  return;
 }
 
 
 // 0x016114c (0x328 bytes)
+/* draws a frame of the space loading screens */
 void TransitionDraw_Space(void)
-
 {
-  undefined8 uVar1;
-  double dVar2;
-  
-  STUB_00078100();
-  ComposeCameraMatrix();
-  CleanAnimationCache();
-  STUB_0006849c();
-  DAT_00a10724 = 0xffffffff;
-  dVar2 = (double)g_ViewContext.xratio;
-  if ((int)(((uint)((int)g_ViewContext.xratio >> 0x1f) >> 1 ^ (uint)g_ViewContext.xratio) -
-           ((int)g_ViewContext.xratio >> 0x1f)) < 0x3f2147ae) {
-    g_ViewContext.xratio = 0.63;
-  }
-  UpdateViewContext();
-  ComposeCameraMatrix();
-  Space_DrawSkyShell();
-  g_ViewContext.xratio = (float)dVar2;
-  UpdateViewContext();
-  ComposeCameraMatrix();
-  if (g_currentLoadingScreen == 4) {
+    STUB_00078100();
+    ComposeCameraMatrix();
+    CleanAnimationCache();
+    STUB_0006849c();
+    DAT_00a10724 = 0xffffffff;
+
+    /* the sky shell at a view at least 0.63 wide */
+    float xratio = g_ViewContext.xratio;
+    if (g_ViewContext.xratio < 0.63f) {
+        g_ViewContext.xratio = 0.63f;
+    }
+    UpdateViewContext();
+    ComposeCameraMatrix();
+    Space_DrawSkyShell();
+    g_ViewContext.xratio = xratio;
+    UpdateViewContext();
+    ComposeCameraMatrix();
+
+    if (g_currentLoadingScreen == LOADSCREEN_ARRIVAL) {
+        STUB_0006d704(1);
+        ____Space_TransitionDrawPass();
+        STUB_0006d708();
+    }
+
+    DrawMobys();
+    STUB_00175554(0x2080000);
     STUB_0006d704(1);
-    ____Space_TransitionDrawPass();
+
+    if (!SpaceIsIntro()) {
+        Space_DrawTransitionOverlay();
+    }
+
+    if (g_currentLoadingScreen == LOADSCREEN_ARRIVAL && g_SpaceSceneFrame > 60) {
+        int alpha = g_SpaceSceneFrame * 2 - 120;
+        if (alpha > 0x80) {
+            alpha = 0x80;
+        }
+
+        DrawBanner(((u32)alpha << 24 & 0xfe000000) | 0x808080);
+    }
+
+    if (!SpaceIsIntro()) {
+        Space_DrawShipEffects(g_SpaceSceneMobys[0]);
+    }
+
     STUB_0006d708();
-  }
-  DrawMobys();
-  STUB_00175554(0x2080000);
-  STUB_0006d704(1);
-  if ((Level != Veldin) && ((Level != Novalis || (g_SeenPlanets.Kerwan != '\0')))) {
-    Space_DrawTransitionOverlay(g_SpaceSceneMobys[0]);
-  }
-  if ((g_currentLoadingScreen == 4) && (0x3c < g_SpaceSceneFrame)) {
-    uVar1 = idol_draw::Blend(1,0,0x80,1,0,0,1,1);
-    SetGSReg(0x16,uVar1);
-    uVar1 = idol_draw::PackCmd(0,1,0,1,0x80);
-    SetGSReg(3,uVar1);
-    Sprite_DrawShape(0x20,0x168,0x100,0x20,0,0,0x100,0x20);
-    uVar1 = FUN_00502f98(1,5,0x60,3,0,0,1,2);
-    SetGSReg(0x16,uVar1);
-  }
-  if ((Level != Veldin) && ((Level != Novalis || (g_SeenPlanets.Kerwan != '\0')))) {
-    Space_DrawShipEffects(g_SpaceSceneMobys[0]);
-  }
-  STUB_0006d708();
-  if ((0 < (int)SceneScreenFade) &&
-     (0x3f800000 <
-      (int)(FLOAT_ORDER(SceneScreenFade)))) {
-    SceneScreenFade = 1.0;
-  }
-  STUB_00174cf4(0x10);
-  STUB_000f1448();
-  return;
+    if (SceneScreenFade > 1.0f) {
+        SceneScreenFade = 1.0f;
+    }
+
+    STUB_00174cf4(0x10);
+    STUB_000f1448();
 }
 
 
 // 0x0161480 (0x244 bytes)
-void Space_SpawnShipParticles(void)
-
+/* six engine sparks off the ship, drifting by zVel */
+void Space_SpawnShipParticles(MobyInstance *ship, float zVel)
 {
-  int iVar1;
-  int iVar2;
-  int iVar3;
-  double dVar4;
-  double dVar5;
-  double dVar6;
-  GPiece<16> local_90;
-  GPiece<16> local_80;
-  GPiece<32> local_70;
-  
-  iVar3 = 0;
-  dVar4 = -0.25;
-  dVar5 = 0.25;
-  dVar6 = 4.5;
-  do {
-    MB_randRangeFloat(-g_FrameTime,g_FrameTime);
-    MB_randRangeFloat(-g_FrameTime,g_FrameTime);
-    MB_randRangeFloat
-              ((float)((double)g_FrameTime * dVar4),
-               (float)((double)g_FrameTime * dVar5));
-    iVar1 = (int)((double)animationSpeed * dVar6);
-    iVar2 = MB_randInt(iVar1);
-    SpawnPart_2(local_70,local_90,local_80,0x24c0c0c0,0x14c0c0c0,iVar1,iVar1,iVar1 + iVar2)
-    ;
-    iVar3 = iVar3 + 1;
-  } while (iVar3 < 6);
-  return;
+    Vec4 *ofs = g_ShipParticleOffsets[g_SpaceshipVariant];
+    Mtx4 *m = &ship->transform;
+
+    for (int i = 0; i < 6; i++, ofs++) {
+        Vec4 vel;
+        Vec4 accel;
+        Vec4 pos;
+
+        vel.x = (float)MB_randRangeFloat(-g_FrameTime, g_FrameTime);
+        vel.y = (float)MB_randRangeFloat(-g_FrameTime, g_FrameTime);
+        vel.z = (float)MB_randRangeFloat(g_FrameTime * -0.25f, g_FrameTime * 0.25f) + zVel;
+        vel.w = 0.4f;
+        accel.x = vel.x;
+        accel.y = vel.y;
+        accel.z = vel.z;
+        accel.w = 0.6f;
+
+        pos.x = m->v2.x * ofs->z + m->v0.x * ofs->x + m->v1.x * ofs->y + ship->pos.x;
+        pos.y = m->v2.y * ofs->z + m->v0.y * ofs->x + m->v1.y * ofs->y + ship->pos.y;
+        pos.z = m->v2.z * ofs->z + m->v0.z * ofs->x + m->v1.z * ofs->y + ship->pos.z;
+        pos.w = m->v1.w * ofs->y + m->v2.w * ofs->z + m->v0.w * ofs->x + ofs->w;
+
+        int life = ScaledFrames(4.5f);
+        SpawnPart_2(&pos.x, &vel.x, &accel.x, 0x24c0c0c0, 0x14c0c0c0, (short)life, (undefined2)life,
+                    (undefined2)(life + MB_randInt(life)));
+    }
 }
 
 

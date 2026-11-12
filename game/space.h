@@ -17,16 +17,11 @@ extern Cuboid * Cuboids; /* 0xa51bd8 */
 extern undefined4 DAT_00653758; /* no defined data */
 extern undefined4 DAT_00731bc4; /* 0x731bc4 */
 extern undefined4 DAT_00731c00; /* no defined data */
-extern undefined4 DAT_00731c90; /* 0x731c90 */
-extern undefined4 DAT_00731c94; /* 0x731c94 */
 extern undefined4 DAT_00731ed0; /* no defined data */
 extern undefined4 DAT_00731f74; /* 0x731f74 */
 extern undefined4 DAT_00731f78; /* 0x731f78 */
 extern undefined4 DAT_00731f7c; /* 0x731f7c */
 extern undefined4 DAT_00732220; /* no defined data */
-extern undefined4 DAT_00734a30; /* no defined data */
-extern undefined4 DAT_00734a40; /* no defined data */
-extern undefined4 DAT_00734a50; /* no defined data */
 extern undefined4 DAT_00734b00; /* no defined data */
 extern undefined4 DAT_0095cda8; /* 0x95cda8 */
 extern undefined4 DAT_0095cf14; /* 0x95cf14 */
@@ -60,23 +55,11 @@ extern undefined4 DAT_00a0a0a0; /* no defined data */
 extern undefined4 DAT_00a10920; /* 0xa10920 */
 extern undefined4 DAT_00a1be80; /* no defined data */
 extern undefined4 DAT_00a1bec0; /* no defined data */
-extern undefined4 DAT_00a561c4; /* 0xa561c4 */
 extern undefined8 DAT_00a561c8; /* 0xa561c8 */
 extern undefined8 DAT_00a561d0; /* 0xa561d0 */
 extern undefined4 DAT_00a561e4; /* 0xa561e4 */
 extern undefined4 DAT_00a561e8; /* 0xa561e8 */
 extern undefined4 DAT_00a561ec; /* 0xa561ec */
-extern undefined4 DAT_00a561f0; /* 0xa561f0 */
-extern undefined4 DAT_00a561f4; /* 0xa561f4 */
-extern undefined4 DAT_00a561f8; /* 0xa561f8 */
-extern undefined4 DAT_00a561fc; /* 0xa561fc */
-extern undefined4 DAT_00a56850; /* 0xa56850 */
-extern undefined4 DAT_00a56854; /* 0xa56854 */
-extern undefined4 DAT_00a56b80; /* 0xa56b80 */
-extern undefined4 DAT_00a56b84; /* 0xa56b84 */
-extern undefined * PTR_DAT_00734a60; /* 0x734a60 */
-extern undefined * PTR_DAT_00734a70; /* 0x734a70 */
-extern undefined * PTR_DAT_00734a80; /* 0x734a80 */
 extern pointer32 PTR_STUB_0015e2c0_00707c68; /* 0x707c68 */
 extern pointer32 PTR_Space_DrawShipEffects_00707cd8; /* 0x707cd8 */
 extern pointer32 PTR_Space_DrawShipEngineGlow_00707cb0; /* 0x707cb0 */
@@ -94,9 +77,22 @@ extern Planets g_SeenPlanets; /* 0x96ca0c */
 extern Vec4 g_ShipBoardOffsets[3]; /* 0x731c60: where the hero boards, per ship variant (ship space) */ /* type set in global_types.tsv */
 extern int g_ShipEngineGlowCnt[3]; /* 0x731dac */ /* type set in global_types.tsv */
 extern Vec4 g_ShipEngineGlows[12]; /* 0x731dc0: engine glows (xyz, size in w): 8 for variant 0, 2 each for 1 and 2 */ /* type set in global_types.tsv */
+extern int g_ShipEnvActive; /* 0x731c94 */ /* type set in global_types.tsv */
+extern u32 g_ShipEnvColors[4]; /* 0x734a30: per ship class (oClass - 0x212), the reflection's colour */ /* type set in global_types.tsv */
+extern int g_ShipEnvForce; /* 0x731c90: 1 = update the uvs once even when off (then 2) */ /* type set in global_types.tsv */
+extern Vec4 *g_ShipEnvNormals[4]; /* 0x734a60 */ /* type set in global_types.tsv */
+extern int g_ShipEnvQuadCnt[4]; /* 0x734a50 */ /* type set in global_types.tsv */
+extern short *g_ShipEnvQuads[4]; /* 0x734a80: 4 (vertex, unused) pairs per quad */ /* type set in global_types.tsv */
+extern int g_ShipEnvTimer; /* 0xa561c4 */ /* type set in global_types.tsv */
+extern float g_ShipEnvUv[102][2]; /* 0xa56850: its sphere-mapped uvs */ /* type set in global_types.tsv */
+extern float g_ShipEnvUvPrev[102][2]; /* 0xa56b80: the uvs when the reflection last went off, blended from */ /* type set in global_types.tsv */
+extern int g_ShipEnvVertCnt[4]; /* 0x734a40 */ /* type set in global_types.tsv */
+extern Vec4 *g_ShipEnvVerts[4]; /* 0x734a70 */ /* type set in global_types.tsv */
+extern Vec4 g_ShipEnvWorld[102]; /* 0xa561f0: the reflection mesh in world space */ /* type set in global_types.tsv */
 extern Vec4 g_ShipGlowCorners[4]; /* 0x731e80 */ /* type set in global_types.tsv */
 extern float g_ShipGlowSt[8]; /* 0x731d8c: QuadDef.st of the engine glow */ /* type set in global_types.tsv */
 extern int g_ShipLeaveFrames[3]; /* 0x731d80: frame of the arrival cutscene the ship leaves at, per variant */ /* type set in global_types.tsv */
+extern Vec4 g_ShipParticleOffsets[3][6]; /* 0x7320a0: engine particle emitters per ship variant (ship space) */ /* type set in global_types.tsv */
 extern int g_ShipTakeoffPending; /* 0xa15c74: the ship takes off at the end of the frame */ /* type set in global_types.tsv */
 extern u32 g_ShipTrailColors[3][2]; /* 0x731f40: trail colour at the ship and at the end, per variant */ /* type set in global_types.tsv */
 extern int g_ShipTrailHead; /* 0x9645c0 */ /* type set in global_types.tsv */
@@ -147,9 +143,9 @@ void Space_DrawTransitionOverlay(void);
 void ____Space_TransitionDrawPass(void);
 void Space_DrawLoadingBanner(int alpha);
 void ChooseLoadingScreen(void);
-void Space_DrawShipEffects(int param_1);
+void Space_DrawShipEffects(MobyInstance *moby);
 void TransitionDraw_Space(void);
-void Space_SpawnShipParticles(void);
+void Space_SpawnShipParticles(MobyInstance *ship, float zVel);
 void UpdateSpace(void);
 void DisplayLoadingScreen(void);
 void SpaceTransition_LoadWad(void);

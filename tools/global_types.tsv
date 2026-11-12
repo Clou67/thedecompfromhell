@@ -363,3 +363,16 @@ g_TransitionDrift	Vec4 NAME /* 0x731fc0: how far the centre moves over loading s
 g_LoadScreenSkyDirs	Vec4 NAME[5] /* 0x732020: per loading screen, the direction the sky scrolls (w copied) */
 g_LoadScreenSkyAngles	float NAME[5] /* 0x732070 */
 g_LoadScreenXRatios	float NAME[5] /* 0x732084: the least view xratio of each loading screen */
+g_ShipEnvColors	u32 NAME[4] /* 0x734a30: per ship class (oClass - 0x212), the reflection's colour */
+g_ShipEnvVertCnt	int NAME[4] /* 0x734a40 */
+g_ShipEnvQuadCnt	int NAME[4] /* 0x734a50 */
+g_ShipEnvNormals	Vec4 *NAME[4] /* 0x734a60 */
+g_ShipEnvVerts	Vec4 *NAME[4] /* 0x734a70 */
+g_ShipEnvQuads	short *NAME[4] /* 0x734a80: 4 (vertex, unused) pairs per quad */
+g_ShipEnvWorld	Vec4 NAME[102] /* 0xa561f0: the reflection mesh in world space */
+g_ShipEnvUv	float NAME[102][2] /* 0xa56850: its sphere-mapped uvs */
+g_ShipEnvUvPrev	float NAME[102][2] /* 0xa56b80: the uvs when the reflection last went off, blended from */
+g_ShipEnvTimer	int NAME /* 0xa561c4 */
+g_ShipEnvForce	int NAME /* 0x731c90: 1 = update the uvs once even when off (then 2) */
+g_ShipEnvActive	int NAME /* 0x731c94 */
+g_ShipParticleOffsets	Vec4 NAME[3][6] /* 0x7320a0: engine particle emitters per ship variant (ship space) */

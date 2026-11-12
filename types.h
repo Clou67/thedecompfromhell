@@ -2870,6 +2870,11 @@ extern undefined4 DAT_00a561b0; /* 0xa561b0 */
 extern undefined4 DAT_00a561b4; /* 0xa561b4 */
 extern undefined4 DAT_00a561b8; /* 0xa561b8 */
 extern undefined4 DAT_00a561bc; /* 0xa561bc */
+extern undefined4 DAT_00a561f4; /* 0xa561f4 */
+extern undefined4 DAT_00a561f8; /* 0xa561f8 */
+extern undefined4 DAT_00a561fc; /* 0xa561fc */
+extern undefined4 DAT_00a56854; /* 0xa56854 */
+extern undefined4 DAT_00a56b84; /* 0xa56b84 */
 extern undefined4 DAT_00e574f4; /* 0xe574f4 */
 extern undefined4 DAT_00e5aad0; /* 0xe5aad0 */
 extern undefined4 DAT_00e5aad4; /* 0xe5aad4 */

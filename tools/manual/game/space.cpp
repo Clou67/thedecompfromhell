@@ -719,15 +719,21 @@ void ____Space_TransitionDrawPass(void)
     SetGSReg(0x16, FUN_00502f98(1, 5, 0x60, 3, 0, 0, 1, 2));
 }
 
+static inline void DrawBanner(u32 color)
+{
+    SetGSReg(0x16, idol_draw::Blend(1, 0, 0x80, 1, 0, 0, 1, 1));
+    SetGSReg(3, idol_draw::PackCmd(0, 1, 0, 1, 0x80));
+    Sprite_DrawShape(0x20, 0x168, 0x100, 0x20, 0, 0, 0x100, 0x20, color,
+                     (void *)(uintptr_t)(*(u32 *)(DAT_00a10920 + 0xc) + (u32)DAT_00a561d0 * 0x24));
+    SetGSReg(0x16, FUN_00502f98(1, 5, 0x60, 3, 0, 0, 1, 2));
+}
+
+
 // 0x015fcb0 (0x130 bytes)
 /* the banner across the bottom of the loading screen, at `alpha` */
 void Space_DrawLoadingBanner(int alpha)
 {
-    SetGSReg(0x16, idol_draw::Blend(1, 0, 0x80, 1, 0, 0, 1, 1));
-    SetGSReg(3, idol_draw::PackCmd(0, 1, 0, 1, 0x80));
-    Sprite_DrawShape(0x20, 0x168, 0x100, 0x20, 0, 0, 0x100, 0x20, (u32)alpha << 24 | 0x808080,
-                     (void *)(uintptr_t)(*(u32 *)(DAT_00a10920 + 0xc) + (u32)DAT_00a561d0 * 0x24));
-    SetGSReg(0x16, FUN_00502f98(1, 5, 0x60, 3, 0, 0, 1, 2));
+    DrawBanner((u32)alpha << 24 | 0x808080);
 }
 
 #define LOADSCREEN_ARRIVAL 4          /* the one played after the random ones */
@@ -929,4 +935,254 @@ void ChooseLoadingScreen(void)
     }
 
     UpdateGameCounters();
+}
+
+#define SHIP_ENV_CLASS 0x212          /* first ship class with a reflection mesh */
+
+static inline void MtxApply(Vec4 *out, Mtx4 *m, Vec4 *v)
+{
+    out->x = m->v3.x * v->w + m->v2.x * v->z + m->v0.x * v->x + v->y * m->v1.x;
+    out->y = m->v3.y * v->w + m->v2.y * v->z + m->v0.y * v->x + v->y * m->v1.y;
+    out->z = m->v3.z * v->w + m->v2.z * v->z + m->v0.z * v->x + v->y * m->v1.z;
+    out->w = m->v3.w * v->w + m->v2.w * v->z + m->v0.w * v->x + v->y * m->v1.w;
+}
+
+static inline void Normalize(Vec4 *v)
+{
+    float len2 = v->z * v->z + v->x * v->x + v->y * v->y;
+    float x = 0.0f;
+    float y = 0.0f;
+    float z = 0.0f;
+
+    if (sqrtf(len2) != 0.0f) {
+        float inv = 1.0f / sqrtf(len2);
+
+        x = v->x * inv;
+        y = v->y * inv;
+        z = v->z * inv;
+    }
+
+    v->x = x;
+    v->y = y;
+    v->z = z;
+}
+
+/* the sphere-map uv of a vertex: the view ray reflected off its normal */
+static inline void ShipEnvUv(float *uv, Vec4 *world, Mtx4 *m, Vec4 *normal)
+{
+    Vec4 view;
+    view.x = world->x - GameCamera.posX;
+    view.y = world->y - GameCamera.posY;
+    view.z = world->z - GameCamera.posZ;
+    Normalize(&view);
+
+    Vec4 n;
+    n.x = normal->w * m->v3.x + normal->z * m->v2.x + normal->x * m->v0.x + normal->y * m->v1.x;
+    n.y = normal->w * m->v3.y + normal->z * m->v2.y + normal->x * m->v0.y + normal->y * m->v1.y;
+    n.z = normal->w * m->v3.z + normal->z * m->v2.z + normal->x * m->v0.z + normal->y * m->v1.z;
+
+    float len = sqrtf(n.z * n.z + n.x * n.x + n.y * n.y);
+    float scale = 0.1f / len;
+    if (len == 0.0f) {
+        n.x = 0.0f;
+        n.y = 0.0f;
+        n.z = 0.0f;
+    }
+    else {
+        n.x *= scale;
+        n.y *= scale;
+        n.z *= scale;
+    }
+
+    float dot = (n.z * view.z + (n.x * view.x + n.y * view.y)) * 2.0f;
+    Vec4 r;
+    r.x = -(n.x * dot - view.x);
+    r.y = -(n.y * dot - view.y);
+    r.z = -(n.z * dot - view.z);
+    Normalize(&r);
+
+    float m2 = sqrtf((r.z + 1.0f) * 2.0f) * 2.0f;
+    uv[0] = r.x / m2 + 0.5f;
+    uv[1] = r.y / m2 + 0.5f;
+}
+
+// 0x01607c0 (0x98c bytes)
+/* the ship's environment-mapped shine: near the camera the reflection uvs follow it (easing in
+   from where they stopped over ~60 frames); away, only the mesh follows the ship */
+void Space_DrawShipEffects(MobyInstance *moby)
+{
+    int cls = moby->oClass - SHIP_ENV_CLASS;
+    Vec4 *verts = g_ShipEnvVerts[cls];
+    Vec4 *normals = g_ShipEnvNormals[cls];
+    short *quads = g_ShipEnvQuads[cls];
+    int vertCnt = g_ShipEnvVertCnt[cls];
+    int quadCnt = g_ShipEnvQuadCnt[cls];
+    u32 texHeaders = EffectTexHeaders;
+    QuadDef q;
+    Mtx4 m;
+
+    if (g_gameMode == GAME_MODE_SPACE && g_SpaceCutscene == 4) {
+        q.tex0 = *(u32 *)(*(u32 *)(DAT_00a10920 + 0x1c) + 4);
+        texHeaders = *(u32 *)(DAT_00a10920 + 0xc);
+    }
+    else {
+        q.tex0 = (u64)GetEffectTex(0x15);
+    }
+
+    q.tex1 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
+    q.clamp = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
+    q.alpha = idol_draw::PackCmd(0, 1, 0, 1, 0x80);
+    for (int i = 0; i < 4; i++) {
+        q.rgba[i] = (int)g_ShipEnvColors[cls];
+    }
+
+    GetBoneTransformations(moby, 0, &m);
+
+    int near = g_gameMode != GAME_MODE_NORMAL ||
+               (fabsf(GameCamera.posX - moby->pos.x) < 16.0f && fabsf(GameCamera.posY - moby->pos.y) < 16.0f);
+
+    if (((g_gameMode != GAME_MODE_SPACE || g_SpaceCutscene != 4) && near) || g_ShipEnvForce == 1) {
+        g_ShipEnvActive = 1;
+        FastDecTimerS32(&g_ShipEnvTimer);
+        float blend = (float)FastIntToDouble(g_ShipEnvTimer) / (float)FastIntToDouble(ScaledFrames(60.5f));
+
+        for (int i = 0; i < vertCnt; i++) {
+            float uv[2];
+
+            MtxApply(&g_ShipEnvWorld[i], &m, &verts[i]);
+            ShipEnvUv(uv, &g_ShipEnvWorld[i], &m, &normals[i]);
+
+            if (g_ShipEnvForce == 1 || g_ShipEnvTimer == 0) {
+                g_ShipEnvUv[i][0] = uv[0];
+                g_ShipEnvUv[i][1] = uv[1];
+            }
+            else {
+                g_ShipEnvUv[i][0] = (g_ShipEnvUvPrev[i][0] - uv[0]) * blend + uv[0];
+                g_ShipEnvUv[i][1] = (g_ShipEnvUvPrev[i][1] - uv[1]) * blend + uv[1];
+            }
+        }
+
+        if (g_ShipEnvForce == 1) {
+            g_ShipEnvForce = 2;
+        }
+    }
+    else {
+        if (g_ShipEnvActive == 1) {
+            g_ShipEnvActive = 0;
+            for (int i = 0; i < vertCnt; i++) {
+                g_ShipEnvUvPrev[i][0] = g_ShipEnvUv[i][0];
+                g_ShipEnvUvPrev[i][1] = g_ShipEnvUv[i][1];
+                MtxApply(&g_ShipEnvWorld[i], &m, &verts[i]);
+            }
+        }
+        else {
+            for (int i = 0; i < vertCnt; i++) {
+                MtxApply(&g_ShipEnvWorld[i], &m, &verts[i]);
+            }
+        }
+
+        g_ShipEnvTimer = ScaledFrames(60.5f);
+    }
+
+    for (int i = 0; i < quadCnt; i++, quads += 8) {
+        for (int j = 0; j < 4; j++) {
+            int vert = quads[j * 2];
+
+            q.xyzw[j] = g_ShipEnvWorld[vert];
+            (&q.st[0][0])[j * 2] = g_ShipEnvUv[vert][0];
+            (&q.st[0][0])[j * 2 + 1] = g_ShipEnvUv[vert][1];
+        }
+
+        FastDrawQuad((undefined4 *)&q, 0, 0, (longlong)texHeaders, 9);
+    }
+}
+
+// 0x016114c (0x328 bytes)
+/* draws a frame of the space loading screens */
+void TransitionDraw_Space(void)
+{
+    STUB_00078100();
+    ComposeCameraMatrix();
+    CleanAnimationCache();
+    STUB_0006849c();
+    DAT_00a10724 = 0xffffffff;
+
+    /* the sky shell at a view at least 0.63 wide */
+    float xratio = g_ViewContext.xratio;
+    if (g_ViewContext.xratio < 0.63f) {
+        g_ViewContext.xratio = 0.63f;
+    }
+    UpdateViewContext();
+    ComposeCameraMatrix();
+    Space_DrawSkyShell();
+    g_ViewContext.xratio = xratio;
+    UpdateViewContext();
+    ComposeCameraMatrix();
+
+    if (g_currentLoadingScreen == LOADSCREEN_ARRIVAL) {
+        STUB_0006d704(1);
+        ____Space_TransitionDrawPass();
+        STUB_0006d708();
+    }
+
+    DrawMobys();
+    STUB_00175554(0x2080000);
+    STUB_0006d704(1);
+
+    if (!SpaceIsIntro()) {
+        Space_DrawTransitionOverlay();
+    }
+
+    if (g_currentLoadingScreen == LOADSCREEN_ARRIVAL && g_SpaceSceneFrame > 60) {
+        int alpha = g_SpaceSceneFrame * 2 - 120;
+        if (alpha > 0x80) {
+            alpha = 0x80;
+        }
+
+        DrawBanner(((u32)alpha << 24 & 0xfe000000) | 0x808080);
+    }
+
+    if (!SpaceIsIntro()) {
+        Space_DrawShipEffects(g_SpaceSceneMobys[0]);
+    }
+
+    STUB_0006d708();
+    if (SceneScreenFade > 1.0f) {
+        SceneScreenFade = 1.0f;
+    }
+
+    STUB_00174cf4(0x10);
+    STUB_000f1448();
+}
+
+// 0x0161480 (0x244 bytes)
+/* six engine sparks off the ship, drifting by zVel */
+void Space_SpawnShipParticles(MobyInstance *ship, float zVel)
+{
+    Vec4 *ofs = g_ShipParticleOffsets[g_SpaceshipVariant];
+    Mtx4 *m = &ship->transform;
+
+    for (int i = 0; i < 6; i++, ofs++) {
+        Vec4 vel;
+        Vec4 accel;
+        Vec4 pos;
+
+        vel.x = (float)MB_randRangeFloat(-g_FrameTime, g_FrameTime);
+        vel.y = (float)MB_randRangeFloat(-g_FrameTime, g_FrameTime);
+        vel.z = (float)MB_randRangeFloat(g_FrameTime * -0.25f, g_FrameTime * 0.25f) + zVel;
+        vel.w = 0.4f;
+        accel.x = vel.x;
+        accel.y = vel.y;
+        accel.z = vel.z;
+        accel.w = 0.6f;
+
+        pos.x = m->v2.x * ofs->z + m->v0.x * ofs->x + m->v1.x * ofs->y + ship->pos.x;
+        pos.y = m->v2.y * ofs->z + m->v0.y * ofs->x + m->v1.y * ofs->y + ship->pos.y;
+        pos.z = m->v2.z * ofs->z + m->v0.z * ofs->x + m->v1.z * ofs->y + ship->pos.z;
+        pos.w = m->v1.w * ofs->y + m->v2.w * ofs->z + m->v0.w * ofs->x + ofs->w;
+
+        int life = ScaledFrames(4.5f);
+        SpawnPart_2(&pos.x, &vel.x, &accel.x, 0x24c0c0c0, 0x14c0c0c0, (short)life, (undefined2)life,
+                    (undefined2)(life + MB_randInt(life)));
+    }
 }

@@ -461,3 +461,16 @@ DAT_00731fc0	g_TransitionDrift
 DAT_00732020	g_LoadScreenSkyDirs
 DAT_00732070	g_LoadScreenSkyAngles
 DAT_00732084	g_LoadScreenXRatios
+DAT_00734a30	g_ShipEnvColors
+DAT_00734a40	g_ShipEnvVertCnt
+DAT_00734a50	g_ShipEnvQuadCnt
+PTR_DAT_00734a60	g_ShipEnvNormals
+PTR_DAT_00734a70	g_ShipEnvVerts
+PTR_DAT_00734a80	g_ShipEnvQuads
+DAT_00a561f0	g_ShipEnvWorld
+DAT_00a56850	g_ShipEnvUv
+DAT_00a56b80	g_ShipEnvUvPrev
+DAT_00a561c4	g_ShipEnvTimer
+DAT_00731c90	g_ShipEnvForce
+DAT_00731c94	g_ShipEnvActive
+DAT_007320a0	g_ShipParticleOffsets
