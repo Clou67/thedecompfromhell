@@ -54,7 +54,7 @@ void UpdateMoby_1324(MobyInstance *moby)
   iVar4 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar1[0x17]);
   if ((iVar4 != 0) &&
      ((((g_heroStateType == 0 || (g_heroStateType == 1)) &&
-       (CHAR_ARRAY_00a1000c.piece<632,2>() == 0)) && (CHAR_ARRAY_00a0feec.piece<160,2>() == 0)))) {
+       (g_HelpFlags.piece<632,2>() == 0)) && (CHAR_ARRAY_00a0feec.piece<160,2>() == 0)))) {
     iVar5 = 0;
     iVar4 = 0;
     do {
@@ -88,7 +88,7 @@ void UpdateMoby_1324(MobyInstance *moby)
       piVar1[0x15] = 0;
     }
   }
-  if (((((CHAR_ARRAY_00a1000c.piece<96,2>() == 0) &&
+  if (((((g_HelpFlags.piece<96,2>() == 0) &&
         (iVar4 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar1[4]), iVar4 != 0)) &&
        (g_LevelFlags[Level][*piVar1] != -1)) &&
       ((UnlockableItems.pyrocitor != '\0' && (5 < (int)(&DAT_00a0fcd4)[*piVar1])))) &&
@@ -105,19 +105,19 @@ void UpdateMoby_1324(MobyInstance *moby)
     piVar1[0x16] = 1;
   }
   if (((ushort)CHAR_ARRAY_00a0feec.piece<64,2>() < 3) &&
-     ((CHAR_ARRAY_00a1000c.piece<612,4>() & 1 << (Level & 0x3f)) == 0)) {
+     ((g_HelpFlags.piece<612,4>() & 1 << (Level & 0x3f)) == 0)) {
     Help_QueueMessage(STR_YOU_CAN_USE__0x4E22,0x4c);
   }
   if ((g_GameSettings.CameraUpDown.piece<0,1>() == '\0') || (g_GameSettings.CameraLeftRight.piece<0,1>() == '\0'))
   {
-    CHAR_ARRAY_00a1000c[0x3b0] = -1;
-    CHAR_ARRAY_00a1000c[0x3b1] = -1;
+    g_HelpFlags[0x3b0] = -1;
+    g_HelpFlags[0x3b1] = -1;
   }
-  else if ((CHAR_ARRAY_00a1000c.piece<948,4>() & 1 << (Level & 0x3f)) == 0) {
+  else if ((g_HelpFlags.piece<948,4>() & 1 << (Level & 0x3f)) == 0) {
     Help_QueueMessage(STR_IF_YOUD_LIKE_YOU_0x4E2C,0x76);
   }
 LAB_0024a048:
-  if ((((CHAR_ARRAY_00a1000c.piece<104,2>() == 0) &&
+  if ((((g_HelpFlags.piece<104,2>() == 0) &&
        (iVar4 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar1[4]), iVar4 != 0)) &&
       (g_LevelFlags[Level][*piVar1] != -1)) && (UnlockableItems.pyrocitor == '\0')) {
     lVar3 = (longlong)(*piVar1 << 2);
@@ -134,11 +134,11 @@ LAB_0024a048:
       Help_QueueMessage(STR_HAVING_TROUBLE_WITH_THE_0x07D3,0xd);
     }
   }
-  if (CHAR_ARRAY_00a1000c.piece<128,2>() == 0) {
+  if (g_HelpFlags.piece<128,2>() == 0) {
     iVar4 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar1[6]);
     if (iVar4 != 0) {
-      CHAR_ARRAY_00a1000c[0x80] = -1;
-      CHAR_ARRAY_00a1000c[0x81] = -1;
+      g_HelpFlags[0x80] = -1;
+      g_HelpFlags[0x81] = -1;
     }
     if (((g_heroState != SWINGING_YELLOW_SWINGSHOT) && (DAT_0096bd70 == 0x2c)) &&
        (g_heroStateTimer == 1)) {
@@ -153,13 +153,13 @@ LAB_0024a048:
      (iVar4 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar1[5]), iVar4 != 0)) {
     iVar4 = (int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5));
     if (((int)((float)(longlong)(animationSpeed * 18.5) * 60.0) <
-         (int)(iVar4 + (uint)(ushort)CHAR_ARRAY_00a1000c.piece<138,2>() * -600)) ||
-       ((uint)(ushort)CHAR_ARRAY_00a1000c.piece<138,2>() * 600 == 0)) {
+         (int)(iVar4 + (uint)(ushort)g_HelpFlags.piece<138,2>() * -600)) ||
+       ((uint)(ushort)g_HelpFlags.piece<138,2>() * 600 == 0)) {
       Help_QueueMessage(STR_YOU_WILL_NEED_A_0x07D7,0x11);
     }
-    else if ((int)(uint)(ushort)CHAR_ARRAY_00a1000c.piece<138,2>() < iVar4 / 600) {
+    else if ((int)(uint)(ushort)g_HelpFlags.piece<138,2>() < iVar4 / 600) {
       sVar2 = (short)(iVar4 >> 0x1f);
-      CHAR_ARRAY_00a1000c.piece<138,2>() =
+      g_HelpFlags.piece<138,2>() =
            ((short)(iVar4 / 600) + sVar2) - ((short)((short)(iVar4 / 0x2580000) + sVar2) >> 0xf);
     }
   }
@@ -167,41 +167,41 @@ LAB_0024a048:
      (iVar4 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar1[5]), iVar4 == 0)) {
     iVar4 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar1[7]);
     if (iVar4 != 0) {
-      CHAR_ARRAY_00a1000c[0x90] = -1;
-      CHAR_ARRAY_00a1000c[0x91] = -1;
+      g_HelpFlags[0x90] = -1;
+      g_HelpFlags[0x91] = -1;
     }
   }
-  else if (CHAR_ARRAY_00a1000c.piece<144,2>() == 0) {
-    CHAR_ARRAY_00a1000c[0x90] = '\0';
-    CHAR_ARRAY_00a1000c[0x91] = '\x01';
+  else if (g_HelpFlags.piece<144,2>() == 0) {
+    g_HelpFlags[0x90] = '\0';
+    g_HelpFlags[0x91] = '\x01';
     iVar4 = (int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5));
-    if ((int)(uint)(ushort)CHAR_ARRAY_00a1000c.piece<146,2>() < iVar4 / 600) {
+    if ((int)(uint)(ushort)g_HelpFlags.piece<146,2>() < iVar4 / 600) {
       sVar2 = (short)(iVar4 >> 0x1f);
-      CHAR_ARRAY_00a1000c.piece<146,2>() =
+      g_HelpFlags.piece<146,2>() =
            ((short)(iVar4 / 600) + sVar2) - ((short)((short)(iVar4 / 0x2580000) + sVar2) >> 0xf);
     }
-    CHAR_ARRAY_00a1000c.piece<148,4>() = CHAR_ARRAY_00a1000c.piece<148,4>() | 1 << (Level & 0x3f) | 0x80000000;
+    g_HelpFlags.piece<148,4>() = g_HelpFlags.piece<148,4>() | 1 << (Level & 0x3f) | 0x80000000;
   }
   else {
     iVar4 = (int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5));
     if (((int)((float)(longlong)(animationSpeed * 18.5) * 60.0) <
-         (int)(iVar4 + (uint)(ushort)CHAR_ARRAY_00a1000c.piece<146,2>() * -600)) ||
-       ((uint)(ushort)CHAR_ARRAY_00a1000c.piece<146,2>() * 600 == 0)) {
+         (int)(iVar4 + (uint)(ushort)g_HelpFlags.piece<146,2>() * -600)) ||
+       ((uint)(ushort)g_HelpFlags.piece<146,2>() * 600 == 0)) {
       Help_QueueMessage(STR_THE_AREA_AHEAD_OF_0x07D8,0x12);
     }
-    else if ((int)(uint)(ushort)CHAR_ARRAY_00a1000c.piece<146,2>() < iVar4 / 600) {
+    else if ((int)(uint)(ushort)g_HelpFlags.piece<146,2>() < iVar4 / 600) {
       sVar2 = (short)(iVar4 >> 0x1f);
-      CHAR_ARRAY_00a1000c.piece<146,2>() =
+      g_HelpFlags.piece<146,2>() =
            ((short)(iVar4 / 600) + sVar2) - ((short)((short)(iVar4 / 0x2580000) + sVar2) >> 0xf);
     }
   }
-  if ((((CHAR_ARRAY_00a1000c.piece<560,2>() == 0) || (CHAR_ARRAY_00a1000c.piece<568,2>() == 0)) &&
+  if ((((g_HelpFlags.piece<560,2>() == 0) || (g_HelpFlags.piece<568,2>() == 0)) &&
       (g_heroState == MOVEMENT_LOCKED)) &&
      ((g_standingOnMoby != 0 && (*(short *)(g_standingOnMoby + 0xa6) == 0x267)))) {
-    if (CHAR_ARRAY_00a1000c.piece<560,2>() == 0) {
+    if (g_HelpFlags.piece<560,2>() == 0) {
       Help_QueueMessage(STR_LASERS_ARE_MOUNTED_ON_0x07DB,0x46);
     }
-    else if ((CHAR_ARRAY_00a1000c.piece<568,2>() == 0) &&
+    else if ((g_HelpFlags.piece<568,2>() == 0) &&
             (iVar4 = piVar1[0x14], piVar1[0x14] = iVar4 + 1,
             (int)(animationSpeed * 600.5) < iVar4 + 1)) {
       Help_QueueMessage(STR_USE__TO_CONTROL_0x07DC,0x47);

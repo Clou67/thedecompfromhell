@@ -4,12 +4,12 @@
 #include <stdio.h>
 #include <string.h>
 #include "game/update/moby1160.h"
+#include "game/boot.h"
 #include "game/camera.h"
 #include "game/collproc.h"
 #include "game/debug.h"
 #include "game/draw.h"
 #include "game/freeze.h"
-#include "game/help.h"
 #include "game/hero.h"
 #include "game/hud.h"
 #include "game/mobyfunc.h"

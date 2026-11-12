@@ -2743,7 +2743,7 @@ void FontPrint_unk3
 
 
 // 0x0069db8 (0x750 bytes)
-void FontPrintOptWestern(float param_1,TextLayout *param_2,u32 param_3,const char *param_4,int param_5,void *param_6,void *param_7)
+void FontPrintOptWestern(float param_1,FontWindow *param_2,u32 param_3,const char *param_4,int param_5,void *param_6,void *param_7)
 
 {
   byte bVar1;
@@ -3079,7 +3079,7 @@ LAB_0006a184:
 
 
 // 0x006a510 (0xb4 bytes)
-void FontPrintMediumOpt(TextLayout *param_1,u32 param_2,const char *param_3,int param_4)
+void FontPrintMediumOpt(FontWindow *param_1,u32 param_2,const char *param_3,int param_4)
 
 {
                     /* Is used in cheats menu
@@ -3098,7 +3098,7 @@ void FontPrintMediumOpt(TextLayout *param_1,u32 param_2,const char *param_3,int 
 
 
 // 0x006a5c4 (0x70 bytes)
-void Sprite_DrawShapeWrapper(void)
+void Sprite_DrawShapeWrapper(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6,int param_7,int param_8,u32 param_9,void *param_10)
 
 {
   Sprite_DrawShape();
@@ -6201,7 +6201,7 @@ void FontPrintCenterScaledLarge
 
 
 // 0x007100c (0xa8 bytes)
-void FontPrintOpt(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4)
+void FontPrintOpt(float param_1,FontWindow *param_2,u32 param_3,const char *param_4,int param_5)
 
 {
   if (g_JapaneseMode) {

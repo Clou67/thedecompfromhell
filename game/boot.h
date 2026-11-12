@@ -179,6 +179,7 @@ extern int g_FrontEndTimer; /* 0x90d710 */
 extern undefined4 g_JapanFontTex; /* 0x90d724 */
 extern undefined4 g_JapanLogoTex; /* 0x90d748 */
 extern int g_LogoMovieDone; /* 0x969cd8 */
+extern int g_ScreenHeight; /* 0x966b04 */
 extern undefined4 g_boltsMined; /* 0xa0fd18 */
 extern undefined4 g_loadingPlanet; /* 0xa10700 */
 extern void * g_pBinkPlayer; /* 0x8fa410 */

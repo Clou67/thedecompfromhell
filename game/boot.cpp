@@ -238,7 +238,7 @@ void ZeroFillKeyGlobals(void)
   memset(&g_SeenPlanets,0,0x14);
   memset(GalacticMap,0,0x50);
   memset(g_KeyLevelFlags,0,0x790);
-  memset(CHAR_ARRAY_00a1000c,0,0x4a0);
+  memset(g_HelpFlags,0,0x4a0);
   memset(&DAT_00a0f51c,0,0x94);
   memset(&DAT_00a0f5b0,0,0x94);
   memset(&DAT_00a0f644,0,0x94);
@@ -630,8 +630,8 @@ void STUB_0001152c(...)
 // 0x0011530 (0x118 bytes)
 // strings: 00651144: 'rc1/ps3data/global/locale/%s' | 00651164: 'rc1/ps3data/global/locale/japanese'
 
-/* [boot] Loads rc1/ps3data/global/locale/<language> (or japanese) into locale buffer, sets Help
-   count + HelpMsgs and relocates message pointers. Also called from pause menu on language
+/* [boot] Loads rc1/ps3data/global/locale/<language> (or japanese) into locale buffer, sets g_Help.msgCount
+   count + g_HelpMsgs and relocates message pointers. Also called from pause menu on language
    change. */
 
 void LoadLanguageHelpMsgs(void)
@@ -649,17 +649,17 @@ void LoadLanguageHelpMsgs(void)
     snprintf(acStack_90,"rc1/ps3data/global/locale/japanese");
   }
   LoadAssetFromFile(acStack_90,g_pLocaleBuffer,0x40000);
-  Help = *g_pLocaleBuffer;
-  HelpMsgs = g_pLocaleBuffer;
+  g_Help.msgCount = *g_pLocaleBuffer;
+  g_HelpMsgs = g_pLocaleBuffer;
   FastMemCopy32
             (g_pLocaleBuffer,g_pLocaleBuffer + 2,(g_pLocaleBuffer[1] + 3U & 0xfffffffc) - 8);
-  if (0 < Help) {
+  if (0 < g_Help.msgCount) {
     iVar2 = 0;
-    iVar1 = Help;
+    iVar1 = g_Help.msgCount;
     do {
       iVar1 = iVar1 + -1;
-      *(int *)((int)HelpMsgs + iVar2) =
-           (int)HelpMsgs + *(int *)((int)HelpMsgs + iVar2) + -8;
+      *(int *)((int)g_HelpMsgs + iVar2) =
+           (int)g_HelpMsgs + *(int *)((int)g_HelpMsgs + iVar2) + -8;
       iVar2 = iVar2 + 0x10;
     } while (0 < iVar1);
   }
@@ -872,15 +872,15 @@ void Load_Front_End(void)
     piVar7 = (int *)(Gameplay + iVar4);
     DAT_0090d71c = Gameplay + 0x10;
     DAT_0090d718 = Gameplay;
-    Help = *piVar7;
-    HelpMsgs = DAT_0090d720;
+    g_Help.msgCount = *piVar7;
+    g_HelpMsgs = DAT_0090d720;
     FastMemCopy32(DAT_0090d720,piVar7 + 2,(piVar7[1] + 3U & 0xfffffffc) - 8);
-    if (0 < Help) {
+    if (0 < g_Help.msgCount) {
       iVar8 = 0;
-      iVar4 = Help;
+      iVar4 = g_Help.msgCount;
       do {
         iVar4 = iVar4 + -1;
-        *(uint *)(HelpMsgs + iVar8) = *(int *)(HelpMsgs + iVar8) + (HelpMsgs - 8);
+        *(uint *)(g_HelpMsgs + iVar8) = *(int *)(g_HelpMsgs + iVar8) + (g_HelpMsgs - 8);
         iVar8 = iVar8 + 0x10;
       } while (0 < iVar4);
     }
@@ -1868,24 +1868,24 @@ void ResetLevelGlobals(void)
   DAT_00731f4c = 0x2058b0;
   DAT_00731f50 = 0x3880c080;
   DAT_00731f54 = 0x308030;
-  g_HelpState = 0;
-  g_HelpStateTimer = 0;
+  g_Help.state = 0;
+  g_Help.timer = 0;
   pHVar1 = HudEntries;
-  DAT_0072088c = 0;
+  g_Help.boxHalfW = 0;
   lVar2 = 0xd;
-  DAT_00720890 = 0;
-  DAT_00720894 = 0;
-  DAT_00720898 = 0;
-  DAT_0072089c = 0;
-  DAT_007208a0 = 0;
-  g_HelpCurFlag = 0;
-  Help = 0;
-  DAT_007208b4 = 0;
-  DAT_007208b8 = 0;
-  g_HelpSuspended = 0;
-  DAT_007208c0 = 0;
-  g_HelpCurIndex = -1;
-  g_HelpCurId = -1;
+  g_Help.boxHalfH = 0;
+  g_Help.boxX = 0;
+  g_Help.boxY = 0;
+  g_Help.curHalfW = 0;
+  g_Help.curHalfH = 0;
+  g_Help.curFlag = 0;
+  g_Help.msgCount = 0;
+  g_Help.armed = 0;
+  g_Help.armTimer = 0;
+  g_Help.suspended = 0;
+  g_Help.resumeDelay = 0;
+  g_Help.curIndex = -1;
+  g_Help.curId = -1;
   do {
     pHVar1->value = 0;
     pHVar1->iconId = 0xffff;

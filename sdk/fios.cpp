@@ -173,7 +173,7 @@ void FUN_005083fc(undefined4 *param_1)
 
 
 // 0x05084b8 (0x4 bytes)
-void FUN_005084b8(void)
+void FUN_005084b8(void *param_1)
 
 {
   return;

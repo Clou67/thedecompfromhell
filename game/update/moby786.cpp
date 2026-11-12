@@ -645,30 +645,30 @@ void UpdateMoby_786(MobyInstance *moby)
       if ((UnlockableItems.sonicSummoner == '\0') &&
          (fVar4 = (moby->pos).y - g_heroPosition.y, fVar5 = (moby->pos).x - g_heroPosition.x,
          SQRT(fVar5 * fVar5 + fVar4 * fVar4) < 3.0)) {
-        if (CHAR_ARRAY_00a1000c.piece<112,2>() == 0) {
-          CHAR_ARRAY_00a1000c[0x70] = '\0';
-          CHAR_ARRAY_00a1000c[0x71] = '\x01';
+        if (g_HelpFlags.piece<112,2>() == 0) {
+          g_HelpFlags[0x70] = '\0';
+          g_HelpFlags[0x71] = '\x01';
           puVar13[0x2b] = (longlong)g_GameFrameCount;
-          uVar23 = CHAR_ARRAY_00a1000c.piece<114,2>();
+          uVar23 = g_HelpFlags.piece<114,2>();
           puVar13[0x2b] = (longlong)(int)(animationSpeed * ((float)(longlong)puVar13[0x2b] + 0.5));
           iVar22 = *(int *)((int)puVar13 + 0x15c);
           if ((int)(uint)(ushort)uVar23 < iVar22 / 600) {
             sVar26 = (short)(iVar22 >> 0x1f);
-            CHAR_ARRAY_00a1000c.piece<114,2>() =
+            g_HelpFlags.piece<114,2>() =
                  ((short)(iVar22 / 600) + sVar26) -
                  ((short)((short)(iVar22 / 0x2580000) + sVar26) >> 0xf);
           }
-          CHAR_ARRAY_00a1000c.piece<116,4>() =
-               CHAR_ARRAY_00a1000c.piece<116,4>() | 1 << (Level & 0x3f) | 0x80000000;
+          g_HelpFlags.piece<116,4>() =
+               g_HelpFlags.piece<116,4>() | 1 << (Level & 0x3f) | 0x80000000;
         }
         else {
           puVar13[0x2b] = (longlong)g_GameFrameCount;
           fVar4 = animationSpeed;
           puVar13[0x2b] = (longlong)(int)(animationSpeed * ((float)(longlong)puVar13[0x2b] + 0.5));
-          uVar23 = CHAR_ARRAY_00a1000c.piece<114,2>();
-          uVar14 = (uint)(ushort)CHAR_ARRAY_00a1000c.piece<114,2>();
+          uVar23 = g_HelpFlags.piece<114,2>();
+          uVar14 = (uint)(ushort)g_HelpFlags.piece<114,2>();
           iVar22 = *(int *)((int)puVar13 + 0x15c);
-          uVar12 = (uint)(ushort)CHAR_ARRAY_00a1000c.piece<114,2>();
+          uVar12 = (uint)(ushort)g_HelpFlags.piece<114,2>();
           puVar13[0x2b] = (longlong)(int)((float)(longlong)(fVar4 * 18.5) * 60.0);
           if ((*(int *)((int)puVar13 + 0x15c) < (int)(iVar22 + uVar12 * -600)) ||
              (uVar14 * 600 == 0)) {
@@ -676,7 +676,7 @@ void UpdateMoby_786(MobyInstance *moby)
           }
           else if ((int)(uint)(ushort)uVar23 < iVar22 / 600) {
             sVar26 = (short)(iVar22 >> 0x1f);
-            CHAR_ARRAY_00a1000c.piece<114,2>() =
+            g_HelpFlags.piece<114,2>() =
                  ((short)(iVar22 / 600) + sVar26) -
                  ((short)((short)(iVar22 / 0x2580000) + sVar26) >> 0xf);
           }

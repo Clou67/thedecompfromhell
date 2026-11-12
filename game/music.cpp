@@ -216,7 +216,7 @@ void music_StartSpeech_Help(int id,int flags,int vol)
     }
     FUN_00506444(acStack_130,0,0,0,
                  g_SpeechPlaying.volume +
-                 ((ushort)(ZERO_MASK((uint)DAT_0071fb58)) & -g_SpeechPlaying.volume
+                 ((ushort)(ZERO_MASK((uint)g_HelpVoiceOn)) & -g_SpeechPlaying.volume
                  ),0,2,0);
   }
   return;
@@ -364,7 +364,7 @@ void music_StartSpeech(int id,int flags,int vol)
           }
           FUN_00506444(acStack_530,0,0,0,
                        g_SpeechPlaying.volume +
-                       ((ushort)(ZERO_MASK((uint)DAT_0071fb58)) &
+                       ((ushort)(ZERO_MASK((uint)g_HelpVoiceOn)) &
                        -g_SpeechPlaying.volume),0,2,0);
         }
       }

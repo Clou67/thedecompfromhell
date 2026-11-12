@@ -57,20 +57,20 @@ void UpdateMoby_1342(MobyInstance *moby)
     if (g_MiscLevelFlags.field26_0x1a == 0) {
       iVar6 = MB_IsPntInCuboid(&g_heroPosition,(longlong)*piVar1);
       if (((iVar6 != 0) &&
-          (((g_heroStateType < 2 || (g_heroStateType == 9)) && (g_HelpState == 0))
-          )) && ((g_HelpCurId == -1 && ((CHAR_ARRAY_00a1000c.piece<164,4>() & 0x80000000) == 0)))) {
+          (((g_heroStateType < 2 || (g_heroStateType == 9)) && (g_Help.state == 0))
+          )) && ((g_Help.curId == -1 && ((g_HelpFlags.piece<164,4>() & 0x80000000) == 0)))) {
         Help_QueueMessage(STR_TRY_USING_THE_GLIDE_0x0BB8,0x14);
       }
       iVar6 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar1[3]);
       if (((iVar6 != 0) && ((g_heroStateType < 2 || (g_heroStateType == 9)))) &&
-         ((g_HelpState == 0 &&
-          ((g_HelpCurId == -1 && ((CHAR_ARRAY_00a1000c.piece<172,4>() & 0x80000000) == 0)))))) {
+         ((g_Help.state == 0 &&
+          ((g_Help.curId == -1 && ((g_HelpFlags.piece<172,4>() & 0x80000000) == 0)))))) {
         Help_QueueMessage(STR_TRY_USING_THE_HELI_PACKS_0x0BB9,0x15);
       }
       iVar6 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar1[6]);
       if ((iVar6 != 0) &&
-         ((((g_heroStateType < 2 || (g_heroStateType == 9)) && (g_HelpState == 0))
-          && ((g_HelpCurId == -1 && ((CHAR_ARRAY_00a1000c.piece<188,4>() & 0x80000000) == 0)))))) {
+         ((((g_heroStateType < 2 || (g_heroStateType == 9)) && (g_Help.state == 0))
+          && ((g_Help.curId == -1 && ((g_HelpFlags.piece<188,4>() & 0x80000000) == 0)))))) {
         Help_QueueMessage(STR_YOULL_NEED_YOUR_NEW_0x0BBB,0x17);
       }
     }
@@ -115,14 +115,14 @@ void UpdateMoby_1342(MobyInstance *moby)
     iVar6 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar1[9]);
     if (((((iVar6 != 0) && (CHAR_ARRAY_00a0feec.piece<24,2>() == 0)) &&
          ((g_heroStateType < 2 || (g_heroStateType == 9)))) &&
-        (((piVar1[0x14] % 6 == 0 && piVar1[0x14] != 0 && (g_HelpState == 0)) &&
-         (g_HelpCurId == -1)))) && (CHAR_ARRAY_00a1000c.piece<176,2>() == 0)) {
+        (((piVar1[0x14] % 6 == 0 && piVar1[0x14] != 0 && (g_Help.state == 0)) &&
+         (g_Help.curId == -1)))) && (g_HelpFlags.piece<176,2>() == 0)) {
       Help_QueueMessage(STR_THIS_IS_A_JUMP_0x0BBA,0x16);
     }
     iVar6 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar1[10]);
     if (((((iVar6 != 0) && ((g_heroStateType < 2 || (g_heroStateType == 9)))) &&
-         (g_HelpState == 0)) &&
-        ((g_HelpCurId == -1 && (CHAR_ARRAY_00a1000c.piece<192,2>() == 0)))) &&
+         (g_Help.state == 0)) &&
+        ((g_Help.curId == -1 && (g_HelpFlags.piece<192,2>() == 0)))) &&
        ((int)(animationSpeed * 216000.5) <
         (int)((int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5)) +
              (uint)(ushort)CHAR_ARRAY_00a0feec.piece<74,2>() * -600))) {
@@ -143,8 +143,8 @@ void UpdateMoby_1342(MobyInstance *moby)
         ((1 < g_heroStateType && (g_heroStateType != 9)))) ||
        (((g_heroState == WEAPON_FIRST_PERSON_VIEW || (UnlockableItems.blaster == '\0')) ||
         ((iVar6 = Hero_GetWeaponAmmo(0xf), iVar6 < 0x15 ||
-         ((((g_HelpState != 0 || (g_HelpCurId != -1)) ||
-           (CHAR_ARRAY_00a1000c.piece<592,2>() != 0)) || (CHAR_ARRAY_00a0feec.piece<152,2>() != 0)))))))) {
+         ((((g_Help.state != 0 || (g_Help.curId != -1)) ||
+           (g_HelpFlags.piece<592,2>() != 0)) || (CHAR_ARRAY_00a0feec.piece<152,2>() != 0)))))))) {
       if (g_heroState == WEAPON_FIRST_PERSON_VIEW) {
         if (CHAR_ARRAY_00a0feec.piece<152,2>() != -1) {
           CHAR_ARRAY_00a0feec.piece<152,2>() = CHAR_ARRAY_00a0feec.piece<152,2>() + 1;
@@ -166,27 +166,27 @@ void UpdateMoby_1342(MobyInstance *moby)
     iVar6 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar1[0xe]);
     if (((iVar6 != 0) && ((g_heroStateType < 2 || (g_heroStateType == 9)))) &&
        ((DAT_00a1a854 < 3 &&
-        (((g_HelpState == 0 && (g_HelpCurId == -1)) &&
-         (CHAR_ARRAY_00a1000c.piece<512,2>() == 0)))))) {
+        (((g_Help.state == 0 && (g_Help.curId == -1)) &&
+         (g_HelpFlags.piece<512,2>() == 0)))))) {
       Help_QueueMessage(STR_TO_ENTER_LOOK_AROUND_MODE_0x03EC,0x40);
     }
     iVar6 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar1[0xe]);
     if (((iVar6 != 0) &&
         (((g_heroStateType < 2 || (g_heroStateType == 9)) &&
          (g_heroState == FIRST_PERSON_VIEW)))) &&
-       (((DAT_00a1a850 == -1 && (g_HelpState == 0)) &&
-        ((g_HelpCurId == -1 &&
-         ((CHAR_ARRAY_00a1000c.piece<512,2>() != 0 && (CHAR_ARRAY_00a1000c.piece<520,2>() == 0)))))))) {
+       (((DAT_00a1a850 == -1 && (g_Help.state == 0)) &&
+        ((g_Help.curId == -1 &&
+         ((g_HelpFlags.piece<512,2>() != 0 && (g_HelpFlags.piece<520,2>() == 0)))))))) {
       Help_QueueMessage(STR_YOU_CAN_ALSO_USE_0x03ED,0x41);
     }
     iVar6 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar1[0x10]);
     if (((iVar6 != 0) &&
-        (((g_heroStateType < 2 || (g_heroStateType == 9)) && (g_HelpState == 0))))
-       && ((g_HelpCurId == -1 && (CHAR_ARRAY_00a1000c.piece<672,2>() == 0)))) {
+        (((g_heroStateType < 2 || (g_heroStateType == 9)) && (g_Help.state == 0))))
+       && ((g_Help.curId == -1 && (g_HelpFlags.piece<672,2>() == 0)))) {
       Help_QueueMessage(STR_THESE_MOVING_WALLS_ALSO_0x0BC0,0x54);
     }
     if (((g_gameMode == GAME_MODE_NORMAL) && (CHAR_ARRAY_0096c165[0xc] != '\0')) &&
-       ((g_HelpState == 0 && ((g_HelpCurId == -1 && (CHAR_ARRAY_00a1000c.piece<200,2>() == 0)))
+       ((g_Help.state == 0 && ((g_Help.curId == -1 && (g_HelpFlags.piece<200,2>() == 0)))
         ))) {
       Help_QueueMessage(STR_CONGRATULATIONS_ON_YOUR_NEW_0x0BBD,0x19);
     }
@@ -209,8 +209,8 @@ void UpdateMoby_1342(MobyInstance *moby)
     }
     if ((CHAR_ARRAY_00a0feec.piece<120,2>() == 0) &&
        (((((g_heroStateType < 2 || (g_heroStateType == 9)) && (2 < piVar1[0x15])) &&
-         ((g_HelpState == 0 && (g_HelpCurId == -1)))) &&
-        (CHAR_ARRAY_00a1000c.piece<208,2>() == 0)))) {
+         ((g_Help.state == 0 && (g_Help.curId == -1)))) &&
+        (g_HelpFlags.piece<208,2>() == 0)))) {
       Help_QueueMessage(STR_WHEN_USING_THE_SWINGSHOT_0x0BBE,0x1a);
     }
     if ((g_heroState == UNK_74) && (CHAR_ARRAY_00a0feec.piece<128,2>() == 0)) {
@@ -226,20 +226,20 @@ void UpdateMoby_1342(MobyInstance *moby)
     }
     iVar6 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar1[0xb]);
     if ((((iVar6 != 0) && (CHAR_ARRAY_00a0feec.piece<128,2>() == 0)) && (g_heroStateType == 6)) &&
-       (((g_CurrentWeapon == 8 && (g_HelpState == 0)) &&
-        ((g_HelpCurId == -1 && (CHAR_ARRAY_00a1000c.piece<216,2>() == 0)))))) {
+       (((g_CurrentWeapon == 8 && (g_Help.state == 0)) &&
+        ((g_Help.curId == -1 && (g_HelpFlags.piece<216,2>() == 0)))))) {
       Help_QueueMessage(STR_YOU_CAN_USE_THE_0x0BBF,0x1b);
     }
     iVar6 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar1[0x11]);
     if ((((iVar6 != 0) && ((g_heroStateType < 2 || (g_heroStateType == 9)))) &&
-        (g_HelpState == 0)) &&
-       ((g_HelpCurId == -1 && (CHAR_ARRAY_00a1000c.piece<968,2>() == 0)))) {
+        (g_Help.state == 0)) &&
+       ((g_Help.curId == -1 && (g_HelpFlags.piece<968,2>() == 0)))) {
       Help_QueueMessage(STR_TO_QUICKLY_CENTER_THE_0x4E2F,0x79);
     }
     iVar6 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar1[0x1f]);
     if (((iVar6 != 0) &&
         (((g_heroStateType == 0 || (g_heroStateType == 1)) &&
-         (CHAR_ARRAY_00a1000c.piece<632,2>() == 0)))) && (CHAR_ARRAY_00a0feec.piece<160,2>() == 0)) {
+         (g_HelpFlags.piece<632,2>() == 0)))) && (CHAR_ARRAY_00a0feec.piece<160,2>() == 0)) {
       iVar6 = 0;
       do {
         if ((((&DAT_00721008)[iVar6 * 0x13] == 0) && (iVar6 != 0x18 && iVar6 != 8)) &&

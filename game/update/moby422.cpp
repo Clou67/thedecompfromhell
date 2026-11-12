@@ -38,28 +38,28 @@ uint UpdateMoby_422(MobyInstance *moby)
   if (iVar4 == 0) {
     MB_UnlockSkillPoint(0x14);
   }
-  if (CHAR_ARRAY_00a1000c.piece<872,2>() == 0) {
+  if (g_HelpFlags.piece<872,2>() == 0) {
     if (g_heroState == THRUSTER_PACK_HOVER) {
-      CHAR_ARRAY_00a1000c[0x368] = '\0';
-      CHAR_ARRAY_00a1000c[0x369] = '\x01';
+      g_HelpFlags[0x368] = '\0';
+      g_HelpFlags[0x369] = '\x01';
     }
     iVar4 = (int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5));
-    if ((int)(uint)(ushort)CHAR_ARRAY_00a1000c.piece<874,2>() < iVar4 / 600) {
+    if ((int)(uint)(ushort)g_HelpFlags.piece<874,2>() < iVar4 / 600) {
       sVar2 = (short)(iVar4 >> 0x1f);
-      CHAR_ARRAY_00a1000c.piece<874,2>() =
+      g_HelpFlags.piece<874,2>() =
            ((short)(iVar4 / 600) + sVar2) - ((short)((short)(iVar4 / 0x2580000) + sVar2) >> 0xf);
     }
-    CHAR_ARRAY_00a1000c.piece<876,4>() = CHAR_ARRAY_00a1000c.piece<876,4>() | 1 << (Level & 0x3f) | 0x80000000;
+    g_HelpFlags.piece<876,4>() = g_HelpFlags.piece<876,4>() | 1 << (Level & 0x3f) | 0x80000000;
     iVar4 = MB_IsPntInCuboid(&g_heroPosition,(longlong)*piVar1);
     if (iVar4 != 0) {
       Help_QueueMessage(STR_YOUR_THRUSTER_PACK_UPGRADE_GIVES_0x2EE3,0x6d);
     }
   }
-  if (((CHAR_ARRAY_00a1000c.piece<880,2>() == 0) ||
-      (((ushort)CHAR_ARRAY_00a1000c.piece<880,2>() < 2 &&
+  if (((g_HelpFlags.piece<880,2>() == 0) ||
+      (((ushort)g_HelpFlags.piece<880,2>() < 2 &&
        ((int)(animationSpeed * 72000.5) <
         (int)((int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5)) +
-             (uint)(ushort)CHAR_ARRAY_00a1000c.piece<882,2>() * -600))))) &&
+             (uint)(ushort)g_HelpFlags.piece<882,2>() * -600))))) &&
      (g_heroState == THRUSTER_PACK_HOVER)) {
     iVar5 = 0;
     iVar4 = piVar1[1] + 1;
@@ -70,21 +70,21 @@ uint UpdateMoby_422(MobyInstance *moby)
       iVar5 = piVar1[2] + 1;
     }
     piVar1[2] = iVar5;
-    uVar7 = CHAR_ARRAY_00a1000c.piece<880,2>();
+    uVar7 = g_HelpFlags.piece<880,2>();
     fVar3 = animationSpeed;
     if ((int)(animationSpeed * 40.5) < iVar5) {
       piVar1[1] = 0;
       if (uVar7 != -1) {
-        CHAR_ARRAY_00a1000c.piece<880,2>() = uVar7 + 1;
-        uVar7 = CHAR_ARRAY_00a1000c.piece<880,2>();
+        g_HelpFlags.piece<880,2>() = uVar7 + 1;
+        uVar7 = g_HelpFlags.piece<880,2>();
       }
       iVar4 = (int)(fVar3 * ((float)(longlong)g_GameFrameCount + 0.5));
-      if ((int)(uint)(ushort)CHAR_ARRAY_00a1000c.piece<882,2>() < iVar4 / 600) {
+      if ((int)(uint)(ushort)g_HelpFlags.piece<882,2>() < iVar4 / 600) {
         sVar2 = (short)(iVar4 >> 0x1f);
-        CHAR_ARRAY_00a1000c.piece<882,2>() =
+        g_HelpFlags.piece<882,2>() =
              ((short)(iVar4 / 600) + sVar2) - ((short)((short)(iVar4 / 0x2580000) + sVar2) >> 0xf);
       }
-      CHAR_ARRAY_00a1000c.piece<884,4>() = CHAR_ARRAY_00a1000c.piece<884,4>() | 1 << (Level & 0x3f) | 0x80000000;
+      g_HelpFlags.piece<884,4>() = g_HelpFlags.piece<884,4>() | 1 << (Level & 0x3f) | 0x80000000;
       iVar4 = piVar1[1];
     }
     if ((int)((uint)uVar7 * (int)(fVar3 * 7200.5) + (int)(fVar3 * 1800.5)) < iVar4) {
@@ -93,7 +93,7 @@ uint UpdateMoby_422(MobyInstance *moby)
   }
   uVar6 = (uint)UnlockableItems.hydroPack;
   if ((UnlockableItems.hydroPack != '\0') &&
-     (uVar6 = (uint)(ushort)CHAR_ARRAY_00a1000c.piece<496,2>(), CHAR_ARRAY_00a1000c.piece<496,2>() == 0)) {
+     (uVar6 = (uint)(ushort)g_HelpFlags.piece<496,2>(), g_HelpFlags.piece<496,2>() == 0)) {
     uVar6 = Help_QueueMessage(STR_YOUR_HYDRO_PACK_WILL_AUTOMATICALLY_0x2EE0,0x3e);
   }
   return uVar6;

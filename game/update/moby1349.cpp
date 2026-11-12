@@ -56,40 +56,40 @@ void UpdateMoby_1349(MobyInstance *moby)
      (iVar3 = MB_IsPntInCuboid(&g_heroPosition,(longlong)*piVar1), iVar3 != 0)) {
     iVar3 = (int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5));
     if (((int)((float)(longlong)(animationSpeed * 18.5) * 60.0) <
-         (int)(iVar3 + (uint)(ushort)CHAR_ARRAY_00a1000c.piece<386,2>() * -600)) ||
-       ((uint)(ushort)CHAR_ARRAY_00a1000c.piece<386,2>() * 600 == 0)) {
+         (int)(iVar3 + (uint)(ushort)g_HelpFlags.piece<386,2>() * -600)) ||
+       ((uint)(ushort)g_HelpFlags.piece<386,2>() * 600 == 0)) {
       Help_QueueMessage(STR_THERE_IS_NOTHING_YOU_0x1F40,0x30);
     }
-    else if ((int)(uint)(ushort)CHAR_ARRAY_00a1000c.piece<386,2>() < iVar3 / 600) {
+    else if ((int)(uint)(ushort)g_HelpFlags.piece<386,2>() < iVar3 / 600) {
       sVar2 = (short)(iVar3 >> 0x1f);
-      CHAR_ARRAY_00a1000c.piece<386,2>() =
+      g_HelpFlags.piece<386,2>() =
            ((short)(iVar3 / 600) + sVar2) - ((short)((short)(iVar3 / 0x2580000) + sVar2) >> 0xf);
     }
   }
   if (((UnlockableItems.grindboots != '\0') &&
       (iVar3 = MB_IsPntInCuboid(&g_heroPosition,(longlong)*piVar1), iVar3 != 0)) &&
      (g_MiscLevelFlags.field47_0x2f == 0)) {
-    if (CHAR_ARRAY_00a1000c.piece<392,2>() == 0) {
-      CHAR_ARRAY_00a1000c[0x188] = '\0';
-      CHAR_ARRAY_00a1000c[0x189] = '\x01';
+    if (g_HelpFlags.piece<392,2>() == 0) {
+      g_HelpFlags[0x188] = '\0';
+      g_HelpFlags[0x189] = '\x01';
       iVar3 = (int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5));
-      if ((int)(uint)(ushort)CHAR_ARRAY_00a1000c.piece<394,2>() < iVar3 / 600) {
+      if ((int)(uint)(ushort)g_HelpFlags.piece<394,2>() < iVar3 / 600) {
         sVar2 = (short)(iVar3 >> 0x1f);
-        CHAR_ARRAY_00a1000c.piece<394,2>() =
+        g_HelpFlags.piece<394,2>() =
              ((short)(iVar3 / 600) + sVar2) - ((short)((short)(iVar3 / 0x2580000) + sVar2) >> 0xf);
       }
-      CHAR_ARRAY_00a1000c.piece<396,4>() = CHAR_ARRAY_00a1000c.piece<396,4>() | 1 << (Level & 0x3f) | 0x80000000;
+      g_HelpFlags.piece<396,4>() = g_HelpFlags.piece<396,4>() | 1 << (Level & 0x3f) | 0x80000000;
     }
     else {
       iVar3 = (int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5));
       if (((int)((float)(longlong)(animationSpeed * 18.5) * 60.0) <
-           (int)(iVar3 + (uint)(ushort)CHAR_ARRAY_00a1000c.piece<394,2>() * -600)) ||
-         ((uint)(ushort)CHAR_ARRAY_00a1000c.piece<394,2>() * 600 == 0)) {
+           (int)(iVar3 + (uint)(ushort)g_HelpFlags.piece<394,2>() * -600)) ||
+         ((uint)(ushort)g_HelpFlags.piece<394,2>() * 600 == 0)) {
         Help_QueueMessage(STR_YOU_CAN_USE_YOUR_0x1F41,0x31);
       }
-      else if ((int)(uint)(ushort)CHAR_ARRAY_00a1000c.piece<394,2>() < iVar3 / 600) {
+      else if ((int)(uint)(ushort)g_HelpFlags.piece<394,2>() < iVar3 / 600) {
         sVar2 = (short)(iVar3 >> 0x1f);
-        CHAR_ARRAY_00a1000c.piece<394,2>() =
+        g_HelpFlags.piece<394,2>() =
              ((short)(iVar3 / 600) + sVar2) - ((short)((short)(iVar3 / 0x2580000) + sVar2) >> 0xf);
       }
     }
@@ -99,47 +99,47 @@ void UpdateMoby_1349(MobyInstance *moby)
      (g_SeenPlanets.Orxon != '\0')) {
     iVar3 = (int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5));
     if (((int)((float)(longlong)(animationSpeed * 18.5) * 60.0) <
-         (int)(iVar3 + (uint)(ushort)CHAR_ARRAY_00a1000c.piece<402,2>() * -600)) ||
-       ((uint)(ushort)CHAR_ARRAY_00a1000c.piece<402,2>() * 600 == 0)) {
+         (int)(iVar3 + (uint)(ushort)g_HelpFlags.piece<402,2>() * -600)) ||
+       ((uint)(ushort)g_HelpFlags.piece<402,2>() * 600 == 0)) {
       Help_QueueMessage(STR_YOU_WILL_NEED_A_0x1F42,0x32);
     }
-    else if ((int)(uint)(ushort)CHAR_ARRAY_00a1000c.piece<402,2>() < iVar3 / 600) {
+    else if ((int)(uint)(ushort)g_HelpFlags.piece<402,2>() < iVar3 / 600) {
       sVar2 = (short)(iVar3 >> 0x1f);
-      CHAR_ARRAY_00a1000c.piece<402,2>() =
+      g_HelpFlags.piece<402,2>() =
            ((short)(iVar3 / 600) + sVar2) - ((short)((short)(iVar3 / 0x2580000) + sVar2) >> 0xf);
     }
   }
   else if (((UnlockableItems.magneboots != '\0') &&
            (iVar3 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar1[1]), iVar3 != 0)) &&
           (g_SeenPlanets.Orxon != '\0')) {
-    if (CHAR_ARRAY_00a1000c.piece<896,2>() == 0) {
-      CHAR_ARRAY_00a1000c[0x380] = '\0';
-      CHAR_ARRAY_00a1000c[0x381] = '\x01';
+    if (g_HelpFlags.piece<896,2>() == 0) {
+      g_HelpFlags[0x380] = '\0';
+      g_HelpFlags[0x381] = '\x01';
       iVar3 = (int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5));
-      if ((int)(uint)(ushort)CHAR_ARRAY_00a1000c.piece<898,2>() < iVar3 / 600) {
+      if ((int)(uint)(ushort)g_HelpFlags.piece<898,2>() < iVar3 / 600) {
         sVar2 = (short)(iVar3 >> 0x1f);
-        CHAR_ARRAY_00a1000c.piece<898,2>() =
+        g_HelpFlags.piece<898,2>() =
              ((short)(iVar3 / 600) + sVar2) - ((short)((short)(iVar3 / 0x2580000) + sVar2) >> 0xf);
       }
-      CHAR_ARRAY_00a1000c.piece<900,4>() = CHAR_ARRAY_00a1000c.piece<900,4>() | 1 << (Level & 0x3f) | 0x80000000;
+      g_HelpFlags.piece<900,4>() = g_HelpFlags.piece<900,4>() | 1 << (Level & 0x3f) | 0x80000000;
     }
     else {
       iVar3 = (int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5));
       if (((int)((float)(longlong)(animationSpeed * 18.5) * 60.0) <
-           (int)(iVar3 + (uint)(ushort)CHAR_ARRAY_00a1000c.piece<898,2>() * -600)) ||
-         ((uint)(ushort)CHAR_ARRAY_00a1000c.piece<898,2>() * 600 == 0)) {
+           (int)(iVar3 + (uint)(ushort)g_HelpFlags.piece<898,2>() * -600)) ||
+         ((uint)(ushort)g_HelpFlags.piece<898,2>() * 600 == 0)) {
         Help_QueueMessage(STR_YOU_CAN_USE_YOUR_0x1F45,0x70);
       }
-      else if ((int)(uint)(ushort)CHAR_ARRAY_00a1000c.piece<898,2>() < iVar3 / 600) {
+      else if ((int)(uint)(ushort)g_HelpFlags.piece<898,2>() < iVar3 / 600) {
         sVar2 = (short)(iVar3 >> 0x1f);
-        CHAR_ARRAY_00a1000c.piece<898,2>() =
+        g_HelpFlags.piece<898,2>() =
              ((short)(iVar3 / 600) + sVar2) - ((short)((short)(iVar3 / 0x2580000) + sVar2) >> 0xf);
       }
     }
   }
   if (DAT_00969f78 * -1.0 < 0.1) {
-    CHAR_ARRAY_00a1000c[0x380] = -1;
-    CHAR_ARRAY_00a1000c[0x381] = -1;
+    g_HelpFlags[0x380] = -1;
+    g_HelpFlags[0x381] = -1;
   }
   if ((g_MiscLevelFlags.field47_0x2f == 0) && (g_heroStateType == 0xf)) {
     g_MiscLevelFlags.field47_0x2f = 1;

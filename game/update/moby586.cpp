@@ -61,28 +61,28 @@ void UpdateMoby_586(MobyInstance *moby)
     fVar4 = (moby->pos).x - g_heroPosition.x;
     if ((SQRT(fVar4 * fVar4 + fVar7 * fVar7) < 2.5) &&
        (uVar3 = 1 << (Level & 0x3f), (DAT_00a25818 & uVar3) == 0)) {
-      if (CHAR_ARRAY_00a1000c.piece<904,2>() == 0) {
-        CHAR_ARRAY_00a1000c[0x388] = '\0';
-        CHAR_ARRAY_00a1000c[0x389] = '\x01';
+      if (g_HelpFlags.piece<904,2>() == 0) {
+        g_HelpFlags[0x388] = '\0';
+        g_HelpFlags[0x389] = '\x01';
         iVar6 = (int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5));
-        if ((int)(uint)(ushort)CHAR_ARRAY_00a1000c.piece<906,2>() < iVar6 / 600) {
+        if ((int)(uint)(ushort)g_HelpFlags.piece<906,2>() < iVar6 / 600) {
           sVar5 = (short)(iVar6 >> 0x1f);
-          CHAR_ARRAY_00a1000c.piece<906,2>() =
+          g_HelpFlags.piece<906,2>() =
                ((short)(iVar6 / 600) + sVar5) - ((short)((short)(iVar6 / 0x2580000) + sVar5) >> 0xf)
           ;
         }
-        CHAR_ARRAY_00a1000c.piece<908,4>() = CHAR_ARRAY_00a1000c.piece<908,4>() | uVar3 | 0x80000000;
+        g_HelpFlags.piece<908,4>() = g_HelpFlags.piece<908,4>() | uVar3 | 0x80000000;
       }
       else {
         iVar6 = (int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5));
         if (((int)((float)(longlong)(animationSpeed * 18.5) * 60.0) <
-             (int)(iVar6 + (uint)(ushort)CHAR_ARRAY_00a1000c.piece<906,2>() * -600)) ||
-           ((uint)(ushort)CHAR_ARRAY_00a1000c.piece<906,2>() * 600 == 0)) {
+             (int)(iVar6 + (uint)(ushort)g_HelpFlags.piece<906,2>() * -600)) ||
+           ((uint)(ushort)g_HelpFlags.piece<906,2>() * 600 == 0)) {
           Help_QueueMessage(STR_WITH_THE_THRUSTER_PACK_YOU_0x2B01,0x71);
         }
-        else if ((int)(uint)(ushort)CHAR_ARRAY_00a1000c.piece<906,2>() < iVar6 / 600) {
+        else if ((int)(uint)(ushort)g_HelpFlags.piece<906,2>() < iVar6 / 600) {
           sVar5 = (short)(iVar6 >> 0x1f);
-          CHAR_ARRAY_00a1000c.piece<906,2>() =
+          g_HelpFlags.piece<906,2>() =
                ((short)(iVar6 / 600) + sVar5) - ((short)((short)(iVar6 / 0x2580000) + sVar5) >> 0xf)
           ;
         }

@@ -92,7 +92,7 @@ ulonglong UpdateMoby_930(MobyInstance *moby)
     }
     uVar4 = (ulonglong)UnlockableItems.hologuise;
     if ((UnlockableItems.hologuise != '\0') &&
-       (uVar2 = CHAR_ARRAY_00a1000c.piece<1012,4>() & 1 << (Level & 0x3f), uVar4 = (ulonglong)uVar2,
+       (uVar2 = g_HelpFlags.piece<1012,4>() & 1 << (Level & 0x3f), uVar4 = (ulonglong)uVar2,
        uVar2 == 0)) {
       iVar5 = Help_QueueMessage(STR_THE_HOLOGUISE_IS_A_0x3E80,0x7e);
       uVar4 = (ulonglong)iVar5;

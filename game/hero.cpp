@@ -8440,7 +8440,7 @@ uint Hero_DisplayHelpMsgs(void)
   uint uVar2;
   int iVar3;
   
-  if ((CHAR_ARRAY_00a1000c.piece<960,2>() != 0) || (UnlockableItems.hydroPack == '\0')) goto LAB_0008d3d4;
+  if ((g_HelpFlags.piece<960,2>() != 0) || (UnlockableItems.hydroPack == '\0')) goto LAB_0008d3d4;
   bVar1 = false;
   if ((g_heroStateType == 0x12) || (g_heroStateType == 0x11)) {
 LAB_0008d3b8:
@@ -8454,7 +8454,7 @@ LAB_0008d3b8:
 LAB_0008d3d4:
   uVar2 = worldUpdateTime;
   if (((0 < (int)worldUpdateTime) && (uVar2 = worldUpdateTime & 0x7f, uVar2 == 0)) &&
-     ((uVar2 = (uint)(ushort)CHAR_ARRAY_00a1000c.piece<640,2>(), CHAR_ARRAY_00a1000c.piece<640,2>() == 0 &&
+     ((uVar2 = (uint)(ushort)g_HelpFlags.piece<640,2>(), g_HelpFlags.piece<640,2>() == 0 &&
       (uVar2 = (uint)(ushort)CHAR_ARRAY_00a0feec.piece<168,2>(), CHAR_ARRAY_00a0feec.piece<168,2>() == 0)))) {
     uVar2 = 0;
     iVar3 = 0;
@@ -9622,7 +9622,7 @@ void Hero_UpdateGadgetGlows(void)
     uVar9 = 0xffffffff806e8c6e;
     uVar15 = 0xffffffff805a3232;
     DAT_0096b308 = (float)dVar19;
-    if ((g_HelpState != 0) && (g_HelpState != 8)) {
+    if ((g_Help.state != 0) && (g_Help.state != 8)) {
       dVar19 = (double)FastWrapRot((float)dVar19,g_FrameTime * 5.5850534);
       DAT_0096b308 = (float)dVar19;
       uVar9 = 0xffffffff806eaafa;
@@ -19700,7 +19700,7 @@ bool ____Hero_UpdateWeaponInput(void)
         }
       }
       else if (g_CurrentWeapon == 0x24) {
-        if (((DAT_0096a5ae != '\0') && (CHAR_ARRAY_00a1000c.piece<1048,2>() == 0)) &&
+        if (((DAT_0096a5ae != '\0') && (g_HelpFlags.piece<1048,2>() == 0)) &&
            (CHAR_ARRAY_00a0feec.piece<216,2>() == 0)) {
           sVar26 = DAT_0096a5aa + 1;
           DAT_0096a5aa = sVar26;

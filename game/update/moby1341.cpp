@@ -52,27 +52,27 @@ ulonglong UpdateMoby_1341(MobyInstance *moby)
         (CHAR_ARRAY_00a0feec.piece<88,2>() == 0)) &&
        (((int)((int)(dVar11 * (double)((float)(longlong)g_GameFrameCount + 0.5)) +
               (uint)(ushort)CHAR_ARRAY_00a0feec.piece<98,2>() * -600) < (int)(dVar11 * 1100.5) &&
-        ((CHAR_ARRAY_00a1000c.piece<652,4>() & 0x80000000) == 0)))) {
+        ((g_HelpFlags.piece<652,4>() & 0x80000000) == 0)))) {
       Help_QueueMessage(STR_WHEN_YOURE_UNDERWATER_PUSH_0x4E27,0x51);
       dVar11 = (double)animationSpeed;
     }
     if (((worldUpdateTime < (int)(dVar11 * dVar13)) && (CHAR_ARRAY_00a0feec.piece<232,2>() != 0)) &&
        (((int)((int)(dVar11 * (double)((float)(longlong)g_GameFrameCount + 0.5)) +
               (uint)(ushort)CHAR_ARRAY_00a0feec.piece<234,2>() * -600) < (int)(dVar11 * 1100.5) &&
-        ((CHAR_ARRAY_00a1000c.piece<916,4>() & 0x80000000) == 0)))) {
+        ((g_HelpFlags.piece<916,4>() & 0x80000000) == 0)))) {
       Help_QueueMessage(STR_WHEN_YOURE_UNDERWATER_DONT_0x4E28,0x72);
     }
     if (g_gameMode == GAME_MODE_NORMAL) {
       bVar1 = g_SeenPlanets.Kerwan == '\0';
-      if ((((bVar1) || (g_SeenPlanets.Aridia != '\0')) || (g_HelpState != 0)) ||
-         ((g_HelpCurId != -1 || (CHAR_ARRAY_00a1000c.piece<32,2>() != 0)))) {
-        if ((((bVar1) && ((g_SeenPlanets.Aridia != '\0' && (g_HelpState == 0)))) &&
-            (g_HelpCurId == -1)) && (CHAR_ARRAY_00a1000c.piece<40,2>() == 0)) {
+      if ((((bVar1) || (g_SeenPlanets.Aridia != '\0')) || (g_Help.state != 0)) ||
+         ((g_Help.curId != -1 || (g_HelpFlags.piece<32,2>() != 0)))) {
+        if ((((bVar1) && ((g_SeenPlanets.Aridia != '\0' && (g_Help.state == 0)))) &&
+            (g_Help.curId == -1)) && (g_HelpFlags.piece<40,2>() == 0)) {
           Help_QueueMessage(STR_GADGETRON_INFOBOTS_GIVE_YOU_0x03E9,5);
         }
-        else if ((((!bVar1) && (g_SeenPlanets.Aridia != '\0')) && (g_HelpState == 0)) &&
-                (((g_HelpCurId == -1 && (CHAR_ARRAY_00a1000c.piece<48,2>() == 0)) &&
-                 (CHAR_ARRAY_00a1000c.piece<32,2>() == 0)))) {
+        else if ((((!bVar1) && (g_SeenPlanets.Aridia != '\0')) && (g_Help.state == 0)) &&
+                (((g_Help.curId == -1 && (g_HelpFlags.piece<48,2>() == 0)) &&
+                 (g_HelpFlags.piece<32,2>() == 0)))) {
           Help_QueueMessage(STR_NOW_THAT_YOU_HAVE_0x03EA,6);
         }
       }
@@ -82,29 +82,29 @@ ulonglong UpdateMoby_1341(MobyInstance *moby)
     }
     iVar9 = MB_IsPntInCuboid(&g_heroPosition,(longlong)*(int *)((int)pvVar3 + 0x3c));
     if (((iVar9 != 0) && ((g_heroStateType < 2 || (g_heroStateType == 9)))) &&
-       ((g_HelpState == 0 &&
-        (((g_HelpCurId == -1 &&
+       ((g_Help.state == 0 &&
+        (((g_Help.curId == -1 &&
           ((int)(animationSpeed * 216000.5) <
            (int)((int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5)) +
                 (uint)(ushort)CHAR_ARRAY_00a0feec.piece<74,2>() * -600))) &&
-         ((CHAR_ARRAY_00a1000c.piece<540,4>() & 1 << (Level & 0x3f)) == 0)))))) {
+         ((g_HelpFlags.piece<540,4>() & 1 << (Level & 0x3f)) == 0)))))) {
       Help_QueueMessage(STR_YOU_CAN_VIEW_A_0x03EF,0x43);
     }
     iVar9 = MB_IsPntInCuboid(&g_heroPosition,(longlong)*(int *)((int)pvVar3 + 0x38));
     if ((((iVar9 != 0) && ((g_heroStateType < 2 || (g_heroStateType == 9)))) &&
-        ((DAT_00a1a854 < 3 && ((g_HelpState == 0 && (g_HelpCurId == -1)))))) &&
-       (CHAR_ARRAY_00a1000c.piece<512,2>() == 0)) {
+        ((DAT_00a1a854 < 3 && ((g_Help.state == 0 && (g_Help.curId == -1)))))) &&
+       (g_HelpFlags.piece<512,2>() == 0)) {
       Help_QueueMessage(STR_TO_ENTER_LOOK_AROUND_MODE_0x03EC,0x40);
     }
     iVar9 = MB_IsPntInCuboid(&g_heroPosition,(longlong)*(int *)((int)pvVar3 + 0x38));
     if (((iVar9 != 0) &&
         (((((g_heroStateType < 2 || (g_heroStateType == 9)) &&
-           (g_heroState == FIRST_PERSON_VIEW)) && ((DAT_00a1a850 == -1 && (g_HelpState == 0)))
-          ) && (g_HelpCurId == -1)))) &&
-       ((CHAR_ARRAY_00a1000c.piece<512,2>() != 0 && (CHAR_ARRAY_00a1000c.piece<520,2>() == 0)))) {
+           (g_heroState == FIRST_PERSON_VIEW)) && ((DAT_00a1a850 == -1 && (g_Help.state == 0)))
+          ) && (g_Help.curId == -1)))) &&
+       ((g_HelpFlags.piece<512,2>() != 0 && (g_HelpFlags.piece<520,2>() == 0)))) {
       Help_QueueMessage(STR_YOU_CAN_ALSO_USE_0x03ED,0x41);
     }
-    if (((((ushort)CHAR_ARRAY_00a1000c.piece<528,2>() < 2) &&
+    if (((((ushort)g_HelpFlags.piece<528,2>() < 2) &&
          (iVar9 = MB_IsPntInCuboid(&g_heroPosition,(longlong)*(int *)((int)pvVar3 + 0x30))
          , iVar9 != 0)) && (DAT_0096bd70 == 0x3b)) &&
        ((g_heroStateTimer == 0 && (MobyUpdateChainStart != 0)))) {
@@ -127,8 +127,8 @@ ulonglong UpdateMoby_1341(MobyInstance *moby)
       } while (iVar9 != 0);
     }
     if ((((g_heroStateType == 0x12) && (*(int *)((int)pvVar3 + 0x28) == 0)) &&
-        (g_HelpState == 0)) &&
-       ((g_HelpCurId == -1 &&
+        (g_Help.state == 0)) &&
+       ((g_Help.curId == -1 &&
         ((iVar9 = MB_IsPntInCuboid(&g_heroPosition,(longlong)*(int *)((int)pvVar3 + 0x20))
          , iVar9 != 0 ||
          (iVar9 = MB_IsPntInCuboid(&g_heroPosition,(longlong)*(int *)((int)pvVar3 + 0x24))
@@ -172,8 +172,8 @@ ulonglong UpdateMoby_1341(MobyInstance *moby)
       }
     }
     else if (g_heroStateType == 0x11) {
-      CHAR_ARRAY_00a1000c[0x220] = -1;
-      CHAR_ARRAY_00a1000c[0x221] = -1;
+      g_HelpFlags[0x220] = -1;
+      g_HelpFlags[0x221] = -1;
     }
     else {
       *(undefined4 *)((int)pvVar3 + 0x2c) = 0;
@@ -191,11 +191,11 @@ ulonglong UpdateMoby_1341(MobyInstance *moby)
               fVar5 = *(float *)(iVar9 + 0x10) - g_heroPosition.x,
               fVar6 = *(float *)(iVar9 + 0x18) - g_heroPosition.z,
               (double)SQRT(fVar6 * fVar6 + fVar5 * fVar5 + fVar4 * fVar4) < dVar13)) &&
-             ((uVar8 = (ulonglong)(uint)g_HelpState, g_HelpState == 0 &&
-              ((uVar8 = (ulonglong)(uint)g_HelpCurId, g_HelpCurId == -1 &&
-               (uVar8 = (ulonglong)(ushort)CHAR_ARRAY_00a1000c.piece<8,2>(), CHAR_ARRAY_00a1000c.piece<8,2>() == 0
+             ((uVar8 = (ulonglong)(uint)g_Help.state, g_Help.state == 0 &&
+              ((uVar8 = (ulonglong)(uint)g_Help.curId, g_Help.curId == -1 &&
+               (uVar8 = (ulonglong)(ushort)g_HelpFlags.piece<8,2>(), g_HelpFlags.piece<8,2>() == 0
                )))))) &&
-            (uVar8 = (ulonglong)(ushort)CHAR_ARRAY_00a1000c.piece<16,2>(), CHAR_ARRAY_00a1000c.piece<16,2>() == 0)
+            (uVar8 = (ulonglong)(ushort)g_HelpFlags.piece<16,2>(), g_HelpFlags.piece<16,2>() == 0)
             ) && (uVar8 = (ulonglong)(ushort)CHAR_ARRAY_00a0feec.piece<104,2>(),
                  CHAR_ARRAY_00a0feec.piece<104,2>() == 0)) {
           iVar10 = FUN_004660a8(iVar9);

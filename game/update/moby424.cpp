@@ -786,7 +786,7 @@ void UpdateMoby_424(MobyInstance *moby)
   }
   else if (bVar1 < 3) {
     if (g_standingOnMoby == moby) {
-      if ((g_HelpState == 0) && (g_HelpCurId == -1)) {
+      if ((g_Help.state == 0) && (g_Help.curId == -1)) {
         local_50 = g_heroPosition.x;
         local_4c = g_heroPosition.y;
         local_48 = g_heroPosition.z;

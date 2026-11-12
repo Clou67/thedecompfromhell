@@ -18,7 +18,7 @@ extern undefined4 _DAT_005029a0; /* direct read */
 extern undefined4 _DAT_005029b0; /* direct read */
 
 // ---- functions
-undefined8 FastDecTimerS32(uint *param_1);
+int FastDecTimerS32(int *param_1);
 undefined8 FastDecTimerS16(ushort *param_1);
 undefined8 FastDecTimerU16(ushort *param_1);
 undefined8 FastDecTimerS8(byte *param_1);

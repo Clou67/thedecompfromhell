@@ -281,15 +281,15 @@ void UpdateMoby_1229(MobyInstance *moby)
             local_80 = (longlong)(int)(animationSpeed * 20.5);
             MB_SetAnimation(lVar14,1,0,(int)(animationSpeed * 20.5));
           }
-          iVar15 = g_HelpState;
+          iVar15 = g_Help.state;
           moby->modeBits =
                moby->modeBits &
                (MIRROR|CAN_BE_DAMAGED|HIDE_BACKFACES|CAN_BE_AUTO_TARGETED|DISABLE_Z_WRITE|
                 DRAW_SHADOW|DRAW_TRANSPARENT_WEIRD|LOCK_ROTATION|NO_DRAW|HAS_SPECIAL_VARS|HAS_GLOW|
                 TRANSPARENT|NO_POST_UPDATE|NO_UPDATE);
           moby->collision = moby->pClass->collision;
-          if ((((iVar15 == 0) && (g_HelpCurId == -1)) && (g_heroType == '\0')) &&
-             ((CHAR_ARRAY_00a1000c.piece<736,2>() == 0 && (UnlockableItems.devastator == '\0')))) {
+          if ((((iVar15 == 0) && (g_Help.curId == -1)) && (g_heroType == '\0')) &&
+             ((g_HelpFlags.piece<736,2>() == 0 && (UnlockableItems.devastator == '\0')))) {
             Help_QueueMessage(STR_THE_DEVASTATOR_MANUFACTURED_EXCLUSIVELY_0x2715,0x5c);
           }
         }

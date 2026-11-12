@@ -271,7 +271,7 @@ void UpdateMoby_1005(MobyInstance *moby)
     }
     Camera_SetMobyDrivenTargetPos(&local_60);
     Camera_SetMobyDrivenTargetRot(&local_50);
-    if (((g_HelpState == 0) && (g_HelpCurId == -1)) &&
+    if (((g_Help.state == 0) && (g_Help.curId == -1)) &&
        (uVar3 = (int)*(uint *)((int)pvVar2 + 0x40) >> 0x1f,
        0x3e4ccccd < (int)((uVar3 >> 1 ^ *(uint *)((int)pvVar2 + 0x40)) - uVar3))) {
       Delt((float)dVar13,g_FrameTime * 4.0,&SceneScreenFade);

@@ -3,6 +3,7 @@
 // 24 functions, 0x415ec4-0x41be44
 #include <stdio.h>
 #include "game/update/moby688.h"
+#include "game/boot.h"
 #include "game/camera.h"
 #include "game/collproc.h"
 #include "game/debug.h"

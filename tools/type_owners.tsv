@@ -19,7 +19,6 @@ g_MainLoopFrames	game/main
 g_HideActivityIcon	game/main
 FreezeState	game/freeze
 g_Freeze	game/freeze
-TextLayout	game/draw
 MobyVarEntry	game/respawn
 MobyVarList	game/respawn
 CheckpointData	game/respawn
@@ -30,3 +29,8 @@ g_CheckpointBits	game/respawn
 g_NavSlots	game/respawn
 WaterSheetSrcVert	game/water
 WaterStage	game/water
+FontWindow	game/draw
+HelpMsg	game/help
+HelpFlag	game/help
+HelpState	game/help
+g_Help	game/help

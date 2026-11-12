@@ -269,17 +269,17 @@ void UpdateMoby_1455(MobyInstance *moby)
       puVar9[0x1f] = (longlong)g_GameFrameCount;
       fVar2 = animationSpeed;
       puVar9[0x1f] = (longlong)(int)(animationSpeed * ((float)(longlong)puVar9[0x1f] + 0.5));
-      uVar13 = CHAR_ARRAY_00a1000c.piece<1082,2>();
-      uVar12 = (uint)(ushort)CHAR_ARRAY_00a1000c.piece<1082,2>();
+      uVar13 = g_HelpFlags.piece<1082,2>();
+      uVar12 = (uint)(ushort)g_HelpFlags.piece<1082,2>();
       iVar18 = *(int *)((int)puVar9 + 0xfc);
-      uVar10 = (uint)(ushort)CHAR_ARRAY_00a1000c.piece<1082,2>();
+      uVar10 = (uint)(ushort)g_HelpFlags.piece<1082,2>();
       puVar9[0x1f] = (longlong)(int)((float)(longlong)(fVar2 * 18.5) * 60.0);
       if ((*(int *)((int)puVar9 + 0xfc) < (int)(iVar18 + uVar10 * -600)) || (uVar12 * 600 == 0)) {
         Help_QueueMessage(STR_IF_YOU_WANT_TO_0x3E83,0x87);
       }
       else if ((int)(uint)(ushort)uVar13 < iVar18 / 600) {
         sVar23 = (short)(iVar18 >> 0x1f);
-        CHAR_ARRAY_00a1000c.piece<1082,2>() =
+        g_HelpFlags.piece<1082,2>() =
              ((short)(iVar18 / 600) + sVar23) -
              ((short)((short)(iVar18 / 0x2580000) + sVar23) >> 0xf);
       }

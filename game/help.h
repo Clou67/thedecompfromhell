@@ -4,71 +4,68 @@
 #include "game/mobyutil.h"
 
 // ---- types
-struct FontWindow { /* DL struct FontWindow; verified by SetFontWindow 0x6ac90 */
-    short win_top;
-    short win_bot;
-    short win_left;
-    short win_right;
-    short text_x;
-    short text_y;
-    short max_width;
-    short max_height;
-    short line_spacing;
-    short flags;
-    short sub_pixel_x;
-    short sub_pixel_y;
-    undefined field12_0x18;
-    undefined field13_0x19;
-    undefined field14_0x1a;
-    undefined field15_0x1b;
+/* one help message of the loaded language (g_HelpMsgs, from the locale file) */
+struct HelpMsg {
+    char *text;              /* 0x0 */
+    int id;                  /* 0x4  StringId */
+    int speech;              /* 0x8  voice line (track - 30000), -1 = none */
+    int unk0c;               /* 0xc */
 };
+/* per help "flag" (DisplayHelp's second argument) @0xa1000c, 148 of them */
+struct HelpFlag {
+    u16 count;               /* 0x0  times shown; 0xffff = never show again */
+    u16 lastShown;           /* 0x2  play time when last shown, (scaled frames) / 600 */
+    u32 levels;              /* 0x4  bit per level it was shown on; bit 31: since the last death */
+};
+/* the help box state machine @0x720884 */
+struct HelpState {
+    int state;               /* 0x00  HelpBoxState */
+    int timer;               /* 0x04  frames in this state */
+    int boxHalfW;            /* 0x08  size of the open box */
+    int boxHalfH;            /* 0x0c */
+    int boxX;                /* 0x10  centre */
+    int boxY;                /* 0x14 */
+    int curHalfW;            /* 0x18  size as drawn this frame */
+    int curHalfH;            /* 0x1c */
+    int curIndex;            /* 0x20  into g_HelpMsgs, -1 = none */
+    int curId;               /* 0x24  queued StringId, -1 = none */
+    int curFlag;             /* 0x28 */
+    int msgCount;            /* 0x2c  entries in g_HelpMsgs */
+    int armed;               /* 0x30  help starts once the d-pad has been held for 2 s */
+    int armTimer;            /* 0x34 */
+    short suspended;         /* 0x38 */
+    short resumed;           /* 0x3a */
+    int resumeDelay;         /* 0x3c  frames before a suspended message comes back */
+};
+typedef char HelpState_size_check[sizeof(struct HelpState) == 0x40 ? 1 : -1];
 
 // ---- globals
-extern char CHAR_ARRAY_00a1000c[1184]; /* 0xa1000c */
-extern undefined1 DAT_0071fb58; /* 0x71fb58 */
-extern undefined1 DAT_0071fb59; /* 0x71fb59 */
 extern undefined4 DAT_00720860; /* 0x720860 */
-extern undefined4 DAT_0072088c; /* 0x72088c */
-extern undefined4 DAT_00720890; /* 0x720890 */
-extern undefined4 DAT_00720894; /* 0x720894 */
-extern undefined4 DAT_00720898; /* 0x720898 */
-extern undefined4 DAT_0072089c; /* 0x72089c */
-extern undefined4 DAT_007208a0; /* 0x7208a0 */
-extern undefined4 DAT_007208b4; /* 0x7208b4 */
-extern undefined4 DAT_007208b8; /* 0x7208b8 */
-extern undefined4 DAT_007208c0; /* 0x7208c0 */
-extern undefined1 DAT_00a104ad; /* 0xa104ad */
-extern undefined4 Help; /* 0x7208b0 */
-extern undefined4 HelpMsgs; /* 0xa1a800 */
-extern int g_HelpCurFlag; /* 0x7208ac */
-extern int g_HelpCurId; /* 0x7208a8 */
-extern int g_HelpCurIndex; /* 0x7208a4 */
-extern undefined2 g_HelpIdPairs; /* 0x7208cc */
-extern undefined1 g_HelpLog; /* 0xa104ac */
+extern HelpState g_Help; /* 0x720884 */ /* type set in global_types.tsv */
+extern HelpFlag g_HelpFlags[148]; /* 0xa1000c */ /* type set in global_types.tsv */
+extern short g_HelpIdPairs[150][2]; /* 0x7208cc */ /* type set in global_types.tsv */
+extern u8 g_HelpLog[150]; /* 0xa104ac: indices into g_HelpIdPairs, oldest first */ /* type set in global_types.tsv */
 extern int g_HelpLogCount; /* 0x71fb5c */
-extern int g_HelpState; /* 0x720884 */
-extern int g_HelpStateTimer; /* 0x720888 */
-extern int g_HelpSuspended; /* 0x7208bc */
+extern HelpMsg *g_HelpMsgs; /* 0xa1a800 */ /* type set in global_types.tsv */
+extern bool g_HelpTextOn; /* 0x71fb59: options, help text */ /* type set in global_types.tsv */
+extern bool g_HelpVoiceOn; /* 0x71fb58: options, help voice (guess) */ /* type set in global_types.tsv */
 extern undefined4 g_PendingSpeech; /* 0x9636e4 */
-extern int g_ScreenHeight; /* 0x966b04 */
-extern char s_MESSAGE_DOES_NOT_EXIST_00720b94[23]; /* 0x720b94 */
-extern undefined1 stack0xffffffd0[16]; /* stack slot, not a real global */
 
 // ---- functions
 void SECTION_HEADER_HELP(void);
 void Help_Skip(void);
-int Help_FindPairIndex(short id,int column,short *pOther);
+int Help_FindPairIndex(short id, int column, short *pOther);
 void Help_AddToLog(short id);
-int Help_QueueMessage(StringId id,int flag);
+int Help_QueueMessage(StringId id, int flag);
 void Help_Kill(void);
-int Help_QueueMessageForce(StringId id,int flag);
+int Help_QueueMessageForce(StringId id, int flag);
 void Help_ClearUsedSinceDeath(void);
 int Help_FindIndex(int id);
-char * help_msg_string_by_index(StringId helpmsg);
+char *help_msg_string_by_index(StringId helpmsg);
 void Help_Suspend(void);
 void Help_Resume(void);
 void Help_StartMessageBox(void);
 void Help_Update(void);
 void Help_DrawIconBox(void);
 void Help_Draw(void);
-short Help_GetPairedId(short id,int column);
+short Help_GetPairedId(short id, int column);

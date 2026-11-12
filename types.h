@@ -3372,3 +3372,5 @@ extern undefined4 _DAT_000e93e0; /* direct read */
 extern undefined4 _DAT_000e9420; /* direct read */
 extern undefined4 _DAT_000e9430; /* direct read */
 extern undefined4 _DAT_000e9450; /* direct read */
+extern char s_MESSAGE_DOES_NOT_EXIST_00720b94[23]; /* 0x720b94 */
+extern undefined1 stack0xffffffd0[16]; /* stack slot, not a real global */

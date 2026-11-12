@@ -1998,9 +1998,9 @@ void PrepareChallengeModeSave(longlong param_1)
     g_MiscLevelFlags.UltraNanotech = true;
     g_heroMaxNanotech = 8;
   }
-  DAT_0071fb58 = 0;
+  g_HelpVoiceOn = 0;
   g_ChallengeMode = iVar4 + 1;
-  DAT_0071fb59 = 0;
+  g_HelpTextOn = 0;
   g_boltCount = uVar1;
   g_totalBoltsCollected = uVar5;
   if (-1 < (int)param_1) {
@@ -4600,7 +4600,7 @@ void SkillPoints_OnEnter(void)
     iVar3 = 0;
     do {
       iVar2 = g_HelpLogCount;
-      bVar1 = CHAR_ARRAY_00a1000c[(g_HelpLogCount - iVar4) + 0x49f];
+      bVar1 = g_HelpFlags[(g_HelpLogCount - iVar4) + 0x49f];
       iVar4 = iVar4 + 1;
       *(undefined2 *)((int)&PTR_Elf64_Ehdr_0072b332 + iVar3) = 1;
       *(undefined2 *)((int)&DAT_0072b330 + iVar3) = *(undefined2 *)(&DAT_007208ce + (uint)bVar1 * 4)

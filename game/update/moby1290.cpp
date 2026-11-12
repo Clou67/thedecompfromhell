@@ -252,7 +252,7 @@ void UpdateMoby_1290(MobyInstance *moby)
       MB_ToastMessage(0x232a,0xffffffffffffffff);
       g_toastMsgTimer = 0xb4;
       MB_UnlockItem(7,1);
-      if (CHAR_ARRAY_00a1000c.piece<416,2>() == 0) {
+      if (g_HelpFlags.piece<416,2>() == 0) {
         Help_QueueMessage(STR_YOU_HAVE_ACQUIRED_A_0x2328,0x34);
       }
       pMVar6 = g_MobyInstance;

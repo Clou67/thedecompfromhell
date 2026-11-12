@@ -208,7 +208,7 @@ LAB_00286e58:
          && ((*(int *)((int)pvVar7 + 0x38) < iVar16 && iVar15 != -1 &&
              (((((g_heroStateType == 0 || (g_heroStateType == 1)) ||
                 (g_heroStateType == 9)) &&
-               ((g_HelpState == 0 && (g_HelpCurId == -1)))) &&
+               ((g_Help.state == 0 && (g_Help.curId == -1)))) &&
               (UnlockableItems.hologuise != '\0')))))) {
         auVar31 = ZEXT416(0xffffffff);
         auVar31 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
@@ -225,16 +225,16 @@ LAB_00286e58:
                           (auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60,0x38,uVar24
                           );
         *(undefined4 *)((int)pvVar7 + 0x38U & 0xfffffffc) = uVar8;
-        if ((CHAR_ARRAY_00a1000c.piece<1004,4>() & 0x80000000) == 0) {
+        if ((g_HelpFlags.piece<1004,4>() & 0x80000000) == 0) {
           Help_QueueMessage(STR_WHILE_WEARING_THE_HOLOGUISE_0x3A9A,0x7d);
         }
         *(undefined4 *)((int)pvVar7 + 0xc) = 0;
         *(int *)((int)pvVar7 + 0x30) = iVar15;
       }
       iVar15 = MB_IsPntInCuboid(&g_heroPosition,(longlong)*(int *)((int)pvVar7 + 0x20));
-      if ((((iVar15 != 0) && (g_HelpState == 0)) && (g_HelpCurId == -1)) &&
+      if ((((iVar15 != 0) && (g_Help.state == 0)) && (g_Help.curId == -1)) &&
          ((UnlockableItems.hydroPack == '\0' &&
-          ((CHAR_ARRAY_00a1000c.piece<1044,4>() & 1 << (Level & 0x3f)) == 0)))) {
+          ((g_HelpFlags.piece<1044,4>() & 1 << (Level & 0x3f)) == 0)))) {
         Help_QueueMessage(STR_YOU_WILL_NEED_A_0x3A9D,0x82);
       }
       iVar16 = 0;
@@ -261,8 +261,8 @@ LAB_002870a0:
       puVar9[0x19] = (longlong)(int)(animationSpeed * 3600.5);
       if (((*(int *)((int)puVar9 + 0xcc) < iVar18 && iVar15 != -1) &&
           (iVar16 = Hero_IsSwimming(), iVar16 != 0)) &&
-         ((g_HelpState == 0 &&
-          ((g_HelpCurId == -1 && (UnlockableItems.hydroPack != '\0')))))) {
+         ((g_Help.state == 0 &&
+          ((g_Help.curId == -1 && (UnlockableItems.hydroPack != '\0')))))) {
         Help_QueueMessage(STR_NOW_THAT_YOU_HAVE_0x4E2E,0x78);
         *(int *)((int)pvVar7 + 0x30) = iVar15;
         *(undefined4 *)((int)pvVar7 + 0x2c) = 0;
@@ -278,11 +278,11 @@ LAB_002870a0:
         ;
         if (puVar17 != (undefined4 *)0x0) {
           Help_Kill();
-          if ((CHAR_ARRAY_00a1000c.piece<1116,4>() & 0x80000000) == 0) {
+          if ((g_HelpFlags.piece<1116,4>() & 0x80000000) == 0) {
             Help_QueueMessage(STR_THE_GUNFIRE_FROM_THOSE_0x4268,0x8b);
           }
-          if ((g_HelpState != 0) ||
-             (puVar17 = (undefined4 *)g_HelpCurId, g_HelpCurId != -1)) {
+          if ((g_Help.state != 0) ||
+             (puVar17 = (undefined4 *)g_Help.curId, g_Help.curId != -1)) {
             auVar31 = ZEXT416(0xffffffff);
             auVar31 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
             *(undefined4 *)((int)pvVar7 + 0x50) = 0;

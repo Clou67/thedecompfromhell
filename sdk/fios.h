@@ -16,7 +16,7 @@ undefined8 read_file_sync(longlong param_1,undefined8 param_2);
 void FUN_0050813c(undefined4 *param_1);
 void load_engine_vram_pair(undefined4 *param_1,undefined8 param_2,undefined8 param_3);
 void FUN_005083fc(undefined4 *param_1);
-void FUN_005084b8(void);
+void FUN_005084b8(void *param_1);
 void FUN_005084bc(void);
 void FUN_005084c0(undefined4 *param_1);
 void FUN_0050851c(undefined4 *param_1);

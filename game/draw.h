@@ -4,23 +4,23 @@
 #include "game/camera.h"
 
 // ---- types
-/* a text box for the font printers (FontPrintMediumOpt, FontPrintOptWestern); built on the stack
-   by the callers. Field names are guesses from DrawDialogText. */
-typedef struct TextLayout {
-    short top;              /* 0x00 */
-    short bottom;           /* 0x02 */
-    short left;             /* 0x04 */
-    short right;            /* 0x06 */
-    short x;                /* 0x08  text anchor (256 = screen centre) */
-    short y;                /* 0x0a */
-    short unk0C;            /* 0x0c */
-    short height;           /* 0x0e  out: height of the text */
-    short lineHeight;       /* 0x10 */
-    short flags;            /* 0x12  4: only measure (fills in height); others unknown */
-    short unk14;            /* 0x14 */
-    short unk16;            /* 0x16 */
-} TextLayout;
-typedef char TextLayout_size_check[sizeof(TextLayout) == 0x18 ? 1 : -1];
+/* a text window for the font printers: SetFontWindow (0x6ac90) fills it, FontPrintOpt and friends
+   print into it. 0x18 bytes (callers keep the next local at +0x18). */
+struct FontWindow {
+    short win_top;           /* 0x00 */
+    short win_bot;           /* 0x02 */
+    short win_left;          /* 0x04 */
+    short win_right;         /* 0x06 */
+    short text_x;            /* 0x08 */
+    short text_y;            /* 0x0a */
+    short max_width;         /* 0x0c  out: width of the printed text */
+    short max_height;        /* 0x0e  out: height of the printed text */
+    short line_spacing;      /* 0x10 */
+    short flags;             /* 0x12  FONT_MEASURE: only measure; others unknown */
+    short sub_pixel_x;       /* 0x14 */
+    short sub_pixel_y;       /* 0x16 */
+};
+typedef char FontWindow_size_check[sizeof(struct FontWindow) == 0x18 ? 1 : -1];
 
 // ---- globals
 extern Vec4 CameraCollPos; /* 0x95d230 */
@@ -295,9 +295,9 @@ void FontPrintOptJapanese (double param_1,undefined8 param_2,undefined4 param_3,
 void DrawSpriteFont(double param_1,double param_2,double param_3,double param_4);
 void DrawSpriteFont_thunk(void);
 void FontPrint_unk3 (double param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5, undefined4 param_6,int param_7,int param_8,undefined8 param_9,undefined8 param_10, int param_11);
-void FontPrintOptWestern(float param_1,TextLayout *param_2,u32 param_3,const char *param_4,int param_5,void *param_6,void *param_7);
-void FontPrintMediumOpt(TextLayout *param_1,u32 param_2,const char *param_3,int param_4);
-void Sprite_DrawShapeWrapper(void);
+void FontPrintOptWestern(float param_1,FontWindow *param_2,u32 param_3,const char *param_4,int param_5,void *param_6,void *param_7);
+void FontPrintMediumOpt(FontWindow *param_1,u32 param_2,const char *param_3,int param_4);
+void Sprite_DrawShapeWrapper(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6,int param_7,int param_8,u32 param_9,void *param_10);
 void DrawRectOverlay(int top,int bot,int left,int right,int color);
 void DrawRoundedRect(short param_1,short param_2,short param_3,short param_4,int param_5);
 void SetFontWindow(FontWindow *window,int win_top,int win_bot,int win_left,int win_right, int text_x,int text_y,int line_spacing,int flags);
@@ -365,7 +365,7 @@ int FontPrintLargeCenter (int param_1,undefined8 param_2,undefined8 param_3,char
 void FontPrintCenterScaledMedium (double param_1,int param_2,int param_3,undefined8 param_4,int param_5, undefined8 param_6);
 void FontPrintCenterScaledSmall (double param_1,int param_2,int param_3,undefined8 param_4,int param_5, undefined8 param_6);
 void FontPrintCenterScaledLarge (double param_1,int param_2,int param_3,undefined8 param_4,int param_5, undefined8 param_6);
-void FontPrintOpt(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4);
+void FontPrintOpt(float param_1,FontWindow *param_2,u32 param_3,const char *param_4,int param_5);
 void FontPrintOptLarge (undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4);
 void STUB_0007116c(...);
 void STUB_00071170(...);

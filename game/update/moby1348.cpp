@@ -38,11 +38,11 @@ void UpdateMoby_1348(MobyInstance *moby)
   double dVar10;
   
   piVar3 = (int *)moby->pVar;
-  if ((CHAR_ARRAY_00a1000c.piece<336,2>() == 0) &&
+  if ((g_HelpFlags.piece<336,2>() == 0) &&
      (iVar6 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar3[9]), iVar6 != 0)) {
     Help_QueueMessage(STR_JUMP_THEN_PRESS_AND_0x1773,0x2a);
   }
-  if (CHAR_ARRAY_00a1000c.piece<328,2>() == 0) {
+  if (g_HelpFlags.piece<328,2>() == 0) {
     iVar6 = 0;
     piVar7 = piVar3;
     do {
@@ -53,37 +53,37 @@ void UpdateMoby_1348(MobyInstance *moby)
       piVar7 = piVar7 + 1;
     } while (iVar6 < 6);
   }
-  if ((CHAR_ARRAY_00a1000c.piece<368,2>() == 0) || (CHAR_ARRAY_00a1000c.piece<376,2>() == 0)) {
+  if ((g_HelpFlags.piece<368,2>() == 0) || (g_HelpFlags.piece<376,2>() == 0)) {
     if ((g_MobyInstance + piVar3[10] == (MobyInstance *)0x0) ||
        ((uVar2 = g_MobyInstance[piVar3[10]].state, uVar2 == 0xfe || (uVar2 == 0xfd)))) {
       if (UnlockableItems.taunter == '\0') {
         Help_QueueMessage(STR_NEED_A_LITTLE_HELP_0x1778,0x2f);
-        if (CHAR_ARRAY_00a1000c.piece<368,2>() != -1) {
-          CHAR_ARRAY_00a1000c.piece<368,2>() = CHAR_ARRAY_00a1000c.piece<368,2>() + 1;
+        if (g_HelpFlags.piece<368,2>() != -1) {
+          g_HelpFlags.piece<368,2>() = g_HelpFlags.piece<368,2>() + 1;
         }
         iVar6 = (int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5));
-        if ((int)(uint)(ushort)CHAR_ARRAY_00a1000c.piece<370,2>() < iVar6 / 600) {
+        if ((int)(uint)(ushort)g_HelpFlags.piece<370,2>() < iVar6 / 600) {
           sVar5 = (short)(iVar6 >> 0x1f);
-          CHAR_ARRAY_00a1000c.piece<370,2>() =
+          g_HelpFlags.piece<370,2>() =
                ((short)(iVar6 / 600) + sVar5) - ((short)((short)(iVar6 / 0x2580000) + sVar5) >> 0xf)
           ;
         }
-        CHAR_ARRAY_00a1000c.piece<372,4>() = CHAR_ARRAY_00a1000c.piece<372,4>() | 1 << (Level & 0x3f) | 0x80000000
+        g_HelpFlags.piece<372,4>() = g_HelpFlags.piece<372,4>() | 1 << (Level & 0x3f) | 0x80000000
         ;
       }
       else {
         Help_QueueMessage(STR_NEED_A_LITTLE_HELP_0x1777,0x2e);
-        if (CHAR_ARRAY_00a1000c.piece<376,2>() != -1) {
-          CHAR_ARRAY_00a1000c.piece<376,2>() = CHAR_ARRAY_00a1000c.piece<376,2>() + 1;
+        if (g_HelpFlags.piece<376,2>() != -1) {
+          g_HelpFlags.piece<376,2>() = g_HelpFlags.piece<376,2>() + 1;
         }
         iVar6 = (int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5));
-        if ((int)(uint)(ushort)CHAR_ARRAY_00a1000c.piece<378,2>() < iVar6 / 600) {
+        if ((int)(uint)(ushort)g_HelpFlags.piece<378,2>() < iVar6 / 600) {
           sVar5 = (short)(iVar6 >> 0x1f);
-          CHAR_ARRAY_00a1000c.piece<378,2>() =
+          g_HelpFlags.piece<378,2>() =
                ((short)(iVar6 / 600) + sVar5) - ((short)((short)(iVar6 / 0x2580000) + sVar5) >> 0xf)
           ;
         }
-        CHAR_ARRAY_00a1000c.piece<380,4>() = CHAR_ARRAY_00a1000c.piece<380,4>() | 1 << (Level & 0x3f) | 0x80000000
+        g_HelpFlags.piece<380,4>() = g_HelpFlags.piece<380,4>() | 1 << (Level & 0x3f) | 0x80000000
         ;
       }
     }
@@ -107,33 +107,33 @@ LAB_00254554:
         if (pMVar4 != (MobyInstance *)0x0) {
           uVar2 = pMVar4->state;
           if ((uVar2 != 0xfd && uVar2 != 0xfe) && (uVar2 != '\x01')) {
-            if (CHAR_ARRAY_00a1000c.piece<320,2>() == 0) {
-              if (CHAR_ARRAY_00a1000c.piece<320,2>() != -1) {
-                CHAR_ARRAY_00a1000c[0x140] = '\0';
-                CHAR_ARRAY_00a1000c[0x141] = '\x01';
+            if (g_HelpFlags.piece<320,2>() == 0) {
+              if (g_HelpFlags.piece<320,2>() != -1) {
+                g_HelpFlags[0x140] = '\0';
+                g_HelpFlags[0x141] = '\x01';
               }
               iVar1 = (int)(animationSpeed *
                            (float)((double)(longlong)g_GameFrameCount + dVar10));
-              if ((int)(uint)(ushort)CHAR_ARRAY_00a1000c.piece<322,2>() < iVar1 / 600) {
+              if ((int)(uint)(ushort)g_HelpFlags.piece<322,2>() < iVar1 / 600) {
                 sVar5 = (short)(iVar1 >> 0x1f);
-                CHAR_ARRAY_00a1000c.piece<322,2>() =
+                g_HelpFlags.piece<322,2>() =
                      ((short)(iVar1 / 600) + sVar5) -
                      ((short)((short)(iVar1 / 0x2580000) + sVar5) >> 0xf);
               }
-              CHAR_ARRAY_00a1000c.piece<324,4>() =
-                   CHAR_ARRAY_00a1000c.piece<324,4>() | 1 << (Level & 0x3f) | 0x80000000;
+              g_HelpFlags.piece<324,4>() =
+                   g_HelpFlags.piece<324,4>() | 1 << (Level & 0x3f) | 0x80000000;
             }
             else {
               iVar1 = (int)((double)animationSpeed *
                            (double)(float)((double)(longlong)g_GameFrameCount + dVar10));
               if (((int)((double)(longlong)((double)animationSpeed * dVar9) * dVar8) <
-                   (int)(iVar1 + (uint)(ushort)CHAR_ARRAY_00a1000c.piece<322,2>() * -600)) ||
-                 ((uint)(ushort)CHAR_ARRAY_00a1000c.piece<322,2>() * 600 == 0)) {
+                   (int)(iVar1 + (uint)(ushort)g_HelpFlags.piece<322,2>() * -600)) ||
+                 ((uint)(ushort)g_HelpFlags.piece<322,2>() * 600 == 0)) {
                 Help_QueueMessage(STR_USE_THE_ENTER_COMMAND_0x1771,0x28);
               }
-              else if ((int)(uint)(ushort)CHAR_ARRAY_00a1000c.piece<322,2>() < iVar1 / 600) {
+              else if ((int)(uint)(ushort)g_HelpFlags.piece<322,2>() < iVar1 / 600) {
                 sVar5 = (short)(iVar1 >> 0x1f);
-                CHAR_ARRAY_00a1000c.piece<322,2>() =
+                g_HelpFlags.piece<322,2>() =
                      ((short)(iVar1 / 600) + sVar5) -
                      ((short)((short)(iVar1 / 0x2580000) + sVar5) >> 0xf);
               }
@@ -142,8 +142,8 @@ LAB_00254554:
           goto LAB_00254554;
         }
 LAB_00254570:
-        CHAR_ARRAY_00a1000c[0x140] = -1;
-        CHAR_ARRAY_00a1000c[0x141] = -1;
+        g_HelpFlags[0x140] = -1;
+        g_HelpFlags[0x141] = -1;
       }
       iVar6 = iVar6 + 1;
       piVar7 = piVar7 + 1;

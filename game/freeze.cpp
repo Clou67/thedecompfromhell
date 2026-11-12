@@ -131,7 +131,7 @@ void DisplayPrompt(int dialog, int arg, int option)
 }
 
 #define FADE_ALPHA           80.0f      /* 0x784b4 */
-#define LAYOUT_MEASURE       4          /* TextLayout.flags: only measure the text */
+#define FONT_MEASURE         4          /* FontWindow.flags: only measure the text */
 #define PROMPT_TEXT_FADE     0x0020ffff /* button label colour, faded in to ... */
 #define PROMPT_TEXT          0x8020ffff
 #define OPTION_TITLE_COLOR   0x8000c0c0
@@ -185,20 +185,20 @@ static void DrawContinueQuit(int y, u32 color)
 /* centred message box sized to its text (memory card prompts) with an optional button line */
 static void DrawMessageBox(const char *text, StringId button)
 {
-    TextLayout box = { 0, (short)g_ScreenHeight, 96, 416, 256, 104, 0, 0, 16, 1 | LAYOUT_MEASURE, 0, 0 };
+    FontWindow box = { 0, (short)g_ScreenHeight, 96, 416, 256, 104, 0, 0, 16, 1 | FONT_MEASURE, 0, 0 };
 
     FontPrintMediumOpt(&box, 0, text, -1);
-    int h = box.height + 40;
-    box.top = (g_ScreenHeight - h) >> 1;
-    box.bottom = box.top + h;
-    box.y = box.top + 4;
+    int h = box.max_height + 40;
+    box.win_top = (g_ScreenHeight - h) >> 1;
+    box.win_bot = box.win_top + h;
+    box.text_y = box.win_top + 4;
     float t = OpenFraction(g_Freeze.timer);
-    DrawRoundedRect(box.top, box.bottom, 96, 416, (int)(t * FADE_ALPHA));
-    box.flags ^= LAYOUT_MEASURE;
+    DrawRoundedRect(box.win_top, box.win_bot, 96, 416, (int)(t * FADE_ALPHA));
+    box.flags ^= FONT_MEASURE;
     FontPrintMediumOpt(&box, FastLerpColor(t, g_FreezeTextColor0, g_FreezeTextColor1), text, -1);
     u32 color = FastLerpColor(OpenFraction(g_Freeze.openAnim2), PROMPT_TEXT_FADE, PROMPT_TEXT);
     if (button)
-        FontPrintMediumCenter(256, box.bottom - 20, color, help_msg_string_by_index(button), -1);
+        FontPrintMediumCenter(256, box.win_bot - 20, color, help_msg_string_by_index(button), -1);
 }
 
 /* "quit race?" while racing, the results screen after it */
@@ -266,7 +266,7 @@ static void DrawRacePrompt(void)
 /* the display mode prompt (dialog 6): yes/no, then the result */
 static void DrawDisplayPrompt(void)
 {
-    TextLayout box = { 100, 300, 96, 416, 256, 104, 0, 0, 16, 1, 0, 0 };
+    FontWindow box = { 100, 300, 96, 416, 256, 104, 0, 0, 16, 1, 0, 0 };
     float t = OpenFraction(g_Freeze.timer);
     StringId msg;
 

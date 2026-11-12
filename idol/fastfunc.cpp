@@ -15,7 +15,7 @@
 #include "sdk/sys.h"
 
 // 0x04fff60 (0x54 bytes)
-undefined8 FastDecTimerS32(uint *param_1)
+int FastDecTimerS32(int *param_1)
 
 {
   undefined8 uVar1;

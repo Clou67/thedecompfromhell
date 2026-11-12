@@ -272,9 +272,9 @@ void memcard_SetupNewGameGlobals(void)
   iVar2 = 4;
   g_heroMaxNanotech = 4;
   DAT_0071fb24 = 1;
-  DAT_0071fb59 = 1;
+  g_HelpTextOn = 1;
   g_GameSettings.Stereo = 1;
-  DAT_0071fb58 = 1;
+  g_HelpVoiceOn = 1;
   g_GameSettings.MusicVolume = 0x2cc;
   g_GameSettings.SfxVolume = 0x400;
   Level = Veldin;
@@ -294,12 +294,12 @@ void memcard_SetupNewGameGlobals(void)
   memset(&g_SeenPlanets,0,0x14);
   memset(GalacticMap,0,0x50);
   memset(g_KeyLevelFlags,0,0x790);
-  memset(CHAR_ARRAY_00a1000c,0,0x4a0);
+  memset(g_HelpFlags,0,0x4a0);
   memset(CHAR_ARRAY_00a0feec,0,0x120);
   memset(CHAR_ARRAY_00a0fdc4,0,0x128);
   DAT_0071fb24 = 1;
-  DAT_0071fb59 = 1;
-  DAT_0071fb58 = 1;
+  g_HelpTextOn = 1;
+  g_HelpVoiceOn = 1;
   g_GameSettings.CameraLeftRight = 1;
   DAT_00969c98 = 0;
   DAT_00969c9c = 0;

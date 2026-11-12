@@ -139,7 +139,7 @@ void UpdateMoby_439(MobyInstance *moby)
          (CHAR_ARRAY_00a0feec.piece<240,2>() == 0)) &&
         ((DAT_00a1a864 != 0 &&
          (puVar6[0x14] = (longlong)(int)(animationSpeed * 1200.5),
-         *(int *)((int)puVar6 + 0xa4) < iVar10)))) && (CHAR_ARRAY_00a1000c.piece<760,2>() == 0)) {
+         *(int *)((int)puVar6 + 0xa4) < iVar10)))) && (g_HelpFlags.piece<760,2>() == 0)) {
       Help_QueueMessage(STR_TO_PERFORM_TRICKS_HOLD_0x138F,0x5f);
     }
     if (g_heroStateType != 0x16) {

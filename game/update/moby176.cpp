@@ -73,7 +73,7 @@ undefined4 * M176_002b22c0(int param_1)
     puVar4 = (undefined4 *)0xffffffff;
     *(undefined2 *)((int)puVar2 + 0x4a) = 0xffff;
   }
-  else if ((CHAR_ARRAY_00a1000c.piece<624,2>() == 0) && (CHAR_ARRAY_00a0feec.piece<80,2>() == 0)) {
+  else if ((g_HelpFlags.piece<624,2>() == 0) && (CHAR_ARRAY_00a0feec.piece<80,2>() == 0)) {
     if (*(char *)(param_1 + 0x20) == '\x03') {
       puVar4 = (undefined4 *)(*(ushort *)(puVar2 + 0x14) + 1);
       *(short *)(puVar2 + 0x14) = (short)puVar4;
