@@ -17,10 +17,10 @@ errors	file
 195	game/loaders.cpp
 2196	game/mUnk.cpp
 0	game/main.cpp
-77	game/map.cpp
-83	game/memcard.cpp
+97	game/map.cpp
+84	game/memcard.cpp
 0	game/mesh.cpp
-41	game/mission.cpp
+0	game/mission.cpp
 91	game/mobyfunc.cpp
 436	game/mobyproc.cpp
 769	game/mobyutil.cpp
@@ -128,7 +128,7 @@ errors	file
 21	game/update/moby11.cpp
 11	game/update/moby1100.cpp
 16	game/update/moby1101.cpp
-48	game/update/moby1105.cpp
+46	game/update/moby1105.cpp
 315	game/update/moby1106.cpp
 2	game/update/moby1107.cpp
 11	game/update/moby1108.cpp
@@ -340,7 +340,7 @@ errors	file
 32	game/update/moby1445.cpp
 58	game/update/moby1448.cpp
 55	game/update/moby1454.cpp
-50	game/update/moby1455.cpp
+48	game/update/moby1455.cpp
 38	game/update/moby1469.cpp
 9	game/update/moby1470.cpp
 10	game/update/moby1471.cpp
@@ -601,7 +601,7 @@ errors	file
 22	game/update/moby325.cpp
 107	game/update/moby326.cpp
 16	game/update/moby327.cpp
-54	game/update/moby328.cpp
+50	game/update/moby328.cpp
 72	game/update/moby329.cpp
 0	game/update/moby331.cpp
 96	game/update/moby333.cpp
@@ -966,14 +966,14 @@ errors	file
 20	game/update/moby902.cpp
 26	game/update/moby903.cpp
 15	game/update/moby908.cpp
-38	game/update/moby909.cpp
+36	game/update/moby909.cpp
 79	game/update/moby910.cpp
 16	game/update/moby911.cpp
 92	game/update/moby912.cpp
 0	game/update/moby913.cpp
 24	game/update/moby914.cpp
 9	game/update/moby915.cpp
-43	game/update/moby918.cpp
+39	game/update/moby918.cpp
 32	game/update/moby919.cpp
 11	game/update/moby92.cpp
 54	game/update/moby921.cpp
@@ -1018,7 +1018,7 @@ errors	file
 73	idol/fastfunc.cpp
 131	idol/idol.cpp
 488	idol/idol_draw.cpp
-1797	idol/mUnk.cpp
+1798	idol/mUnk.cpp
 40	idol/mUnk2.cpp
 1097	idol/mathfunc.cpp
 362	idol/sUnk.cpp

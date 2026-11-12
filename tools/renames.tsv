@@ -127,3 +127,16 @@ DAT_0095ced8	g_SpaceSceneMobys[4]
 DAT_0095cedc	g_SpaceSceneMobys[5]
 DAT_0095cee0	g_SpaceSceneMobys[6]
 DAT_0095cee4	g_SpaceSceneMobys[7]
+g_KeyLevelFlags	g_MissionTargets
+DAT_00a24624	g_LevelMissions
+DAT_00a24620	g_MissionsOpen
+PTR_DAT_00728d84	g_MissionDefs
+PTR_DAT_00728dd0	g_MapIconTables
+DAT_00a15d40	g_MissionMobys
+DAT_00a20820	g_MapAlt
+DAT_00a205c4	g_MapHeroU[0]
+DAT_00a20614	g_MapHeroV[0]
+DAT_00a245a8	g_MissionState[0]
+DAT_00a245ac	g_MissionState[1]
+DAT_00a245b0	g_MissionState[2]
+DAT_00a245b4	g_MissionState[3]

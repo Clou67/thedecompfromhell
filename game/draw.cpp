@@ -19,6 +19,7 @@
 #include "game/main.h"
 #include "game/memcard.h"
 #include "game/mesh.h"
+#include "game/mission.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
@@ -470,10 +471,10 @@ void UploadViewMatricesToPasses(void)
     pRVar6->command = pRVar27;
     lVar13 = lVar13 + -1;
   } while (lVar13 != 0);
-  uVar19 = ZEXT48(&DAT_00a245a8);
-  uVar21 = ZEXT48(&DAT_00a245ac);
-  uVar25 = ZEXT48(&DAT_00a245b0);
-  uVar26 = ZEXT48(&DAT_00a245b4);
+  uVar19 = ZEXT48(&g_MissionState[0]);
+  uVar21 = ZEXT48(&g_MissionState[1]);
+  uVar25 = ZEXT48(&g_MissionState[2]);
+  uVar26 = ZEXT48(&g_MissionState[3]);
   lVar18 = 6;
   piVar16 = piVar11;
   do {

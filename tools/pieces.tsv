@@ -1,0 +1,2 @@
+# name	stride	offset:field,...  (see generate.py PIECE_ARRAYS)
+g_MissionTargets	16	0:x,4:y,8:rot,12:state

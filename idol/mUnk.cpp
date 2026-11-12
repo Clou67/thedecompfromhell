@@ -456,7 +456,7 @@ int FUN_004d3698(int param_1)
   else {
     for (iVar1 = *(int *)(&DAT_00738138 + Level * 4); iVar1 < *(int *)(&DAT_0073813c + Level * 4);
         iVar1 = iVar1 + 1) {
-      if (*(int *)(&DAT_00a15d40 + iVar1 * 4) == param_1) {
+      if (*(int *)(&g_MissionMobys + iVar1 * 4) == param_1) {
         return iVar1;
       }
     }
@@ -491,7 +491,7 @@ LAB_004d37b0:
       iVar2 = *(int *)(&DAT_008fa1ac + iVar2);
       *(undefined2 *)(param_2 + 0x36) = 0;
       *(int *)(param_2 + 0x3c) = iVar2;
-      if ((*(int *)(g_KeyLevelFlags + (int)((uVar1 & 0xffffffff) << 4) + 0xc) != 0) &&
+      if ((*(int *)(g_MissionTargets + (int)((uVar1 & 0xffffffff) << 4) + 0xc) != 0) &&
          (*(short *)(iVar2 + 8) == 0)) {
         sVar3 = *(short *)(iVar2 + 6);
         *(short *)(param_2 + 0x36) = sVar3;
@@ -505,7 +505,7 @@ LAB_004d37b0:
     for (iVar2 = *(int *)(&DAT_00738138 + Level * 4); iVar2 < *(int *)(&DAT_0073813c + Level * 4);
         iVar2 = iVar2 + 1) {
       uVar1 = (ulonglong)iVar2;
-      if (*(int *)(&DAT_00a15d40 + iVar2 * 4) == param_1) {
+      if (*(int *)(&g_MissionMobys + iVar2 * 4) == param_1) {
         if (iVar2 == -1) {
           return uVar1;
         }
@@ -792,7 +792,7 @@ undefined8 FUN_004d3870(int param_1,int param_2)
               if ((int)uVar8 < *(int *)(&DAT_0073813c + Level * 4)) {
                 lVar21 = ((ulonglong)uVar8 & 0x3fffffff) << 2;
                 do {
-                  if (*(int *)(&DAT_00a15d40 + (int)lVar21) == param_1) goto LAB_004d3e20;
+                  if (*(int *)(&g_MissionMobys + (int)lVar21) == param_1) goto LAB_004d3e20;
                   uVar20 = uVar20 + 1;
                   lVar21 = lVar21 + 4;
                 } while ((int)uVar20 < *(int *)(&DAT_0073813c + Level * 4));
@@ -801,8 +801,8 @@ undefined8 FUN_004d3870(int param_1,int param_2)
             }
 LAB_004d3e20:
             iVar15 = (int)(uVar20 << 4);
-            if (*(int *)(g_KeyLevelFlags + iVar15 + 0xc) == 0) {
-              pcVar11 = g_KeyLevelFlags + iVar15 + 0xc;
+            if (*(int *)(g_MissionTargets + iVar15 + 0xc) == 0) {
+              pcVar11 = g_MissionTargets + iVar15 + 0xc;
               pcVar11[0] = '\0';
               pcVar11[1] = '\0';
               pcVar11[2] = '\0';
@@ -867,14 +867,14 @@ void FUN_004d407c(int param_1,undefined4 param_2)
   if (((int)Level < 0) || (0x12 < (int)Level)) {
     uVar1 = 0;
 LAB_004d4100:
-    *(undefined4 *)(g_KeyLevelFlags + uVar1 * 0x10 + 0xc) = param_2;
+    *(undefined4 *)(g_MissionTargets + uVar1 * 0x10 + 0xc) = param_2;
   }
   else {
     uVar1 = *(uint *)(&DAT_00738138 + Level * 4);
     if ((int)uVar1 < *(int *)(&DAT_0073813c + Level * 4)) {
       lVar2 = ((ulonglong)uVar1 & 0x3fffffff) << 2;
       do {
-        if (*(int *)(&DAT_00a15d40 + (int)lVar2) == param_1) {
+        if (*(int *)(&g_MissionMobys + (int)lVar2) == param_1) {
           if (uVar1 == 0xffffffff) {
             return;
           }

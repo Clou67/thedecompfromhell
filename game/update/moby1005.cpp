@@ -9,6 +9,7 @@
 #include "game/hero.h"
 #include "game/hud.h"
 #include "game/memcard.h"
+#include "game/mission.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"

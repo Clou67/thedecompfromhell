@@ -8,6 +8,7 @@
 #include "game/draw.h"
 #include "game/hud.h"
 #include "game/main.h"
+#include "game/mission.h"
 #include "game/mobyutil.h"
 #include "game/pad.h"
 #include "game/partupd.h"
@@ -586,7 +587,7 @@ void DrawParts(void)
       if (-1 < (char)bVar6) {
         if ((bVar6 & 3) < 2) {
           iVar27 = 0;
-          pfVar22 = (float *)&DAT_00a245a8;
+          pfVar22 = (float *)&g_MissionState[0];
           dVar49 = (double)*(float *)((int)PartInstances + iVar25 + 0x10);
           dVar48 = (double)*(float *)((int)PartInstances + iVar25 + 0x14);
           dVar50 = (double)(*(float *)((int)PartInstances + iVar25 + 0xc) * 4.7619046e-06);

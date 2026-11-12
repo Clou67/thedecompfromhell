@@ -69,3 +69,14 @@ g_FontVram	u8 *NAME /* 0xa10930: 0x100000 bytes, the Japanese font texture */
 DAT_00927204	u32 *NAME /* 0x927204: set to 130 at start-up, next to g_pFrameTicks */
 g_SpaceSceneMobys	MobyInstance *NAME[8] /* 0x95cec8: the mobys of the playing space (ship) cutscene */
 g_SpaceSceneMobyCnt	short NAME /* 0x95cd94: entries in g_SpaceSceneMobys (read as a halfword) */
+g_MissionTargets	MissionTarget NAME[121] /* 0x96c24c: map position and state of the mission objects (save data) */
+g_LevelMissions	MissionDef *NAME /* 0xa24624: g_MissionDefs[g_SelectedLevel] */
+g_MissionsOpen	int NAME /* 0xa24620: missions shown and not done (RefreshLevelMissionStatus) */
+g_MissionDefs	MissionDef *NAME[19] /* 0x728d84: per level */
+g_MapIconTables	MapIcon *NAME[19] /* 0x728dd0: per level */
+g_MapIcons	MapIcon *NAME /* 0xa204e0: the shown level's icons */
+g_MissionMobys	MobyInstance *NAME[121] /* 0xa15d40: the mobys of the current level's mission targets */
+g_MapAlt	int NAME /* 0xa20820: set: the map uses level + 100 (guess: alternate map) */
+g_MapHeroU	int NAME[20] /* 0xa205c4: Ratchet's map position per level, 16.16; 0x08000000 = none */
+g_MapHeroV	int NAME[20] /* 0xa20614 */
+g_MissionState	int NAME[24] /* 0xa245a8: cleared by ResetMissionState */

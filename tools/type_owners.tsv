@@ -37,3 +37,7 @@ g_Help	game/help
 Language	game/pause
 IMSeqMem	game/initonce
 QuadDef	game/draw
+MissionDef	game/mission
+MapIcon	game/map
+MissionTarget	game/mission
+g_MapIconTables	game/map

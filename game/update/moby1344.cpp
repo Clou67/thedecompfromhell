@@ -6,6 +6,7 @@
 #include "game/help.h"
 #include "game/hero.h"
 #include "game/map.h"
+#include "game/mission.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/update/moby1118.h"

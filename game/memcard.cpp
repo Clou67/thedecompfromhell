@@ -293,7 +293,7 @@ void memcard_SetupNewGameGlobals(void)
   memset(UINT_ARRAY_0096c1dc,0,8);
   memset(&g_SeenPlanets,0,0x14);
   memset(GalacticMap,0,0x50);
-  memset(g_KeyLevelFlags,0,0x790);
+  memset(g_MissionTargets,0,0x790);
   memset(HelpData,0,0x4a0);
   memset(CHAR_ARRAY_00a0feec,0,0x120);
   memset(CHAR_ARRAY_00a0fdc4,0,0x128);

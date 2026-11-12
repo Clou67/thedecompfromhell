@@ -150,6 +150,22 @@ if os.path.exists(os.path.join(TOOLS, 'renames.tsv')):
     for _l in open(os.path.join(TOOLS, 'renames.tsv')):
         _l = _l.split('#')[0].rstrip('\n')
         if '\t' in _l: _k, _v = _l.split('\t', 1); RENAMES[_k.strip()] = _v.strip()
+# globals that Ghidra had as byte arrays and that are now arrays of structs: rewrite its
+# .piece<offset,size>() accesses to element fields.  pieces.tsv: name <TAB> stride <TAB> off:field,...
+PIECE_ARRAYS = []
+if os.path.exists(os.path.join(TOOLS, 'pieces.tsv')):
+    for _l in open(os.path.join(TOOLS, 'pieces.tsv')):
+        _l = _l.split('#')[0].strip()
+        if not _l: continue
+        _n, _st, _fs = _l.split('\t')
+        _fields = {int(k, 0): v for k, v in (f.split(':') for f in _fs.split(','))}
+        def _mk(n=_n, st=int(_st, 0), fields=_fields):
+            rx = re.compile(r'\b%s\.piece<(\d+),\d+>\(\)' % re.escape(n))
+            def rep(m):
+                off = int(m[1]); f = fields.get(off % st)
+                return '%s[%d].%s' % (n, off // st, f) if f else m[0]
+            return lambda t: rx.sub(rep, t)
+        PIECE_ARRAYS.append(_mk())
 RENAME_RE = re.compile(r'\b(%s)\b' % '|'.join(map(re.escape, RENAMES))) if RENAMES else None
 # ---- build every function's text
 files = collections.defaultdict(list)
@@ -167,6 +183,7 @@ for a, sz, nm in rows:
         m = DEF.search(txt)
         if m: txt = txt[:m.start(1)] + PROTOS[cn] + txt[m.end(1):]
     if RENAME_RE: txt = RENAME_RE.sub(lambda m: RENAMES[m[1]], txt)
+    for _pr in PIECE_ARRAYS: txt = _pr(txt)
     texts[a] = txt
 
 def prototype(txt):

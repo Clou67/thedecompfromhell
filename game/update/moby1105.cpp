@@ -321,7 +321,7 @@ void UpdateMoby_1105(MobyInstance *moby)
       DeleteMoby(moby);
       return;
     }
-    if (g_KeyLevelFlags.piece<764,4>() == 0) {
+    if (g_MissionTargets[47].state == 0) {
       if (moby->animationId != '\x01') {
         puVar11[0x2b] = (longlong)(int)(animationSpeed * 10.5);
         MB_SetAnimation(lVar21,1,0,*(undefined4 *)((int)puVar11 + 0x15c));

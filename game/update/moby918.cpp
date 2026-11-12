@@ -330,7 +330,7 @@ void UpdateMoby_918(MobyInstance *moby)
       }
       dVar27 = (double)GetGroundZ(0x3fe0000000000000,lVar15 + 0x10,0);
       (moby->pos).z = (float)dVar27;
-      if ((g_KeyLevelFlags.piece<268,4>() == 0) || (g_KeyLevelFlags.piece<284,4>() == 0)) {
+      if ((g_MissionTargets[16].state == 0) || (g_MissionTargets[17].state == 0)) {
         lVar17 = FUN_004d3698(lVar15);
         *(undefined2 *)(*(int *)(&DAT_008fa1ac + (int)(lVar17 << 2)) + 4) = 0xd;
       }

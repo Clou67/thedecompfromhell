@@ -6,6 +6,7 @@
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/main.h"
+#include "game/mission.h"
 #include "game/skyfunc.h"
 #include "game/vendor.h"
 #include "idol/fastfunc.h"
@@ -674,7 +675,7 @@ void FUN_0050c020(int param_1,undefined4 *param_2)
       iVar3 = *(int *)(uVar5 + 0x6c);
       if (((*(byte *)(uVar5 + 0x5e) & 4) == 0) && ((*(ushort *)(iVar3 + 0x2a) & 1) == 0)) {
         iVar18 = 0;
-        pfVar15 = (float *)&DAT_00a245a8;
+        pfVar15 = (float *)&g_MissionState[0];
         do {
           if (pfVar15[1] * *(float *)(uVar5 + 0x44) +
               pfVar15[2] * *(float *)(uVar5 + 0x48) +

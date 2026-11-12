@@ -180,10 +180,6 @@ extern undefined4 DAT_00966b9c; /* 0x966b9c */
 extern undefined4 DAT_00966bc0; /* 0x966bc0 */
 extern undefined1 DAT_00969c78; /* 0x969c78 */
 extern undefined4 DAT_00a15f64; /* 0xa15f64 */
-extern undefined4 DAT_00a245a8; /* 0xa245a8 */
-extern undefined4 DAT_00a245ac; /* 0xa245ac */
-extern undefined4 DAT_00a245b0; /* 0xa245b0 */
-extern undefined4 DAT_00a245b4; /* 0xa245b4 */
 extern undefined4 DAT_00a24610; /* 0xa24610 */
 extern undefined4 DAT_00a4c4e0; /* 0xa4c4e0 */
 extern undefined4 DAT_00e572d0; /* 0xe572d0 */

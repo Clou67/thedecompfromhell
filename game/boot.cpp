@@ -237,7 +237,7 @@ void ZeroFillKeyGlobals(void)
   DAT_0096c1f8 = 0;
   memset(&g_SeenPlanets,0,0x14);
   memset(GalacticMap,0,0x50);
-  memset(g_KeyLevelFlags,0,0x790);
+  memset(g_MissionTargets,0,0x790);
   memset(HelpData,0,0x4a0);
   memset(&DAT_00a0f51c,0,0x94);
   memset(&DAT_00a0f5b0,0,0x94);

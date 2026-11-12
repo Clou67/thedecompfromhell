@@ -3,6 +3,25 @@
 #include "types.h"
 #include "game/update/moby1118.h"
 
+// ---- types
+/* a map icon (g_MapIconTables[level]; the list ends with an entry that has MAPICON_END) */
+struct MapIcon {
+    short target;            /* 0x00  index into g_MissionTargets / g_MissionMobys; < 0: fixed spot */
+    short mission;           /* 0x02  index into the level's missions, -1 = always */
+    u16 flags;               /* 0x04  MAPICON_* */
+    u8 _pad06[4];
+    short label;             /* 0x0a  has a text label */
+    short unk0c;
+    short labelW;            /* 0x0e  label box size, fitted by UpdateMissionDisplay */
+    short labelH;            /* 0x10 */
+    u8 _pad12[6];
+    float u;                 /* 0x18  map coordinates */
+    float v;                 /* 0x1c */
+    float rot;               /* 0x20 */
+    int visible;             /* 0x24 */
+};
+typedef char MapIcon_size_check[sizeof(struct MapIcon) == 0x28 ? 1 : -1];
+
 // ---- globals
 extern undefined4 DAT_0071fa40; /* 0x71fa40 */
 extern undefined4 DAT_0071fa60; /* 0x71fa60 */
@@ -45,8 +64,6 @@ extern undefined4 DAT_00a204dc; /* 0xa204dc */
 extern undefined4 DAT_00a204ec; /* 0xa204ec */
 extern undefined4 DAT_00a204f0; /* 0xa204f0 */
 extern undefined4 DAT_00a20570; /* 0xa20570 */
-extern undefined4 DAT_00a205c4; /* 0xa205c4 */
-extern undefined4 DAT_00a20614; /* 0xa20614 */
 extern undefined4 DAT_00a206fc; /* 0xa206fc */
 extern undefined4 DAT_00a207ac; /* 0xa207ac */
 extern undefined4 DAT_00a207b0; /* 0xa207b0 */
@@ -58,7 +75,6 @@ extern undefined4 DAT_00a207c8; /* 0xa207c8 */
 extern undefined4 DAT_00a207cc; /* 0xa207cc */
 extern undefined4 DAT_00a207d8; /* 0xa207d8 */
 extern undefined4 DAT_00a207e8; /* 0xa207e8 */
-extern undefined4 DAT_00a20820; /* 0xa20820 */
 extern undefined4 DAT_00a20824; /* 0xa20824 */
 extern undefined4 DAT_00a20828; /* 0xa20828 */
 extern undefined4 DAT_00a2082c; /* 0xa2082c */
@@ -76,6 +92,7 @@ extern MiscLevelFlags g_MiscLevelFlags; /* 0x96bff0 */
 extern undefined4 g_CardState; /* 0xa0fd1c */
 extern undefined4 g_CardStateFlags; /* 0xa0fd20 */
 extern undefined * g_CardStateFuncs; /* 0x7265bc */
+extern int g_MapAlt; /* 0xa20820: set: the map uses level + 100 (guess: alternate map) */ /* type set in global_types.tsv */
 extern int g_MapAvailable; /* 0xa204e4 */
 extern int g_MapCacheBuf; /* 0xa207a8 */
 extern int g_MapCacheId; /* 0xa207bc */
@@ -83,7 +100,10 @@ extern int g_MapCacheSize; /* 0xa207d4 */
 extern int g_MapCurIndex; /* 0xa206e8 */
 extern int g_MapFileId; /* 0xa206ec */
 extern int g_MapFileSize; /* 0xa206f4 */
-extern int g_MapIcons; /* 0xa204e0 */
+extern int g_MapHeroU[20]; /* 0xa205c4: Ratchet's map position per level, 16.16; 0x08000000 = none */ /* type set in global_types.tsv */
+extern int g_MapHeroV[20]; /* 0xa20614 */ /* type set in global_types.tsv */
+extern MapIcon *g_MapIconTables[19]; /* 0x728dd0: per level */ /* type set in global_types.tsv */
+extern MapIcon *g_MapIcons; /* 0xa204e0: the shown level's icons */ /* type set in global_types.tsv */
 extern int g_MapIsMapOMatic; /* 0xa206f0 */
 extern int g_MapLoaded; /* 0xa204e8 */
 extern int g_MapRevealMask; /* 0xa204cc */
@@ -107,7 +127,7 @@ void STUB_000e2704(...);
 void Map_MergeByMask(char *out,char *a,char *b,char *mask);
 void Map_ExpandRevealMask(char *out,char *mask);
 int Map_UpdateZoomPan(void);
-void Map_WorldToMapCoords (float x,float y,int unused0,int unused1,float *outU,float *outV,int level);
+void Map_WorldToMapCoords(float x,float y,float *outU,float *outV,int level);
 void Map_GetIconLabel(int icon,char *out);
 void DrawMapFrame(void);
 void Map_DecodeLayer(int param_1,int param_2,short *param_3);

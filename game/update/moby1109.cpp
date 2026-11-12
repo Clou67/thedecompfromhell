@@ -1497,7 +1497,7 @@ void UpdateMoby_1109(MobyInstance *moby)
   if (bVar2 < 5) {
     if (bVar2 < 2) {
       if (bVar2 == 0) {
-        DAT_00a20820 = 0;
+        g_MapAlt = 0;
         if (g_LevelFlags[Level][*(int *)((int)pvVar18 + 0xf8)] == -1) {
           puVar38 = (ushort *)(&g_MobyGroups)[*(int *)((int)moby->pVar + 0xcc)];
           do {
@@ -1533,7 +1533,7 @@ void UpdateMoby_1109(MobyInstance *moby)
               (-1 < *(int *)((int)pvVar18 + 0x9c))))) {
             bVar1 = DAT_00ef1a68 != 0;
             *(undefined4 *)((int)pvVar18 + 0x110) = 1;
-            DAT_00a20820 = 0;
+            g_MapAlt = 0;
             if (bVar1) {
               *(undefined4 *)((int)pvVar18 + 0x9c) = 2;
               DAT_00ef1a68 = 0;
@@ -1591,7 +1591,7 @@ void UpdateMoby_1109(MobyInstance *moby)
             fVar5 = pCVar28[iVar34].rot.w;
             *(undefined4 *)((int)pvVar18 + 0xbc) = 2;
             (moby->rotation).w = fVar5;
-            DAT_00a20820 = 0;
+            g_MapAlt = 0;
           }
           else if ((*(int *)((int)pvVar18 + 0xbc) == 2) &&
                   (iVar34 = MB_IsPntInCuboid
@@ -1608,7 +1608,7 @@ void UpdateMoby_1109(MobyInstance *moby)
             fVar5 = pCVar28[iVar34].rot.w;
             *(undefined4 *)((int)pvVar18 + 0xbc) = 0;
             (moby->rotation).w = fVar5;
-            DAT_00a20820 = 0;
+            g_MapAlt = 0;
           }
           else if ((*(int *)((int)pvVar18 + 0xbc) != 1) &&
                   (iVar34 = MB_IsPntInCuboid
@@ -1625,7 +1625,7 @@ void UpdateMoby_1109(MobyInstance *moby)
             fVar5 = pCVar28[iVar34].rot.w;
             *(undefined4 *)((int)pvVar18 + 0xbc) = 1;
             (moby->rotation).w = fVar5;
-            DAT_00a20820 = 1;
+            g_MapAlt = 1;
             if (g_MiscLevelFlags.field33_0x21 == 0) {
               g_MiscLevelFlags.field33_0x21 = 1;
             }
@@ -1868,13 +1868,13 @@ void UpdateMoby_1109(MobyInstance *moby)
         iVar34 = *(int *)((int)pvVar18 + 0xbc);
         moby->scale = moby->pClass->gScale;
         if (iVar34 == 1) {
-          DAT_00a20820 = 1;
+          g_MapAlt = 1;
           if (g_MiscLevelFlags.field33_0x21 == 0) {
             g_MiscLevelFlags.field33_0x21 = 1;
           }
         }
         else {
-          DAT_00a20820 = 0;
+          g_MapAlt = 0;
         }
         fVar6 = (moby->transform).v0.y;
         fVar7 = (moby->transform).v0.x;

@@ -679,8 +679,8 @@ void UpdateMoby_827(MobyInstance *moby)
             NO_POST_UPDATE|NO_UPDATE);
     }
     if ((moby->state == '\x10') ||
-       (((DAT_00a20820 == 0 || (*(short *)((int)pvVar8 + 0x242) != 0)) &&
-        ((DAT_00a20820 != 0 || (*(short *)((int)pvVar8 + 0x242) == 0)))))) {
+       (((g_MapAlt == 0 || (*(short *)((int)pvVar8 + 0x242) != 0)) &&
+        ((g_MapAlt != 0 || (*(short *)((int)pvVar8 + 0x242) == 0)))))) {
       DoManipulator(0x4000ccccc0000000,moby,1,(Manipulator *)((int)pvVar8 + 0x250));
       M827_0047aa38(lVar11);
       if ((moby->enabled != '\0') &&

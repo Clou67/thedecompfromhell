@@ -162,7 +162,7 @@ void UpdateMoby_909(MobyInstance *moby)
   }
   bVar2 = moby->state;
   if (bVar2 == 0) {
-    bVar1 = g_KeyLevelFlags.piece<332,4>() != 0;
+    bVar1 = g_MissionTargets[20].state != 0;
     if (!bVar1) {
       dVar30 = (double)FastWrapRot((moby->rotation).z,3.1415927);
       (moby->rotation).z = (float)dVar30;

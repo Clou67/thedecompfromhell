@@ -3295,7 +3295,7 @@ undefined8 UpdatePauseMenu(int param_1)
           if (5 < sVar6) {
             iVar5 = *(int *)(iVar5 + 4 + iVar4) >> 0x10;
             if (iVar5 != 0) {
-              DAT_00a52c98 = *(undefined4 *)(&DAT_00a15d40 + iVar5 * 4);
+              DAT_00a52c98 = *(undefined4 *)(&g_MissionMobys + iVar5 * 4);
             }
             resumePage = g_currentMenuPage;
             resumeScreen = 0;

@@ -12,6 +12,7 @@
 #include "game/hud.h"
 #include "game/memcard.h"
 #include "game/mission.h"
+#include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/pad.h"
 #include "game/pause.h"
@@ -101,10 +102,10 @@ void Map_LoadPlanetMap(void)
   lVar33 = 0x14;
   puVar12 = &DAT_007261cc;
   DAT_00a204d0 = 1;
-  puVar17 = &DAT_00a205c4;
+  puVar17 = &g_MapHeroU[0];
   pfVar14 = &g_MapZoom;
   puVar20 = &DAT_007261d0;
-  puVar23 = &DAT_00a20614;
+  puVar23 = &g_MapHeroV[0];
   do {
     uVar9 = *puVar12;
     *pfVar14 = 0.65;
@@ -746,17 +747,17 @@ int Map_UpdateZoomPan(void)
       *(undefined4 *)((int)lVar7 + 0x104) = uVar3;
       auVar8 = loadVectorLeftIndexed(0x104,lVar5);
       auVar11 = loadVectorRightIndexed(0x114,lVar5);
-      iVar1 = (&DAT_00a20614)[iVar4];
+      iVar1 = (&g_MapHeroV[0])[iVar4];
       auVar12 = vectorCompareGreaterThanSignedWord(auVar8 | auVar11,auVar9);
       auVar8 = vectorConditionalSelect(auVar8 | auVar11,auVar9,auVar12);
       auVar8 = auVar8 >> 0x60 & (GPiece<16>)0xffffffff;
       uVar3 = storeVectorElementWordIndexed
                         (auVar8 | auVar8 << 0x20 | auVar8 << 0x40 | auVar8 << 0x60,0x104,lVar5);
       *(undefined4 *)((int)lVar5 + 0x104) = uVar3;
-      (&DAT_00a20614)[iVar4] = iVar1 + (iVar1 >> 0x1f & -iVar1);
-      iVar1 = (&DAT_00a20614)[iVar4];
+      (&g_MapHeroV[0])[iVar4] = iVar1 + (iVar1 >> 0x1f & -iVar1);
+      iVar1 = (&g_MapHeroV[0])[iVar4];
       iVar6 = 0;
-      (&DAT_00a20614)[iVar4] =
+      (&g_MapHeroV[0])[iVar4] =
            iVar1 + ((uint)(0x10000000 - (longlong)iVar1 >> 0x3f) & 0x10000000U - iVar1);
     }
   }
@@ -768,8 +769,7 @@ int Map_UpdateZoomPan(void)
 
 
 // 0x00e2b38 (0xfc bytes)
-void Map_WorldToMapCoords
-               (float x,float y,int unused0,int unused1,float *outU,float *outV,int level)
+void Map_WorldToMapCoords(float x,float y,float *outU,float *outV,int level)
 
 {
   LevelId LVar1;
@@ -1573,7 +1573,7 @@ void DrawMapFrame(void)
         iVar49 = uVar32 + 8;
         iVar47 = uVar32 + 0xc;
         uVar48 = 0x80000000;
-        uVar56 = ZEXT48(g_KeyLevelFlags + 0xc);
+        uVar56 = ZEXT48(g_MissionTargets + 0xc);
         iVar38 = iVar30;
         do {
           iVar41 = (int)uVar57;
@@ -1741,7 +1741,7 @@ void DrawMapFrame(void)
       if (g_heroStateType == 0xf) {
         dVar55 = (double)FastWrapRot(g_heroRotation.z,1.5707964);
       }
-      if (DAT_00a20820 == 0) {
+      if (g_MapAlt == 0) {
         Map_WorldToMapCoords
                   (g_heroPosition.x,g_heroPosition.y,0,(int)puVar25,(float *)(puVar19 + 0x10),
                    (float *)((int)puVar19 + 0x84),Level);
@@ -1960,7 +1960,7 @@ void Map_RevealAroundPos(float *pos)
   float local_4c [5];
   
   if (g_MapLoaded != 0) {
-    if (DAT_00a20820 == 0) {
+    if (g_MapAlt == 0) {
       Map_WorldToMapCoords(*pos,pos[1],(int)pos,0x970000,&local_50,local_4c,Level);
     }
     else {
@@ -2251,7 +2251,7 @@ void Map_RegisterLevelObject(void *obj,int idx)
 
 {
   if ((int)Level < 0x13) {
-    *(void **)(&DAT_00a15d40 + (idx + *(int *)(&DAT_00738138 + Level * 4)) * 4) = obj;
+    *(void **)(&g_MissionMobys + (idx + *(int *)(&DAT_00738138 + Level * 4)) * 4) = obj;
   }
   return;
 }
@@ -2288,12 +2288,12 @@ void Map_SaveLevelObjectState(void)
       lVar6 = ((ulonglong)uVar3 & 0x3fffffff) << 2;
       lVar4 = ((ulonglong)uVar3 & 0xfffffff) << 4;
       do {
-        iVar2 = *(int *)(&DAT_00a15d40 + (int)lVar6);
+        iVar2 = *(int *)(&g_MissionMobys + (int)lVar6);
         if (iVar2 != 0) {
           iVar5 = (int)lVar4;
-          *(undefined4 *)(g_KeyLevelFlags + iVar5) = *(undefined4 *)(iVar2 + 0x10);
-          *(undefined4 *)(g_KeyLevelFlags + iVar5 + 4) = *(undefined4 *)(iVar2 + 0x14);
-          *(undefined4 *)(g_KeyLevelFlags + iVar5 + 8) = *(undefined4 *)(iVar2 + 0x48);
+          *(undefined4 *)(g_MissionTargets + iVar5) = *(undefined4 *)(iVar2 + 0x10);
+          *(undefined4 *)(g_MissionTargets + iVar5 + 4) = *(undefined4 *)(iVar2 + 0x14);
+          *(undefined4 *)(g_MissionTargets + iVar5 + 8) = *(undefined4 *)(iVar2 + 0x48);
         }
         uVar3 = uVar3 + 1;
         lVar6 = lVar6 + 4;

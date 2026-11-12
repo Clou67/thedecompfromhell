@@ -1811,7 +1811,6 @@ typedef enum TROPHIES_ENUM {
 } TROPHIES_ENUM;
 
 // ---- globals
-extern char CHAR_ARRAY_0096c165[37]; /* 0x96c165 */
 extern CollDamageOut CollDamage[64]; /* 0xa14c00 */
 extern undefined4 DAT_000fc230; /* 0xfc230 */
 extern undefined4 DAT_000fd8b4; /* 0xfd8b4 */

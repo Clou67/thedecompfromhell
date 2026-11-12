@@ -353,7 +353,7 @@ void UpdateMoby_1455(MobyInstance *moby)
     moby->state = '\x01';
     FUN_004d3720(moby,uVar28 + 0x20);
     *(undefined4 *)((int)pvVar8 + 0x2c) = 0x406ccccd;
-    uVar19 = g_KeyLevelFlags.piece<1644,4>();
+    uVar19 = g_MissionTargets[102].state;
     *(f32 *)((int)pvVar8 + 0xc4) = (moby->rotation).z;
     if (uVar19 == 0) {
       dVar31 = (double)FastWrapRot((moby->rotation).z,3.1415927);

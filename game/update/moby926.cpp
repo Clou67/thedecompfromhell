@@ -4,6 +4,7 @@
 #include "game/update/moby926.h"
 #include "game/freeze.h"
 #include "game/hero.h"
+#include "game/mission.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "idol/mUnk.h"

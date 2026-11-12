@@ -20,6 +20,7 @@
 #include "game/mUnk.h"
 #include "game/main.h"
 #include "game/mesh.h"
+#include "game/mission.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/pad.h"

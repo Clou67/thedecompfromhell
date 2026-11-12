@@ -158,7 +158,7 @@ void UpdateMoby_328(MobyInstance *moby)
       } while (iVar18 < sVar23);
     }
   }
-  if (g_KeyLevelFlags.piece<1132,4>() == 0) {
+  if (g_MissionTargets[70].state == 0) {
     if (moby->animationId != '\x01') {
       MB_SetAnimation(moby,1,0,2);
     }
@@ -349,7 +349,7 @@ LAB_00343904:
     dVar35 = 0.03999999910593033;
   }
 LAB_00343a30:
-  if (g_KeyLevelFlags.piece<1132,4>() == 0) {
+  if (g_MissionTargets[70].state == 0) {
     iVar18 = *(int *)((int)pvVar8 + 0x164);
     if (iVar18 == 0) {
       pMVar20 = CreateMoby(0x4c1);
