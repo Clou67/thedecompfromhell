@@ -50,3 +50,4 @@ g_PartView	game/partproc
 PartUpdateFn	game/partupd
 MemSlots_IMSeqMem_descriptor	idol/idol_draw
 g_PartProfile	game/partproc
+sky_sprite	game/skyfunc

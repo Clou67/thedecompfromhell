@@ -34,7 +34,7 @@ errors	file
 0	game/respawn.cpp
 89	game/sUnk.cpp
 124	game/skyfunc.cpp
-50	game/skyproc.cpp
+0	game/skyproc.cpp
 35	game/sound.cpp
 285	game/space.cpp
 115	game/update.cpp

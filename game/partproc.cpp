@@ -18,6 +18,7 @@
 #include "game/pad.h"
 #include "game/partupd.h"
 #include "game/pause.h"
+#include "game/skyproc.h"
 #include "game/vendor.h"
 #include "idol/idol_draw.h"
 #include "idol/mUnk.h"
