@@ -3727,7 +3727,7 @@ void SpaceTransition_LoadWad(void)
   PartIndexNext = 0;
   PartIndexTop = 0xffffffff;
   PartActiveCnt = 0;
-  FastMemSetZero(&DAT_00a52000,0x200);
+  FastMemSetZero(&g_PartUsed,0x200);
   ResetDrawGlobals();
   DAT_00a390b8 = 500;
   PartClipDist = 0x1f4000;

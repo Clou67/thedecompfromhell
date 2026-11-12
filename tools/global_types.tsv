@@ -85,3 +85,13 @@ g_GsTexCount	int NAME /* 0x9513a0 */
 g_GsRamAlloc	int NAME /* 0x966ad0: next free GS memory, bytes */
 g_pPacket	u8 *NAME /* 0xe5aa58: write position in the GIF/VIF packet being built */
 g_SpriteGifTag	u64 NAME[2] /* 0x71e960: GIF tag for GsTex_Bind's sprite (built by GsTex_StaticInit) */
+PartInstances	PartInstance *NAME /* 0xa51fc0: 4096 particles */
+PartIndexNext	int NAME /* 0xa51fc4: lowest index that may be free */
+PartIndexTop	int NAME /* 0xa51fc8: highest index in use */
+PartActiveCnt	int NAME /* 0xa51fcc */
+PartUpdates	PartUpdateFn NAME[80] /* 0xa52604: update function per particle class */
+g_PartUsed	u8 NAME[512] /* 0xa52000: a bit per particle in use */
+g_NibbleBitCount	u8 NAME[16] /* 0x735570: bits set in each 4-bit value */
+g_pDebugCounterMode	u32 *NAME /* 0x9271fc */
+g_PartProfile	PartProfile NAME[128] /* 0x11004000: per class: count and cycles (debug build only) */
+g_PartView	PartView NAME /* 0xa52b40: camera axes and position for drawing particles (UpdateParts) */

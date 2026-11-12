@@ -1,6 +1,12 @@
-// game/partproc.cpp -- reconstructed from NPEA00385 EBOOT
-// STATUS: NOT STARTED (raw Ghidra output)
+// game/partproc.cpp -- the particle pool: allocation, the per-frame update and drawing
+// STATUS: IN PROGRESS
+// MERGE (9 of 11 functions cleaned; the rest are generated)
 // 11 functions, 0x11e448-0x11fb94
+//
+// Particles live in PartInstances[4096] (0x40 bytes each); g_PartUsed has a bit per slot.
+// PartIndexNext is the lowest slot that may be free, PartIndexTop the highest one in use, so
+// allocation and the update loop only look at that range. In Deadlocked this file is assembly
+// (partproc.s); RaC1's PS3 build has it as C.
 #include <math.h>
 #include <stdio.h>
 #include "game/partproc.h"
@@ -8,378 +14,226 @@
 #include "game/draw.h"
 #include "game/hud.h"
 #include "game/main.h"
+#include "game/mesh.h"
 #include "game/mission.h"
-#include "game/mobyutil.h"
 #include "game/pad.h"
 #include "game/partupd.h"
 #include "game/pause.h"
 #include "game/vendor.h"
+#include "idol/fastfunc.h"
 #include "idol/idol_draw.h"
 #include "idol/mUnk.h"
 
+#define MAX_PARTS      4096
+#define PART_DEAD      0x80             /* PartInstance.type: free slot */
+#define PART_FADE_IN   8                /* frames a particle takes to fade out at the end of its life */
+
+/* PartInstance.update[] as used by class 22 (a coloured, growing, falling puff) */
+struct Part22 {
+    Vec3 vel;                           /* 0x20 */
+    float gravity;                      /* 0x2c  added to vel.z */
+    u8 startColor[4];                   /* 0x30  RGBA at the start of its life */
+    u8 endColor[4];                     /* 0x34  ... and at the end */
+    short life;                         /* 0x38  frames */
+    short _pad;
+    float growth;                       /* 0x3c  added to scale */
+};
+
+static inline bool PartAlive(PartInstance *part)
+{
+    return (s8)part->type >= 0;
+}
+
+/* from the view: its x, y and z columns, the last two normalized, and its position */
+static inline void SetPartView(void)
+{
+    float *view = (float *)(DAT_00902e9c + 0xa0);      /* 4x4 matrix, rows */
+    float *pos = (float *)(DAT_00902e9c + 0x20);
+
+    g_PartView.right.x = view[0];
+    g_PartView.right.y = view[4];
+    g_PartView.right.z = view[8];
+    g_PartView.right.w = 0.0f;
+
+    /* the binary includes the fourth row in the length (vrsqrtefp + one Newton step) */
+    float upLen2 = view[1] * view[1] + view[5] * view[5] + view[9] * view[9] + view[13] * view[13];
+    float upScale = 1.0f / sqrtf(upLen2);
+    g_PartView.up.x = view[1] * upScale;
+    g_PartView.up.y = view[5] * upScale;
+    g_PartView.up.z = view[9] * upScale;
+    g_PartView.up.w = 0.0f;
+
+    float fwdLen2 = view[2] * view[2] + view[6] * view[6] + view[10] * view[10] + view[14] * view[14];
+    float fwdScale = 1.0f / sqrtf(fwdLen2);
+    g_PartView.fwd.x = view[2] * fwdScale;
+    g_PartView.fwd.y = view[6] * fwdScale;
+    g_PartView.fwd.z = view[10] * fwdScale;
+    g_PartView.fwd.w = 0.0f;
+
+    g_PartView.camPos.x = pos[0];
+    g_PartView.camPos.y = pos[1];
+    g_PartView.camPos.z = pos[2];
+    g_PartView.camPos.w = 0.0f;
+}
+
+static inline void UpdateAllParts(void)
+{
+    for (int i = 0; i <= PartIndexTop; i++) {
+        PartInstance *part = &PartInstances[i];
+
+        if (PartAlive(part))
+            PartUpdates[(u8)part->iClass](part);
+    }
+}
+
 // 0x011e448 (0x14 bytes)
 void SECTION_HEADER_PARTPROC(void)
-
 {
-  DAT_00729624 = 0x10000;
-  return;
+    DAT_00729624 = 0x10000;
 }
 
 
 // 0x011e45c (0x11c bytes)
-// strings: 006531a4: '*** frame %d ***\n' | 006531bc: 'class: %d\tcount: %d\tcycles: %d\n'
-
-ulonglong UpdatePartsDebug(void)
-
+/* R1+R2+L2 held, L1 pressed: one update with the profile counters on, then print them */
+void UpdatePartsDebug(void)
 {
-  uint uVar1;
-  ulonglong uVar2;
-  int32_t iVar3;
-  uint *puVar4;
-  int iVar5;
-  
-  if (((g_Pad.downButtons & (R1|R2|L2)) == (R1|R2|L2)) && ((g_Pad.buttonsPressedThisFrame & L1) != 0)) {
+    if ((g_Pad.downButtons & (R1 | R2 | L2)) != (R1 | R2 | L2) || !(g_Pad.buttonsPressedThisFrame & L1)) {
+        UpdateParts();
+        return;
+    }
+
     printf("\n");
-    printf("*** frame %d ***\n",g_MainLoopFrames);
+    printf("*** frame %d ***\n", g_MainLoopFrames);
     printf("\n");
-    *DAT_009271fc = 0x81;
+    *g_pDebugCounterMode = 0x81;
     UpdateParts_NotUsed();
-    iVar5 = 0;
-    puVar4 = (uint *)&DAT_11004000;
-    do {
-      uVar1 = *puVar4;
-      uVar2 = (ulonglong)uVar1;
-      if (uVar1 != 0) {
-        iVar3 = printf("class: %d\tcount: %d\tcycles: %d\n",iVar5,uVar1,
-                             (int)(puVar4[1] << 5) / (int)uVar1);
-        uVar2 = (ulonglong)iVar3;
-      }
-      iVar5 = iVar5 + 1;
-      puVar4 = puVar4 + 2;
-    } while (iVar5 < 0x80);
-  }
-  else {
-    uVar2 = UpdateParts();
-  }
-  return uVar2;
+
+    for (int i = 0; i < 128; i++) {
+        u32 count = g_PartProfile[i].count;
+
+        if (count != 0)
+            printf("class: %d\tcount: %d\tcycles: %d\n", i, count, (int)(g_PartProfile[i].cycles << 5) / (int)count);
+    }
 }
 
 
 // 0x011e580 (0x148 bytes)
-PartInstance * CreatePartEx(int idx,int arg)
-
+PartInstance *CreatePartEx(int iClass, int unused)
 {
-  undefined4 *puVar1;
-  uint uVar2;
-  ulonglong uVar3;
-  uint uVar4;
-  PartInstance *pPVar5;
-  uint uVar6;
-  ulonglong uVar7;
-  int iVar8;
-  
-  uVar4 = PartIndexNext;
-  if ((int)PartIndexNext < 0x1000) {
-    uVar6 = PartIndexNext + 1;
-    iVar8 = (int)PartIndexNext >> 3;
-    uVar2 = PartIndexNext & 7;
-    PartActiveCnt = PartActiveCnt + 1;
-    PartIndexNext = uVar6;
-    (&DAT_00a52000)[iVar8] = (&DAT_00a52000)[iVar8] | (byte)(1 << uVar2);
-    if ((int)uVar6 <= PartIndexTop) {
-      PartIndexNext = uVar6 & 0xfffffff8;
-      iVar8 = (int)uVar6 >> 3;
-      while (uVar6 = PartIndexNext, (int)PartIndexNext < 0x1000) {
-        uVar7 = 1;
-        do {
-          uVar6 = PartIndexNext;
-          if (((uint)uVar7 & (uint)(byte)(&DAT_00a52000)[iVar8]) == 0) goto LAB_0011e650;
-          PartIndexNext = PartIndexNext + 1;
-          uVar3 = uVar7 & 0x7f;
-          uVar7 = (uVar7 & 0x7fffffff) << 1;
-        } while (uVar3 != 0);
-        iVar8 = iVar8 + 1;
-      }
+    int index = PartIndexNext;
+
+    if (index >= MAX_PARTS)
+        return 0;
+
+    PartIndexNext = index + 1;
+    PartActiveCnt++;
+    g_PartUsed[index >> 3] |= 1 << (index & 7);
+
+    /* below the top: find the next free slot for PartIndexNext */
+    if (PartIndexNext <= PartIndexTop) {
+        PartIndexNext &= ~7;
+        int byteIndex = PartIndexNext >> 3;
+
+        while (PartIndexNext < MAX_PARTS) {
+            bool found = false;
+
+            for (int bit = 1; bit != 0x100; bit <<= 1) {
+                if (!(bit & g_PartUsed[byteIndex])) {
+                    found = true;
+                    break;
+                }
+                PartIndexNext++;
+            }
+            if (found)
+                break;
+
+            byteIndex++;
+        }
     }
-LAB_0011e650:
-    iVar8 = uVar6 - 1;
-    pPVar5 = (PartInstance *)((int)PartInstances + uVar4 * 0x40);
-    PartIndexTop = iVar8 + ((uint)((longlong)iVar8 - (longlong)PartIndexTop >> 0x3f) &
-                           PartIndexTop - iVar8);
-    puVar1 = (undefined4 *)((uint)pPVar5 & 0xfffffff0);
-    puVar1[3] = 0;
-    puVar1[2] = 0;
-    puVar1[1] = 0;
-    *puVar1 = 0;
-    puVar1 = (undefined4 *)((uint)&pPVar5->pos & 0xfffffff0);
-    puVar1[3] = 0;
-    puVar1[2] = 0;
-    puVar1[1] = 0;
-    *puVar1 = 0;
-    puVar1 = (undefined4 *)((uint)pPVar5->update & 0xfffffff0);
-    puVar1[3] = 0;
-    puVar1[2] = 0;
-    puVar1[1] = 0;
-    *puVar1 = 0;
-    puVar1 = (undefined4 *)((uint)(pPVar5->update + 4) & 0xfffffff0);
-    puVar1[3] = 0;
-    puVar1[2] = 0;
-    puVar1[1] = 0;
-    *puVar1 = 0;
-    pPVar5->iClass = (char)idx;
-  }
-  else {
-    pPVar5 = (PartInstance *)0x0;
-  }
-  return pPVar5;
+
+    if (PartIndexNext - 1 > PartIndexTop)
+        PartIndexTop = PartIndexNext - 1;
+
+    PartInstance *part = &PartInstances[index];
+    FastMemSetZero(part, sizeof(PartInstance));
+    part->iClass = iClass;
+
+    return part;
 }
 
 
 // 0x011e6c8 (0x24 bytes)
-PartInstance * CreatePart(int idx)
-
+PartInstance *CreatePart(int iClass)
 {
-  PartInstance *pPVar1;
-  
-  pPVar1 = CreatePartEx(idx,0);
-  return pPVar1;
+    return CreatePartEx(iClass, 0);
 }
 
 
 // 0x011e6ec (0x104 bytes)
-void DeletePart(int idx)
-
+void DeletePart(PartInstance *part)
 {
-  byte bVar1;
-  int iVar2;
-  uint uVar3;
-  uint uVar4;
-  uint uVar5;
-  
-  uVar3 = idx - (int)PartInstances;
-  uVar3 = ((int)uVar3 >> 6) + (uint)((int)uVar3 < 0 && (uVar3 & 0x3f) != 0);
-  PartActiveCnt = PartActiveCnt + -1;
-  (&DAT_00a52000)[(int)uVar3 >> 3] =
-       (&DAT_00a52000)[(int)uVar3 >> 3] & ((byte)(1 << (uVar3 & 7)) ^ 0xff);
-  if ((PartIndexTop == uVar3) && (uVar4 = PartIndexTop - 1, PartIndexTop = uVar4, -1 < (int)uVar4))
-  {
-    uVar5 = 1 << (uVar4 & 7);
-    bVar1 = (&DAT_00a52000)[(int)uVar4 >> 3];
-    iVar2 = (int)uVar4 >> 3;
-    while( true ) {
-      for (; uVar5 != 0; uVar5 = (int)uVar5 >> 1) {
-        if ((uVar5 & bVar1) != 0) goto LAB_0011e7bc;
-        uVar4 = uVar4 - 1;
-        PartIndexTop = uVar4;
-      }
-      if ((int)uVar4 < 0) break;
-      uVar5 = 0x80;
-      bVar1 = *(byte *)(iVar2 + 0xa51fff);
-      iVar2 = iVar2 + -1;
+    int index = part - PartInstances;
+
+    PartActiveCnt--;
+    g_PartUsed[index >> 3] &= ~(1 << (index & 7));
+
+    /* it was the top one: move the top down to the next slot in use */
+    if (PartIndexTop == index) {
+        PartIndexTop = index - 1;
+
+        int byteIndex = PartIndexTop >> 3;
+        int bit = 1 << (PartIndexTop & 7);
+        while (PartIndexTop >= 0) {
+            u8 used = g_PartUsed[byteIndex];
+            bool found = false;
+
+            for (; bit != 0; bit >>= 1) {
+                if (bit & used) {
+                    found = true;
+                    break;
+                }
+                PartIndexTop--;
+            }
+            if (found)
+                break;
+
+            byteIndex--;
+            bit = 0x80;
+        }
     }
-  }
-LAB_0011e7bc:
-  *(undefined1 *)(idx + 1) = 0x80;
-  PartIndexNext =
-       uVar3 + ((uint)((longlong)PartIndexNext - (longlong)(int)uVar3 >> 0x3f) &
-               PartIndexNext - uVar3);
-  return;
+
+    part->type = PART_DEAD;
+
+    if (index < PartIndexNext)
+        PartIndexNext = index;
 }
 
 
 // 0x011e7f0 (0x64 bytes)
+/* particles in use, counting whole bytes of g_PartUsed below PartIndexTop */
 int CountActiveParts(void)
-
 {
-  int iVar1;
-  int iVar2;
-  int iVar3;
-  
-  iVar1 = 0;
-  iVar2 = 0;
-  if (0 < PartIndexTop >> 3) {
-    do {
-      iVar3 = iVar1 + 1;
-      iVar2 = iVar2 + (uint)(byte)(&DAT_00735570)[(byte)(&DAT_00a52000)[iVar1] & 0xf] +
-              (uint)(byte)(&DAT_00735570)[(byte)(&DAT_00a52000)[iVar1] >> 4];
-      iVar1 = iVar3;
-    } while (iVar3 < PartIndexTop >> 3);
-  }
-  return iVar2;
+    int count = 0;
+
+    for (int i = 0; i < PartIndexTop >> 3; i++)
+        count += g_NibbleBitCount[g_PartUsed[i] & 0xf] + g_NibbleBitCount[g_PartUsed[i] >> 4];
+
+    return count;
 }
 
 
 // 0x011e8a0 (0x270 bytes)
-/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
-
 void UpdateParts(void)
-
 {
-  int iVar1;
-  byte *pbVar2;
-  int iVar3;
-  int iVar4;
-  GPiece<16> auVar5;
-  GPiece<16> auVar6;
-  GPiece<16> auVar7;
-  GPiece<16> auVar8;
-  GPiece<16> auVar9;
-  GPiece<16> auVar10;
-  GPiece<16> auVar11;
-  GPiece<16> auVar12;
-  GPiece<16> auVar13;
-  GPiece<16> auVar14;
-  GPiece<16> auVar15;
-  GPiece<16> auVar16;
-  GPiece<16> auVar17;
-  
-  auVar6 = *(undefined1 (*) [16])(DAT_00902e9c + 0xa0U & 0xfffffff0);
-  auVar7 = *(undefined1 (*) [16])(DAT_00902e9c + 0xb0U & 0xfffffff0);
-  auVar8 = *(undefined1 (*) [16])(DAT_00902e9c + 0xc0U & 0xfffffff0);
-  auVar12 = auVar6 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar9 = *(undefined1 (*) [16])(DAT_00902e9c + 0xd0U & 0xfffffff0);
-  auVar5 = auVar7 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar14 = auVar8 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar10 = loadVectorLeftIndexed(0x10,0x11e860);
-  auVar11 = loadVectorLeftIndexed(0x14,0x11e860);
-  DAT_00a52b40 = storeVectorElementWordIndexed
-                           (auVar12 | auVar12 << 0x20 | auVar12 << 0x40 | auVar12 << 0x60,0x2b40,
-                            0xa50000);
-  DAT_00a52b44 = storeVectorElementWordIndexed
-                           (auVar5 | auVar5 << 0x20 | auVar5 << 0x40 | auVar5 << 0x60,4,0xa52b40);
-  DAT_00a52b48 = storeVectorElementWordIndexed
-                           (auVar14 | auVar14 << 0x20 | auVar14 << 0x40 | auVar14 << 0x60,8,0xa52b40
-                           );
-  DAT_00a52b4c = 0;
-  auVar12 = vectorPermute(auVar6,auVar8,_DAT_0011e880);
-  auVar14 = vectorPermute(auVar7,auVar9,_DAT_0011e880);
-  auVar16 = vectorPermute(auVar7,auVar8,_DAT_0011e880);
-  auVar17 = vectorPermute(auVar9,auVar6,_DAT_0011e880);
-  auVar5 = vectorPermute(auVar8,auVar9,_DAT_0011e880);
-  auVar13 = vectorMergeHighWord(auVar12,auVar14);
-  auVar12 = ZEXT416(0);
-  auVar15 = auVar12 | auVar12 << 0x20 | auVar12 << 0x40 | auVar12 << 0x60;
-  auVar16 = vectorPermute(auVar16,auVar17,_DAT_0011e860);
-  auVar14 = vectorPermute(auVar6,auVar7,_DAT_0011e880);
-  auVar17 = vectorMultiplyAddFloatingPoint(auVar13,auVar13,auVar15);
-  auVar12 = auVar10 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar10 = auVar12 | auVar12 << 0x20 | auVar12 << 0x40 | auVar12 << 0x60;
-  auVar5 = vectorPermute(auVar5,auVar14,_DAT_0011e860);
-  auVar12 = auVar11 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar11 = auVar12 | auVar12 << 0x20 | auVar12 << 0x40 | auVar12 << 0x60;
-  auVar12 = vectorMultiplyAddFloatingPoint(auVar16,auVar16,auVar17);
-  auVar12 = vectorMultiplyAddFloatingPoint(auVar5,auVar5,auVar12);
-  auVar12 = auVar12 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar12 = auVar12 | auVar12 << 0x20 | auVar12 << 0x40 | auVar12 << 0x60;
-  auVar5 = vectorReciprocalSquareRootEstimateFloatingPoint(auVar12);
-  auVar12 = vectorMultiplyAddFloatingPoint(auVar5,auVar12,auVar15);
-  auVar14 = vectorMultiplyAddFloatingPoint(auVar5,auVar10,auVar15);
-  auVar12 = vectorNegativeMultiplySubtractFloatingPoint(auVar5,auVar12,auVar11);
-  auVar12 = vectorMultiplyAddFloatingPoint(auVar12,auVar14,auVar5);
-  auVar14 = vectorCompareEqualToFloatingPoint(auVar12,auVar12);
-  auVar12 = vectorConditionalSelect(auVar5,auVar12,auVar14);
-  auVar14 = vectorMultiplyAddFloatingPoint(auVar13,auVar12,auVar15);
-  auVar12 = auVar14 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar5 = auVar14 >> 0x40 & (GPiece<16>)0xffffffff;
-  auVar14 = auVar14 >> 0x20 & (GPiece<16>)0xffffffff;
-  DAT_00a52b50 = storeVectorElementWordIndexed
-                           (auVar12 | auVar12 << 0x20 | auVar12 << 0x40 | auVar12 << 0x60,0x2b50,
-                            0xa50000);
-  DAT_00a52b54 = storeVectorElementWordIndexed
-                           (auVar5 | auVar5 << 0x20 | auVar5 << 0x40 | auVar5 << 0x60,4,0xa52b50);
-  DAT_00a52b58 = storeVectorElementWordIndexed
-                           (auVar14 | auVar14 << 0x20 | auVar14 << 0x40 | auVar14 << 0x60,8,0xa52b50
-                           );
-  DAT_00a52b5c = 0;
-  auVar14 = vectorPermute(auVar6,auVar8,_DAT_0011e890);
-  auVar13 = vectorPermute(auVar7,auVar9,_DAT_0011e890);
-  auVar16 = vectorPermute(auVar7,auVar8,_DAT_0011e890);
-  auVar12 = vectorPermute(auVar9,auVar6,_DAT_0011e890);
-  auVar5 = vectorPermute(auVar6,auVar7,_DAT_0011e890);
-  auVar6 = vectorMergeHighWord(auVar14,auVar13);
-  auVar14 = vectorPermute(auVar8,auVar9,_DAT_0011e890);
-  auVar7 = vectorPermute(auVar16,auVar12,_DAT_0011e860);
-  auVar8 = vectorMultiplyAddFloatingPoint(auVar6,auVar6,auVar15);
-  auVar12 = vectorPermute(auVar14,auVar5,_DAT_0011e860);
-  auVar5 = vectorMultiplyAddFloatingPoint(auVar7,auVar7,auVar8);
-  auVar12 = vectorMultiplyAddFloatingPoint(auVar12,auVar12,auVar5);
-  auVar12 = auVar12 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar12 = auVar12 | auVar12 << 0x20 | auVar12 << 0x40 | auVar12 << 0x60;
-  auVar5 = vectorReciprocalSquareRootEstimateFloatingPoint(auVar12);
-  auVar12 = vectorMultiplyAddFloatingPoint(auVar5,auVar12,auVar15);
-  auVar14 = vectorMultiplyAddFloatingPoint(auVar5,auVar10,auVar15);
-  auVar12 = vectorNegativeMultiplySubtractFloatingPoint(auVar5,auVar12,auVar11);
-  auVar12 = vectorMultiplyAddFloatingPoint(auVar12,auVar14,auVar5);
-  auVar14 = vectorCompareEqualToFloatingPoint(auVar12,auVar12);
-  auVar12 = vectorConditionalSelect(auVar5,auVar12,auVar14);
-  auVar14 = vectorMultiplyAddFloatingPoint(auVar6,auVar12,auVar15);
-  auVar12 = auVar14 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar5 = auVar14 >> 0x40 & (GPiece<16>)0xffffffff;
-  auVar14 = auVar14 >> 0x20 & (GPiece<16>)0xffffffff;
-  DAT_00a52b60 = storeVectorElementWordIndexed
-                           (auVar12 | auVar12 << 0x20 | auVar12 << 0x40 | auVar12 << 0x60,0x2b60,
-                            0xa50000);
-  DAT_00a52b64 = storeVectorElementWordIndexed
-                           (auVar5 | auVar5 << 0x20 | auVar5 << 0x40 | auVar5 << 0x60,4,0xa52b60);
-  DAT_00a52b68 = storeVectorElementWordIndexed
-                           (auVar14 | auVar14 << 0x20 | auVar14 << 0x40 | auVar14 << 0x60,8,0xa52b60
-                           );
-  DAT_00a52b6c = 0;
-  auVar14 = *(undefined1 (*) [16])(DAT_00902e9c + 0x20U & 0xfffffff0);
-  auVar12 = auVar14 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar5 = auVar14 >> 0x40 & (GPiece<16>)0xffffffff;
-  auVar14 = auVar14 >> 0x20 & (GPiece<16>)0xffffffff;
-  DAT_00a52b70 = storeVectorElementWordIndexed
-                           (auVar12 | auVar12 << 0x20 | auVar12 << 0x40 | auVar12 << 0x60,0x2b70,
-                            0xa50000);
-  DAT_00a52b74 = storeVectorElementWordIndexed
-                           (auVar5 | auVar5 << 0x20 | auVar5 << 0x40 | auVar5 << 0x60,4,0xa52b70);
-  DAT_00a52b78 = storeVectorElementWordIndexed
-                           (auVar14 | auVar14 << 0x20 | auVar14 << 0x40 | auVar14 << 0x60,8,0xa52b70
-                           );
-  DAT_00a52b7c = 0;
-  if (-1 < PartIndexTop) {
-    iVar4 = 0;
-    iVar3 = 0;
-    iVar1 = PartIndexTop;
-    do {
-      pbVar2 = (byte *)((int)PartInstances + iVar4);
-      if (-1 < (char)pbVar2[1]) {
-        (**(code **)PartUpdates[*pbVar2])(pbVar2);
-        iVar1 = PartIndexTop;
-      }
-      iVar3 = iVar3 + 1;
-      iVar4 = iVar4 + 0x40;
-    } while (iVar3 <= iVar1);
-  }
-  return;
+    SetPartView();
+    UpdateAllParts();
 }
 
 
 // 0x011eb10 (0xb4 bytes)
 void UpdateParts_NotUsed(void)
-
 {
-  int iVar1;
-  byte *pbVar2;
-  int iVar3;
-  int iVar4;
-  
-  iVar3 = 0;
-  if (-1 < PartIndexTop) {
-    iVar4 = 0;
-    iVar1 = PartIndexTop;
-    do {
-      pbVar2 = (byte *)((int)PartInstances + iVar4);
-      if (-1 < (char)pbVar2[1]) {
-        (**(code **)PartUpdates[*pbVar2])(pbVar2);
-        iVar1 = PartIndexTop;
-      }
-      iVar3 = iVar3 + 1;
-      iVar4 = iVar4 + 0x40;
-    } while (iVar3 <= iVar1);
-  }
-  return;
+    UpdateAllParts();
 }
 
 
@@ -634,20 +488,20 @@ void DrawParts(void)
                    0.0078125 + 3.1415927;
           if (*(char *)((int)pvVar17 + iVar25 + 1) == '\0') {
             dVar42 = (double)(fVar23 * 0.5);
-            dVar43 = (double)DAT_00a52b60;
-            dVar45 = (double)DAT_00a52b64;
-            dVar44 = (double)DAT_00a52b68;
-            uVar18 = _FSin(dVar42,&DAT_00a52b60,0);
+            dVar43 = (double)g_PartView.fwd.x;
+            dVar45 = (double)g_PartView.fwd.y;
+            dVar44 = (double)g_PartView.fwd.z;
+            uVar18 = _FSin(dVar42,&g_PartView.fwd.x,0);
             dVar41 = extraout_f1;
             dVar31 = (double)_FSin(dVar42,uVar18,1);
             dVar42 = (double)(float)(dVar45 * dVar41);
             dVar46 = (double)(float)(dVar44 * dVar41);
-            dVar44 = (double)DAT_00a52b40;
-            dVar45 = (double)DAT_00a52b44;
-            dVar33 = (double)DAT_00a52b48;
-            dVar34 = (double)DAT_00a52b50;
-            dVar35 = (double)DAT_00a52b54;
-            dVar37 = (double)DAT_00a52b58;
+            dVar44 = (double)g_PartView.right.x;
+            dVar45 = (double)g_PartView.right.y;
+            dVar33 = (double)g_PartView.right.z;
+            dVar34 = (double)g_PartView.up.x;
+            dVar35 = (double)g_PartView.up.y;
+            dVar37 = (double)g_PartView.up.z;
             dVar41 = (double)(float)(dVar43 * dVar41);
           }
           else {
@@ -780,9 +634,9 @@ void DrawParts(void)
                           uVar28 >> 8 & 0xff00 | uVar28 << 0x18 | (uVar28 & 0xff00) << 8);
           pfVar19[0x17] = fVar24;
           pfVar19[5] = fVar24;
-          fVar24 = (float)(dVar47 + dVar44) * 0.5 - DAT_00a52b70;
-          fVar5 = (float)(dVar50 + dVar48) * 0.5 - DAT_00a52b78;
-          fVar4 = (float)(dVar42 + dVar49) * 0.5 - DAT_00a52b74;
+          fVar24 = (float)(dVar47 + dVar44) * 0.5 - g_PartView.camPos.x;
+          fVar5 = (float)(dVar50 + dVar48) * 0.5 - g_PartView.camPos.z;
+          fVar4 = (float)(dVar42 + dVar49) * 0.5 - g_PartView.camPos.y;
           fVar10 = fVar5 * fVar3 - fVar24 * fVar23;
           fVar13 = fVar4 * fVar23 - fVar5 * fVar2;
           fVar9 = fVar24 * fVar2 - fVar4 * fVar3;
@@ -880,201 +734,36 @@ LAB_0011f80c:
 
 
 // 0x011f918 (0x27c bytes)
-/* Part 22 */
-
+/* class 22: drifts and falls, grows, and fades from its start colour to its end colour; the
+   last PART_FADE_IN frames also fade the alpha */
 void UpdatePart_22(PartInstance *part)
-
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  short sVar4;
-  undefined1 uVar5;
-  short sVar6;
-  longlong lVar7;
-  undefined8 in_LR;
-  GPiece<16> auVar8;
-  GPiece<16> auVar9;
-  GPiece<16> auVar10;
-  GPiece<16> auVar11;
-  GPiece<16> auVar12;
-  GPiece<16> auVar13;
-  GPiece<16> auVar14;
-  GPiece<16> auVar15;
-  GPiece<16> auVar16;
-  GPiece<16> auVar17;
-  GPiece<16> auVar18;
-  GPiece<16> auVar19;
-  GPiece<16> auVar20;
-  GPiece<16> auVar21;
-  GPiece<16> auVar22;
-  GPiece<16> auVar23;
-  GPiece<16> auVar24;
-  GPiece<16> auVar25;
-  
-  lVar7 = (longlong)(int)part;
-  auVar9 = ZEXT416(0xfffffff0);
-  auVar8 = auVar9 | auVar9 << 0x20 | auVar9 << 0x40 | auVar9 << 0x60;
-  auVar9 = ZEXT416(1);
-  auVar10 = loadVectorLeftIndexed(10,lVar7);
-  sVar4 = part->timer;
-  auVar10 = vectorShiftRightWord(auVar10,auVar8);
-  auVar9 = vectorSubtractUnsignedWordModulo
-                     (auVar10,auVar9 | auVar9 << 0x20 | auVar9 << 0x40 | auVar9 << 0x60);
-  auVar10 = vectorSplatHalfWord(auVar9,1);
-  auVar9 = vectorShiftLeftIntegerWord(auVar9,auVar8);
-  auVar9 = vectorShiftRightAlgebraicWord(auVar9,auVar8);
-  sVar6 = storeVectorElementHalfWordIndexed(auVar10,10,lVar7);
-  part->timer = sVar6;
-  if ((short)(sVar4 + -1) < 1) {
-    DeletePart();
-  }
-  else {
-    auVar8 = ZEXT416(0xfffffff0);
-    auVar10 = ZEXT416(0xffffffff);
-    auVar13 = auVar10 | auVar10 << 0x20 | auVar10 << 0x40 | auVar10 << 0x60;
-    auVar10 = ZEXT416(8);
-    auVar12 = auVar10 | auVar10 << 0x20 | auVar10 << 0x40 | auVar10 << 0x60;
-    part->rot = part->rot + '\x01';
-    auVar10 = loadVectorLeftIndexed(0x38,lVar7);
-    auVar10 = vectorShiftRightAlgebraicWord
-                        (auVar10,auVar8 | auVar8 << 0x20 | auVar8 << 0x40 | auVar8 << 0x60);
-    auVar14 = vectorShiftLeftIntegerWord(auVar13,auVar13);
-    auVar8 = ZEXT416(0xffffffff);
-    auVar19 = auVar8 | auVar8 << 0x20 | auVar8 << 0x40 | auVar8 << 0x60;
-    auVar8 = vectorCompareGreaterThanSignedWord(auVar9,auVar12);
-    auVar13 = vectorConvertFromSignedFixedPointWord(auVar10,0);
-    auVar10 = vectorConditionalSelect(auVar9,auVar12,auVar8);
-    auVar8 = loadVectorLeftIndexed(4,0x11f908);
-    auVar8 = auVar8 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar11 = auVar8 | auVar8 << 0x20 | auVar8 << 0x40 | auVar8 << 0x60;
-    auVar8 = ZEXT416(9);
-    auVar20 = vectorShiftLeftIntegerWord(auVar19,auVar19);
-    auVar12 = vectorConvertFromSignedFixedPointWord(auVar9,0);
-    auVar19 = loadVectorLeftIndexed(in_LR,0x11f908);
-    auVar9 = ZEXT416(0xfffffff8);
-    auVar22 = auVar9 | auVar9 << 0x20 | auVar9 << 0x40 | auVar9 << 0x60;
-    auVar9 = vectorShiftLeftIntegerWord
-                       (auVar10,auVar8 | auVar8 << 0x20 | auVar8 << 0x40 | auVar8 << 0x60);
-    auVar8 = auVar19 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar16 = vectorReciprocalEstimateFloatingPoint(auVar13);
-    auVar10 = vectorConvertFromSignedFixedPointWord(auVar9,0);
-    auVar9 = ZEXT416(0xffffffff);
-    auVar19 = auVar9 | auVar9 << 0x20 | auVar9 << 0x40 | auVar9 << 0x60;
-    auVar21 = loadVectorLeftIndexed(0x33,lVar7);
-    auVar9 = loadVectorLeftIndexed(0x30,lVar7);
-    auVar19 = vectorShiftLeftIntegerWord(auVar19,auVar19);
-    auVar18 = vectorNegativeMultiplySubtractFloatingPoint(auVar16,auVar13,auVar11);
-    auVar19 = vectorMultiplyAddFloatingPoint
-                        (auVar10,auVar8 | auVar8 << 0x20 | auVar8 << 0x40 | auVar8 << 0x60,auVar19);
-    auVar8 = loadVectorLeftIndexed(0x31,lVar7);
-    auVar9 = vectorShiftRightWord(auVar9,auVar22);
-    auVar8 = vectorShiftRightWord(auVar8,auVar22);
-    auVar15 = vectorConvertFromSignedFixedPointWord(auVar9,0);
-    auVar17 = vectorConvertFromSignedFixedPointWord(auVar8,0);
-    auVar14 = vectorMultiplyAddFloatingPoint(auVar16,auVar18,auVar14);
-    auVar8 = vectorShiftRightWord(auVar21,auVar22);
-    auVar9 = ZEXT416(0xffffffff);
-    auVar16 = auVar9 | auVar9 << 0x20 | auVar9 << 0x40 | auVar9 << 0x60;
-    auVar10 = loadVectorLeftIndexed(0x32,lVar7);
-    auVar9 = loadVectorLeftIndexed(0x37,lVar7);
-    auVar21 = vectorShiftLeftIntegerWord(auVar16,auVar16);
-    auVar16 = vectorConvertFromSignedFixedPointWord(auVar8,0);
-    auVar23 = loadVectorLeftIndexed(0x34,lVar7);
-    auVar24 = loadVectorLeftIndexed(0x35,lVar7);
-    auVar25 = loadVectorLeftIndexed(0x36,lVar7);
-    auVar8 = vectorNegativeMultiplySubtractFloatingPoint(auVar14,auVar13,auVar11);
-    auVar9 = vectorShiftRightWord(auVar9,auVar22);
-    auVar18 = vectorShiftRightWord(auVar10,auVar22);
-    auVar23 = vectorShiftRightWord(auVar23,auVar22);
-    auVar24 = vectorShiftRightWord(auVar24,auVar22);
-    auVar10 = vectorConvertFromSignedFixedPointWord(auVar9,0);
-    auVar18 = vectorConvertFromSignedFixedPointWord(auVar18,0);
-    fVar1 = (float)part->update[1];
-    fVar2 = (float)part->update[2];
-    auVar24 = vectorConvertFromSignedFixedPointWord(auVar24,0);
-    fVar3 = (float)part->update[3];
-    auVar14 = vectorMultiplyAddFloatingPoint(auVar14,auVar8,auVar20);
-    auVar20 = vectorShiftRightWord(auVar25,auVar22);
-    auVar9 = ZEXT416(0xffffffff);
-    auVar22 = auVar9 | auVar9 << 0x20 | auVar9 << 0x40 | auVar9 << 0x60;
-    auVar9 = ZEXT416(0xffffffff);
-    auVar8 = auVar9 | auVar9 << 0x20 | auVar9 << 0x40 | auVar9 << 0x60;
-    auVar9 = ZEXT416(0xffffffff);
-    auVar25 = auVar9 | auVar9 << 0x20 | auVar9 << 0x40 | auVar9 << 0x60;
-    auVar20 = vectorConvertFromSignedFixedPointWord(auVar20,0);
-    auVar22 = vectorShiftLeftIntegerWord(auVar22,auVar22);
-    auVar9 = vectorShiftLeftIntegerWord(auVar8,auVar8);
-    auVar16 = vectorMultiplyAddFloatingPoint(auVar16,auVar19,auVar9);
-    auVar11 = vectorNegativeMultiplySubtractFloatingPoint(auVar14,auVar13,auVar11);
-    auVar13 = vectorConvertFromSignedFixedPointWord(auVar23,0);
-    auVar9 = ZEXT416(0xffffffff);
-    auVar23 = auVar9 | auVar9 << 0x20 | auVar9 << 0x40 | auVar9 << 0x60;
-    auVar9 = loadVectorLeftIndexed(8,0x11f908);
-    (part->pos).x = (float)part->update[0] + (part->pos).x;
-    auVar8 = auVar9 >> 0x60 & (GPiece<16>)0xffffffff;
-    (part->pos).y = fVar1 + (part->pos).y;
-    (part->pos).z = fVar2 + (part->pos).z;
-    part->update[2] = (int)(fVar3 + fVar2);
-    auVar11 = vectorMultiplyAddFloatingPoint(auVar14,auVar11,auVar21);
-    auVar21 = vectorShiftLeftIntegerWord(auVar25,auVar25);
-    auVar9 = ZEXT416(0xffffffff);
-    auVar14 = auVar9 | auVar9 << 0x20 | auVar9 << 0x40 | auVar9 << 0x60;
-    auVar9 = ZEXT416(0xffffffff);
-    auVar25 = auVar9 | auVar9 << 0x20 | auVar9 << 0x40 | auVar9 << 0x60;
-    auVar19 = vectorMultiplyAddFloatingPoint(auVar10,auVar19,auVar21);
-    auVar9 = ZEXT416(0xffffffff);
-    auVar21 = auVar9 | auVar9 << 0x20 | auVar9 << 0x40 | auVar9 << 0x60;
-    auVar14 = vectorShiftLeftIntegerWord(auVar14,auVar14);
-    auVar9 = vectorShiftLeftIntegerWord(auVar23,auVar23);
-    auVar23 = vectorShiftLeftIntegerWord(auVar25,auVar25);
-    auVar10 = vectorMultiplyAddFloatingPoint(auVar11,auVar12,auVar22);
-    auVar12 = vectorShiftLeftIntegerWord(auVar21,auVar21);
-    part->scale = part->scale + (float)part->update[7];
-    auVar11 = vectorSubtractFloatingPoint
-                        (auVar8 | auVar8 << 0x20 | auVar8 << 0x40 | auVar8 << 0x60,auVar10);
-    auVar8 = vectorMultiplyAddFloatingPoint(auVar15,auVar10,auVar14);
-    auVar14 = vectorMultiplyAddFloatingPoint(auVar17,auVar10,auVar9);
-    auVar15 = vectorMultiplyAddFloatingPoint(auVar18,auVar10,auVar23);
-    auVar9 = vectorMultiplyAddFloatingPoint(auVar16,auVar10,auVar12);
-    auVar8 = vectorMultiplyAddFloatingPoint(auVar13,auVar11,auVar8);
-    auVar10 = vectorMultiplyAddFloatingPoint(auVar24,auVar11,auVar14);
-    auVar13 = vectorMultiplyAddFloatingPoint(auVar20,auVar11,auVar15);
-    auVar9 = vectorMultiplyAddFloatingPoint(auVar19,auVar11,auVar9);
-    auVar8 = vectorConvertToSignedFixedPointWordSaturate(auVar8,0);
-    auVar10 = vectorConvertToSignedFixedPointWordSaturate(auVar10,0);
-    auVar12 = vectorConvertToSignedFixedPointWordSaturate(auVar13,0);
-    auVar13 = vectorConvertToSignedFixedPointWordSaturate(auVar9,0);
-    auVar9 = auVar8 >> 0x60 & (GPiece<16>)0xff;
-    auVar8 = auVar10 >> 0x60 & (GPiece<16>)0xff;
-    auVar10 = auVar12 >> 0x60 & (GPiece<16>)0xff;
-    auVar13 = auVar13 >> 0x60 & (GPiece<16>)0xff;
-    uVar5 = storeVectorElementByteIndexed
-                      (auVar9 | auVar9 << 8 | auVar9 << 0x10 | auVar9 << 0x18 | auVar9 << 0x20 |
-                       auVar9 << 0x28 | auVar9 << 0x30 | auVar9 << 0x38 | auVar9 << 0x40 |
-                       auVar9 << 0x48 | auVar9 << 0x50 | auVar9 << 0x58 | auVar9 << 0x60 |
-                       auVar9 << 0x68 | auVar9 << 0x70 | auVar9 << 0x78,4,lVar7);
-    *(undefined1 *)&part->color = uVar5;
-    uVar5 = storeVectorElementByteIndexed
-                      (auVar8 | auVar8 << 8 | auVar8 << 0x10 | auVar8 << 0x18 | auVar8 << 0x20 |
-                       auVar8 << 0x28 | auVar8 << 0x30 | auVar8 << 0x38 | auVar8 << 0x40 |
-                       auVar8 << 0x48 | auVar8 << 0x50 | auVar8 << 0x58 | auVar8 << 0x60 |
-                       auVar8 << 0x68 | auVar8 << 0x70 | auVar8 << 0x78,5,lVar7);
-    *(undefined1 *)((int)&part->color + 1) = uVar5;
-    uVar5 = storeVectorElementByteIndexed
-                      (auVar10 | auVar10 << 8 | auVar10 << 0x10 | auVar10 << 0x18 | auVar10 << 0x20
-                       | auVar10 << 0x28 | auVar10 << 0x30 | auVar10 << 0x38 | auVar10 << 0x40 |
-                       auVar10 << 0x48 | auVar10 << 0x50 | auVar10 << 0x58 | auVar10 << 0x60 |
-                       auVar10 << 0x68 | auVar10 << 0x70 | auVar10 << 0x78,6,lVar7);
-    *(undefined1 *)((int)&part->color + 2) = uVar5;
-    uVar5 = storeVectorElementByteIndexed
-                      (auVar13 | auVar13 << 8 | auVar13 << 0x10 | auVar13 << 0x18 | auVar13 << 0x20
-                       | auVar13 << 0x28 | auVar13 << 0x30 | auVar13 << 0x38 | auVar13 << 0x40 |
-                       auVar13 << 0x48 | auVar13 << 0x50 | auVar13 << 0x58 | auVar13 << 0x60 |
-                       auVar13 << 0x68 | auVar13 << 0x70 | auVar13 << 0x78,7,lVar7);
-    *(undefined1 *)((int)&part->color + 3) = uVar5;
-  }
-  return;
+    Part22 *data = (Part22 *)part->update;
+
+    part->timer--;
+    short timer = part->timer;
+    if (timer < 1) {
+        DeletePart(part);
+        return;
+    }
+
+    part->rot++;
+
+    float fade = (float)((timer < PART_FADE_IN ? timer : PART_FADE_IN) << 9) * (1.0f / 4096.0f);
+    float age = (float)timer * (1.0f / (float)data->life);     /* 1 at birth, 0 at the end */
+    float rest = 1.0f - age;
+
+    part->pos.x = data->vel.x + part->pos.x;
+    part->pos.y = data->vel.y + part->pos.y;
+    part->pos.z = data->vel.z + part->pos.z;
+    data->vel.z = data->gravity + data->vel.z;
+    part->scale = part->scale + data->growth;
+
+    u8 *color = (u8 *)&part->color;
+    color[0] = (int)(data->endColor[0] * rest + data->startColor[0] * age);
+    color[1] = (int)(data->endColor[1] * rest + data->startColor[1] * age);
+    color[2] = (int)(data->endColor[2] * rest + data->startColor[2] * age);
+    color[3] = (int)(data->endColor[3] * fade * rest + data->startColor[3] * fade * age);
 }
 
 

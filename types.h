@@ -2326,13 +2326,6 @@ struct RenderingStep {
     uint field7_0x10;
 };
 
-struct RGBA {
-    u8 r;
-    u8 g;
-    u8 b;
-    u8 a;
-};
-
 typedef enum RsxMethod {
     NV4097_SET_OBJECT=0,
     NV4097_NO_OPERATION=256,
@@ -2650,6 +2643,9 @@ extern undefined4 _DAT_000e93e0; /* direct read */
 extern undefined4 _DAT_000e9420; /* direct read */
 extern undefined4 _DAT_000e9430; /* direct read */
 extern undefined4 _DAT_000e9450; /* direct read */
+extern undefined4 _DAT_0011e860; /* direct read */
+extern undefined4 _DAT_0011e880; /* direct read */
+extern undefined4 _DAT_0011e890; /* direct read */
 extern undefined4 japanese_mode; /* 0xd9208 */
 extern char s_MESSAGE_DOES_NOT_EXIST_00720b94[23]; /* 0x720b94 */
 extern undefined1 stack0xffffffd0[16]; /* stack slot, not a real global */

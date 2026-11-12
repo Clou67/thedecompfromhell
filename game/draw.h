@@ -2,6 +2,7 @@
 // game/draw.h
 #include "types.h"
 #include "game/camera.h"
+#include "game/partproc.h"
 
 // ---- types
 /* a text window for the font printers: SetFontWindow (0x6ac90) fills it, FontPrintOpt and friends

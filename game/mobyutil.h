@@ -1867,7 +1867,6 @@ extern undefined4 DAT_00e5aa94; /* 0xe5aa94 */
 extern undefined4 DAT_00e5aa98; /* 0xe5aa98 */
 extern undefined4 DAT_00e5aa9c; /* 0xe5aa9c */
 extern undefined4 DAT_010bb494; /* 0x10bb494 */
-extern undefined4 DAT_11004000; /* no defined data */
 extern undefined4 DAT_11004004; /* no defined data */
 extern MobyInstance * g_MobyInstance; /* 0xa390a0 */
 extern MobyInstance * MobyInstanceEnd; /* 0xa390a8 */

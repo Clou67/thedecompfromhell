@@ -5,7 +5,6 @@
 #include "sdk/fios.h"
 #include "game/draw.h"
 #include "game/hero.h"
-#include "game/initonce.h"
 #include "game/mission.h"
 #include "game/pause.h"
 #include "game/vendor.h"

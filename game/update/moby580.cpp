@@ -562,7 +562,7 @@ void UpdateMoby_580(MobyInstance *moby)
   if (DAT_010c9f7c != 0) {
     return;
   }
-  *DAT_009271fc = 0x81;
+  *g_pDebugCounterMode = 0x81;
   *DAT_009271f8 = 0;
   pvVar4 = moby->pVar;
   uVar26 = ZEXT48(pvVar4);

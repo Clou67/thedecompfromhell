@@ -35,7 +35,7 @@ HelpDatum	game/help
 HelpDef	game/help
 g_Help	game/help
 Language	game/pause
-IMSeqMem	game/initonce
+IMSeqMem	idol/idol_draw
 QuadDef	game/draw
 MissionDef	game/mission
 MapIcon	game/map
@@ -44,3 +44,9 @@ g_MapIconTables	game/map
 PifHeader	game/bloaders
 PifParser	game/bloaders
 GsTex	game/bloaders
+PartView	game/partproc
+PartProfile	game/partproc
+g_PartView	game/partproc
+PartUpdateFn	game/partupd
+MemSlots_IMSeqMem_descriptor	idol/idol_draw
+g_PartProfile	game/partproc

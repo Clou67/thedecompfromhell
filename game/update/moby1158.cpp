@@ -10,6 +10,7 @@
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
+#include "game/partproc.h"
 #include "game/water.h"
 
 // 0x01e348c (0x14 bytes)

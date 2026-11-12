@@ -30,6 +30,7 @@
 #include "game/music.h"
 #include "game/pad.h"
 #include "game/partproc.h"
+#include "game/partupd.h"
 #include "game/path.h"
 #include "game/pause.h"
 #include "game/respawn.h"
@@ -770,7 +771,7 @@ skip_directionalLightCopy:
   PartIndexNext = 0;
   PartIndexTop = 0xffffffff;
   PartActiveCnt = 0;
-  FastMemSetZero(&DAT_00a52000,0x200);
+  FastMemSetZero(&g_PartUsed,0x200);
   pMVar6 = g_MobyInstance;
   if (g_MobyInstance != MobyInstanceEnd) {
     do {
@@ -945,7 +946,7 @@ void PrepareFrontbin(void)
                     /* CORRESPONDING PS2 FUNCTION IN FRONTBIN ELF 0x1eb798 */
   piVar11 = DAT_009271f8;
   Level = Veldin;
-  *DAT_009271fc = 0x83;
+  *g_pDebugCounterMode = 0x83;
   *piVar11 = 0;
   dVar2 = g_GameSettings.Stereo;
   memcard_ResetGame();

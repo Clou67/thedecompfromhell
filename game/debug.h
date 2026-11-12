@@ -1,6 +1,7 @@
 #pragma once
 // game/debug.h
 #include "types.h"
+#include "game/partproc.h"
 
 // ---- types
 typedef enum DEBUG_OPTION {

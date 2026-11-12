@@ -20,6 +20,8 @@ struct PartInstance {
 struct partupd { /* PlaceHolder Class Structure */
 };
 
+typedef void (*PartUpdateFn)(struct PartInstance *);   /* a particle class update function */
+
 // ---- globals
 extern undefined4 DAT_00120ef4; /* 0x120ef4 */
 extern undefined4 DAT_0012b0f0; /* 0x12b0f0 */
@@ -210,7 +212,7 @@ extern pointer PTR_UpdatePart_79_00707398; /* 0x707398 */
 extern pointer PTR_UpdatePart_7_00706f18; /* 0x706f18 */
 extern pointer PTR_UpdatePart_8_00706f28; /* 0x706f28 */
 extern pointer PTR_UpdatePart_9_00706f38; /* 0x706f38 */
-extern PartInstance * PartUpdates[80]; /* 0xa52604 */
+extern PartUpdateFn PartUpdates[80]; /* 0xa52604: update function per particle class */ /* type set in global_types.tsv */
 extern undefined4 g_PartTexFrames; /* 0xa52804 */
 
 // ---- functions

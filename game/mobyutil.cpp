@@ -24,6 +24,7 @@
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/pad.h"
+#include "game/partproc.h"
 #include "game/partupd.h"
 #include "game/path.h"
 #include "game/pause.h"
@@ -197,8 +198,8 @@ ulonglong UpdateMobysDebug(void)
     printf("\n");
     printf("*** frame %d ***\n",g_MainLoopFrames);
     printf("\n");
-    *DAT_009271fc = 0x81;
-    FastMemSet(&DAT_11004000,0,0x700);
+    *g_pDebugCounterMode = 0x81;
+    FastMemSet(&g_PartProfile,0,0x700);
     MobyUpdateChainStart = (MobyInstance *)FindMobysCloseToUpdate();
     for (pMVar3 = MobyUpdateChainStart; pMVar3 != (MobyInstance *)0x0;
         pMVar3 = (MobyInstance *)pMVar3->pChain) {
@@ -217,14 +218,14 @@ ulonglong UpdateMobysDebug(void)
         }
         iVar4 = (uint)pMVar3->mClass * 8;
         iVar9 = *DAT_009271f8;
-        *(int *)(&DAT_11004000 + iVar4) = *(int *)(&DAT_11004000 + iVar4) + 1;
+        *(int *)(&g_PartProfile + iVar4) = *(int *)(&g_PartProfile + iVar4) + 1;
         *(int *)(&DAT_11004004 + iVar4) = *(int *)(&DAT_11004004 + iVar4) + iVar9;
       }
     }
     auVar16 = ZEXT416(0);
     auVar16 = auVar16 | auVar16 << 0x20 | auVar16 << 0x40 | auVar16 << 0x60;
     iVar9 = 0;
-    uVar6 = ZEXT48(&DAT_11004000);
+    uVar6 = ZEXT48(&g_PartProfile);
     do {
       auVar16 = auVar16 >> 0x60 & (GPiece<16>)0xffffffff;
       auVar16 = auVar16 | auVar16 << 0x20 | auVar16 << 0x40 | auVar16 << 0x60;
@@ -244,7 +245,7 @@ ulonglong UpdateMobysDebug(void)
       iVar9 = 0;
       lVar10 = 0;
       puVar12 = &mClass_to_oClass;
-      uVar6 = ZEXT48(&DAT_11004000);
+      uVar6 = ZEXT48(&g_PartProfile);
       do {
         piVar13 = (int *)uVar6;
         iVar4 = *piVar13;

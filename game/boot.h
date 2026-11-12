@@ -119,7 +119,6 @@ extern undefined4 DAT_00927134; /* 0x927134 */
 extern undefined4 DAT_009271d0; /* 0x9271d0 */
 extern undefined4 DAT_009271d4; /* 0x9271d4 */
 extern undefined4 DAT_009271f8; /* 0x9271f8 */
-extern undefined4 DAT_009271fc; /* 0x9271fc */
 extern undefined4 DAT_00964564; /* 0x964564 */
 extern undefined4 DAT_0096c1e4; /* 0x96c1e4 */
 extern undefined4 DAT_0096c1e8; /* 0x96c1e8 */
@@ -183,6 +182,7 @@ extern int g_ScreenHeight; /* 0x966b04 */
 extern undefined4 g_boltsMined; /* 0xa0fd18 */
 extern undefined4 g_loadingPlanet; /* 0xa10700 */
 extern void * g_pBinkPlayer; /* 0x8fa410 */
+extern u32 *g_pDebugCounterMode; /* 0x9271fc */ /* type set in global_types.tsv */
 extern int * g_pLocaleBuffer; /* 0xa1092c */
 extern void * g_pNextMainFunc; /* 0x71cc70 */
 extern undefined4 skip_directionalLightCopy; /* 0x118a8 */

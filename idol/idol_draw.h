@@ -2,6 +2,20 @@
 // idol/idol_draw.h
 #include "types.h"
 
+// ---- types
+/* Idol's sequential memory pool (0x24 bytes; created inline with operator new in InitMemSlots).
+   Fields are unnamed: only the constructor's stores are known */
+struct IMSeqMem {
+    u32 unk00[4];            /* 0x00 */
+    u8 unk10;                /* 0x10 */
+    u8 unk11;                /* 0x11 */
+    u32 unk14;               /* 0x14 */
+    void *vtable;            /* 0x18  @0x66173c */
+    u32 unk1c;               /* 0x1c */
+    u32 unk20;               /* 0x20 */
+};
+typedef char IMSeqMem_size_check[sizeof(struct IMSeqMem) == 0x24 ? 1 : -1];
+
 // ---- globals
 extern undefined4 DAT_0065f438; /* no defined data */
 extern undefined4 DAT_0065f620; /* no defined data */
@@ -26,6 +40,7 @@ extern undefined4 DAT_01593328; /* 0x1593328 */
 extern undefined4 DAT_01593348; /* no defined data */
 extern undefined1 DAT_0159334c; /* 0x159334c */
 extern undefined4 DAT_01593358; /* no defined data */
+extern IMSeqMem *MemSlots_IMSeqMem_descriptor; /* 0xa1091c: the pool InitMemSlots allocates from (DL keeps these pointers in a MEMSLOTS struct, MemSlots) */ /* type set in global_types.tsv */
 extern pointer PTR_DAT_0071a3b8; /* 0x71a3b8 */
 extern pointer PTR_DAT_0071a614; /* 0x71a614 */
 extern undefined * PTR_DAT_0071a654; /* 0x71a654 */

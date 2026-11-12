@@ -2940,7 +2940,7 @@ void FUN_00502cd0(void)
   DAT_009271f8 = &DAT_0159b374;
   g_pFrameTicks = &DAT_0159b37c;
   DAT_00927204 = &DAT_0159b380;
-  DAT_009271fc = &DAT_0159b378;
+  g_pDebugCounterMode = &DAT_0159b378;
   DAT_0159b35c = &DAT_0159b384;
   return;
 }

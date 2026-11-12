@@ -2009,7 +2009,7 @@ LAB_000ddaa0:
   PartIndexNext = 0;
   PartActiveCnt = 0;
   PartIndexTop = 0xffffffff;
-  FastMemSetZero(&DAT_00a52000,0x200);
+  FastMemSetZero(&g_PartUsed,0x200);
   g_SpaceshipPtr = (MobyInstance *)0x0;
   iVar16 = (int)local_d0;
   if (0 < *(int *)(iVar16 + 0x2c)) {

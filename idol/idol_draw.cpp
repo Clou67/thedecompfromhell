@@ -6,7 +6,6 @@
 #include "idol/idol_draw.h"
 #include "game/boot.h"
 #include "game/hero.h"
-#include "game/initonce.h"
 #include "game/update/moby458.h"
 #include "idol/idol.h"
 #include "idol/mUnk.h"
