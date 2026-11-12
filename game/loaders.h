@@ -36,13 +36,6 @@ extern int CuboidCnt; /* 0xa51bdc */
 extern int CylinderCnt; /* 0xa51bd4 */
 extern undefined4 DAT_0071ef00; /* no defined data */
 extern undefined4 DAT_0072479c; /* 0x72479c */
-extern undefined4 DAT_007247c0; /* no defined data */
-extern undefined2 DAT_007247ca; /* 0x7247ca */
-extern undefined2 DAT_007247cc; /* 0x7247cc */
-extern undefined2 DAT_007247ce; /* 0x7247ce */
-extern undefined4 DAT_007247d0; /* no defined data */
-extern undefined2 DAT_007247da; /* 0x7247da */
-extern undefined1 DAT_007247e0; /* 0x7247e0 */
 extern undefined4 DAT_007ff23c; /* 0x7ff23c */
 extern undefined4 DAT_0095d2d0; /* no defined data */
 extern undefined4 DAT_0095d2d2; /* no defined data */
@@ -65,12 +58,8 @@ extern undefined4 DAT_00a1c840; /* 0xa1c840 */
 extern undefined4 DAT_00a1c880; /* 0xa1c880 */
 extern undefined4 DAT_00a1c900; /* 0xa1c900 */
 extern undefined4 DAT_00a202c0; /* no defined data */
-extern undefined4 DAT_00a20450; /* no defined data */
-extern undefined4 DAT_00a20460; /* no defined data */
 extern undefined4 DAT_00a204ac; /* 0xa204ac */
 extern undefined4 DAT_00a204b0; /* 0xa204b0 */
-extern undefined4 DAT_00a37388; /* 0xa37388 */
-extern undefined4 DAT_00a37390; /* no defined data */
 extern undefined4 DAT_00a4d540; /* 0xa4d540 */
 extern undefined4 DAT_00a4d5a0; /* 0xa4d5a0 */
 extern undefined4 DAT_00a4d600; /* 0xa4d600 */
@@ -99,11 +88,7 @@ extern Tfrag * Tfrags; /* 0x92d440 */
 extern undefined4 TfragsCnt; /* 0x92d444 */
 extern TieInstance * g_TieInstance; /* 0xe583f4 */
 extern TieInstance * TieInstanceEnd; /* 0xe583f8 */
-extern undefined4 _DAT_000dc1e0; /* direct read */
-extern undefined4 _DAT_000dc1f0; /* direct read */
-extern undefined4 _DAT_000dc200; /* direct read */
-extern undefined4 _DAT_007247c0; /* direct read */
-extern undefined4 _DAT_007247d0; /* direct read */
+extern short g_CockpitTexDef[8]; /* 0x7247d0 */ /* type set in global_types.tsv */
 extern int *g_EffectTableEntries; /* 0x95e9f4 */ /* type set in global_types.tsv */
 extern int *g_EffectTableOffsets; /* 0x95e9f8 */ /* type set in global_types.tsv */
 extern int g_EffectTexCnt; /* 0x95ddd0 */ /* type set in global_types.tsv */
@@ -116,6 +101,10 @@ extern undefined4 g_IsPal; /* 0x966ae8 */
 extern undefined4 g_JapanFontTex; /* 0x90d724 */
 extern undefined2 g_LoadingStage; /* 0x964560 */
 extern void *g_MemSlotsBase; /* 0xa108d8: start of the MemSlots pool */ /* type set in global_types.tsv */
+extern int g_MobyTexAddrs[]; /* 0xa37390: per slot, texture address + a tag */ /* type set in global_types.tsv */
+extern int g_MobyTexDefCnt; /* 0xa37388 */ /* type set in global_types.tsv */
+extern short g_MobyTexDefs[][8]; /* 0xa4c540: tex_def per moby texture slot */ /* type set in global_types.tsv */
+extern u8 g_MobyTexRef; /* 0x7247e0: the one-entry tex_refs passed with a ship class */ /* type set in global_types.tsv */
 extern undefined4 g_NpcChunkLoadHandle; /* 0x7247f0 */
 extern int g_PartTexBaseIndex; /* 0xa52b38 */
 extern u64 g_PifFileTexRegs[][3]; /* 0xa202d0 */ /* type set in global_types.tsv */
@@ -125,6 +114,7 @@ extern SeqFrameFix g_RatchetWideFixes[33]; /* 0x724864 */ /* type set in global_
 extern undefined4 g_SceneChunkPtrs; /* 0x95cdb0 */
 extern undefined4 g_SceneLoadBuffer; /* 0x95cdac */
 extern char *g_SkyData; /* 0xa56140: the level's sky file */ /* type set in global_types.tsv */
+extern short g_SpaceshipTexDef[8]; /* 0x7247c0: tex_def of the ship's textures */ /* type set in global_types.tsv */
 extern u8 *g_byteGridData; /* 0xa204a8 */ /* type set in global_types.tsv */
 extern float g_byteGridMax; /* 0xa204a4 */ /* type set in global_types.tsv */
 extern float g_byteGridMin; /* 0xa204a0 */ /* type set in global_types.tsv */
@@ -147,16 +137,16 @@ void ParseEffectTexs(int *tex_defs, int tex_cnt);
 void ParseSky(char *data);
 void LoadMobyModel(MobyClass *pClass, void *tex_regs, char *tex_refs, int oClass);
 void LoadMobyPClasses(MobyClass *pClass, void *tex_regs, char *tex_refs, int oClass);
-int LoadSpaceshipModel(int *data,int *gs_addrs);
-void SetUpVisGif (longlong *pGif,short *tex_def,int mip_dist,int filter,int u_clamp,int v_clamp, int index);
+u8 *LoadSpaceshipModel(int *data, int *gs_addrs);
+void SetUpVisGif(u64 *pGif, short *tex_def, int mip_dist, int filter, int u_clamp, int v_clamp, int index);
 void STUB_000dcb5c(...);
 void STUB_000dcb60(...);
-void ParseMobySeq(MobyClass *pClass,int seq);
+void ParseMobySeq(MobyClass *pClass, int seq);
 void STUB_000dcbc0(...);
 void STUB_000dcbc4(...);
 void STUB_000dcbc8(...);
 void ParseColl(char *data);
-void PrintMobyMemory(int *classes,int cnt);
+void PrintMobyMemory(int *classes, int cnt);
 void STUB_000dce3c(...);
 void LoadHelp(void);
 ulonglong NAVG_LoadFile(int param_1);

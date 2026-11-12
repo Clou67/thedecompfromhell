@@ -2575,6 +2575,10 @@ extern undefined4 DAT_0071cb64; /* 0x71cb64 */
 extern undefined4 DAT_0071cb68; /* 0x71cb68 */
 extern undefined4 DAT_0071cb6c; /* 0x71cb6c */
 extern undefined4 DAT_0071fad8; /* no defined data */
+extern undefined2 DAT_007247ca; /* 0x7247ca */
+extern undefined2 DAT_007247cc; /* 0x7247cc */
+extern undefined2 DAT_007247ce; /* 0x7247ce */
+extern undefined2 DAT_007247da; /* 0x7247da */
 extern undefined4 DAT_0072486c; /* 0x72486c */
 extern undefined4 DAT_00724870; /* 0x724870 */
 extern undefined2 DAT_0072b33c; /* 0x72b33c */
@@ -2630,6 +2634,8 @@ extern undefined4 DAT_00a1de5c; /* 0xa1de5c */
 extern undefined4 DAT_00a1e124; /* no defined data */
 extern undefined4 DAT_00a1e128; /* no defined data */
 extern undefined4 DAT_00a1e12c; /* no defined data */
+extern undefined4 DAT_00a20450; /* no defined data */
+extern undefined4 DAT_00a20460; /* no defined data */
 extern undefined1 DAT_00a2c444; /* 0xa2c444 */
 extern undefined4 DAT_00e5aad0; /* 0xe5aad0 */
 extern undefined4 DAT_00e5aad4; /* 0xe5aad4 */
@@ -2658,6 +2664,9 @@ extern pointer32 PTR_music_FreshenCB_00706db8; /* 0x706db8 */
 extern pointer32 PTR_music_StopCB_00706de8; /* 0x706de8 */
 extern pointer32 PTR_music_TimeRemainingCB_00706df8; /* 0x706df8 */
 extern pointer32 PTR_sysutil_gameexit_callback_00703618; /* 0x703618 */
+extern undefined4 _DAT_000dc1e0; /* direct read */
+extern undefined4 _DAT_000dc1f0; /* direct read */
+extern undefined4 _DAT_000dc200; /* direct read */
 extern undefined4 _DAT_000e93b0; /* direct read */
 extern undefined4 _DAT_000e93c0; /* direct read */
 extern undefined4 _DAT_000e93d0; /* direct read */
@@ -2680,6 +2689,8 @@ extern undefined4 _DAT_0017dce0; /* direct read */
 extern undefined4 _DAT_0017dcf0; /* direct read */
 extern undefined4 _DAT_0017dd00; /* direct read */
 extern undefined4 _DAT_0017dd10; /* direct read */
+extern undefined4 _DAT_007247c0; /* direct read */
+extern undefined4 _DAT_007247d0; /* direct read */
 extern undefined4 japanese_mode; /* 0xd9208 */
 extern char s_MESSAGE_DOES_NOT_EXIST_00720b94[23]; /* 0x720b94 */
 extern undefined4 skip_directionalLightCopy; /* 0x118a8 */

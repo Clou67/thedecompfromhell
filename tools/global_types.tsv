@@ -219,3 +219,9 @@ g_EffectTexCnt	int NAME /* 0x95ddd0 */
 g_RatchetWideFixes	SeqFrameFix NAME[33] /* 0x724864 */
 g_pIdolDraw	undefined4 NAME /* 0x8fa564: the Idol renderer object (was g_viewMtxPtr); +0xc widescreen, +0x4a8 main memory base for RSX offsets, +0x4ac VRAM base */
 g_SkyData	char *NAME /* 0xa56140: the level's sky file */
+g_SpaceshipTexDef	short NAME[8] /* 0x7247c0: tex_def of the ship's textures */
+g_CockpitTexDef	short NAME[8] /* 0x7247d0 */
+g_MobyTexRef	u8 NAME /* 0x7247e0: the one-entry tex_refs passed with a ship class */
+g_MobyTexDefCnt	int NAME /* 0xa37388 */
+g_MobyTexAddrs	int NAME[] /* 0xa37390: per slot, texture address + a tag */
+g_MobyTexDefs	short NAME[][8] /* 0xa4c540: tex_def per moby texture slot */

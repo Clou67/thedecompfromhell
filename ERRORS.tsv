@@ -15,7 +15,7 @@ errors	file
 0	game/initsky.cpp
 0	game/initspace.cpp
 0	game/lights.cpp
-167	game/loaders.cpp
+146	game/loaders.cpp
 2196	game/mUnk.cpp
 0	game/main.cpp
 95	game/map.cpp

@@ -465,3 +465,303 @@ void LoadMobyPClasses(MobyClass *pClass, void *tex_regs, char *tex_refs, int oCl
     oClass_to_mClass_lookup++;
     LoadMobyModel(pClass, tex_regs, tex_refs, oClass);
 }
+
+/* the spaceship file's four textures go to these slots of the GS address table */
+#define GSADDR_SHIP_TEX       0x2b    /* 8-bit 64x64 */
+#define GSADDR_SHIP_MIP       0x2c    /* 8-bit 32x32 */
+#define GSADDR_SHIP_CLUT      0x2d    /* 32-bit 16x16 */
+#define GSADDR_COCKPIT_CLUT   0x2e    /* 32-bit 16x16 */
+
+#define SHIP_TEX_HEADER       0x430   /* the texture block's header */
+#define SHIP_TEX_SIZE         0x14000
+#define COCKPIT_TEX_SIZE      0x4000
+#define SHIP_TEX_TAG          0x80000000
+#define COCKPIT_TEX_TAG       0x70000000
+
+/* tex_def fields (shorts) that hold GS block addresses */
+#define TEXDEF_PAL            5
+#define TEXDEF_MIP2           6
+#define TEXDEF_MIP3           7
+
+#define GS_PSMT8              0x13
+#define GS_PSMCT32            0x12
+
+#define VISGIF_FIXED_A        (-2)    /* SetUpVisGif index: the fixed textures 16 / 17 of the pif file */
+#define VISGIF_FIXED_B        (-3)
+#define PIF_FIXED_TEX_A       16
+#define PIF_FIXED_TEX_B       17
+
+#define MOBY_MEM_MAX          512
+
+/* the spaceship file: offsets of the ship class, its textures, the cockpit class and its
+   textures */
+struct SpaceshipFile {
+    int shipClass;
+    int shipTex;
+    int cockpitClass;
+    int cockpitTex;
+};
+
+/* one record of the table PrintMobyMemory reads (32 bytes) */
+struct MobyClassRecord {
+    int offset;              /* 0x00  of the class in the moby data, 0 if absent */
+    int oClass;              /* 0x04 */
+    int unk08[6];            /* 0x08 */
+};
+
+static inline void UploadImage(u32 *image, int gsAddr, int format, int size, void *src)
+{
+    sceGsSetDefLoadImage(image, (GSmem.base + gsAddr) >> 8, 1, format, 0, 0, size, size);
+    FlushCache(0);
+    sceGsExecLoadImage(image, src);
+    sceGsSyncPath(0, 0);
+}
+
+// 0x00dc210 (0x5ec bytes)
+// Copies the chosen spaceship out of the spaceship file to `data`, uploads its textures and loads
+// the ship and cockpit classes. Returns the memory after the textures.
+u8 *LoadSpaceshipModel(int *data, int *gs_addrs)
+{
+    SpaceshipFile *ship = (SpaceshipFile *)data;
+    u8 *base = (u8 *)data;
+    u32 image;
+
+    FastMemCopy(data, (void *)DAT_0096456c, *(int *)(&DAT_010ea114 + g_SpaceshipVariant * 8) << 11);
+
+    u8 *shipTex = base + ship->shipTex;
+    u8 *cockpitTex = base + ship->cockpitTex;
+    for (int i = 0; i < 4; i++) {
+        if (i == 0) {
+            UploadImage(&image, gs_addrs[GSADDR_SHIP_TEX], GS_PSMT8, 64, shipTex + SHIP_TEX_HEADER + 0x14000);
+        }
+        else if (i == 1) {
+            UploadImage(&image, gs_addrs[GSADDR_SHIP_MIP], GS_PSMT8, 32, shipTex + SHIP_TEX_HEADER + 0x15000);
+        }
+        else if (i == 2) {
+            UploadImage(&image, gs_addrs[GSADDR_SHIP_CLUT], GS_PSMCT32, 16, shipTex + 0x30);
+        }
+        else {
+            UploadImage(&image, gs_addrs[GSADDR_COCKPIT_CLUT], GS_PSMCT32, 16, cockpitTex + 0x30);
+        }
+    }
+
+    /* the ship: its textures move down over the header */
+    g_SpaceshipTexDef[TEXDEF_PAL] = (short)(gs_addrs[GSADDR_SHIP_CLUT] >> 8);
+    g_SpaceshipTexDef[TEXDEF_MIP2] = (short)(gs_addrs[GSADDR_SHIP_TEX] >> 8);
+    g_SpaceshipTexDef[TEXDEF_MIP3] = (short)(gs_addrs[GSADDR_SHIP_MIP] >> 8);
+    *(Vec4 *)g_MobyTexDefs[g_MobyTexDefCnt] = *(Vec4 *)g_SpaceshipTexDef;
+    g_MobyTexAddrs[g_MobyTexDefCnt] = (int)shipTex + SHIP_TEX_TAG;
+    FastMemCopy(shipTex, shipTex + SHIP_TEX_HEADER, SHIP_TEX_SIZE);
+    u8 *dest = shipTex + SHIP_TEX_SIZE;
+    g_MobyTexRef = (u8)g_MobyTexDefCnt;
+
+    int oClass = OCLASSES_SPACESHIP[g_SpaceshipVariant];
+    if ((&MobyClassLookup)[oClass] == 0xff) {
+        LoadMobyPClasses((MobyClass *)(base + ship->shipClass), g_SpaceshipTexDef - g_MobyTexDefCnt * 8,
+                         (char *)&g_MobyTexRef, oClass);
+    }
+    g_MobyTexDefCnt++;
+
+    /* the cockpit: its textures go after the ship's */
+    g_CockpitTexDef[TEXDEF_PAL] = (short)(gs_addrs[GSADDR_COCKPIT_CLUT] >> 8);
+    *(Vec4 *)g_MobyTexDefs[g_MobyTexDefCnt] = *(Vec4 *)g_CockpitTexDef;
+    g_MobyTexAddrs[g_MobyTexDefCnt] = (int)dest + COCKPIT_TEX_TAG;
+    FastMemCopy(dest, cockpitTex + SHIP_TEX_HEADER, COCKPIT_TEX_SIZE);
+    g_MobyTexRef = (u8)g_MobyTexDefCnt;
+
+    oClass = OCLASSES_COCKPIT[g_SpaceshipVariant];
+    if ((&MobyClassLookup)[oClass] == 0xff) {
+        LoadMobyPClasses((MobyClass *)(base + ship->cockpitClass), g_CockpitTexDef - g_MobyTexDefCnt * 8,
+                         (char *)&g_MobyTexRef, oClass);
+    }
+
+    DAT_00731c90 = 1;
+    DAT_00731c94 = 1;
+    DAT_00a561c4 = 0;
+    g_MobyTexDefCnt++;
+    return dest + COCKPIT_TEX_SIZE;
+}
+
+// 0x00dc7fc (0x360 bytes)
+// Fills the TEX1 / CLAMP / TEX0 / MIPTBP1 values of a GIF packet from a texture definition
+// (shorts: [2] width, [3] height, [4] mips, [5] clut, [6] / [7] mips 2 and 3 as GS blocks).
+// index -1 is a fixed 8x8 texture, -2 / -3 the two fixed pif-file textures.
+void SetUpVisGif(u64 *pGif, short *tex_def, int mip_dist, int filter, int u_clamp, int v_clamp, int index)
+{
+    int tbw0 = tex_def[2] >> 6;
+    int tbw1 = tex_def[2] >> 7;
+
+    tbw0 = tbw0 < 1 ? 1 : tbw0;
+    tbw1 = tbw1 < 1 ? 1 : tbw1;
+
+    int uLog = FastLog2(tex_def[2]);
+    int vLog = FastLog2(tex_def[3]);
+    int gsBase = GSmem.base >> 8;
+    int pal = tex_def[TEXDEF_PAL] + gsBase;
+    int mip2 = tex_def[TEXDEF_MIP2] + gsBase;
+    int mip3 = tex_def[TEXDEF_MIP3] + gsBase;
+
+    if (index >= 0) {
+        pGif[0] = SCE_GS_SET_TEX1(0, tex_def[4] - 1, 1, filter, 0, 0, mip_dist);
+        pGif[2] = SCE_GS_SET_CLAMP(u_clamp, v_clamp, 0, 0, index, 0);
+        pGif[4] = SCE_GS_SET_TEX0(0, tbw0, GS_PSMT8, uLog, vLog, 1, 0, pal, GS_PSMCT32, 0, 0, 4);
+        pGif[6] = SCE_GS_SET_MIPTBP1(0, tbw1, mip2, 1, mip3, 1);
+    }
+    else if (index <= VISGIF_FIXED_A) {
+        u64 *regs = g_PifFileTexRegs[index == VISGIF_FIXED_B ? PIF_FIXED_TEX_B : PIF_FIXED_TEX_A];
+
+        pGif[0] = SCE_GS_SET_TEX1(0, 0, 1, filter, 0, 0, mip_dist);
+        pGif[2] = SCE_GS_SET_CLAMP(1, 1, 0, 0, 0, 0);
+        pGif[4] = regs[0];
+        pGif[6] = regs[2];
+    }
+    else {
+        pGif[0] = SCE_GS_SET_TEX1(0, 0, 1, filter, 0, 0, mip_dist);
+        pGif[2] = SCE_GS_SET_CLAMP(1, 1, 0, 0, 0, 0);
+        pGif[4] = SCE_GS_SET_TEX0(0x3ffb, 1, GS_PSMCT32, 3, 3, 1, 0, 0, 0, 0, 0, 4);
+        pGif[6] = SCE_GS_SET_MIPTBP1(0, 0, 0, 0, 0, 0);
+    }
+}
+
+// 0x00dcb5c (0x4 bytes)
+void STUB_000dcb5c(...)
+{
+}
+
+// 0x00dcb60 (0x4 bytes)
+void STUB_000dcb60(...)
+{
+}
+
+// 0x00dcb64 (0x5c bytes)
+// A sequence loaded on its own: its pointers are relative to the sequence.
+void ParseMobySeq(MobyClass *pClass, int seq)
+{
+    MobySeq *sequence = pClass->seqs[seq];
+    u8 *base = (u8 *)sequence;
+
+    if (sequence->trigs != NULL) {
+        sequence->trigs = (short *)(base + (int)sequence->trigs);
+    }
+
+    for (int i = 0; i < sequence->frameCnt; i++) {
+        sequence->frames[i] = (MobyFrame *)(base + (int)sequence->frames[i]);
+    }
+}
+
+// 0x00dcbc0 (0x4 bytes)
+void STUB_000dcbc0(...)
+{
+}
+
+// 0x00dcbc4 (0x4 bytes)
+void STUB_000dcbc4(...)
+{
+}
+
+// 0x00dcbc8 (0x4 bytes)
+void STUB_000dcbc8(...)
+{
+}
+
+// 0x00dcbcc (0x7c bytes)
+// The collision file: offsets of the collision grid and of the hero-only collision.
+void ParseColl(char *data)
+{
+    int *offsets = (int *)data;
+
+    if (offsets[0] != 0) {
+        g_CollOutput.grid = data + offsets[0];
+    }
+
+    if (offsets[1] != 0) {
+        g_HeroCollision = (HeroCollHeader *)(data + offsets[1]);
+        for (int i = 0; i < g_HeroCollision->cellCount; i++) {
+            HeroCollCell *cell = &g_HeroCollision->cells[i];
+
+            cell->data = (u8 *)g_HeroCollision + (int)cell->data;
+        }
+    }
+}
+
+// 0x00dcc50 (0x1ec bytes)
+// Debug: prints the moby classes by size, biggest first. A class's size runs to the next class
+// (or to the one after, when the next is absent).
+void PrintMobyMemory(int *classes, int cnt)
+{
+    struct {
+        float oClass;
+        float kbytes;
+    } sizes[MOBY_MEM_MAX + 1];
+    MobyClassRecord *records = (MobyClassRecord *)classes;
+
+    for (int i = 0; i < cnt; i++) {
+        MobyClassRecord *record = &records[i];
+        float kbytes;
+
+        sizes[i].oClass = (float)record->oClass;
+        if (record->offset == 0) {
+            kbytes = 0.0f;
+        }
+        else {
+            int end = record[1].offset != 0 ? record[1].offset : record[2].offset;
+
+            kbytes = (float)((double)FastIntToDouble(end - record->offset) * (1.0 / 1024.0));
+            sizes[i + 1].oClass = -1.0f;
+            sizes[i + 1].kbytes = 0.0f;
+        }
+        sizes[i].kbytes = kbytes;
+    }
+
+    bool sorted;
+    do {
+        sorted = true;
+        for (int i = 0; i < cnt; i++) {
+            if (sizes[i].kbytes < sizes[i + 1].kbytes) {
+                float oClass = sizes[i].oClass;
+                float kbytes = sizes[i].kbytes;
+
+                sorted = false;
+                sizes[i].kbytes = sizes[i + 1].kbytes;
+                sizes[i].oClass = sizes[i + 1].oClass;
+                sizes[i + 1].oClass = oClass;
+                sizes[i + 1].kbytes = kbytes;
+            }
+        }
+    } while (!sorted);
+
+    for (int i = 0; i < cnt; i++) {
+        printf("moby %d:      %.1fK\n", FastDoubleToInt(sizes[i].oClass), (double)sizes[i].kbytes);
+    }
+}
+
+// 0x00dce3c (0x4 bytes)
+void STUB_000dce3c(...)
+{
+}
+
+// 0x00dce40 (0x10c bytes)
+// Same as boot's LoadLanguageHelpMsgs.
+void LoadHelp(void)
+{
+    char path[128];
+
+    if (g_JapaneseMode) {
+        sprintf(path, "rc1/ps3data/global/locale/japanese");
+    }
+    else {
+        sprintf(path, "rc1/ps3data/global/locale/%s", GetLanguageNameByIdx());
+    }
+
+    LoadAssetFromFile(path, g_pLocaleBuffer, 0x40000);
+
+    /* drop the 8-byte header: { count, size }, then the messages */
+    g_Help.num_message = g_pLocaleBuffer[0];
+    HelpMsgs = (HelpMsg *)g_pLocaleBuffer;
+    FastMemCopy32(g_pLocaleBuffer, g_pLocaleBuffer + 2, ((g_pLocaleBuffer[1] + 3) & ~3) - 8);
+    for (int i = 0; i < g_Help.num_message; i++) {
+        u32 *message = (u32 *)((u8 *)HelpMsgs + i * 16);
+
+        message[0] += (u32)HelpMsgs - 8;
+    }
+}

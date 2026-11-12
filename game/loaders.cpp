@@ -1,6 +1,6 @@
 // game/loaders.cpp -- level data loading: textures, moby classes, scenes, the level file itself
 // STATUS: CLEAN (checked against the asm; local names are mine)
-// MERGE (10 of 41 functions cleaned; the rest are generated)
+// MERGE (22 of 41 functions cleaned; the rest are generated)
 // 41 functions, 0xdb1e0-0xe0e14
 //
 // Most of the data comes in with offsets relative to its own start that are turned into
@@ -521,506 +521,316 @@ void LoadMobyPClasses(MobyClass *pClass, void *tex_regs, char *tex_refs, int oCl
     LoadMobyModel(pClass, tex_regs, tex_refs, oClass);
 }
 
+/* the spaceship file's four textures go to these slots of the GS address table */
+#define GSADDR_SHIP_TEX       0x2b    /* 8-bit 64x64 */
+#define GSADDR_SHIP_MIP       0x2c    /* 8-bit 32x32 */
+#define GSADDR_SHIP_CLUT      0x2d    /* 32-bit 16x16 */
+#define GSADDR_COCKPIT_CLUT   0x2e    /* 32-bit 16x16 */
+
+#define SHIP_TEX_HEADER       0x430   /* the texture block's header */
+#define SHIP_TEX_SIZE         0x14000
+#define COCKPIT_TEX_SIZE      0x4000
+#define SHIP_TEX_TAG          0x80000000
+#define COCKPIT_TEX_TAG       0x70000000
+
+/* tex_def fields (shorts) that hold GS block addresses */
+#define TEXDEF_PAL            5
+#define TEXDEF_MIP2           6
+#define TEXDEF_MIP3           7
+
+#define GS_PSMT8              0x13
+#define GS_PSMCT32            0x12
+
+#define VISGIF_FIXED_A        (-2)    /* SetUpVisGif index: the fixed textures 16 / 17 of the pif file */
+#define VISGIF_FIXED_B        (-3)
+#define PIF_FIXED_TEX_A       16
+#define PIF_FIXED_TEX_B       17
+
+#define MOBY_MEM_MAX          512
+
+/* the spaceship file: offsets of the ship class, its textures, the cockpit class and its
+   textures */
+struct SpaceshipFile {
+    int shipClass;
+    int shipTex;
+    int cockpitClass;
+    int cockpitTex;
+};
+
+/* one record of the table PrintMobyMemory reads (32 bytes) */
+struct MobyClassRecord {
+    int offset;              /* 0x00  of the class in the moby data, 0 if absent */
+    int oClass;              /* 0x04 */
+    int unk08[6];            /* 0x08 */
+};
+
+static inline void UploadImage(u32 *image, int gsAddr, int format, int size, void *src)
+{
+    sceGsSetDefLoadImage(image, (GSmem.base + gsAddr) >> 8, 1, format, 0, 0, size, size);
+    FlushCache(0);
+    sceGsExecLoadImage(image, src);
+    sceGsSyncPath(0, 0);
+}
+
 
 // 0x00dc210 (0x5ec bytes)
-/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
-
-int LoadSpaceshipModel(int *data,int *gs_addrs)
-
+// Copies the chosen spaceship out of the spaceship file to `data`, uploads its textures and loads
+// the ship and cockpit classes. Returns the memory after the textures.
+u8 *LoadSpaceshipModel(int *data, int *gs_addrs)
 {
-  int iVar1;
-  int iVar2;
-  uint uVar3;
-  int iVar4;
-  int iVar5;
-  longlong lVar6;
-  longlong lVar7;
-  longlong lVar8;
-  ulonglong uVar9;
-  ulonglong uVar10;
-  MobyClass *pMVar11;
-  int iVar12;
-  MOBY_OCLASSES MVar13;
-  GPiece<16> auVar14;
-  GPiece<16> auVar15;
-  GPiece<16> auVar16;
-  GPiece<16> auVar17;
-  GPiece<16> auVar18;
-  GPiece<16> auVar19;
-  GPiece<16> auStack_80;
-  
-  lVar8 = (longlong)(int)gs_addrs;
-  lVar6 = (longlong)(int)data;
-  FastMemCopy
-            (lVar6,DAT_0096456c,
-             *(int *)(&DAT_010ea114 + (int)((longlong)g_SpaceshipVariant << 3)) << 0xb);
-  iVar1 = *data;
-  iVar12 = 0;
-  uVar9 = (ulonglong)(uint)data[1];
-  iVar2 = data[2];
-  uVar3 = data[3];
-  do {
-    if (iVar12 == 0) {
-      sceGsSetDefLoadImage(auStack_80,GSmem.base + gs_addrs[0x2b] >> 8,1,0x13,0,0,0x40,0x40);
-      lVar7 = uVar9 + 0x14430;
+    SpaceshipFile *ship = (SpaceshipFile *)data;
+    u8 *base = (u8 *)data;
+    u32 image;
+
+    FastMemCopy(data, (void *)DAT_0096456c, *(int *)(&DAT_010ea114 + g_SpaceshipVariant * 8) << 11);
+
+    u8 *shipTex = base + ship->shipTex;
+    u8 *cockpitTex = base + ship->cockpitTex;
+    for (int i = 0; i < 4; i++) {
+        if (i == 0) {
+            UploadImage(&image, gs_addrs[GSADDR_SHIP_TEX], GS_PSMT8, 64, shipTex + SHIP_TEX_HEADER + 0x14000);
+        }
+        else if (i == 1) {
+            UploadImage(&image, gs_addrs[GSADDR_SHIP_MIP], GS_PSMT8, 32, shipTex + SHIP_TEX_HEADER + 0x15000);
+        }
+        else if (i == 2) {
+            UploadImage(&image, gs_addrs[GSADDR_SHIP_CLUT], GS_PSMCT32, 16, shipTex + 0x30);
+        }
+        else {
+            UploadImage(&image, gs_addrs[GSADDR_COCKPIT_CLUT], GS_PSMCT32, 16, cockpitTex + 0x30);
+        }
     }
-    else if (iVar12 == 1) {
-      sceGsSetDefLoadImage(auStack_80,GSmem.base + gs_addrs[0x2c] >> 8,1,0x13,0,0,0x20,0x20);
-      lVar7 = uVar9 + 0x15430;
+
+    /* the ship: its textures move down over the header */
+    g_SpaceshipTexDef[TEXDEF_PAL] = (short)(gs_addrs[GSADDR_SHIP_CLUT] >> 8);
+    g_SpaceshipTexDef[TEXDEF_MIP2] = (short)(gs_addrs[GSADDR_SHIP_TEX] >> 8);
+    g_SpaceshipTexDef[TEXDEF_MIP3] = (short)(gs_addrs[GSADDR_SHIP_MIP] >> 8);
+    *(Vec4 *)g_MobyTexDefs[g_MobyTexDefCnt] = *(Vec4 *)g_SpaceshipTexDef;
+    g_MobyTexAddrs[g_MobyTexDefCnt] = (int)shipTex + SHIP_TEX_TAG;
+    FastMemCopy(shipTex, shipTex + SHIP_TEX_HEADER, SHIP_TEX_SIZE);
+    u8 *dest = shipTex + SHIP_TEX_SIZE;
+    g_MobyTexRef = (u8)g_MobyTexDefCnt;
+
+    int oClass = OCLASSES_SPACESHIP[g_SpaceshipVariant];
+    if ((&MobyClassLookup)[oClass] == 0xff) {
+        LoadMobyPClasses((MobyClass *)(base + ship->shipClass), g_SpaceshipTexDef - g_MobyTexDefCnt * 8,
+                         (char *)&g_MobyTexRef, oClass);
     }
-    else if (iVar12 == 2) {
-      sceGsSetDefLoadImage(auStack_80,GSmem.base + gs_addrs[0x2d] >> 8,1,0x12,0,0,0x10,0x10);
-      lVar7 = uVar9 + 0x30;
+    g_MobyTexDefCnt++;
+
+    /* the cockpit: its textures go after the ship's */
+    g_CockpitTexDef[TEXDEF_PAL] = (short)(gs_addrs[GSADDR_COCKPIT_CLUT] >> 8);
+    *(Vec4 *)g_MobyTexDefs[g_MobyTexDefCnt] = *(Vec4 *)g_CockpitTexDef;
+    g_MobyTexAddrs[g_MobyTexDefCnt] = (int)dest + COCKPIT_TEX_TAG;
+    FastMemCopy(dest, cockpitTex + SHIP_TEX_HEADER, COCKPIT_TEX_SIZE);
+    g_MobyTexRef = (u8)g_MobyTexDefCnt;
+
+    oClass = OCLASSES_COCKPIT[g_SpaceshipVariant];
+    if ((&MobyClassLookup)[oClass] == 0xff) {
+        LoadMobyPClasses((MobyClass *)(base + ship->cockpitClass), g_CockpitTexDef - g_MobyTexDefCnt * 8,
+                         (char *)&g_MobyTexRef, oClass);
     }
-    else {
-      sceGsSetDefLoadImage(auStack_80,GSmem.base + gs_addrs[0x2e] >> 8,1,0x12,0,0,0x10,0x10);
-      lVar7 = (ulonglong)uVar3 + 0x30;
-    }
-    FlushCache(0);
-    sceGsExecLoadImage(auStack_80,lVar7 + lVar6 & 0xffffffff);
-    sceGsSyncPath(0,0);
-    iVar12 = iVar12 + 1;
-  } while (iVar12 < 4);
-  auVar14 = ZEXT416(8);
-  auVar14 = auVar14 | auVar14 << 0x20 | auVar14 << 0x40 | auVar14 << 0x60;
-  auVar15 = loadVectorLeftIndexed(0xb4,lVar8);
-  auVar17 = loadVectorLeftIndexed(0xac,lVar8);
-  auVar16 = vectorShiftRightAlgebraicWord(auVar15,auVar14);
-  auVar15 = loadVectorLeftIndexed(0xb0,lVar8);
-  auVar17 = vectorShiftRightAlgebraicWord(auVar17,auVar14);
-  auVar15 = vectorShiftRightAlgebraicWord(auVar15,auVar14);
-  auVar19 = vectorSplatHalfWord(auVar16,1);
-  auVar14.piece<0,10>() = _DAT_007247c0;
-  auVar14.piece<10,2>() = DAT_007247ca;
-  auVar14.piece<12,2>() = DAT_007247cc;
-  auVar14.piece<14,2>() = DAT_007247ce;
-  auVar18 = vectorSplatHalfWord(auVar17,1);
-  uVar10 = lVar6 + uVar9 & 0xffffffff;
-  DAT_007247ca = storeVectorElementHalfWordIndexed(auVar19,10,0x7247c0);
-  auVar19 = vectorSplatHalfWord(auVar15,1);
-  DAT_007247cc = storeVectorElementHalfWordIndexed(auVar18,0xc,0x7247c0);
-  DAT_007247ce = storeVectorElementHalfWordIndexed(auVar19,0xe,0x7247c0);
-  auVar16 = vectorPermute(auVar14,auVar16,_DAT_000dc1e0);
-  auVar14 = vectorPermute(auVar17,auVar15,_DAT_000dc1e0);
-  iVar12 = DAT_00a37388 * 4;
-  auVar14 = vectorPermute(auVar16,auVar14,_DAT_000dc1f0);
-  *(undefined1 (*) [16])(DAT_00a37388 * 0x10 + 0xa4c540) = auVar14;
-  *(int *)(&DAT_00a37390 + iVar12) = (int)(lVar6 + uVar9) + -0x80000000;
-  FastMemCopy(uVar10,lVar6 + uVar9 + 0x430 & 0xffffffff,0x14000);
-  iVar5 = oClass_to_mClass_lookup;
-  iVar12 = (int)((longlong)g_SpaceshipVariant << 2);
-  uVar10 = uVar10 + 0x14000;
-  DAT_007247e0 = (undefined1)DAT_00a37388;
-  if ((&MobyClassLookup)[*(int *)((int)OCLASSES_SPACESHIP + iVar12)] == -1) {
-    iVar12 = *(int *)((int)OCLASSES_SPACESHIP + iVar12);
-    pMVar11 = (MobyClass *)((int)data + iVar1);
-    iVar4 = DAT_00a37388 * -0x10;
-    iVar1 = oClass_to_mClass_lookup * 4;
-    (&MobyClassLookup)[iVar12] = (char)oClass_to_mClass_lookup;
-    MVar13 = (MOBY_OCLASSES)iVar12;
-    (&mClass_to_oClass)[iVar5] = MVar13;
-    MobyClasses[iVar5] = pMVar11;
-    if (pMVar11 == (MobyClass *)0x0) {
-      GetMobyFunction(MVar13);
-      oClass_to_mClass_lookup = oClass_to_mClass_lookup + 1;
-    }
-    else {
-      *(undefined4 *)(&MobyMipDists + iVar1) = *(undefined4 *)&pMVar11->bangles;
-      GetMobyFunction(MVar13);
-      oClass_to_mClass_lookup = oClass_to_mClass_lookup + 1;
-      LoadMobyModel(pMVar11,&DAT_007247c0 + iVar4,&DAT_007247e0,iVar12);
-    }
-  }
-  auVar14 = ZEXT416(8);
-  DAT_00a37388 = DAT_00a37388 + 1;
-  auVar15 = loadVectorLeftIndexed(0xb8,lVar8);
-  auVar14 = vectorShiftRightAlgebraicWord
-                      (auVar15,auVar14 | auVar14 << 0x20 | auVar14 << 0x40 | auVar14 << 0x60);
-  auVar15.piece<0,10>() = _DAT_007247d0;
-  auVar15.piece<10,2>() = DAT_007247da;
-  auVar15.piece<12,4>() = uRam007247dc;
-  auVar16 = vectorSplatHalfWord(auVar14,1);
-  DAT_007247da = storeVectorElementHalfWordIndexed(auVar16,10,0x7247d0);
-  iVar1 = DAT_00a37388 * 4;
-  auVar14 = vectorPermute(auVar15,auVar14,_DAT_000dc200);
-  iVar12 = (int)uVar10;
-  *(undefined1 (*) [16])(DAT_00a37388 * 0x10 + 0xa4c540) = auVar14;
-  *(int *)(&DAT_00a37390 + iVar1) = iVar12 + 0x70000000;
-  FastMemCopy(uVar10 & 0xffffffff,lVar6 + (ulonglong)uVar3 + 0x430 & 0xffffffff,0x4000);
-  iVar5 = oClass_to_mClass_lookup;
-  iVar1 = (int)((longlong)g_SpaceshipVariant << 2);
-  DAT_007247e0 = (undefined1)DAT_00a37388;
-  if ((&MobyClassLookup)[*(int *)((int)OCLASSES_COCKPIT + iVar1)] == -1) {
-    iVar1 = *(int *)((int)OCLASSES_COCKPIT + iVar1);
-    pMVar11 = (MobyClass *)((int)data + iVar2);
-    iVar4 = DAT_00a37388 * -0x10;
-    iVar2 = oClass_to_mClass_lookup * 4;
-    (&MobyClassLookup)[iVar1] = (char)oClass_to_mClass_lookup;
-    MobyClasses[iVar5] = pMVar11;
-    MVar13 = (MOBY_OCLASSES)iVar1;
-    (&mClass_to_oClass)[iVar5] = MVar13;
-    if (pMVar11 == (MobyClass *)0x0) {
-      GetMobyFunction(MVar13);
-      oClass_to_mClass_lookup = oClass_to_mClass_lookup + 1;
-    }
-    else {
-      *(undefined4 *)(&MobyMipDists + iVar2) = *(undefined4 *)&pMVar11->bangles;
-      GetMobyFunction(MVar13);
-      oClass_to_mClass_lookup = oClass_to_mClass_lookup + 1;
-      LoadMobyModel(pMVar11,&DAT_007247d0 + iVar4,&DAT_007247e0,iVar1);
-    }
-  }
-  DAT_00731c90 = 1;
-  DAT_00731c94 = 1;
-  DAT_00a561c4 = 0;
-  DAT_00a37388 = DAT_00a37388 + 1;
-  return iVar12 + 0x4000;
+
+    DAT_00731c90 = 1;
+    DAT_00731c94 = 1;
+    DAT_00a561c4 = 0;
+    g_MobyTexDefCnt++;
+    return dest + COCKPIT_TEX_SIZE;
 }
 
 
 // 0x00dc7fc (0x360 bytes)
-void SetUpVisGif
-               (longlong *pGif,short *tex_def,int mip_dist,int filter,int u_clamp,int v_clamp,
-               int index)
-
+// Fills the TEX1 / CLAMP / TEX0 / MIPTBP1 values of a GIF packet from a texture definition
+// (shorts: [2] width, [3] height, [4] mips, [5] clut, [6] / [7] mips 2 and 3 as GS blocks).
+// index -1 is a fixed 8x8 texture, -2 / -3 the two fixed pif-file textures.
+void SetUpVisGif(u64 *pGif, short *tex_def, int mip_dist, int filter, int u_clamp, int v_clamp, int index)
 {
-  short sVar1;
-  short sVar2;
-  short sVar3;
-  int iVar4;
-  uint uVar5;
-  undefined8 uVar6;
-  undefined8 uVar7;
-  longlong lVar8;
-  longlong lVar9;
-  longlong lVar10;
-  
-  lVar9 = (longlong)((int)tex_def[2] >> 6);
-  lVar10 = (longlong)((int)tex_def[2] >> 7);
-  uVar6 = FastLog2();
-  uVar7 = FastLog2(tex_def[3]);
-  sVar1 = tex_def[5];
-  sVar2 = tex_def[6];
-  sVar3 = tex_def[7];
-  iVar4 = GSmem.base >> 8;
-  if (index < 0) {
-    if (index < -1) {
-      uVar5 = (uint)(ZERO_MASK((-3 - index))) & 0x18;
-      lVar9 = SCE_GS_SET_TEX1(0,0,1,filter,0,0,mip_dist);
-      *pGif = lVar9;
-      lVar9 = SCE_GS_SET_CLAMP(1,1,0,0,0,0);
-      pGif[2] = lVar9;
-      pGif[4] = *(longlong *)(&DAT_00a20450 + uVar5);
-      pGif[6] = *(longlong *)(&DAT_00a20460 + uVar5);
+    int tbw0 = tex_def[2] >> 6;
+    int tbw1 = tex_def[2] >> 7;
+
+    tbw0 = tbw0 < 1 ? 1 : tbw0;
+    tbw1 = tbw1 < 1 ? 1 : tbw1;
+
+    int uLog = FastLog2(tex_def[2]);
+    int vLog = FastLog2(tex_def[3]);
+    int gsBase = GSmem.base >> 8;
+    int pal = tex_def[TEXDEF_PAL] + gsBase;
+    int mip2 = tex_def[TEXDEF_MIP2] + gsBase;
+    int mip3 = tex_def[TEXDEF_MIP3] + gsBase;
+
+    if (index >= 0) {
+        pGif[0] = SCE_GS_SET_TEX1(0, tex_def[4] - 1, 1, filter, 0, 0, mip_dist);
+        pGif[2] = SCE_GS_SET_CLAMP(u_clamp, v_clamp, 0, 0, index, 0);
+        pGif[4] = SCE_GS_SET_TEX0(0, tbw0, GS_PSMT8, uLog, vLog, 1, 0, pal, GS_PSMCT32, 0, 0, 4);
+        pGif[6] = SCE_GS_SET_MIPTBP1(0, tbw1, mip2, 1, mip3, 1);
+    }
+    else if (index <= VISGIF_FIXED_A) {
+        u64 *regs = g_PifFileTexRegs[index == VISGIF_FIXED_B ? PIF_FIXED_TEX_B : PIF_FIXED_TEX_A];
+
+        pGif[0] = SCE_GS_SET_TEX1(0, 0, 1, filter, 0, 0, mip_dist);
+        pGif[2] = SCE_GS_SET_CLAMP(1, 1, 0, 0, 0, 0);
+        pGif[4] = regs[0];
+        pGif[6] = regs[2];
     }
     else {
-      lVar9 = SCE_GS_SET_TEX1(0,0,1,filter,0,0,mip_dist);
-      *pGif = lVar9;
-      lVar9 = SCE_GS_SET_CLAMP(1,1,0,0,0,0);
-      pGif[2] = lVar9;
-      lVar9 = SCE_GS_SET_TEX0(0x3ffb,1,0x12,3,3,1,0,0);
-      pGif[4] = lVar9;
-      lVar9 = SCE_GS_SET_MIPTBP1(0,0,0,0,0,0);
-      pGif[6] = lVar9;
+        pGif[0] = SCE_GS_SET_TEX1(0, 0, 1, filter, 0, 0, mip_dist);
+        pGif[2] = SCE_GS_SET_CLAMP(1, 1, 0, 0, 0, 0);
+        pGif[4] = SCE_GS_SET_TEX0(0x3ffb, 1, GS_PSMCT32, 3, 3, 1, 0, 0, 0, 0, 0, 4);
+        pGif[6] = SCE_GS_SET_MIPTBP1(0, 0, 0, 0, 0, 0);
     }
-  }
-  else {
-    lVar8 = SCE_GS_SET_TEX1(0,(longlong)tex_def[4] + -1,1,filter,0,0,mip_dist);
-    *pGif = lVar8;
-    lVar8 = SCE_GS_SET_CLAMP(u_clamp,v_clamp,0,0,index,0);
-    pGif[2] = lVar8;
-    lVar9 = SCE_GS_SET_TEX0
-                      (0,lVar9 + (lVar9 + -1 >> 0x3f & 1U - lVar9),0x13,uVar6,uVar7,1,0,
-                       sVar1 + iVar4);
-    pGif[4] = lVar9;
-    lVar9 = SCE_GS_SET_MIPTBP1(0,lVar10 + (lVar10 + -1 >> 0x3f & 1U - lVar10),sVar2 + iVar4,1,
-                                sVar3 + iVar4,1);
-    pGif[6] = lVar9;
-  }
-  return;
 }
 
 
 // 0x00dcb5c (0x4 bytes)
 void STUB_000dcb5c(...)
-
 {
-  return;
 }
 
 
 // 0x00dcb60 (0x4 bytes)
 void STUB_000dcb60(...)
-
 {
-  return;
 }
 
 
 // 0x00dcb64 (0x5c bytes)
-void ParseMobySeq(MobyClass *pClass,int seq)
-
+// A sequence loaded on its own: its pointers are relative to the sequence.
+void ParseMobySeq(MobyClass *pClass, int seq)
 {
-  byte bVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  
-  iVar2 = *(int *)(&pClass->type + (int)((longlong)seq << 2));
-  if (*(int *)(iVar2 + 0x14) != 0) {
-    *(int *)(iVar2 + 0x14) = iVar2 + *(int *)(iVar2 + 0x14);
-  }
-  iVar4 = 0;
-  iVar3 = iVar2;
-  if (*(char *)(iVar2 + 0x10) != '\0') {
-    do {
-      iVar4 = iVar4 + 1;
-      bVar1 = *(byte *)(iVar2 + 0x10);
-      *(int *)(iVar3 + 0x1c) = *(int *)(iVar3 + 0x1c) + iVar2;
-      iVar3 = iVar3 + 4;
-    } while (iVar4 < (int)(uint)bVar1);
-  }
-  return;
+    MobySeq *sequence = pClass->seqs[seq];
+    u8 *base = (u8 *)sequence;
+
+    if (sequence->trigs != NULL) {
+        sequence->trigs = (short *)(base + (int)sequence->trigs);
+    }
+
+    for (int i = 0; i < sequence->frameCnt; i++) {
+        sequence->frames[i] = (MobyFrame *)(base + (int)sequence->frames[i]);
+    }
 }
 
 
 // 0x00dcbc0 (0x4 bytes)
 void STUB_000dcbc0(...)
-
 {
-  return;
 }
 
 
 // 0x00dcbc4 (0x4 bytes)
 void STUB_000dcbc4(...)
-
 {
-  return;
 }
 
 
 // 0x00dcbc8 (0x4 bytes)
 void STUB_000dcbc8(...)
-
 {
-  return;
 }
 
 
 // 0x00dcbcc (0x7c bytes)
+// The collision file: offsets of the collision grid and of the hero-only collision.
 void ParseColl(char *data)
-
 {
-  int iVar1;
-  int iVar2;
-  
-  if (*(int *)data != 0) {
-    g_CollOutput.grid = data + *(int *)data;
-  }
-  if (*(int *)(data + 4) != 0) {
-    g_HeroCollision = (HeroCollHeader *)(data + *(int *)(data + 4));
-    iVar1 = 0;
-    if (0 < g_HeroCollision->cellCount) {
-      iVar2 = 0;
-      do {
-        iVar1 = iVar1 + 1;
-        *(int *)((int)&g_HeroCollision->cells[0].data + iVar2) =
-             (int)g_HeroCollision->pad +
-             *(int *)((int)&g_HeroCollision->cells[0].data + iVar2) + -4;
-        iVar2 = iVar2 + 0x10;
-      } while (iVar1 < g_HeroCollision->cellCount);
+    int *offsets = (int *)data;
+
+    if (offsets[0] != 0) {
+        g_CollOutput.grid = data + offsets[0];
     }
-  }
-  return;
+
+    if (offsets[1] != 0) {
+        g_HeroCollision = (HeroCollHeader *)(data + offsets[1]);
+        for (int i = 0; i < g_HeroCollision->cellCount; i++) {
+            HeroCollCell *cell = &g_HeroCollision->cells[i];
+
+            cell->data = (u8 *)g_HeroCollision + (int)cell->data;
+        }
+    }
 }
 
 
 // 0x00dcc50 (0x1ec bytes)
-// strings: 00652290: 'moby %d:      %.1fK\n'
-
-
-void PrintMobyMemory(int *classes,int cnt)
-
+// Debug: prints the moby classes by size, biggest first. A class's size runs to the next class
+// (or to the one after, when the next is absent).
+void PrintMobyMemory(int *classes, int cnt)
 {
-  float fVar1;
-  undefined4 uVar2;
-  int iVar3;
-  uint uVar4;
-  uint uVar5;
-  undefined4 uVar6;
-  ulonglong *puVar7;
-  int iVar8;
-  bool bVar9;
-  bool bVar10;
-  ulonglong uVar11;
-  longlong lVar12;
-  undefined8 uVar13;
-  int32_t iVar14;
-  ulonglong unaff_r24;
-  int iVar15;
-  ulonglong unaff_r25;
-  int *piVar17;
-  longlong lVar16;
-  ulonglong unaff_r26;
-  ulonglong unaff_r27;
-  longlong lVar18;
-  ulonglong unaff_r28;
-  longlong lVar19;
-  longlong lVar20;
-  ulonglong unaff_r29;
-  longlong lVar21;
-  ulonglong unaff_r30;
-  int iVar22;
-  ulonglong unaff_r31;
-  ulonglong in_LR;
-  double dVar23;
-  ulonglong in_f31;
-  double dVar24;
-  GPiece<16> auVar25;
-  
-  lVar12 = (longlong)(int)classes;
-  uVar11 = ZEXT48(&stack0x00000000);
-  lVar20 = uVar11 - 0x10c0;
-  puVar7 = (ulonglong *)lVar20;
-  *puVar7 = uVar11;
-  puVar7[0x21a] = in_LR;
-  puVar7[0x217] = in_f31;
-  puVar7[0x211] = unaff_r26;
-  puVar7[0x20f] = unaff_r24;
-  iVar15 = 0;
-  puVar7[0x215] = unaff_r30;
-  puVar7[0x210] = unaff_r25;
-  puVar7[0x216] = unaff_r31;
-  iVar22 = 0;
-  puVar7[0x214] = unaff_r29;
-  puVar7[0x213] = unaff_r28;
-  puVar7[0x212] = unaff_r27;
-  if (0 < cnt) {
-    dVar24 = 0.0009765625;
-    lVar19 = lVar12 + 4;
-    lVar21 = uVar11 - 0x1050;
-    lVar16 = lVar12;
-    lVar18 = lVar20;
-    do {
-      auVar25 = loadVectorLeftIndexed(in_LR,lVar19);
-      piVar17 = (int *)lVar16;
-      iVar3 = *piVar17;
-      auVar25 = vectorConvertFromSignedFixedPointWord(auVar25,0);
-      auVar25 = auVar25 >> 0x60 & (GPiece<16>)0xffffffff;
-      uVar6 = storeVectorElementWordIndexed
-                        (auVar25 | auVar25 << 0x20 | auVar25 << 0x40 | auVar25 << 0x60,0,lVar21);
-      *(undefined4 *)lVar21 = uVar6;
-      iVar8 = (int)lVar18;
-      if (iVar3 == 0) {
-        fVar1 = 0.0;
-      }
-      else {
-        if (piVar17[8] == 0) {
-          dVar23 = (double)FastIntToDouble(piVar17[0x10] - iVar3);
+    struct {
+        float oClass;
+        float kbytes;
+    } sizes[MOBY_MEM_MAX + 1];
+    MobyClassRecord *records = (MobyClassRecord *)classes;
+
+    for (int i = 0; i < cnt; i++) {
+        MobyClassRecord *record = &records[i];
+        float kbytes;
+
+        sizes[i].oClass = (float)record->oClass;
+        if (record->offset == 0) {
+            kbytes = 0.0f;
         }
         else {
-          dVar23 = (double)FastIntToDouble(piVar17[8] - iVar3);
+            int end = record[1].offset != 0 ? record[1].offset : record[2].offset;
+
+            kbytes = (float)((double)FastIntToDouble(end - record->offset) * (1.0 / 1024.0));
+            sizes[i + 1].oClass = -1.0f;
+            sizes[i + 1].kbytes = 0.0f;
         }
-        lVar12 = -0x40800000;
-        fVar1 = (float)(dVar23 * dVar24);
-        *(undefined4 *)(iVar8 + 0x78) = 0xbf800000;
-        *(undefined4 *)(iVar8 + 0x7c) = 0;
-      }
-      iVar15 = iVar15 + 1;
-      *(float *)(iVar8 + 0x74) = fVar1;
-      lVar19 = lVar19 + 0x20;
-      lVar16 = lVar16 + 0x20;
-      lVar21 = lVar21 + 8;
-      lVar18 = lVar18 + 8;
-    } while (iVar15 < cnt);
-  }
-  do {
-    iVar15 = 0;
-    bVar9 = true;
-    lVar16 = lVar20;
-    bVar10 = true;
-    if (0 < cnt) {
-      do {
-        bVar9 = bVar10;
-        iVar3 = (int)lVar16;
-        uVar4 = (int)*(uint *)(iVar3 + 0x74) >> 0x1f;
-        uVar5 = (int)*(uint *)(iVar3 + 0x7c) >> 0x1f;
-        uVar6 = *(undefined4 *)(iVar3 + 0x74);
-        if ((int)((uVar4 >> 1 ^ *(uint *)(iVar3 + 0x74)) - uVar4) <
-            (int)((uVar5 >> 1 ^ *(uint *)(iVar3 + 0x7c)) - uVar5)) {
-          uVar2 = *(undefined4 *)(iVar3 + 0x70);
-          bVar9 = false;
-          *(undefined4 *)(iVar3 + 0x74) = *(undefined4 *)(iVar3 + 0x7c);
-          *(undefined4 *)(iVar3 + 0x70) = *(undefined4 *)(iVar3 + 0x78);
-          *(undefined4 *)(iVar3 + 0x78) = uVar2;
-          *(undefined4 *)(iVar3 + 0x7c) = uVar6;
-        }
-        iVar15 = iVar15 + 1;
-        lVar12 = lVar16 + 8;
-        lVar16 = lVar12;
-        bVar10 = bVar9;
-      } while (iVar15 < cnt);
+        sizes[i].kbytes = kbytes;
     }
-  } while (!bVar9);
-  if (0 < cnt) {
+
+    bool sorted;
     do {
-      uVar13 = FastDoubleToInt((double)*(float *)((int)lVar20 + 0x70),lVar12);
-      puVar7[8] = (ulonglong)(double)*(float *)((int)lVar20 + 0x74);
-      iVar14 = printf("moby %d:      %.1fK\n",uVar13,puVar7[8]);
-      lVar12 = (longlong)iVar14;
-      iVar22 = iVar22 + 1;
-      lVar20 = lVar20 + 8;
-    } while (iVar22 < cnt);
-  }
-  return;
+        sorted = true;
+        for (int i = 0; i < cnt; i++) {
+            if (sizes[i].kbytes < sizes[i + 1].kbytes) {
+                float oClass = sizes[i].oClass;
+                float kbytes = sizes[i].kbytes;
+
+                sorted = false;
+                sizes[i].kbytes = sizes[i + 1].kbytes;
+                sizes[i].oClass = sizes[i + 1].oClass;
+                sizes[i + 1].oClass = oClass;
+                sizes[i + 1].kbytes = kbytes;
+            }
+        }
+    } while (!sorted);
+
+    for (int i = 0; i < cnt; i++) {
+        printf("moby %d:      %.1fK\n", FastDoubleToInt(sizes[i].oClass), (double)sizes[i].kbytes);
+    }
 }
 
 
 // 0x00dce3c (0x4 bytes)
 void STUB_000dce3c(...)
-
 {
-  return;
 }
 
 
 // 0x00dce40 (0x10c bytes)
-// strings: 006522a8: 'rc1/ps3data/global/locale/%s' | 006522c8: 'rc1/ps3data/global/locale/japanese'
-
-
+// Same as boot's LoadLanguageHelpMsgs.
 void LoadHelp(void)
-
 {
-  undefined8 uVar1;
-  int iVar2;
-  int iVar3;
-  char acStack_90 [128];
-  
-  if (g_JapaneseMode) {
-    snprintf(acStack_90,"rc1/ps3data/global/locale/japanese");
-  }
-  else {
-    uVar1 = GetLanguageNameByIdx();
-    snprintf(acStack_90,"rc1/ps3data/global/locale/%s",uVar1);
-  }
-  LoadAssetFromFile(acStack_90,g_pLocaleBuffer,0x40000);
-  g_Help.num_message = *g_pLocaleBuffer;
-  HelpMsgs = g_pLocaleBuffer;
-  FastMemCopy32
-            (g_pLocaleBuffer,g_pLocaleBuffer + 2,
-             (g_pLocaleBuffer[1] + 3U & 0xfffffffc) - 8);
-  if (0 < g_Help.num_message) {
-    iVar2 = 0;
-    iVar3 = g_Help.num_message;
-    do {
-      iVar3 = iVar3 + -1;
-      *(int *)((int)HelpMsgs + iVar2) =
-           (int)HelpMsgs + *(int *)((int)HelpMsgs + iVar2) + -8;
-      iVar2 = iVar2 + 0x10;
-    } while (0 < iVar3);
-  }
-  return;
+    char path[128];
+
+    if (g_JapaneseMode) {
+        sprintf(path, "rc1/ps3data/global/locale/japanese");
+    }
+    else {
+        sprintf(path, "rc1/ps3data/global/locale/%s", GetLanguageNameByIdx());
+    }
+
+    LoadAssetFromFile(path, g_pLocaleBuffer, 0x40000);
+
+    /* drop the 8-byte header: { count, size }, then the messages */
+    g_Help.num_message = g_pLocaleBuffer[0];
+    HelpMsgs = (HelpMsg *)g_pLocaleBuffer;
+    FastMemCopy32(g_pLocaleBuffer, g_pLocaleBuffer + 2, ((g_pLocaleBuffer[1] + 3) & ~3) - 8);
+    for (int i = 0; i < g_Help.num_message; i++) {
+        u32 *message = (u32 *)((u8 *)HelpMsgs + i * 16);
+
+        message[0] += (u32)HelpMsgs - 8;
+    }
 }
 
 

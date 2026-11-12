@@ -329,3 +329,8 @@ DAT_0095e9f8	g_EffectTableOffsets
 DAT_00a10914	g_pPifFileBuffer
 DAT_00a202d0	g_PifFileTexRegs
 DAT_00724864	g_RatchetWideFixes
+DAT_007247c0	g_SpaceshipTexDef
+DAT_007247d0	g_CockpitTexDef
+DAT_007247e0	g_MobyTexRef
+DAT_00a37388	g_MobyTexDefCnt
+DAT_00a37390	g_MobyTexAddrs
