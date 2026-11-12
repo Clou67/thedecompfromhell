@@ -6,7 +6,7 @@
 #include "game/debug.h"
 #include "game/freeze.h"
 #include "game/hero.h"
-#include "game/inittransition.h"
+#include "game/initspace.h"
 #include "game/loaders.h"
 #include "game/memcard.h"
 #include "game/mobyfunc.h"

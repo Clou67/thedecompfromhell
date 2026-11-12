@@ -12,7 +12,8 @@ errors	file
 1680	game/hero.cpp
 588	game/hud.cpp
 0	game/initonce.cpp
-0	game/inittransition.cpp
+0	game/initsky.cpp
+0	game/initspace.cpp
 0	game/lights.cpp
 202	game/loaders.cpp
 2196	game/mUnk.cpp

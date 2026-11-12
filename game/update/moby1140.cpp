@@ -8,7 +8,7 @@
 #include "game/freeze.h"
 #include "game/help.h"
 #include "game/hero.h"
-#include "game/inittransition.h"
+#include "game/initspace.h"
 #include "game/map.h"
 #include "game/memcard.h"
 #include "game/mission.h"
