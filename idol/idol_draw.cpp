@@ -7071,7 +7071,7 @@ void FUN_004fe764(int param_1)
 // 0x04fe778 (0x8c bytes)
 // strings: 0065f5cc: '===MemPool %s Info === %d bytes available %s (%5.2f meg)\n'
 
-void FUN_004fe778(int param_1,undefined8 param_2)
+void FUN_004fe778(u8 *param_1,const char *param_2)
 
 {
   longlong lVar1;
@@ -7874,8 +7874,7 @@ void FUN_004ff674(undefined8 param_1,undefined8 param_2,undefined8 param_3)
 
 
 // 0x04ff6d0 (0xb0 bytes)
-void print_tty(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-              undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void print_tty(const char *param_1,...)
 
 {
   undefined4 uStack00000034;

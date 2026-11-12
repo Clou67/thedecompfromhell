@@ -591,8 +591,7 @@ void FUN_005118e8(undefined4 *param_1,undefined8 param_2,undefined4 param_3,unde
 // 0x0511a80 (0x1b4 bytes)
 // strings: 006671d8: 'dearchiver' | 006671e8: 'dearchiver_rwlock' | 00667200: 'dearchiver_manifests_lock' | 00667220: 'dearchiver_readgroup' | 00667238: 'dearchiver_bufferLock' | 00667250: 'dearchiver_bufferCond' | 00667270: 'dearchiver_lookupCacheLock'
 
-void FUN_00511a80(undefined4 *param_1,undefined8 param_2,undefined4 param_3,undefined4 param_4,
-                 undefined4 param_5,uint param_6,undefined4 param_7,undefined4 param_8)
+void FUN_00511a80(u8 *param_1,u8 *param_2,int param_3,u8 *param_4,int param_5,int param_6,int param_7,u8 *param_8)
 
 {
   undefined *puVar1;

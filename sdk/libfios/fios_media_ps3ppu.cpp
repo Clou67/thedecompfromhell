@@ -561,7 +561,7 @@ LAB_00528bc8:
 // 0x0528c7c (0x284 bytes)
 // strings: 006687f8: 'm_dirLock' | 00668810: 'm_fdLock' | 00668828: 'media.m_suspendLock' | 00668840: 'media.m_suspendCond' | 00668860: '/dev_hdd0' | 00668880: 'g_fdIndirectionRWLock' | 00668870: '/dev_hdd1'
 
-void FUN_00528c7c(undefined4 *param_1,undefined8 param_2)
+void FUN_00528c7c(u8 *param_1,const char *param_2)
 
 {
   undefined *puVar1;

@@ -60,23 +60,23 @@ int FUN_00503c70(int param_1,int param_2);
 char *Locale_Convert(Localizer *param_1,char *param_2,int param_3,char *param_4,int param_5,int *param_6);
 void FUN_00503df8(void);
 void FUN_00503dfc(void);
-longlong LoadAssetFromFile(undefined8 param_1,undefined8 param_2,longlong param_3);
+int LoadAssetFromFile(const char *param_1,void *param_2,int param_3);
 void FUN_00503f8c(undefined8 param_1,undefined8 param_2,longlong param_3);
 void FUN_005040f4(int param_1);
 undefined8 GetFileSize(undefined8 param_1);
 void FUN_00504218(undefined8 param_1,undefined8 param_2,int param_3,int param_4);
 void *FUN_0050436c(void *param_1);
 void FUN_00504374(longlong param_1,undefined8 param_2,undefined4 param_3);
-void FUN_005043b0(longlong param_1);
-namespace idol { void InitGameGraphics(int param_1); } 
-void FUN_00504468(longlong param_1);
-namespace idol { void GameAuthenticate(int param_1,char *param_2,char *param_3); } 
+void FUN_005043b0(u8 *param_1);
+namespace idol { void InitGameGraphics(u8 *param_1); } 
+void FUN_00504468(u8 *param_1);
+namespace idol { void GameAuthenticate(u8 *param_1,char *param_2,char *param_3); } 
 void FUN_0050476c(void);
 void FUN_005048f4(void);
 void FUN_005048f8(void);
 void FUN_0050493c(undefined8 param_1,int param_2);
-void FUN_00504988(int param_1,undefined8 param_2,char param_3);
-namespace idol { void CheckLicense(int *unk1,int glow_rgba,char *gameId,char *gameIdExt,bool isDisc,int param_6); } 
+void FUN_00504988(u8 *param_1,const char *param_2,int param_3);
+namespace idol { void CheckLicense(int *unk1,const char *glow_rgba,char *gameId,char *gameIdExt,bool isDisc,int param_6); } 
 undefined4 FUN_00504c38(int param_1);
 undefined4 FUN_00504c58(int param_1);
 undefined4 FUN_00504c78(int param_1);
@@ -101,7 +101,7 @@ void FUN_0050544c(int param_1,uint param_2,undefined8 param_3);
 void FUN_005054a4(int param_1,uint param_2,int param_3);
 void FUN_00505580(void);
 void FUN_005055e8(undefined8 param_1,undefined4 *param_2);
-void FUN_0050565c(undefined4 param_1);
+void FUN_0050565c(u8 *param_1);
 void FUN_005057a0(void);
 undefined4 FUN_005057c4(void);
 void FUN_005057d4(undefined4 param_1);
@@ -115,7 +115,7 @@ void FUN_00505af8(void);
 undefined8 FUN_00505afc(void);
 undefined8 FUN_00505b04(void);
 void FUN_00505b0c(void);
-void FUN_00505b30(undefined8 param_1,undefined4 *param_2,undefined8 param_3);
+void Sound_LoadBank(u8 *param_1,u8 *param_2,u32 *param_3);
 void FUN_00505bac(undefined8 param_1,undefined8 param_2,undefined4 *param_3,undefined8 param_4);
 longlong FUN_00505c6c(undefined8 param_1,undefined8 param_2);
 void FUN_00505cf8(void);

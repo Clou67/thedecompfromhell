@@ -1169,7 +1169,6 @@ extern u8 g_AnimLayerJointBuf[6][0x1500]; /* 0xa24640 */ /* type set in global_t
 extern AnimLayer g_AnimLayerPool[6]; /* 0xa2c440 */ /* type set in global_types.tsv */
 extern EnvSample *g_EnvSamples; /* 0xa4db00 */ /* type set in global_types.tsv */
 extern Vec4 g_HeroLightDir; /* 0xa4c4e0: UpdateHeroLightAngle */ /* type set in global_types.tsv */
-extern void *g_MobyClassUpdates[240]; /* 0xa34f80: update function per mClass (follows MobyClasses) */ /* type set in global_types.tsv */
 extern u8 *g_MobyDrawListEnd; /* 0xa39098 */ /* type set in global_types.tsv */
 extern u8 *g_MobyDrawListStart; /* 0xa3909c: draw entries, 0xb0 bytes each */ /* type set in global_types.tsv */
 extern int g_MobyShadowCount; /* 0xa49f50 (guess) */ /* type set in global_types.tsv */

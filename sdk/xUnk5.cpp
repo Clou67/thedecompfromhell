@@ -72,7 +72,7 @@ void FUN_005e6ae0(undefined4 *param_1)
 // 0x05e6af0 (0x320 bytes)
 // strings: 006617cc: 'edgeDecompressorTaskset'
 
-void FUN_005e6af0(int *param_1,undefined8 param_2)
+void FUN_005e6af0(u8 *param_1,u8 *param_2)
 
 {
   int iVar1;

@@ -269,6 +269,7 @@ extern undefined4 g_PostPreDrawFuncs; /* 0x95e1e0 */
 extern int g_PreDrawCount; /* 0x95e1dc */
 extern RENDER g_RenderFlags; /* 0x95cd44 */
 extern int g_ScreenHalfWidth; /* 0x966b08 */
+extern int g_ScreenHeight; /* 0x966b04 */
 extern undefined1 g_ScreenInsertEffect; /* 0x95cf30 */
 extern int g_ScreenWidth; /* 0x966b00 */
 extern undefined4 g_SubtitleTable; /* 0x95cd9c */
@@ -294,9 +295,9 @@ void STUB_0006849c(...);
 void STUB_000684a0(...);
 void UpdateOcclusion(int param_1);
 void Render_DispatchJob(void);
-void *GetEffectTex(int param_1);
+int GetEffectTex(int param_1);
 void DrawFullScreenQuad(int rgba,void *tex);
-void Sprite_DrawShape (RsxCmd param_1,ulonglong param_2,int param_3,longlong param_4,longlong param_5, longlong param_6,int param_7,longlong param_8);
+void Sprite_DrawShape(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6,int param_7,int param_8,u32 param_9,void *param_10);
 void Sprite_DrawShapeF(double param_1,double param_2,double param_3,double param_4);
 void FontPrintJapanese_unk2 (double param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5, undefined4 param_6,int param_7,int param_8,undefined8 param_9,undefined8 param_10, int param_11);
 int FontLenScaledWithTableNoKern (double param_1,int param_2,int param_3,undefined8 param_4,int param_5);
@@ -304,9 +305,9 @@ void FontPrintOptJapanese (double param_1,undefined8 param_2,undefined4 param_3,
 void DrawSpriteFont(double param_1,double param_2,double param_3,double param_4);
 void DrawSpriteFont_thunk(void);
 void FontPrint_unk3 (double param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5, undefined4 param_6,int param_7,int param_8,undefined8 param_9,undefined8 param_10, int param_11);
-void FontPrintOptWestern(float param_1,FontWindow *param_2,u32 param_3,const char *param_4,int param_5,void *param_6,void *param_7);
+void FontPrintOptWestern(float param_1,FontWindow *param_2,u32 param_3,const char *param_4,int param_5,int param_6,void *param_7);
 void FontPrintMediumOpt(FontWindow *param_1,u32 param_2,const char *param_3,int param_4);
-void Sprite_DrawShapeWrapper(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6,int param_7,int param_8,u32 param_9,void *param_10);
+void Sprite_DrawShapeWrapper(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6,int param_7,int param_8,u32 param_9,int param_10);
 void DrawRectOverlay(int top,int bot,int left,int right,int color);
 void DrawRoundedRect(short param_1,short param_2,short param_3,short param_4,int param_5);
 void SetFontWindow(FontWindow *window,int win_top,int win_bot,int win_left,int win_right, int text_x,int text_y,int line_spacing,int flags);

@@ -71,3 +71,6 @@ AnimLayer	game/mobyfunc
 EnvSample	game/mobyfunc
 g_AnimLayerPool	game/mobyfunc
 g_EnvSamples	game/mobyfunc
+BinkPlayer	idol/mUnk
+SceneSound	game/boot
+SoundDef	game/sound

@@ -12,7 +12,7 @@ extern pointer32 PTR_FUN_00710368; /* 0x710368 */
 extern pointer32 PTR_FUN_00710370; /* 0x710370 */
 
 // ---- functions
-namespace idol { void RegisterTrophyCtxHandle(longlong param_1); } 
+namespace idol { void RegisterTrophyCtxHandle(u32 param_1); } 
 void FUN_004f0094(int param_1);
 namespace idol { void NPTrophyUnlock(int param_1,TROPHIES_ENUM param_2); } 
 void FUN_004f03dc(int param_1,undefined8 param_2);
@@ -24,13 +24,13 @@ void FUN_004f06ac(void);
 void FUN_004f0828(void);
 undefined8 FUN_004f0ac8(undefined8 param_1,int param_2,int param_3,int param_4);
 void FUN_004f0c84(void);
-void FUN_004f0c98(int param_1);
+void FUN_004f0c98(u8 *param_1);
 void FUN_004f0cc0(int param_1);
 void FUN_004f0ce8(int param_1,undefined1 param_2);
 ulonglong FUN_004f0d50(longlong param_1,longlong param_2);
 void FUN_004f0d9c(int param_1,int param_2);
 undefined4 FUN_004f0de8(int param_1);
-void FUN_004f0df4(int param_1);
+void FUN_004f0df4(u8 *param_1);
 void FUN_004f0e28(undefined4 *param_1,undefined4 param_2,undefined4 param_3);
 void FUN_004f0e44(undefined4 *param_1,undefined4 param_2,undefined4 param_3);
 void FUN_004f0e60(int param_1);

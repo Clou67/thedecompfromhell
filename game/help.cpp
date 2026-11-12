@@ -7,7 +7,6 @@
 // into HelpData) that counts how often that hint was shown and on which levels. The help log
 // (pause menu) lists recently shown messages by their index in g_HelpIdPairs.
 #include "game/help.h"
-#include "game/boot.h"
 #include "game/draw.h"
 #include "game/freeze.h"
 #include "game/hero.h"

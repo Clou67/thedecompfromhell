@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "game/mobyfunc.h"
+#include "game/boot.h"
 #include "game/debug.h"
 #include "game/draw.h"
 #include "game/hero.h"

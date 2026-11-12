@@ -61,6 +61,7 @@ extern int g_IdleFrames; /* 0x738830 */
 extern int g_MovieLanguage; /* 0xe5a638 */
 extern undefined4 g_MovieParam0; /* 0xe5a630 */
 extern char g_SceneSavedCamUnderWater; /* 0x95cd9b */
+extern struct BinkPlayer *g_pBinkPlayer; /* 0x8fa410 */ /* type set in global_types.tsv */
 extern undefined4 worldUpdateTime; /* 0xa10710 */
 
 // ---- functions

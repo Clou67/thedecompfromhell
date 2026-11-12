@@ -17,7 +17,6 @@ extern Blender * Blenders; /* 0xa1c8c0 */
 extern int CuboidCnt; /* 0xa51bdc */
 extern int CylinderCnt; /* 0xa51bd4 */
 extern undefined4 DAT_0071ef00; /* no defined data */
-extern undefined4 DAT_0071f404; /* 0x71f404 */
 extern undefined4 DAT_0072479c; /* 0x72479c */
 extern undefined4 DAT_007247c0; /* no defined data */
 extern undefined2 DAT_007247ca; /* 0x7247ca */
@@ -51,6 +50,7 @@ extern undefined4 DAT_00a15c7c; /* 0xa15c7c */
 extern undefined4 DAT_00a15f50; /* 0xa15f50 */
 extern undefined4 DAT_00a15f70; /* 0xa15f70 */
 extern undefined4 DAT_00a15f74; /* 0xa15f74 */
+extern undefined4 DAT_00a15f80; /* 0xa15f80 */
 extern undefined4 DAT_00a1a860; /* 0xa1a860 */
 extern undefined4 DAT_00a1c840; /* 0xa1c840 */
 extern undefined4 DAT_00a1c880; /* 0xa1c880 */
@@ -84,7 +84,9 @@ extern undefined MobyMipDists; /* 0xa37b90 */
 extern int OCLASSES_COCKPIT[3]; /* 0x731c4c */
 extern int OCLASSES_SPACESHIP[3]; /* 0x731c40 */
 extern pointer32 PTR_AdvanceLoadingStage_00705ad0; /* 0x705ad0 */
+extern pointer32 PTR_sound_BasicCB_00707c38; /* 0x707c38 */
 extern undefined4 ScreenColorEffectLevel; /* 0x95cf1c */
+extern undefined4 ShrubInstanceCnt; /* 0xa1a798 */
 extern int SphereCnt; /* 0xa51bcc */
 extern undefined4 SplineCnt; /* 0xa51ea0 */
 extern void * SplineOfs; /* 0xa51ea4 */
@@ -99,10 +101,12 @@ extern undefined4 _DAT_007247c0; /* direct read */
 extern undefined4 _DAT_007247d0; /* direct read */
 extern undefined4 g_EffectTexCnt; /* 0x95ddd0 */
 extern undefined g_EffectTexs; /* 0x95d6d0 */
+extern undefined4 g_EngineData; /* 0xa15f60 */
 extern int g_EnvSampleCount; /* 0xa4daf4 */ /* type set in global_types.tsv */
 extern int g_GsRamAlloc; /* 0x966ad0: next free GS memory, bytes */ /* type set in global_types.tsv */
 extern HeroCollHeader * g_HeroCollision; /* 0xa15c00 */
 extern undefined4 g_IsPal; /* 0x966ae8 */
+extern undefined4 g_JapanFontTex; /* 0x90d724 */
 extern undefined2 g_LoadingStage; /* 0x964560 */
 extern void *g_MemSlotsBase; /* 0xa108d8: start of the MemSlots pool */ /* type set in global_types.tsv */
 extern undefined4 g_NpcChunkLoadHandle; /* 0x7247f0 */

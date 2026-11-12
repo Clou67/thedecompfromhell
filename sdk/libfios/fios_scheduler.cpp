@@ -261,7 +261,7 @@ void FUN_0051ce5c(int param_1,undefined4 param_2)
 
 // SDK libfios.a(fios_scheduler.ppu.o): cell::fios::scheduler::setDefaultScheduler(cell::fios::scheduler*)  [exact match]
 // 0x051ced4 (0x54 bytes)
-void FUN_0051ced4(int param_1)
+void FUN_0051ced4(u8 *param_1)
 
 {
   char cVar1;
@@ -1556,7 +1556,7 @@ LAB_0051ef54:
 // 0x051ef8c (0x220 bytes)
 // strings: 00667b40: 'Must call FIOSInit before createSchedulerForMedia!\n'
 
-undefined4 * FUN_0051ef8c(undefined4 param_1,undefined8 *param_2)
+void *FUN_0051ef8c(u8 *param_1,u8 *param_2)
 
 {
   char cVar3;

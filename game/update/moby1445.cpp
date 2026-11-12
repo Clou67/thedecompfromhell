@@ -3,12 +3,12 @@
 // 3 functions, 0x280018-0x280de0
 #include <stdlib.h>
 #include "game/update/moby1445.h"
-#include "game/boot.h"
 #include "game/camera.h"
 #include "game/collproc.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
+#include "game/update/moby1440.h"
 #include "game/update/moby849.h"
 #include "idol/fastfunc.h"
 

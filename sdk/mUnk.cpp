@@ -8,7 +8,7 @@
 // 0x04efdf4 (0x90 bytes)
 // strings: 0065b760: 'sceNpTrophyDestroyHandle() failed. status = 0x%x\n' | 0065b798: 'sceNpTrophyDestroyContext() failed. status = 0x%x\n'
 
-void sceNpTrophyDestroyHandle(int param_1)
+void sceNpTrophyDestroyHandle(u32 param_1)
 
 {
   undefined8 uVar1;

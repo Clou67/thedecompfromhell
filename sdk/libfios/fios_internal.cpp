@@ -207,7 +207,7 @@ void FUN_00519444(void)
 // 0x05194f0 (0x1c0 bytes)
 // strings: 00667890: 'FIOSInit: invalid version/size in parameters! Header may not match the compiled library. Initialization failed.\n' | 00667888: '1.3.2' | 00667908: 'FIOS %s initialized\n'
 
-void FUN_005194f0(int *param_1)
+void FUN_005194f0(u8 *param_1)
 
 {
   bool bVar1;

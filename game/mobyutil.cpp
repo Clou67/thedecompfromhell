@@ -14610,7 +14610,7 @@ LAB_00113080:
 
 
 // 0x01131a8 (0xbc bytes)
-void SetNtscPalTiming(void)
+void SetNtscPalTiming(int param_1)
 
 {
   bool bVar1;

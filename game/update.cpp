@@ -904,19 +904,19 @@ void PlayInfobotMovie(int movieIdx)
   if (movieIdx < 0x13 && 0 < movieIdx) {
     pvVar1 = g_pBinkPlayer;
     if (g_pBinkPlayer == (void *)0x0) {
-      uVar2 = FUN_005e38b0(0x60);
+      uVar2 = Idol_New(0x60);
       pvVar1 = (void *)0x0;
       if ((void *)uVar2 != (void *)0x0) {
-        FUN_004d5d5c(uVar2);
+        BinkPlayer_Init(uVar2);
         pvVar1 = (void *)uVar2;
       }
     }
     g_pBinkPlayer = pvVar1;
     pvVar1 = g_pBinkPlayer;
     iVar3 = snprintf(acStack_e0,"/rc1/ps3data/movies/infobots[%d].bik",movieIdx);
-    uVar2 = FUN_004ef34c(iVar3);
-    FUN_004ef4d0(uVar2,acStack_e0,auStack_a0);
-    FUN_004d5448(pvVar1,auStack_a0,g_Language,0x400);
+    uVar2 = FileSys_Get(iVar3);
+    FileSys_ResolvePath(uVar2,acStack_e0,auStack_a0);
+    BinkPlayer_Start(pvVar1,auStack_a0,g_Language,0x400);
     iVar3 = g_Language;
     if (g_heroHealth == 0) {
       HandleHeroDeath();
@@ -955,19 +955,19 @@ void PlayHelpMovie(int movieIdx)
   if ((uint)movieIdx < 3) {
     pvVar1 = g_pBinkPlayer;
     if (g_pBinkPlayer == (void *)0x0) {
-      uVar2 = FUN_005e38b0(0x60);
+      uVar2 = Idol_New(0x60);
       pvVar1 = (void *)0x0;
       if ((void *)uVar2 != (void *)0x0) {
-        FUN_004d5d5c(uVar2);
+        BinkPlayer_Init(uVar2);
         pvVar1 = (void *)uVar2;
       }
     }
     g_pBinkPlayer = pvVar1;
     pvVar1 = g_pBinkPlayer;
     iVar3 = snprintf(acStack_e0,"/rc1/ps3data/movies/help[%d].bik",movieIdx);
-    uVar2 = FUN_004ef34c(iVar3);
-    FUN_004ef4d0(uVar2,acStack_e0,auStack_a0);
-    FUN_004d5448(pvVar1,auStack_a0,g_Language,0x400);
+    uVar2 = FileSys_Get(iVar3);
+    FileSys_ResolvePath(uVar2,acStack_e0,auStack_a0);
+    BinkPlayer_Start(pvVar1,auStack_a0,g_Language,0x400);
     iVar3 = g_Language;
     if (g_heroHealth == 0) {
       HandleHeroDeath();
@@ -1007,19 +1007,19 @@ void PlaySpecialMovie(int movieIdx)
   if ((uint)movieIdx < 4) {
     pvVar1 = g_pBinkPlayer;
     if (g_pBinkPlayer == (void *)0x0) {
-      unaff_r29 = FUN_005e38b0(0x60);
+      unaff_r29 = Idol_New(0x60);
       pvVar1 = (void *)0x0;
       if ((void *)unaff_r29 != (void *)0x0) {
-        FUN_004d5d5c(unaff_r29);
+        BinkPlayer_Init(unaff_r29);
         pvVar1 = (void *)unaff_r29;
       }
     }
     g_pBinkPlayer = pvVar1;
     pvVar1 = g_pBinkPlayer;
     iVar3 = snprintf(acStack_e0,"/rc1/ps3data/movies/special[%d].bik",movieIdx);
-    uVar2 = FUN_004ef34c(iVar3);
-    FUN_004ef4d0(uVar2,acStack_e0,auStack_a0);
-    FUN_004d5448(pvVar1,auStack_a0,0,0x400);
+    uVar2 = FileSys_Get(iVar3);
+    FileSys_ResolvePath(uVar2,acStack_e0,auStack_a0);
+    BinkPlayer_Start(pvVar1,auStack_a0,0,0x400);
     DAT_009637cb = DAT_009637cb | 8;
     FlushCache(0);
     sound_StopAllSounds();
@@ -1053,19 +1053,19 @@ void PlayStoryMovie(int movieIdx)
   if ((uint)movieIdx < 0xc) {
     pvVar1 = g_pBinkPlayer;
     if (g_pBinkPlayer == (void *)0x0) {
-      unaff_r29 = FUN_005e38b0(0x60);
+      unaff_r29 = Idol_New(0x60);
       pvVar1 = (void *)0x0;
       if ((void *)unaff_r29 != (void *)0x0) {
-        FUN_004d5d5c(unaff_r29);
+        BinkPlayer_Init(unaff_r29);
         pvVar1 = (void *)unaff_r29;
       }
     }
     g_pBinkPlayer = pvVar1;
     pvVar1 = g_pBinkPlayer;
     iVar3 = snprintf(acStack_e0,"/rc1/ps3data/movies/story[%d].bik",movieIdx);
-    uVar2 = FUN_004ef34c(iVar3);
-    FUN_004ef4d0(uVar2,acStack_e0,auStack_a0);
-    FUN_004d5448(pvVar1,auStack_a0,g_Language,0x400);
+    uVar2 = FileSys_Get(iVar3);
+    FileSys_ResolvePath(uVar2,acStack_e0,auStack_a0);
+    BinkPlayer_Start(pvVar1,auStack_a0,g_Language,0x400);
     iVar3 = g_Language;
     DAT_009637cb = DAT_009637cb | 8;
     FlushCache(0);
@@ -1165,10 +1165,10 @@ void PlayMovieBlocking(void)
   
   pvVar2 = g_pBinkPlayer;
   if (g_pBinkPlayer == (void *)0x0) {
-    uVar3 = FUN_005e38b0(0x60);
+    uVar3 = Idol_New(0x60);
     pvVar2 = (void *)0x0;
     if ((void *)uVar3 != (void *)0x0) {
-      FUN_004d5d5c(uVar3);
+      BinkPlayer_Init(uVar3);
       pvVar2 = (void *)uVar3;
     }
   }
@@ -1183,10 +1183,10 @@ void PlayMovieBlocking(void)
       break;
     }
     UpdateOcclusion(0);
-    iVar4 = FUN_004d5524(pvVar2);
+    iVar4 = BinkPlayer_GetState(pvVar2);
     cellSysutilCheckCallback();
     if (1 < iVar4) {
-      iVar5 = FUN_004d59e8(pvVar2);
+      iVar5 = BinkPlayer_DrawFrame(pvVar2);
     }
     Render_DispatchJob();
   } while (iVar5 == 0);
@@ -1213,10 +1213,10 @@ void UpdateCinematic(void)
   STUB_005066bc_RET_0(0);
   pvVar2 = g_pBinkPlayer;
   if (g_pBinkPlayer == (void *)0x0) {
-    uVar3 = FUN_005e38b0(0x60);
+    uVar3 = Idol_New(0x60);
     pvVar2 = (void *)0x0;
     if ((void *)uVar3 != (void *)0x0) {
-      FUN_004d5d5c(uVar3);
+      BinkPlayer_Init(uVar3);
       pvVar2 = (void *)uVar3;
     }
   }
@@ -1231,10 +1231,10 @@ void UpdateCinematic(void)
       break;
     }
     UpdateOcclusion(0);
-    iVar4 = FUN_004d5524(pvVar2);
+    iVar4 = BinkPlayer_GetState(pvVar2);
     cellSysutilCheckCallback();
     if (1 < iVar4) {
-      iVar5 = FUN_004d59e8(pvVar2);
+      iVar5 = BinkPlayer_DrawFrame(pvVar2);
     }
     Render_DispatchJob();
   } while (iVar5 == 0);

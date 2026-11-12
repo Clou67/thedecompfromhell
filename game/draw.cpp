@@ -2052,7 +2052,7 @@ void Render_DispatchJob(void)
 
 
 // 0x00685c4 (0x1c bytes)
-void *GetEffectTex(int param_1)
+int GetEffectTex(int param_1)
 
 {
   return *(undefined4 *)(TexInfo + (int)(param_1 << 2));
@@ -2127,9 +2127,7 @@ void DrawFullScreenQuad(int rgba,void *tex)
 
 
 // 0x006889c (0x354 bytes)
-void Sprite_DrawShape
-               (RsxCmd param_1,ulonglong param_2,int param_3,longlong param_4,longlong param_5,
-               longlong param_6,int param_7,longlong param_8)
+void Sprite_DrawShape(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6,int param_7,int param_8,u32 param_9,void *param_10)
 
 {
   RsxCmd *pRVar1;
@@ -2745,7 +2743,7 @@ void FontPrint_unk3
 
 
 // 0x0069db8 (0x750 bytes)
-void FontPrintOptWestern(float param_1,FontWindow *param_2,u32 param_3,const char *param_4,int param_5,void *param_6,void *param_7)
+void FontPrintOptWestern(float param_1,FontWindow *param_2,u32 param_3,const char *param_4,int param_5,int param_6,void *param_7)
 
 {
   byte bVar1;
@@ -3100,7 +3098,7 @@ void FontPrintMediumOpt(FontWindow *param_1,u32 param_2,const char *param_3,int 
 
 
 // 0x006a5c4 (0x70 bytes)
-void Sprite_DrawShapeWrapper(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6,int param_7,int param_8,u32 param_9,void *param_10)
+void Sprite_DrawShapeWrapper(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6,int param_7,int param_8,u32 param_9,int param_10)
 
 {
   Sprite_DrawShape();

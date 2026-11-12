@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "game/update/moby1160.h"
-#include "game/boot.h"
 #include "game/camera.h"
 #include "game/collproc.h"
 #include "game/debug.h"

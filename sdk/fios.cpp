@@ -85,7 +85,7 @@ void FUN_0050813c(undefined4 *param_1)
 // 0x0508198 (0x264 bytes)
 // strings: 0065faf0: 'Loading file %s\n' | 0065fb08: 'Common/Textures/randomNormals.ps3' | 0065fb30: 'Common/Textures/randomNormalsVram.ps3'
 
-void load_engine_vram_pair(undefined4 *param_1,undefined8 param_2,undefined8 param_3)
+void load_engine_vram_pair(u8 *param_1,const char *param_2,const char *param_3)
 
 {
   int iVar1;

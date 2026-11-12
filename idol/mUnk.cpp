@@ -1410,7 +1410,7 @@ void FUN_004d4c88(undefined4 *param_1)
 // 0x04d4dd0 (0x48c bytes)
 // strings: 00658ec8: 'OpenBinkFile -- Errors %s\n'
 
-undefined4 FUN_004d4dd0(undefined8 param_1,undefined8 param_2,undefined4 param_3)
+int BinkPlayer_Open(BinkPlayer *param_1,char *param_2,int param_3)
 
 {
   undefined4 *puVar1;
@@ -1627,9 +1627,9 @@ void FUN_004d525c(int param_1,undefined8 param_2,ulonglong param_3)
   
   iVar2 = snprintf(acStack_120,"/%s/ps3data/movies/mpeg%d.bik",
                          ZEXT48((&PTR_DAT_008fa400)[*(int *)(param_1 + 0x5c)]),param_2);
-  uVar1 = FUN_004ef34c(iVar2);
-  FUN_004ef4d0(uVar1,acStack_120,auStack_a0);
-  FUN_004d4dd0(param_1,auStack_a0,param_3 | 0x84000);
+  uVar1 = FileSys_Get(iVar2);
+  FileSys_ResolvePath(uVar1,acStack_120,auStack_a0);
+  BinkPlayer_Open(param_1,auStack_a0,param_3 | 0x84000);
   return;
 }
 
@@ -1653,9 +1653,9 @@ undefined4 FUN_004d5310(int param_1,undefined8 param_2,int param_3,ulonglong par
   FUN_005ea398(1,local_40);
   iVar2 = snprintf(acStack_140,"/%s/ps3data/movies/mpeg%d.bik",
                          ZEXT48((&PTR_DAT_008fa400)[*(int *)(param_1 + 0x5c)]),param_2);
-  uVar1 = FUN_004ef34c(iVar2);
-  FUN_004ef4d0(uVar1,acStack_140,auStack_c0);
-  FUN_004d4dd0(param_1,auStack_c0,param_4 | 0x84000);
+  uVar1 = FileSys_Get(iVar2);
+  FileSys_ResolvePath(uVar1,acStack_140,auStack_c0);
+  BinkPlayer_Open(param_1,auStack_c0,param_4 | 0x84000);
   FUN_005ed898(*(undefined4 *)(param_1 + 8),local_40[0],
                (int)((float)(longlong)(int)g_GameSettings.MusicVolume * 0.0009765625 * 32768.0));
   return *(undefined4 *)(param_1 + 8);
@@ -1663,7 +1663,7 @@ undefined4 FUN_004d5310(int param_1,undefined8 param_2,int param_3,ulonglong par
 
 
 // 0x04d5448 (0xd4 bytes)
-undefined4 FUN_004d5448(int param_1,undefined8 param_2,int param_3,ulonglong param_4)
+int BinkPlayer_Start(BinkPlayer *param_1,char *param_2,int param_3,int param_4)
 
 {
   int local_30 [6];
@@ -1673,7 +1673,7 @@ undefined4 FUN_004d5448(int param_1,undefined8 param_2,int param_3,ulonglong par
     local_30[0] = 0;
   }
   FUN_005ea398(1,local_30);
-  FUN_004d4dd0(param_1,param_2,param_4 | 0x84000);
+  BinkPlayer_Open(param_1,param_2,param_4 | 0x84000);
   FUN_005ed898(*(undefined4 *)(param_1 + 8),local_30[0],
                (int)((float)(longlong)(int)g_GameSettings.MusicVolume * 0.0009765625 * 32768.0));
   return *(undefined4 *)(param_1 + 8);
@@ -1689,7 +1689,7 @@ undefined4 FUN_004d551c(int param_1)
 
 
 // 0x04d5524 (0xc bytes)
-undefined4 FUN_004d5524(int param_1)
+int BinkPlayer_GetState(BinkPlayer *param_1)
 
 {
   return *(undefined4 *)(param_1 + 0x10);
@@ -1839,7 +1839,7 @@ void FUN_004d5934(undefined8 param_1)
 // 0x04d59e8 (0x324 bytes)
 // strings: 00658e78: 'BINK Player' | 00658e88: 'Freeing textures from movie.  Size in bytes giving back: %d\n'
 
-undefined8 FUN_004d59e8(undefined4 *param_1)
+int BinkPlayer_DrawFrame(BinkPlayer *param_1)
 
 {
   RsxCmd *pRVar1;
@@ -1955,7 +1955,7 @@ undefined8 FUN_004d59e8(undefined4 *param_1)
 
 
 // 0x04d5d0c (0x50 bytes)
-void FUN_004d5d0c(int param_1)
+void BinkPlayer_Stop(BinkPlayer *param_1)
 
 {
   if (*(int *)(param_1 + 0x5c) != -1) {
@@ -1968,7 +1968,7 @@ void FUN_004d5d0c(int param_1)
 
 
 // 0x04d5d5c (0x24 bytes)
-void FUN_004d5d5c(int param_1)
+void BinkPlayer_Init(BinkPlayer *param_1)
 
 {
   *(undefined4 *)(param_1 + 0x14) = 0x44000000;
@@ -1992,7 +1992,7 @@ void FUN_004d5d80(int param_1)
 
 
 // 0x04d5da4 (0x4 bytes)
-void FUN_004d5da4(void)
+void FUN_004d5da4(BinkPlayer *param_1,int param_2)
 
 {
   return;
@@ -2583,7 +2583,7 @@ void idol_draw::SetTextureUnitRegs(int param_1,ulonglong param_2,int *param_3)
 
 
 // 0x04d6e60 (0xd0 bytes)
-void idol_draw::BindTexture(undefined8 param_1,undefined8 param_2)
+void idol_draw::BindTexture(RenderingStep *param_1,int param_2,void *param_3,u64 param_4)
 
 {
   GPiece<48> local_30;
@@ -2682,7 +2682,7 @@ void FUN_004d6f50(int param_1,int param_2)
 
 
 // 0x04d7088 (0x118 bytes)
-void FUN_004d7088(undefined4 *param_1)
+void FUN_004d7088(u8 *param_1)
 
 {
   undefined4 *puVar1;
@@ -3333,7 +3333,7 @@ void idol_draw::BindVertexProgram(undefined8 param_1,int param_2,int param_3)
 
 
 // 0x04d86b0 (0xc4 bytes)
-void FUN_004d86b0(void)
+void FUN_004d86b0(int param_1)
 
 {
   RsxCmd *pRVar1;
@@ -11001,7 +11001,7 @@ void FUN_004e6770(int param_1)
 // 0x04e68bc (0x22c bytes)
 // strings: 006596ec: 'Allocating a new 256MB address space.\n' | 00659714: 'sys_mmapper_allocate_address() failed: %d\n' | 00659744: 'Allocating physical memory blocks.\n' | 00659694: 'sys_mmapper_allocate_memory() failed: %d\n' | 0065976c: 'Mapping the physical memory blocks to the address space.\n' | 006596c4: 'sys_mmapper_map_memory() failed: %d\n'
 
-void FUN_004e68bc(int param_1,int param_2,ulonglong param_3,ulonglong param_4)
+void FUN_004e68bc(u8 *param_1,int param_2,int param_3,int param_4)
 
 {
   int iVar2;
@@ -11378,7 +11378,7 @@ void FUN_004e7170(undefined4 *param_1)
 
 
 // 0x04e7388 (0x7c bytes)
-void FUN_004e7388(undefined4 *param_1)
+void FUN_004e7388(u8 *param_1)
 
 {
   param_1[1] = 0;
@@ -11420,7 +11420,7 @@ SaveDataInfo * idol::GetSaveData(void)
   pSVar1 = GameSavePtr;
   if (GameSavePtr == (SaveDataInfo *)0x0) {
     pSVar1 = (SaveDataInfo *)0x0;
-    puVar1 = (SaveDataInfo *)FUN_005e38b0(0x478);
+    puVar1 = (SaveDataInfo *)Idol_New(0x478);
     if (puVar1 != (SaveDataInfo *)0x0) {
       puVar1->loadResult = 0;
       puVar1->field0_0x0 = &PTR_PTR_006618d0;
@@ -11470,7 +11470,7 @@ void FUN_004e7534(undefined4 param_1)
   cellGameContentErrorDialog(param_1,0x2cf,0);
   puVar1 = GameSavePtr;
   if (GameSavePtr == (undefined4 *)0x0) {
-    puVar2 = (undefined4 *)FUN_005e38b0(0x478);
+    puVar2 = (undefined4 *)Idol_New(0x478);
     puVar1 = (undefined4 *)0x0;
     if (puVar2 != (undefined4 *)0x0) {
       puVar2[1] = 0;
@@ -11548,7 +11548,7 @@ void FUN_004e7694(undefined4 *param_1)
 
 
 // 0x04e7710 (0x28 bytes)
-void FUN_004e7710(void)
+void FUN_004e7710(SaveDataInfo *param_1)
 
 {
   cellSysmoduleUnloadModule(0x33);
@@ -11557,7 +11557,7 @@ void FUN_004e7710(void)
 
 
 // 0x04e7738 (0x34 bytes)
-void FUN_004e7738(undefined4 *param_1)
+void FUN_004e7738(u8 *param_1,int param_2)
 
 {
   *param_1 = &PTR_PTR_006618d0;
@@ -11913,7 +11913,7 @@ void FUN_004e7f54(int param_1,undefined8 param_2)
 // 0x04e7f9c (0x13c bytes)
 // strings: 0065a0b0: '---###---Invalid File ID for SaveGame Utility!---###---\n' | 0065a0f0: '%s%s' (raw)
 
-void FUN_004e7f9c(int param_1,longlong param_2)
+void FUN_004e7f9c(SaveDataInfo *param_1,int param_2)
 
 {
   undefined8 uVar1;
@@ -12122,7 +12122,7 @@ void FUN_004e85a0(int param_1)
   
   puVar1 = GameSavePtr;
   if (GameSavePtr == (undefined4 *)0x0) {
-    puVar2 = (undefined4 *)FUN_005e38b0(0x478);
+    puVar2 = (undefined4 *)Idol_New(0x478);
     puVar1 = (undefined4 *)0x0;
     if (puVar2 != (undefined4 *)0x0) {
       puVar2[1] = 0;
@@ -12185,7 +12185,7 @@ void idol::SaveSystem_PS::SaveGameData(void)
   
   puVar1 = GameSavePtr;
   if (GameSavePtr == (undefined4 *)0x0) {
-    puVar2 = (undefined4 *)FUN_005e38b0(0x478);
+    puVar2 = (undefined4 *)Idol_New(0x478);
     puVar1 = (undefined4 *)0x0;
     if (puVar2 != (undefined4 *)0x0) {
       puVar2[1] = 0;
@@ -12272,7 +12272,7 @@ void idol::SaveSystem_PS::AutoSaveGameData(void)
   
   puVar1 = GameSavePtr;
   if (GameSavePtr == (undefined4 *)0x0) {
-    puVar3 = (undefined4 *)FUN_005e38b0(0x478);
+    puVar3 = (undefined4 *)Idol_New(0x478);
     puVar1 = (undefined4 *)0x0;
     if (puVar3 != (undefined4 *)0x0) {
       puVar3[1] = 0;
@@ -12384,7 +12384,7 @@ void idol::SaveSystem_PS::LoadGameData(void)
   
   puVar1 = GameSavePtr;
   if (GameSavePtr == (undefined4 *)0x0) {
-    puVar2 = (undefined4 *)FUN_005e38b0(0x478);
+    puVar2 = (undefined4 *)Idol_New(0x478);
     puVar1 = (undefined4 *)0x0;
     if (puVar2 != (undefined4 *)0x0) {
       puVar2[1] = 0;
@@ -12467,7 +12467,7 @@ void idol::thr_SaveSystem_CheckExisting(void)
   
   puVar1 = GameSavePtr;
   if (GameSavePtr == (undefined4 *)0x0) {
-    puVar2 = (undefined4 *)FUN_005e38b0(0x478);
+    puVar2 = (undefined4 *)Idol_New(0x478);
     puVar1 = (undefined4 *)0x0;
     if (puVar2 != (undefined4 *)0x0) {
       puVar2[1] = 0;
@@ -12555,7 +12555,7 @@ void idol::SaveDataListCallback(undefined4 *param_1,uint *param_2,undefined4 *pa
   
   puVar3 = GameSavePtr;
   if (GameSavePtr == (undefined4 *)0x0) {
-    puVar6 = (undefined4 *)FUN_005e38b0(0x478);
+    puVar6 = (undefined4 *)Idol_New(0x478);
     puVar3 = (undefined4 *)0x0;
     if (puVar6 != (undefined4 *)0x0) {
       puVar6[1] = 0;
@@ -12678,8 +12678,8 @@ LAB_004e973c:
 LAB_004e975c:
     iVar9 = snprintf(acStack_e8,"/%s/ps3data/SAVEDATA/ICON0.PNG",puVar3 + 0x119);
   }
-  uVar5 = FUN_004ef34c(iVar9);
-  FUN_004ef4d0(uVar5,acStack_e8,auStack_190);
+  uVar5 = FileSys_Get(iVar9);
+  FileSys_ResolvePath(uVar5,acStack_e8,auStack_190);
   DAT_0111162c = 0;
   DAT_01111628 = &DAT_01111630;
   DAT_01111620 = 0;
@@ -12720,7 +12720,7 @@ void idol::SaveDataStatusListCallback(undefined4 *param_1,uint *param_2,uint *pa
   print_tty2("\n***Inside SaveDataStatusListCallback***\n");
   puVar4 = GameSavePtr;
   if (GameSavePtr == (undefined4 *)0x0) {
-    puVar6 = (undefined4 *)FUN_005e38b0(0x478);
+    puVar6 = (undefined4 *)Idol_New(0x478);
     puVar4 = (undefined4 *)0x0;
     if (puVar6 != (undefined4 *)0x0) {
       puVar6[1] = 0;
@@ -12888,7 +12888,7 @@ void FUN_004e9da0(undefined4 *param_1,undefined8 param_2,undefined4 *param_3)
   print_tty2("\n***Inside SaveFileOpListCallback***\n");
   puVar2 = GameSavePtr;
   if (GameSavePtr == (undefined4 *)0x0) {
-    puVar4 = (undefined4 *)FUN_005e38b0(0x478);
+    puVar4 = (undefined4 *)Idol_New(0x478);
     puVar2 = (undefined4 *)0x0;
     if (puVar4 != (undefined4 *)0x0) {
       puVar4[1] = 0;
@@ -12939,8 +12939,8 @@ LAB_004ea180:
     print_tty2("*--- Saving Pic1.png ---*\n");
     iVar5 = snprintf(acStack_838,"/%s/ps3data/SAVEDATA/%s",puVar2 + 0x119,
                            (ulonglong)*(uint *)(iVar5 + 0x4a8) + 0x28);
-    uVar3 = FUN_004ef34c(iVar5);
-    FUN_004ef4d0(uVar3,acStack_838,auStack_438);
+    uVar3 = FileSys_Get(iVar5);
+    FileSys_ResolvePath(uVar3,acStack_838,auStack_438);
     iVar5 = idol::fileAllocLoad(auStack_438,g_pSaveBuffer,local_840);
     uVar1 = g_pSaveBuffer;
     if (iVar5 == 0) {
@@ -12970,8 +12970,8 @@ LAB_004ea180:
     print_tty2("*--- Saving Icon0.png ---*\n");
     iVar5 = snprintf(acStack_838,"/%s/ps3data/SAVEDATA/maps/map[%d].png",puVar2 + 0x119,
                            puVar2[7]);
-    uVar3 = FUN_004ef34c(iVar5);
-    FUN_004ef4d0(uVar3,acStack_838,auStack_438);
+    uVar3 = FileSys_Get(iVar5);
+    FileSys_ResolvePath(uVar3,acStack_838,auStack_438);
     iVar5 = idol::fileAllocLoad(auStack_438,g_pSaveBuffer,local_840);
     uVar1 = g_pSaveBuffer;
     if (iVar5 == 0) {
@@ -13072,7 +13072,7 @@ void idol::cb_data_status_load(undefined4 *param_1,int param_2,int *param_3)
   bVar3 = false;
   puVar4 = GameSavePtr;
   if (GameSavePtr == (undefined4 *)0x0) {
-    puVar5 = (undefined4 *)FUN_005e38b0(0x478);
+    puVar5 = (undefined4 *)Idol_New(0x478);
     puVar4 = (undefined4 *)0x0;
     if (puVar5 != (undefined4 *)0x0) {
       puVar5[1] = 0;
@@ -13183,7 +13183,7 @@ void idol::cb_data_status_load(undefined4 *param_1,int param_2,int *param_3)
           if (bVar3) {
             puVar4 = GameSavePtr;
             if (GameSavePtr == (undefined4 *)0x0) {
-              puVar5 = (undefined4 *)FUN_005e38b0(0x478);
+              puVar5 = (undefined4 *)Idol_New(0x478);
               puVar4 = (undefined4 *)0x0;
               if (puVar5 != (undefined4 *)0x0) {
                 puVar5[1] = 0;
@@ -13269,7 +13269,7 @@ void idol::cb_file_operation_load(undefined4 *param_1,undefined8 param_2,undefin
   
   puVar7 = GameSavePtr;
   if (GameSavePtr == (undefined4 *)0x0) {
-    puVar8 = (undefined4 *)FUN_005e38b0(0x478);
+    puVar8 = (undefined4 *)Idol_New(0x478);
     puVar7 = (undefined4 *)0x0;
     if (puVar8 != (undefined4 *)0x0) {
       puVar8[1] = 0;
@@ -13363,7 +13363,7 @@ void FUN_004eab50(undefined4 *param_1,uint *param_2)
   print_tty2("Found %d existing saves...",(ulonglong)*param_2);
   puVar1 = GameSavePtr;
   if (GameSavePtr == (undefined4 *)0x0) {
-    puVar2 = (undefined4 *)FUN_005e38b0(0x478);
+    puVar2 = (undefined4 *)Idol_New(0x478);
     puVar1 = (undefined4 *)0x0;
     if (puVar2 != (undefined4 *)0x0) {
       puVar2[1] = 0;
@@ -14382,7 +14382,7 @@ ulonglong FUN_004ec544(void)
 // 0x04ec568 (0x184 bytes)
 // strings: 0065aad8: 'WwsLightTfrag'
 
-void FUN_004ec568(undefined4 *param_1)
+void FUN_004ec568(u8 *param_1,int param_2)
 
 {
   undefined4 *puVar1;
@@ -15062,7 +15062,7 @@ void FUN_004ee0a8(void)
 
 
 // 0x04ee1e0 (0x18c bytes)
-void FUN_004ee1e0(undefined4 *param_1)
+void FUN_004ee1e0(u8 *param_1)
 
 {
   *param_1 = 0;
@@ -15199,7 +15199,7 @@ undefined8 FUN_004ee3fc(int *param_1)
 
 
 // 0x04ee594 (0x54 bytes)
-void FUN_004ee594(int param_1,undefined4 param_2,undefined4 param_3,undefined1 param_4)
+void FUN_004ee594(u8 *param_1,int param_2,int param_3,int param_4)
 
 {
   int iVar1;
@@ -15534,7 +15534,7 @@ undefined8 FUN_004eef00(int param_1)
   }
   print_tty2("  contentInfoPath:[%s]\n",__dest);
   print_tty2("  usrdirPath:[%s]\n",__dest_00);
-  uVar2 = FUN_004ef34c();
+  uVar2 = FileSys_Get();
   sVar3 = strlen("/app_home");
   iVar4 = FUN_005ccb28(__dest_00,"/app_home",sVar3);
   if (iVar4 == 0) {
@@ -15642,7 +15642,7 @@ void FUN_004ef320(undefined8 param_1)
 
 
 // 0x04ef34c (0x70 bytes)
-void FUN_004ef34c(void)
+u8 *FileSys_Get(void)
 
 {
   if (DAT_01592400 == '\0') {
@@ -15696,7 +15696,7 @@ char * FUN_004ef3bc(char *param_1,undefined8 param_2)
 // 0x04ef4d0 (0x214 bytes)
 // strings: 0065b0f0: '/dev_hdd0' | 0065b100: '/dev_hdd1' | 0065b0d4: '/app_home' | 0065b0e4: '/dev_bdvd'
 
-char * FUN_004ef4d0(char *param_1,char *param_2,undefined8 param_3)
+char *FileSys_ResolvePath(u8 *param_1,const char *param_2,char *param_3)
 
 {
   int iVar1;
@@ -15760,7 +15760,7 @@ char * FUN_004ef6e4(undefined8 param_1,undefined8 param_2)
   char *pcVar1;
   char acStack_50 [64];
   
-  FUN_004ef4d0(param_1,param_2,acStack_50);
+  FileSys_ResolvePath(param_1,param_2,acStack_50);
   pcVar1 = strcpy((char *)param_2,acStack_50);
   return pcVar1;
 }

@@ -2549,10 +2549,31 @@ struct UpdateCam { /* DL struct UpdateCam (RC1 size 0xa0); 48 of them at UpdateC
 
 extern undefined4 DAT_0011eec0; /* 0x11eec0 */
 extern undefined4 DAT_0015aa20; /* 0x15aa20 */
+extern undefined4 DAT_006517ac; /* no defined data */
+extern undefined4 DAT_006517dc; /* no defined data */
+extern undefined4 DAT_0065180c; /* no defined data */
+extern undefined4 DAT_0065183c; /* no defined data */
 extern undefined4 DAT_00652bf8; /* no defined data */
 extern undefined4 DAT_00652c00; /* no defined data */
 extern undefined4 DAT_0071a32c; /* 0x71a32c */
 extern undefined4 DAT_0071a364; /* 0x71a364 */
+extern undefined4 DAT_0071c9a0; /* 0x71c9a0 */
+extern undefined4 DAT_0071c9c0; /* 0x71c9c0 */
+extern undefined4 DAT_0071c9e0; /* 0x71c9e0 */
+extern undefined4 DAT_0071ca00; /* 0x71ca00 */
+extern undefined4 DAT_0071ca20; /* 0x71ca20 */
+extern undefined4 DAT_0071ca40; /* 0x71ca40 */
+extern undefined4 DAT_0071ca60; /* 0x71ca60 */
+extern undefined4 DAT_0071ca64; /* no defined data */
+extern undefined4 DAT_0071ca80; /* 0x71ca80 */
+extern undefined4 DAT_0071caa0; /* 0x71caa0 */
+extern undefined4 DAT_0071cac0; /* 0x71cac0 */
+extern undefined4 DAT_0071cae0; /* 0x71cae0 */
+extern undefined4 DAT_0071cb00; /* 0x71cb00 */
+extern undefined4 DAT_0071cb60; /* 0x71cb60 */
+extern undefined4 DAT_0071cb64; /* 0x71cb64 */
+extern undefined4 DAT_0071cb68; /* 0x71cb68 */
+extern undefined4 DAT_0071cb6c; /* 0x71cb6c */
 extern undefined4 DAT_0071fad8; /* no defined data */
 extern undefined2 DAT_0072b33c; /* 0x72b33c */
 extern undefined2 DAT_0072b348; /* 0x72b348 */
@@ -2604,6 +2625,8 @@ extern pointer PTR_DAT_0071a36c; /* 0x71a36c */
 extern pointer PTR_DAT_0071a370; /* 0x71a370 */
 extern pointer PTR_DAT_0071a378; /* 0x71a378 */
 extern pointer32 PTR_DrawSceneShipEffect_007059a8; /* 0x7059a8 */
+extern pointer32 PTR_GameStart_007035d8; /* 0x7035d8 */
+extern pointer32 PTR_Global_QuickMovieMalloc_00704d30; /* 0x704d30 */
 extern pointer PTR_PTR_0071a35c; /* 0x71a35c */
 extern pointer PTR_PTR_0071a360; /* 0x71a360 */
 extern pointer PTR_PTR_0071a368; /* 0x71a368 */
@@ -2613,6 +2636,7 @@ extern pointer32 PTR_memcard_printGameSaved_00705f88; /* 0x705f88 */
 extern pointer32 PTR_memcard_print_LoadingCB_PS3_00705f98; /* 0x705f98 */
 extern pointer32 PTR_memcard_print_SavingGameCB_PS3_00705f90; /* 0x705f90 */
 extern pointer32 PTR_memcard_print_TimeForPain_00705f78; /* 0x705f78 */
+extern pointer32 PTR_sysutil_gameexit_callback_00703618; /* 0x703618 */
 extern undefined4 _DAT_000e93b0; /* direct read */
 extern undefined4 _DAT_000e93c0; /* direct read */
 extern undefined4 _DAT_000e93d0; /* direct read */
@@ -2625,4 +2649,5 @@ extern undefined4 _DAT_0011e880; /* direct read */
 extern undefined4 _DAT_0011e890; /* direct read */
 extern undefined4 japanese_mode; /* 0xd9208 */
 extern char s_MESSAGE_DOES_NOT_EXIST_00720b94[23]; /* 0x720b94 */
+extern undefined4 skip_directionalLightCopy; /* 0x118a8 */
 extern undefined1 stack0xffffffd0[16]; /* stack slot, not a real global */

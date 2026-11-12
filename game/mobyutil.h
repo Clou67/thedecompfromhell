@@ -2091,7 +2091,7 @@ void MB_ToastMessageByIndex(int idx);
 void MB_UnlockLevel(LevelId param_1);
 void MB_UnlockTrophy(TROPHIES_ENUM trophy);
 void MB_UnlockItem(longlong param_1,char param_2);
-void SetNtscPalTiming(void);
+void SetNtscPalTiming(int param_1);
 void ____MB_BuildScaledRotMtx (double param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4, undefined8 param_5,undefined8 param_6,undefined8 param_7);
 void MB_compressVector(float *v,int *out);
 void MB_decompressVector(float *out,int *in);

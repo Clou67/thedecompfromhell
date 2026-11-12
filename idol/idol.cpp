@@ -228,7 +228,7 @@ Localizer *Locale_GetInstance(void)
   int iVar1;
   
   if (DAT_00902ec4 == 0) {
-    iVar1 = FUN_005e38b0(0x1c);
+    iVar1 = Idol_New(0x1c);
     DAT_00902ec4 = 0;
     if (iVar1 != 0) {
       *(undefined4 *)(iVar1 + 4) = 0;
@@ -456,7 +456,7 @@ void FUN_00503dfc(void)
 
 
 // 0x0503e00 (0x18c bytes)
-longlong LoadAssetFromFile(undefined8 param_1,undefined8 param_2,longlong param_3)
+int LoadAssetFromFile(const char *param_1,void *param_2,int param_3)
 
 {
   undefined8 uVar1;
@@ -636,7 +636,7 @@ void FUN_00504374(longlong param_1,undefined8 param_2,undefined4 param_3)
 // 0x05043b0 (0x74 bytes)
 // strings: 0065f814: 'Scratch Memory'
 
-void FUN_005043b0(longlong param_1)
+void FUN_005043b0(u8 *param_1)
 
 {
   undefined8 uVar1;
@@ -649,7 +649,7 @@ void FUN_005043b0(longlong param_1)
 
 
 // 0x0504424 (0x44 bytes)
-void idol::InitGameGraphics(int param_1)
+void idol::InitGameGraphics(u8 *param_1)
 
 {
   (*(code *)**(undefined4 **)(**(int **)(param_1 + 0xc4) + 8))
@@ -661,7 +661,7 @@ void idol::InitGameGraphics(int param_1)
 // 0x0504468 (0x248 bytes)
 // strings: 0065f824: 'Common/UI/DialogMessages.chl' | 0065f844: 'LoadDialogMessages() error\n'
 
-void FUN_00504468(longlong param_1)
+void FUN_00504468(u8 *param_1)
 
 {
   undefined8 uVar1;
@@ -729,7 +729,7 @@ void FUN_00504468(longlong param_1)
 // 0x05046b0 (0xbc bytes)
 // strings: 0065f860: 'GameAuthenticate' | 0065f878: 'ERROR authentication thread create failed\n'
 
-void idol::GameAuthenticate(int param_1,char *param_2,char *param_3)
+void idol::GameAuthenticate(u8 *param_1,char *param_2,char *param_3)
 
 {
   int iVar1;
@@ -818,7 +818,7 @@ void FUN_0050493c(undefined8 param_1,int param_2)
 // 0x0504988 (0x278 bytes)
 // strings: 0065f8a4: '\n\nApp Name %s\n' | 0065f8b4: '/app_home' | 0065f8c4: 'Activating SKU %s\n' | 0065f8dc: 'NPUA' (raw) | 0065f8e4: 'BCUS' (raw) | 0065f8ec: 'NPEA' (raw) | 0065f8f4: 'BCES' (raw) | 0065f8fc: 'NPHA' (raw) | 0065f904: 'NPJA' (raw) | 0065f90c: 'Registered SKU %d  Region is %d\n\n' | 0065f934: '/dev_bdvd'
 
-void FUN_00504988(int param_1,undefined8 param_2,char param_3)
+void FUN_00504988(u8 *param_1,const char *param_2,int param_3)
 
 {
   undefined4 uVar1;
@@ -891,7 +891,7 @@ void FUN_00504988(int param_1,undefined8 param_2,char param_3)
 
 
 // 0x0504c00 (0x38 bytes)
-void idol::CheckLicense(int *unk1,int glow_rgba,char *gameId,char *gameIdExt,bool isDisc,int param_6)
+void idol::CheckLicense(int *unk1,const char *glow_rgba,char *gameId,char *gameIdExt,bool isDisc,int param_6)
 
 {
   int iVar1;
@@ -1377,7 +1377,7 @@ void FUN_005055e8(undefined8 param_1,undefined4 *param_2)
 // 0x050565c (0x144 bytes)
 // strings: 0065f9a8: 'Dolby Digital' | 0065f9b8: 'Linear PCM' | 0065f9c8: 'cellAudioOutConfigure failed with error 0x%x\n' | 0065f9f8: 'cellAudioInit failed with error 0x%x\n'
 
-void FUN_0050565c(undefined4 param_1)
+void FUN_0050565c(u8 *param_1)
 
 {
   int iVar2;
@@ -1540,7 +1540,7 @@ void FUN_00505b0c(void)
 
 
 // 0x0505b30 (0x7c bytes)
-void FUN_00505b30(undefined8 param_1,undefined4 *param_2,undefined8 param_3)
+void Sound_LoadBank(u8 *param_1,u8 *param_2,u32 *param_3)
 
 {
   longlong lVar1;
@@ -1559,8 +1559,8 @@ void FUN_00505bac(undefined8 param_1,undefined8 param_2,undefined4 *param_3,unde
   longlong lVar2;
   GPiece<72> auStack_70;
   
-  uVar1 = FUN_004ef34c();
-  FUN_004ef4d0(uVar1,param_1,auStack_70);
+  uVar1 = FileSys_Get();
+  FileSys_ResolvePath(uVar1,param_1,auStack_70);
   lVar2 = snd_BankLoadEx(auStack_70,param_2);
   (*(code *)*param_3)(lVar2 + (ZERO_MASK((int)lVar2) & -lVar2 - 1U),param_4);
   return;
@@ -1575,8 +1575,8 @@ longlong FUN_00505c6c(undefined8 param_1,undefined8 param_2)
   longlong lVar2;
   GPiece<72> auStack_60;
   
-  uVar1 = FUN_004ef34c();
-  FUN_004ef4d0(uVar1,param_1,auStack_60);
+  uVar1 = FileSys_Get();
+  FileSys_ResolvePath(uVar1,param_1,auStack_60);
   lVar2 = snd_BankLoadEx(auStack_60,param_2);
   return lVar2 + (ZERO_MASK((int)lVar2) & -lVar2 - 1U);
 }

@@ -3,7 +3,6 @@
 // 21 functions, 0x21ccbc-0x222564
 #include <stdio.h>
 #include "game/update/moby1242.h"
-#include "game/boot.h"
 #include "game/camera.h"
 #include "game/collproc.h"
 #include "game/debug.h"

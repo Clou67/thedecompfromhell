@@ -47,7 +47,7 @@ void handle_invalidate_magic(undefined4 *param_1)
 
 // SDK libfios.a(fios_base.ppu.o): cell::fios::object::operator new(unsigned int, unsigned int, unsigned int)  [exact match]
 // 0x051080c (0x94 bytes)
-undefined4 FUN_0051080c(undefined4 param_1,uint param_2,uint param_3)
+void *FUN_0051080c(u32 param_1,u32 param_2,u32 param_3)
 
 {
   int iVar1;

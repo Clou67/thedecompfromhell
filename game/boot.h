@@ -1,35 +1,22 @@
 #pragma once
 // game/boot.h
 #include "types.h"
+#include "game/sound.h"
+#include "idol/mUnk.h"
+
+// ---- types
+/* an ambient sound of the title scene (@0x71cb5c, ends with start == -1) */
+typedef struct SceneSound {
+    int start;               /* scene frame it starts at */
+    int end;                 /* and stops after; -1 plays to the end of the loop */
+    int sound;
+    int handle;              /* the playing channel, -1 none */
+} SceneSound;
 
 // ---- globals
-extern undefined4 DAT_00280000; /* 0x280000 */
 extern undefined4 DAT_00651080; /* no defined data */
-extern undefined4 DAT_006517ac; /* no defined data */
-extern undefined4 DAT_006517dc; /* no defined data */
-extern undefined4 DAT_0065180c; /* no defined data */
-extern undefined4 DAT_0065183c; /* no defined data */
 extern undefined4 DAT_0066173c; /* no defined data */
 extern undefined4 DAT_0071c980; /* 0x71c980 */
-extern undefined4 DAT_0071c984; /* no defined data */
-extern undefined4 DAT_0071c9a0; /* 0x71c9a0 */
-extern undefined4 DAT_0071c9c0; /* 0x71c9c0 */
-extern undefined4 DAT_0071c9e0; /* 0x71c9e0 */
-extern undefined4 DAT_0071ca00; /* 0x71ca00 */
-extern undefined4 DAT_0071ca20; /* 0x71ca20 */
-extern undefined4 DAT_0071ca40; /* 0x71ca40 */
-extern undefined4 DAT_0071ca60; /* 0x71ca60 */
-extern undefined4 DAT_0071ca64; /* no defined data */
-extern undefined4 DAT_0071ca80; /* 0x71ca80 */
-extern undefined4 DAT_0071caa0; /* 0x71caa0 */
-extern undefined4 DAT_0071cac0; /* 0x71cac0 */
-extern undefined4 DAT_0071cae0; /* 0x71cae0 */
-extern undefined4 DAT_0071cb00; /* 0x71cb00 */
-extern undefined4 DAT_0071cb5c; /* 0x71cb5c */
-extern undefined4 DAT_0071cb60; /* 0x71cb60 */
-extern undefined4 DAT_0071cb64; /* 0x71cb64 */
-extern undefined4 DAT_0071cb68; /* 0x71cb68 */
-extern undefined4 DAT_0071cb6c; /* 0x71cb6c */
 extern undefined4 DAT_0071cc08; /* 0x71cc08 */
 extern undefined4 DAT_0071cc2c; /* no defined data */
 extern undefined4 DAT_0071ccc0; /* 0x71ccc0 */
@@ -40,9 +27,9 @@ extern undefined4 DAT_00731f48; /* 0x731f48 */
 extern undefined4 DAT_00731f4c; /* 0x731f4c */
 extern undefined4 DAT_00731f50; /* 0x731f50 */
 extern undefined4 DAT_00731f54; /* 0x731f54 */
-extern undefined4 DAT_008fa630; /* 0x8fa630 */
-extern undefined4 DAT_009030e4; /* 0x9030e4 */
-extern undefined4 DAT_0090d714; /* 0x90d714 */
+extern void *DAT_008fa630; /* 0x8fa630 */ /* type set in global_types.tsv */
+extern void *DAT_009030e4; /* 0x9030e4: the object at 0x90d98c */ /* type set in global_types.tsv */
+extern u8 *DAT_0090d714; /* 0x90d714 */ /* type set in global_types.tsv */
 extern undefined4 DAT_0090d718; /* 0x90d718 */
 extern undefined4 DAT_0090d71c; /* 0x90d71c */
 extern undefined4 DAT_0090d720; /* 0x90d720 */
@@ -111,15 +98,14 @@ extern undefined4 DAT_00926bf4; /* 0x926bf4 */
 extern undefined4 DAT_00926bf8; /* 0x926bf8 */
 extern undefined4 DAT_00926bfc; /* 0x926bfc */
 extern undefined4 DAT_00926c00; /* no defined data */
-extern undefined4 DAT_00927078; /* no defined data */
 extern undefined4 DAT_00927118; /* 0x927118 */
 extern undefined4 DAT_0092711c; /* 0x92711c */
 extern undefined4 DAT_00927130; /* 0x927130 */
 extern undefined4 DAT_00927134; /* 0x927134 */
 extern undefined4 DAT_009271d0; /* 0x9271d0 */
 extern undefined4 DAT_009271d4; /* 0x9271d4 */
-extern undefined4 DAT_009271f8; /* 0x9271f8 */
-extern undefined4 DAT_00964564; /* 0x964564 */
+extern int *DAT_009271f8; /* 0x9271f8 */ /* type set in global_types.tsv */
+extern u32 *DAT_00964564; /* 0x964564: the initialised-data records */ /* type set in global_types.tsv */
 extern undefined4 DAT_0096c1e4; /* 0x96c1e4 */
 extern undefined4 DAT_0096c1e8; /* 0x96c1e8 */
 extern undefined4 DAT_0096c1ec; /* 0x96c1ec */
@@ -130,10 +116,9 @@ extern undefined4 DAT_00a0f5b0; /* no defined data */
 extern undefined4 DAT_00a0f6e4; /* no defined data */
 extern undefined4 DAT_00a10680; /* no defined data */
 extern undefined4 DAT_00a10724; /* 0xa10724 */
-extern undefined4 DAT_00a108fc; /* 0xa108fc */
+extern int *DAT_00a108fc; /* 0xa108fc: the level's gameplay file */ /* type set in global_types.tsv */
 extern undefined4 DAT_00a10908; /* 0xa10908 */
 extern undefined4 DAT_00a15f7c; /* 0xa15f7c */
-extern undefined4 DAT_00a15f80; /* 0xa15f80 */
 extern undefined4 DAT_00a1a7b8; /* 0xa1a7b8 */
 extern undefined4 DAT_00a1a7bc; /* 0xa1a7bc */
 extern undefined4 DAT_00a1bfd8; /* 0xa1bfd8 */
@@ -150,8 +135,6 @@ extern undefined MobyTexLookup; /* 0xa38290 */
 extern pointer PTR_DAT_008fa62c; /* 0x8fa62c */
 extern pointer PTR_DAT_00902e98; /* 0x902e98 */
 extern pointer32 PTR_FUN_007108d0; /* 0x7108d0 */
-extern pointer32 PTR_GameStart_007035d8; /* 0x7035d8 */
-extern pointer32 PTR_Global_QuickMovieMalloc_00704d30; /* 0x704d30 */
 extern pointer PTR_PTR_00661790; /* 0x661790 */
 extern undefined * PTR_PTR_00661820; /* 0x661820 */
 extern undefined * PTR_PTR_00661878; /* 0x661878 */
@@ -159,62 +142,58 @@ extern undefined * PTR_PTR_00661898; /* 0x661898 */
 extern undefined * PTR_PTR_00661940; /* 0x661940 */
 extern pointer PTR_PTR_00661960; /* 0x661960 */
 extern pointer32 PTR_TOC_BASE_0070379c; /* 0x70379c */
-extern undefined * PTR_s_english_0071cb3c; /* 0x71cb3c */
-extern pointer32 PTR_sound_BasicCB_00707c38; /* 0x707c38 */
-extern pointer32 PTR_sysutil_gameexit_callback_00703618; /* 0x703618 */
-extern undefined4 ShrubInstanceBase; /* 0xa1a794 */
-extern undefined4 ShrubInstanceCnt; /* 0xa1a798 */
+extern ShrubInstance *ShrubInstanceBase; /* 0xa1a794 */ /* type set in global_types.tsv */
 extern ShrubInstance *ShrubInstanceEnd; /* type set in global_types.tsv */
-extern undefined8 TexSamplerFlags; /* 0x10ee2e0 */
 extern undefined4 TieCnt; /* 0xe583fc */
 extern undefined4 TieCntBase; /* 0xa18388 */
-extern undefined4 TieInstanceBase; /* 0xa18384 */
-extern undefined4 g_EngineData; /* 0xa15f60 */
+extern TieInstance *TieInstanceBase; /* 0xa18384 */ /* type set in global_types.tsv */
+extern struct BinkPlayer g_BinkPlayerObject; /* 0x927078: what g_pBinkPlayer normally points at */ /* type set in global_types.tsv */
+extern u32 g_BootSoundBank; /* 0x71f404 */ /* type set in global_types.tsv */
+extern SoundDef g_BootSoundDefs[13]; /* 0x71c984: the boot sound bank's defs; [7..11] belong to the frame class */ /* type set in global_types.tsv */
 extern u8 *g_FontVram; /* 0xa10930: 0x100000 bytes, the Japanese font texture */ /* type set in global_types.tsv */
 extern int g_FrontEndLogoAlpha; /* 0x90d708 */
 extern int g_FrontEndPressStartAlpha; /* 0x90d70c */
 extern int g_FrontEndTimer; /* 0x90d710 */
-extern undefined4 g_JapanFontTex; /* 0x90d724 */
 extern undefined4 g_JapanLogoTex; /* 0x90d748 */
 extern int g_LogoMovieDone; /* 0x969cd8 */
-extern int g_ScreenHeight; /* 0x966b04 */
+extern void *g_MobyClassUpdates[240]; /* 0xa34f80: update function per mClass (follows MobyClasses) */ /* type set in global_types.tsv */
 extern undefined4 g_boltsMined; /* 0xa0fd18 */
 extern undefined4 g_loadingPlanet; /* 0xa10700 */
-extern void * g_pBinkPlayer; /* 0x8fa410 */
 extern u32 *g_pDebugCounterMode; /* 0x9271fc */ /* type set in global_types.tsv */
 extern int * g_pLocaleBuffer; /* 0xa1092c */
 extern void * g_pNextMainFunc; /* 0x71cc70 */
-extern undefined4 skip_directionalLightCopy; /* 0x118a8 */
+extern const char *s_LanguageNames[]; /* 0x71cb3c: "english", ... */ /* type set in global_types.tsv */
+extern SceneSound s_SceneSounds[]; /* 0x71cb5c */ /* type set in global_types.tsv */
 
 // ---- functions
 void _init(void);
-undefined8 STUB_00010230_RET_0(...);
+int STUB_00010230_RET_0(void);
 void PlayLogoMovie(void);
-undefined * GetLanguageNameByIdx(void);
+const char *GetLanguageNameByIdx(void);
 void PlayAttractMovie(int idx);
 void ZeroFillKeyGlobals(void);
 void FrontEnd_DrawLogo(void);
 char FrontEnd_UpdateSceneCamera(void);
 void FrontEnd_Draw(void);
 void FrontEnd_Update(void);
-int IsSoundHandlePlaying(int handle,int soundId);
-void STUB_0001152c(...);
+int IsSoundHandlePlaying(int handle, int soundId);
+void STUB_0001152c(void);
 void LoadLanguageHelpMsgs(void);
-MobyInstance * LoadGameplay(int *gameplay,int param_2);
+u8 *LoadGameplay(int *gameplay, int size);
 void Load_Front_End(void);
 void PrepareFrontbin(void);
 void DrawSplashScreen(void *tex);
-void ShowSplash(void *tex,int holdFrames,int fadeInFrames,int fadeOutFrames,int blackFrames);
-void LoadAndShowSplash (char *path,int holdFrames,int fadeInFrames,int fadeOutFrames,int blackFrames);
+void ShowSplash(void *tex, int holdFrames, int fadeInFrames, int fadeOutFrames, int blackFrames);
+void LoadAndShowSplash(char *path, int holdFrames, int fadeInFrames, int fadeOutFrames, int blackFrames);
 void GameStart(void);
-void LoadAndShowSplashVram (char *texPath,char *vramPath,int holdFrames,int fadeInFrames,int fadeOutFrames, int blackFrames);
+void LoadAndShowSplashVram(char *texPath, char *vramPath, int holdFrames, int fadeInFrames, int fadeOutFrames, int blackFrames);
 void Transition_DrawSky(void);
 void ____SectionHeader_Boot_13a0c(void);
 void GameShutDown(void);
-void sysutil_gameexit_callback(longlong arg);
-uint CopyInitDataRecords(void);
+void sysutil_gameexit_callback(u64 status, u64 param, void *userData);
+u32 CopyInitDataRecords(void);
 void ResetLevelGlobals(void);
-int boot(int param_1,char **param_2,char **param_3);
+int boot(int argc, char **argv, char **envp);
 void StaticDestroy_BootGlobals(void);
 void StaticInit_BootGlobals(void);
-undefined4 _start(void);
+u32 _start(u64 argc, u32 *argv, u32 *envp, u64 envc, u64 tls0, u32 tls1, u32 tls2, u32 tls3);

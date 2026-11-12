@@ -1428,7 +1428,7 @@ void ChooseLoadingScreen(void)
   if (((g_SpaceSceneFrame == 1) && (Level != Veldin)) &&
      ((Level != Novalis || (g_SeenPlanets.Kerwan != '\0')))) {
     STUB_00505f50();
-    FUN_005062f4(DAT_0071f404,g_currentLoadingScreen,0x400,0,0,0,0,g_SoundChannels);
+    FUN_005062f4(g_BootSoundBank,g_currentLoadingScreen,0x400,0,0,0,0,g_SoundChannels);
     STUB_00505f4c();
     STUB_00505d20();
   }
@@ -3760,14 +3760,14 @@ void SpaceTransition_LoadWad(void)
     piVar7 = piVar7 + 1;
   } while (iVar15 < 0x46);
   ParseSpaceSceneChunk(0);
-  DAT_0071f404 = -1;
+  g_BootSoundBank = -1;
   LoadAssetFromFile("rc1/ps3data/global/space_wad.bnk",pMVar3 + 0x460,0xffffffffffffffff);
-  FUN_00505b30(pMVar3 + 0x460,&PTR_sound_BasicCB_00707c38,&DAT_0071f404);
+  Sound_LoadBank(pMVar3 + 0x460,&PTR_sound_BasicCB_00707c38,&g_BootSoundBank);
   do {
     FlushCache(0);
     STUB_00503078(0);
     STUB_00505d20();
-  } while (DAT_0071f404 == -1);
+  } while (g_BootSoundBank == -1);
   STUB_00505f48();
   return;
 }
@@ -3791,28 +3791,28 @@ void PlaySpaceMovie(undefined8 param_1)
   uVar6 = ZEXT48(g_pBinkPlayer);
   DAT_009637cb = DAT_009637cb | 8;
   if (g_pBinkPlayer == (void *)0x0) {
-    uVar1 = FUN_005e38b0(0x60);
+    uVar1 = Idol_New(0x60);
     uVar6 = 0;
     if ((int)uVar1 != 0) {
-      FUN_004d5d5c(uVar1);
+      BinkPlayer_Init(uVar1);
       uVar6 = uVar1;
     }
     g_pBinkPlayer = (void *)uVar6;
   }
   iVar3 = snprintf(acStack_f0,"/rc1/ps3data/movies/story[%d].bik",param_1);
-  uVar2 = FUN_004ef34c(iVar3);
-  FUN_004ef4d0(uVar2,acStack_f0,auStack_b0);
-  FUN_004d5448(uVar6,auStack_b0,g_Language,0x400);
+  uVar2 = FileSys_Get(iVar3);
+  FileSys_ResolvePath(uVar2,acStack_f0,auStack_b0);
+  BinkPlayer_Start(uVar6,auStack_b0,g_Language,0x400);
   iVar3 = 0;
   lVar5 = 0;
   while( true ) {
     UpdatePad();
     lVar5 = (ZERO_MASK((g_Pad.buttonsPressedThisFrame & START)) & lVar5 - 1U) + 1;
     UpdateOcclusion(0);
-    iVar4 = FUN_004d5524(uVar6);
+    iVar4 = BinkPlayer_GetState(uVar6);
     cellSysutilCheckCallback();
     if (1 < iVar4) {
-      iVar3 = FUN_004d59e8(uVar6);
+      iVar3 = BinkPlayer_DrawFrame(uVar6);
     }
     Render_DispatchJob();
     if ((int)lVar5 != 0) break;
@@ -4008,7 +4008,7 @@ void DoSpaceTransition(void)
     STUB_00505f48();
     printf("unloaded sound bank %#010x\n",*(undefined4 *)(g_pSoundDefs + 0x1c));
   }
-  DAT_0071f404 = 0;
+  g_BootSoundBank = 0;
   FUN_00506664(0);
   STUB_005066bc_RET_0(0);
   g_ViewContext.fogR = 0;

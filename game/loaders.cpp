@@ -2309,7 +2309,7 @@ undefined8 LoadLevelFiles(void)
     if (g_LoadingStage == 7) {
       iVar3 = STUB_00505d20();
       sVar1 = g_LoadingStage;
-      if ((iVar3 == 0) && (DAT_0071f404 != -1)) {
+      if ((iVar3 == 0) && (g_BootSoundBank != -1)) {
         STUB_00505f48();
         return 1;
       }
@@ -2318,13 +2318,13 @@ undefined8 LoadLevelFiles(void)
       iVar3 = STUB_00505d20();
       sVar1 = g_LoadingStage;
       if (iVar3 == 0) {
-        DAT_0071f404 = -1;
+        g_BootSoundBank = -1;
         snprintf(acStack_160,"rc1/ps3data/level%d/sound.bnk",Level);
         FUN_004fe5c8(TEX_BASE,0x10);
         uVar2 = FUN_004fe5ec(TEX_BASE);
         uVar4 = LoadAssetFromFile(acStack_160,uVar2,0xffffffffffffffff);
         FUN_004fe6ec(TEX_BASE,uVar4);
-        FUN_00505b30(uVar2,&PTR_sound_BasicCB_00707c38,&DAT_0071f404);
+        Sound_LoadBank(uVar2,&PTR_sound_BasicCB_00707c38,&g_BootSoundBank);
         sVar1 = g_LoadingStage + 1;
       }
     }
@@ -2340,8 +2340,8 @@ undefined8 LoadLevelFiles(void)
       iVar3 = STUB_00505d20();
       sVar1 = g_LoadingStage;
       if (iVar3 == 0) {
-        snd_UnloadBank(DAT_0071f404,1);
-        DAT_0071f404 = 0;
+        snd_UnloadBank(g_BootSoundBank,1);
+        g_BootSoundBank = 0;
         sVar1 = g_LoadingStage + 1;
       }
     }
@@ -2349,7 +2349,7 @@ undefined8 LoadLevelFiles(void)
       if (DAT_00964562 == 0) {
         FUN_0060c0d0();
         sVar1 = 6;
-        if (DAT_0071f404 != 0) {
+        if (g_BootSoundBank != 0) {
           sVar1 = g_LoadingStage + 1;
         }
       }
@@ -2451,7 +2451,7 @@ int LoadAllMobys(int param_1,int param_2)
     DAT_00a1bfd8 = piVar17[0x1d] + (int)piVar17;
     iVar11 = (int)piVar17 + piVar17[1];
     IconTableEntry = (IconTableEntries *)((int)piVar17 + *(int *)(DAT_00a1bfd8 + 4));
-    DAT_00a4dae0 = DAT_0071f404;
+    DAT_00a4dae0 = g_BootSoundBank;
     TexturePointerArray = (int)piVar17 + *(int *)(DAT_00a1bfd8 + 8);
     TfragsCnt = (uint)*(ushort *)((int)DAT_00a15f74 + 6);
     OcclGrid = (void *)(iVar11 + ((uint)(ZERO_MASK(piVar17[1])) & -iVar11));
@@ -2606,7 +2606,7 @@ int LoadAllMobys(int param_1,int param_2)
         iVar33 = g_pSoundDefs + iVar28;
         iVar28 = iVar28 + 0x20;
         bVar1 = iVar11 < g_TotalSoundDefCnt;
-        *(undefined4 *)(iVar33 + 0x1c) = DAT_0071f404;
+        *(undefined4 *)(iVar33 + 0x1c) = g_BootSoundBank;
       } while (bVar1);
     }
     psVar29 = psVar26 + 4;
@@ -2657,7 +2657,7 @@ int LoadAllMobys(int param_1,int param_2)
               iVar6 = iVar4 + iVar9;
               iVar4 = iVar4 + iVar9;
               iVar9 = iVar9 + 0x20;
-              *(undefined4 *)(iVar6 + 0x1c) = DAT_0071f404;
+              *(undefined4 *)(iVar6 + 0x1c) = g_BootSoundBank;
               *(short *)(iVar4 + 0x1a) = (short)uVar10;
             } while (iVar19 < (int)(uint)*(byte *)(*(int *)((int)MobyClasses + iVar33) + 0xd));
           }

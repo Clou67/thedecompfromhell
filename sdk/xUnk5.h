@@ -19,7 +19,7 @@ undefined4 FUN_005e6a68(undefined4 param_1);
 void FUN_005e6ac0(undefined4 *param_1);
 void FUN_005e6ad0(undefined4 *param_1);
 void FUN_005e6ae0(undefined4 *param_1);
-void FUN_005e6af0(int *param_1,undefined8 param_2);
+void FUN_005e6af0(u8 *param_1,u8 *param_2);
 void FUN_005e6e10(undefined4 *param_1);
 void FUN_005e6e20(undefined4 *param_1);
 void FUN_005e6e30(undefined4 *param_1);

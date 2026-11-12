@@ -2871,7 +2871,7 @@ void FUN_005e387c(int param_1)
 
 
 // 0x05e38b0 (0xf4 bytes)
-int FUN_005e38b0(undefined8 param_1)
+void *Idol_New(u32 param_1)
 
 {
   undefined *puVar1;
@@ -2918,7 +2918,7 @@ void FUN_005e39a4(void)
 
 
 // 0x05e39dc (0x108 bytes)
-int FUN_005e39dc(undefined8 param_1,undefined8 param_2)
+void *FUN_005e39dc(u32 param_1,u32 param_2)
 
 {
   undefined *puVar1;

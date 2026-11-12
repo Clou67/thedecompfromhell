@@ -46,7 +46,7 @@ longlong FUN_005113b4(undefined8 param_1,int param_2,undefined4 param_3,int para
 void FUN_00511524(int param_1,uint param_2,int param_3,uint param_4,int param_5);
 undefined4 FUN_0051179c(int param_1,uint param_2,int param_3,int param_4,int param_5,int param_6);
 void FUN_005118e8(undefined4 *param_1,undefined8 param_2,undefined4 param_3,undefined4 param_4, uint param_5,undefined4 param_6);
-void FUN_00511a80(undefined4 *param_1,undefined8 param_2,undefined4 param_3,undefined4 param_4, undefined4 param_5,uint param_6,undefined4 param_7,undefined4 param_8);
+void FUN_00511a80(u8 *param_1,u8 *param_2,int param_3,u8 *param_4,int param_5,int param_6,int param_7,u8 *param_8);
 void FUN_00511c34(undefined4 *param_1,undefined8 param_2,undefined4 param_3,undefined4 param_4, undefined4 param_5,uint param_6,undefined4 param_7,undefined4 param_8);
 void FUN_00511de8(undefined4 *param_1,undefined8 param_2,undefined4 param_3,undefined4 param_4, undefined4 param_5,uint param_6,undefined4 param_7);
 void FUN_00511f8c(undefined4 *param_1,undefined8 param_2,undefined4 param_3,undefined4 param_4, undefined4 param_5,uint param_6,undefined4 param_7);

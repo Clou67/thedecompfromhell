@@ -20,7 +20,7 @@ char * FUN_0051923c(char *param_1,char *param_2,uint param_3);
 int FUN_00519310(char *param_1,char *param_2,uint param_3);
 size_t FUN_005193cc(undefined4 param_1,char *param_2,int param_3);
 void FUN_00519444(void);
-void FUN_005194f0(int *param_1);
+void FUN_005194f0(u8 *param_1);
 void FUN_005196b0(void);
 int FUN_0051970c(char *param_1,char *param_2,longlong param_3);
 int FUN_005197dc(char *param_1,char *param_2);

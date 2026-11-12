@@ -888,7 +888,7 @@ void cellVideoOutGetState(void)
 
 
 // 0x064f644 (0x20 bytes)
-void cellSysutilRegisterCallback(void)
+int cellSysutilRegisterCallback(int param_1,void (*param_2)(u64,u64,void *),void *param_3)
 
 {
   ulonglong uStack00000028;
@@ -1140,7 +1140,7 @@ void sceNpTrophyGetGameInfo(void)
 
 
 // 0x064f884 (0x20 bytes)
-void sceNpTrophyDestroyHandle(void)
+void sceNpTrophyDestroyHandle(u32 param_1)
 
 {
   ulonglong uStack00000028;

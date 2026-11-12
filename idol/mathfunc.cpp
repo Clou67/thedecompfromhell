@@ -2522,7 +2522,7 @@ void FUN_005eadd0(int param_1,int param_2)
 
 
 // 0x05eae04 (0x24 bytes)
-void FUN_005eae04(void)
+void FUN_005eae04(u8 *param_1,u8 *param_2)
 
 {
   FUN_005f515c();
@@ -3341,7 +3341,7 @@ LAB_005ec3f0:
 // 0x05ec620 (0x158 bytes)
 // strings: 00661cf0: 'Bink global sound mutex' | 00661c20: 'C:\\devel\\projects\\bink\\src\\sdk\\decode\\binkread.c'
 
-uint FUN_005ec620(int param_1,undefined4 param_2)
+u32 FUN_005ec620(u8 *param_1,u32 param_2)
 
 {
   uint uVar1;

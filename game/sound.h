@@ -79,6 +79,21 @@ struct SoundVTable {
     void *update;
 };
 
+/* a sound definition (DL's SoundDef, 0x20 bytes) */
+typedef struct SoundDef {
+    float minRange;          /* 0x00 */
+    float maxRange;          /* 0x04 */
+    int minVolume;           /* 0x08 */
+    int maxVolume;           /* 0x0c */
+    int minPitch;            /* 0x10 */
+    int maxPitch;            /* 0x14 */
+    char loop;               /* 0x18 */
+    char flags;              /* 0x19 */
+    short index;             /* 0x1a */
+    int bank_index;          /* 0x1c */
+} SoundDef;
+typedef char SoundDef_size_check[sizeof(SoundDef) == 0x20 ? 1 : -1];
+
 // ---- globals
 extern undefined4 DAT_00731be8; /* no defined data */
 extern undefined1 DAT_00963760; /* 0x963760 */
@@ -102,7 +117,7 @@ extern SoundData g_SoundChannels[30]; /* 0x9637d0 */
 extern undefined4 g_SoundCnt; /* 0x9644f0 */
 extern int g_SoundLoadBusy; /* 0x9637a4 */
 extern int g_TotalSoundDefCnt; /* 0xa10730 */
-extern undefined4 g_pSoundDefs; /* 0xa10734 */
+extern SoundDef *g_pSoundDefs; /* 0xa10734 */ /* type set in global_types.tsv */
 extern undefined4 g_pSoundInstances; /* 0x9644f4 */
 extern soundGlobals g_soundGlobals; /* 0x9637a8 */
 

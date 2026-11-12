@@ -16,7 +16,7 @@
 // 0x04eff54 (0x140 bytes)
 // strings: 0065b7cc: '%s failed: status = 0x%x\n' | 0065b7e8: 'sceNpTrophyInit' | 0065b7f8: 'sceNpTrophyCreateContext' | 0065b818: 'sceNpTrophyCreateHandle' | 0065b830: 'NPTrophyRegister' | 0065b848: 'thr_npTrophy_register'
 
-void idol::RegisterTrophyCtxHandle(longlong param_1)
+void idol::RegisterTrophyCtxHandle(u32 param_1)
 
 {
   undefined8 uVar1;
@@ -493,7 +493,7 @@ void FUN_004f0c84(void)
 
 
 // 0x04f0c98 (0x28 bytes)
-void FUN_004f0c98(int param_1)
+void FUN_004f0c98(u8 *param_1)
 
 {
   *(undefined4 *)(param_1 + 0x14) = 0;
@@ -597,7 +597,7 @@ undefined4 FUN_004f0de8(int param_1)
 
 
 // 0x04f0df4 (0x30 bytes)
-void FUN_004f0df4(int param_1)
+void FUN_004f0df4(u8 *param_1)
 
 {
   *(undefined4 *)(param_1 + 0xc) = 0;

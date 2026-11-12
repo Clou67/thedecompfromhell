@@ -33,6 +33,19 @@ typedef struct SaveDataInfo {
 } SaveDataInfo;
 typedef char SaveDataInfo_size_check[sizeof(SaveDataInfo) == 0x478 ? 1 : -1];
 
+/* Idol's Bink movie player (0x60 bytes; the singleton is g_pBinkPlayer, built in place at
+   0x927078 by the static constructors) */
+typedef struct BinkPlayer {
+    void *vtable;            /* 0x00 */
+    u8 _pad04[4];
+    void *bink;              /* 0x08 */
+    u8 _pad0c[4];
+    int state;               /* 0x10  BinkPlayer_GetState; > 1 once frames are coming */
+    u8 _pad14[0x48];
+    int unk5c;               /* 0x5c  -1: nothing to stop */
+} BinkPlayer;
+typedef char BinkPlayer_size_check[sizeof(BinkPlayer) == 0x60 ? 1 : -1];
+
 /* Idol singleton (*g_pMsgDialog, 0x20 bytes, made by FUN_004eaddc) that owns the system message
    callback ("In messageCallback"); ticked once per frame from startLevel. Identification inferred. */
 typedef struct IdolMsgDialog IdolMsgDialog;
@@ -119,7 +132,7 @@ extern undefined4 DAT_008fabbc; /* 0x8fabbc */
 extern undefined4 DAT_008fabc4; /* 0x8fabc4 */
 extern undefined4 DAT_008fabc8; /* 0x8fabc8 */
 extern undefined4 DAT_008fabcc; /* 0x8fabcc */
-extern undefined4 DAT_008fabd0; /* 0x8fabd0 */
+extern char *DAT_008fabd0; /* 0x8fabd0: &Cheats[4] */ /* type set in global_types.tsv */
 extern undefined4 DAT_008fabd4; /* 0x8fabd4 */
 extern undefined4 DAT_008fabd8; /* 0x8fabd8 */
 extern undefined4 DAT_008fd4a0; /* 0x8fd4a0 */
@@ -371,6 +384,7 @@ extern pointer32 PTR_cb_file_operation_load_00710080; /* 0x710080 */
 extern undefined * PTR_s__RC1_SAVEDATA_006599c8; /* 0x6599c8 */
 extern pointer32 PTR_thr_SaveSystem_CheckExisting_00710050; /* 0x710050 */
 extern RenderingStep * ShadowPass; /* 0x8fa428 */
+extern undefined8 TexSamplerFlags; /* 0x10ee2e0 */
 extern undefined4 _DAT_004df160; /* direct read */
 extern undefined4 _DAT_004df170; /* direct read */
 extern undefined4 _DAT_004df190; /* direct read */
@@ -476,7 +490,7 @@ extern undefined4 _DAT_011116a0; /* direct read */
 extern undefined4 _DAT_011116b0; /* direct read */
 extern undefined4 _DAT_011116c0; /* direct read */
 extern u8 g_PartNoShrink; /* 0x8fa54c: set: DrawParts does not shrink big particles */ /* type set in global_types.tsv */
-extern void * g_pGame; /* 0x902ecc */
+extern void *g_pGame; /* 0x902ecc: Idol's game object (0x90d770) */ /* type set in global_types.tsv */
 extern void * g_pHWSystem; /* 0x902ed0 */
 extern IdolMsgDialog *g_pMsgDialog; /* 0x1111640 */ /* type set in global_types.tsv */
 extern char *g_pSaveBuffer; /* 0x8fabb4 */ /* type set in global_types.tsv */
@@ -503,22 +517,22 @@ undefined8 FUN_004d46cc(int param_1,undefined8 param_2,int *param_3);
 void FUN_004d4b40(int param_1);
 void FUN_004d4b94(undefined4 *param_1);
 void FUN_004d4c88(undefined4 *param_1);
-undefined4 FUN_004d4dd0(undefined8 param_1,undefined8 param_2,undefined4 param_3);
+int BinkPlayer_Open(BinkPlayer *param_1,char *param_2,int param_3);
 void FUN_004d525c(int param_1,undefined8 param_2,ulonglong param_3);
 undefined4 FUN_004d5310(int param_1,undefined8 param_2,int param_3,ulonglong param_4);
-undefined4 FUN_004d5448(int param_1,undefined8 param_2,int param_3,ulonglong param_4);
+int BinkPlayer_Start(BinkPlayer *param_1,char *param_2,int param_3,int param_4);
 undefined4 FUN_004d551c(int param_1);
-undefined4 FUN_004d5524(int param_1);
+int BinkPlayer_GetState(BinkPlayer *param_1);
 void FUN_004d5530(undefined8 param_1,undefined8 param_2);
 undefined4 * FUN_004d5558(undefined8 param_1,int param_2);
 void FUN_004d5594(undefined8 param_1,uint param_2);
 void FUN_004d5880(undefined8 param_1);
 void FUN_004d5934(undefined8 param_1);
-undefined8 FUN_004d59e8(undefined4 *param_1);
-void FUN_004d5d0c(int param_1);
-void FUN_004d5d5c(int param_1);
+int BinkPlayer_DrawFrame(BinkPlayer *param_1);
+void BinkPlayer_Stop(BinkPlayer *param_1);
+void BinkPlayer_Init(BinkPlayer *param_1);
 void FUN_004d5d80(int param_1);
-void FUN_004d5da4(void);
+void FUN_004d5da4(BinkPlayer *param_1,int param_2);
 void FUN_004d5da8(void);
 void FUN_004d5dac(undefined8 param_1,uint param_2);
 void FUN_004d5df0(void);
@@ -533,9 +547,9 @@ void FUN_004d6888(int param_1,undefined8 param_2,undefined8 param_3,ulonglong pa
 namespace idol_draw { void ResetPassState(RenderingStep *param_1); } 
 void FUN_004d6bb0(RenderingStep *param_1,ulonglong param_2,RsxCmd *param_3);
 namespace idol_draw { void SetTextureUnitRegs(int param_1,ulonglong param_2,int *param_3); } 
-namespace idol_draw { void BindTexture(undefined8 param_1,undefined8 param_2); } 
+namespace idol_draw { void BindTexture(RenderingStep *param_1,int param_2,void *param_3,u64 param_4); } 
 void FUN_004d6f50(int param_1,int param_2);
-void FUN_004d7088(undefined4 *param_1);
+void FUN_004d7088(u8 *param_1);
 void FUN_004d71a0(void);
 void * FUN_004d71c0(int param_1);
 void FUN_004d72d4(void);
@@ -544,7 +558,7 @@ void FUN_004d7464(int param_1,undefined8 param_2);
 void * FUN_004d8148(int *param_1);
 namespace idol_draw { void BindFragmentProgram(undefined8 param_1,int param_2,longlong param_3); } 
 namespace idol_draw { void BindVertexProgram(undefined8 param_1,int param_2,int param_3); } 
-void FUN_004d86b0(void);
+void FUN_004d86b0(int param_1);
 void FUN_004d8774(int *param_1);
 void FUN_004d8b50(int param_1,longlong param_2);
 void FUN_004d8db8(int param_1);
@@ -616,7 +630,7 @@ void FUN_004e64b4(void);
 void FUN_004e668c(void);
 void FUN_004e6734(void);
 void FUN_004e6770(int param_1);
-void FUN_004e68bc(int param_1,int param_2,ulonglong param_3,ulonglong param_4);
+void FUN_004e68bc(u8 *param_1,int param_2,int param_3,int param_4);
 void FUN_004e6ae8(int param_1);
 undefined4 FUN_004e6c40(int param_1,int param_2);
 void FUN_004e6df0(int param_1,int param_2);
@@ -624,12 +638,12 @@ int32_t FUN_004e6eac(int param_1,int param_2);
 void FUN_004e6fd8(int param_1,int *param_2,int param_3);
 void FUN_004e70a4(uint *param_1);
 void FUN_004e7170(undefined4 *param_1);
-void FUN_004e7388(undefined4 *param_1);
+void FUN_004e7388(u8 *param_1);
 namespace idol { SaveDataInfo * GetSaveData(void); } 
 void FUN_004e7534(undefined4 param_1);
 void FUN_004e7694(undefined4 *param_1);
-void FUN_004e7710(void);
-void FUN_004e7738(undefined4 *param_1);
+void FUN_004e7710(SaveDataInfo *param_1);
+void FUN_004e7738(u8 *param_1,int param_2);
 void FUN_004e776c(undefined4 *param_1);
 void FUN_004e77c0(undefined4 *param_1);
 undefined8 FUN_004e77f4(undefined8 param_1,undefined8 param_2,undefined8 param_3,char param_4);
@@ -646,7 +660,7 @@ undefined4 FUN_004e7e04(int param_1);
 int SaveData_CallOnLoad(SaveDataInfo *param_1);
 undefined4 FUN_004e7ee4(int param_1);
 void FUN_004e7f54(int param_1,undefined8 param_2);
-void FUN_004e7f9c(int param_1,longlong param_2);
+void FUN_004e7f9c(SaveDataInfo *param_1,int param_2);
 void SaveData_SetTitle(SaveDataInfo *param_1,const char *param_2);
 void SaveData_SetDialogStrings(SaveDataInfo *param_1,char *param_2,char *param_3);
 void FUN_004e81b4(undefined4 param_1,undefined4 *param_2,undefined4 param_3,undefined4 param_4, undefined4 param_5);
@@ -685,7 +699,7 @@ void FUN_004eb678(void);
 void FUN_004eb6e8(undefined8 param_1,longlong param_2,undefined8 param_3,ulonglong param_4, undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 namespace idol { void Pad_PS_Update(int param_1,ulonglong param_2,int param_3); } 
 ulonglong FUN_004ec544(void);
-void FUN_004ec568(undefined4 *param_1);
+void FUN_004ec568(u8 *param_1,int param_2);
 namespace idol_draw { void * InitFrameRenderState (int param_1,void *param_2,int param_3,void *param_4,int param_5,void *param_6, longlong param_7); } 
 void FUN_004ec844(int *param_1,longlong param_2);
 void FUN_004ec8a4(int *param_1,undefined8 param_2,uint param_3);
@@ -701,11 +715,11 @@ void FUN_004edd30(int param_1);
 namespace idol_draw { void Spurs_FlushAndSwapQueue(uint *param_1); } 
 void FUN_004ee034(void);
 void FUN_004ee0a8(void);
-void FUN_004ee1e0(undefined4 *param_1);
+void FUN_004ee1e0(u8 *param_1);
 void FUN_004ee36c(void);
 undefined8 FUN_004ee38c(undefined4 param_1);
 undefined8 FUN_004ee3fc(int *param_1);
-void FUN_004ee594(int param_1,undefined4 param_2,undefined4 param_3,undefined1 param_4);
+void FUN_004ee594(u8 *param_1,int param_2,int param_3,int param_4);
 void FUN_004ee5e8(undefined4 *param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4);
 int FUN_004ee640(int param_1);
 bool FUN_004ee65c(int param_1,uint param_2,char param_3);
@@ -720,9 +734,9 @@ void FUN_004ef218(undefined4 param_1);
 longlong FUN_004ef248(longlong param_1);
 void FUN_004ef2f4(undefined8 param_1);
 void FUN_004ef320(undefined8 param_1);
-void FUN_004ef34c(void);
+u8 *FileSys_Get(void);
 char * FUN_004ef3bc(char *param_1,undefined8 param_2);
-char * FUN_004ef4d0(char *param_1,char *param_2,undefined8 param_3);
+char *FileSys_ResolvePath(u8 *param_1,const char *param_2,char *param_3);
 char * FUN_004ef6e4(undefined8 param_1,undefined8 param_2);
 void FUN_004ef730(int param_1,int param_2);
 undefined1 FUN_004efb80(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined1 *param_4);

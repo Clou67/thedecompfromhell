@@ -2,7 +2,6 @@
 // STATUS: NOT STARTED (raw Ghidra output)
 // 4 functions, 0x27caec-0x27ecbc
 #include "game/update/moby1440.h"
-#include "game/boot.h"
 #include "game/camera.h"
 #include "game/collproc.h"
 #include "game/draw.h"

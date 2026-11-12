@@ -150,3 +150,20 @@ g_MobySkinCount	int NAME /* 0xa49b44 (guess: skinned mobys queued for STUB_000f5
 g_MobyDrawListStart	u8 *NAME /* 0xa3909c: draw entries, 0xb0 bytes each */
 g_MobyDrawListEnd	u8 *NAME /* 0xa39098 */
 g_MobyShadowList	int NAME[] /* 0xa4a0e0: the shadow list DrawScreenEffect_152df8 draws (Ghidra label "____oClassInstanceList") */
+g_pBinkPlayer	struct BinkPlayer *NAME /* 0x8fa410 */
+g_BinkPlayerObject	struct BinkPlayer NAME /* 0x927078: what g_pBinkPlayer normally points at */
+g_BootSoundDefs	SoundDef NAME[13] /* 0x71c984: the boot sound bank's defs; [7..11] belong to the frame class */
+g_BootSoundBank	u32 NAME /* 0x71f404 */
+g_pSoundDefs	SoundDef *NAME /* 0xa10734 */
+s_LanguageNames	const char *NAME[] /* 0x71cb3c: "english", ... */
+s_SceneSounds	SceneSound NAME[] /* 0x71cb5c */
+DAT_009271f8	int *NAME /* 0x9271f8 */
+g_pGame	void *NAME /* 0x902ecc: Idol's game object (0x90d770) */
+DAT_009030e4	void *NAME /* 0x9030e4: the object at 0x90d98c */
+TieInstanceBase	TieInstance *NAME /* 0xa18384 */
+ShrubInstanceBase	ShrubInstance *NAME /* 0xa1a794 */
+DAT_00a108fc	int *NAME /* 0xa108fc: the level's gameplay file */
+DAT_008fabd0	char *NAME /* 0x8fabd0: &Cheats[4] */
+DAT_008fa630	void *NAME /* 0x8fa630 */
+DAT_0090d714	u8 *NAME /* 0x90d714 */
+DAT_00964564	u32 *NAME /* 0x964564: the initialised-data records */

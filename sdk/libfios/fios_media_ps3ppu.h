@@ -46,7 +46,7 @@ int FUN_00528454(int param_1,char *param_2,int param_3);
 undefined4 FUN_00528598(undefined8 param_1,undefined4 *param_2,undefined8 param_3);
 void FUN_00528914(undefined4 *param_1,undefined8 param_2);
 void FUN_00528b98(void);
-void FUN_00528c7c(undefined4 *param_1,undefined8 param_2);
+void FUN_00528c7c(u8 *param_1,const char *param_2);
 void FUN_00528f00(int param_1);
 uint FUN_00528fc8(int param_1,int param_2,undefined4 param_3);
 void FUN_00529580(undefined4 *param_1);

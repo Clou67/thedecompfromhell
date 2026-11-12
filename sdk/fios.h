@@ -14,7 +14,7 @@ extern undefined4 _DAT_00508710; /* direct read */
 // ---- functions
 undefined8 read_file_sync(longlong param_1,undefined8 param_2);
 void FUN_0050813c(undefined4 *param_1);
-void load_engine_vram_pair(undefined4 *param_1,undefined8 param_2,undefined8 param_3);
+void load_engine_vram_pair(u8 *param_1,const char *param_2,const char *param_3);
 void FUN_005083fc(undefined4 *param_1);
 void FUN_005084b8(void *param_1);
 void FUN_005084bc(void);
