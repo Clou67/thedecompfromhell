@@ -50,3 +50,4 @@ g_NavSlots	NavSlot NAME[][64] /* 0xa0e11c */
 g_RespawnCount	int NAME /* 0xa53504 */
 g_RespawnTicks	int NAME /* 0xa53508 */
 g_LevelObjBits	u32 NAME[][64] /* 0xa0cd1c: per level, objects whose state was ever committed at a checkpoint (one bit each); part of the save */
+g_ScratchBuf	u8 *NAME /* 0x902ec8: scratch memory shared by the drawing code (water uses it as a WaterStage) */

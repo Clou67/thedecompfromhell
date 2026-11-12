@@ -339,7 +339,7 @@ void FUN_004d31b0(undefined8 param_1,int param_2,int param_3)
       }
     }
   }
-  pcVar8 = DAT_00902ec8;
+  pcVar8 = g_ScratchBuf;
   if (*(short *)(param_2 + 0x36) == -1) {
     return;
   }

@@ -9702,7 +9702,7 @@ void DrawsFlowingLava
     uVar12 = uVar7 & 0xf;
     uVar7 = uVar7 + 0x89;
     uVar12 = uVar12 * 0x20200 - 0x7f878f90;
-    puVar2 = (uint *)(DAT_00902ec8 + iVar10);
+    puVar2 = (uint *)(g_ScratchBuf + iVar10);
     iVar10 = iVar10 + 1;
     *puVar2 = (uint)(byte)(uVar12 >> 0x18) | (uint)uVar12 >> 8 & 0xff00 |
               (uint)((uVar12 & 0xffffffff) << 8) & 0xff0000 | (uint)((uVar12 & 0xffffffff) << 0x18);
@@ -9731,8 +9731,8 @@ void DrawsFlowingLava
           sVar15 = *psVar3;
           iVar17 = (int)*(short *)(iVar5 + param_2 + 0x22 + iVar16) - (int)sVar15;
           puVar9 = (undefined4 *)(*(int *)(iVar5 + param_2 + 0x14) + sVar15 * 8);
-          puVar11 = (undefined4 *)(DAT_00902ec8 + 0x1000);
-          puVar13 = (undefined4 *)(DAT_00902ec8 + 0x2000);
+          puVar11 = (undefined4 *)(g_ScratchBuf + 0x1000);
+          puVar13 = (undefined4 *)(g_ScratchBuf + 0x2000);
           iVar14 = iVar17;
           if (0 < iVar17) {
             do {
@@ -9749,10 +9749,10 @@ void DrawsFlowingLava
             sVar15 = *psVar3;
           }
           piVar4 = (int *)(iVar5 + param_2 + 0x10);
-          DrawLavaStrips(param_1,iVar17,*piVar4 + sVar15 * 0xc,DAT_00902ec8,DAT_00902ec8 + 0x1000,
-                         DAT_00902ec8 + 0x2000,param_4,param_5,0);
-          DrawLavaStrips(param_1,iVar17,*piVar4 + *psVar3 * 0xc,DAT_00902ec8,DAT_00902ec8 + 0x1000,
-                         DAT_00902ec8 + 0x2000,param_4,param_5,0);
+          DrawLavaStrips(param_1,iVar17,*piVar4 + sVar15 * 0xc,g_ScratchBuf,g_ScratchBuf + 0x1000,
+                         g_ScratchBuf + 0x2000,param_4,param_5,0);
+          DrawLavaStrips(param_1,iVar17,*piVar4 + *psVar3 * 0xc,g_ScratchBuf,g_ScratchBuf + 0x1000,
+                         g_ScratchBuf + 0x2000,param_4,param_5,0);
           iVar8 = iVar8 + 1;
           iVar16 = iVar16 + 2;
         } while (iVar8 < *(int *)(iVar5 + param_2 + 0x1c));
@@ -9840,7 +9840,7 @@ void ____Draw_ScrollingTexStrips
             sVar8 = *psVar15;
           }
           DrawTexturedStrips(iVar3,*piVar13 + sVar8 * 0xc,*piVar12 + sVar8 * 4,
-                             (ulonglong)DAT_00902ec8 + 0x1000,(ulonglong)DAT_00902ec8 + 0x2000,
+                             (ulonglong)g_ScratchBuf + 0x1000,(ulonglong)g_ScratchBuf + 0x2000,
                              param_3,param_4,uVar1);
           iVar2 = iVar2 + 1;
           psVar15 = psVar15 + 1;

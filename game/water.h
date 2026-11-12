@@ -109,6 +109,16 @@ struct WaterTile {
 };
 typedef char WaterTile_size_check[sizeof(struct WaterTile) == 0x11a0 ? 1 : -1];
 
+/* the water working area in g_ScratchBuf: one tile's staged heights (StageTileBuf) and the
+   per-vertex results of ShadeVerts for its 17x17 vertices */
+#define WATER_VERTS 17
+struct WaterStage {
+    float grid[20][24];                          /* 0x0000  see StageTileBuf */
+    struct Vec2 envUV[WATER_VERTS * WATER_VERTS]; /* 0x0780 */
+    u32 color[WATER_VERTS * WATER_VERTS];        /* 0x1088  0xRRGGBBAA, grey */
+};
+typedef char WaterStage_size_check[sizeof(struct WaterStage) == 0x150c ? 1 : -1];
+
 struct WaterTileBox {
     s32 min_x;
     s32 min_y;
@@ -174,7 +184,6 @@ extern undefined8 DAT_0073b4a0; /* 0x73b4a0 */
 extern undefined8 DAT_0073b4b0; /* 0x73b4b0 */
 extern undefined4 DAT_0073b50c; /* 0x73b50c */
 extern undefined4 DAT_0073b58c; /* 0x73b58c */
-extern undefined4 DAT_00902ec8; /* 0x902ec8 */
 extern undefined4 DAT_00e5aaa4; /* 0xe5aaa4 */
 extern undefined4 DAT_00e5aad0; /* 0xe5aad0 */
 extern undefined4 DAT_00e5aad4; /* 0xe5aad4 */
@@ -214,6 +223,7 @@ extern undefined4 _DAT_0017dcf0; /* direct read */
 extern undefined4 _DAT_0017dd00; /* direct read */
 extern undefined4 _DAT_0017dd10; /* direct read */
 extern undefined4 fogNearDist; /* 0x95d198 */
+extern u8 *g_ScratchBuf; /* 0x902ec8: scratch memory shared by the drawing code (water uses it as a WaterStage) */ /* type set in global_types.tsv */
 
 // ---- functions
 void SECTION_HEADER_WATER(void);

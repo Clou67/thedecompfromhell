@@ -17,9 +17,9 @@ errors	file
 201	game/loaders.cpp
 2196	game/mUnk.cpp
 0	game/main.cpp
-80	game/map.cpp
+77	game/map.cpp
 80	game/memcard.cpp
-18	game/mesh.cpp
+0	game/mesh.cpp
 41	game/mission.cpp
 90	game/mobyfunc.cpp
 433	game/mobyproc.cpp
@@ -29,7 +29,7 @@ errors	file
 55	game/partproc.cpp
 284	game/partupd.cpp
 75	game/path.cpp
-758	game/pause.cpp
+754	game/pause.cpp
 62	game/rUnk.cpp
 0	game/respawn.cpp
 140	game/sUnk.cpp
@@ -1012,11 +1012,11 @@ errors	file
 575	game/vendor.cpp
 77	game/vuchain.cpp
 135	game/walk.cpp
-80	game/water.cpp
+84	game/water.cpp
 23	idol/9Unk.cpp
 3	idol/fUnk.cpp
 70	idol/fastfunc.cpp
-128	idol/idol.cpp
+129	idol/idol.cpp
 485	idol/idol_draw.cpp
 1786	idol/mUnk.cpp
 37	idol/mUnk2.cpp

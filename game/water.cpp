@@ -240,9 +240,9 @@ void WaterTile_StepSim(WaterTile *tile,int cnt)
   if (0 < cnt) {
     do {
       if (*(short *)((int)tile + iVar1 * 0x11a0 + 0x1e) != 0) {
-        StageTileBuf(DAT_00902ec8,
+        StageTileBuf(g_ScratchBuf,
                            (void *)((int)tile + DAT_00e5aaa4 * 0x5c0 + iVar1 * 0x11a0 + 0x50));
-        WaterTile_StepWave((float *)DAT_00902ec8,iVar1,DAT_0073a9f0,tile);
+        WaterTile_StepWave((float *)g_ScratchBuf,iVar1,DAT_0073a9f0,tile);
       }
       iVar1 = iVar1 + 1;
     } while (iVar1 < cnt);
@@ -284,9 +284,9 @@ void WaterTile_UpdateWaves(WaterTile *tiles,int nTiles)
     if (0 < nTiles) {
       do {
         if (*(short *)((int)tiles + iVar1 * 0x11a0 + 0x1e) != 0) {
-          StageTileBuf(DAT_00902ec8,
+          StageTileBuf(g_ScratchBuf,
                              (void *)((int)tiles + DAT_00e5aaa4 * 0x5c0 + iVar1 * 0x11a0 + 0x50));
-          WaterTile_StepWave((float *)DAT_00902ec8,iVar1,DAT_0073a9f0,tiles);
+          WaterTile_StepWave((float *)g_ScratchBuf,iVar1,DAT_0073a9f0,tiles);
         }
         iVar1 = iVar1 + 1;
       } while (iVar1 < nTiles);
@@ -755,8 +755,8 @@ void WaterTile_BuildVertexGrid(WaterTile *tile)
   longlong lVar9;
   
   iVar6 = 0;
-  pfVar7 = (float *)(DAT_00902ec8 + 0x2000);
-  pfVar4 = (float *)(DAT_00902ec8 + 0x70);
+  pfVar7 = (float *)(g_ScratchBuf + 0x2000);
+  pfVar4 = (float *)(g_ScratchBuf + 0x70);
   fVar2 = (tile->tilePos).y + WaterTileConsts.TileOffset.y;
   do {
     lVar9 = 0x11;
@@ -799,7 +799,7 @@ void WaterTile_DrawCellBase(WaterTile *tile,uint idx)
   puVar5 = (undefined4 *)idol::AllocateMemAlign(FrameHeap,0x450,0x10);
   lVar9 = 0x2e;
   puVar6 = &DAT_0073aac0;
-  iVar3 = DAT_00902ec8 +
+  iVar3 = g_ScratchBuf +
           ((idx & 3) * 4 +
           (int)((longlong)((int)idx >> 2) << 6) + (int)((longlong)((int)idx >> 2) << 2)) * 0xc +
           0x2000;
@@ -864,18 +864,18 @@ void WaterTile_DrawCellOvl(WaterTile *tile,uint idx)
   auVar17 = loadVectorLeftIndexed(4,0x17c870);
   auVar17 = auVar17 >> 0x60 & (GPiece<16>)0xffffffff;
   auVar16 = auVar17 | auVar17 << 0x20 | auVar17 << 0x40 | auVar17 << 0x60;
-  iVar2 = DAT_00902ec8 + (int)uVar6 * 0xc + 0x2000;
+  iVar2 = g_ScratchBuf + (int)uVar6 * 0xc + 0x2000;
   auVar17 = loadVectorLeftIndexed(8,0x17c870);
   auVar14 = loadVectorLeftIndexed(0xc,0x17c870);
   auVar13 = loadVectorLeftIndexed(0x10,0x17c870);
   auVar17 = auVar17 >> 0x60 & (GPiece<16>)0xffffffff;
   auVar15 = auVar17 | auVar17 << 0x20 | auVar17 << 0x40 | auVar17 << 0x60;
-  iVar3 = DAT_00902ec8 + (int)((uVar6 & 0xffffffff) << 3) + 0x780;
+  iVar3 = g_ScratchBuf + (int)((uVar6 & 0xffffffff) << 3) + 0x780;
   auVar17 = auVar14 >> 0x60 & (GPiece<16>)0xffffffff;
   auVar14 = auVar17 | auVar17 << 0x20 | auVar17 << 0x40 | auVar17 << 0x60;
   auVar17 = auVar13 >> 0x60 & (GPiece<16>)0xffffffff;
   psVar8 = &DAT_0073aa60;
-  uVar6 = (ulonglong)DAT_00902ec8 + (uVar6 & 0x3fffffff) * 4 + 0x1088 & 0xffffffff;
+  uVar6 = (ulonglong)g_ScratchBuf + (uVar6 & 0x3fffffff) * 4 + 0x1088 & 0xffffffff;
   lVar7 = lVar5 + 0x14;
   lVar12 = 0x2e;
   lVar9 = lVar5;
@@ -1259,7 +1259,7 @@ void WaterTile_DrawAll(WaterTile *tile,int cnt)
   if (0 < cnt) {
     do {
       if (tile->mask != 0) {
-        StageTileBuf(DAT_00902ec8,tile->buf[DAT_0073a9f4].height[0] + 2);
+        StageTileBuf(g_ScratchBuf,tile->buf[DAT_0073a9f4].height[0] + 2);
         ShadeVerts(tile);
         WaterTile_BuildVertexGrid(tile);
         WaterTile_UpdateWaves(tile);
@@ -1268,7 +1268,7 @@ void WaterTile_DrawAll(WaterTile *tile,int cnt)
           lVar9 = 0x11;
           iVar6 = 0;
           do {
-            *(float *)((int)DAT_00902ec8[1].buf[2].height[10] + iVar6 + 0x38) = (tile->tilePos).z;
+            *(float *)((int)g_ScratchBuf[1].buf[2].height[10] + iVar6 + 0x38) = (tile->tilePos).z;
             lVar9 = lVar9 + -1;
             iVar6 = iVar6 + 0xc;
           } while (lVar9 != 0);
@@ -1278,7 +1278,7 @@ void WaterTile_DrawAll(WaterTile *tile,int cnt)
           lVar9 = 0x11;
           iVar6 = 0;
           do {
-            *(float *)((int)DAT_00902ec8[1].buf[2].height[0xd] + iVar6 + 0x38) = (tile->tilePos).z;
+            *(float *)((int)g_ScratchBuf[1].buf[2].height[0xd] + iVar6 + 0x38) = (tile->tilePos).z;
             lVar9 = lVar9 + -1;
             iVar6 = iVar6 + 0xcc;
           } while (lVar9 != 0);
@@ -1288,7 +1288,7 @@ void WaterTile_DrawAll(WaterTile *tile,int cnt)
           lVar9 = 0x11;
           iVar6 = 0;
           do {
-            *(float *)((int)DAT_00902ec8[2].buf[1].heightTop + iVar6 + -0x50) = (tile->tilePos).z;
+            *(float *)((int)g_ScratchBuf[2].buf[1].heightTop + iVar6 + -0x50) = (tile->tilePos).z;
             lVar9 = lVar9 + -1;
             iVar6 = iVar6 + 0xc;
           } while (lVar9 != 0);
@@ -1298,7 +1298,7 @@ void WaterTile_DrawAll(WaterTile *tile,int cnt)
           lVar9 = 0x11;
           iVar6 = 0;
           do {
-            *(float *)((int)DAT_00902ec8[1].buf[2].height[10] + iVar6 + 0x38) = (tile->tilePos).z;
+            *(float *)((int)g_ScratchBuf[1].buf[2].height[10] + iVar6 + 0x38) = (tile->tilePos).z;
             lVar9 = lVar9 + -1;
             iVar6 = iVar6 + 0xcc;
           } while (lVar9 != 0);
@@ -2205,8 +2205,8 @@ void OceanSpecialPass(undefined8 param_1,OceanPlane *param_2,int param_3,int par
   iVar6 = 0;
   lVar7 = 0x80;
   do {
-    *(undefined4 *)(DAT_00902ec8 + iVar6) = 0xff757c8e;
-    iVar4 = DAT_00902ec8 + iVar6;
+    *(undefined4 *)(g_ScratchBuf + iVar6) = 0xff757c8e;
+    iVar4 = g_ScratchBuf + iVar6;
     iVar6 = iVar6 + 8;
     *(undefined4 *)(iVar4 + 4) = 0xff757c8e;
     lVar7 = lVar7 + -1;
@@ -2222,7 +2222,7 @@ void OceanSpecialPass(undefined8 param_1,OceanPlane *param_2,int param_3,int par
         lVar5 = (longlong)iVar4;
         pfVar1 = *(float **)(param_3 + 0x14);
         lVar7 = lVar5;
-        pfVar2 = (float *)(DAT_00902ec8 + 0x1000);
+        pfVar2 = (float *)(g_ScratchBuf + 0x1000);
         while (0 < iVar4) {
           lVar7 = lVar7 + -1;
           *pfVar2 = (float)((double)*pfVar1 * dVar8);
@@ -2232,7 +2232,7 @@ void OceanSpecialPass(undefined8 param_1,OceanPlane *param_2,int param_3,int par
           iVar4 = (int)lVar7;
         }
         DrawOceanStrip
-                  (param_1,lVar5,*(undefined4 *)(param_3 + 0x10),DAT_00902ec8,DAT_00902ec8 + 0x1000)
+                  (param_1,lVar5,*(undefined4 *)(param_3 + 0x10),g_ScratchBuf,g_ScratchBuf + 0x1000)
         ;
       }
       iVar6 = iVar6 + 1;
@@ -2311,7 +2311,7 @@ void SetFogVars(float neardist,float fardist,float nearintensity,float farintens
   }
   cmd = idol_draw::PackCmd(0,1,2,1,0x80);
   SetGSReg(3,cmd);
-  STUB_00500458(&DAT_0073b330,DAT_00902ec8 + 0x2800,0xf8);
+  STUB_00500458(&DAT_0073b330,g_ScratchBuf + 0x2800,0xf8);
   return;
 }
 
@@ -2363,7 +2363,7 @@ void IcePass(int param_1,int param_2,undefined8 param_3,undefined8 param_4)
   uVar1 = idol_draw::PackCmd(0,1,2,1,0x80);
   idol_draw::PackCmd(0,1,2,1,0x40);
   lVar5 = 0x2d;
-  puVar2 = DAT_00902ec8;
+  puVar2 = g_ScratchBuf;
   do {
     *puVar2 = 0x80808080;
     puVar2[1] = 0x80808080;
@@ -2380,10 +2380,10 @@ void IcePass(int param_1,int param_2,undefined8 param_3,undefined8 param_4)
       if (iVar3 != -1) {
         NormalsToEnvUV
                   (*(int *)(param_1 + 0x1c),*(void **)(param_1 + 0x10),*(Vec3 **)(param_1 + 0x18),
-                   (Vec2 *)(DAT_00902ec8 + 0x400));
+                   (Vec2 *)(g_ScratchBuf + 0x400));
         DrawTexturedStrips
-                  (*(undefined4 *)(param_1 + 0x1c),*(undefined4 *)(param_1 + 0x10),DAT_00902ec8,
-                   *(undefined4 *)(param_1 + 0x14),DAT_00902ec8 + 0x400,param_3,param_4,uVar1);
+                  (*(undefined4 *)(param_1 + 0x1c),*(undefined4 *)(param_1 + 0x10),g_ScratchBuf,
+                   *(undefined4 *)(param_1 + 0x14),g_ScratchBuf + 0x400,param_3,param_4,uVar1);
       }
       iVar4 = iVar4 + 1;
       param_1 = param_1 + 0x20;

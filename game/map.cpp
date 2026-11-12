@@ -1354,7 +1354,7 @@ void DrawMapFrame(void)
     iVar30 = g_MapIcons;
     puVar19[0x2d] = uVar45;
     puVar19[0x2c] = uVar48;
-    uVar32 = DAT_00902ec8;
+    uVar32 = g_ScratchBuf;
     if (iVar30 != 0) {
       auVar83 = loadVectorLeftIndexed(0x14,0xe2dc8);
       lVar24 = ZEXT48(&DAT_00a204c0) + (longlong)(g_MapCurIndex << 2);
@@ -1373,7 +1373,7 @@ void DrawMapFrame(void)
       auVar83 = loadVectorLeftIndexed(0x1c,0xe2dc8);
       auVar83 = auVar83 >> 0x60 & (GPiece<16>)0xffffffff;
       auVar72 = vectorShiftLeftIntegerWord(auVar76,auVar76);
-      uVar56 = (ulonglong)DAT_00902ec8;
+      uVar56 = (ulonglong)g_ScratchBuf;
       dVar70 = (double)(float)(dVar55 * 0.07692307978868484);
       auVar83 = vectorMultiplyAddFloatingPoint
                           (auVar74,auVar83 | auVar83 << 0x20 | auVar83 << 0x40 | auVar83 << 0x60,
@@ -1852,7 +1852,7 @@ void Map_DecodeLayer(int param_1,int param_2,short *param_3)
   int iVar17;
   int iVar18;
   
-  pbVar4 = DAT_00902ec8;
+  pbVar4 = g_ScratchBuf;
   uVar5 = 0;
   do {
     iVar18 = 0x200;
@@ -2107,7 +2107,7 @@ void Map_DecompressMapImage(longlong param_1,byte *param_2,byte *param_3)
   puVar1[0x9a] = unaff_r26;
   puVar1[0x99] = unaff_r25;
   puVar1[0x98] = unaff_r24;
-  pbVar2 = DAT_00902ec8;
+  pbVar2 = g_ScratchBuf;
   if (iVar17 != 0) {
     if ((*param_2 & 1) == 0) {
       uVar4 = 0;
@@ -2172,9 +2172,9 @@ void Map_DecompressMapImage(longlong param_1,byte *param_2,byte *param_3)
     else {
       pbVar15 = param_2 + 1;
       iVar17 = (int)param_1;
-      pbVar16 = DAT_00902ec8 + 0x2000;
+      pbVar16 = g_ScratchBuf + 0x2000;
       uVar14 = ((ulonglong)*param_2 << 0x20) >> 0x21;
-      FastMemSet(DAT_00902ec8,0,0x2400);
+      FastMemSet(g_ScratchBuf,0,0x2400);
       uVar13 = 1;
       pbVar12 = pbVar2;
       while( true ) {

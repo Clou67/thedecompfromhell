@@ -77,8 +77,8 @@ void M317_Gaspar_SubmitOcean(void)
   lVar19 = 0x80;
   iVar9 = 0;
   do {
-    puVar14 = DAT_00902ec8;
-    *(undefined4 *)((int)DAT_00902ec8 + iVar9) = 0x8e7c75ff;
+    puVar14 = g_ScratchBuf;
+    *(undefined4 *)((int)g_ScratchBuf + iVar9) = 0x8e7c75ff;
     *(undefined4 *)((int)puVar14 + iVar9 + 4) = 0x8e7c75ff;
     lVar19 = lVar19 + -1;
     iVar9 = iVar9 + 8;
@@ -92,7 +92,7 @@ void M317_Gaspar_SubmitOcean(void)
       lVar17 = (longlong)iVar10;
       pfVar5 = *(float **)((int)&PTR_DAT_00835814 + iVar18);
       lVar19 = lVar17;
-      pfVar6 = (float *)(DAT_00902ec8 + 0x400);
+      pfVar6 = (float *)(g_ScratchBuf + 0x400);
       iVar11 = iVar10;
       while (0 < iVar11) {
         lVar19 = lVar19 + -1;
@@ -105,9 +105,9 @@ void M317_Gaspar_SubmitOcean(void)
       puVar12 = (undefined4 *)
                 idol::AllocateMemAlign(FrameHeap,(int)(lVar17 << 5) - (int)(lVar17 << 2),0x10);
       puVar15 = *(undefined4 **)((int)&PTR_DAT_00835810 + iVar18);
-      puVar13 = DAT_00902ec8 + 0x400;
+      puVar13 = g_ScratchBuf + 0x400;
       lVar19 = lVar17;
-      puVar14 = DAT_00902ec8;
+      puVar14 = g_ScratchBuf;
       puVar16 = puVar12;
       if (iVar10 != 0) {
         do {

@@ -89,3 +89,4 @@ ____Unused_Respawn_IncCounter_a53504	Respawn_IncCounter
 ____NAVG_AllocSlot_a0e11c	NAVG_AllocSlot
 DAT_00a0cd1c	g_LevelObjBits
 FastVecNormalize	FastVecReflect
+DAT_00902ec8	g_ScratchBuf

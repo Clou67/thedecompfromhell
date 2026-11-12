@@ -22,7 +22,6 @@ extern undefined4 DAT_00e6285c; /* no defined data */
 extern undefined4 DAT_00e6285d; /* no defined data */
 extern undefined2 DAT_00e6285e; /* 0xe6285e */
 extern pointer32 PTR_M1073_001b4cdc_007089b8; /* 0x7089b8 */
-extern undefined4 texScale; /* 0x73aa18 */
 
 // ---- functions
 void M1072_001b4100(void);

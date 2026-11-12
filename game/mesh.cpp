@@ -1,6 +1,5 @@
 // game/mesh.cpp -- water surfaces: tile wave simulation, water sheets, environment-map UVs
-// STATUS: IN PROGRESS
-// MERGE (18 of 19 functions cleaned; the rest are generated)
+// STATUS: CLEAN (checked against the asm; local names are mine)
 // 19 functions, 0xe9114-0xea378
 //
 // A water surface is an array of 16x16-height tiles (WaterTile). Each tile keeps three height
@@ -11,7 +10,6 @@
 #include <string.h>
 #include "game/mesh.h"
 #include "game/camera.h"
-#include "game/hero.h"
 #include "game/water.h"
 #include "idol/fastfunc.h"
 
@@ -31,63 +29,44 @@ void SECTION_HEADER_MESH(void)
 }
 
 /* PS2 VU code, emptied on PS3 */
-
-
 // 0x00e9130 (0x4 bytes)
 void STUB_000e9130(...)
 {
 }
-
-
 // 0x00e9134 (0x4 bytes)
 void STUB_000e9134(...)
 {
 }
-
-
 // 0x00e9138 (0x4 bytes)
 void STUB_000e9138(...)
 {
 }
-
-
 // 0x00e913c (0x4 bytes)
 void STUB_000e913c(...)
 {
 }
-
-
 // 0x00e9140 (0x8 bytes)
 int STUB_000e9140(...)
 {
     return 0;
 }
-
-
 // 0x00e9148 (0x4 bytes)
 void STUB_000e9148(...)
 {
 }
-
-
 // 0x00e914c (0x4 bytes)
 void STUB_000e914c(...)
 {
 }
-
-
 // 0x00e9150 (0x8 bytes)
 int STUB_000e9150(...)
 {
     return 0;
 }
-
-
 // 0x00e9158 (0x4 bytes)
 void STUB_000e9158(...)
 {
 }
-
 
 // 0x00e915c (0x4c bytes)
 void AddUVOffsets(Vec2 *dst, Vec2 *src, int count, Vec2 *offset)
@@ -98,7 +77,6 @@ void AddUVOffsets(Vec2 *dst, Vec2 *src, int count, Vec2 *offset)
         dst->y = src->y + v;
     }
 }
-
 
 // 0x00e91a8 (0x138 bytes)
 void StageTileBuf(float (*stage)[24], WaterTileBuf *buf)
@@ -123,7 +101,6 @@ void StageTileBuf(float (*stage)[24], WaterTileBuf *buf)
     stage[18][20] = buf->heightCorner[5];
 }
 
-
 // 0x00e92e8 (0xb4 bytes)
 void WaterTileBufLerp(float t, float *dst, float *bufA, float *bufB)
 {
@@ -132,468 +109,64 @@ void WaterTileBufLerp(float t, float *dst, float *bufA, float *bufB)
         dst[i] = bufA[i] * u + bufB[i] * t;
 }
 
+#define SHADE_PIVOT    0.573f   /* 0xe93f8: light level left unchanged by the contrast */
+#define SHADE_CONTRAST 3.0f
+#define SHADE_SCALE    512.0f
+#define SHADE_AMBIENT  64
 
-// 0x00e9470 (0x78c bytes)
-/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
-
-void ShadeVerts(WaterTile *tile)
-
+static inline float InvSqrt(float x)
 {
-  longlong lVar1;
-  GPiece<16> auVar2;
-  GPiece<16> auVar3;
-  ulonglong *puVar4;
-  GPiece<16> auVar5;
-  GPiece<16> auVar6;
-  GPiece<16> auVar7;
-  GPiece<16> auVar8;
-  GPiece<16> auVar9;
-  float fVar10;
-  float fVar11;
-  float fVar12;
-  longlong lVar13;
-  undefined4 *puVar14;
-  longlong lVar15;
-  ulonglong uVar16;
-  longlong lVar17;
-  ulonglong uVar18;
-  ulonglong uVar19;
-  ulonglong uVar20;
-  int iVar21;
-  ulonglong unaff_r15;
-  ulonglong unaff_r16;
-  ulonglong unaff_r17;
-  ulonglong unaff_r18;
-  ulonglong unaff_r19;
-  ulonglong unaff_r20;
-  ulonglong unaff_r21;
-  ulonglong unaff_r22;
-  ulonglong unaff_r23;
-  ulonglong unaff_r24;
-  ulonglong unaff_r25;
-  ulonglong unaff_r26;
-  longlong lVar22;
-  ulonglong unaff_r27;
-  ulonglong uVar23;
-  longlong lVar24;
-  ulonglong unaff_r28;
-  ulonglong unaff_r29;
-  ulonglong unaff_r30;
-  ulonglong unaff_r31;
-  ulonglong uVar25;
-  byte in_cr6;
-  undefined4 uVar26;
-  GPiece<16> auVar27;
-  GPiece<16> auVar28;
-  GPiece<16> auVar29;
-  GPiece<16> auVar30;
-  GPiece<16> auVar31;
-  GPiece<16> auVar32;
-  GPiece<16> auVar33;
-  GPiece<16> auVar34;
-  GPiece<16> auVar35;
-  GPiece<16> auVar36;
-  GPiece<16> auVar37;
-  GPiece<16> auVar38;
-  GPiece<16> auVar39;
-  GPiece<16> auVar40;
-  GPiece<16> auVar41;
-  GPiece<16> auVar42;
-  GPiece<16> auVar43;
-  GPiece<16> auVar44;
-  GPiece<16> auVar45;
-  GPiece<16> auVar46;
-  GPiece<16> auVar47;
-  GPiece<16> auVar48;
-  GPiece<16> auVar49;
-  undefined4 in_vr31_32_0;
-  undefined4 in_vr31_32_1;
-  undefined4 in_vr31_32_2;
-  undefined4 in_vr31_32_3;
-  GPiece<16> auVar50;
-  GPiece<16> auVar51;
-  
-  lVar15 = (longlong)(int)tile;
-  uVar23 = ZEXT48(&stack0x00000000);
-  lVar1 = uVar23 - 0x2d0;
-  puVar4 = (ulonglong *)lVar1;
-  *puVar4 = uVar23;
-  lVar13 = uVar23 - 0xa0;
-  puVar14 = (undefined4 *)lVar13;
-  puVar14[3] = in_vr31_32_3;
-  puVar14[2] = in_vr31_32_2;
-  puVar14[1] = in_vr31_32_1;
-  *puVar14 = in_vr31_32_0;
-  puVar4[0x57] = unaff_r29;
-  puVar4[0x55] = unaff_r27;
-  uVar23 = (ulonglong)DAT_00902ec8;
-  puVar4[0x2b] = uVar23;
-  fVar12 = WaterTileConsts.lightDir.z;
-  fVar11 = WaterTileConsts.lightDir.y;
-  fVar10 = WaterTileConsts.lightDir.x;
-  puVar4[0x53] = unaff_r25;
-  auVar27 = loadVectorLeftIndexed(0x10,0x73aa00);
-  auVar29 = loadVectorLeftIndexed(0x14,0x73aa00);
-  *(undefined1 (*) [16])(puVar4 + 0x2e) = auVar27;
-  auVar27 = loadVectorLeftIndexed(4,lVar15);
-  *(undefined1 (*) [16])(puVar4 + 0x2c) = auVar29;
-  puVar4[0x54] = unaff_r26;
-  auVar29 = loadVectorLeftIndexed(0xc,0x73aa00);
-  lVar22 = uVar23 + 0x780;
-  *(float *)(puVar4 + 6) = fVar10;
-  auVar27 = vectorAddFloatingPoint(auVar27,auVar29);
-  *(float *)((int)puVar4 + 0x34) = fVar11;
-  *(float *)(puVar4 + 7) = fVar12;
-  lVar24 = uVar23 + 0x1088;
-  puVar4[0x30] = 0;
-  fVar11 = GameCamera.posZ;
-  fVar10 = GameCamera.posY;
-  *(float *)(puVar4 + 8) = GameCamera.posX;
-  puVar4[0x59] = unaff_r31;
-  puVar4[0x58] = unaff_r30;
-  puVar4[0x56] = unaff_r28;
-  puVar4[0x52] = unaff_r24;
-  puVar4[0x51] = unaff_r23;
-  puVar4[0x50] = unaff_r22;
-  puVar4[0x4f] = unaff_r21;
-  puVar4[0x4e] = unaff_r20;
-  puVar4[0x4d] = unaff_r19;
-  puVar4[0x4c] = unaff_r18;
-  puVar4[0x4b] = unaff_r17;
-  puVar4[0x4a] = unaff_r16;
-  puVar4[0x49] = unaff_r15;
-  *(float *)((int)puVar4 + 0x44) = fVar10;
-  *(float *)(puVar4 + 9) = fVar11;
-  puVar4[0x2a] = 0;
-  *(undefined1 (*) [16])(puVar4 + 0x28) = auVar27;
-  do {
-    uVar26 = *(undefined4 *)(puVar4 + 0x28);
-    auVar27 = loadVectorLeftIndexed(lVar13,0xe93a0);
-    auVar47 = *(undefined1 (*) [16])(puVar4 + 0x2e);
-    auVar33 = loadVectorLeftIndexed(lVar13,lVar15);
-    auVar27 = auVar27 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar30 = auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60;
-    auVar29 = auVar47 >> 0x60 & (GPiece<16>)0xffffffff;
-    *(undefined4 *)((int)puVar4 + 0x13c) = uVar26;
-    *(undefined4 *)(puVar4 + 0x27) = uVar26;
-    *(undefined4 *)((int)puVar4 + 0x134) = uVar26;
-    *(undefined4 *)(puVar4 + 0x26) = uVar26;
-    auVar8 = _DAT_000e93e0;
-    auVar7 = _DAT_000e93d0;
-    auVar6 = _DAT_000e93c0;
-    auVar5 = _DAT_000e93b0;
-    uVar16 = puVar4[0x2b];
-    auVar27 = loadVectorLeftIndexed(8,0x73aa00);
-    uVar25 = puVar4[0x2a];
-    auVar50 = *(undefined1 (*) [16])(puVar4 + 0x2c);
-    auVar36 = auVar30 ^ auVar47;
-    auVar30 = auVar30 ^ auVar50;
-    auVar31 = loadVectorLeftIndexed(0x5c,0xe93a0);
-    auVar28 = vectorAddFloatingPoint(auVar33,auVar27);
-    auVar33 = loadVectorLeftIndexed(0x60,0xe93a0);
-    auVar27 = auVar31 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar31 = auVar33 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar33 = loadVectorLeftIndexed(100,0xe93a0);
-    auVar39 = loadVectorLeftIndexed(0x68,0xe93a0);
-    auVar33 = auVar33 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar39 = auVar39 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar2 = auVar30 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar3 = auVar50 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar35 = loadVectorLeftIndexed(0x50,0xe93a0);
-    *(undefined1 (*) [16])(puVar4 + 0x1e) =
-         auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60;
-    auVar40 = loadVectorLeftIndexed(0x54,0xe93a0);
-    auVar43 = loadVectorLeftIndexed(0x58,0xe93a0);
-    *(undefined1 (*) [16])(puVar4 + 0x1c) =
-         auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-    iVar21 = 0;
-    uVar23 = uVar25 + uVar16 + 0x70 & 0xffffffff;
-    auVar31 = auVar36 >> 0x60 & (GPiece<16>)0xffffffff;
-    *(undefined1 (*) [16])(puVar4 + 0x24) =
-         auVar33 | auVar33 << 0x20 | auVar33 << 0x40 | auVar33 << 0x60;
-    uVar19 = uVar25 + uVar16 + 0x10 & 0xffffffff;
-    *(undefined1 (*) [16])(puVar4 + 0x20) =
-         auVar39 | auVar39 << 0x20 | auVar39 << 0x40 | auVar39 << 0x60;
-    auVar39 = _DAT_000e9430;
-    auVar33 = _DAT_000e9420;
-    uVar18 = uVar25 + uVar16 + 0xd0 & 0xffffffff;
-    *(undefined4 *)((int)puVar4 + 0x11c) = 0x1c1d1e1f;
-    *(undefined4 *)(puVar4 + 0x23) = 0x8090a0b;
-    *(undefined4 *)((int)puVar4 + 0x114) = 0x4050607;
-    *(undefined4 *)(puVar4 + 0x22) = 0x10203;
-    auVar9 = _DAT_000e9450;
-    auVar27 = ZEXT416(0);
-    auVar32 = auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60;
-    auVar27 = auVar35 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar35 = auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60;
-    auVar36 = vectorPermute(auVar36,auVar32,_DAT_000e9450);
-    uVar20 = uVar25 + uVar16 + 0x6c & 0xffffffff;
-    *(undefined4 *)((int)puVar4 + 0xdc) = 0x10111213;
-    *(undefined4 *)(puVar4 + 0x1b) = 0x10111213;
-    *(undefined4 *)((int)puVar4 + 0xd4) = 0x4050607;
-    *(undefined4 *)(puVar4 + 0x1a) = 0x10203;
-    uVar16 = uVar25 + uVar16 + 0x74 & 0xffffffff;
-    auVar27 = auVar40 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar40 = auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60;
-    *(undefined1 (*) [16])(puVar4 + 0x18) =
-         auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-    auVar27 = auVar43 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar43 = auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60;
-    auVar48 = vectorPermute(auVar47,auVar32,auVar9);
-    *(undefined1 (*) [16])(puVar4 + 0x16) = auVar36;
-    auVar27 = loadVectorLeftIndexed(0xc0,0xe93a0);
-    auVar31 = loadVectorLeftIndexed(0xc4,0xe93a0);
-    auVar47 = loadVectorLeftIndexed(200,0xe93a0);
-    auVar36 = loadVectorLeftIndexed(0xcc,0xe93a0);
-    auVar49 = vectorPermute(auVar32,auVar30,auVar33);
-    auVar51 = vectorPermute(auVar32,auVar50,auVar33);
-    auVar27 = auVar27 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar50 = auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60;
-    auVar27 = auVar31 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar30 = auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60;
-    auVar27 = auVar47 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar31 = auVar36 >> 0x60 & (GPiece<16>)0xffffffff;
-    lVar17 = lVar22 + 4;
-    do {
-      auVar34 = loadVectorLeftIndexed(lVar13,uVar23);
-      auVar37 = loadVectorRightIndexed(0x10,uVar23);
-      auVar38 = *(undefined1 (*) [16])(puVar4 + 0xc);
-      *(undefined4 *)(puVar4 + 0xc) = 0;
-      *(undefined4 *)((int)puVar4 + 100) = 0;
-      auVar36 = (auVar34 | auVar37) >> 0x60 & (GPiece<16>)0xffffffff;
-      uVar26 = storeVectorElementWordIndexed
-                         (auVar36 | auVar36 << 0x20 | auVar36 << 0x40 | auVar36 << 0x60,0x68,lVar1);
-      *(undefined4 *)(puVar4 + 0xd) = uVar26;
-      auVar47 = loadVectorLeftIndexed(lVar13,uVar20);
-      auVar41 = loadVectorRightIndexed(0x10,uVar20);
-      auVar42 = *(undefined1 (*) [16])(puVar4 + 0xe);
-      uVar26 = storeVectorElementWordIndexed(*(undefined1 (*) [16])(puVar4 + 0x18),0x70,lVar1);
-      *(undefined4 *)(puVar4 + 0xe) = uVar26;
-      *(undefined4 *)((int)puVar4 + 0x74) = 0;
-      auVar36 = (auVar47 | auVar41) >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar47 = vectorPermute(auVar47 | auVar41,auVar42,auVar9);
-      uVar26 = storeVectorElementWordIndexed
-                         (auVar36 | auVar36 << 0x20 | auVar36 << 0x40 | auVar36 << 0x60,0x78,lVar1);
-      *(undefined4 *)(puVar4 + 0xf) = uVar26;
-      auVar45 = loadVectorLeftIndexed(lVar13,uVar16);
-      auVar41 = loadVectorRightIndexed(0x10,uVar16);
-      auVar42 = *(undefined1 (*) [16])(puVar4 + 0x10);
-      uVar26 = storeVectorElementWordIndexed
-                         (auVar29 | auVar29 << 0x20 | auVar29 << 0x40 | auVar29 << 0x60,0x80,lVar1);
-      *(undefined4 *)(puVar4 + 0x10) = uVar26;
-      auVar36 = (auVar45 | auVar41) >> 0x60 & (GPiece<16>)0xffffffff;
-      *(undefined4 *)((int)puVar4 + 0x84) = 0;
-      auVar34 = vectorPermute(auVar32,auVar34 | auVar37,*(undefined1 (*) [16])(puVar4 + 0x1a));
-      auVar45 = vectorPermute(auVar45 | auVar41,auVar42,auVar9);
-      uVar26 = storeVectorElementWordIndexed
-                         (auVar36 | auVar36 << 0x20 | auVar36 << 0x40 | auVar36 << 0x60,0x88,lVar1);
-      *(undefined4 *)(puVar4 + 0x11) = uVar26;
-      auVar41 = loadVectorLeftIndexed(lVar13,uVar19);
-      auVar42 = loadVectorRightIndexed(0x10,uVar19);
-      auVar37 = vectorPermute(auVar34,auVar38,*(undefined1 (*) [16])(puVar4 + 0x22));
-      auVar34 = *(undefined1 (*) [16])(puVar4 + 0x12);
-      auVar47 = vectorPermute(*(undefined1 (*) [16])(puVar4 + 0x16),auVar47,auVar39);
-      auVar36 = (auVar41 | auVar42) >> 0x60 & (GPiece<16>)0xffffffff;
-      *(undefined4 *)(puVar4 + 0x12) = 0;
-      uVar26 = storeVectorElementWordIndexed
-                         (auVar2 | auVar2 << 0x20 | auVar2 << 0x40 | auVar2 << 0x60,0x94,lVar1);
-      *(undefined4 *)((int)puVar4 + 0x94) = uVar26;
-      auVar34 = vectorPermute(auVar41 | auVar42,auVar34,auVar33);
-      uVar26 = storeVectorElementWordIndexed
-                         (auVar36 | auVar36 << 0x20 | auVar36 << 0x40 | auVar36 << 0x60,0x98,lVar1);
-      *(undefined4 *)(puVar4 + 0x13) = uVar26;
-      auVar38 = vectorPermute(auVar48,auVar45,auVar39);
-      auVar46 = loadVectorLeftIndexed(lVar13,uVar18);
-      auVar45 = loadVectorRightIndexed(0x10,uVar18);
-      auVar36 = vectorPermute(auVar49,auVar34,auVar39);
-      auVar34 = vectorPermute(auVar46 | auVar45,*(undefined1 (*) [16])(puVar4 + 0x14),auVar33);
-      auVar41 = vectorSubtractFloatingPoint(auVar37,auVar36);
-      auVar47 = vectorSubtractFloatingPoint(auVar36,auVar47);
-      auVar36 = vectorPermute(auVar51,auVar34,auVar39);
-      auVar44 = vectorSubtractFloatingPoint(auVar37,auVar36);
-      auVar36 = vectorSubtractFloatingPoint(auVar36,auVar38);
-      *(undefined4 *)(puVar4 + 0x14) = 0;
-      uVar26 = storeVectorElementWordIndexed
-                         (auVar3 | auVar3 << 0x20 | auVar3 << 0x40 | auVar3 << 0x60,0xa4,lVar1);
-      *(undefined4 *)((int)puVar4 + 0xa4) = uVar26;
-      auVar34 = vectorPermute(auVar41,auVar41,auVar5);
-      auVar38 = vectorPermute(auVar47,auVar47,auVar6);
-      auVar42 = vectorPermute(auVar41,auVar41,auVar6);
-      auVar47 = vectorPermute(auVar47,auVar47,auVar5);
-      auVar34 = vectorMultiplyAddFloatingPoint(auVar34,auVar38,auVar32);
-      auVar41 = vectorPermute(auVar44,auVar44,auVar5);
-      auVar38 = vectorPermute(auVar36,auVar36,auVar6);
-      auVar44 = vectorPermute(auVar44,auVar44,auVar6);
-      auVar36 = vectorPermute(auVar36,auVar36,auVar5);
-      auVar38 = vectorMultiplyAddFloatingPoint(auVar41,auVar38,auVar32);
-      auVar47 = vectorNegativeMultiplySubtractFloatingPoint(auVar42,auVar47,auVar34);
-      auVar36 = vectorNegativeMultiplySubtractFloatingPoint(auVar44,auVar36,auVar38);
-      auVar34 = vectorAddFloatingPoint(auVar36,auVar47);
-      auVar36 = vectorMultiplyAddFloatingPoint(auVar34,auVar34,auVar32);
-      auVar47 = vectorPermute(auVar34,auVar34,auVar7);
-      auVar38 = vectorPermute(auVar34,auVar34,auVar8);
-      auVar47 = vectorMultiplyAddFloatingPoint(auVar47,auVar47,auVar36);
-      auVar36 = (auVar46 | auVar45) >> 0x60 & (GPiece<16>)0xffffffff;
-      uVar26 = storeVectorElementWordIndexed
-                         (auVar36 | auVar36 << 0x20 | auVar36 << 0x40 | auVar36 << 0x60,0xa8,lVar1);
-      *(undefined4 *)(puVar4 + 0x15) = uVar26;
-      auVar45 = *(undefined1 (*) [16])(puVar4 + 6);
-      auVar36 = vectorMultiplyAddFloatingPoint(auVar38,auVar38,auVar47);
-      auVar41 = vectorPermute(auVar45,auVar45,auVar8);
-      auVar42 = vectorPermute(auVar45,auVar45,auVar7);
-      auVar36 = auVar36 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar36 = auVar36 | auVar36 << 0x20 | auVar36 << 0x40 | auVar36 << 0x60;
-      auVar47 = vectorReciprocalSquareRootEstimateFloatingPoint(auVar36);
-      auVar36 = vectorMultiplyAddFloatingPoint(auVar47,auVar36,auVar32);
-      auVar38 = vectorMultiplyAddFloatingPoint(auVar47,auVar35,auVar32);
-      auVar36 = vectorNegativeMultiplySubtractFloatingPoint(auVar47,auVar36,auVar40);
-      auVar36 = vectorMultiplyAddFloatingPoint(auVar36,auVar38,auVar47);
-      auVar38 = vectorCompareEqualToFloatingPoint(auVar36,auVar36);
-      auVar36 = vectorConditionalSelect(auVar47,auVar36,auVar38);
-      auVar38 = vectorMultiplyAddFloatingPoint(auVar34,auVar36,auVar32);
-      auVar36 = auVar28 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar47 = auVar36 | auVar36 << 0x20 | auVar36 << 0x40 | auVar36 << 0x60;
-      auVar45 = vectorMultiplyAddFloatingPoint(auVar45,auVar38,auVar32);
-      auVar36 = vectorPermute(auVar38,auVar38,auVar7);
-      auVar34 = vectorPermute(auVar38,auVar38,auVar8);
-      auVar45 = vectorMultiplyAddFloatingPoint(auVar42,auVar36,auVar45);
-      auVar36 = ZEXT416(0xffffffff);
-      auVar36 = auVar36 | auVar36 << 0x20 | auVar36 << 0x40 | auVar36 << 0x60;
-      auVar42 = vectorShiftLeftIntegerWord(auVar36,auVar36);
-      auVar36 = vectorMultiplyAddFloatingPoint(auVar41,auVar34,auVar45);
-      auVar36 = auVar36 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar36 = vectorSubtractFloatingPoint
-                          (auVar36 | auVar36 << 0x20 | auVar36 << 0x40 | auVar36 << 0x60,auVar43);
-      auVar34 = vectorMultiplyAddFloatingPoint
-                          (auVar36,*(undefined1 (*) [16])(puVar4 + 0x1e),auVar43);
-      auVar36 = ZEXT416(8);
-      auVar41 = vectorCompareGreaterThanFloatingPoint(auVar32,auVar34);
-      auVar34 = vectorLogicalAndWithComplement(auVar34,auVar41);
-      auVar41 = vectorCompareGreaterThanFloatingPoint(auVar34,auVar40);
-      auVar34 = vectorConditionalSelect(auVar34,auVar40,auVar41);
-      auVar41 = vectorMultiplyAddFloatingPoint
-                          (auVar34,*(undefined1 (*) [16])(puVar4 + 0x1c),auVar42);
-      auVar45 = *(undefined1 (*) [16])(puVar4 + 0x26);
-      auVar34 = vectorPermute(auVar28,*(undefined1 (*) [16])(puVar4 + 0x28),auVar33);
-      auVar28 = vectorConvertToSignedFixedPointWordSaturate(auVar41,0);
-      auVar41.piece<0,4>() = auVar28.piece<0,4>() + auVar50.piece<0,4>();
-      auVar41.piece<8,8>() = auVar28.piece<8,8>();
-      auVar41.piece<4,4>() = auVar28.piece<4,4>() + auVar50.piece<4,4>();
-      auVar42.piece<0,8>() = auVar41.piece<0,8>();
-      auVar42.piece<12,4>() = auVar28.piece<12,4>();
-      auVar42.piece<8,4>() = auVar28.piece<8,4>() + auVar50.piece<8,4>();
-      auVar28.piece<0,12>() = auVar42.piece<0,12>();
-      auVar28.piece<12,4>() = auVar42.piece<12,4>() + auVar50.piece<12,4>();
-      auVar41 = vectorCompareGreaterThanSignedWord(auVar28,auVar30);
-      auVar28 = vectorConditionalSelect(auVar28,auVar30,auVar41);
-      auVar42 = vectorShiftLeftIntegerWord
-                          (auVar28,auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60);
-      auVar41 = vectorShiftLeftIntegerWord
-                          (auVar28,auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60);
-      auVar28 = vectorShiftLeftIntegerWord
-                          (auVar28,auVar36 | auVar36 << 0x20 | auVar36 << 0x40 | auVar36 << 0x60);
-      auVar28 = (auVar42 | auVar41 | auVar28 | auVar30) >> 0x60 & (GPiece<16>)0xffffffff;
-      uVar26 = storeVectorElementWordIndexed
-                         (auVar28 | auVar28 << 0x20 | auVar28 << 0x40 | auVar28 << 0x60,0,lVar24);
-      *(undefined4 *)((uint)lVar24 & 0xfffffffc) = uVar26;
-      auVar28 = loadVectorLeftIndexed(8,lVar15);
-      auVar41 = loadVectorLeftIndexed(0x18,0x73aa00);
-      auVar36 = vectorPermute(auVar28,*(undefined1 (*) [16])(puVar4 + 10),auVar33);
-      auVar28 = auVar28 >> 0x60 & (GPiece<16>)0xffffffff;
-      uVar26 = storeVectorElementWordIndexed(auVar47,0x50,lVar1);
-      *(undefined4 *)(puVar4 + 10) = uVar26;
-      uVar26 = storeVectorElementWordIndexed(auVar45,0x54,lVar1);
-      *(undefined4 *)((int)puVar4 + 0x54) = uVar26;
-      auVar36 = vectorPermute(auVar34,auVar36,auVar39);
-      uVar26 = storeVectorElementWordIndexed
-                         (auVar28 | auVar28 << 0x20 | auVar28 << 0x40 | auVar28 << 0x60,0x58,lVar1);
-      *(undefined4 *)(puVar4 + 0xb) = uVar26;
-      auVar28 = vectorSubtractFloatingPoint(*(undefined1 (*) [16])(puVar4 + 8),auVar36);
-      auVar34 = vectorSubtractFloatingPoint(auVar28,auVar37);
-      auVar28 = vectorMultiplyAddFloatingPoint(auVar34,auVar34,auVar32);
-      auVar37 = vectorPermute(auVar34,auVar34,auVar7);
-      auVar36 = vectorPermute(auVar34,auVar34,auVar8);
-      auVar28 = vectorMultiplyAddFloatingPoint(auVar37,auVar37,auVar28);
-      lVar24 = lVar24 + 4;
-      auVar28 = vectorMultiplyAddFloatingPoint(auVar36,auVar36,auVar28);
-      auVar28 = auVar28 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar28 = auVar28 | auVar28 << 0x20 | auVar28 << 0x40 | auVar28 << 0x60;
-      auVar36 = vectorMultiplyAddFloatingPoint
-                          (auVar38,*(undefined1 (*) [16])(puVar4 + 0x24),auVar32);
-      auVar38 = vectorReciprocalSquareRootEstimateFloatingPoint(auVar28);
-      auVar37 = vectorPermute(auVar36,auVar36,auVar8);
-      auVar28 = vectorMultiplyAddFloatingPoint(auVar38,auVar28,auVar32);
-      auVar45 = vectorMultiplyAddFloatingPoint(auVar38,auVar35,auVar32);
-      auVar42 = vectorPermute(auVar36,auVar36,auVar7);
-      auVar28 = vectorNegativeMultiplySubtractFloatingPoint(auVar38,auVar28,auVar40);
-      auVar28 = vectorMultiplyAddFloatingPoint(auVar28,auVar45,auVar38);
-      auVar45 = vectorCompareEqualToFloatingPoint(auVar28,auVar28);
-      auVar28 = vectorConditionalSelect(auVar38,auVar28,auVar45);
-      auVar34 = vectorMultiplyAddFloatingPoint(auVar34,auVar28,auVar32);
-      auVar28 = vectorMultiplyAddFloatingPoint(auVar34,auVar36,auVar32);
-      auVar45 = vectorPermute(auVar34,auVar34,auVar7);
-      auVar38 = vectorPermute(auVar34,auVar34,auVar8);
-      auVar28 = vectorMultiplyAddFloatingPoint(auVar45,auVar42,auVar28);
-      auVar28 = vectorMultiplyAddFloatingPoint(auVar38,auVar37,auVar28);
-      auVar28 = auVar28 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar28 = auVar28 | auVar28 << 0x20 | auVar28 << 0x40 | auVar28 << 0x60;
-      vectorCompareGreaterThanOrEqualToFloatingPoint(auVar28,auVar32);
-      if (!(bool)(in_cr6 >> 1 & 1)) {
-        auVar37 = ZEXT416(0xffffffff);
-        auVar37 = auVar37 | auVar37 << 0x20 | auVar37 << 0x40 | auVar37 << 0x60;
-        auVar37 = vectorShiftLeftIntegerWord(auVar37,auVar37);
-        auVar28 = vectorMultiplyAddFloatingPoint
-                            (auVar28,*(undefined1 (*) [16])(puVar4 + 0x20),auVar37);
-        auVar28 = vectorMultiplyAddFloatingPoint(auVar36,auVar28,auVar32);
-        auVar34 = vectorSubtractFloatingPoint(auVar34,auVar28);
-      }
-      auVar28 = ZEXT416(0xffffffff);
-      auVar37 = auVar28 | auVar28 << 0x20 | auVar28 << 0x40 | auVar28 << 0x60;
-      auVar28 = auVar34 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar36 = auVar34 >> 0x40 & (GPiece<16>)0xffffffff;
-      auVar34 = vectorShiftLeftIntegerWord(auVar37,auVar37);
-      auVar34 = vectorMultiplyAddFloatingPoint
-                          (auVar28 | auVar28 << 0x20 | auVar28 << 0x40 | auVar28 << 0x60,auVar41,
-                           auVar34);
-      auVar28 = ZEXT416(0xffffffff);
-      auVar28 = auVar28 | auVar28 << 0x20 | auVar28 << 0x40 | auVar28 << 0x60;
-      iVar21 = iVar21 + 1;
-      auVar37 = vectorShiftLeftIntegerWord(auVar28,auVar28);
-      uVar23 = uVar23 + 4;
-      uVar20 = uVar20 + 4;
-      uVar16 = uVar16 + 4;
-      uVar19 = uVar19 + 4;
-      uVar18 = uVar18 + 4;
-      auVar28 = vectorMultiplyAddFloatingPoint(auVar34,auVar35,auVar35);
-      auVar28 = auVar28 >> 0x60 & (GPiece<16>)0xffffffff;
-      uVar26 = storeVectorElementWordIndexed
-                         (auVar28 | auVar28 << 0x20 | auVar28 << 0x40 | auVar28 << 0x60,0,lVar22);
-      *(undefined4 *)((uint)lVar22 & 0xfffffffc) = uVar26;
-      auVar28 = loadVectorLeftIndexed(0x18,0x73aa00);
-      lVar22 = lVar22 + 8;
-      auVar28 = vectorMultiplyAddFloatingPoint
-                          (auVar36 | auVar36 << 0x20 | auVar36 << 0x40 | auVar36 << 0x60,auVar28,
-                           auVar37);
-      auVar28 = vectorMultiplyAddFloatingPoint(auVar28,auVar35,auVar35);
-      auVar28 = auVar28 >> 0x60 & (GPiece<16>)0xffffffff;
-      uVar26 = storeVectorElementWordIndexed
-                         (auVar28 | auVar28 << 0x20 | auVar28 << 0x40 | auVar28 << 0x60,0,lVar17);
-      *(undefined4 *)((uint)lVar17 & 0xfffffffc) = uVar26;
-      auVar28 = loadVectorLeftIndexed(0x10,0x73aa00);
-      auVar28 = vectorAddFloatingPoint(auVar47,auVar28);
-      lVar17 = lVar17 + 8;
-    } while (iVar21 < 0x11);
-    auVar27 = vectorAddFloatingPoint
-                        (*(undefined1 (*) [16])(puVar4 + 0x26),*(undefined1 (*) [16])(puVar4 + 0x2c)
-                        );
-    uVar23 = puVar4[0x30];
-    puVar4[0x2a] = puVar4[0x2a] + 0x60;
-    puVar4[0x30] = uVar23 + 1;
-    *(undefined1 (*) [16])(puVar4 + 0x28) = auVar27;
-  } while ((int)(uVar23 + 1) < 0x11);
-  return;
+    /* the binary: vrsqrtefp plus one Newton step, keeping the estimate if the step gives NaN */
+    return 1.0f / sqrtf(x);
 }
 
+// 0x00e9470 (0x78c bytes)
+/* light and environment-map one staged tile: for each of its 17x17 vertices a grey level from the
+   surface normal (central differences of the staged heights) and the reflection of the view
+   direction as UVs. Written 4-wide with the vector unit in the binary. */
+void ShadeVerts(WaterTile *tile)
+{
+    WaterStage *stage = (WaterStage *)g_ScratchBuf;
+    Vec3 light = WaterTileConsts.lightDir;
+    float camX = GameCamera.posX, camY = GameCamera.posY, camZ = GameCamera.posZ;
+    float gx = WaterTileConsts.TileGridSize.x, gy = WaterTileConsts.TileGridSize.y;
+    float y = tile->tilePos.y + WaterTileConsts.TileOffset.y;
+    int k = 0;
+
+    for (int row = 0; row < WATER_VERTS; row++, y += gy) {
+        float x = tile->tilePos.x + WaterTileConsts.TileOffset.x;
+        for (int col = 0; col < WATER_VERTS; col++, k++, x += gx) {
+            float *g = &stage->grid[row + 1][col + 4];
+            float h = g[0], hl = g[-1], hr = g[1], hu = g[-24], hd = g[24];
+
+            /* sum of the normals of the up-left and down-right triangles */
+            float nx = gy * (h - hl) + gy * (hr - h);
+            float ny = gx * (h - hu) + gx * (hd - h);
+            float nz = -(gx * gy) + -(gx * gy);
+            float s = InvSqrt(nx * nx + ny * ny + nz * nz);
+            nx *= s; ny *= s; nz *= s;
+
+            float lit = (nx * light.x + ny * light.y + nz * light.z - SHADE_PIVOT) * SHADE_CONTRAST + SHADE_PIVOT;
+            if (lit < 0.0f) lit = 0.0f;
+            if (lit > 1.0f) lit = 1.0f;
+            int grey = (int)(lit * SHADE_SCALE) + SHADE_AMBIENT;
+            if (grey > 0xff) grey = 0xff;
+            stage->color[k] = grey << 24 | grey << 16 | grey << 8 | 0xff;
+
+            float vx = camX - x, vy = camY - y, vz = camZ - tile->tilePos.z - h;
+            float t = InvSqrt(vz * vz + (vy * vy + vx * vx));
+            vx *= t; vy *= t; vz *= t;
+            /* reflect off the surface (normal flipped to face up) when the view is in front of it */
+            float d = vx * -nx + vy * -ny + vz * -nz;
+            if (d >= 0.0f) {
+                vx -= -nx * (d * 2.0f);
+                vy -= -ny * (d * 2.0f);
+            }
+            stage->envUV[k].x = vx * WaterTileConsts.texScale * 0.5f + 0.5f;
+            stage->envUV[k].y = vy * WaterTileConsts.texScale * 0.5f + 0.5f;
+        }
+    }
+}
 
 // 0x00e9c08 (0x320 bytes)
 /* one step of the wave equation for tiles[tileIdx]: buf[bufIdx] holds the previous heights and
@@ -648,7 +221,6 @@ void WaterTile_StepWave(float (*stage)[24], int tileIdx, int bufIdx, WaterTile *
         tiles[tile->tileLinkCorners[3]].buf[bufIdx].heightCorner[0] = b->height[15][15];
 }
 
-
 // 0x00e9f28 (0x4 bytes)
 void STUB_000e9f28(...)
 {
@@ -664,7 +236,6 @@ static inline u32 Brighten(u32 c)
     u32 v = f <= 0.0f ? 0 : f >= 4294967295.0f ? 0xffffffff : (u32)f;   /* vctuxs */
     return v > 0xff ? 0xff : v;
 }
-
 
 // 0x00e9f48 (0x2a0 bytes)
 /* vertices of a water sheet: height blended between two poses, both UV layers wobbled by a wave
@@ -695,12 +266,10 @@ void BuildVerts(WaterSheet *sheet, WaterSheetVert *out)
     }
 }
 
-
 // 0x00ea1e8 (0x4 bytes)
 void STUB_000ea1e8(...)
 {
 }
-
 
 // 0x00ea1f8 (0x180 bytes)
 /* environment-map UVs: reflect the direction to the camera off each normal */
@@ -720,5 +289,3 @@ void NormalsToEnvUV(int count, Vec3 *positions, Vec3 *normals, Vec2 *outUV)
         outUV->y = refl[1] * ENV_UV;
     }
 }
-
-

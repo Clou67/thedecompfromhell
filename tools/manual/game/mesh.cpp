@@ -1,6 +1,5 @@
 // game/mesh.cpp -- water surfaces: tile wave simulation, water sheets, environment-map UVs
-// STATUS: IN PROGRESS
-// MERGE
+// STATUS: CLEAN (checked against the asm; local names are mine)
 // 19 functions, 0xe9114-0xea378
 //
 // A water surface is an array of 16x16-height tiles (WaterTile). Each tile keeps three height
@@ -103,6 +102,65 @@ void WaterTileBufLerp(float t, float *dst, float *bufA, float *bufB)
     float u = 1.0f - t;
     for (unsigned i = 0; i < sizeof(WaterTileBuf) / sizeof(float); i++)
         dst[i] = bufA[i] * u + bufB[i] * t;
+}
+
+#define SHADE_PIVOT    0.573f   /* 0xe93f8: light level left unchanged by the contrast */
+#define SHADE_CONTRAST 3.0f
+#define SHADE_SCALE    512.0f
+#define SHADE_AMBIENT  64
+
+static inline float InvSqrt(float x)
+{
+    /* the binary: vrsqrtefp plus one Newton step, keeping the estimate if the step gives NaN */
+    return 1.0f / sqrtf(x);
+}
+
+// 0x00e9470 (0x78c bytes)
+/* light and environment-map one staged tile: for each of its 17x17 vertices a grey level from the
+   surface normal (central differences of the staged heights) and the reflection of the view
+   direction as UVs. Written 4-wide with the vector unit in the binary. */
+void ShadeVerts(WaterTile *tile)
+{
+    WaterStage *stage = (WaterStage *)g_ScratchBuf;
+    Vec3 light = WaterTileConsts.lightDir;
+    float camX = GameCamera.posX, camY = GameCamera.posY, camZ = GameCamera.posZ;
+    float gx = WaterTileConsts.TileGridSize.x, gy = WaterTileConsts.TileGridSize.y;
+    float y = tile->tilePos.y + WaterTileConsts.TileOffset.y;
+    int k = 0;
+
+    for (int row = 0; row < WATER_VERTS; row++, y += gy) {
+        float x = tile->tilePos.x + WaterTileConsts.TileOffset.x;
+        for (int col = 0; col < WATER_VERTS; col++, k++, x += gx) {
+            float *g = &stage->grid[row + 1][col + 4];
+            float h = g[0], hl = g[-1], hr = g[1], hu = g[-24], hd = g[24];
+
+            /* sum of the normals of the up-left and down-right triangles */
+            float nx = gy * (h - hl) + gy * (hr - h);
+            float ny = gx * (h - hu) + gx * (hd - h);
+            float nz = -(gx * gy) + -(gx * gy);
+            float s = InvSqrt(nx * nx + ny * ny + nz * nz);
+            nx *= s; ny *= s; nz *= s;
+
+            float lit = (nx * light.x + ny * light.y + nz * light.z - SHADE_PIVOT) * SHADE_CONTRAST + SHADE_PIVOT;
+            if (lit < 0.0f) lit = 0.0f;
+            if (lit > 1.0f) lit = 1.0f;
+            int grey = (int)(lit * SHADE_SCALE) + SHADE_AMBIENT;
+            if (grey > 0xff) grey = 0xff;
+            stage->color[k] = grey << 24 | grey << 16 | grey << 8 | 0xff;
+
+            float vx = camX - x, vy = camY - y, vz = camZ - tile->tilePos.z - h;
+            float t = InvSqrt(vz * vz + (vy * vy + vx * vx));
+            vx *= t; vy *= t; vz *= t;
+            /* reflect off the surface (normal flipped to face up) when the view is in front of it */
+            float d = vx * -nx + vy * -ny + vz * -nz;
+            if (d >= 0.0f) {
+                vx -= -nx * (d * 2.0f);
+                vy -= -ny * (d * 2.0f);
+            }
+            stage->envUV[k].x = vx * WaterTileConsts.texScale * 0.5f + 0.5f;
+            stage->envUV[k].y = vy * WaterTileConsts.texScale * 0.5f + 0.5f;
+        }
+    }
 }
 
 // 0x00e9c08 (0x320 bytes)

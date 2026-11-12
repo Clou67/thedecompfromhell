@@ -16,14 +16,8 @@ struct Vec3 {
 
 // ---- globals
 extern undefined4 DAT_00726aac; /* 0x726aac */
-extern undefined4 _DAT_000e93b0; /* direct read */
-extern undefined4 _DAT_000e93c0; /* direct read */
-extern undefined4 _DAT_000e93d0; /* direct read */
-extern undefined4 _DAT_000e93e0; /* direct read */
-extern undefined4 _DAT_000e9420; /* direct read */
-extern undefined4 _DAT_000e9430; /* direct read */
-extern undefined4 _DAT_000e9450; /* direct read */
 extern undefined4 minHeight; /* 0x73aa1c */
+extern undefined4 texScale; /* 0x73aa18 */
 
 // ---- functions
 void SECTION_HEADER_MESH(void);

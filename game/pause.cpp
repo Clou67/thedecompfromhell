@@ -1940,8 +1940,8 @@ void PrepareChallengeModeSave(longlong param_1)
   int iVar12;
   int iVar13;
   
-  iVar13 = DAT_00902ec8;
-  FastMemCopy32(DAT_00902ec8,&g_goldWeaponsArray,0x28);
+  iVar13 = g_ScratchBuf;
+  FastMemCopy32(g_ScratchBuf,&g_goldWeaponsArray,0x28);
   FastMemCopy32(iVar13 + 0x30,&UnlockableItems,0x25);
   FastMemCopy32(iVar13 + 0x60,&currentAmmoArray,0x94);
   FastMemCopy32(iVar13 + 0x100,g_CollectedGoldBolts,0x50);
@@ -4138,13 +4138,13 @@ undefined8 Missions_OnEnter(int param_1)
   longlong lVar3;
   
   RefreshLevelMissionStatus();
-  lVar3 = BuildMissionList(DAT_00902ec8,(uint *)0x0,DAT_00902ec8 + 0x40,'\x01');
+  lVar3 = BuildMissionList(g_ScratchBuf,(uint *)0x0,g_ScratchBuf + 0x40,'\x01');
   *(int *)(param_1 + 0x7c) = (int)lVar3;
   piVar2 = (int *)(param_1 + 0x30 + g_SelectedLevel * 4);
   if (*piVar2 != -1) {
     iVar1 = *piVar2;
-    DAT_0072af24 = DAT_00902ec8[iVar1];
-    DAT_0072adc0 = DAT_00902ec8[iVar1 + 0x40];
+    DAT_0072af24 = g_ScratchBuf[iVar1];
+    DAT_0072adc0 = g_ScratchBuf[iVar1 + 0x40];
   }
   return 0;
 }
@@ -4215,11 +4215,11 @@ undefined8 Missions_Update(int param_1)
           PlayMobySound(1,0x11,*(MobyInstance **)(param_1 + 0x14));
         }
         if (((uVar4 & 0x5000) != 0) || (g_SelectedLevel != LVar5)) {
-          lVar8 = BuildMissionList(DAT_00902ec8,(uint *)0x0,DAT_00902ec8 + 0x40,'\x01');
+          lVar8 = BuildMissionList(g_ScratchBuf,(uint *)0x0,g_ScratchBuf + 0x40,'\x01');
           *(int *)(param_1 + 0x7c) = (int)lVar8;
           iVar10 = *(int *)(param_1 + 0x30 + g_SelectedLevel * 4);
-          DAT_0072af24 = DAT_00902ec8[iVar10];
-          DAT_0072adc0 = DAT_00902ec8[iVar10 + 0x40];
+          DAT_0072af24 = g_ScratchBuf[iVar10];
+          DAT_0072adc0 = g_ScratchBuf[iVar10 + 0x40];
         }
       }
       if ((g_Pad.pressedButton & 0x10) != 0) {
@@ -6252,7 +6252,7 @@ undefined8 DrawMissionsFrame(int param_1)
   undefined2 local_98;
   undefined2 local_96;
   
-  outTextIds = DAT_00902ec8;
+  outTextIds = g_ScratchBuf;
   local_b0 = 0;
   STUB_0006d704(0);
   lVar2 = BuildMissionList(outTextIds,&local_b0,(int *)0x0,'\0');

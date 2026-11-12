@@ -3365,3 +3365,10 @@ extern undefined4 DAT_00a1e124; /* no defined data */
 extern undefined4 DAT_00a1e128; /* no defined data */
 extern undefined4 DAT_00a1e12c; /* no defined data */
 extern undefined4 g_Manipulator; /* 0x96c07b */
+extern undefined4 _DAT_000e93b0; /* direct read */
+extern undefined4 _DAT_000e93c0; /* direct read */
+extern undefined4 _DAT_000e93d0; /* direct read */
+extern undefined4 _DAT_000e93e0; /* direct read */
+extern undefined4 _DAT_000e9420; /* direct read */
+extern undefined4 _DAT_000e9430; /* direct read */
+extern undefined4 _DAT_000e9450; /* direct read */

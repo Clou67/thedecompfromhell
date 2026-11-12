@@ -24,3 +24,13 @@ struct WaterTile {
     u8 unk1190[0x10];            /* 0x1190 */
 };
 typedef char WaterTile_size_check[sizeof(struct WaterTile) == 0x11a0 ? 1 : -1];
+
+/* the water working area in g_ScratchBuf: one tile's staged heights (StageTileBuf) and the
+   per-vertex results of ShadeVerts for its 17x17 vertices */
+#define WATER_VERTS 17
+struct WaterStage {
+    float grid[20][24];                          /* 0x0000  see StageTileBuf */
+    struct Vec2 envUV[WATER_VERTS * WATER_VERTS]; /* 0x0780 */
+    u32 color[WATER_VERTS * WATER_VERTS];        /* 0x1088  0xRRGGBBAA, grey */
+};
+typedef char WaterStage_size_check[sizeof(struct WaterStage) == 0x150c ? 1 : -1];

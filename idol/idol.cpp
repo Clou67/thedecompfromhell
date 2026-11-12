@@ -646,7 +646,7 @@ void FUN_005043b0(longlong param_1)
   
   uVar1 = idol::AllocateMemAlign(param_1 + 0x58,0x4000,0x10);
   FUN_004fe39c(param_1 + 0xa0,uVar1,0x4000,"Scratch Memory",2,0);
-  DAT_00902ec8 = FUN_004fe5ec(param_1 + 0xa0);
+  g_ScratchBuf = FUN_004fe5ec(param_1 + 0xa0);
   return;
 }
 
