@@ -358,8 +358,8 @@ UpdateMobysDebug:   # 0xfc238, 0x3e4 bytes
   00fc4b4  cmpwi 5, 0
   00fc4b8  bt 2, 0xfc4d4
   00fc4bc  addi 5, 3, 16
-  00fc4c0  <unknown>
-  00fc4c4  <unknown>
+  00fc4c0  lvlx 2, 3, 29
+  00fc4c4  lvrx 4, 5, 29
   00fc4c8  vor 2, 2, 4
   00fc4cc  vcfsx 2, 2, 0
   00fc4d0  vaddfp 3, 3, 2
@@ -1631,7 +1631,7 @@ MB_SpawnBoltsFromCrate:   # 0xfd8d0, 0x420 bytes
   00fd8f8  std 31, 160(1)
   00fd8fc  extsw 7, 7
   00fd900  ori 31, 5, 0
-  00fd904  <unknown>
+  00fd904  lvlx 2, 6, 3
   00fd908  std 7, 112(1)
   00fd90c  lbz 6, 177(3)
   00fd910  lfd 1, 112(1)
@@ -1713,12 +1713,12 @@ MB_SpawnBoltsFromCrate:   # 0xfd8d0, 0x420 bytes
   00fda40  addi 8, 3, 16
   00fda44  clrldi 5, 5, 32
   00fda48  extsh 6, 6
-  00fda4c  <unknown>
+  00fda4c  lvlx 5, 7, 30
   00fda50  addic 7, 6, 1
   00fda54  vsraw 5, 5, 2
   00fda58  lhzx 9, 5, 3
-  00fda5c  <unknown>
-  00fda60  <unknown>
+  00fda5c  lvlx 4, 3, 5
+  00fda60  lvrx 2, 8, 5
   00fda64  extsh 3, 9
   00fda68  srawi 5, 7, 1
   00fda6c  vor 4, 4, 2
@@ -1742,7 +1742,7 @@ MB_SpawnBoltsFromCrate:   # 0xfd8d0, 0x420 bytes
   00fdab4  lis 3, 16
   00fdab8  vspltw 2, 2, 0
   00fdabc  addi 3, 3, -10060
-  00fdac0  <unknown>
+  00fdac0  lvlx 3, 0, 3
   00fdac4  vspltw 3, 3, 0
   00fdac8  vcmpgefp. 4, 2, 3
   00fdacc  bf 26, 0xfdae0
@@ -1842,7 +1842,7 @@ MB_SpawnBoltsFromCrate:   # 0xfd8d0, 0x420 bytes
   00fdc44  li 4, 12
   00fdc48  addi 3, 3, -10060
   00fdc4c  li 28, 0
-  00fdc50  <unknown>
+  00fdc50  lvlx 3, 4, 3
   00fdc54  vspltw 3, 3, 0
   00fdc58  vcmpgefp. 3, 2, 3
   00fdc5c  bt 26, 0xfdc80
@@ -1857,7 +1857,7 @@ MB_SpawnBoltsFromCrate:   # 0xfd8d0, 0x420 bytes
   00fdc80  lis 3, 16
   00fdc84  li 4, 20
   00fdc88  addi 3, 3, -10060
-  00fdc8c  <unknown>
+  00fdc8c  lvlx 3, 4, 3
   00fdc90  vspltw 3, 3, 0
   00fdc94  vcmpgefp. 2, 2, 3
   00fdc98  bt 26, 0xfdca0
@@ -6073,10 +6073,10 @@ MB_UpdateNavMoveTurning:   # 0x101cc0, 0x39c bytes
   0101f9c  vslw 3, 3, 3
   0101fa0  lfs 2, 8(4)
   0101fa4  lfs 3, -3056(5)
-  0101fa8  <unknown>
+  0101fa8  lvlx 2, 6, 4
   0101fac  fmuls 2, 3, 2
   0101fb0  vspltw 2, 2, 0
-  0101fb4  <unknown>
+  0101fb4  lvlx 4, 7, 5
   0101fb8  vmaddfp 2, 4, 2, 3
   0101fbc  fctiwz 2, 2
   0101fc0  vctsxs 2, 2, 0
@@ -7712,10 +7712,10 @@ MB_UpdateLegAnimMoveTurning:   # 0x103710, 0x3a0 bytes
   01039ac  vslw 3, 3, 3
   01039b0  lfs 1, 8(4)
   01039b4  lfs 2, -3056(5)
-  01039b8  <unknown>
+  01039b8  lvlx 2, 6, 4
   01039bc  fmuls 1, 2, 1
   01039c0  vspltw 2, 2, 0
-  01039c4  <unknown>
+  01039c4  lvlx 4, 7, 5
   01039c8  vmaddfp 2, 4, 2, 3
   01039cc  fctiwz 1, 1
   01039d0  vctsxs 2, 2, 0
@@ -11322,11 +11322,11 @@ MB_HandleDamage:   # 0x106840, 0xd54 bytes
   0107208  lis 5, 16
   010720c  vspltisw 2, -1
   0107210  li 6, 52
-  0107214  <unknown>
+  0107214  lvlx 3, 4, 3
   0107218  addi 5, 5, 26616
   010721c  li 3, 28
   0107220  vslw 2, 2, 2
-  0107224  <unknown>
+  0107224  lvlx 4, 6, 5
   0107228  vspltw 4, 4, 0
   010722c  vmaddfp 2, 3, 4, 2
   0107230  vctsxs 2, 2, 0
@@ -11336,11 +11336,11 @@ MB_HandleDamage:   # 0x106840, 0xd54 bytes
   0107240  lis 5, 16
   0107244  vspltisw 2, -1
   0107248  li 6, 56
-  010724c  <unknown>
+  010724c  lvlx 3, 4, 3
   0107250  addi 5, 5, 26616
   0107254  li 3, 28
   0107258  vslw 2, 2, 2
-  010725c  <unknown>
+  010725c  lvlx 4, 6, 5
   0107260  vspltw 4, 4, 0
   0107264  vmaddfp 2, 3, 4, 2
   0107268  vctsxs 2, 2, 0
@@ -11350,11 +11350,11 @@ MB_HandleDamage:   # 0x106840, 0xd54 bytes
   0107278  lis 5, 16
   010727c  vspltisw 2, -1
   0107280  li 6, 60
-  0107284  <unknown>
+  0107284  lvlx 3, 4, 3
   0107288  addi 5, 5, 26616
   010728c  li 3, 28
   0107290  vslw 2, 2, 2
-  0107294  <unknown>
+  0107294  lvlx 4, 6, 5
   0107298  vspltw 4, 4, 0
   010729c  vmaddfp 2, 3, 4, 2
   01072a0  vctsxs 2, 2, 0
@@ -11368,16 +11368,16 @@ MB_HandleDamage:   # 0x106840, 0xd54 bytes
   01072c0  bt 2, 0x1072e0
   01072c4  lis 5, 16
   01072c8  li 6, 64
-  01072cc  <unknown>
+  01072cc  lvlx 3, 4, 3
   01072d0  addi 5, 5, 26616
-  01072d4  <unknown>
+  01072d4  lvlx 2, 6, 5
   01072d8  vspltw 2, 2, 0
   01072dc  b 0x1072f8
   01072e0  lis 5, 16
-  01072e4  <unknown>
+  01072e4  lvlx 3, 4, 3
   01072e8  li 6, 60
   01072ec  addi 5, 5, 26616
-  01072f0  <unknown>
+  01072f0  lvlx 2, 6, 5
   01072f4  vspltw 2, 2, 0
   01072f8  vspltisw 4, -1
   01072fc  li 3, 28
@@ -11392,10 +11392,10 @@ MB_HandleDamage:   # 0x106840, 0xd54 bytes
   0107320  li 6, 60
   0107324  vspltisw 2, -1
   0107328  addi 5, 5, 26616
-  010732c  <unknown>
+  010732c  lvlx 3, 4, 3
   0107330  li 3, 28
   0107334  vslw 2, 2, 2
-  0107338  <unknown>
+  0107338  lvlx 4, 6, 5
   010733c  vspltw 4, 4, 0
   0107340  vmaddfp 2, 3, 4, 2
   0107344  vctsxs 2, 2, 0
@@ -11406,10 +11406,10 @@ MB_HandleDamage:   # 0x106840, 0xd54 bytes
   0107358  li 6, 68
   010735c  vspltisw 2, -1
   0107360  addi 5, 5, 26616
-  0107364  <unknown>
+  0107364  lvlx 3, 4, 3
   0107368  li 3, 28
   010736c  vslw 2, 2, 2
-  0107370  <unknown>
+  0107370  lvlx 4, 6, 5
   0107374  vspltw 4, 4, 0
   0107378  vmaddfp 2, 3, 4, 2
   010737c  vctsxs 2, 2, 0
@@ -11776,8 +11776,8 @@ MB_DamageMobyList:   # 0x107860, 0x580 bytes
   01079ac  slwi 4, 4, 2
   01079b0  clrldi 6, 6, 32
   01079b4  fsel 1, 7, 1, 4
-  01079b8  <unknown>
-  01079bc  <unknown>
+  01079b8  lvlx 4, 4, 5
+  01079bc  lvlx 3, 7, 6
   01079c0  fsel 2, 6, 2, 3
   01079c4  fcmpu 0, 1, 5
   01079c8  bt 1, 0x1079d4
@@ -11842,15 +11842,15 @@ MB_DamageMobyList:   # 0x107860, 0x580 bytes
   0107ab4  li 4, 112
   0107ab8  addc 4, 1, 4
   0107abc  li 5, 16
-  0107ac0  <unknown>
+  0107ac0  lvlx 5, 0, 4
   0107ac4  addic 6, 4, 4
   0107ac8  vspltw 2, 2, 0
   0107acc  li 7, 16
-  0107ad0  <unknown>
+  0107ad0  lvrx 6, 5, 4
   0107ad4  addic 4, 4, 8
   0107ad8  vor 5, 5, 6
-  0107adc  <unknown>
-  0107ae0  <unknown>
+  0107adc  lvlx 6, 0, 6
+  0107ae0  lvrx 7, 7, 6
   0107ae4  vaddfp 2, 2, 5
   0107ae8  vor 5, 6, 7
   0107aec  vaddfp 2, 2, 5
@@ -11858,7 +11858,7 @@ MB_DamageMobyList:   # 0x107860, 0x580 bytes
   0107af4  lis 4, 16
   0107af8  li 5, 4
   0107afc  addi 4, 4, 30688
-  0107b00  <unknown>
+  0107b00  lvlx 5, 5, 4
   0107b04  vspltw 5, 5, 0
   0107b08  vaddfp 2, 2, 5
   0107b0c  vmaddfp 4, 2, 4, 3
@@ -11869,15 +11869,15 @@ MB_DamageMobyList:   # 0x107860, 0x580 bytes
   0107b20  li 6, 12
   0107b24  vspltisw 8, -1
   0107b28  vspltisw 13, -1
-  0107b2c  <unknown>
-  0107b30  <unknown>
+  0107b2c  lvlx 2, 5, 4
+  0107b30  lvlx 3, 6, 4
   0107b34  li 5, 16
   0107b38  vspltw 2, 2, 0
   0107b3c  vspltw 3, 3, 0
   0107b40  vslw 8, 8, 8
   0107b44  vaddfp 2, 4, 2
   0107b48  vsubfp 7, 3, 4
-  0107b4c  <unknown>
+  0107b4c  lvlx 5, 5, 4
   0107b50  vspltw 5, 5, 0
   0107b54  li 5, 20
   0107b58  vspltisw 1, -1
@@ -11904,7 +11904,7 @@ MB_DamageMobyList:   # 0x107860, 0x580 bytes
   0107bac  vslw 6, 1, 1
   0107bb0  vsel 2, 10, 2, 7
   0107bb4  vslw 7, 13, 13
-  0107bb8  <unknown>
+  0107bb8  lvlx 10, 5, 4
   0107bbc  vcmpgtfp 1, 3, 5
   0107bc0  vslw 9, 9, 9
   0107bc4  li 5, 24
@@ -11913,14 +11913,14 @@ MB_DamageMobyList:   # 0x107860, 0x580 bytes
   0107bd0  vspltisw 12, -1
   0107bd4  vsel 3, 5, 3, 1
   0107bd8  vspltisw 5, -1
-  0107bdc  <unknown>
+  0107bdc  lvlx 13, 5, 4
   0107be0  vslw 12, 12, 12
   0107be4  li 5, 28
   0107be8  vspltw 13, 13, 0
   0107bec  vmaddfp 6, 11, 4, 6
   0107bf0  vslw 5, 5, 5
   0107bf4  li 6, 48
-  0107bf8  <unknown>
+  0107bf8  lvlx 0, 5, 4
   0107bfc  vmaddfp 7, 8, 2, 7
   0107c00  vmaddfp 5, 3, 3, 5
   0107c04  vspltw 0, 0, 0
@@ -11940,7 +11940,7 @@ MB_DamageMobyList:   # 0x107860, 0x580 bytes
   0107c3c  vmaddfp 2, 9, 13, 2
   0107c40  vmaddfp 9, 11, 6, 1
   0107c44  vslw 6, 14, 14
-  0107c48  <unknown>
+  0107c48  lvlx 1, 5, 4
   0107c4c  vspltisw 14, -1
   0107c50  vspltw 1, 1, 0
   0107c54  vmaddfp 6, 5, 3, 6
@@ -11988,7 +11988,7 @@ MB_DamageMobyList:   # 0x107860, 0x580 bytes
   0107cfc  stfs 31, 152(1)
   0107d00  stw 8, 156(1)
   0107d04  li 7, 176
-  0107d08  <unknown>
+  0107d08  lvlx 4, 5, 4
   0107d0c  stfs 31, 208(1)
   0107d10  li 5, 96
   0107d14  stfs 31, 212(1)
@@ -12384,11 +12384,11 @@ MB_randPrimPoints:   # 0x108240, 0xba4 bytes
   0108364  ori 6, 1, 0
   0108368  li 24, 2208
   010836c  addic 29, 23, 34
-  0108370  <unknown>
+  0108370  lvlx 4, 4, 25
   0108374  addic 30, 23, 38
   0108378  lfs 1, 4(25)
   010837c  addic 7, 23, 42
-  0108380  <unknown>
+  0108380  lvlx 7, 5, 25
   0108384  addic 27, 23, 46
   0108388  lfs 2, 12(25)
   010838c  li 16, 44
@@ -12443,14 +12443,14 @@ MB_randPrimPoints:   # 0x108240, 0xba4 bytes
   0108450  sth 8, 124(1)
   0108454  vslw 2, 2, 2
   0108458  sth 9, 126(1)
-  010845c  <unknown>
+  010845c  lvlx 6, 16, 31
   0108460  vspltisw 3, -1
   0108464  vmaddfp 8, 6, 4, 2
-  0108468  <unknown>
-  010846c  <unknown>
+  0108468  lvlx 9, 19, 1
+  010846c  lvlx 5, 22, 1
   0108470  vslw 10, 3, 3
-  0108474  <unknown>
-  0108478  <unknown>
+  0108474  lvlx 3, 17, 1
+  0108478  lvlx 2, 18, 1
   010847c  vmaddfp 8, 9, 8, 10
   0108480  vspltw 9, 8, 0
   0108484  stvewx 9, 19, 1
@@ -12476,22 +12476,22 @@ MB_randPrimPoints:   # 0x108240, 0xba4 bytes
   01084d4  lhz 8, 0(7)
   01084d8  sth 5, 136(1)
   01084dc  sth 8, 138(1)
-  01084e0  <unknown>
+  01084e0  lvlx 3, 0, 23
   01084e4  li 5, 128
-  01084e8  <unknown>
+  01084e8  lvrx 5, 4, 23
   01084ec  li 8, 136
-  01084f0  <unknown>
+  01084f0  lvlx 6, 16, 31
   01084f4  li 4, 132
   01084f8  vor 3, 3, 5
   01084fc  vspltw 5, 2, 0
-  0108500  <unknown>
+  0108500  lvlx 10, 5, 1
   0108504  vspltw 9, 2, 1
   0108508  vmaddfp 8, 3, 6, 8
   010850c  vspltw 2, 2, 2
   0108510  vaddfp 5, 5, 10
   0108514  vspltisw 10, -1
-  0108518  <unknown>
-  010851c  <unknown>
+  0108518  lvlx 3, 4, 1
+  010851c  lvlx 11, 8, 1
   0108520  vaddfp 3, 9, 3
   0108524  vslw 9, 10, 10
   0108528  vaddfp 2, 2, 11
@@ -15128,10 +15128,10 @@ MB_StartKick:   # 0x10ad80, 0x208 bytes
   010aea0  li 5, -3056
   010aea4  stw 25, 68(28)
   010aea8  cmpwi 27, 0
-  010aeac  <unknown>
+  010aeac  lvlx 3, 3, 26
   010aeb0  vslw 2, 2, 2
   010aeb4  vspltw 3, 3, 0
-  010aeb8  <unknown>
+  010aeb8  lvlx 4, 5, 4
   010aebc  li 4, 44
   010aec0  lwz 3, 36(28)
   010aec4  li 5, 1
@@ -16755,19 +16755,19 @@ MB_UpdateLightsTransition:   # 0x10c808, 0x190 bytes
   010c84c  vspltisw 4, -1
   010c850  lis 6, 114
   010c854  addi 5, 5, -14336
-  010c858  <unknown>
+  010c858  lvlx 3, 4, 31
   010c85c  lhz 4, 12(31)
   010c860  vsraw 2, 3, 2
   010c864  extsh 4, 4
   010c868  extsw 4, 4
   010c86c  vcfsx 2, 2, 0
   010c870  std 4, 128(1)
-  010c874  <unknown>
+  010c874  lvlx 3, 0, 5
   010c878  li 4, -3056
   010c87c  vspltw 3, 3, 0
   010c880  vaddfp 2, 2, 3
   010c884  vslw 3, 4, 4
-  010c888  <unknown>
+  010c888  lvlx 4, 4, 6
   010c88c  lfs 2, 0(5)
   010c890  li 4, 0
   010c894  lfd 1, 128(1)
@@ -16863,17 +16863,17 @@ MB_ColorDyingMoby:   # 0x10c9a0, 0x3f4 bytes
   010c9fc  lis 5, 17
   010ca00  vspltisw 4, -1
   010ca04  li 4, 1
-  010ca08  <unknown>
+  010ca08  lvlx 3, 3, 30
   010ca0c  addi 3, 5, -13928
   010ca10  sth 4, 2(30)
   010ca14  vsraw 2, 3, 2
   010ca18  li 4, -3056
   010ca1c  vslw 4, 4, 4
   010ca20  vcfsx 2, 2, 0
-  010ca24  <unknown>
+  010ca24  lvlx 3, 0, 3
   010ca28  lis 3, 114
   010ca2c  vspltw 3, 3, 0
-  010ca30  <unknown>
+  010ca30  lvlx 5, 4, 3
   010ca34  vaddfp 2, 2, 3
   010ca38  vmaddfp 2, 5, 2, 4
   010ca3c  vctsxs 2, 2, 0
@@ -19852,12 +19852,12 @@ MB_genericExplosion:   # 0x10e030, 0x1abc bytes
   010f938  lfs 3, 144(3)
   010f93c  lfs 4, 148(3)
   010f940  ld 4, 424(1)
-  010f944  <unknown>
+  010f944  lvlx 3, 7, 6
   010f948  li 6, 360
   010f94c  fsel 1, 1, 3, 2
   010f950  fsubs 1, 4, 1
   010f954  stfs 1, 352(4)
-  010f958  <unknown>
+  010f958  lvlx 4, 5, 3
   010f95c  vspltw 4, 4, 0
   010f960  vmaddfp 2, 3, 4, 2
   010f964  vctsxs 2, 2, 0
@@ -20206,11 +20206,11 @@ MB_SpawnExplosionSparks:   # 0x10fb28, 0x4e4 bytes
   010fef4  li 4, 16
   010fef8  vslw 2, 2, 2
   010fefc  lfs 1, 48(3)
-  010ff00  <unknown>
+  010ff00  lvlx 3, 6, 24
   010ff04  fmuls 1, 30, 1
   010ff08  li 6, 360
   010ff0c  stfs 1, 352(5)
-  010ff10  <unknown>
+  010ff10  lvlx 4, 4, 3
   010ff14  vspltw 4, 4, 0
   010ff18  vmaddfp 2, 3, 4, 2
   010ff1c  vctsxs 2, 2, 0
@@ -22998,8 +22998,8 @@ MB_ToastMessage:   # 0x112a38, 0xb0 bytes
   0112a7c  addi 4, 4, 10804
   0112a80  li 6, -3056
   0112a84  vslw 2, 2, 2
-  0112a88  <unknown>
-  0112a8c  <unknown>
+  0112a88  lvlx 3, 0, 4
+  0112a8c  lvlx 4, 6, 5
   0112a90  vspltw 3, 3, 0
   0112a94  vmaddfp 31, 4, 3, 2
   0112a98  vctsxs 31, 31, 0
@@ -23043,7 +23043,7 @@ MB_ToastMessageByIndex:   # 0x112af0, 0x128 bytes
   0112b30  vspltisw 3, -1
   0112b34  lis 4, 114
   0112b38  li 5, -3056
-  0112b3c  <unknown>
+  0112b3c  lvlx 2, 0, 30
   0112b40  li 7, 4
   0112b44  vspltisw 6, -1
   0112b48  vspltw 2, 2, 0
@@ -23051,8 +23051,8 @@ MB_ToastMessageByIndex:   # 0x112af0, 0x128 bytes
   0112b50  vslw 3, 3, 3
   0112b54  li 6, 0
   0112b58  subc 3, 31, 3
-  0112b5c  <unknown>
-  0112b60  <unknown>
+  0112b5c  lvlx 4, 5, 4
+  0112b60  lvlx 5, 7, 30
   0112b64  sradi 3, 3, 63
   0112b68  vmaddfp 2, 4, 2, 3
   0112b6c  subc 6, 6, 31
@@ -23155,13 +23155,13 @@ MB_UnlockLevel:   # 0x112c20, 0x1a0 bytes
   0112cf0  vslw 3, 3, 3
   0112cf4  li 4, 0
   0112cf8  li 7, 0
-  0112cfc  <unknown>
+  0112cfc  lvlx 2, 0, 3
   0112d00  subc 4, 31, 4
-  0112d04  <unknown>
+  0112d04  lvlx 4, 6, 5
   0112d08  subc 7, 7, 31
   0112d0c  vspltw 2, 2, 0
   0112d10  sradi 4, 4, 63
-  0112d14  <unknown>
+  0112d14  lvlx 5, 8, 3
   0112d18  li 9, 18
   0112d1c  and 4, 4, 7
   0112d20  vspltw 5, 5, 0
@@ -23272,10 +23272,10 @@ MB_UnlockItem:   # 0x112e18, 0x360 bytes
   0112ebc  li 7, 4
   0112ec0  vslw 2, 2, 2
   0112ec4  extsw 3, 3
-  0112ec8  <unknown>
-  0112ecc  <unknown>
+  0112ec8  lvlx 3, 0, 4
+  0112ecc  lvlx 4, 6, 5
   0112ed0  vspltw 3, 3, 0
-  0112ed4  <unknown>
+  0112ed4  lvlx 5, 7, 4
   0112ed8  lis 4, 161
   0112edc  vmaddfp 2, 4, 3, 2
   0112ee0  vspltw 3, 5, 0
@@ -29342,10 +29342,10 @@ MB_SpawnGridParticles:   # 0x118e38, 0x1e4 bytes
   0118e88  lwz 3, 1176(3)
   0118e8c  lwz 4, 1192(4)
   0118e90  lfs 3, 48(6)
-  0118e94  <unknown>
+  0118e94  lvlx 2, 9, 8
   0118e98  fctiwz 4, 3
-  0118e9c  <unknown>
-  0118ea0  <unknown>
+  0118e9c  lvlx 4, 11, 10
+  0118ea0  lvlx 6, 0, 7
   0118ea4  vsubfp 2, 2, 4
   0118ea8  vslw 5, 5, 5
   0118eac  vspltw 6, 6, 0
@@ -29355,14 +29355,14 @@ MB_SpawnGridParticles:   # 0x118e38, 0x1e4 bytes
   0118ebc  stfd 1, 144(1)
   0118ec0  lwz 10, 148(1)
   0118ec4  mullw 3, 3, 10
-  0118ec8  <unknown>
+  0118ec8  lvlx 7, 12, 7
   0118ecc  addc 3, 4, 3
   0118ed0  addc 3, 3, 9
   0118ed4  clrldi 3, 3, 32
   0118ed8  li 10, 328
   0118edc  li 4, 56
-  0118ee0  <unknown>
-  0118ee4  <unknown>
+  0118ee0  lvlx 8, 0, 3
+  0118ee4  lvlx 9, 8, 7
   0118ee8  vsrw 8, 8, 3
   0118eec  vmaddfp 3, 2, 6, 5
   0118ef0  vspltw 6, 7, 0
@@ -29373,13 +29373,13 @@ MB_SpawnGridParticles:   # 0x118e38, 0x1e4 bytes
   0118f04  addic 9, 3, 5056
   0118f08  addic 3, 5, 48
   0118f0c  vnmsubfp 5, 5, 6, 7
-  0118f10  <unknown>
+  0118f10  lvlx 6, 10, 9
   0118f14  lfs 1, 60(6)
   0118f18  vmaddfp 2, 2, 5, 4
   0118f1c  vaddfp 2, 2, 3
   0118f20  vspltw 4, 2, 0
   0118f24  stvewx 4, 4, 6
-  0118f28  <unknown>
+  0118f28  lvlx 5, 8, 7
   0118f2c  vspltw 5, 5, 0
   0118f30  vaddfp 5, 6, 5
   0118f34  vspltw 5, 5, 0
@@ -29396,7 +29396,7 @@ MB_SpawnGridParticles:   # 0x118e38, 0x1e4 bytes
   0118f60  addc 3, 1, 3
   0118f64  li 7, 0
   0118f68  clrldi 3, 3, 32
-  0118f6c  <unknown>
+  0118f6c  lvlx 4, 5, 4
   0118f70  addic 4, 1, 112
   0118f74  vspltw 4, 4, 0
   0118f78  li 5, 18
@@ -29886,7 +29886,7 @@ MB_SpawnSparks_oClass2EE:   # 0x119600, 0x418 bytes
   0119760  stfs 3, 116(1)
   0119764  stfs 1, 112(1)
   0119768  lfs 27, 32(3)
-  011976c  <unknown>
+  011976c  lvlx 31, 4, 3
   0119770  vspltw 31, 31, 0
   0119774  bl 0x5c8318
   0119778  nop
@@ -29932,7 +29932,7 @@ MB_SpawnSparks_oClass2EE:   # 0x119600, 0x418 bytes
   0119818  vslw 2, 2, 2
   011981c  li 6, 80
   0119820  li 7, 43
-  0119824  <unknown>
+  0119824  lvlx 3, 5, 4
   0119828  li 4, 10
   011982c  vmaddfp 2, 3, 31, 2
   0119830  li 5, 2
@@ -29992,7 +29992,7 @@ MB_SpawnSparks_oClass2EE:   # 0x119600, 0x418 bytes
   0119908  stfs 3, 120(1)
   011990c  stfs 1, 116(1)
   0119910  stfs 2, 112(1)
-  0119914  <unknown>
+  0119914  lvlx 31, 4, 3
   0119918  vspltw 31, 31, 0
   011991c  addic 3, 1, 112
   0119920  lis 10, 32767
@@ -30012,7 +30012,7 @@ MB_SpawnSparks_oClass2EE:   # 0x119600, 0x418 bytes
   0119958  lis 3, 114
   011995c  li 4, -3056
   0119960  vslw 2, 2, 2
-  0119964  <unknown>
+  0119964  lvlx 3, 4, 3
   0119968  li 3, 10
   011996c  vmaddfp 2, 3, 31, 2
   0119970  vctsxs 2, 2, 0
@@ -30558,7 +30558,7 @@ MB_SpawnSparksPair:   # 0x11a1a0, 0x2b4 bytes
   011a208  ori 31, 5, 0
   011a20c  lfs 29, 4(6)
   011a210  lfs 27, 8(6)
-  011a214  <unknown>
+  011a214  lvlx 31, 7, 6
   011a218  std 27, 136(1)
   011a21c  lfs 30, 16(6)
   011a220  vspltw 31, 31, 0
@@ -30606,7 +30606,7 @@ MB_SpawnSparksPair:   # 0x11a1a0, 0x2b4 bytes
   011a2c8  li 4, -3056
   011a2cc  fmr 1, 30
   011a2d0  vslw 2, 2, 2
-  011a2d4  <unknown>
+  011a2d4  lvlx 3, 4, 3
   011a2d8  li 3, 10
   011a2dc  vmaddfp 2, 3, 31, 2
   011a2e0  vctsxs 2, 2, 0
@@ -30631,7 +30631,7 @@ MB_SpawnSparksPair:   # 0x11a1a0, 0x2b4 bytes
   011a32c  li 28, 16
   011a330  lfs 27, 20(3)
   011a334  lfs 28, 24(3)
-  011a338  <unknown>
+  011a338  lvlx 31, 4, 3
   011a33c  vspltw 31, 31, 0
   011a340  ori 3, 30, 0
   011a344  fmr 1, 27
@@ -30657,7 +30657,7 @@ MB_SpawnSparksPair:   # 0x11a1a0, 0x2b4 bytes
   011a394  vslw 2, 2, 2
   011a398  stb 3, 9(27)
   011a39c  li 3, 10
-  011a3a0  <unknown>
+  011a3a0  lvlx 3, 5, 4
   011a3a4  vmaddfp 2, 3, 31, 2
   011a3a8  vctsxs 2, 2, 0
   011a3ac  vsplth 2, 2, 1
@@ -30726,8 +30726,8 @@ MB_ToastMessageFmt:   # 0x11a458, 0xc0 bytes
   011a4a4  addi 4, 4, -23468
   011a4a8  li 6, -3056
   011a4ac  vslw 2, 2, 2
-  011a4b0  <unknown>
-  011a4b4  <unknown>
+  011a4b0  lvlx 3, 0, 4
+  011a4b4  lvlx 4, 6, 5
   011a4b8  vspltw 3, 3, 0
   011a4bc  vmaddfp 31, 4, 3, 2
   011a4c0  vctsxs 31, 31, 0
@@ -31957,8 +31957,8 @@ MB_UnlockSkillPoint:   # 0x11b728, 0x21c bytes
   011b7d0  addi 3, 3, -18656
   011b7d4  li 5, -3056
   011b7d8  vslw 2, 2, 2
-  011b7dc  <unknown>
-  011b7e0  <unknown>
+  011b7dc  lvlx 3, 0, 3
+  011b7e0  lvlx 4, 5, 4
   011b7e4  li 3, 21462
   011b7e8  vspltw 3, 3, 0
   011b7ec  lis 4, 161

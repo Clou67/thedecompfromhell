@@ -154,9 +154,9 @@ UpdateMoby_546:   # 0x3b1338, 0x474 bytes
   03b1590  nop
   03b1594  li 3, 100
   03b1598  addi 4, 3, 16
-  03b159c  <unknown>
+  03b159c  lvlx 2, 3, 30
   03b15a0  lwz 3, 100(30)
-  03b15a4  <unknown>
+  03b15a4  lvrx 3, 4, 30
   03b15a8  cmpwi 3, 0
   03b15ac  vor 2, 2, 3
   03b15b0  bf 1, 0x3b1788
@@ -167,10 +167,10 @@ UpdateMoby_546:   # 0x3b1338, 0x474 bytes
   03b15c4  addi 3, 3, 4864
   03b15c8  lis 5, 114
   03b15cc  li 6, -3056
-  03b15d0  <unknown>
+  03b15d0  lvlx 3, 4, 3
   03b15d4  vspltw 3, 3, 0
   03b15d8  li 3, 108
-  03b15dc  <unknown>
+  03b15dc  lvlx 5, 6, 5
   03b15e0  vaddfp 2, 2, 3
   03b15e4  vslw 3, 4, 4
   03b15e8  vmaddfp 2, 5, 2, 3

@@ -237,7 +237,7 @@ UpdateMoby_439:   # 0x37b090, 0x4d8 bytes
   037b354  stfs 28, 128(1)
   037b358  li 6, 140
   037b35c  cmpwi 5, 0
-  037b360  <unknown>
+  037b360  lvlx 2, 4, 3
   037b364  stfs 29, 132(1)
   037b368  vcfsx 2, 2, 0
   037b36c  stfs 30, 136(1)

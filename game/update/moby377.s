@@ -168,8 +168,8 @@ UpdateMoby_377:   # 0x357a40, 0x6a8 bytes
   0357be0  li 3, 16
   0357be4  fsubs 2, 4, 2
   0357be8  lwz 4, 0(30)
-  0357bec  <unknown>
-  0357bf0  <unknown>
+  0357bec  lvlx 2, 3, 4
+  0357bf0  lvlx 3, 5, 4
   0357bf4  lfs 3, 8(6)
   0357bf8  fabs 4, 1
   0357bfc  fabs 6, 2
@@ -297,17 +297,17 @@ UpdateMoby_377:   # 0x357a40, 0x6a8 bytes
   0357de4  stfs 3, 120(1)
   0357de8  lwz 10, 0(30)
   0357dec  lwz 10, 120(10)
-  0357df0  <unknown>
-  0357df4  <unknown>
+  0357df0  lvlx 4, 5, 10
+  0357df4  lvrx 5, 6, 10
   0357df8  vor 4, 4, 5
   0357dfc  li 5, 132
   0357e00  ori 6, 30, 0
   0357e04  vspltw 5, 4, 0
   0357e08  vaddfp 2, 2, 4
   0357e0c  stvewx 5, 4, 1
-  0357e10  <unknown>
+  0357e10  lvlx 4, 7, 10
   0357e14  li 4, 128
-  0357e18  <unknown>
+  0357e18  lvrx 5, 8, 10
   0357e1c  vor 4, 4, 5
   0357e20  vspltw 2, 2, 0
   0357e24  vspltw 5, 4, 0

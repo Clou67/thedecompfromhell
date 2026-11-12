@@ -123,10 +123,10 @@ UpdateMoby_94:   # 0x4c49b0, 0x340 bytes
   04c4b8c  vslw 2, 2, 2
   04c4b90  stw 3, 16(29)
   04c4b94  li 28, 0
-  04c4b98  <unknown>
+  04c4b98  lvlx 3, 4, 5
   04c4b9c  li 3, 20
   04c4ba0  vspltw 3, 3, 0
-  04c4ba4  <unknown>
+  04c4ba4  lvlx 4, 8, 7
   04c4ba8  vmaddfp 2, 4, 3, 2
   04c4bac  vctsxs 2, 2, 0
   04c4bb0  vspltw 2, 2, 0

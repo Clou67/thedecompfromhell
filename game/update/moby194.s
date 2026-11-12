@@ -3601,9 +3601,9 @@ UpdateMoby_194:   # 0x2de920, 0x4550 bytes
   02e2054  li 3, 116
   02e2058  vspltisw 2, -16
   02e205c  addi 4, 3, 16
-  02e2060  <unknown>
+  02e2060  lvlx 3, 3, 30
   02e2064  lhz 3, 116(30)
-  02e2068  <unknown>
+  02e2068  lvrx 4, 4, 30
   02e206c  extsh 3, 3
   02e2070  vor 3, 3, 4
   02e2074  cmpwi 3, 0
@@ -3614,8 +3614,8 @@ UpdateMoby_194:   # 0x2de920, 0x4550 bytes
   02e2088  li 4, 136
   02e208c  addi 28, 3, -6044
   02e2090  li 3, 168
-  02e2094  <unknown>
-  02e2098  <unknown>
+  02e2094  lvlx 3, 3, 28
+  02e2098  lvlx 4, 4, 29
   02e209c  vspltw 3, 3, 0
   02e20a0  vmaddfp 2, 2, 3, 4
   02e20a4  vspltw 2, 2, 0
@@ -3868,19 +3868,19 @@ UpdateMoby_194:   # 0x2de920, 0x4550 bytes
   02e2480  lis 4, 114
   02e2484  li 5, -3064
   02e2488  vspltisw 7, -16
-  02e248c  <unknown>
+  02e248c  lvlx 3, 3, 26
   02e2490  vslw 2, 2, 2
   02e2494  vspltw 3, 3, 0
-  02e2498  <unknown>
+  02e2498  lvlx 4, 5, 4
   02e249c  li 3, 116
   02e24a0  vspltisw 6, -1
   02e24a4  vmaddfp 2, 4, 3, 2
   02e24a8  addi 4, 3, 16
-  02e24ac  <unknown>
+  02e24ac  lvlx 3, 0, 26
   02e24b0  vspltisw 4, -1
   02e24b4  vspltw 3, 3, 0
-  02e24b8  <unknown>
-  02e24bc  <unknown>
+  02e24b8  lvlx 8, 3, 30
+  02e24bc  lvrx 9, 4, 30
   02e24c0  vslw 4, 4, 4
   02e24c4  vor 8, 8, 9
   02e24c8  vslw 6, 6, 6

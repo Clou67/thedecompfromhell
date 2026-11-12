@@ -121,9 +121,9 @@ M1242_0021ccd8:   # 0x21ccd8, 0x2a8 bytes
   021ce80  ori 7, 7, 6404
   021ce84  addic 30, 8, 2
   021ce88  ori 6, 6, 6272
-  021ce8c  <unknown>
+  021ce8c  lvlx 3, 0, 8
   021ce90  lwz 9, 40(29)
-  021ce94  <unknown>
+  021ce94  lvlx 4, 0, 30
   021ce98  vsraw 3, 3, 2
   021ce9c  vsraw 4, 4, 2
   021cea0  lwz 10, 8(9)
@@ -300,21 +300,21 @@ M1242_0021cf80:   # 0x21cf80, 0x314 bytes
   021d144  li 8, 148
   021d148  lis 7, 4
   021d14c  lis 6, 8
-  021d150  <unknown>
+  021d150  lvlx 6, 3, 1
   021d154  li 3, 132
-  021d158  <unknown>
+  021d158  lvlx 5, 4, 1
   021d15c  ori 5, 30, 0
   021d160  ori 7, 7, 6404
   021d164  ori 6, 6, 6272
   021d168  li 4, 4
-  021d16c  <unknown>
+  021d16c  lvlx 4, 3, 1
   021d170  addic 30, 5, 2
-  021d174  <unknown>
+  021d174  lvlx 3, 8, 1
   021d178  li 3, 8
-  021d17c  <unknown>
+  021d17c  lvlx 8, 0, 30
   021d180  vspltisw 7, -1
   021d184  vsraw 8, 8, 2
-  021d188  <unknown>
+  021d188  lvlx 9, 0, 5
   021d18c  vspltisw 10, -1
   021d190  vslw 7, 7, 7
   021d194  vcfsx 8, 8, 0
@@ -1722,14 +1722,14 @@ M1242_Hud_Draw:   # 0x21e750, 0xb48 bytes
   021e7f8  lis 5, 34
   021e7fc  addi 4, 3, 16
   021e800  li 6, 192
-  021e804  <unknown>
+  021e804  lvlx 2, 3, 30
   021e808  addi 3, 5, -6392
-  021e80c  <unknown>
+  021e80c  lvrx 3, 4, 30
   021e810  vor 2, 2, 3
   021e814  lis 5, 101
   021e818  vspltisw 3, -1
   021e81c  li 4, 13
-  021e820  <unknown>
+  021e820  lvlx 4, 0, 3
   021e824  addic 5, 5, 20536
   021e828  ori 3, 28, 0
   021e82c  vcfsx 2, 2, 0
@@ -2293,10 +2293,10 @@ M1242_Hud_Draw:   # 0x21e750, 0xb48 bytes
   021f0e4  lis 5, 114
   021f0e8  li 6, -3056
   021f0ec  vslw 2, 2, 2
-  021f0f0  <unknown>
+  021f0f0  lvlx 3, 4, 3
   021f0f4  li 3, 288
   021f0f8  vspltw 3, 3, 0
-  021f0fc  <unknown>
+  021f0fc  lvlx 4, 6, 5
   021f100  vmaddfp 2, 4, 3, 2
   021f104  vctsxs 2, 2, 0
   021f108  vspltw 2, 2, 0
@@ -2777,31 +2777,31 @@ M1242_0021f870:   # 0x21f870, 0x6c0 bytes
   021f8b8  lis 11, 165
   021f8bc  lfs 1, 0(6)
   021f8c0  lfs 2, -3056(7)
-  021f8c4  <unknown>
+  021f8c4  lvlx 2, 0, 6
   021f8c8  fmuls 1, 2, 1
   021f8cc  vspltw 2, 2, 0
   021f8d0  std 29, 224(1)
-  021f8d4  <unknown>
+  021f8d4  lvlx 4, 8, 7
   021f8d8  lwz 29, 120(3)
   021f8dc  li 7, 100
   021f8e0  vmaddfp 2, 4, 2, 3
   021f8e4  addi 8, 7, 16
   021f8e8  lfs 2, 100(29)
-  021f8ec  <unknown>
+  021f8ec  lvlx 3, 7, 29
   021f8f0  fctidz 1, 1
   021f8f4  li 7, 16
-  021f8f8  <unknown>
+  021f8f8  lvrx 4, 8, 29
   021f8fc  addi 9, 7, 16
   021f900  vor 3, 3, 4
   021f904  li 8, 20
   021f908  vspltisw 4, -1
   021f90c  lfs 3, 16(29)
   021f910  addi 10, 8, 16
-  021f914  <unknown>
+  021f914  lvlx 5, 7, 29
   021f918  vctsxs 2, 2, 0
   021f91c  lfs 4, 20(29)
   021f920  vslw 4, 4, 4
-  021f924  <unknown>
+  021f924  lvrx 6, 9, 29
   021f928  fcfid 1, 1
   021f92c  std 30, 232(1)
   021f930  lfs 5, 16(3)
@@ -2813,20 +2813,20 @@ M1242_0021f870:   # 0x21f870, 0x6c0 bytes
   021f948  frsp 1, 1
   021f94c  fmuls 1, 2, 1
   021f950  vmaddfp 30, 3, 2, 4
-  021f954  <unknown>
-  021f958  <unknown>
+  021f954  lvlx 2, 8, 29
+  021f958  lvrx 3, 10, 29
   021f95c  lfs 6, 20(3)
   021f960  lwz 9, 260(29)
   021f964  vor 2, 2, 3
   021f968  lwz 10, 7128(11)
   021f96c  slwi 9, 9, 7
-  021f970  <unknown>
+  021f970  lvlx 3, 7, 3
   021f974  addc 7, 10, 9
   021f978  fmadds 2, 3, 1, 5
   021f97c  li 10, 52
   021f980  fmadds 1, 4, 1, 6
   021f984  clrldi 7, 7, 32
-  021f988  <unknown>
+  021f988  lvlx 4, 8, 3
   021f98c  li 9, 24
   021f990  vmaddfp 3, 5, 30, 3
   021f994  li 8, 48
@@ -2834,23 +2834,23 @@ M1242_0021f870:   # 0x21f870, 0x6c0 bytes
   021f99c  addi 11, 9, 16
   021f9a0  lfs 3, 48(7)
   021f9a4  lfs 4, 52(7)
-  021f9a8  <unknown>
+  021f9a8  lvlx 4, 8, 7
   021f9ac  li 8, 40
   021f9b0  fsubs 2, 2, 3
   021f9b4  fsubs 1, 1, 4
   021f9b8  vsubfp 3, 3, 4
-  021f9bc  <unknown>
-  021f9c0  <unknown>
+  021f9bc  lvlx 4, 10, 7
+  021f9c0  lvlx 5, 9, 29
   021f9c4  li 10, 56
   021f9c8  vsubfp 2, 2, 4
-  021f9cc  <unknown>
+  021f9cc  lvrx 6, 11, 29
   021f9d0  fabs 5, 2
   021f9d4  lfs 3, 0(7)
   021f9d8  fabs 6, 1
   021f9dc  lfs 4, 4(7)
-  021f9e0  <unknown>
+  021f9e0  lvlx 29, 8, 7
   021f9e4  li 8, 112
-  021f9e8  <unknown>
+  021f9e8  lvlx 4, 10, 7
   021f9ec  li 7, 116
   021f9f0  fmuls 1, 1, 1
   021f9f4  vspltw 3, 3, 0
@@ -2862,7 +2862,7 @@ M1242_0021f870:   # 0x21f870, 0x6c0 bytes
   021fa0c  stvewx 2, 7, 1
   021fa10  lwz 7, 112(1)
   021fa14  lfs 8, 112(1)
-  021fa18  <unknown>
+  021fa18  lvlx 3, 9, 3
   021fa1c  fmadds 29, 2, 2, 1
   021fa20  fmadds 30, 3, 3, 4
   021fa24  vor 2, 5, 6
@@ -2981,7 +2981,7 @@ M1242_0021f870:   # 0x21f870, 0x6c0 bytes
   021fbe8  li 3, 16
   021fbec  lfs 1, 16(28)
   021fbf0  fsubs 3, 30, 1
-  021fbf4  <unknown>
+  021fbf4  lvlx 31, 3, 28
   021fbf8  vspltw 31, 31, 0
   021fbfc  fcmpu 0, 29, 3
   021fc00  cror 6, 0, 2
@@ -3040,23 +3040,23 @@ M1242_0021f870:   # 0x21f870, 0x6c0 bytes
   021fcd4  li 5, 52
   021fcd8  vslw 4, 3, 3
   021fcdc  li 6, 24
-  021fce0  <unknown>
+  021fce0  lvlx 3, 4, 3
   021fce4  addi 4, 5, 16
-  021fce8  <unknown>
+  021fce8  lvlx 5, 5, 29
   021fcec  vspltw 3, 3, 0
   021fcf0  li 5, 32
-  021fcf4  <unknown>
+  021fcf4  lvlx 30, 6, 3
   021fcf8  vaddfp 2, 2, 31
   021fcfc  li 6, 36
   021fd00  vspltw 30, 30, 0
-  021fd04  <unknown>
-  021fd08  <unknown>
+  021fd04  lvrx 6, 4, 29
+  021fd08  lvlx 7, 5, 3
   021fd0c  vor 5, 5, 6
   021fd10  vspltisw 6, -1
   021fd14  vslw 6, 6, 6
   021fd18  vmaddfp 4, 2, 3, 4
   021fd1c  vspltw 2, 7, 0
-  021fd20  <unknown>
+  021fd20  lvlx 3, 6, 3
   021fd24  vsubfp 2, 2, 5
   021fd28  vspltw 5, 3, 0
   021fd2c  vspltw 3, 4, 0
@@ -3084,9 +3084,9 @@ M1242_0021f870:   # 0x21f870, 0x6c0 bytes
   021fd84  li 4, 28
   021fd88  vspltw 2, 2, 0
   021fd8c  addi 3, 3, -1984
-  021fd90  <unknown>
+  021fd90  lvlx 5, 0, 31
   021fd94  vslw 3, 3, 3
-  021fd98  <unknown>
+  021fd98  lvlx 6, 4, 3
   021fd9c  vmaddfp 2, 4, 2, 3
   021fda0  lis 3, 151
   021fda4  vspltw 3, 6, 0
@@ -3102,7 +3102,7 @@ M1242_0021f870:   # 0x21f870, 0x6c0 bytes
   021fdcc  lis 3, 34
   021fdd0  li 4, 40
   021fdd4  addi 3, 3, -1984
-  021fdd8  <unknown>
+  021fdd8  lvlx 3, 4, 3
   021fddc  vspltw 3, 3, 0
   021fde0  vcmpgefp. 2, 2, 3
   021fde4  bf 26, 0x21feec
@@ -3113,27 +3113,27 @@ M1242_0021f870:   # 0x21f870, 0x6c0 bytes
   021fdf8  li 5, 20
   021fdfc  li 6, 32
   021fe00  vslw 4, 4, 4
-  021fe04  <unknown>
+  021fe04  lvlx 2, 4, 3
   021fe08  li 4, 52
   021fe0c  vspltw 2, 2, 0
-  021fe10  <unknown>
+  021fe10  lvlx 3, 5, 3
   021fe14  addi 5, 4, 16
   021fe18  vspltw 3, 3, 0
   021fe1c  vsubfp 2, 2, 30
   021fe20  vaddfp 5, 2, 31
-  021fe24  <unknown>
-  021fe28  <unknown>
+  021fe24  lvlx 2, 4, 29
+  021fe28  lvrx 6, 5, 29
   021fe2c  li 4, 24
   021fe30  vor 6, 2, 6
-  021fe34  <unknown>
+  021fe34  lvlx 2, 6, 3
   021fe38  li 5, 36
   021fe3c  vspltw 8, 2, 0
-  021fe40  <unknown>
+  021fe40  lvlx 7, 4, 3
   021fe44  vspltw 2, 7, 0
   021fe48  vaddfp 30, 6, 8
   021fe4c  vmaddfp 4, 5, 3, 4
   021fe50  vspltisw 3, -1
-  021fe54  <unknown>
+  021fe54  lvlx 5, 5, 3
   021fe58  vspltw 5, 5, 0
   021fe5c  vslw 6, 3, 3
   021fe60  vmaddfp 30, 30, 5, 6
@@ -3160,7 +3160,7 @@ M1242_0021f870:   # 0x21f870, 0x6c0 bytes
   021feb4  vspltisw 5, -1
   021feb8  lis 3, 151
   021febc  vspltw 3, 30, 0
-  021fec0  <unknown>
+  021fec0  lvlx 6, 0, 31
   021fec4  vslw 5, 5, 5
   021fec8  vsubfp 2, 2, 6
   021fecc  addic 3, 3, -25376
@@ -3847,11 +3847,11 @@ M1242_0021ff90:   # 0x21ff90, 0x1078 bytes
   02209c8  stb 4, 32(31)
   02209cc  li 4, -3056
   02209d0  sth 3, 52(31)
-  02209d4  <unknown>
+  02209d4  lvlx 2, 5, 29
   02209d8  vslw 3, 3, 3
   02209dc  li 3, 248
   02209e0  vspltw 2, 2, 0
-  02209e4  <unknown>
+  02209e4  lvlx 4, 4, 6
   02209e8  vmaddfp 2, 4, 2, 3
   02209ec  vctsxs 2, 2, 0
   02209f0  vspltw 2, 2, 0
@@ -4636,9 +4636,9 @@ UpdateMoby_1242_JetFighterPoki:   # 0x221048, 0x151c bytes
   0221654  li 6, 16
   0221658  addi 5, 5, 4104
   022165c  vslw 5, 5, 5
-  0221660  <unknown>
+  0221660  lvlx 2, 4, 3
   0221664  vrefp 3, 2
-  0221668  <unknown>
+  0221668  lvlx 4, 6, 5
   022166c  vspltw 4, 4, 0
   0221670  vspltisw 7, -1
   0221674  vspltisw 8, -1
@@ -4650,10 +4650,10 @@ UpdateMoby_1242_JetFighterPoki:   # 0x221048, 0x151c bytes
   022168c  vnmsubfp 6, 3, 2, 4
   0221690  vmaddfp 3, 3, 6, 5
   0221694  vspltisw 6, -1
-  0221698  <unknown>
+  0221698  lvlx 5, 3, 29
   022169c  li 3, 32
   02216a0  vslw 6, 6, 6
-  02216a4  <unknown>
+  02216a4  lvlx 10, 3, 5
   02216a8  lbz 3, 5647(29)
   02216ac  vspltw 10, 10, 0
   02216b0  vnmsubfp 9, 3, 2, 4
@@ -5040,8 +5040,8 @@ UpdateMoby_1242_JetFighterPoki:   # 0x221048, 0x151c bytes
   0221ca4  vslw 3, 3, 3
   0221ca8  stfs 1, 40(30)
   0221cac  stfs 1, 56(30)
-  0221cb0  <unknown>
-  0221cb4  <unknown>
+  0221cb0  lvlx 2, 4, 28
+  0221cb4  lvlx 4, 6, 5
   0221cb8  lis 4, 161
   0221cbc  vspltw 2, 2, 0
   0221cc0  li 3, 276
@@ -5184,10 +5184,10 @@ UpdateMoby_1242_JetFighterPoki:   # 0x221048, 0x151c bytes
   0221ee4  lis 5, 114
   0221ee8  li 6, -3056
   0221eec  vslw 2, 2, 2
-  0221ef0  <unknown>
+  0221ef0  lvlx 3, 4, 3
   0221ef4  li 3, 276
   0221ef8  vspltw 3, 3, 0
-  0221efc  <unknown>
+  0221efc  lvlx 4, 6, 5
   0221f00  vmaddfp 2, 4, 3, 2
   0221f04  vctsxs 2, 2, 0
   0221f08  vspltw 2, 2, 0

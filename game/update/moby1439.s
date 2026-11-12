@@ -183,13 +183,13 @@ UpdateMoby_1439:   # 0x27c788, 0x364 bytes
   027ca54  lis 4, 114
   027ca58  vslw 4, 4, 4
   027ca5c  addi 3, 3, -14504
-  027ca60  <unknown>
+  027ca60  lvlx 2, 6, 5
   027ca64  vcfsx 2, 2, 0
   027ca68  ori 5, 31, 0
-  027ca6c  <unknown>
+  027ca6c  lvlx 3, 7, 3
   027ca70  li 3, -3056
   027ca74  vspltw 3, 3, 0
-  027ca78  <unknown>
+  027ca78  lvlx 5, 3, 4
   027ca7c  li 3, 1
   027ca80  li 4, 0
   027ca84  vaddfp 2, 2, 3

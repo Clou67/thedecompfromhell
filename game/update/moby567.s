@@ -56,12 +56,12 @@ FUN_003bbc08:   # 0x3bbc08, 0x14c bytes
   03bbcd8  stfs 1, 8(4)
   03bbcdc  lfs 1, 12(29)
   03bbce0  stfs 1, 12(4)
-  03bbce4  <unknown>
+  03bbce4  lvlx 3, 0, 3
   03bbce8  lis 3, 114
   03bbcec  vspltw 3, 3, 0
   03bbcf0  vaddfp 2, 2, 3
   03bbcf4  vslw 3, 4, 4
-  03bbcf8  <unknown>
+  03bbcf8  lvlx 4, 5, 3
   03bbcfc  li 5, 20
   03bbd00  ori 3, 28, 0
   03bbd04  vmaddfp 2, 4, 2, 3
@@ -372,12 +372,12 @@ UpdateMoby_567:   # 0x3bbde8, 0x6ac bytes
   03bc254  li 5, 166
   03bc258  vspltisw 7, 0
   03bc25c  vslw 2, 2, 2
-  03bc260  <unknown>
+  03bc260  lvlx 6, 3, 1
   03bc264  fmadds 1, 2, 2, 1
   03bc268  vsldoi 3, 7, 7, 0
   03bc26c  vmaddfp 8, 6, 6, 2
-  03bc270  <unknown>
-  03bc274  <unknown>
+  03bc270  lvlx 5, 4, 1
+  03bc274  lvlx 2, 5, 31
   03bc278  lwz 29, 24(29)
   03bc27c  vsrw 2, 2, 4
   03bc280  fsqrts 1, 1
@@ -395,8 +395,8 @@ UpdateMoby_567:   # 0x3bbde8, 0x6ac bytes
   03bc2b0  vslw 7, 7, 7
   03bc2b4  vslw 8, 8, 8
   03bc2b8  vslw 11, 11, 11
-  03bc2bc  <unknown>
-  03bc2c0  <unknown>
+  03bc2bc  lvlx 9, 4, 3
+  03bc2c0  lvlx 10, 5, 3
   03bc2c4  vspltw 9, 9, 0
   03bc2c8  vspltw 10, 10, 0
   03bc2cc  vspltisw 12, -1
@@ -452,7 +452,7 @@ UpdateMoby_567:   # 0x3bbde8, 0x6ac bytes
   03bc394  li 5, 64
   03bc398  lvx 4, 3, 6
   03bc39c  li 3, 96
-  03bc3a0  <unknown>
+  03bc3a0  lvlx 6, 7, 6
   03bc3a4  vperm 3, 3, 7, 4
   03bc3a8  li 7, 112
   03bc3ac  lvx 8, 4, 6

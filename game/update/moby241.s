@@ -83,8 +83,8 @@ UpdateMoby_241:   # 0x30d0a0, 0x18c4 bytes
   030d1c0  addi 3, 3, -12216
   030d1c4  li 5, -3056
   030d1c8  lis 6, 114
-  030d1cc  <unknown>
-  030d1d0  <unknown>
+  030d1cc  lvlx 2, 4, 3
+  030d1d0  lvlx 3, 5, 6
   030d1d4  vspltw 2, 2, 0
   030d1d8  b 0x30d1fc
   030d1dc  lis 3, 49
@@ -92,9 +92,9 @@ UpdateMoby_241:   # 0x30d0a0, 0x18c4 bytes
   030d1e4  addi 3, 3, -12216
   030d1e8  lis 5, 114
   030d1ec  li 6, -3056
-  030d1f0  <unknown>
+  030d1f0  lvlx 2, 4, 3
   030d1f4  vspltw 2, 2, 0
-  030d1f8  <unknown>
+  030d1f8  lvlx 3, 6, 5
   030d1fc  vspltisw 4, -1
   030d200  li 3, 356
   030d204  vspltw 3, 3, 0
@@ -723,10 +723,10 @@ UpdateMoby_241:   # 0x30d0a0, 0x18c4 bytes
   030dbc0  lis 5, 114
   030dbc4  li 6, -3056
   030dbc8  vslw 2, 2, 2
-  030dbcc  <unknown>
+  030dbcc  lvlx 3, 4, 3
   030dbd0  li 3, 360
   030dbd4  vspltw 3, 3, 0
-  030dbd8  <unknown>
+  030dbd8  lvlx 4, 6, 5
   030dbdc  vmaddfp 2, 4, 3, 2
   030dbe0  vctsxs 2, 2, 0
   030dbe4  vspltw 2, 2, 0
@@ -1150,10 +1150,10 @@ UpdateMoby_241:   # 0x30d0a0, 0x18c4 bytes
   030e26c  li 5, -3056
   030e270  lis 7, 114
   030e274  vslw 3, 3, 3
-  030e278  <unknown>
+  030e278  lvlx 2, 6, 4
   030e27c  vspltw 2, 2, 0
   030e280  li 4, 1
-  030e284  <unknown>
+  030e284  lvlx 4, 5, 7
   030e288  lwz 5, 120(3)
   030e28c  vmaddfp 2, 4, 2, 3
   030e290  vctsxs 2, 2, 0
@@ -1172,10 +1172,10 @@ UpdateMoby_241:   # 0x30d0a0, 0x18c4 bytes
   030e2c4  li 4, -3056
   030e2c8  lis 6, 114
   030e2cc  vslw 2, 2, 2
-  030e2d0  <unknown>
+  030e2d0  lvlx 3, 5, 3
   030e2d4  li 3, 360
   030e2d8  vspltw 3, 3, 0
-  030e2dc  <unknown>
+  030e2dc  lvlx 4, 4, 6
   030e2e0  vmaddfp 2, 4, 3, 2
   030e2e4  vctsxs 2, 2, 0
   030e2e8  vspltw 2, 2, 0
@@ -1448,10 +1448,10 @@ UpdateMoby_241:   # 0x30d0a0, 0x18c4 bytes
   030e714  stb 4, 32(31)
   030e718  li 4, -3056
   030e71c  vslw 2, 2, 2
-  030e720  <unknown>
+  030e720  lvlx 3, 6, 3
   030e724  li 3, 360
   030e728  vspltw 3, 3, 0
-  030e72c  <unknown>
+  030e72c  lvlx 4, 4, 5
   030e730  vmaddfp 2, 4, 3, 2
   030e734  vctsxs 2, 2, 0
   030e738  vspltw 2, 2, 0
@@ -1491,14 +1491,14 @@ UpdateMoby_241:   # 0x30d0a0, 0x18c4 bytes
   030e7c0  lis 5, 114
   030e7c4  li 6, -3056
   030e7c8  vslw 2, 2, 2
-  030e7cc  <unknown>
+  030e7cc  lvlx 3, 4, 3
   030e7d0  li 3, 360
   030e7d4  vspltw 3, 3, 0
-  030e7d8  <unknown>
+  030e7d8  lvlx 4, 6, 5
   030e7dc  addi 4, 3, 16
   030e7e0  vmaddfp 2, 4, 3, 2
-  030e7e4  <unknown>
-  030e7e8  <unknown>
+  030e7e4  lvlx 3, 3, 30
+  030e7e8  lvrx 4, 4, 30
   030e7ec  vor 3, 3, 4
   030e7f0  vctsxs 2, 2, 0
   030e7f4  vadduwm 2, 3, 2

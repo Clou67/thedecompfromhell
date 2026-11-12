@@ -316,7 +316,7 @@ M458_SpawnRocket:   # 0x200b0, 0x978 bytes
   0020574  lis 3, 114
   0020578  vspltisw 2, 0
   002057c  li 4, -11860
-  0020580  <unknown>
+  0020580  lvlx 3, 4, 3
   0020584  vspltw 3, 3, 0
   0020588  vcmpgefp. 2, 2, 3
   002058c  bf 26, 0x2093c
@@ -694,7 +694,7 @@ UpdateMoby_458:   # 0x20a80, 0x8d4 bytes
   0020bac  li 29, 0
   0020bb0  addi 5, 5, 2600
   0020bb4  ori 28, 29, 0
-  0020bb8  <unknown>
+  0020bb8  lvlx 3, 4, 3
   0020bbc  vspltw 3, 3, 0
   0020bc0  lfs 28, 8(5)
   0020bc4  lfs 2, -11864(3)

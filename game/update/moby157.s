@@ -521,8 +521,8 @@ M157_0029e578:   # 0x29e578, 0x4c0 bytes
   029e9a8  addi 3, 3, -6884
   029e9ac  li 5, 84
   029e9b0  vslw 2, 2, 2
-  029e9b4  <unknown>
-  029e9b8  <unknown>
+  029e9b4  lvlx 3, 4, 25
+  029e9b8  lvlx 4, 5, 3
   029e9bc  li 3, 188
   029e9c0  vspltw 4, 4, 0
   029e9c4  vmaddfp 2, 3, 4, 2
@@ -705,10 +705,10 @@ UpdateMoby_157:   # 0x29ead8, 0x145c bytes
   029ed20  lis 7, 114
   029ed24  li 8, -3056
   029ed28  vslw 2, 2, 2
-  029ed2c  <unknown>
+  029ed2c  lvlx 3, 6, 5
   029ed30  li 5, 20
   029ed34  vspltw 3, 3, 0
-  029ed38  <unknown>
+  029ed38  lvlx 4, 8, 7
   029ed3c  vmaddfp 2, 4, 3, 2
   029ed40  vctsxs 2, 2, 0
   029ed44  vspltw 2, 2, 0
@@ -850,11 +850,11 @@ UpdateMoby_157:   # 0x29ead8, 0x145c bytes
   029ef64  stw 7, 16(30)
   029ef68  li 6, -3056
   029ef6c  vslw 3, 3, 3
-  029ef70  <unknown>
+  029ef70  lvlx 2, 4, 3
   029ef74  lis 4, 161
   029ef78  vspltw 2, 2, 0
   029ef7c  li 3, 20
-  029ef80  <unknown>
+  029ef80  lvlx 4, 6, 5
   029ef84  addic 4, 4, 2368
   029ef88  vmaddfp 2, 4, 2, 3
   029ef8c  vctsxs 2, 2, 0
@@ -1335,9 +1335,9 @@ UpdateMoby_157:   # 0x29ead8, 0x145c bytes
   029f6f8  li 7, 112
   029f6fc  vslw 3, 3, 3
   029f700  vslw 6, 6, 6
-  029f704  <unknown>
-  029f708  <unknown>
-  029f70c  <unknown>
+  029f704  lvlx 2, 4, 3
+  029f708  lvlx 4, 5, 6
+  029f70c  lvlx 5, 7, 3
   029f710  vspltw 2, 2, 0
   029f714  vspltw 5, 5, 0
   029f718  li 4, 30
@@ -1594,9 +1594,9 @@ UpdateMoby_157:   # 0x29ead8, 0x145c bytes
   029fb04  li 4, -3056
   029fb08  lis 6, 114
   029fb0c  vslw 2, 2, 2
-  029fb10  <unknown>
+  029fb10  lvlx 3, 5, 3
   029fb14  vspltw 3, 3, 0
-  029fb18  <unknown>
+  029fb18  lvlx 4, 4, 6
   029fb1c  vmaddfp 2, 4, 3, 2
   029fb20  vctsxs 2, 2, 0
   029fb24  vspltw 2, 2, 0

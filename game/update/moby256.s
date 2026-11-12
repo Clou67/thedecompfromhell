@@ -129,13 +129,13 @@ Spawn_Moby256_Rocket:   # 0xed3e0, 0x444 bytes
   00ed5b8  cmpwi 7, 0
   00ed5bc  sth 6, 30(3)
   00ed5c0  lfs 1, -3052(4)
-  00ed5c4  <unknown>
+  00ed5c4  lvlx 2, 5, 4
   00ed5c8  bt 2, 0xed5d4
   00ed5cc  li 4, 0
   00ed5d0  stw 4, 56(29)
   00ed5d4  li 4, 12
   00ed5d8  vspltisw 3, -8
-  00ed5dc  <unknown>
+  00ed5dc  lvlx 4, 4, 3
   00ed5e0  lbz 3, 12(3)
   00ed5e4  vsrw 3, 4, 3
   00ed5e8  cmpwi 3, 0
@@ -158,10 +158,10 @@ Spawn_Moby256_Rocket:   # 0xed3e0, 0x444 bytes
   00ed62c  li 6, -3056
   00ed630  stfs 2, 48(29)
   00ed634  vslw 3, 3, 3
-  00ed638  <unknown>
+  00ed638  lvlx 2, 5, 3
   00ed63c  li 3, 20
   00ed640  vspltw 4, 2, 0
-  00ed644  <unknown>
+  00ed644  lvlx 2, 6, 4
   00ed648  cmpwi 27, 0
   00ed64c  vmaddfp 3, 2, 4, 3
   00ed650  vctsxs 3, 3, 0
@@ -201,7 +201,7 @@ Spawn_Moby256_Rocket:   # 0xed3e0, 0x444 bytes
   00ed6d8  vspltisw 3, -1
   00ed6dc  addi 4, 4, -11328
   00ed6e0  vslw 3, 3, 3
-  00ed6e4  <unknown>
+  00ed6e4  lvlx 4, 5, 4
   00ed6e8  li 4, 62
   00ed6ec  vspltw 4, 4, 0
   00ed6f0  vmaddfp 2, 2, 4, 3
@@ -214,7 +214,7 @@ Spawn_Moby256_Rocket:   # 0xed3e0, 0x444 bytes
   00ed70c  li 5, 24
   00ed710  addi 4, 4, -11328
   00ed714  vslw 3, 3, 3
-  00ed718  <unknown>
+  00ed718  lvlx 4, 5, 4
   00ed71c  li 4, 62
   00ed720  vspltw 4, 4, 0
   00ed724  vmaddfp 2, 2, 4, 3
@@ -2116,7 +2116,7 @@ UpdateMoby_256_GC_Rocket:   # 0xed970, 0x1d48 bytes
   00ef5a4  fmuls 2, 31, 2
   00ef5a8  lfs 4, 220(29)
   00ef5ac  li 6, 180
-  00ef5b0  <unknown>
+  00ef5b0  lvlx 2, 3, 27
   00ef5b4  vspltisw 3, -1
   00ef5b8  li 7, 360
   00ef5bc  li 4, 0
@@ -2126,7 +2126,7 @@ UpdateMoby_256_GC_Rocket:   # 0xed970, 0x1d48 bytes
   00ef5cc  fsel 1, 1, 3, 2
   00ef5d0  fsubs 1, 4, 1
   00ef5d4  stfs 1, 352(25)
-  00ef5d8  <unknown>
+  00ef5d8  lvlx 4, 6, 29
   00ef5dc  vspltw 4, 4, 0
   00ef5e0  vmaddfp 2, 2, 4, 3
   00ef5e4  vctsxs 2, 2, 0

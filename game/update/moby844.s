@@ -261,8 +261,8 @@ M844_00482c20:   # 0x482c20, 0x3f4 bytes
   0482d20  li 5, 8
   0482d24  vspltisw 10, -1
   0482d28  vslw 2, 2, 2
-  0482d2c  <unknown>
-  0482d30  <unknown>
+  0482d2c  lvlx 3, 4, 3
+  0482d30  lvlx 5, 5, 30
   0482d34  vrefp 4, 3
   0482d38  vspltw 5, 5, 0
   0482d3c  vspltisw 6, -1
@@ -563,9 +563,9 @@ UpdateMoby_844:   # 0x483078, 0x1214 bytes
   0483234  vslw 2, 2, 2
   0483238  stb 4, 32(31)
   048323c  li 4, -3056
-  0483240  <unknown>
+  0483240  lvlx 3, 0, 29
   0483244  vspltw 3, 3, 0
-  0483248  <unknown>
+  0483248  lvlx 4, 4, 3
   048324c  li 3, 140
   0483250  vmaddfp 2, 4, 3, 2
   0483254  li 4, 255
@@ -675,19 +675,19 @@ UpdateMoby_844:   # 0x483078, 0x1214 bytes
   04833f4  li 6, 36
   04833f8  addi 5, 5, 12308
   04833fc  vslw 3, 3, 3
-  0483400  <unknown>
+  0483400  lvlx 2, 4, 3
   0483404  lis 3, 114
   0483408  vcfsx 2, 2, 0
-  048340c  <unknown>
+  048340c  lvlx 31, 6, 5
   0483410  li 4, -3056
   0483414  vspltw 31, 31, 0
   0483418  li 6, 140
   048341c  vspltisw 6, -1
-  0483420  <unknown>
+  0483420  lvlx 4, 4, 3
   0483424  addi 3, 6, 16
-  0483428  <unknown>
+  0483428  lvlx 5, 6, 30
   048342c  vaddfp 2, 2, 31
-  0483430  <unknown>
+  0483430  lvrx 7, 3, 30
   0483434  vor 5, 5, 7
   0483438  lfs 24, 36(5)
   048343c  vmaddfp 2, 4, 2, 3
@@ -717,21 +717,21 @@ UpdateMoby_844:   # 0x483078, 0x1214 bytes
   048349c  lis 5, 114
   04834a0  li 6, -3056
   04834a4  vslw 2, 2, 2
-  04834a8  <unknown>
+  04834a8  lvlx 3, 4, 3
   04834ac  vcfsx 3, 3, 0
   04834b0  li 3, 140
-  04834b4  <unknown>
+  04834b4  lvlx 4, 6, 5
   04834b8  lis 4, 72
   04834bc  addi 5, 3, 16
   04834c0  vspltisw 5, -1
   04834c4  addi 4, 4, 12308
-  04834c8  <unknown>
+  04834c8  lvlx 6, 3, 30
   04834cc  li 3, 40
   04834d0  vslw 5, 5, 5
-  04834d4  <unknown>
+  04834d4  lvrx 7, 5, 30
   04834d8  vor 6, 6, 7
   04834dc  vaddfp 3, 3, 31
-  04834e0  <unknown>
+  04834e0  lvlx 7, 3, 4
   04834e4  vmaddfp 2, 4, 3, 2
   04834e8  vspltw 4, 7, 0
   04834ec  vcfsx 3, 6, 0
@@ -1157,9 +1157,9 @@ UpdateMoby_844:   # 0x483078, 0x1214 bytes
   0483b7c  lis 3, 114
   0483b80  stb 4, 32(31)
   0483b84  vslw 2, 2, 2
-  0483b88  <unknown>
+  0483b88  lvlx 3, 0, 29
   0483b8c  vspltw 3, 3, 0
-  0483b90  <unknown>
+  0483b90  lvlx 4, 5, 3
   0483b94  li 3, 140
   0483b98  lfs 1, 112(30)
   0483b9c  vmaddfp 2, 4, 3, 2

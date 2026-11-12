@@ -444,7 +444,7 @@ Cam17_ModifyFollowCam:   # 0x3d5b0, 0xbb0 bytes
   003da3c  lfs 1, -3056(4)
   003da40  li 4, 8
   003da44  fmuls 1, 1, 30
-  003da48  <unknown>
+  003da48  lvlx 31, 4, 3
   003da4c  vspltw 31, 31, 0
   003da50  fctiwz 1, 1
   003da54  stfd 1, 128(1)
@@ -498,7 +498,7 @@ Cam17_ModifyFollowCam:   # 0x3d5b0, 0xbb0 bytes
   003db14  ori 6, 6, 3
   003db18  stw 6, 440(3)
   003db1c  lfs 1, -3056(4)
-  003db20  <unknown>
+  003db20  lvlx 3, 5, 4
   003db24  fmuls 1, 1, 30
   003db28  vmaddfp 31, 3, 31, 2
   003db2c  lhz 3, 46(31)
@@ -537,7 +537,7 @@ Cam17_ModifyFollowCam:   # 0x3d5b0, 0xbb0 bytes
   003dbb0  li 3, -3056
   003dbb4  lis 4, 114
   003dbb8  vslw 2, 2, 2
-  003dbbc  <unknown>
+  003dbbc  lvlx 3, 3, 4
   003dbc0  li 3, 46
   003dbc4  vmaddfp 2, 3, 31, 2
   003dbc8  vctsxs 2, 2, 0
@@ -549,7 +549,7 @@ Cam17_ModifyFollowCam:   # 0x3d5b0, 0xbb0 bytes
   003dbe0  lfs 1, -3056(3)
   003dbe4  vslw 2, 2, 2
   003dbe8  fmuls 2, 1, 30
-  003dbec  <unknown>
+  003dbec  lvlx 3, 4, 3
   003dbf0  lhz 3, 46(31)
   003dbf4  vmaddfp 31, 3, 31, 2
   003dbf8  extsh 5, 3
@@ -590,7 +590,7 @@ Cam17_ModifyFollowCam:   # 0x3d5b0, 0xbb0 bytes
   003dc84  li 4, 16
   003dc88  lfs 31, 16(3)
   003dc8c  lfs 1, -3056(27)
-  003dc90  <unknown>
+  003dc90  lvlx 2, 4, 3
   003dc94  fmuls 1, 1, 31
   003dc98  vspltw 31, 2, 0
   003dc9c  fctiwz 1, 1
@@ -606,7 +606,7 @@ Cam17_ModifyFollowCam:   # 0x3d5b0, 0xbb0 bytes
   003dcc4  fmr 31, 1
   003dcc8  lhz 4, 46(31)
   003dccc  vslw 2, 2, 2
-  003dcd0  <unknown>
+  003dcd0  lvlx 3, 3, 27
   003dcd4  extsh 3, 4
   003dcd8  vmaddfp 2, 3, 31, 2
   003dcdc  fctiwz 1, 2
@@ -625,7 +625,7 @@ Cam17_ModifyFollowCam:   # 0x3d5b0, 0xbb0 bytes
   003dd10  li 4, -3056
   003dd14  vslw 2, 2, 2
   003dd18  lfs 1, -3056(3)
-  003dd1c  <unknown>
+  003dd1c  lvlx 3, 4, 3
   003dd20  fmuls 1, 1, 30
   003dd24  vmaddfp 31, 3, 31, 2
   003dd28  lhz 3, 46(31)

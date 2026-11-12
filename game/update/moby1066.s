@@ -859,10 +859,10 @@ UpdateMoby_1066:   # 0x1ade10, 0x224 bytes
   01adfd4  lis 5, 114
   01adfd8  li 6, -3056
   01adfdc  vslw 2, 2, 2
-  01adfe0  <unknown>
+  01adfe0  lvlx 3, 4, 3
   01adfe4  li 3, 8
   01adfe8  vspltw 3, 3, 0
-  01adfec  <unknown>
+  01adfec  lvlx 4, 6, 5
   01adff0  vmaddfp 2, 4, 3, 2
   01adff4  vctsxs 2, 2, 0
   01adff8  vspltw 2, 2, 0

@@ -375,10 +375,10 @@ Moby1267_UpdateTargetLock:   # 0x15120, 0x50c bytes
   00155b4  stw 4, 136(31)
   00155b8  lfs 1, 24(27)
   00155bc  lfs 2, -3056(3)
-  00155c0  <unknown>
+  00155c0  lvlx 3, 5, 27
   00155c4  fmuls 1, 2, 1
   00155c8  vspltw 3, 3, 0
-  00155cc  <unknown>
+  00155cc  lvlx 4, 6, 3
   00155d0  vmaddfp 2, 4, 3, 2
   00155d4  fctiwz 1, 1
   00155d8  vctsxs 2, 2, 0
@@ -484,10 +484,10 @@ UpdateMoby_1267:   # 0x156a8, 0x1240 bytes
   00157dc  li 5, -3056
   00157e0  lis 4, 114
   00157e4  stw 6, 68(31)
-  00157e8  <unknown>
+  00157e8  lvlx 3, 0, 3
   00157ec  li 3, 112
   00157f0  vspltw 3, 3, 0
-  00157f4  <unknown>
+  00157f4  lvlx 4, 5, 4
   00157f8  lis 4, 16457
   00157fc  vmaddfp 2, 4, 3, 2
   0015800  li 5, -1
@@ -769,11 +769,11 @@ UpdateMoby_1267:   # 0x156a8, 0x1240 bytes
   0015c50  lis 28, 114
   0015c54  li 3, -3056
   0015c58  stb 5, 8357(29)
-  0015c5c  <unknown>
+  0015c5c  lvlx 31, 4, 6
   0015c60  li 5, 448
   0015c64  lis 4, 161
   0015c68  vspltw 31, 31, 0
-  0015c6c  <unknown>
+  0015c6c  lvlx 3, 3, 28
   0015c70  li 3, 460
   0015c74  vmaddfp 2, 3, 31, 2
   0015c78  lwz 4, 1800(4)
@@ -812,8 +812,8 @@ UpdateMoby_1267:   # 0x156a8, 0x1240 bytes
   0015cfc  addi 4, 4, 22060
   0015d00  li 6, 48
   0015d04  vslw 2, 2, 2
-  0015d08  <unknown>
-  0015d0c  <unknown>
+  0015d08  lvlx 3, 5, 28
+  0015d0c  lvlx 4, 6, 4
   0015d10  li 4, 144
   0015d14  vspltw 4, 4, 0
   0015d18  lfs 1, 140(30)
@@ -859,7 +859,7 @@ UpdateMoby_1267:   # 0x156a8, 0x1240 bytes
   0015db8  li 5, 172
   0015dbc  vslw 2, 2, 2
   0015dc0  li 6, 7
-  0015dc4  <unknown>
+  0015dc4  lvlx 3, 3, 28
   0015dc8  li 3, 1
   0015dcc  vmaddfp 2, 3, 31, 2
   0015dd0  stw 3, 28956(4)
@@ -1192,8 +1192,8 @@ UpdateMoby_1267:   # 0x156a8, 0x1240 bytes
   00162ec  vslw 2, 2, 2
   00162f0  li 7, -3056
   00162f4  stw 4, 352(3)
-  00162f8  <unknown>
-  00162fc  <unknown>
+  00162f8  lvlx 3, 5, 6
+  00162fc  lvlx 4, 7, 28
   0016300  vspltw 3, 3, 0
   0016304  li 5, 360
   0016308  li 7, 68
@@ -1208,7 +1208,7 @@ UpdateMoby_1267:   # 0x156a8, 0x1240 bytes
   001632c  vspltw 2, 2, 0
   0016330  stvewx 2, 5, 3
   0016334  stw 4, 368(3)
-  0016338  <unknown>
+  0016338  lvlx 2, 7, 6
   001633c  vspltw 2, 2, 0
   0016340  lfs 29, 68(6)
   0016344  li 4, 112
@@ -1217,7 +1217,7 @@ UpdateMoby_1267:   # 0x156a8, 0x1240 bytes
   0016350  vctsxs 2, 2, 0
   0016354  vspltw 2, 2, 0
   0016358  stvewx 2, 8, 3
-  001635c  <unknown>
+  001635c  lvlx 2, 9, 6
   0016360  vspltw 2, 2, 0
   0016364  vmaddfp 2, 4, 2, 3
   0016368  vctsxs 2, 2, 0

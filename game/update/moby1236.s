@@ -16,8 +16,8 @@ M1236_00219280:   # 0x219280, 0xc8 bytes
   0219294  li 3, -3056
   0219298  vslw 3, 3, 3
   021929c  cmpwi 4, 255
-  02192a0  <unknown>
-  02192a4  <unknown>
+  02192a0  lvlx 2, 0, 7
+  02192a4  lvlx 4, 3, 6
   02192a8  vspltw 2, 2, 0
   02192ac  lwz 7, 120(5)
   02192b0  li 5, 296
@@ -44,7 +44,7 @@ M1236_00219280:   # 0x219280, 0xc8 bytes
   0219304  bt 2, 0x21930c
   0219308  bf 6, 0x219330
   021930c  vspltisw 3, -1
-  0219310  <unknown>
+  0219310  lvlx 4, 3, 6
   0219314  lwz 10, 120(9)
   0219318  vslw 3, 3, 3
   021931c  vmaddfp 3, 4, 2, 3
@@ -206,8 +206,8 @@ M1236_00219370:   # 0x219370, 0x3ac bytes
   02195ac  lfs 1, -3056(4)
   02195b0  li 5, -3056
   02195b4  fmuls 1, 1, 31
-  02195b8  <unknown>
-  02195bc  <unknown>
+  02195b8  lvlx 3, 0, 3
+  02195bc  lvlx 4, 5, 4
   02195c0  vspltw 3, 3, 0
   02195c4  lwz 3, 296(30)
   02195c8  cmpwi 1, 3, 0
@@ -737,10 +737,10 @@ UpdateMoby_1236:   # 0x219780, 0x8f4 bytes
   0219e54  lis 4, 114
   0219e58  li 6, -3056
   0219e5c  vslw 2, 2, 2
-  0219e60  <unknown>
+  0219e60  lvlx 3, 5, 3
   0219e64  li 3, 296
   0219e68  vspltw 3, 3, 0
-  0219e6c  <unknown>
+  0219e6c  lvlx 4, 6, 4
   0219e70  li 4, 5
   0219e74  vmaddfp 2, 4, 3, 2
   0219e78  vctsxs 2, 2, 0

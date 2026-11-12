@@ -82,7 +82,7 @@ M1016_001833f0:   # 0x1833f0, 0x314 bytes
   018350c  fmadds 7, 6, 6, 7
   0183510  stfs 2, 120(1)
   0183514  lfs 27, 16(4)
-  0183518  <unknown>
+  0183518  lvlx 31, 5, 4
   018351c  lfs 28, 20(4)
   0183520  fsqrts 7, 7
   0183524  vspltw 31, 31, 0
@@ -125,7 +125,7 @@ M1016_001833f0:   # 0x1833f0, 0x314 bytes
   01835b8  lwz 3, 32(30)
   01835bc  cmpwi 6, 0
   01835c0  lfs 1, -3056(4)
-  01835c4  <unknown>
+  01835c4  lvlx 2, 5, 4
   01835c8  bt 2, 0x1835f4
   01835cc  vspltisw 3, -1
   01835d0  fmuls 2, 1, 28
@@ -245,12 +245,12 @@ M1016_00183710:   # 0x183710, 0x120 bytes
   018379c  li 8, 8
   01837a0  stw 3, 28(31)
   01837a4  li 9, 4
-  01837a8  <unknown>
-  01837ac  <unknown>
+  01837a8  lvlx 6, 0, 4
+  01837ac  lvlx 5, 5, 7
   01837b0  addic 3, 31, 32
-  01837b4  <unknown>
+  01837b4  lvlx 3, 6, 4
   01837b8  mtctr 9
-  01837bc  <unknown>
+  01837bc  lvlx 2, 8, 4
   01837c0  vspltw 6, 6, 0
   01837c4  vspltw 3, 3, 0
   01837c8  vspltw 2, 2, 0

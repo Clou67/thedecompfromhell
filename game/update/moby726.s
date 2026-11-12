@@ -381,10 +381,10 @@ UpdateMoby_726:   # 0x4351b8, 0x964 bytes
   0435780  lis 5, 114
   0435784  li 6, -3056
   0435788  vslw 2, 2, 2
-  043578c  <unknown>
+  043578c  lvlx 3, 4, 3
   0435790  li 3, 186
   0435794  vspltw 3, 3, 0
-  0435798  <unknown>
+  0435798  lvlx 4, 6, 5
   043579c  vmaddfp 2, 4, 3, 2
   04357a0  vctsxs 2, 2, 0
   04357a4  vsplth 2, 2, 1
@@ -468,10 +468,10 @@ UpdateMoby_726:   # 0x4351b8, 0x964 bytes
   04358dc  lis 4, 114
   04358e0  li 6, -3056
   04358e4  vslw 2, 2, 2
-  04358e8  <unknown>
+  04358e8  lvlx 3, 5, 3
   04358ec  li 3, 186
   04358f0  vspltw 3, 3, 0
-  04358f4  <unknown>
+  04358f4  lvlx 4, 6, 4
   04358f8  lwz 28, 196(30)
   04358fc  vmaddfp 2, 4, 3, 2
   0435900  cmpwi 28, -1

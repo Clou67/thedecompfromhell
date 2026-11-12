@@ -47,9 +47,9 @@ UpdateMoby_198:   # 0x2e5088, 0x5a0 bytes
   02e5134  li 5, 48
   02e5138  addi 6, 5, 16
   02e513c  stb 3, 32(30)
-  02e5140  <unknown>
+  02e5140  lvlx 2, 5, 31
   02e5144  lwz 3, 48(31)
-  02e5148  <unknown>
+  02e5148  lvrx 3, 6, 31
   02e514c  cmpwi 3, 0
   02e5150  vor 2, 2, 3
   02e5154  bt 2, 0x2e51a0
@@ -61,10 +61,10 @@ UpdateMoby_198:   # 0x2e5088, 0x5a0 bytes
   02e516c  lis 5, 114
   02e5170  li 6, -3056
   02e5174  vslw 3, 3, 3
-  02e5178  <unknown>
+  02e5178  lvlx 4, 4, 3
   02e517c  vspltw 4, 4, 0
   02e5180  li 3, 52
-  02e5184  <unknown>
+  02e5184  lvlx 5, 6, 5
   02e5188  vaddfp 2, 2, 4
   02e518c  vmaddfp 2, 5, 2, 3
   02e5190  vctsxs 2, 2, 0
@@ -101,8 +101,8 @@ UpdateMoby_198:   # 0x2e5088, 0x5a0 bytes
   02e520c  vslw 2, 2, 2
   02e5210  li 6, 4
   02e5214  ori 7, 31, 0
-  02e5218  <unknown>
-  02e521c  <unknown>
+  02e5218  lvlx 3, 3, 8
+  02e521c  lvlx 4, 5, 4
   02e5220  vspltw 3, 3, 0
   02e5224  li 4, 52
   02e5228  li 3, 0

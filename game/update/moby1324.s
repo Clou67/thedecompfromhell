@@ -285,13 +285,13 @@ UpdateMoby_1324:   # 0x249cb0, 0x924 bytes
   024a0c0  addic 4, 4, -812
   024a0c4  addi 5, 3, 16
   024a0c8  li 6, 8
-  024a0cc  <unknown>
-  024a0d0  <unknown>
+  024a0cc  lvlx 2, 3, 4
+  024a0d0  lvrx 3, 5, 4
   024a0d4  lis 3, 37
   024a0d8  vor 2, 2, 3
   024a0dc  addi 3, 3, -25448
   024a0e0  vcfsx 2, 2, 0
-  024a0e4  <unknown>
+  024a0e4  lvlx 3, 6, 3
   024a0e8  vspltw 3, 3, 0
   024a0ec  vspltw 2, 2, 0
   024a0f0  vcmpgefp. 2, 2, 3

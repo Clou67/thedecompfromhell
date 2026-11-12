@@ -70,10 +70,10 @@ M336_0001e700:   # 0x1e700, 0x24c bytes
   001e7ec  li 5, -3056
   001e7f0  li 6, 164
   001e7f4  vslw 2, 2, 2
-  001e7f8  <unknown>
+  001e7f8  lvlx 3, 3, 27
   001e7fc  li 11, -1
   001e800  vspltw 3, 3, 0
-  001e804  <unknown>
+  001e804  lvlx 4, 5, 4
   001e808  li 7, 1
   001e80c  fmr 1, 31
   001e810  vmaddfp 2, 4, 3, 2

@@ -358,7 +358,7 @@ M1259_0022ab80:   # 0x22ab80, 0x430 bytes
   022ac9c  addic 22, 1, 112
   022aca0  addc 19, 21, 3
   022aca4  ori 20, 18, 0
-  022aca8  <unknown>
+  022aca8  lvlx 30, 4, 25
   022acac  clrldi 22, 22, 32
   022acb0  clrldi 19, 19, 32
   022acb4  vspltw 30, 30, 0
@@ -368,8 +368,8 @@ M1259_0022ab80:   # 0x22ab80, 0x430 bytes
   022acc4  stw 23, 8(20)
   022acc8  stw 23, 4(20)
   022accc  stw 23, 0(20)
-  022acd0  <unknown>
-  022acd4  <unknown>
+  022acd0  lvlx 2, 3, 29
+  022acd4  lvrx 3, 4, 29
   022acd8  li 3, 8996
   022acdc  vor 2, 2, 3
   022ace0  addi 4, 3, 16
@@ -377,8 +377,8 @@ M1259_0022ab80:   # 0x22ab80, 0x430 bytes
   022ace8  vspltisw 5, -1
   022acec  vcfsx 2, 2, 0
   022acf0  vslw 3, 3, 3
-  022acf4  <unknown>
-  022acf8  <unknown>
+  022acf4  lvlx 8, 3, 29
+  022acf8  lvrx 9, 4, 29
   022acfc  vslw 5, 5, 5
   022ad00  vor 8, 8, 9
   022ad04  vspltisw 7, -1

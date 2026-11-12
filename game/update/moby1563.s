@@ -42,7 +42,7 @@ M1563_0029a288:   # 0x29a288, 0x290 bytes
   029a320  lfs 28, 0(6)
   029a324  lfs 29, 4(6)
   029a328  lfs 26, 8(6)
-  029a32c  <unknown>
+  029a32c  lvlx 31, 3, 6
   029a330  std 29, 168(1)
   029a334  lfs 30, 16(6)
   029a338  vspltw 31, 31, 0
@@ -80,7 +80,7 @@ M1563_0029a288:   # 0x29a288, 0x290 bytes
   029a3b8  li 4, -3056
   029a3bc  fmr 1, 30
   029a3c0  vslw 2, 2, 2
-  029a3c4  <unknown>
+  029a3c4  lvlx 3, 4, 3
   029a3c8  li 3, 10
   029a3cc  vmaddfp 2, 3, 31, 2
   029a3d0  vctsxs 2, 2, 0
@@ -104,7 +104,7 @@ M1563_0029a288:   # 0x29a288, 0x290 bytes
   029a418  addi 3, 3, -23960
   029a41c  li 29, 16
   029a420  lfs 27, 20(3)
-  029a424  <unknown>
+  029a424  lvlx 31, 4, 3
   029a428  vspltw 31, 31, 0
   029a42c  addic 3, 1, 128
   029a430  lis 10, 32767
@@ -130,7 +130,7 @@ M1563_0029a288:   # 0x29a288, 0x290 bytes
   029a480  vslw 2, 2, 2
   029a484  stb 3, 9(28)
   029a488  li 3, 255
-  029a48c  <unknown>
+  029a48c  lvlx 3, 5, 4
   029a490  li 4, 10
   029a494  vmaddfp 2, 3, 31, 2
   029a498  vctsxs 2, 2, 0
@@ -1593,7 +1593,7 @@ UpdateMoby_1563:   # 0x29a5a8, 0x1824 bytes
   029bbe4  lfs 29, 48(26)
   029bbe8  lfs 28, 132(26)
   029bbec  lfs 27, 52(26)
-  029bbf0  <unknown>
+  029bbf0  lvlx 31, 4, 26
   029bbf4  vspltw 31, 31, 0
   029bbf8  ori 3, 31, 0
   029bbfc  bl 0x502730
@@ -1671,7 +1671,7 @@ UpdateMoby_1563:   # 0x29a5a8, 0x1824 bytes
   029bd1c  li 4, -3056
   029bd20  fmr 1, 27
   029bd24  vslw 2, 2, 2
-  029bd28  <unknown>
+  029bd28  lvlx 3, 4, 3
   029bd2c  li 3, 10
   029bd30  vmaddfp 2, 3, 31, 2
   029bd34  vctsxs 2, 2, 0

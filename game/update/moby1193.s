@@ -116,7 +116,7 @@ UpdateMoby_1193:   # 0x1f1fc0, 0xa1c bytes
   01f2164  lfs 29, 20(3)
   01f2168  lfs 30, 24(3)
   01f216c  lfs 31, 28(3)
-  01f2170  <unknown>
+  01f2170  lvlx 31, 4, 3
   01f2174  vspltw 31, 31, 0
   01f2178  extsw 3, 27
   01f217c  addic 26, 1, 208
@@ -208,7 +208,7 @@ UpdateMoby_1193:   # 0x1f1fc0, 0xa1c bytes
   01f22d4  vslw 2, 2, 2
   01f22d8  li 6, 127
   01f22dc  li 7, 43
-  01f22e0  <unknown>
+  01f22e0  lvlx 3, 5, 4
   01f22e4  li 4, 10
   01f22e8  vmaddfp 2, 3, 31, 2
   01f22ec  li 5, 2

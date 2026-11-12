@@ -315,7 +315,7 @@ M671_0040c3f0:   # 0x40c3f0, 0x161c bytes
   040c7e8  lfs 2, 0(23)
   040c7ec  addic 22, 31, 512
   040c7f0  fmuls 2, 2, 1
-  040c7f4  <unknown>
+  040c7f4  lvlx 2, 3, 27
   040c7f8  li 3, 736
   040c7fc  vspltw 2, 2, 0
   040c800  addic 29, 31, 176
@@ -978,14 +978,14 @@ M671_0040c3f0:   # 0x40c3f0, 0x161c bytes
   040d244  vspltisw 2, -8
   040d248  li 4, 736
   040d24c  vspltisw 4, -1
-  040d250  <unknown>
+  040d250  lvlx 3, 3, 23
   040d254  lis 3, 114
   040d258  vsrw 2, 3, 2
   040d25c  lvx 3, 4, 31
   040d260  li 4, -3056
   040d264  vslw 4, 4, 4
   040d268  vcfsx 2, 2, 0
-  040d26c  <unknown>
+  040d26c  lvlx 5, 4, 3
   040d270  li 3, 248
   040d274  ld 30, 888(31)
   040d278  vaddfp 2, 2, 3
@@ -1126,14 +1126,14 @@ M671_0040c3f0:   # 0x40c3f0, 0x161c bytes
   040d494  vspltisw 2, -8
   040d498  li 4, 736
   040d49c  vspltisw 4, -1
-  040d4a0  <unknown>
+  040d4a0  lvlx 3, 3, 23
   040d4a4  lis 3, 114
   040d4a8  vsrw 2, 3, 2
   040d4ac  lvx 3, 4, 31
   040d4b0  li 4, -3056
   040d4b4  vslw 4, 4, 4
   040d4b8  vcfsx 2, 2, 0
-  040d4bc  <unknown>
+  040d4bc  lvlx 5, 4, 3
   040d4c0  li 3, 290
   040d4c4  ld 30, 888(31)
   040d4c8  vaddfp 2, 2, 3

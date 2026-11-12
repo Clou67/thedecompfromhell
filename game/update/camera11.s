@@ -8,8 +8,8 @@ SECTION_HEADER_CAMERA11:   # 0x37818, 0x7c bytes
   0037828  li 5, -3056
   003782c  vslw 2, 2, 2
   0037830  lis 7, 114
-  0037834  <unknown>
-  0037838  <unknown>
+  0037834  lvlx 3, 0, 3
+  0037838  lvlx 4, 5, 4
   003783c  addic 7, 7, -10608
   0037840  vspltw 3, 3, 0
   0037844  lis 4, 147
@@ -25,7 +25,7 @@ SECTION_HEADER_CAMERA11:   # 0x37818, 0x7c bytes
   003786c  vctsxs 2, 2, 0
   0037870  vspltw 2, 2, 0
   0037874  stvewx 2, 5, 4
-  0037878  <unknown>
+  0037878  lvlx 2, 6, 3
   003787c  vspltw 2, 2, 0
   0037880  vmaddfp 2, 4, 2, 3
   0037884  vctsxs 2, 2, 0

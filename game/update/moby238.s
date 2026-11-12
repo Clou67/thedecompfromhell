@@ -1203,10 +1203,10 @@ M238_00306c48:   # 0x306c48, 0x570 bytes
   0306ca8  vslw 2, 2, 2
   0306cac  stw 4, 56(30)
   0306cb0  li 4, -3056
-  0306cb4  <unknown>
+  0306cb4  lvlx 3, 0, 3
   0306cb8  li 3, 708
   0306cbc  vspltw 3, 3, 0
-  0306cc0  <unknown>
+  0306cc0  lvlx 4, 4, 5
   0306cc4  vmaddfp 2, 4, 3, 2
   0306cc8  vctsxs 2, 2, 0
   0306ccc  vspltw 2, 2, 0
@@ -1489,10 +1489,10 @@ M238_00306c48:   # 0x306c48, 0x570 bytes
   0307120  stb 7, 279(30)
   0307124  li 4, -3056
   0307128  vslw 2, 2, 2
-  030712c  <unknown>
+  030712c  lvlx 3, 5, 6
   0307130  li 5, 38
   0307134  vspltw 3, 3, 0
-  0307138  <unknown>
+  0307138  lvlx 4, 4, 3
   030713c  vmaddfp 2, 4, 3, 2
   0307140  addic 4, 30, 272
   0307144  ori 3, 31, 0

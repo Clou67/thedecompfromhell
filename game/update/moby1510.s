@@ -257,7 +257,7 @@ UpdateMoby_1510:   # 0x28dfa8, 0x544 bytes
   028e39c  li 29, 0
   028e3a0  lfs 30, 52(28)
   028e3a4  lfs 31, 0(28)
-  028e3a8  <unknown>
+  028e3a8  lvlx 31, 3, 28
   028e3ac  vspltw 31, 31, 0
   028e3b0  li 3, 6
   028e3b4  bl 0xfc620
@@ -308,7 +308,7 @@ UpdateMoby_1510:   # 0x28dfa8, 0x544 bytes
   028e468  vslw 2, 2, 2
   028e46c  stb 4, 3(3)
   028e470  li 4, 10
-  028e474  <unknown>
+  028e474  lvlx 3, 6, 5
   028e478  li 6, 2
   028e47c  vmaddfp 2, 3, 31, 2
   028e480  li 5, 43

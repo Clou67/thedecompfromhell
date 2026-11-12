@@ -3836,8 +3836,8 @@ M111_001ce130:   # 0x1ce130, 0x2a8 bytes
   01ce25c  vslw 2, 2, 2
   01ce260  stfs 1, 0(31)
   01ce264  stb 4, 103(30)
-  01ce268  <unknown>
-  01ce26c  <unknown>
+  01ce268  lvlx 3, 0, 27
+  01ce26c  lvlx 4, 5, 3
   01ce270  vspltw 3, 3, 0
   01ce274  li 5, 38
   01ce278  addic 4, 30, 96

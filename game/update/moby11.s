@@ -13,15 +13,15 @@ UpdateMoby_11:   # 0x1bd450, 0x980 bytes
   01bd474  std 31, 200(1)
   01bd478  li 7, 4
   01bd47c  ori 31, 3, 0
-  01bd480  <unknown>
+  01bd480  lvlx 2, 6, 5
   01bd484  std 30, 192(1)
-  01bd488  <unknown>
+  01bd488  lvlx 3, 0, 4
   01bd48c  lwz 30, 120(3)
   01bd490  vspltw 3, 3, 0
   01bd494  vaddfp 2, 2, 3
   01bd498  vspltw 3, 2, 0
   01bd49c  stvewx 3, 6, 5
-  01bd4a0  <unknown>
+  01bd4a0  lvlx 4, 7, 4
   01bd4a4  vspltw 4, 4, 0
   01bd4a8  vcmpgtfp. 3, 3, 4
   01bd4ac  std 29, 184(1)
@@ -35,7 +35,7 @@ UpdateMoby_11:   # 0x1bd450, 0x980 bytes
   01bd4cc  lis 6, -16312
   01bd4d0  lis 4, 118
   01bd4d4  ori 6, 6, 62915
-  01bd4d8  <unknown>
+  01bd4d8  lvlx 2, 5, 3
   01bd4dc  vspltw 2, 2, 0
   01bd4e0  stw 6, 15772(4)
   01bd4e4  lis 3, 28
@@ -47,8 +47,8 @@ UpdateMoby_11:   # 0x1bd450, 0x980 bytes
   01bd4fc  vspltisw 7, -1
   01bd500  vspltisw 9, -1
   01bd504  vslw 5, 5, 5
-  01bd508  <unknown>
-  01bd50c  <unknown>
+  01bd508  lvlx 3, 4, 3
+  01bd50c  lvlx 4, 5, 3
   01bd510  vspltw 3, 3, 0
   01bd514  vspltw 4, 4, 0
   01bd518  li 4, 20
@@ -59,8 +59,8 @@ UpdateMoby_11:   # 0x1bd450, 0x980 bytes
   01bd52c  vslw 9, 9, 9
   01bd530  vcmpgtfp 6, 3, 2
   01bd534  vsel 2, 3, 2, 6
-  01bd538  <unknown>
-  01bd53c  <unknown>
+  01bd538  lvlx 6, 4, 3
+  01bd53c  lvlx 8, 5, 3
   01bd540  vspltw 6, 6, 0
   01bd544  vcmpgtfp 3, 2, 4
   01bd548  vsel 2, 4, 2, 3
@@ -71,26 +71,26 @@ UpdateMoby_11:   # 0x1bd450, 0x980 bytes
   01bd55c  vslw 3, 3, 3
   01bd560  vspltisw 5, -1
   01bd564  li 5, 32
-  01bd568  <unknown>
+  01bd568  lvlx 10, 4, 3
   01bd56c  li 4, 36
   01bd570  vslw 5, 5, 5
   01bd574  vmaddfp 3, 4, 2, 3
   01bd578  vmaddfp 5, 4, 3, 5
   01bd57c  vmaddfp 2, 3, 6, 2
   01bd580  vspltw 3, 10, 0
-  01bd584  <unknown>
+  01bd584  lvlx 6, 5, 3
   01bd588  vspltw 6, 6, 0
   01bd58c  li 5, 48
   01bd590  vmaddfp 7, 4, 5, 7
   01bd594  vmaddfp 2, 5, 8, 2
   01bd598  vspltisw 8, -1
-  01bd59c  <unknown>
+  01bd59c  lvlx 5, 4, 3
   01bd5a0  li 4, 40
   01bd5a4  vspltw 5, 5, 0
   01bd5a8  vmaddfp 4, 4, 7, 9
   01bd5ac  vmaddfp 2, 7, 3, 2
   01bd5b0  vslw 3, 8, 8
-  01bd5b4  <unknown>
+  01bd5b4  lvlx 9, 4, 3
   01bd5b8  vspltisw 7, -16
   01bd5bc  li 4, 44
   01bd5c0  vspltisw 8, 0
@@ -98,8 +98,8 @@ UpdateMoby_11:   # 0x1bd450, 0x980 bytes
   01bd5c8  vspltw 4, 9, 0
   01bd5cc  vrlw 6, 4, 7
   01bd5d0  vmaddfp 2, 2, 5, 3
-  01bd5d4  <unknown>
-  01bd5d8  <unknown>
+  01bd5d4  lvlx 3, 4, 3
+  01bd5d8  lvlx 5, 5, 3
   01bd5dc  li 4, 144
   01bd5e0  vspltw 3, 3, 0
   01bd5e4  vspltw 5, 5, 0

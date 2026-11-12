@@ -375,7 +375,7 @@ UpdateMoby_613:   # 0x3dd370, 0x63c bytes
   03dd920  stfs 2, 0(30)
   03dd924  stfs 2, 240(29)
   03dd928  lfs 1, -3056(4)
-  03dd92c  <unknown>
+  03dd92c  lvlx 3, 6, 4
   03dd930  lfs 2, 4(30)
   03dd934  stfs 2, 244(29)
   03dd938  lfs 2, 8(30)
@@ -383,7 +383,7 @@ UpdateMoby_613:   # 0x3dd370, 0x63c bytes
   03dd940  lfs 2, 12(30)
   03dd944  stfs 2, 252(29)
   03dd948  lfs 2, 44(3)
-  03dd94c  <unknown>
+  03dd94c  lvlx 4, 5, 3
   03dd950  fmuls 1, 1, 2
   03dd954  vspltw 4, 4, 0
   03dd958  vmaddfp 2, 3, 4, 2

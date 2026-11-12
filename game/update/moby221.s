@@ -168,10 +168,10 @@ UpdateMoby_221:   # 0x2f8c70, 0x99c bytes
   02f8ee4  li 5, -3056
   02f8ee8  lis 6, 114
   02f8eec  vslw 2, 2, 2
-  02f8ef0  <unknown>
+  02f8ef0  lvlx 3, 4, 3
   02f8ef4  li 3, 128
   02f8ef8  vspltw 3, 3, 0
-  02f8efc  <unknown>
+  02f8efc  lvlx 4, 5, 6
   02f8f00  vmaddfp 2, 4, 3, 2
   02f8f04  vctsxs 2, 2, 0
   02f8f08  vsplth 2, 2, 1

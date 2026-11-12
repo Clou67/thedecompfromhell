@@ -268,11 +268,11 @@ M1319_00246598:   # 0x246598, 0x238 bytes
   02465c8  lis 9, 121
   02465cc  addi 8, 7, 16
   02465d0  addic 6, 6, 1
-  02465d4  <unknown>
+  02465d4  lvlx 2, 7, 5
   02465d8  li 7, -7120
-  02465dc  <unknown>
+  02465dc  lvrx 3, 8, 5
   02465e0  vor 2, 2, 3
-  02465e4  <unknown>
+  02465e4  lvlx 3, 7, 9
   02465e8  srawi 7, 6, 4
   02465ec  vcfsx 4, 2, 0
   02465f0  vspltw 3, 3, 0

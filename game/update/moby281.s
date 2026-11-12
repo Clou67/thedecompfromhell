@@ -252,10 +252,10 @@ UpdateMoby_281:   # 0x32c468, 0x5f4 bytes
   032c82c  stb 4, 32(31)
   032c830  li 4, -3056
   032c834  vslw 2, 2, 2
-  032c838  <unknown>
+  032c838  lvlx 3, 5, 3
   032c83c  li 3, 40
   032c840  vspltw 3, 3, 0
-  032c844  <unknown>
+  032c844  lvlx 4, 4, 6
   032c848  vmaddfp 2, 4, 3, 2
   032c84c  vctsxs 2, 2, 0
   032c850  vspltw 2, 2, 0

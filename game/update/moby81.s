@@ -349,7 +349,7 @@ UpdateMoby_81:   # 0x46c660, 0x8ac bytes
   046cbc4  lfs 26, 64(26)
   046cbc8  addic 27, 27, 23856
   046cbcc  lfs 25, 0(26)
-  046cbd0  <unknown>
+  046cbd0  lvlx 31, 3, 26
   046cbd4  vspltw 31, 31, 0
   046cbd8  cmpwi 30, 2
   046cbdc  bt 2, 0x46cc70
@@ -439,7 +439,7 @@ UpdateMoby_81:   # 0x46c660, 0x8ac bytes
   046cd2c  stb 4, 3(3)
   046cd30  li 7, 43
   046cd34  li 4, 10
-  046cd38  <unknown>
+  046cd38  lvlx 3, 6, 5
   046cd3c  li 5, 2
   046cd40  vmaddfp 2, 3, 31, 2
   046cd44  li 6, 96

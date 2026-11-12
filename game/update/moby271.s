@@ -229,10 +229,10 @@ UpdateMoby_271:   # 0x323bf8, 0x1cbc bytes
   0323d5c  stb 4, 71(30)
   0323d60  li 4, -3056
   0323d64  vslw 2, 2, 2
-  0323d68  <unknown>
+  0323d68  lvlx 3, 6, 3
   0323d6c  li 3, 292
   0323d70  vspltw 3, 3, 0
-  0323d74  <unknown>
+  0323d74  lvlx 4, 4, 5
   0323d78  vmaddfp 2, 4, 3, 2
   0323d7c  vctsxs 2, 2, 0
   0323d80  vspltw 2, 2, 0
@@ -374,10 +374,10 @@ UpdateMoby_271:   # 0x323bf8, 0x1cbc bytes
   0323fa0  li 6, -3056
   0323fa4  lis 4, 114
   0323fa8  stb 7, 32(31)
-  0323fac  <unknown>
+  0323fac  lvlx 3, 5, 3
   0323fb0  li 3, 292
   0323fb4  vspltw 3, 3, 0
-  0323fb8  <unknown>
+  0323fb8  lvlx 4, 6, 4
   0323fbc  vmaddfp 2, 4, 3, 2
   0323fc0  vctsxs 2, 2, 0
   0323fc4  vspltw 2, 2, 0
@@ -393,10 +393,10 @@ UpdateMoby_271:   # 0x323bf8, 0x1cbc bytes
   0323fec  lis 4, 114
   0323ff0  li 6, -3056
   0323ff4  vslw 2, 2, 2
-  0323ff8  <unknown>
+  0323ff8  lvlx 3, 5, 3
   0323ffc  li 3, 292
   0324000  vspltw 3, 3, 0
-  0324004  <unknown>
+  0324004  lvlx 4, 6, 4
   0324008  lis 5, 151
   032400c  li 4, 90
   0324010  addic 5, 5, -25376
@@ -538,11 +538,11 @@ UpdateMoby_271:   # 0x323bf8, 0x1cbc bytes
   0324230  lis 5, 114
   0324234  li 6, -3056
   0324238  vslw 2, 2, 2
-  032423c  <unknown>
+  032423c  lvlx 3, 4, 3
   0324240  li 3, 292
   0324244  vspltw 3, 3, 0
   0324248  li 4, 90
-  032424c  <unknown>
+  032424c  lvlx 4, 6, 5
   0324250  lis 5, 151
   0324254  vmaddfp 2, 4, 3, 2
   0324258  addic 5, 5, -25376
@@ -878,8 +878,8 @@ UpdateMoby_271:   # 0x323bf8, 0x1cbc bytes
   0324780  stfs 1, 264(30)
   0324784  lfs 1, 28(31)
   0324788  stfs 1, 268(30)
-  032478c  <unknown>
-  0324790  <unknown>
+  032478c  lvlx 2, 4, 3
+  0324790  lvlx 4, 6, 5
   0324794  vspltw 2, 2, 0
   0324798  li 3, 272
   032479c  vmaddfp 2, 4, 2, 3

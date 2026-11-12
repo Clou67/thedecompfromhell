@@ -82,8 +82,8 @@ M777_004588b8:   # 0x4588b8, 0x20c bytes
   04589d4  vslw 2, 2, 2
   04589d8  addic 4, 30, 192
   04589dc  stfs 1, 32(30)
-  04589e0  <unknown>
-  04589e4  <unknown>
+  04589e0  lvlx 3, 0, 3
+  04589e4  lvlx 4, 6, 5
   04589e8  vspltw 3, 3, 0
   04589ec  li 5, 38
   04589f0  ori 3, 31, 0
@@ -219,7 +219,7 @@ UpdateMoby_777:   # 0x458b00, 0xdf8 bytes
   0458c2c  stfs 1, 24(31)
   0458c30  lfs 1, 28(6)
   0458c34  stfs 1, 28(31)
-  0458c38  <unknown>
+  0458c38  lvlx 2, 5, 29
   0458c3c  lfs 1, 4(29)
   0458c40  vspltw 31, 2, 0
   0458c44  bl 0xffb70
@@ -229,12 +229,12 @@ UpdateMoby_777:   # 0x458b00, 0xdf8 bytes
   0458c54  vspltisw 3, -1
   0458c58  lis 5, 114
   0458c5c  vslw 3, 3, 3
-  0458c60  <unknown>
+  0458c60  lvlx 2, 4, 3
   0458c64  li 3, -3056
   0458c68  vcfsx 2, 2, 0
   0458c6c  stfs 1, 24(31)
   0458c70  li 4, 0
-  0458c74  <unknown>
+  0458c74  lvlx 4, 3, 5
   0458c78  li 3, 412
   0458c7c  vaddfp 2, 2, 31
   0458c80  vmaddfp 2, 4, 2, 3
@@ -938,13 +938,13 @@ UpdateMoby_777:   # 0x458b00, 0xdf8 bytes
   0459768  li 6, 4
   045976c  addi 5, 5, -30012
   0459770  vslw 4, 4, 4
-  0459774  <unknown>
+  0459774  lvlx 2, 4, 3
   0459778  lis 3, 114
   045977c  vcfsx 2, 2, 0
-  0459780  <unknown>
+  0459780  lvlx 3, 6, 5
   0459784  li 4, -3056
   0459788  vspltw 3, 3, 0
-  045978c  <unknown>
+  045978c  lvlx 5, 4, 3
   0459790  li 3, 412
   0459794  vaddfp 2, 2, 3
   0459798  vmaddfp 2, 5, 2, 4

@@ -63,7 +63,7 @@ M1401_0026bc10:   # 0x26bc10, 0x2fc bytes
   026bce0  lfs 29, 8(4)
   026bce4  lfs 30, 12(4)
   026bce8  std 26, 160(1)
-  026bcec  <unknown>
+  026bcec  lvlx 31, 5, 4
   026bcf0  vspltw 31, 31, 0
   026bcf4  li 3, 16
   026bcf8  bl 0xfc620
@@ -99,7 +99,7 @@ M1401_0026bc10:   # 0x26bc10, 0x2fc bytes
   026bd70  li 5, 2
   026bd74  li 6, 127
   026bd78  vslw 2, 2, 2
-  026bd7c  <unknown>
+  026bd7c  lvlx 3, 4, 29
   026bd80  li 4, 10
   026bd84  li 7, 43
   026bd88  vmaddfp 2, 3, 31, 2

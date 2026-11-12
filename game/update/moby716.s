@@ -108,25 +108,25 @@ UpdateMoby_716:   # 0x4318a8, 0x164 bytes
   0431958  cror 6, 1, 2
   043195c  bt 6, 0x4319f4
   0431960  li 4, 16
-  0431964  <unknown>
+  0431964  lvlx 2, 0, 30
   0431968  lis 5, 67
   043196c  vspltisw 4, -1
   0431970  li 6, -3056
   0431974  addi 5, 5, 6296
-  0431978  <unknown>
+  0431978  lvrx 3, 4, 30
   043197c  lis 4, 114
   0431980  vor 2, 2, 3
-  0431984  <unknown>
+  0431984  lvlx 3, 0, 5
   0431988  vslw 4, 4, 4
   043198c  vspltw 3, 3, 0
   0431990  vcfsx 2, 2, 0
-  0431994  <unknown>
+  0431994  lvlx 5, 6, 4
   0431998  li 4, 2148
   043199c  li 6, 4
   04319a0  li 7, 8
   04319a4  vaddfp 2, 2, 3
-  04319a8  <unknown>
-  04319ac  <unknown>
+  04319a8  lvlx 3, 4, 3
+  04319ac  lvlx 6, 6, 5
   04319b0  li 6, 8
   04319b4  vmaddfp 2, 5, 2, 4
   04319b8  vspltw 4, 6, 0
@@ -138,7 +138,7 @@ UpdateMoby_716:   # 0x4318a8, 0x164 bytes
   04319d0  vsel 2, 2, 4, 3
   04319d4  vspltw 2, 2, 0
   04319d8  stvewx 2, 4, 3
-  04319dc  <unknown>
+  04319dc  lvlx 2, 7, 5
   04319e0  vspltw 2, 2, 0
   04319e4  vmaddfp 2, 5, 2, 6
   04319e8  vctsxs 2, 2, 0

@@ -611,10 +611,10 @@ M910_004aa510:   # 0x4aa510, 0x7c0 bytes
   04aa708  stb 4, 32(31)
   04aa70c  li 4, -3056
   04aa710  vslw 2, 2, 2
-  04aa714  <unknown>
+  04aa714  lvlx 3, 6, 3
   04aa718  lis 3, 143
   04aa71c  vspltw 3, 3, 0
-  04aa720  <unknown>
+  04aa720  lvlx 4, 4, 5
   04aa724  lis 6, 16872
   04aa728  lis 4, 114
   04aa72c  li 5, 38
@@ -1108,10 +1108,10 @@ UpdateMoby_910:   # 0x4aad50, 0x1260 bytes
   04aaf44  stb 3, 32(31)
   04aaf48  li 7, -3056
   04aaf4c  vslw 2, 2, 2
-  04aaf50  <unknown>
+  04aaf50  lvlx 3, 5, 4
   04aaf54  li 4, 424
   04aaf58  vspltw 3, 3, 0
-  04aaf5c  <unknown>
+  04aaf5c  lvlx 4, 7, 6
   04aaf60  vmaddfp 2, 4, 3, 2
   04aaf64  vctsxs 2, 2, 0
   04aaf68  vspltw 2, 2, 0
@@ -2094,10 +2094,10 @@ UpdateMoby_910:   # 0x4aad50, 0x1260 bytes
   04abeac  lis 4, 114
   04abeb0  li 6, -3056
   04abeb4  vslw 2, 2, 2
-  04abeb8  <unknown>
+  04abeb8  lvlx 3, 5, 3
   04abebc  li 3, 424
   04abec0  vspltw 3, 3, 0
-  04abec4  <unknown>
+  04abec4  lvlx 4, 6, 4
   04abec8  vmaddfp 2, 4, 3, 2
   04abecc  vctsxs 2, 2, 0
   04abed0  vspltw 2, 2, 0

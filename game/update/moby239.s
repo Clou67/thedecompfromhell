@@ -1650,8 +1650,8 @@ UpdateMoby_239:   # 0x3090f8, 0x2450 bytes
   030aa94  stfs 1, 440(30)
   030aa98  li 3, 428
   030aa9c  stfs 1, 444(30)
-  030aaa0  <unknown>
-  030aaa4  <unknown>
+  030aaa0  lvlx 3, 5, 4
+  030aaa4  lvlx 4, 7, 6
   030aaa8  vmaddfp 2, 3, 4, 2
   030aaac  vctsxs 2, 2, 0
   030aab0  vspltw 2, 2, 0
@@ -1754,9 +1754,9 @@ UpdateMoby_239:   # 0x3090f8, 0x2450 bytes
   030ac34  li 7, -3056
   030ac38  stb 3, 356(30)
   030ac3c  vslw 2, 2, 2
-  030ac40  <unknown>
+  030ac40  lvlx 3, 5, 4
   030ac44  li 4, 428
-  030ac48  <unknown>
+  030ac48  lvlx 4, 7, 6
   030ac4c  vmaddfp 2, 3, 4, 2
   030ac50  vctsxs 2, 2, 0
   030ac54  vspltw 2, 2, 0

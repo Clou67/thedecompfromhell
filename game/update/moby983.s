@@ -503,13 +503,13 @@ M983_004c8510:   # 0x4c8510, 0x86c bytes
   04c8cc0  lis 5, 77
   04c8cc4  addic 6, 6, 5056
   04c8cc8  addi 5, 5, -31544
-  04c8ccc  <unknown>
+  04c8ccc  lvlx 2, 4, 3
   04c8cd0  li 3, 20
   04c8cd4  vcfsx 2, 2, 0
   04c8cd8  li 4, -3056
   04c8cdc  stfs 1, 352(6)
-  04c8ce0  <unknown>
-  04c8ce4  <unknown>
+  04c8ce0  lvlx 3, 3, 5
+  04c8ce4  lvlx 5, 4, 29
   04c8ce8  vspltw 3, 3, 0
   04c8cec  li 3, 360
   04c8cf0  vaddfp 2, 2, 3
@@ -1222,7 +1222,7 @@ M983_004c8df0:   # 0x4c8df0, 0x1300 bytes
   04c9868  li 3, 8
   04c986c  fmr 6, 5
   04c9870  fmadds 4, 1, 1, 4
-  04c9874  <unknown>
+  04c9874  lvlx 31, 3, 20
   04c9878  stw 14, 188(1)
   04c987c  vspltw 31, 31, 0
   04c9880  fmr 7, 6
@@ -1324,13 +1324,13 @@ M983_004c8df0:   # 0x4c8df0, 0x1300 bytes
   04c9a00  lis 3, 270
   04c9a04  vspltisw 2, -16
   04c9a08  addic 3, 3, 19904
-  04c9a0c  <unknown>
+  04c9a0c  lvlx 3, 23, 3
   04c9a10  li 3, -3056
   04c9a14  vsraw 2, 3, 2
   04c9a18  vspltisw 3, -1
   04c9a1c  vcfsx 2, 2, 0
   04c9a20  vslw 3, 3, 3
-  04c9a24  <unknown>
+  04c9a24  lvlx 4, 3, 17
   04c9a28  lis 3, 270
   04c9a2c  addic 3, 3, 19896
   04c9a30  vaddfp 2, 2, 31
@@ -1784,7 +1784,7 @@ M983_004ca100:   # 0x4ca100, 0x244 bytes
   04ca138  li 8, 0
   04ca13c  lfs 2, 16(3)
   04ca140  fsubs 3, 3, 2
-  04ca144  <unknown>
+  04ca144  lvlx 2, 5, 4
   04ca148  lfs 4, 24(7)
   04ca14c  stw 8, 20848(9)
   04ca150  lfs 5, 24(3)
@@ -1797,12 +1797,12 @@ M983_004ca100:   # 0x4ca100, 0x244 bytes
   04ca16c  li 6, -3056
   04ca170  li 7, 19920
   04ca174  stw 8, 19924(4)
-  04ca178  <unknown>
+  04ca178  lvlx 3, 0, 5
   04ca17c  lis 4, 114
   04ca180  fmadds 5, 3, 3, 5
   04ca184  vspltw 3, 3, 0
   04ca188  lis 9, 143
-  04ca18c  <unknown>
+  04ca18c  lvlx 4, 6, 4
   04ca190  vaddfp 2, 2, 3
   04ca194  lis 4, 127
   04ca198  vspltisw 3, -1

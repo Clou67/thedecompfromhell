@@ -25,8 +25,8 @@ M439_0037c1c0:   # 0x37c1c0, 0x98 bytes
   037c214  stw 31, 408(30)
   037c218  li 5, -3056
   037c21c  vslw 2, 2, 2
-  037c220  <unknown>
-  037c224  <unknown>
+  037c220  lvlx 3, 0, 3
+  037c224  lvlx 4, 5, 4
   037c228  vspltw 3, 3, 0
   037c22c  li 3, 412
   037c230  vmaddfp 2, 4, 3, 2
@@ -71,8 +71,8 @@ M44_0037c268:   # 0x37c268, 0x25c bytes
   037c2d4  addi 4, 4, -15784
   037c2d8  li 6, -3056
   037c2dc  vslw 2, 2, 2
-  037c2e0  <unknown>
-  037c2e4  <unknown>
+  037c2e0  lvlx 3, 0, 4
+  037c2e4  lvlx 4, 6, 5
   037c2e8  li 4, 342
   037c2ec  vspltw 3, 3, 0
   037c2f0  vmaddfp 2, 4, 3, 2
@@ -99,8 +99,8 @@ M44_0037c268:   # 0x37c268, 0x25c bytes
   037c344  lfs 1, 24(31)
   037c348  fadds 1, 1, 31
   037c34c  stfs 1, 120(1)
-  037c350  <unknown>
-  037c354  <unknown>
+  037c350  lvlx 30, 4, 3
+  037c354  lvlx 31, 0, 3
   037c358  vspltw 30, 30, 0
   037c35c  vspltw 31, 31, 0
   037c360  lis 3, 164
@@ -140,7 +140,7 @@ M44_0037c268:   # 0x37c268, 0x25c bytes
   037c3e8  li 4, -3056
   037c3ec  lis 5, 164
   037c3f0  vslw 3, 2, 2
-  037c3f4  <unknown>
+  037c3f4  lvlx 2, 4, 3
   037c3f8  lwz 3, -28512(5)
   037c3fc  li 4, 0
   037c400  vmaddfp 3, 2, 30, 3
@@ -165,7 +165,7 @@ M44_0037c268:   # 0x37c268, 0x25c bytes
   037c44c  bf 2, 0x37c480
   037c450  lis 3, 114
   037c454  li 4, -3056
-  037c458  <unknown>
+  037c458  lvlx 2, 4, 3
   037c45c  vspltisw 3, -1
   037c460  vspltw 2, 2, 0
   037c464  li 3, 412

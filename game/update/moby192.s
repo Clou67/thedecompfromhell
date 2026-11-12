@@ -1133,9 +1133,9 @@ UpdateMoby_192:   # 0x2db020, 0xd8c bytes
   02dbc48  stw 7, 80(30)
   02dbc4c  li 3, -3056
   02dbc50  stb 10, 32(31)
-  02dbc54  <unknown>
+  02dbc54  lvlx 2, 6, 5
   02dbc58  vspltw 2, 2, 0
-  02dbc5c  <unknown>
+  02dbc5c  lvlx 4, 3, 8
   02dbc60  li 3, 84
   02dbc64  vmaddfp 2, 4, 2, 3
   02dbc68  vctsxs 2, 2, 0

@@ -291,7 +291,7 @@ DrawTie:   # 0x50c5e0, 0xc24 bytes
   050ca5c  li 7, 16
   050ca60  lvx 3, 6, 4
   050ca64  li 11, 128
-  050ca68  <unknown>
+  050ca68  lvlx 4, 0, 5
   050ca6c  li 6, 112
   050ca70  lvx 5, 8, 4
   050ca74  lis 12, 68
@@ -1114,7 +1114,7 @@ FUN_0050d240:   # 0x50d240, 0x114c bytes
   050d76c  li 6, 16
   050d770  lvx 3, 4, 5
   050d774  li 9, 128
-  050d778  <unknown>
+  050d778  lvlx 4, 0, 7
   050d77c  li 4, 112
   050d780  lvx 5, 3, 5
   050d784  li 10, 144

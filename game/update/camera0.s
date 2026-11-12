@@ -757,20 +757,20 @@ HandleSpecialTargetActivation:   # 0x2c578, 0x10b0 bytes
   002c658  extsw 3, 3
   002c65c  std 3, 112(1)
   002c660  lis 3, 3
-  002c664  <unknown>
+  002c664  lvlx 2, 4, 5
   002c668  addi 3, 3, -14996
   002c66c  li 4, 4
   002c670  vcfsx 2, 2, 0
   002c674  lis 5, 114
   002c678  lfs 1, 4(3)
-  002c67c  <unknown>
+  002c67c  lvlx 3, 4, 3
   002c680  lfd 2, 112(1)
   002c684  vspltw 3, 3, 0
   002c688  li 3, -3056
   002c68c  fcfid 2, 2
   002c690  vaddfp 2, 2, 3
   002c694  vslw 3, 4, 4
-  002c698  <unknown>
+  002c698  lvlx 4, 3, 5
   002c69c  lfs 3, -3056(5)
   002c6a0  li 3, 276
   002c6a4  frsp 2, 2
@@ -844,7 +844,7 @@ HandleSpecialTargetActivation:   # 0x2c578, 0x10b0 bytes
   002c7b4  stb 4, 260(31)
   002c7b8  li 4, 4
   002c7bc  lwz 3, -10976(5)
-  002c7c0  <unknown>
+  002c7c0  lvlx 2, 6, 5
   002c7c4  extsw 3, 3
   002c7c8  lis 5, 114
   002c7cc  vcfsx 2, 2, 0
@@ -852,9 +852,9 @@ HandleSpecialTargetActivation:   # 0x2c578, 0x10b0 bytes
   002c7d4  std 3, 112(1)
   002c7d8  lis 3, 3
   002c7dc  addi 3, 3, -14996
-  002c7e0  <unknown>
+  002c7e0  lvlx 3, 4, 3
   002c7e4  lfs 1, 4(3)
-  002c7e8  <unknown>
+  002c7e8  lvlx 4, 6, 5
   002c7ec  lfd 2, 112(1)
   002c7f0  vspltw 3, 3, 0
   002c7f4  fcfid 2, 2
@@ -921,20 +921,20 @@ HandleSpecialTargetActivation:   # 0x2c578, 0x10b0 bytes
   002c8e8  extsw 3, 3
   002c8ec  std 3, 112(1)
   002c8f0  lis 3, 3
-  002c8f4  <unknown>
+  002c8f4  lvlx 2, 4, 5
   002c8f8  addi 3, 3, -14996
   002c8fc  li 4, 4
   002c900  vcfsx 2, 2, 0
   002c904  lis 5, 114
   002c908  lfs 1, 4(3)
-  002c90c  <unknown>
+  002c90c  lvlx 3, 4, 3
   002c910  lfd 2, 112(1)
   002c914  vspltw 3, 3, 0
   002c918  li 3, -3056
   002c91c  fcfid 2, 2
   002c920  vaddfp 2, 2, 3
   002c924  vslw 3, 4, 4
-  002c928  <unknown>
+  002c928  lvlx 4, 3, 5
   002c92c  lfs 3, -3056(5)
   002c930  li 3, 276
   002c934  frsp 2, 2
@@ -1010,7 +1010,7 @@ HandleSpecialTargetActivation:   # 0x2c578, 0x10b0 bytes
   002ca4c  stb 4, 260(31)
   002ca50  li 4, 4
   002ca54  lwz 3, -10932(5)
-  002ca58  <unknown>
+  002ca58  lvlx 2, 6, 5
   002ca5c  extsw 3, 3
   002ca60  lis 5, 114
   002ca64  vcfsx 2, 2, 0
@@ -1018,9 +1018,9 @@ HandleSpecialTargetActivation:   # 0x2c578, 0x10b0 bytes
   002ca6c  std 3, 112(1)
   002ca70  lis 3, 3
   002ca74  addi 3, 3, -14996
-  002ca78  <unknown>
+  002ca78  lvlx 3, 4, 3
   002ca7c  lfs 1, 4(3)
-  002ca80  <unknown>
+  002ca80  lvlx 4, 6, 5
   002ca84  lfd 2, 112(1)
   002ca88  vspltw 3, 3, 0
   002ca8c  fcfid 2, 2
@@ -1093,7 +1093,7 @@ HandleSpecialTargetActivation:   # 0x2c578, 0x10b0 bytes
   002cb98  stb 4, 260(31)
   002cb9c  li 4, 4
   002cba0  lwz 3, -10976(5)
-  002cba4  <unknown>
+  002cba4  lvlx 2, 6, 5
   002cba8  extsw 3, 3
   002cbac  lis 5, 114
   002cbb0  vcfsx 2, 2, 0
@@ -1101,9 +1101,9 @@ HandleSpecialTargetActivation:   # 0x2c578, 0x10b0 bytes
   002cbb8  std 3, 112(1)
   002cbbc  lis 3, 3
   002cbc0  addi 3, 3, -14996
-  002cbc4  <unknown>
+  002cbc4  lvlx 3, 4, 3
   002cbc8  lfs 1, 4(3)
-  002cbcc  <unknown>
+  002cbcc  lvlx 4, 6, 5
   002cbd0  lfd 2, 112(1)
   002cbd4  vspltw 3, 3, 0
   002cbd8  fcfid 2, 2
@@ -1162,7 +1162,7 @@ HandleSpecialTargetActivation:   # 0x2c578, 0x10b0 bytes
   002ccac  stb 4, 260(31)
   002ccb0  li 4, 4
   002ccb4  lwz 3, -10956(5)
-  002ccb8  <unknown>
+  002ccb8  lvlx 2, 6, 5
   002ccbc  extsw 3, 3
   002ccc0  lis 5, 114
   002ccc4  vcfsx 2, 2, 0
@@ -1170,9 +1170,9 @@ HandleSpecialTargetActivation:   # 0x2c578, 0x10b0 bytes
   002cccc  std 3, 112(1)
   002ccd0  lis 3, 3
   002ccd4  addi 3, 3, -14996
-  002ccd8  <unknown>
+  002ccd8  lvlx 3, 4, 3
   002ccdc  lfs 1, 4(3)
-  002cce0  <unknown>
+  002cce0  lvlx 4, 6, 5
   002cce4  lfd 2, 112(1)
   002cce8  vspltw 3, 3, 0
   002ccec  fcfid 2, 2
@@ -1217,13 +1217,13 @@ HandleSpecialTargetActivation:   # 0x2c578, 0x10b0 bytes
   002cd88  extsw 3, 3
   002cd8c  std 3, 112(1)
   002cd90  lis 3, 3
-  002cd94  <unknown>
+  002cd94  lvlx 2, 4, 5
   002cd98  li 4, 4
   002cd9c  addi 3, 3, -14996
   002cda0  lis 5, 114
   002cda4  vcfsx 2, 2, 0
   002cda8  lfs 1, 4(3)
-  002cdac  <unknown>
+  002cdac  lvlx 3, 4, 3
   002cdb0  lfs 2, -3056(5)
   002cdb4  li 3, -3056
   002cdb8  lfd 3, 112(1)
@@ -1231,7 +1231,7 @@ HandleSpecialTargetActivation:   # 0x2c578, 0x10b0 bytes
   002cdc0  fcfid 3, 3
   002cdc4  vaddfp 2, 2, 3
   002cdc8  vslw 3, 4, 4
-  002cdcc  <unknown>
+  002cdcc  lvlx 4, 3, 5
   002cdd0  li 3, 262
   002cdd4  frsp 3, 3
   002cdd8  vmaddfp 2, 4, 2, 3
@@ -1260,20 +1260,20 @@ HandleSpecialTargetActivation:   # 0x2c578, 0x10b0 bytes
   002ce34  vspltisw 4, -1
   002ce38  std 3, 112(1)
   002ce3c  lis 3, 3
-  002ce40  <unknown>
+  002ce40  lvlx 2, 4, 5
   002ce44  addi 3, 3, -14996
   002ce48  li 4, 4
   002ce4c  vcfsx 2, 2, 0
   002ce50  lis 5, 114
   002ce54  lfs 1, 4(3)
-  002ce58  <unknown>
+  002ce58  lvlx 3, 4, 3
   002ce5c  lfd 2, 112(1)
   002ce60  vspltw 3, 3, 0
   002ce64  li 3, -3056
   002ce68  fcfid 2, 2
   002ce6c  vaddfp 2, 2, 3
   002ce70  vslw 3, 4, 4
-  002ce74  <unknown>
+  002ce74  lvlx 4, 3, 5
   002ce78  lfs 3, -3056(5)
   002ce7c  li 3, 262
   002ce80  frsp 2, 2
@@ -1306,7 +1306,7 @@ HandleSpecialTargetActivation:   # 0x2c578, 0x10b0 bytes
   002ceec  stb 4, 260(31)
   002cef0  li 4, 4
   002cef4  lwz 3, -10976(5)
-  002cef8  <unknown>
+  002cef8  lvlx 2, 6, 5
   002cefc  extsw 3, 3
   002cf00  lis 5, 114
   002cf04  vcfsx 2, 2, 0
@@ -1314,9 +1314,9 @@ HandleSpecialTargetActivation:   # 0x2c578, 0x10b0 bytes
   002cf0c  std 3, 112(1)
   002cf10  lis 3, 3
   002cf14  addi 3, 3, -14996
-  002cf18  <unknown>
+  002cf18  lvlx 3, 4, 3
   002cf1c  lfs 1, 4(3)
-  002cf20  <unknown>
+  002cf20  lvlx 4, 6, 5
   002cf24  lfd 2, 112(1)
   002cf28  vspltw 3, 3, 0
   002cf2c  fcfid 2, 2
@@ -1401,20 +1401,20 @@ HandleSpecialTargetActivation:   # 0x2c578, 0x10b0 bytes
   002d068  extsw 3, 3
   002d06c  std 3, 112(1)
   002d070  lis 3, 3
-  002d074  <unknown>
+  002d074  lvlx 2, 4, 5
   002d078  addi 3, 3, -14996
   002d07c  li 4, 4
   002d080  vcfsx 2, 2, 0
   002d084  lis 5, 114
   002d088  lfs 1, 4(3)
-  002d08c  <unknown>
+  002d08c  lvlx 3, 4, 3
   002d090  lfd 2, 112(1)
   002d094  vspltw 3, 3, 0
   002d098  li 3, -3056
   002d09c  fcfid 2, 2
   002d0a0  vaddfp 2, 2, 3
   002d0a4  vslw 3, 4, 4
-  002d0a8  <unknown>
+  002d0a8  lvlx 4, 3, 5
   002d0ac  lfs 3, -3056(5)
   002d0b0  li 3, 262
   002d0b4  frsp 2, 2
@@ -1447,7 +1447,7 @@ HandleSpecialTargetActivation:   # 0x2c578, 0x10b0 bytes
   002d120  stb 4, 260(31)
   002d124  li 4, 4
   002d128  lwz 3, -10956(5)
-  002d12c  <unknown>
+  002d12c  lvlx 2, 6, 5
   002d130  extsw 3, 3
   002d134  lis 5, 114
   002d138  vcfsx 2, 2, 0
@@ -1455,9 +1455,9 @@ HandleSpecialTargetActivation:   # 0x2c578, 0x10b0 bytes
   002d140  std 3, 112(1)
   002d144  lis 3, 3
   002d148  addi 3, 3, -14996
-  002d14c  <unknown>
+  002d14c  lvlx 3, 4, 3
   002d150  lfs 1, 4(3)
-  002d154  <unknown>
+  002d154  lvlx 4, 6, 5
   002d158  lfd 2, 112(1)
   002d15c  vspltw 3, 3, 0
   002d160  fcfid 2, 2
@@ -1501,20 +1501,20 @@ HandleSpecialTargetActivation:   # 0x2c578, 0x10b0 bytes
   002d1f8  extsw 3, 3
   002d1fc  std 3, 112(1)
   002d200  lis 3, 3
-  002d204  <unknown>
+  002d204  lvlx 2, 4, 5
   002d208  addi 3, 3, -14996
   002d20c  li 4, 4
   002d210  vcfsx 2, 2, 0
   002d214  lis 5, 114
   002d218  lfs 1, 4(3)
-  002d21c  <unknown>
+  002d21c  lvlx 3, 4, 3
   002d220  lfd 2, 112(1)
   002d224  vspltw 3, 3, 0
   002d228  li 3, -3056
   002d22c  fcfid 2, 2
   002d230  vaddfp 2, 2, 3
   002d234  vslw 3, 4, 4
-  002d238  <unknown>
+  002d238  lvlx 4, 3, 5
   002d23c  lfs 3, -3056(5)
   002d240  li 3, 262
   002d244  frsp 2, 2
@@ -1584,18 +1584,18 @@ HandleSpecialTargetActivation:   # 0x2c578, 0x10b0 bytes
   002d344  extsw 3, 3
   002d348  std 3, 112(1)
   002d34c  lis 3, 3
-  002d350  <unknown>
+  002d350  lvlx 2, 4, 5
   002d354  li 4, 4
   002d358  addi 3, 3, -14996
   002d35c  vcfsx 2, 2, 0
   002d360  lfs 1, 4(3)
-  002d364  <unknown>
+  002d364  lvlx 3, 4, 3
   002d368  lfd 2, 112(1)
   002d36c  vspltw 31, 3, 0
   002d370  fcfid 2, 2
   002d374  vspltisw 3, -1
   002d378  li 3, 262
-  002d37c  <unknown>
+  002d37c  lvlx 4, 28, 29
   002d380  lfs 3, -3056(29)
   002d384  vaddfp 2, 2, 31
   002d388  vslw 3, 3, 3
@@ -1618,12 +1618,12 @@ HandleSpecialTargetActivation:   # 0x2c578, 0x10b0 bytes
   002d3cc  li 4, -11004
   002d3d0  li 5, 32
   002d3d4  vslw 2, 2, 2
-  002d3d8  <unknown>
+  002d3d8  lvlx 3, 4, 3
   002d3dc  lwz 3, 112(30)
   002d3e0  vcfsx 3, 3, 0
   002d3e4  vaddfp 3, 3, 31
   002d3e8  stfs 1, 264(31)
-  002d3ec  <unknown>
+  002d3ec  lvlx 4, 28, 29
   002d3f0  vmaddfp 2, 4, 3, 2
   002d3f4  vctsxs 2, 2, 0
   002d3f8  vsplth 2, 2, 1
@@ -1674,13 +1674,13 @@ HandleSpecialTargetActivation:   # 0x2c578, 0x10b0 bytes
   002d4ac  extsw 3, 3
   002d4b0  std 3, 112(1)
   002d4b4  lis 3, 3
-  002d4b8  <unknown>
+  002d4b8  lvlx 2, 5, 4
   002d4bc  li 4, 4
   002d4c0  addi 3, 3, -14996
   002d4c4  lis 5, 114
   002d4c8  vcfsx 2, 2, 0
   002d4cc  lfs 1, 4(3)
-  002d4d0  <unknown>
+  002d4d0  lvlx 3, 4, 3
   002d4d4  lfs 2, -3056(5)
   002d4d8  li 3, -3056
   002d4dc  lfd 3, 112(1)
@@ -1688,7 +1688,7 @@ HandleSpecialTargetActivation:   # 0x2c578, 0x10b0 bytes
   002d4e4  fcfid 3, 3
   002d4e8  vaddfp 2, 2, 3
   002d4ec  vslw 3, 4, 4
-  002d4f0  <unknown>
+  002d4f0  lvlx 4, 3, 5
   002d4f4  li 3, 262
   002d4f8  frsp 3, 3
   002d4fc  vmaddfp 2, 4, 2, 3
@@ -1721,7 +1721,7 @@ HandleSpecialTargetActivation:   # 0x2c578, 0x10b0 bytes
   002d568  stb 4, 260(31)
   002d56c  li 4, 4
   002d570  lwz 3, -10940(5)
-  002d574  <unknown>
+  002d574  lvlx 2, 6, 5
   002d578  extsw 3, 3
   002d57c  lis 5, 114
   002d580  vcfsx 2, 2, 0
@@ -1729,9 +1729,9 @@ HandleSpecialTargetActivation:   # 0x2c578, 0x10b0 bytes
   002d588  std 3, 112(1)
   002d58c  lis 3, 3
   002d590  addi 3, 3, -14996
-  002d594  <unknown>
+  002d594  lvlx 3, 4, 3
   002d598  lfs 1, 4(3)
-  002d59c  <unknown>
+  002d59c  lvlx 4, 6, 5
   002d5a0  lfd 2, 112(1)
   002d5a4  vspltw 3, 3, 0
   002d5a8  fcfid 2, 2
@@ -1859,7 +1859,7 @@ HandleSpecialTargetUpVec:   # 0x2d638, 0x984 bytes
   002d798  lfs 1, 0(3)
   002d79c  lis 4, 3
   002d7a0  lfs 2, 4(3)
-  002d7a4  <unknown>
+  002d7a4  lvlx 2, 6, 5
   002d7a8  stfs 1, 64(3)
   002d7ac  addi 4, 4, -10712
   002d7b0  vcfsx 2, 2, 0
@@ -1869,12 +1869,12 @@ HandleSpecialTargetUpVec:   # 0x2d638, 0x984 bytes
   002d7c0  lfs 2, 12(3)
   002d7c4  stfs 1, 72(3)
   002d7c8  stfs 2, 76(3)
-  002d7cc  <unknown>
+  002d7cc  lvlx 3, 0, 4
   002d7d0  lis 4, 114
   002d7d4  vspltw 3, 3, 0
   002d7d8  vaddfp 2, 2, 3
   002d7dc  vslw 3, 4, 4
-  002d7e0  <unknown>
+  002d7e0  lvlx 4, 5, 4
   002d7e4  lwz 3, 112(3)
   002d7e8  li 4, 32
   002d7ec  vmaddfp 2, 4, 2, 3
@@ -2097,23 +2097,23 @@ HandleSpecialTargetUpVec:   # 0x2d638, 0x984 bytes
   002db50  vspltisw 4, -1
   002db54  li 7, 116
   002db58  li 8, 104
-  002db5c  <unknown>
+  002db5c  lvlx 3, 4, 29
   002db60  li 4, 96
   002db64  vsraw 2, 3, 2
-  002db68  <unknown>
+  002db68  lvlx 3, 5, 29
   002db6c  li 5, 100
   002db70  vslw 4, 4, 4
   002db74  vcfsx 2, 2, 0
-  002db78  <unknown>
+  002db78  lvlx 5, 4, 29
   002db7c  li 4, 120
-  002db80  <unknown>
-  002db84  <unknown>
+  002db80  lvlx 6, 6, 29
+  002db84  lvlx 7, 5, 29
   002db88  li 6, 84
-  002db8c  <unknown>
+  002db8c  lvlx 8, 7, 29
   002db90  li 5, 88
-  002db94  <unknown>
+  002db94  lvlx 9, 8, 29
   002db98  vsubfp 5, 5, 6
-  002db9c  <unknown>
+  002db9c  lvlx 10, 4, 29
   002dba0  vsubfp 7, 7, 8
   002dba4  li 4, 80
   002dba8  lfs 1, 108(29)
@@ -2142,7 +2142,7 @@ HandleSpecialTargetUpVec:   # 0x2d638, 0x984 bytes
   002dc04  nop
   002dc08  li 4, 80
   002dc0c  cmpwi 3, 0
-  002dc10  <unknown>
+  002dc10  lvlx 2, 4, 29
   002dc14  bt 2, 0x2dc44
   002dc18  vspltw 3, 2, 0
   002dc1c  li 3, 112
@@ -2193,13 +2193,13 @@ HandleSpecialTargetUpVec:   # 0x2d638, 0x984 bytes
   002dcd0  stb 3, 260(29)
   002dcd4  addi 3, 6, -10712
   002dcd8  vslw 4, 4, 4
-  002dcdc  <unknown>
+  002dcdc  lvlx 2, 5, 4
   002dce0  li 4, -3056
   002dce4  vcfsx 2, 2, 0
-  002dce8  <unknown>
+  002dce8  lvlx 3, 0, 3
   002dcec  lis 3, 114
   002dcf0  vspltw 3, 3, 0
-  002dcf4  <unknown>
+  002dcf4  lvlx 5, 4, 3
   002dcf8  li 3, 276
   002dcfc  lfs 1, 80(29)
   002dd00  lfs 2, 84(29)
@@ -2235,13 +2235,13 @@ HandleSpecialTargetUpVec:   # 0x2d638, 0x984 bytes
   002dd78  stb 3, 260(29)
   002dd7c  addi 3, 6, -10712
   002dd80  vslw 4, 4, 4
-  002dd84  <unknown>
+  002dd84  lvlx 2, 5, 4
   002dd88  li 4, -3056
   002dd8c  vcfsx 2, 2, 0
-  002dd90  <unknown>
+  002dd90  lvlx 3, 0, 3
   002dd94  lis 3, 114
   002dd98  vspltw 3, 3, 0
-  002dd9c  <unknown>
+  002dd9c  lvlx 5, 4, 3
   002dda0  lfs 1, 96(29)
   002dda4  lfs 2, 100(29)
   002dda8  li 3, 276
@@ -2790,17 +2790,17 @@ UpdateCamTarget_0:   # 0x2e3a0, 0x9d8 bytes
   002e61c  addi 6, 7, -7292
   002e620  li 7, -11008
   002e624  lfs 1, 4(6)
-  002e628  <unknown>
+  002e628  lvlx 2, 7, 4
   002e62c  li 4, 4
   002e630  lfs 2, -3056(8)
   002e634  vcfsx 2, 2, 0
-  002e638  <unknown>
+  002e638  lvlx 4, 4, 6
   002e63c  lfd 3, 176(1)
   002e640  li 4, -3056
   002e644  vspltw 4, 4, 0
   002e648  fcfid 3, 3
   002e64c  vaddfp 2, 2, 4
-  002e650  <unknown>
+  002e650  lvlx 4, 4, 8
   002e654  frsp 3, 3
   002e658  vmaddfp 2, 4, 2, 3
   002e65c  fadds 3, 3, 1
@@ -4103,10 +4103,10 @@ Cam0_ForceLookAtDir:   # 0x2f470, 0x6c bytes
   002fa78  stw 3, 608(27)
   002fa7c  lfs 31, 36(4)
   002fa80  lfs 1, -3056(5)
-  002fa84  <unknown>
+  002fa84  lvlx 3, 6, 4
   002fa88  fmuls 1, 1, 31
   002fa8c  vspltw 3, 3, 0
-  002fa90  <unknown>
+  002fa90  lvlx 4, 7, 5
   002fa94  vmaddfp 2, 4, 3, 2
   002fa98  fctiwz 1, 1
   002fa9c  vctsxs 2, 2, 0
@@ -4285,10 +4285,10 @@ Cam0_ForceLookAtDir:   # 0x2f470, 0x6c bytes
   002fd50  lis 5, 114
   002fd54  li 6, -3056
   002fd58  vslw 2, 2, 2
-  002fd5c  <unknown>
+  002fd5c  lvlx 3, 4, 3
   002fd60  li 3, 18
   002fd64  vspltw 3, 3, 0
-  002fd68  <unknown>
+  002fd68  lvlx 4, 6, 5
   002fd6c  vmaddfp 2, 4, 3, 2
   002fd70  vctsxs 2, 2, 0
   002fd74  vsplth 2, 2, 1
@@ -4310,10 +4310,10 @@ Cam0_ForceLookAtDir:   # 0x2f470, 0x6c bytes
   002fdb4  lis 5, 114
   002fdb8  li 7, -3056
   002fdbc  vslw 2, 2, 2
-  002fdc0  <unknown>
+  002fdc0  lvlx 3, 6, 4
   002fdc4  li 4, 20
   002fdc8  vspltw 3, 3, 0
-  002fdcc  <unknown>
+  002fdcc  lvlx 4, 7, 5
   002fdd0  vmaddfp 2, 4, 3, 2
   002fdd4  vctsxs 2, 2, 0
   002fdd8  vsplth 2, 2, 1
@@ -4337,10 +4337,10 @@ Cam0_ForceLookAtDir:   # 0x2f470, 0x6c bytes
   002fe20  extsh 8, 4
   002fe24  lfs 31, 68(3)
   002fe28  lfs 1, -3056(5)
-  002fe2c  <unknown>
+  002fe2c  lvlx 3, 6, 3
   002fe30  fmuls 1, 1, 31
   002fe34  vspltw 3, 3, 0
-  002fe38  <unknown>
+  002fe38  lvlx 4, 7, 5
   002fe3c  vmaddfp 2, 4, 3, 2
   002fe40  fctiwz 1, 1
   002fe44  vctsxs 2, 2, 0
@@ -5208,9 +5208,9 @@ Camera0_Init:   # 0x309f0, 0x490 bytes
   0030bc8  lfs 5, -11012(4)
   0030bcc  vspltisw 3, -1
   0030bd0  stfs 5, 556(28)
-  0030bd4  <unknown>
+  0030bd4  lvlx 2, 0, 8
   0030bd8  lis 9, 149
-  0030bdc  <unknown>
+  0030bdc  lvlx 4, 7, 6
   0030be0  li 4, 516
   0030be4  vspltw 2, 2, 0
   0030be8  std 29, 152(1)
@@ -5270,7 +5270,7 @@ Camera0_Init:   # 0x309f0, 0x490 bytes
   0030cc0  lwz 3, 388(3)
   0030cc4  stfs 1, 72(31)
   0030cc8  stfs 2, 76(31)
-  0030ccc  <unknown>
+  0030ccc  lvlx 2, 5, 4
   0030cd0  lhz 3, 134(3)
   0030cd4  cmpwi 3, 7
   0030cd8  bf 2, 0x30cf0
@@ -5286,9 +5286,9 @@ Camera0_Init:   # 0x309f0, 0x490 bytes
   0030d00  li 6, 4
   0030d04  addi 5, 5, 2532
   0030d08  vslw 5, 5, 5
-  0030d0c  <unknown>
+  0030d0c  lvlx 3, 4, 3
   0030d10  vcfsx 3, 3, 0
-  0030d14  <unknown>
+  0030d14  lvlx 4, 6, 5
   0030d18  vspltw 4, 4, 0
   0030d1c  vaddfp 3, 3, 4
   0030d20  vmaddfp 2, 2, 3, 5
@@ -5461,11 +5461,11 @@ CalcCamOfs_0:   # 0x30e90, 0x280 bytes
   0030fc4  vspltisw 2, -1
   0030fc8  lis 8, 114
   0030fcc  li 9, -3056
-  0030fd0  <unknown>
+  0030fd0  lvlx 3, 7, 3
   0030fd4  vslw 2, 2, 2
   0030fd8  lis 7, 114
   0030fdc  vspltw 3, 3, 0
-  0030fe0  <unknown>
+  0030fe0  lvlx 4, 9, 8
   0030fe4  lis 8, 114
   0030fe8  vmaddfp 2, 4, 3, 2
   0030fec  lfs 6, -11112(7)
@@ -6288,7 +6288,7 @@ UpdateSegmentColl_0:   # 0x31b78, 0x554 bytes
   0031ccc  addic 27, 27, -25376
   0031cd0  lfs 23, 12(3)
   0031cd4  addic 26, 26, 2368
-  0031cd8  <unknown>
+  0031cd8  lvlx 31, 4, 3
   0031cdc  addic 25, 25, 5056
   0031ce0  vspltw 31, 31, 0
   0031ce4  lfs 1, 528(28)
@@ -6357,7 +6357,7 @@ UpdateSegmentColl_0:   # 0x31b78, 0x554 bytes
   0031de0  lfs 2, 452(25)
   0031de4  lfs 3, 456(25)
   0031de8  cmpwi 3, 0
-  0031dec  <unknown>
+  0031dec  lvlx 2, 5, 4
   0031df0  bt 2, 0x32004
   0031df4  lbz 3, 8356(27)
   0031df8  li 30, 1
@@ -6877,8 +6877,8 @@ UpdateCamCollisions_0:   # 0x32100, 0xacc bytes
   003262c  li 7, -3056
   0032630  vslw 2, 2, 2
   0032634  stfs 30, 512(22)
-  0032638  <unknown>
-  003263c  <unknown>
+  0032638  lvlx 3, 6, 4
+  003263c  lvlx 4, 7, 5
   0032640  vspltw 3, 3, 0
   0032644  li 4, 516
   0032648  vmaddfp 2, 4, 3, 2
@@ -6978,11 +6978,11 @@ UpdateCamCollisions_0:   # 0x32100, 0xacc bytes
   00327c0  vslw 3, 3, 3
   00327c4  lfs 1, 36(3)
   00327c8  lfs 2, -3056(4)
-  00327cc  <unknown>
+  00327cc  lvlx 2, 5, 3
   00327d0  fmuls 1, 2, 1
   00327d4  vspltw 2, 2, 0
   00327d8  lhz 3, 516(22)
-  00327dc  <unknown>
+  00327dc  lvlx 4, 6, 4
   00327e0  extsh 3, 3
   00327e4  vmaddfp 2, 4, 2, 3
   00327e8  fctiwz 1, 1
@@ -8698,10 +8698,10 @@ Cam0_HandleRunningAtCam:   # 0x341f8, 0x1ec bytes
   00342c4  lis 9, 114
   00342c8  li 10, -3056
   00342cc  vslw 2, 2, 2
-  00342d0  <unknown>
+  00342d0  lvlx 3, 7, 3
   00342d4  li 7, 548
   00342d8  vspltw 3, 3, 0
-  00342dc  <unknown>
+  00342dc  lvlx 4, 10, 9
   00342e0  lfs 2, 392(8)
   00342e4  lis 9, 151
   00342e8  vmaddfp 2, 4, 3, 2

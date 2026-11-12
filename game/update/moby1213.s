@@ -719,12 +719,12 @@ UpdateMoby_1213:   # 0x206160, 0x7e8 bytes
   0206334  stb 27, 32(31)
   0206338  li 4, 116
   020633c  sth 3, 52(31)
-  0206340  <unknown>
+  0206340  lvlx 2, 0, 29
   0206344  addi 3, 4, 16
   0206348  vslw 3, 3, 3
   020634c  vcfsx 2, 2, 0
-  0206350  <unknown>
-  0206354  <unknown>
+  0206350  lvlx 4, 4, 30
+  0206354  lvrx 5, 3, 30
   0206358  li 3, 100
   020635c  vor 4, 4, 5
   0206360  vmaddfp 2, 4, 2, 3
@@ -769,9 +769,9 @@ UpdateMoby_1213:   # 0x206160, 0x7e8 bytes
   02063fc  li 7, -3052
   0206400  lfs 2, 26628(3)
   0206404  lwz 4, -25488(4)
-  0206408  <unknown>
+  0206408  lvlx 3, 5, 3
   020640c  vslw 2, 2, 2
-  0206410  <unknown>
+  0206410  lvlx 4, 7, 6
   0206414  cmpwi 7, 4, 10
   0206418  lfs 1, -3052(6)
   020641c  cmpwi 1, 4, 9
@@ -784,7 +784,7 @@ UpdateMoby_1213:   # 0x206160, 0x7e8 bytes
   0206438  addi 3, 3, 24864
   020643c  vslw 3, 3, 3
   0206440  lfs 1, 4(3)
-  0206444  <unknown>
+  0206444  lvlx 4, 4, 3
   0206448  fmuls 2, 2, 1
   020644c  vspltw 4, 4, 0
   0206450  vmaddfp 2, 2, 4, 3
@@ -794,16 +794,16 @@ UpdateMoby_1213:   # 0x206160, 0x7e8 bytes
   0206460  addi 4, 3, 16
   0206464  vspltw 9, 2, 0
   0206468  vspltisw 2, -1
-  020646c  <unknown>
+  020646c  lvlx 3, 3, 30
   0206470  lis 3, 32
   0206474  vslw 6, 6, 6
-  0206478  <unknown>
+  0206478  lvrx 4, 4, 30
   020647c  addi 3, 3, 24864
   0206480  vor 3, 3, 4
   0206484  vslw 10, 2, 2
   0206488  vspltisw 8, -1
   020648c  vrefp 4, 3
-  0206490  <unknown>
+  0206490  lvlx 5, 5, 3
   0206494  li 3, 100
   0206498  vspltw 5, 5, 0
   020649c  lfs 1, 112(30)
@@ -813,11 +813,11 @@ UpdateMoby_1213:   # 0x206160, 0x7e8 bytes
   02064ac  lfs 2, 100(30)
   02064b0  vnmsubfp 7, 4, 3, 5
   02064b4  vmaddfp 2, 4, 7, 6
-  02064b8  <unknown>
-  02064bc  <unknown>
+  02064b8  lvlx 4, 3, 30
+  02064bc  lvrx 6, 4, 30
   02064c0  vor 4, 4, 6
   02064c4  lwz 4, 0(29)
-  02064c8  <unknown>
+  02064c8  lvlx 7, 0, 29
   02064cc  extsw 4, 4
   02064d0  vnmsubfp 6, 2, 3, 5
   02064d4  vmaddfp 6, 2, 6, 8

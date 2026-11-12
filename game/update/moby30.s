@@ -171,14 +171,14 @@ UpdateMoby_30:   # 0x3371a0, 0xfb0 bytes
   033729c  lis 5, 51
   03372a0  addi 5, 5, 29008
   03372a4  vslw 4, 4, 4
-  03372a8  <unknown>
+  03372a8  lvlx 2, 4, 3
   03372ac  lis 3, 114
   03372b0  vcfsx 3, 2, 0
-  03372b4  <unknown>
+  03372b4  lvlx 2, 0, 5
   03372b8  li 4, -3056
   03372bc  vspltw 2, 2, 0
   03372c0  li 5, 0
-  03372c4  <unknown>
+  03372c4  lvlx 5, 4, 3
   03372c8  li 3, 118
   03372cc  lhz 4, 136(30)
   03372d0  cmpwi 4, 0
@@ -209,15 +209,15 @@ UpdateMoby_30:   # 0x3371a0, 0xfb0 bytes
   0337334  sth 3, 52(31)
   0337338  li 3, 148
   033733c  addi 4, 3, 16
-  0337340  <unknown>
+  0337340  lvlx 3, 3, 30
   0337344  lis 3, 114
-  0337348  <unknown>
+  0337348  lvrx 4, 4, 30
   033734c  li 4, -3056
   0337350  vor 3, 3, 4
   0337354  vspltisw 4, -1
   0337358  vcfsx 3, 3, 0
   033735c  vslw 4, 4, 4
-  0337360  <unknown>
+  0337360  lvlx 5, 4, 3
   0337364  li 3, 152
   0337368  vaddfp 2, 3, 2
   033736c  vmaddfp 2, 5, 2, 4
@@ -242,14 +242,14 @@ UpdateMoby_30:   # 0x3371a0, 0xfb0 bytes
   03373b8  vspltisw 5, -1
   03373bc  std 3, 432(1)
   03373c0  lis 3, 51
-  03373c4  <unknown>
+  03373c4  lvlx 2, 5, 4
   03373c8  addi 29, 3, 29008
   03373cc  lis 3, 114
   03373d0  vcfsx 2, 2, 0
   03373d4  li 4, -3056
-  03373d8  <unknown>
+  03373d8  lvlx 3, 0, 29
   03373dc  lfs 1, 0(29)
-  03373e0  <unknown>
+  03373e0  lvlx 4, 4, 3
   03373e4  lfd 2, 432(1)
   03373e8  vspltw 3, 3, 0
   03373ec  fcfid 2, 2
@@ -294,26 +294,26 @@ UpdateMoby_30:   # 0x3371a0, 0xfb0 bytes
   0337488  vspltisw 5, -1
   033748c  addi 4, 3, 16
   0337490  li 6, 2624
-  0337494  <unknown>
+  0337494  lvlx 2, 3, 30
   0337498  addi 3, 5, 16
-  033749c  <unknown>
-  03374a0  <unknown>
+  033749c  lvrx 3, 4, 30
+  03374a0  lvlx 4, 5, 30
   03374a4  vor 2, 2, 3
   03374a8  lis 5, 129
   03374ac  vspltisw 3, -16
   03374b0  vsraw 2, 2, 3
-  03374b4  <unknown>
+  03374b4  lvrx 3, 3, 30
   03374b8  li 3, 112
   03374bc  vor 3, 4, 3
   03374c0  vcfsx 2, 2, 0
   03374c4  vslw 4, 5, 5
   03374c8  addi 4, 3, 16
-  03374cc  <unknown>
+  03374cc  lvlx 5, 3, 30
   03374d0  li 3, 24
-  03374d4  <unknown>
+  03374d4  lvrx 6, 4, 30
   03374d8  vmaddfp 2, 2, 3, 4
   03374dc  vor 3, 5, 6
-  03374e0  <unknown>
+  03374e0  lvlx 4, 6, 5
   03374e4  lbz 4, 112(31)
   03374e8  rlwinm 4, 4, 0, 30, 30
   03374ec  cmpwi 4, 0
@@ -370,16 +370,16 @@ UpdateMoby_30:   # 0x3371a0, 0xfb0 bytes
   03375b8  lis 5, 51
   03375bc  addi 5, 5, 29008
   03375c0  vslw 4, 4, 4
-  03375c4  <unknown>
+  03375c4  lvlx 2, 4, 3
   03375c8  li 3, -3056
   03375cc  vcfsx 2, 2, 0
   03375d0  lis 4, 114
-  03375d4  <unknown>
+  03375d4  lvlx 3, 0, 5
   03375d8  li 6, 118
   03375dc  vspltw 3, 3, 0
   03375e0  li 7, 3
   03375e4  li 8, 8
-  03375e8  <unknown>
+  03375e8  lvlx 5, 3, 4
   03375ec  li 9, 116
   03375f0  li 10, 0
   03375f4  vaddfp 2, 2, 3
@@ -390,8 +390,8 @@ UpdateMoby_30:   # 0x3371a0, 0xfb0 bytes
   0337608  vsplth 2, 2, 1
   033760c  stvehx 2, 6, 30
   0337610  stb 7, 32(31)
-  0337614  <unknown>
-  0337618  <unknown>
+  0337614  lvlx 2, 8, 5
+  0337618  lvlx 4, 3, 4
   033761c  vspltw 2, 2, 0
   0337620  lfs 1, 112(30)
   0337624  vmaddfp 2, 4, 2, 3
@@ -431,10 +431,10 @@ UpdateMoby_30:   # 0x3371a0, 0xfb0 bytes
   03376ac  lis 4, 114
   03376b0  li 6, -3056
   03376b4  vslw 2, 2, 2
-  03376b8  <unknown>
+  03376b8  lvlx 3, 5, 3
   03376bc  vspltw 3, 3, 0
   03376c0  li 5, 20
-  03376c4  <unknown>
+  03376c4  lvlx 4, 6, 4
   03376c8  li 4, 116
   03376cc  vmaddfp 2, 4, 3, 2
   03376d0  vspltisw 3, -1
@@ -443,7 +443,7 @@ UpdateMoby_30:   # 0x3371a0, 0xfb0 bytes
   03376dc  vctsxs 2, 2, 0
   03376e0  vsplth 2, 2, 1
   03376e4  stvehx 2, 4, 30
-  03376e8  <unknown>
+  03376e8  lvlx 2, 5, 3
   03376ec  vspltw 2, 2, 0
   03376f0  vmaddfp 2, 4, 2, 3
   03376f4  vctsxs 2, 2, 0
@@ -906,15 +906,15 @@ UpdateMoby_30:   # 0x3371a0, 0xfb0 bytes
   0337e18  lis 5, 51
   0337e1c  addi 5, 5, 29008
   0337e20  vslw 4, 4, 4
-  0337e24  <unknown>
+  0337e24  lvlx 2, 4, 3
   0337e28  lis 3, 114
   0337e2c  vcfsx 2, 2, 0
   0337e30  li 4, -3056
-  0337e34  <unknown>
+  0337e34  lvlx 3, 0, 5
   0337e38  li 6, 118
   0337e3c  vspltw 3, 3, 0
   0337e40  li 7, 3
-  0337e44  <unknown>
+  0337e44  lvlx 5, 4, 3
   0337e48  li 5, 0
   0337e4c  ori 3, 31, 0
   0337e50  li 4, 2
@@ -934,35 +934,35 @@ UpdateMoby_30:   # 0x3371a0, 0xfb0 bytes
   0337e88  vspltisw 5, -1
   0337e8c  addi 4, 3, 16
   0337e90  li 6, 60
-  0337e94  <unknown>
+  0337e94  lvlx 2, 3, 30
   0337e98  addi 3, 5, 16
-  0337e9c  <unknown>
-  0337ea0  <unknown>
+  0337e9c  lvrx 3, 4, 30
+  0337ea0  lvlx 4, 5, 30
   0337ea4  vor 2, 2, 3
   0337ea8  li 4, 2624
   0337eac  vspltisw 3, -16
   0337eb0  lis 5, 51
   0337eb4  addi 5, 5, 29008
   0337eb8  vsraw 2, 2, 3
-  0337ebc  <unknown>
+  0337ebc  lvrx 3, 3, 30
   0337ec0  lis 3, 129
   0337ec4  vor 3, 4, 3
   0337ec8  vcfsx 2, 2, 0
   0337ecc  vslw 4, 5, 5
   0337ed0  vspltisw 5, -1
-  0337ed4  <unknown>
+  0337ed4  lvlx 6, 4, 3
   0337ed8  li 3, 112
   0337edc  vslw 5, 5, 5
   0337ee0  addi 4, 3, 16
   0337ee4  li 8, 72
   0337ee8  vmaddfp 2, 2, 3, 4
-  0337eec  <unknown>
+  0337eec  lvlx 3, 6, 5
   0337ef0  vspltw 3, 3, 0
   0337ef4  li 5, 140
   0337ef8  addi 7, 5, 16
   0337efc  vmaddfp 4, 6, 2, 5
-  0337f00  <unknown>
-  0337f04  <unknown>
+  0337f00  lvlx 5, 3, 30
+  0337f04  lvrx 7, 4, 30
   0337f08  li 3, 24
   0337f0c  li 4, 132
   0337f10  lbz 9, 112(31)
@@ -975,11 +975,11 @@ UpdateMoby_30:   # 0x3371a0, 0xfb0 bytes
   0337f2c  vsubfp 3, 5, 3
   0337f30  vspltw 3, 3, 0
   0337f34  stvewx 3, 3, 31
-  0337f38  <unknown>
-  0337f3c  <unknown>
-  0337f40  <unknown>
+  0337f38  lvlx 3, 4, 30
+  0337f3c  lvrx 4, 6, 30
+  0337f40  lvlx 5, 5, 30
   0337f44  vor 3, 3, 4
-  0337f48  <unknown>
+  0337f48  lvrx 4, 7, 30
   0337f4c  vor 4, 5, 4
   0337f50  vsubfp 4, 4, 3
   0337f54  vmaddfp 2, 4, 2, 3
@@ -1037,14 +1037,14 @@ UpdateMoby_30:   # 0x3371a0, 0xfb0 bytes
   0338024  stfs 1, 72(31)
   0338028  li 4, 148
   033802c  vslw 3, 3, 3
-  0338030  <unknown>
+  0338030  lvlx 2, 5, 3
   0338034  addi 5, 4, 16
   0338038  vspltw 2, 2, 0
-  033803c  <unknown>
+  033803c  lvlx 4, 6, 7
   0338040  li 6, 0
   0338044  vmaddfp 2, 4, 2, 3
-  0338048  <unknown>
-  033804c  <unknown>
+  0338048  lvlx 3, 4, 30
+  033804c  lvrx 5, 5, 30
   0338050  li 4, 116
   0338054  vor 3, 3, 5
   0338058  vspltisw 5, -1
@@ -1054,7 +1054,7 @@ UpdateMoby_30:   # 0x3371a0, 0xfb0 bytes
   0338068  vsplth 2, 2, 1
   033806c  stvehx 2, 4, 30
   0338070  sth 6, 136(30)
-  0338074  <unknown>
+  0338074  lvlx 2, 0, 3
   0338078  lis 4, 129
   033807c  vspltw 2, 2, 0
   0338080  li 3, 152

@@ -1524,7 +1524,7 @@ MB_StartAnimLayer:   # 0xf0dd8, 0xd0 bytes
   00f0e34  stb 5, 35(9)
   00f0e38  stb 6, 33(9)
   00f0e3c  stw 11, 40(9)
-  00f0e40  <unknown>
+  00f0e40  lvlx 4, 0, 4
   00f0e44  vspltw 4, 4, 0
   00f0e48  vslw 6, 6, 6
   00f0e4c  vrefp 5, 3

@@ -77,7 +77,7 @@ UpdateMoby_658:   # 0x407868, 0x684 bytes
   040798c  stfs 1, 28(30)
   0407990  stb 4, 46(30)
   0407994  lwz 3, 32(30)
-  0407998  <unknown>
+  0407998  lvlx 3, 5, 30
   040799c  cmpwi 3, -1
   04079a0  vsrw 2, 3, 2
   04079a4  bt 2, 0x4079bc
@@ -93,8 +93,8 @@ UpdateMoby_658:   # 0x407868, 0x684 bytes
   04079cc  addi 3, 3, 30800
   04079d0  li 5, -3056
   04079d4  vslw 3, 3, 3
-  04079d8  <unknown>
-  04079dc  <unknown>
+  04079d8  lvlx 4, 0, 3
+  04079dc  lvlx 5, 5, 4
   04079e0  vspltw 4, 4, 0
   04079e4  li 3, 48
   04079e8  li 4, 0

@@ -541,8 +541,8 @@ Cam22_ModifyFollowCam:   # 0x44598, 0x3fc bytes
   00446d0  lfs 2, 4(22)
   00446d4  lwz 30, 116(1)
   00446d8  fmuls 2, 1, 2
-  00446dc  <unknown>
-  00446e0  <unknown>
+  00446dc  lvlx 2, 0, 22
+  00446e0  lvlx 4, 4, 5
   00446e4  vspltw 2, 2, 0
   00446e8  li 4, 12
   00446ec  vmaddfp 29, 4, 2, 3
@@ -554,7 +554,7 @@ Cam22_ModifyFollowCam:   # 0x44598, 0x3fc bytes
   0044704  lfs 2, 8(22)
   0044708  lwz 23, 116(1)
   004470c  fmuls 2, 1, 2
-  0044710  <unknown>
+  0044710  lvlx 6, 3, 22
   0044714  vspltw 6, 6, 0
   0044718  vmaddfp 30, 4, 6, 2
   004471c  vslw 2, 3, 3
@@ -562,7 +562,7 @@ Cam22_ModifyFollowCam:   # 0x44598, 0x3fc bytes
   0044724  vctsxs 30, 30, 0
   0044728  stfd 2, 112(1)
   004472c  lfs 2, 12(22)
-  0044730  <unknown>
+  0044730  lvlx 3, 4, 22
   0044734  fmuls 1, 1, 2
   0044738  vspltw 3, 3, 0
   004473c  lwz 25, 116(1)

@@ -74,8 +74,8 @@ UpdateMoby_705:   # 0x429d80, 0x1f0 bytes
   0429e98  li 6, -3056
   0429e9c  vslw 2, 2, 2
   0429ea0  stfs 1, 4(30)
-  0429ea4  <unknown>
-  0429ea8  <unknown>
+  0429ea4  lvlx 3, 4, 3
+  0429ea8  lvlx 4, 6, 5
   0429eac  li 3, 8
   0429eb0  vspltw 3, 3, 0
   0429eb4  vmaddfp 2, 4, 3, 2

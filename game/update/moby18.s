@@ -75,7 +75,7 @@ M18_002b9d00:   # 0x2b9d00, 0x314 bytes
   02b9e1c  fmadds 7, 6, 6, 7
   02b9e20  stfs 2, 120(1)
   02b9e24  lfs 27, 16(4)
-  02b9e28  <unknown>
+  02b9e28  lvlx 31, 5, 4
   02b9e2c  lfs 28, 20(4)
   02b9e30  fsqrts 7, 7
   02b9e34  vspltw 31, 31, 0
@@ -118,7 +118,7 @@ M18_002b9d00:   # 0x2b9d00, 0x314 bytes
   02b9ec8  lwz 3, 48(30)
   02b9ecc  cmpwi 6, 0
   02b9ed0  lfs 1, -3056(4)
-  02b9ed4  <unknown>
+  02b9ed4  lvlx 2, 5, 4
   02b9ed8  bt 2, 0x2b9f04
   02b9edc  vspltisw 3, -1
   02b9ee0  fmuls 2, 1, 28
@@ -238,12 +238,12 @@ M18_002ba020:   # 0x2ba020, 0x120 bytes
   02ba0ac  li 8, 8
   02ba0b0  stw 3, 44(31)
   02ba0b4  li 9, 4
-  02ba0b8  <unknown>
-  02ba0bc  <unknown>
+  02ba0b8  lvlx 6, 0, 4
+  02ba0bc  lvlx 5, 5, 7
   02ba0c0  addic 3, 31, 48
-  02ba0c4  <unknown>
+  02ba0c4  lvlx 3, 6, 4
   02ba0c8  mtctr 9
-  02ba0cc  <unknown>
+  02ba0cc  lvlx 2, 8, 4
   02ba0d0  vspltw 6, 6, 0
   02ba0d4  vspltw 3, 3, 0
   02ba0d8  vspltw 2, 2, 0

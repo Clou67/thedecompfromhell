@@ -657,10 +657,10 @@ M169_002a1698:   # 0x2a1698, 0x370 bytes
   02a1844  lis 5, 114
   02a1848  li 6, -3056
   02a184c  vslw 2, 2, 2
-  02a1850  <unknown>
+  02a1850  lvlx 3, 4, 3
   02a1854  li 8, 52
   02a1858  vspltw 3, 3, 0
-  02a185c  <unknown>
+  02a185c  lvlx 4, 6, 5
   02a1860  lwz 9, 8320(29)
   02a1864  addic 3, 1, 112
   02a1868  vmaddfp 2, 4, 3, 2

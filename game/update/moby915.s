@@ -160,10 +160,10 @@ M917_004afc18:   # 0x4afc18, 0x390 bytes
   04afe6c  stb 4, 32(31)
   04afe70  li 4, -3056
   04afe74  vslw 2, 2, 2
-  04afe78  <unknown>
+  04afe78  lvlx 3, 3, 28
   04afe7c  lis 3, 16256
   04afe80  vspltw 3, 3, 0
-  04afe84  <unknown>
+  04afe84  lvlx 4, 4, 5
   04afe88  li 4, 376
   04afe8c  vspltisw 5, -1
   04afe90  stw 3, 124(1)
@@ -181,12 +181,12 @@ M917_004afc18:   # 0x4afc18, 0x390 bytes
   04afec0  vspltisw 9, -1
   04afec4  vspltw 2, 2, 0
   04afec8  stvewx 2, 4, 29
-  04afecc  <unknown>
+  04afecc  lvlx 2, 3, 28
   04afed0  vspltw 2, 2, 0
   04afed4  ori 3, 31, 0
   04afed8  vmaddfp 2, 4, 2, 3
   04afedc  vslw 4, 5, 5
-  04afee0  <unknown>
+  04afee0  lvlx 3, 5, 28
   04afee4  vspltw 3, 3, 0
   04afee8  li 4, 8
   04afeec  li 5, 4

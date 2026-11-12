@@ -264,8 +264,8 @@ FUN_0038a248:   # 0x38a248, 0x38c bytes
   038a4d0  li 3, 4
   038a4d4  vspltisw 2, -16
   038a4d8  addi 4, 3, 16
-  038a4dc  <unknown>
-  038a4e0  <unknown>
+  038a4dc  lvlx 3, 3, 25
+  038a4e0  lvrx 4, 4, 25
   038a4e4  vor 3, 3, 4
   038a4e8  vsraw 2, 3, 2
   038a4ec  vcfsx 2, 2, 0
@@ -1423,17 +1423,17 @@ UpdateMoby_455:   # 0x38a628, 0x11d8 bytes
   038b738  li 3, 138
   038b73c  li 5, 36
   038b740  addi 4, 3, 16
-  038b744  <unknown>
+  038b744  lvlx 2, 3, 30
   038b748  lis 3, 114
-  038b74c  <unknown>
-  038b750  <unknown>
+  038b74c  lvrx 3, 4, 30
+  038b750  lvlx 4, 5, 23
   038b754  vor 2, 2, 3
   038b758  li 4, -3056
   038b75c  vspltisw 3, -16
   038b760  vsraw 2, 2, 3
   038b764  vspltw 3, 4, 0
   038b768  vspltisw 4, -1
-  038b76c  <unknown>
+  038b76c  lvlx 5, 4, 3
   038b770  vcfsx 2, 2, 0
   038b774  li 3, 136
   038b778  vslw 4, 4, 4

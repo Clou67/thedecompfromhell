@@ -1304,11 +1304,11 @@ M267_0031eca8:   # 0x31eca8, 0xf10 bytes
   031f35c  lfs 2, 60(3)
   031f360  lfs 3, 64(3)
   031f364  fsubs 1, 2, 1
-  031f368  <unknown>
+  031f368  lvlx 3, 5, 27
   031f36c  li 5, 360
   031f370  fmuls 1, 1, 3
   031f374  stfs 1, 352(28)
-  031f378  <unknown>
+  031f378  lvlx 4, 4, 3
   031f37c  vspltw 4, 4, 0
   031f380  vmaddfp 2, 3, 4, 2
   031f384  vctsxs 2, 2, 0
@@ -1594,11 +1594,11 @@ M267_0031eca8:   # 0x31eca8, 0xf10 bytes
   031f7e4  lfs 2, 60(3)
   031f7e8  lfs 3, 64(3)
   031f7ec  fsubs 1, 2, 1
-  031f7f0  <unknown>
+  031f7f0  lvlx 3, 5, 27
   031f7f4  li 5, 360
   031f7f8  fmuls 1, 1, 3
   031f7fc  stfs 1, 352(28)
-  031f800  <unknown>
+  031f800  lvlx 4, 4, 3
   031f804  vspltw 4, 4, 0
   031f808  vmaddfp 2, 3, 4, 2
   031f80c  vctsxs 2, 2, 0
@@ -1901,7 +1901,7 @@ UpdateMoby_263:   # 0x31fbe0, 0x990 bytes
   031fcd0  vsldoi 5, 3, 3, 0
   031fcd4  lwzx 28, 28, 3
   031fcd8  lwz 3, 0(28)
-  031fcdc  <unknown>
+  031fcdc  lvlx 4, 0, 28
   031fce0  cmpwi 3, 0
   031fce4  bf 1, 0x31fd88
   031fce8  vspltisw 5, 0
@@ -1914,7 +1914,7 @@ UpdateMoby_263:   # 0x31fbe0, 0x990 bytes
   031fd04  li 4, 52
   031fd08  li 5, 56
   031fd0c  vsldoi 2, 3, 3, 0
-  031fd10  <unknown>
+  031fd10  lvlx 4, 0, 6
   031fd14  vspltw 7, 3, 0
   031fd18  vaddfp 6, 5, 4
   031fd1c  vspltw 5, 5, 0
@@ -1926,13 +1926,13 @@ UpdateMoby_263:   # 0x31fbe0, 0x990 bytes
   031fd34  addic 6, 6, 16
   031fd38  vspltw 4, 6, 0
   031fd3c  stvewx 4, 3, 29
-  031fd40  <unknown>
+  031fd40  lvlx 4, 0, 7
   031fd44  vaddfp 3, 3, 4
   031fd48  ori 7, 10, 0
   031fd4c  vaddfp 4, 7, 4
   031fd50  vspltw 3, 3, 0
   031fd54  stvewx 3, 4, 29
-  031fd58  <unknown>
+  031fd58  lvlx 3, 0, 8
   031fd5c  ori 8, 11, 0
   031fd60  vaddfp 2, 2, 3
   031fd64  vaddfp 6, 8, 3
@@ -1941,7 +1941,7 @@ UpdateMoby_263:   # 0x31fbe0, 0x990 bytes
   031fd70  vsldoi 2, 6, 6, 0
   031fd74  stvewx 4, 5, 29
   031fd78  lwz 10, 0(28)
-  031fd7c  <unknown>
+  031fd7c  lvlx 4, 0, 28
   031fd80  cmpw 9, 10
   031fd84  bt 0, 0x31fd10
   031fd88  vspltw 4, 4, 0
@@ -1953,7 +1953,7 @@ UpdateMoby_263:   # 0x31fbe0, 0x990 bytes
   031fda0  vspltisw 9, -1
   031fda4  vslw 6, 6, 6
   031fda8  vspltisw 11, -1
-  031fdac  <unknown>
+  031fdac  lvlx 7, 4, 3
   031fdb0  vspltw 7, 7, 0
   031fdb4  vslw 9, 9, 9
   031fdb8  li 4, 48

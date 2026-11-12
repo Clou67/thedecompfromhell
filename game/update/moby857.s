@@ -2636,21 +2636,21 @@ M857_004928e0:   # 0x4928e0, 0x3ec bytes
   0492b38  lis 4, 114
   0492b3c  li 6, -3056
   0492b40  vslw 2, 2, 2
-  0492b44  <unknown>
+  0492b44  lvlx 3, 5, 3
   0492b48  vspltw 3, 3, 0
-  0492b4c  <unknown>
+  0492b4c  lvlx 4, 6, 4
   0492b50  vmaddfp 2, 4, 3, 2
   0492b54  vspltisw 3, -16
   0492b58  vspltisw 4, 0
   0492b5c  li 4, 16
   0492b60  li 6, 0
-  0492b64  <unknown>
+  0492b64  lvlx 5, 4, 3
   0492b68  vspltw 5, 5, 0
   0492b6c  vctsxs 2, 2, 0
   0492b70  li 4, 12
   0492b74  li 28, 9
   0492b78  addic 27, 29, 128
-  0492b7c  <unknown>
+  0492b7c  lvlx 9, 4, 3
   0492b80  li 4, 144
   0492b84  vspltw 9, 9, 0
   0492b88  vrlw 6, 2, 3

@@ -38,12 +38,12 @@ FUN_0036a1d0:   # 0x36a1d0, 0x2e8 bytes
   036a23c  stb 4, 49(31)
   036a240  stb 4, 32(31)
   036a244  stw 28, 32(7)
-  036a248  <unknown>
+  036a248  lvlx 2, 0, 27
   036a24c  vslw 3, 3, 3
   036a250  li 3, 16
   036a254  vspltw 2, 2, 0
   036a258  li 4, 0
-  036a25c  <unknown>
+  036a25c  lvlx 4, 5, 6
   036a260  lis 5, 16256
   036a264  vmaddfp 2, 4, 2, 3
   036a268  vctsxs 2, 2, 0

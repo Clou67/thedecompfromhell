@@ -737,10 +737,10 @@ M574_003c2a58:   # 0x3c2a58, 0xc2c bytes
   03c2ab8  stw 4, 56(30)
   03c2abc  li 4, -3056
   03c2ac0  vslw 2, 2, 2
-  03c2ac4  <unknown>
+  03c2ac4  lvlx 3, 5, 3
   03c2ac8  li 3, 594
   03c2acc  vspltw 3, 3, 0
-  03c2ad0  <unknown>
+  03c2ad0  lvlx 4, 4, 6
   03c2ad4  vmaddfp 2, 4, 3, 2
   03c2ad8  vctsxs 2, 2, 0
   03c2adc  vsplth 2, 2, 1

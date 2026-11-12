@@ -1219,10 +1219,10 @@ UpdateMoby_554:   # 0x3b3248, 0x11c bytes
   03b32cc  lis 5, 114
   03b32d0  li 6, -3056
   03b32d4  vslw 2, 2, 2
-  03b32d8  <unknown>
+  03b32d8  lvlx 3, 4, 3
   03b32dc  li 4, 4
   03b32e0  vspltw 3, 3, 0
-  03b32e4  <unknown>
+  03b32e4  lvlx 4, 6, 5
   03b32e8  lwz 3, 0(30)
   03b32ec  lis 5, 165
   03b32f0  vmaddfp 2, 4, 3, 2

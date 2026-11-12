@@ -1732,8 +1732,8 @@ UpdateMoby_340:   # 0x34b2e8, 0x2434 bytes
   034c1a0  vspltisw 2, -1
   034c1a4  li 4, -3056
   034c1a8  vslw 2, 2, 2
-  034c1ac  <unknown>
-  034c1b0  <unknown>
+  034c1ac  lvlx 3, 3, 27
+  034c1b0  lvlx 4, 4, 25
   034c1b4  vspltw 3, 3, 0
   034c1b8  li 3, 326
   034c1bc  vmaddfp 2, 4, 3, 2
@@ -1779,11 +1779,11 @@ UpdateMoby_340:   # 0x34b2e8, 0x2434 bytes
   034c25c  li 3, 76
   034c260  vspltisw 2, -1
   034c264  li 4, -3056
-  034c268  <unknown>
+  034c268  lvlx 3, 3, 27
   034c26c  vslw 2, 2, 2
   034c270  vspltw 3, 3, 0
   034c274  li 3, 326
-  034c278  <unknown>
+  034c278  lvlx 4, 4, 29
   034c27c  li 4, 7
   034c280  vmaddfp 2, 4, 3, 2
   034c284  vctsxs 2, 2, 0
@@ -1989,8 +1989,8 @@ UpdateMoby_340:   # 0x34b2e8, 0x2434 bytes
   034c5a4  vspltisw 2, -1
   034c5a8  li 4, -3056
   034c5ac  vslw 2, 2, 2
-  034c5b0  <unknown>
-  034c5b4  <unknown>
+  034c5b0  lvlx 3, 3, 27
+  034c5b4  lvlx 4, 4, 25
   034c5b8  vspltw 3, 3, 0
   034c5bc  li 3, 326
   034c5c0  vmaddfp 2, 4, 3, 2
@@ -2036,11 +2036,11 @@ UpdateMoby_340:   # 0x34b2e8, 0x2434 bytes
   034c660  li 3, 76
   034c664  vspltisw 2, -1
   034c668  li 4, -3056
-  034c66c  <unknown>
+  034c66c  lvlx 3, 3, 27
   034c670  vslw 2, 2, 2
   034c674  vspltw 3, 3, 0
   034c678  li 3, 326
-  034c67c  <unknown>
+  034c67c  lvlx 4, 4, 29
   034c680  li 4, 7
   034c684  vmaddfp 2, 4, 3, 2
   034c688  vctsxs 2, 2, 0
@@ -2303,10 +2303,10 @@ UpdateMoby_340:   # 0x34b2e8, 0x2434 bytes
   034ca8c  stb 4, 32(31)
   034ca90  li 4, -3056
   034ca94  vslw 2, 2, 2
-  034ca98  <unknown>
+  034ca98  lvlx 3, 6, 3
   034ca9c  li 3, 326
   034caa0  vspltw 3, 3, 0
-  034caa4  <unknown>
+  034caa4  lvlx 4, 4, 5
   034caa8  vmaddfp 2, 4, 3, 2
   034caac  vctsxs 2, 2, 0
   034cab0  vsplth 2, 2, 1
@@ -2355,11 +2355,11 @@ UpdateMoby_340:   # 0x34b2e8, 0x2434 bytes
   034cb5c  li 3, 96
   034cb60  vspltisw 2, -1
   034cb64  li 4, -3056
-  034cb68  <unknown>
+  034cb68  lvlx 3, 3, 28
   034cb6c  vslw 2, 2, 2
   034cb70  vspltw 3, 3, 0
   034cb74  li 3, 326
-  034cb78  <unknown>
+  034cb78  lvlx 4, 4, 29
   034cb7c  li 4, 1
   034cb80  vmaddfp 2, 4, 3, 2
   034cb84  vctsxs 2, 2, 0
@@ -2787,11 +2787,11 @@ UpdateMoby_340:   # 0x34b2e8, 0x2434 bytes
   034d21c  li 3, 140
   034d220  vspltisw 2, -1
   034d224  li 4, -3056
-  034d228  <unknown>
+  034d228  lvlx 3, 3, 27
   034d22c  vslw 2, 2, 2
   034d230  vspltw 3, 3, 0
   034d234  li 3, 324
-  034d238  <unknown>
+  034d238  lvlx 4, 4, 28
   034d23c  vmaddfp 2, 4, 3, 2
   034d240  vctsxs 2, 2, 0
   034d244  vsplth 2, 2, 1

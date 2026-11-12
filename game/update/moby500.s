@@ -1345,10 +1345,10 @@ M511_003a5468:   # 0x3a5468, 0xf14 bytes
   03a5e04  lis 30, 114
   03a5e08  li 7, -3056
   03a5e0c  sth 3, 52(31)
-  03a5e10  <unknown>
+  03a5e10  lvlx 3, 6, 4
   03a5e14  li 3, 188
   03a5e18  vspltw 3, 3, 0
-  03a5e1c  <unknown>
+  03a5e1c  lvlx 4, 7, 30
   03a5e20  cmpwi 5, 0
   03a5e24  lfs 30, 84(4)
   03a5e28  vmaddfp 2, 4, 3, 2
@@ -1368,8 +1368,8 @@ M511_003a5468:   # 0x3a5468, 0xf14 bytes
   03a5e60  addi 3, 3, 21468
   03a5e64  li 5, 88
   03a5e68  vslw 2, 2, 2
-  03a5e6c  <unknown>
-  03a5e70  <unknown>
+  03a5e6c  lvlx 3, 4, 30
+  03a5e70  lvlx 4, 5, 3
   03a5e74  vspltw 4, 4, 0
   03a5e78  vmaddfp 2, 3, 4, 2
   03a5e7c  vctsxs 2, 2, 0
@@ -2974,10 +2974,10 @@ UpdateMoby_500:   # 0x3a7360, 0xd00 bytes
   03a77d0  stb 4, 32(31)
   03a77d4  li 4, -3056
   03a77d8  vslw 2, 2, 2
-  03a77dc  <unknown>
+  03a77dc  lvlx 3, 5, 3
   03a77e0  li 3, 188
   03a77e4  vspltw 3, 3, 0
-  03a77e8  <unknown>
+  03a77e8  lvlx 4, 4, 6
   03a77ec  vmaddfp 2, 4, 3, 2
   03a77f0  vctsxs 2, 2, 0
   03a77f4  vspltb 2, 2, 3
@@ -3212,7 +3212,7 @@ UpdateMoby_500:   # 0x3a7360, 0xd00 bytes
   03a7b88  ori 5, 4, 0
   03a7b8c  lis 10, 115
   03a7b90  lis 11, 151
-  03a7b94  <unknown>
+  03a7b94  lvlx 3, 8, 9
   03a7b98  ori 3, 5, 0
   03a7b9c  addic 7, 7, -16064
   03a7ba0  addic 8, 10, 32062
@@ -3227,9 +3227,9 @@ UpdateMoby_500:   # 0x3a7360, 0xd00 bytes
   03a7bc4  addc 10, 10, 11
   03a7bc8  extsw 10, 10
   03a7bcc  addi 11, 10, 16
-  03a7bd0  <unknown>
+  03a7bd0  lvlx 2, 10, 8
   03a7bd4  lhzx 10, 8, 10
-  03a7bd8  <unknown>
+  03a7bd8  lvrx 5, 11, 8
   03a7bdc  cmpwi 10, 0
   03a7be0  vor 2, 2, 5
   03a7be4  vsrw 2, 2, 4
@@ -3240,8 +3240,8 @@ UpdateMoby_500:   # 0x3a7360, 0xd00 bytes
   03a7bf8  extsw 10, 10
   03a7bfc  addi 11, 10, 16
   03a7c00  vslw 5, 5, 5
-  03a7c04  <unknown>
-  03a7c08  <unknown>
+  03a7c04  lvlx 6, 10, 9
+  03a7c08  lvrx 7, 11, 9
   03a7c0c  vor 6, 6, 7
   03a7c10  vmaddfp 2, 2, 3, 5
   03a7c14  vcfsx 5, 6, 0
@@ -3360,9 +3360,9 @@ UpdateMoby_500:   # 0x3a7360, 0xd00 bytes
   03a7dd8  lis 5, 114
   03a7ddc  li 6, -3056
   03a7de0  vslw 2, 2, 2
-  03a7de4  <unknown>
+  03a7de4  lvlx 3, 4, 3
   03a7de8  vspltw 3, 3, 0
-  03a7dec  <unknown>
+  03a7dec  lvlx 4, 6, 5
   03a7df0  vspltisw 7, 1
   03a7df4  li 3, 188
   03a7df8  vmaddfp 2, 4, 3, 2

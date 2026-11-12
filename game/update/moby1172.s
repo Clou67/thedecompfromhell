@@ -125,8 +125,8 @@ M1172_001ed1f0:   # 0x1ed1f0, 0x23c bytes
   01ed3b8  vslw 2, 2, 2
   01ed3bc  stfs 1, 0(29)
   01ed3c0  stb 4, 103(31)
-  01ed3c4  <unknown>
-  01ed3c8  <unknown>
+  01ed3c4  lvlx 3, 0, 3
+  01ed3c8  lvlx 4, 6, 5
   01ed3cc  vspltw 3, 3, 0
   01ed3d0  li 5, 38
   01ed3d4  addic 4, 31, 96
@@ -241,8 +241,8 @@ UpdateMoby_1172:   # 0x1ed448, 0x33c bytes
   01ed59c  addi 3, 3, -11220
   01ed5a0  li 5, -3056
   01ed5a4  vslw 2, 2, 2
-  01ed5a8  <unknown>
-  01ed5ac  <unknown>
+  01ed5a8  lvlx 3, 0, 3
+  01ed5ac  lvlx 4, 5, 4
   01ed5b0  vspltw 3, 3, 0
   01ed5b4  li 3, 116
   01ed5b8  lwz 4, 124(30)

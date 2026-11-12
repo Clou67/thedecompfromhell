@@ -586,10 +586,10 @@ UpdateMoby_679:   # 0x40fb18, 0x9ec bytes
   0410414  stfs 2, 340(27)
   0410418  lfs 1, 60(4)
   041041c  lfs 2, -3056(5)
-  0410420  <unknown>
+  0410420  lvlx 3, 6, 4
   0410424  fmuls 1, 2, 1
   0410428  vspltw 3, 3, 0
-  041042c  <unknown>
+  041042c  lvlx 4, 7, 5
   0410430  vmaddfp 2, 4, 3, 2
   0410434  fctiwz 1, 1
   0410438  vctsxs 2, 2, 0

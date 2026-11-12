@@ -60,9 +60,9 @@ M1633_002a5158:   # 0x2a5158, 0x168 bytes
   02a5238  stw 6, 4(9)
   02a523c  stfs 28, 8(9)
   02a5240  stfs 29, 12(9)
-  02a5244  <unknown>
+  02a5244  lvlx 3, 0, 10
   02a5248  li 4, 20
-  02a524c  <unknown>
+  02a524c  lvlx 4, 5, 11
   02a5250  vspltw 3, 3, 0
   02a5254  li 5, 22
   02a5258  li 6, 64
@@ -337,11 +337,11 @@ UpdateMoby_1633:   # 0x2a52f8, 0x478 bytes
   02a56bc  vslw 3, 3, 3
   02a56c0  lfs 1, 48(3)
   02a56c4  lfs 2, -3056(4)
-  02a56c8  <unknown>
+  02a56c8  lvlx 2, 5, 3
   02a56cc  fmuls 1, 2, 1
   02a56d0  vspltw 2, 2, 0
   02a56d4  lhz 3, 20(30)
-  02a56d8  <unknown>
+  02a56d8  lvlx 4, 6, 4
   02a56dc  extsh 3, 3
   02a56e0  vmaddfp 2, 4, 2, 3
   02a56e4  fctiwz 1, 1

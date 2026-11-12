@@ -676,12 +676,12 @@ UpdateMoby_632:   # 0x3f25b8, 0xca8 bytes
   03f301c  vspltisw 7, -16
   03f3020  li 5, 166
   03f3024  vslw 5, 2, 2
-  03f3028  <unknown>
+  03f3028  lvlx 3, 3, 1
   03f302c  fmadds 1, 2, 2, 1
   03f3030  vmaddfp 5, 3, 3, 5
   03f3034  vspltisw 2, 0
-  03f3038  <unknown>
-  03f303c  <unknown>
+  03f3038  lvlx 4, 4, 1
+  03f303c  lvlx 8, 5, 31
   03f3040  lwz 29, 24(29)
   03f3044  vsldoi 6, 2, 2, 0
   03f3048  vsrw 7, 8, 7
@@ -700,8 +700,8 @@ UpdateMoby_632:   # 0x3f25b8, 0xca8 bytes
   03f307c  vslw 6, 6, 6
   03f3080  vslw 8, 8, 8
   03f3084  vslw 11, 11, 11
-  03f3088  <unknown>
-  03f308c  <unknown>
+  03f3088  lvlx 9, 4, 3
+  03f308c  lvlx 10, 5, 3
   03f3090  vspltw 9, 9, 0
   03f3094  vspltw 10, 10, 0
   03f3098  vspltisw 12, -1
@@ -757,7 +757,7 @@ UpdateMoby_632:   # 0x3f25b8, 0xca8 bytes
   03f3160  li 5, 96
   03f3164  lvx 3, 3, 6
   03f3168  li 3, 128
-  03f316c  <unknown>
+  03f316c  lvlx 5, 7, 6
   03f3170  vperm 2, 6, 2, 3
   03f3174  li 7, 144
   03f3178  lvx 8, 4, 6

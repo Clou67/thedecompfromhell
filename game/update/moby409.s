@@ -277,8 +277,8 @@ M409_0001f240:   # 0x1f240, 0x4b4 bytes
   001f668  li 7, -3056
   001f66c  vslw 3, 3, 3
   001f670  stfs 1, 68(28)
-  001f674  <unknown>
-  001f678  <unknown>
+  001f674  lvlx 4, 5, 3
+  001f678  lvlx 5, 7, 6
   001f67c  vspltw 4, 4, 0
   001f680  li 5, 20
   001f684  li 6, 0
@@ -640,20 +640,20 @@ UpdateMoby_409:   # 0x1f7a8, 0x8a8 bytes
   001fcc0  li 23, 80
   001fcc4  fsel 1, 4, 3, 1
   001fcc8  lfs 3, 40(3)
-  001fccc  <unknown>
+  001fccc  lvlx 2, 4, 3
   001fcd0  li 4, 32
   001fcd4  lfs 6, 44(3)
-  001fcd8  <unknown>
+  001fcd8  lvlx 3, 5, 3
   001fcdc  li 5, 40
   001fce0  vspltw 2, 2, 0
   001fce4  vspltw 3, 3, 0
-  001fce8  <unknown>
+  001fce8  lvlx 4, 4, 3
   001fcec  fmuls 4, 1, 1
   001fcf0  li 4, 44
-  001fcf4  <unknown>
-  001fcf8  <unknown>
+  001fcf4  lvlx 5, 6, 3
+  001fcf8  lvlx 6, 5, 3
   001fcfc  vspltw 4, 4, 0
-  001fd00  <unknown>
+  001fd00  lvlx 7, 4, 3
   001fd04  addi 4, 7, 16
   001fd08  fmuls 7, 4, 1
   001fd0c  vspltw 5, 5, 0
@@ -670,8 +670,8 @@ UpdateMoby_409:   # 0x1f7a8, 0x8a8 bytes
   001fd38  fmadds 1, 5, 3, 1
   001fd3c  fmadds 1, 2, 6, 1
   001fd40  stfs 1, 256(1)
-  001fd44  <unknown>
-  001fd48  <unknown>
+  001fd44  lvlx 9, 7, 30
+  001fd48  lvrx 10, 4, 30
   001fd4c  vor 9, 9, 10
   001fd50  vspltisw 10, -1
   001fd54  li 4, 166
@@ -684,7 +684,7 @@ UpdateMoby_409:   # 0x1f7a8, 0x8a8 bytes
   001fd70  vspltisw 12, -1
   001fd74  vcmpgtfp 9, 2, 3
   001fd78  vsel 2, 3, 2, 9
-  001fd7c  <unknown>
+  001fd7c  lvlx 9, 4, 31
   001fd80  vmaddfp 3, 2, 2, 8
   001fd84  vslw 8, 11, 11
   001fd88  vspltisw 11, -16
@@ -715,7 +715,7 @@ UpdateMoby_409:   # 0x1f7a8, 0x8a8 bytes
   001fdec  stvehx 8, 9, 1
   001fdf0  lvx 4, 10, 3
   001fdf4  lvx 6, 11, 3
-  001fdf8  <unknown>
+  001fdf8  lvlx 7, 29, 3
   001fdfc  vperm 2, 2, 4, 6
   001fe00  vspltw 4, 7, 0
   001fe04  lvx 6, 26, 3
@@ -829,10 +829,10 @@ UpdateMoby_409:   # 0x1f7a8, 0x8a8 bytes
   001ffb4  li 6, -3056
   001ffb8  vslw 2, 2, 2
   001ffbc  stw 3, 352(30)
-  001ffc0  <unknown>
+  001ffc0  lvlx 3, 5, 29
   001ffc4  li 3, 360
   001ffc8  vspltw 3, 3, 0
-  001ffcc  <unknown>
+  001ffcc  lvlx 4, 6, 4
   001ffd0  vmaddfp 2, 4, 3, 2
   001ffd4  vctsxs 2, 2, 0
   001ffd8  vspltw 2, 2, 0

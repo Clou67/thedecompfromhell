@@ -1386,8 +1386,8 @@ M829_0047df40:   # 0x47df40, 0x178 bytes
   047e02c  stw 10, 48(7)
   047e030  stb 5, 40(7)
   047e034  stb 4, 41(7)
-  047e038  <unknown>
-  047e03c  <unknown>
+  047e038  lvlx 2, 8, 6
+  047e03c  lvlx 4, 3, 11
   047e040  vspltw 2, 2, 0
   047e044  li 3, 112
   047e048  vmaddfp 2, 4, 2, 3

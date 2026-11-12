@@ -109,10 +109,10 @@ UpdateMoby_875:   # 0x49e5d0, 0x48c bytes
   049e774  li 6, -3056
   049e778  stfs 1, 172(30)
   049e77c  vslw 3, 3, 3
-  049e780  <unknown>
+  049e780  lvlx 2, 5, 3
   049e784  li 3, 160
   049e788  vspltw 2, 2, 0
-  049e78c  <unknown>
+  049e78c  lvlx 4, 6, 4
   049e790  vmaddfp 2, 4, 2, 3
   049e794  vctsxs 2, 2, 0
   049e798  vsplth 2, 2, 1

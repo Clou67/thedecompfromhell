@@ -888,9 +888,9 @@ FUN_002e74a8:   # 0x2e74a8, 0x71c bytes
   02e7700  li 9, -3056
   02e7704  stb 7, 32(30)
   02e7708  li 4, 68
-  02e770c  <unknown>
+  02e770c  lvlx 2, 5, 6
   02e7710  vspltw 2, 2, 0
-  02e7714  <unknown>
+  02e7714  lvlx 4, 9, 8
   02e7718  lfs 1, 72(30)
   02e771c  vmaddfp 2, 4, 2, 3
   02e7720  vctsxs 2, 2, 0
@@ -1534,10 +1534,10 @@ M1900_002e7c08:   # 0x2e7c08, 0xa84 bytes
   02e8154  lis 4, 114
   02e8158  li 5, -3056
   02e815c  vslw 2, 2, 2
-  02e8160  <unknown>
+  02e8160  lvlx 3, 3, 26
   02e8164  li 3, 192
   02e8168  vspltw 3, 3, 0
-  02e816c  <unknown>
+  02e816c  lvlx 4, 5, 4
   02e8170  vmaddfp 2, 4, 3, 2
   02e8174  vctsxs 2, 2, 0
   02e8178  vspltw 2, 2, 0
@@ -2776,9 +2776,9 @@ UpdateMoby_203:   # 0x2e8af8, 0x1c40 bytes
   02e9560  stb 7, 32(31)
   02e9564  li 3, 68
   02e9568  vslw 3, 3, 3
-  02e956c  <unknown>
+  02e956c  lvlx 2, 9, 4
   02e9570  vspltw 2, 2, 0
-  02e9574  <unknown>
+  02e9574  lvlx 4, 5, 6
   02e9578  vmaddfp 2, 4, 2, 3
   02e957c  vctsxs 2, 2, 0
   02e9580  vsplth 2, 2, 1
@@ -3087,10 +3087,10 @@ UpdateMoby_203:   # 0x2e8af8, 0x1c40 bytes
   02e9a3c  lis 4, 114
   02e9a40  li 6, -3056
   02e9a44  vslw 2, 2, 2
-  02e9a48  <unknown>
+  02e9a48  lvlx 3, 5, 3
   02e9a4c  li 3, 111
   02e9a50  vspltw 3, 3, 0
-  02e9a54  <unknown>
+  02e9a54  lvlx 4, 6, 4
   02e9a58  vmaddfp 2, 4, 3, 2
   02e9a5c  vctsxs 2, 2, 0
   02e9a60  vspltb 2, 2, 3
@@ -3197,9 +3197,9 @@ UpdateMoby_203:   # 0x2e8af8, 0x1c40 bytes
   02e9bf4  li 7, -3056
   02e9bf8  vslw 4, 2, 2
   02e9bfc  li 3, 92
-  02e9c00  <unknown>
+  02e9c00  lvlx 3, 5, 4
   02e9c04  vspltw 3, 3, 0
-  02e9c08  <unknown>
+  02e9c08  lvlx 2, 7, 6
   02e9c0c  lhz 4, 108(30)
   02e9c10  vmaddfp 3, 2, 3, 4
   02e9c14  cmpwi 4, 0
@@ -3221,7 +3221,7 @@ UpdateMoby_203:   # 0x2e8af8, 0x1c40 bytes
   02e9c54  vspltisw 3, -1
   02e9c58  addi 3, 3, -30104
   02e9c5c  vslw 3, 3, 3
-  02e9c60  <unknown>
+  02e9c60  lvlx 4, 4, 3
   02e9c64  li 3, 108
   02e9c68  vspltw 4, 4, 0
   02e9c6c  li 4, 1

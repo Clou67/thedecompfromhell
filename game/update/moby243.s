@@ -60,11 +60,11 @@ FUN_0030f5c8:   # 0x30f5c8, 0x1c8 bytes
   030f68c  stb 4, 49(28)
   030f690  stb 4, 32(28)
   030f694  stw 29, 16(26)
-  030f698  <unknown>
+  030f698  lvlx 2, 6, 27
   030f69c  li 3, 20
   030f6a0  vslw 3, 3, 3
   030f6a4  vspltw 2, 2, 0
-  030f6a8  <unknown>
+  030f6a8  lvlx 4, 7, 5
   030f6ac  li 4, 0
   030f6b0  lis 29, 114
   030f6b4  vmaddfp 2, 4, 2, 3
@@ -1146,14 +1146,14 @@ UpdateMoby_243:   # 0x30f810, 0x10bc bytes
   03107fc  fmuls 2, 25, 2
   0310800  lfs 4, 120(29)
   0310804  vspltisw 3, -1
-  0310808  <unknown>
+  0310808  lvlx 2, 3, 26
   031080c  li 5, 360
   0310810  vslw 3, 3, 3
   0310814  ori 3, 31, 0
   0310818  fsel 1, 1, 3, 2
   031081c  fsubs 1, 4, 1
   0310820  stfs 1, 352(24)
-  0310824  <unknown>
+  0310824  lvlx 4, 4, 29
   0310828  vspltw 4, 4, 0
   031082c  vmaddfp 2, 2, 4, 3
   0310830  vctsxs 2, 2, 0

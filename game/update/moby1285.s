@@ -49,8 +49,8 @@ M1288_0023d358:   # 0x23d358, 0x118 bytes
   023d3f0  stfs 1, 72(30)
   023d3f4  lfs 1, 76(31)
   023d3f8  stfs 1, 76(30)
-  023d3fc  <unknown>
-  023d400  <unknown>
+  023d3fc  lvlx 2, 0, 3
+  023d400  lvlx 4, 5, 4
   023d404  vspltw 2, 2, 0
   023d408  li 4, 188
   023d40c  ori 3, 30, 0
@@ -183,8 +183,8 @@ UpdateMoby_1285:   # 0x23d4d8, 0x7d8 bytes
   023d668  addi 3, 3, -11152
   023d66c  li 5, -3056
   023d670  vslw 2, 2, 2
-  023d674  <unknown>
-  023d678  <unknown>
+  023d674  lvlx 3, 0, 3
+  023d678  lvlx 4, 5, 4
   023d67c  li 3, 188
   023d680  vspltw 3, 3, 0
   023d684  lfs 1, 16(31)

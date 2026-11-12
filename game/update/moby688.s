@@ -321,7 +321,7 @@ M688_00415f18:   # 0x415f18, 0xd5c bytes
   04163f0  li 6, -3056
   04163f4  li 7, 492
   04163f8  li 4, 1
-  04163fc  <unknown>
+  04163fc  lvlx 2, 3, 23
   0416400  lis 3, 164
   0416404  vspltw 2, 2, 0
   0416408  lwz 8, 496(30)
@@ -345,7 +345,7 @@ M688_00415f18:   # 0x415f18, 0xd5c bytes
   0416450  lwz 8, 120(8)
   0416454  vslw 3, 3, 3
   0416458  stw 4, 488(8)
-  041645c  <unknown>
+  041645c  lvlx 4, 6, 5
   0416460  vmaddfp 3, 4, 2, 3
   0416464  vctsxs 3, 3, 0
   0416468  vsplth 3, 3, 1
@@ -395,9 +395,9 @@ M688_00415f18:   # 0x415f18, 0xd5c bytes
   0416518  sth 3, 52(31)
   041651c  li 3, -3056
   0416520  vslw 2, 2, 2
-  0416524  <unknown>
+  0416524  lvlx 3, 7, 23
   0416528  vspltw 3, 3, 0
-  041652c  <unknown>
+  041652c  lvlx 4, 3, 6
   0416530  li 3, 390
   0416534  vmaddfp 2, 4, 3, 2
   0416538  vctsxs 2, 2, 0
@@ -460,7 +460,7 @@ M688_00415f18:   # 0x415f18, 0xd5c bytes
   041661c  lfs 2, -3056(3)
   0416620  lhz 5, 390(30)
   0416624  fmuls 1, 2, 1
-  0416628  <unknown>
+  0416628  lvlx 2, 4, 3
   041662c  extsh 3, 5
   0416630  fctiwz 1, 1
   0416634  stfd 1, 272(1)
@@ -472,7 +472,7 @@ M688_00415f18:   # 0x415f18, 0xd5c bytes
   041664c  lis 7, 164
   0416650  ori 5, 30, 0
   0416654  li 6, 1
-  0416658  <unknown>
+  0416658  lvlx 4, 3, 23
   041665c  li 8, 492
   0416660  vslw 3, 3, 3
   0416664  ori 3, 29, 0
@@ -2675,9 +2675,9 @@ M688_0041873c:   # 0x41873c, 0x2a8 bytes
   04188e4  ori 7, 7, 6404
   04188e8  addic 30, 8, 2
   04188ec  ori 6, 6, 6272
-  04188f0  <unknown>
+  04188f0  lvlx 3, 0, 8
   04188f4  lwz 9, 40(29)
-  04188f8  <unknown>
+  04188f8  lvlx 4, 0, 30
   04188fc  vsraw 3, 3, 2
   0418900  vsraw 4, 4, 2
   0418904  lwz 10, 8(9)
@@ -2854,21 +2854,21 @@ M688_004189e4:   # 0x4189e4, 0x314 bytes
   0418ba8  li 8, 148
   0418bac  lis 7, 4
   0418bb0  lis 6, 8
-  0418bb4  <unknown>
+  0418bb4  lvlx 6, 3, 1
   0418bb8  li 3, 132
-  0418bbc  <unknown>
+  0418bbc  lvlx 5, 4, 1
   0418bc0  ori 5, 30, 0
   0418bc4  ori 7, 7, 6404
   0418bc8  ori 6, 6, 6272
   0418bcc  li 4, 4
-  0418bd0  <unknown>
+  0418bd0  lvlx 4, 3, 1
   0418bd4  addic 30, 5, 2
-  0418bd8  <unknown>
+  0418bd8  lvlx 3, 8, 1
   0418bdc  li 3, 8
-  0418be0  <unknown>
+  0418be0  lvlx 8, 0, 30
   0418be4  vspltisw 7, -1
   0418be8  vsraw 8, 8, 2
-  0418bec  <unknown>
+  0418bec  lvlx 9, 0, 5
   0418bf0  vspltisw 10, -1
   0418bf4  vslw 7, 7, 7
   0418bf8  vcfsx 8, 8, 0
@@ -5718,10 +5718,10 @@ M688_0041b7c0:   # 0x41b7c0, 0x328 bytes
   041b964  lis 4, 114
   041b968  li 5, -3056
   041b96c  vslw 2, 2, 2
-  041b970  <unknown>
+  041b970  lvlx 3, 3, 29
   041b974  li 3, 128
   041b978  vspltw 3, 3, 0
-  041b97c  <unknown>
+  041b97c  lvlx 4, 5, 4
   041b980  lbz 4, 97(31)
   041b984  vmaddfp 2, 4, 3, 2
   041b988  xori 4, 4, 1
@@ -5924,9 +5924,9 @@ M688_0041bb00:   # 0x41bb00, 0x200 bytes
   041bcac  vslw 2, 2, 2
   041bcb0  stb 3, 5622(29)
   041bcb4  lis 3, 114
-  041bcb8  <unknown>
+  041bcb8  lvlx 3, 5, 4
   041bcbc  vspltw 3, 3, 0
-  041bcc0  <unknown>
+  041bcc0  lvlx 4, 6, 3
   041bcc4  li 3, 132
   041bcc8  vmaddfp 2, 4, 3, 2
   041bccc  vctsxs 2, 2, 0

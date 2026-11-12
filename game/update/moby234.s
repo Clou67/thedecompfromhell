@@ -222,21 +222,21 @@ M234_00303a90:   # 0x303a90, 0x204 bytes
   0303b64  vspltisw 5, 0
   0303b68  li 4, 116
   0303b6c  li 6, 232
-  0303b70  <unknown>
-  0303b74  <unknown>
+  0303b70  lvlx 2, 3, 28
+  0303b74  lvlx 3, 4, 1
   0303b78  li 3, 224
   0303b7c  vaddfp 2, 3, 2
   0303b80  addi 5, 3, 16
   0303b84  li 4, 220
-  0303b88  <unknown>
+  0303b88  lvlx 4, 3, 29
   0303b8c  addi 3, 6, 16
-  0303b90  <unknown>
+  0303b90  lvrx 3, 5, 29
   0303b94  vor 4, 4, 3
-  0303b98  <unknown>
+  0303b98  lvlx 3, 6, 29
   0303b9c  vspltw 6, 2, 0
   0303ba0  vcmpgefp. 7, 6, 5
   0303ba4  stvewx 6, 4, 29
-  0303ba8  <unknown>
+  0303ba8  lvrx 6, 3, 29
   0303bac  vor 3, 3, 6
   0303bb0  bf 26, 0x303bc0
   0303bb4  li 3, 0
@@ -250,7 +250,7 @@ M234_00303a90:   # 0x303a90, 0x204 bytes
   0303bd4  vspltisw 10, -1
   0303bd8  vspltisw 9, -1
   0303bdc  vslw 6, 6, 6
-  0303be0  <unknown>
+  0303be0  lvlx 7, 4, 3
   0303be4  vspltw 7, 7, 0
   0303be8  vslw 9, 9, 9
   0303bec  li 3, 224
@@ -264,7 +264,7 @@ M234_00303a90:   # 0x303a90, 0x204 bytes
   0303c0c  vnmsubfp 3, 5, 3, 7
   0303c10  vmaddfp 3, 5, 3, 6
   0303c14  vmaddfp 2, 3, 2, 4
-  0303c18  <unknown>
+  0303c18  lvlx 4, 0, 30
   0303c1c  vsubuwm 3, 4, 8
   0303c20  vcfsx 3, 3, 0
   0303c24  vspltw 2, 2, 0
@@ -278,7 +278,7 @@ M234_00303a90:   # 0x303a90, 0x204 bytes
   0303c44  addi 5, 3, 14976
   0303c48  li 6, 224
   0303c4c  li 3, 1
-  0303c50  <unknown>
+  0303c50  lvlx 3, 4, 5
   0303c54  vspltw 3, 3, 0
   0303c58  vsubfp 2, 2, 3
   0303c5c  vspltw 2, 2, 0
@@ -841,10 +841,10 @@ UpdateMoby_234:   # 0x304418, 0x494 bytes
   0304530  lis 5, 114
   0304534  li 6, -3056
   0304538  vslw 2, 2, 2
-  030453c  <unknown>
+  030453c  lvlx 3, 4, 3
   0304540  li 4, 236
   0304544  vspltw 3, 3, 0
-  0304548  <unknown>
+  0304548  lvlx 4, 6, 5
   030454c  ori 3, 31, 0
   0304550  vmaddfp 2, 4, 3, 2
   0304554  vctsxs 2, 2, 0
@@ -912,10 +912,10 @@ UpdateMoby_234:   # 0x304418, 0x494 bytes
   030464c  lis 4, 114
   0304650  li 6, -3056
   0304654  vslw 2, 2, 2
-  0304658  <unknown>
+  0304658  lvlx 3, 5, 3
   030465c  li 3, 236
   0304660  vspltw 3, 3, 0
-  0304664  <unknown>
+  0304664  lvlx 4, 6, 4
   0304668  li 4, 3
   030466c  vmaddfp 2, 4, 3, 2
   0304670  vctsxs 2, 2, 0

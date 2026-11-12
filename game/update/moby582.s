@@ -405,8 +405,8 @@ M582_003d1128:   # 0x3d1128, 0x50 bytes
   03d1138  li 5, -3056
   03d113c  vslw 2, 2, 2
   03d1140  li 6, -24704
-  03d1144  <unknown>
-  03d1148  <unknown>
+  03d1144  lvlx 3, 0, 3
+  03d1148  lvlx 4, 5, 4
   03d114c  lis 3, 132
   03d1150  vspltw 3, 3, 0
   03d1154  lis 4, 1

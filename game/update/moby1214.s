@@ -90,8 +90,8 @@ M1214_00206970:   # 0x206970, 0x2d4 bytes
   0206ac8  vslw 2, 2, 2
   0206acc  stfs 1, 0(31)
   0206ad0  stb 4, 103(30)
-  0206ad4  <unknown>
-  0206ad8  <unknown>
+  0206ad4  lvlx 3, 0, 27
+  0206ad8  lvlx 4, 3, 5
   0206adc  vspltw 3, 3, 0
   0206ae0  li 5, 38
   0206ae4  addic 4, 30, 96
@@ -343,8 +343,8 @@ UpdateMoby_1214:   # 0x206cd8, 0x131c bytes
   0206f48  stfs 1, 152(30)
   0206f4c  lfs 1, 28(3)
   0206f50  stfs 1, 156(30)
-  0206f54  <unknown>
-  0206f58  <unknown>
+  0206f54  lvlx 2, 5, 29
+  0206f58  lvlx 3, 6, 4
   0206f5c  vspltw 2, 2, 0
   0206f60  ori 3, 31, 0
   0206f64  li 4, 0
@@ -853,10 +853,10 @@ UpdateMoby_1214:   # 0x206cd8, 0x131c bytes
   0207740  lis 5, 114
   0207744  li 6, -3056
   0207748  vslw 2, 2, 2
-  020774c  <unknown>
+  020774c  lvlx 3, 4, 3
   0207750  li 3, 184
   0207754  vspltw 3, 3, 0
-  0207758  <unknown>
+  0207758  lvlx 4, 6, 5
   020775c  lis 4, 16256
   0207760  li 5, 1
   0207764  vmaddfp 2, 4, 3, 2
@@ -897,11 +897,11 @@ UpdateMoby_1214:   # 0x206cd8, 0x131c bytes
   02077f0  lis 5, 114
   02077f4  li 6, -3056
   02077f8  vslw 2, 2, 2
-  02077fc  <unknown>
+  02077fc  lvlx 3, 4, 3
   0207800  li 3, 184
   0207804  vspltw 3, 3, 0
   0207808  li 4, 2
-  020780c  <unknown>
+  020780c  lvlx 4, 6, 5
   0207810  vmaddfp 2, 4, 3, 2
   0207814  vctsxs 2, 2, 0
   0207818  vspltw 2, 2, 0
@@ -919,11 +919,11 @@ UpdateMoby_1214:   # 0x206cd8, 0x131c bytes
   0207848  lis 5, 114
   020784c  li 6, -3056
   0207850  vslw 2, 2, 2
-  0207854  <unknown>
+  0207854  lvlx 3, 4, 3
   0207858  li 3, 184
   020785c  vspltw 3, 3, 0
   0207860  li 4, 2
-  0207864  <unknown>
+  0207864  lvlx 4, 6, 5
   0207868  vmaddfp 2, 4, 3, 2
   020786c  vctsxs 2, 2, 0
   0207870  vspltw 2, 2, 0
@@ -941,9 +941,9 @@ UpdateMoby_1214:   # 0x206cd8, 0x131c bytes
   02078a0  lis 3, 114
   02078a4  li 5, -3056
   02078a8  vslw 2, 2, 2
-  02078ac  <unknown>
+  02078ac  lvlx 3, 4, 29
   02078b0  vspltw 3, 3, 0
-  02078b4  <unknown>
+  02078b4  lvlx 4, 5, 3
   02078b8  li 3, 164
   02078bc  lfs 1, 176(30)
   02078c0  vmaddfp 2, 4, 3, 2

@@ -46,34 +46,34 @@ M918_004b0218:   # 0x4b0218, 0x2cc bytes
   04b02a4  std 29, 328(1)
   04b02a8  li 8, 20
   04b02ac  ori 29, 4, 0
-  04b02b0  <unknown>
+  04b02b0  lvlx 31, 0, 5
   04b02b4  li 4, 24
-  04b02b8  <unknown>
+  04b02b8  lvlx 30, 6, 5
   04b02bc  li 6, 28
-  04b02c0  <unknown>
+  04b02c0  lvlx 29, 7, 5
   04b02c4  li 11, 32
-  04b02c8  <unknown>
+  04b02c8  lvlx 28, 9, 5
   04b02cc  li 7, 36
-  04b02d0  <unknown>
-  04b02d4  <unknown>
+  04b02d0  lvlx 26, 10, 5
+  04b02d4  lvlx 22, 8, 5
   04b02d8  li 9, 48
-  04b02dc  <unknown>
+  04b02dc  lvlx 23, 4, 5
   04b02e0  li 8, 52
   04b02e4  std 30, 336(1)
-  04b02e8  <unknown>
+  04b02e8  lvlx 24, 6, 5
   04b02ec  li 30, 0
   04b02f0  std 28, 320(1)
-  04b02f4  <unknown>
+  04b02f4  lvlx 25, 11, 5
   04b02f8  addic 28, 29, 432
   04b02fc  std 27, 312(1)
-  04b0300  <unknown>
+  04b0300  lvlx 21, 7, 5
   04b0304  addic 27, 29, 420
   04b0308  std 31, 344(1)
   04b030c  lfs 31, 40(5)
   04b0310  ori 31, 3, 0
   04b0314  lfs 30, 44(5)
-  04b0318  <unknown>
-  04b031c  <unknown>
+  04b0318  lvlx 27, 9, 5
+  04b031c  lvlx 20, 8, 5
   04b0320  vspltw 31, 31, 0
   04b0324  vspltw 30, 30, 0
   04b0328  vspltw 29, 29, 0
@@ -89,7 +89,7 @@ M918_004b0218:   # 0x4b0218, 0x2cc bytes
   04b0350  lis 3, 270
   04b0354  li 4, 18368
   04b0358  lwz 5, 18368(3)
-  04b035c  <unknown>
+  04b035c  lvlx 2, 4, 3
   04b0360  cmpwi 5, 0
   04b0364  bt 2, 0x4b0418
   04b0368  lis 3, 161
@@ -99,7 +99,7 @@ M918_004b0218:   # 0x4b0218, 0x2cc bytes
   04b0378  vcfsx 2, 2, 0
   04b037c  vspltisw 6, -1
   04b0380  vslw 3, 3, 3
-  04b0384  <unknown>
+  04b0384  lvlx 4, 4, 3
   04b0388  vand 4, 4, 20
   04b038c  vslw 5, 5, 5
   04b0390  vcfsx 4, 4, 0
@@ -851,10 +851,10 @@ UpdateMoby_918:   # 0x4b0698, 0x127c bytes
   04b0fa8  lis 5, 114
   04b0fac  li 6, -3056
   04b0fb0  vslw 2, 2, 2
-  04b0fb4  <unknown>
+  04b0fb4  lvlx 3, 4, 3
   04b0fb8  li 3, 584
   04b0fbc  vspltw 3, 3, 0
-  04b0fc0  <unknown>
+  04b0fc0  lvlx 4, 6, 5
   04b0fc4  vmaddfp 2, 4, 3, 2
   04b0fc8  vctsxs 2, 2, 0
   04b0fcc  vspltw 2, 2, 0

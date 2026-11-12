@@ -1034,7 +1034,7 @@ UpdateMoby_600:   # 0x3d6950, 0x330 bytes
   03d6a98  li 10, -24556
   03d6a9c  stw 3, 4(9)
   03d6aa0  addic 7, 8, -24556
-  03d6aa4  <unknown>
+  03d6aa4  lvlx 4, 5, 4
   03d6aa8  addic 9, 6, -24560
   03d6aac  addic 7, 7, 8
   03d6ab0  vspltw 4, 4, 0

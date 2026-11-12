@@ -392,10 +392,10 @@ UpdateMoby_1283:   # 0x237e98, 0xa94 bytes
   02382fc  lis 4, 114
   0238300  li 6, -3056
   0238304  vslw 2, 2, 2
-  0238308  <unknown>
+  0238308  lvlx 3, 5, 3
   023830c  li 3, 372
   0238310  vspltw 3, 3, 0
-  0238314  <unknown>
+  0238314  lvlx 4, 6, 4
   0238318  vmaddfp 2, 4, 3, 2
   023831c  vctsxs 2, 2, 0
   0238320  vspltw 2, 2, 0

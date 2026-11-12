@@ -1779,7 +1779,7 @@ Camera_InitBlender:   # 0x514c0, 0x630 bytes
   0051a38  vspltisw 5, -1
   0051a3c  addi 31, 5, 5300
   0051a40  li 5, -3056
-  0051a44  <unknown>
+  0051a44  lvlx 3, 3, 30
   0051a48  lwz 4, 756(30)
   0051a4c  vadduwm 2, 3, 2
   0051a50  addic 4, 4, 1
@@ -1791,8 +1791,8 @@ Camera_InitBlender:   # 0x514c0, 0x630 bytes
   0051a68  li 3, 4
   0051a6c  lis 4, 114
   0051a70  lfs 1, 4(31)
-  0051a74  <unknown>
-  0051a78  <unknown>
+  0051a74  lvlx 3, 3, 31
+  0051a78  lvlx 4, 5, 4
   0051a7c  lfs 2, -3056(4)
   0051a80  lfd 3, 160(1)
   0051a84  vspltw 3, 3, 0

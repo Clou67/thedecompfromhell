@@ -432,10 +432,10 @@ UpdateMoby_328:   # 0x343330, 0xe04 bytes
   03438c4  lis 4, 114
   03438c8  li 6, -3056
   03438cc  vslw 2, 2, 2
-  03438d0  <unknown>
+  03438d0  lvlx 3, 5, 3
   03438d4  li 3, 388
   03438d8  vspltw 3, 3, 0
-  03438dc  <unknown>
+  03438dc  lvlx 4, 6, 4
   03438e0  vmaddfp 2, 4, 3, 2
   03438e4  vctsxs 2, 2, 0
   03438e8  vspltw 2, 2, 0

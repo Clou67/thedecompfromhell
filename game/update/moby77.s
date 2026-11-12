@@ -168,10 +168,10 @@ UpdateMoby_77:   # 0x453bc8, 0x760 bytes
   0453e58  lis 4, 114
   0453e5c  li 6, -3056
   0453e60  vslw 2, 2, 2
-  0453e64  <unknown>
+  0453e64  lvlx 3, 5, 3
   0453e68  li 3, 104
   0453e6c  vspltw 3, 3, 0
-  0453e70  <unknown>
+  0453e70  lvlx 4, 6, 4
   0453e74  vmaddfp 2, 4, 3, 2
   0453e78  vctsxs 2, 2, 0
   0453e7c  vspltw 2, 2, 0

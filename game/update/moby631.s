@@ -257,8 +257,8 @@ M631_003f00b8:   # 0x3f00b8, 0x470 bytes
   03f04ac  li 9, 4
   03f04b0  li 3, 1
   03f04b4  stfs 1, 532(30)
-  03f04b8  <unknown>
-  03f04bc  <unknown>
+  03f04b8  lvlx 3, 5, 4
+  03f04bc  lvlx 4, 7, 6
   03f04c0  vspltw 3, 3, 0
   03f04c4  li 4, 0
   03f04c8  ori 5, 31, 0
@@ -403,10 +403,10 @@ UpdateMoby_631:   # 0x3f0610, 0x1ee0 bytes
   03f07d4  stw 4, 56(30)
   03f07d8  li 4, -3056
   03f07dc  vslw 2, 2, 2
-  03f07e0  <unknown>
+  03f07e0  lvlx 3, 5, 3
   03f07e4  li 3, 596
   03f07e8  vspltw 3, 3, 0
-  03f07ec  <unknown>
+  03f07ec  lvlx 4, 4, 6
   03f07f0  vmaddfp 2, 4, 3, 2
   03f07f4  vctsxs 2, 2, 0
   03f07f8  vspltw 2, 2, 0
@@ -748,9 +748,9 @@ UpdateMoby_631:   # 0x3f0610, 0x1ee0 bytes
   03f0d38  stb 6, 188(31)
   03f0d3c  li 3, -3056
   03f0d40  stb 7, 32(31)
-  03f0d44  <unknown>
+  03f0d44  lvlx 2, 8, 4
   03f0d48  vspltw 2, 2, 0
-  03f0d4c  <unknown>
+  03f0d4c  lvlx 4, 3, 5
   03f0d50  li 3, 518
   03f0d54  vmaddfp 2, 4, 2, 3
   03f0d58  vctsxs 2, 2, 0
@@ -1409,9 +1409,9 @@ UpdateMoby_631:   # 0x3f0610, 0x1ee0 bytes
   03f178c  lis 3, 114
   03f1790  vslw 2, 2, 2
   03f1794  li 6, -3056
-  03f1798  <unknown>
+  03f1798  lvlx 3, 4, 5
   03f179c  vspltw 3, 3, 0
-  03f17a0  <unknown>
+  03f17a0  lvlx 4, 6, 3
   03f17a4  li 3, 518
   03f17a8  vmaddfp 2, 4, 3, 2
   03f17ac  vctsxs 2, 2, 0
@@ -1445,8 +1445,8 @@ UpdateMoby_631:   # 0x3f0610, 0x1ee0 bytes
   03f181c  vslw 2, 2, 2
   03f1820  li 6, 516
   03f1824  addic 26, 1, 224
-  03f1828  <unknown>
-  03f182c  <unknown>
+  03f1828  lvlx 3, 3, 28
+  03f182c  lvlx 4, 4, 29
   03f1830  vspltw 3, 3, 0
   03f1834  addic 27, 1, 304
   03f1838  ori 5, 26, 0
@@ -1669,8 +1669,8 @@ UpdateMoby_631:   # 0x3f0610, 0x1ee0 bytes
   03f1b9c  stw 6, 0(3)
   03f1ba0  stb 7, 188(31)
   03f1ba4  stb 8, 32(31)
-  03f1ba8  <unknown>
-  03f1bac  <unknown>
+  03f1ba8  lvlx 2, 9, 4
+  03f1bac  lvlx 4, 10, 5
   03f1bb0  li 3, 518
   03f1bb4  vspltw 2, 2, 0
   03f1bb8  vmaddfp 2, 4, 2, 3
@@ -2012,7 +2012,7 @@ UpdateMoby_631:   # 0x3f0610, 0x1ee0 bytes
   03f20f8  lis 6, 17839
   03f20fc  lis 7, 16256
   03f2100  li 5, 464
-  03f2104  <unknown>
+  03f2104  lvlx 3, 3, 31
   03f2108  ori 6, 6, 57190
   03f210c  li 3, 3
   03f2110  lvx 4, 4, 1
@@ -2030,7 +2030,7 @@ UpdateMoby_631:   # 0x3f0610, 0x1ee0 bytes
   03f2140  stb 3, 473(1)
   03f2144  li 3, 144
   03f2148  stvehx 5, 4, 1
-  03f214c  <unknown>
+  03f214c  lvlx 5, 6, 26
   03f2150  li 4, 64
   03f2154  lvx 6, 5, 26
   03f2158  li 6, 80

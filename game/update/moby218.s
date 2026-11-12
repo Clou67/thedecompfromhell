@@ -372,8 +372,8 @@ UpdateMoby_218:   # 0x2f44c0, 0x15bc bytes
   02f4a64  addi 3, 3, 17520
   02f4a68  li 4, 16
   02f4a6c  stfs 1, 212(30)
-  02f4a70  <unknown>
-  02f4a74  <unknown>
+  02f4a70  lvlx 3, 4, 3
+  02f4a74  lvlx 4, 6, 5
   02f4a78  vspltw 3, 3, 0
   02f4a7c  li 3, 320
   02f4a80  vmaddfp 2, 4, 3, 2
@@ -573,17 +573,17 @@ UpdateMoby_218:   # 0x2f44c0, 0x15bc bytes
   02f4d88  addi 5, 3, 16
   02f4d8c  li 4, 36
   02f4d90  vslw 4, 4, 4
-  02f4d94  <unknown>
+  02f4d94  lvlx 2, 3, 30
   02f4d98  addi 3, 6, 17520
-  02f4d9c  <unknown>
+  02f4d9c  lvrx 3, 5, 30
   02f4da0  lis 5, 114
   02f4da4  vor 2, 2, 3
-  02f4da8  <unknown>
+  02f4da8  lvlx 3, 4, 3
   02f4dac  li 3, -3056
   02f4db0  vspltw 3, 3, 0
   02f4db4  vmaddfp 2, 2, 3, 4
   02f4db8  vslw 3, 5, 5
-  02f4dbc  <unknown>
+  02f4dbc  lvlx 4, 3, 5
   02f4dc0  li 3, 320
   02f4dc4  vmaddfp 2, 4, 2, 3
   02f4dc8  vctsxs 2, 2, 0
@@ -1013,14 +1013,14 @@ UpdateMoby_218:   # 0x2f44c0, 0x15bc bytes
   02f5468  lwz 6, 208(1)
   02f546c  fabs 10, 3
   02f5470  lfs 3, 208(1)
-  02f5474  <unknown>
+  02f5474  lvlx 2, 3, 30
   02f5478  addi 3, 4, 16
-  02f547c  <unknown>
-  02f5480  <unknown>
+  02f547c  lvrx 3, 7, 30
+  02f5480  lvlx 4, 4, 30
   02f5484  rlwinm 6, 6, 3, 29, 29
   02f5488  vor 2, 2, 3
   02f548c  fabs 9, 3
-  02f5490  <unknown>
+  02f5490  lvrx 3, 3, 30
   02f5494  lwz 3, 212(1)
   02f5498  lfs 3, 212(1)
   02f549c  rlwimi 6, 3, 2, 30, 30
@@ -1269,9 +1269,9 @@ UpdateMoby_218:   # 0x2f44c0, 0x15bc bytes
   02f5868  stfs 1, 312(30)
   02f586c  lfs 1, 28(31)
   02f5870  stfs 1, 316(30)
-  02f5874  <unknown>
+  02f5874  lvlx 7, 4, 3
   02f5878  vmaddfp 3, 3, 7, 4
-  02f587c  <unknown>
+  02f587c  lvlx 4, 6, 5
   02f5880  vspltw 4, 4, 0
   02f5884  vrefp 7, 3
   02f5888  vnmsubfp 8, 7, 3, 4
@@ -1321,17 +1321,17 @@ UpdateMoby_218:   # 0x2f44c0, 0x15bc bytes
   02f5938  addi 5, 3, 16
   02f593c  li 4, 36
   02f5940  vslw 4, 4, 4
-  02f5944  <unknown>
+  02f5944  lvlx 2, 3, 30
   02f5948  addi 3, 6, 17520
-  02f594c  <unknown>
+  02f594c  lvrx 3, 5, 30
   02f5950  lis 5, 114
   02f5954  vor 2, 2, 3
-  02f5958  <unknown>
+  02f5958  lvlx 3, 4, 3
   02f595c  li 3, -3056
   02f5960  vspltw 3, 3, 0
   02f5964  vmaddfp 2, 2, 3, 4
   02f5968  vslw 3, 5, 5
-  02f596c  <unknown>
+  02f596c  lvlx 4, 3, 5
   02f5970  li 3, 320
   02f5974  vmaddfp 2, 4, 2, 3
   02f5978  vctsxs 2, 2, 0
@@ -1361,10 +1361,10 @@ UpdateMoby_218:   # 0x2f44c0, 0x15bc bytes
   02f59d8  lis 4, 114
   02f59dc  li 6, -3056
   02f59e0  vslw 2, 2, 2
-  02f59e4  <unknown>
+  02f59e4  lvlx 3, 5, 3
   02f59e8  li 3, 320
   02f59ec  vspltw 3, 3, 0
-  02f59f0  <unknown>
+  02f59f0  lvlx 4, 6, 4
   02f59f4  li 4, 1
   02f59f8  vmaddfp 2, 4, 3, 2
   02f59fc  vctsxs 2, 2, 0

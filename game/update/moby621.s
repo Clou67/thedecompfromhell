@@ -483,7 +483,7 @@ UpdateMoby_621:   # 0x3e2218, 0x844 bytes
   03e2994  li 29, 224
   03e2998  addi 4, 3, 8640
   03e299c  lis 3, 114
-  03e29a0  <unknown>
+  03e29a0  lvlx 3, 30, 31
   03e29a4  vsrw 2, 3, 2
   03e29a8  lfs 1, -3056(3)
   03e29ac  vcfux 2, 2, 0
@@ -501,7 +501,7 @@ UpdateMoby_621:   # 0x3e2218, 0x844 bytes
   03e29dc  fdivs 2, 3, 2
   03e29e0  bl 0x109af0
   03e29e4  nop
-  03e29e8  <unknown>
+  03e29e8  lvlx 2, 29, 1
   03e29ec  lfs 1, 224(1)
   03e29f0  vctuxs 2, 2, 0
   03e29f4  fctidz 1, 1

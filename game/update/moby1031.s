@@ -149,10 +149,10 @@ UpdateMoby_1031:   # 0x1907f0, 0x348 bytes
   0190a18  lis 4, 114
   0190a1c  li 6, -3056
   0190a20  vslw 2, 2, 2
-  0190a24  <unknown>
+  0190a24  lvlx 3, 5, 3
   0190a28  li 3, 16
   0190a2c  vspltw 3, 3, 0
-  0190a30  <unknown>
+  0190a30  lvlx 4, 6, 4
   0190a34  vmaddfp 2, 4, 3, 2
   0190a38  vctsxs 2, 2, 0
   0190a3c  vspltw 2, 2, 0
@@ -189,10 +189,10 @@ UpdateMoby_1031:   # 0x1907f0, 0x348 bytes
   0190ab8  lis 4, 114
   0190abc  li 6, -3056
   0190ac0  vslw 2, 2, 2
-  0190ac4  <unknown>
+  0190ac4  lvlx 3, 5, 3
   0190ac8  li 3, 16
   0190acc  vspltw 3, 3, 0
-  0190ad0  <unknown>
+  0190ad0  lvlx 4, 6, 4
   0190ad4  vmaddfp 2, 4, 3, 2
   0190ad8  vctsxs 2, 2, 0
   0190adc  vspltw 2, 2, 0

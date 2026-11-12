@@ -37,12 +37,12 @@ FUN_0032ca80:   # 0x32ca80, 0x320 bytes
   032cb04  stw 27, 32(7)
   032cb08  stfs 31, 36(7)
   032cb0c  stw 30, 40(7)
-  032cb10  <unknown>
+  032cb10  lvlx 2, 0, 26
   032cb14  vslw 3, 3, 3
   032cb18  li 3, 12
   032cb1c  vspltw 2, 2, 0
   032cb20  li 4, 4
-  032cb24  <unknown>
+  032cb24  lvlx 4, 5, 6
   032cb28  vmaddfp 2, 4, 2, 3
   032cb2c  vspltisw 3, -1
   032cb30  li 5, 14
@@ -50,7 +50,7 @@ FUN_0032ca80:   # 0x32ca80, 0x320 bytes
   032cb38  vctsxs 2, 2, 0
   032cb3c  vsplth 2, 2, 1
   032cb40  stvehx 2, 3, 7
-  032cb44  <unknown>
+  032cb44  lvlx 2, 4, 26
   032cb48  vspltw 2, 2, 0
   032cb4c  vmaddfp 2, 4, 2, 3
   032cb50  vctsxs 2, 2, 0
@@ -587,10 +587,10 @@ UpdateMoby_282:   # 0x32cef0, 0xbd4 bytes
   032d3e8  lis 4, 114
   032d3ec  li 6, -3056
   032d3f0  vslw 2, 2, 2
-  032d3f4  <unknown>
+  032d3f4  lvlx 3, 5, 3
   032d3f8  li 3, 376
   032d3fc  vspltw 3, 3, 0
-  032d400  <unknown>
+  032d400  lvlx 4, 6, 4
   032d404  vmaddfp 2, 4, 3, 2
   032d408  vctsxs 2, 2, 0
   032d40c  vspltw 2, 2, 0

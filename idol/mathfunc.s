@@ -1023,8 +1023,8 @@ FUN_005e9008:   # 0x5e9008, 0x1a0 bytes
   05e9050  vperm 12, 5, 5, 9
   05e9054  vmaddfp 6, 10, 10, 6
   05e9058  vmaddfp 8, 11, 11, 8
-  05e905c  <unknown>
-  05e9060  <unknown>
+  05e905c  lvlx 10, 4, 7
+  05e9060  lvlx 11, 5, 7
   05e9064  vspltw 10, 10, 0
   05e9068  vspltw 11, 11, 0
   05e906c  li 4, 48
@@ -1082,7 +1082,7 @@ FUN_005e9008:   # 0x5e9008, 0x1a0 bytes
   05e913c  vperm 9, 6, 6, 9
   05e9140  vmaddfp 7, 7, 7, 8
   05e9144  vmaddfp 7, 9, 9, 7
-  05e9148  <unknown>
+  05e9148  lvlx 9, 4, 7
   05e914c  li 4, 80
   05e9150  vspltw 9, 9, 0
   05e9154  lvx 12, 4, 7
@@ -2120,7 +2120,7 @@ FUN_005e99f8:   # 0x5e99f8, 0x908 bytes
   05ea0a8  lvx 12, 27, 10
   05ea0ac  clrlwi 3, 8, 16
   05ea0b0  add 6, 6, 7
-  05ea0b4  <unknown>
+  05ea0b4  lvlx 0, 0, 9
   05ea0b8  vspltw 0, 0, 0
   05ea0bc  vupkhsh 0, 0
   05ea0c0  vcfsx 0, 0, 15
@@ -2204,7 +2204,7 @@ FUN_005e99f8:   # 0x5e99f8, 0x908 bytes
   05ea1f8  lvx 13, 27, 11
   05ea1fc  clrlwi 3, 8, 16
   05ea200  add 6, 6, 7
-  05ea204  <unknown>
+  05ea204  lvlx 0, 0, 9
   05ea208  vsplth 0, 0, 0
   05ea20c  vupkhsh 0, 0
   05ea210  vcfsx 0, 0, 15

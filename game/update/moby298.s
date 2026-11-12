@@ -496,10 +496,10 @@ UpdateMoby_298:   # 0x3361b0, 0xde0 bytes
   0336960  lis 5, 114
   0336964  li 6, -3056
   0336968  vslw 2, 2, 2
-  033696c  <unknown>
+  033696c  lvlx 3, 4, 3
   0336970  li 3, 352
   0336974  vspltw 3, 3, 0
-  0336978  <unknown>
+  0336978  lvlx 4, 6, 5
   033697c  vmaddfp 2, 4, 3, 2
   0336980  vctsxs 2, 2, 0
   0336984  vspltw 2, 2, 0

@@ -415,18 +415,18 @@ UpdateMoby_611:   # 0x3da868, 0x608 bytes
   03daaf8  vspltisw 4, -1
   03daafc  addi 5, 3, 16
   03dab00  stb 4, 32(31)
-  03dab04  <unknown>
+  03dab04  lvlx 2, 3, 30
   03dab08  lis 4, 62
-  03dab0c  <unknown>
+  03dab0c  lvrx 3, 5, 30
   03dab10  addi 3, 4, -22456
   03dab14  vor 2, 2, 3
   03dab18  li 4, -3056
   03dab1c  vslw 4, 4, 4
   03dab20  vcfsx 2, 2, 0
-  03dab24  <unknown>
+  03dab24  lvlx 3, 0, 3
   03dab28  lis 3, 114
   03dab2c  vspltw 3, 3, 0
-  03dab30  <unknown>
+  03dab30  lvlx 5, 4, 3
   03dab34  li 3, 96
   03dab38  li 4, 0
   03dab3c  vaddfp 2, 2, 3
@@ -526,8 +526,8 @@ UpdateMoby_611:   # 0x3da868, 0x608 bytes
   03dacb4  li 5, 4
   03dacb8  vspltisw 2, -16
   03dacbc  addi 6, 5, 16
-  03dacc0  <unknown>
-  03dacc4  <unknown>
+  03dacc0  lvlx 3, 5, 4
+  03dacc4  lvrx 4, 6, 4
   03dacc8  vor 3, 3, 4
   03daccc  vsraw 2, 3, 2
   03dacd0  vcfsx 2, 2, 0
@@ -539,26 +539,26 @@ UpdateMoby_611:   # 0x3da868, 0x608 bytes
   03dace8  lis 5, 114
   03dacec  addi 4, 3, 16
   03dacf0  li 6, -3056
-  03dacf4  <unknown>
-  03dacf8  <unknown>
+  03dacf4  lvlx 2, 3, 30
+  03dacf8  lvrx 3, 4, 30
   03dacfc  vor 2, 2, 3
-  03dad00  <unknown>
+  03dad00  lvlx 3, 6, 5
   03dad04  b 0x3dad28
   03dad08  li 3, 92
   03dad0c  lis 5, 114
   03dad10  addi 4, 3, 16
   03dad14  li 6, -3056
-  03dad18  <unknown>
-  03dad1c  <unknown>
+  03dad18  lvlx 2, 3, 30
+  03dad1c  lvrx 3, 4, 30
   03dad20  vor 2, 2, 3
-  03dad24  <unknown>
+  03dad24  lvlx 3, 6, 5
   03dad28  lis 3, 62
   03dad2c  vcfsx 2, 2, 0
   03dad30  vspltisw 4, -1
   03dad34  addi 3, 3, -22456
   03dad38  vspltw 3, 3, 0
   03dad3c  vslw 4, 4, 4
-  03dad40  <unknown>
+  03dad40  lvlx 5, 0, 3
   03dad44  vspltw 5, 5, 0
   03dad48  li 3, 96
   03dad4c  vaddfp 2, 2, 5

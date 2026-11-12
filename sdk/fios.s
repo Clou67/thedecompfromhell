@@ -633,29 +633,29 @@ FUN_00508738:   # 0x508738, 0x448 bytes
   0508964  addc 5, 7, 5
   0508968  addi 7, 6, 16
   050896c  stw 5, 64(27)
-  0508970  <unknown>
+  0508970  lvlx 2, 21, 23
   0508974  li 5, 38
-  0508978  <unknown>
-  050897c  <unknown>
-  0508980  <unknown>
+  0508978  lvrx 3, 3, 23
+  050897c  lvlx 4, 4, 23
+  0508980  lvrx 5, 8, 23
   0508984  li 3, 84
   0508988  vor 2, 2, 3
-  050898c  <unknown>
-  0508990  <unknown>
+  050898c  lvlx 3, 6, 23
+  0508990  lvrx 6, 7, 23
   0508994  addi 4, 3, 16
   0508998  vor 4, 4, 5
   050899c  li 6, 112
   05089a0  vor 3, 3, 6
   05089a4  lis 7, 81
-  05089a8  <unknown>
+  05089a8  lvlx 5, 3, 23
   05089ac  li 3, 120
-  05089b0  <unknown>
+  05089b0  lvrx 6, 4, 23
   05089b4  addi 7, 7, -31024
   05089b8  vspltw 8, 3, 0
   05089bc  li 4, 116
   05089c0  vspltw 7, 4, 0
   05089c4  vspltw 11, 2, 0
-  05089c8  <unknown>
+  05089c8  lvlx 9, 5, 20
   05089cc  li 5, 16
   05089d0  lvx 10, 6, 1
   05089d4  stvewx 8, 3, 1
@@ -675,13 +675,13 @@ FUN_00508738:   # 0x508738, 0x448 bytes
   0508a0c  lvx 4, 4, 7
   0508a10  li 3, 80
   0508a14  li 4, 84
-  0508a18  <unknown>
+  0508a18  lvlx 10, 3, 7
   0508a1c  li 3, 88
   0508a20  vmaddfp 8, 2, 2, 7
   0508a24  vperm 3, 2, 2, 3
   0508a28  vperm 2, 2, 2, 4
   0508a2c  vor 4, 5, 6
-  0508a30  <unknown>
+  0508a30  lvlx 6, 4, 7
   0508a34  vspltw 5, 10, 0
   0508a38  vspltw 6, 6, 0
   0508a3c  vspltw 10, 4, 0
@@ -696,7 +696,7 @@ FUN_00508738:   # 0x508738, 0x448 bytes
   0508a60  vor 9, 9, 12
   0508a64  vmaddfp 5, 11, 5, 7
   0508a68  vnmsubfp 7, 2, 11, 6
-  0508a6c  <unknown>
+  0508a6c  lvlx 2, 3, 7
   0508a70  vspltw 2, 2, 0
   0508a74  vmaddfp 5, 7, 5, 11
   0508a78  vsel 5, 5, 8, 9
@@ -709,8 +709,8 @@ FUN_00508738:   # 0x508738, 0x448 bytes
   0508a94  vspltisw 5, 0
   0508a98  addi 3, 3, -31024
   0508a9c  li 5, 96
-  0508aa0  <unknown>
-  0508aa4  <unknown>
+  0508aa0  lvlx 7, 4, 3
+  0508aa4  lvlx 8, 5, 3
   0508aa8  vspltw 7, 7, 0
   0508aac  vspltw 8, 8, 0
   0508ab0  vnmsubfp 4, 4, 7, 6
@@ -731,7 +731,7 @@ FUN_00508738:   # 0x508738, 0x448 bytes
   0508aec  li 5, 60
   0508af0  vrlw 3, 3, 4
   0508af4  addic 30, 30, 80
-  0508af8  <unknown>
+  0508af8  lvlx 5, 4, 3
   0508afc  vspltw 4, 5, 0
   0508b00  vsel 2, 2, 3, 4
   0508b04  vspltw 2, 2, 0

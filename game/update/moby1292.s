@@ -69,13 +69,13 @@ FUN_0023e6e0:   # 0x23e6e0, 0x494 bytes
   023e7c8  stfs 3, 8(3)
   023e7cc  lfs 3, 12(31)
   023e7d0  stfs 3, 12(3)
-  023e7d4  <unknown>
+  023e7d4  lvlx 3, 0, 4
   023e7d8  vspltw 3, 3, 0
   023e7dc  fabs 3, 2
   023e7e0  rlwinm 6, 6, 3, 29, 29
   023e7e4  vaddfp 2, 2, 3
   023e7e8  vslw 3, 4, 4
-  023e7ec  <unknown>
+  023e7ec  lvlx 4, 8, 7
   023e7f0  li 7, 24
   023e7f4  li 8, 0
   023e7f8  fsubs 1, 5, 3

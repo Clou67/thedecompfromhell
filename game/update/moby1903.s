@@ -1079,7 +1079,7 @@ UpdateMoby_1903:   # 0x2d5780, 0x350 bytes
   02d58ec  stw 4, 8(8)
   02d58f0  addic 5, 12, 8
   02d58f4  li 7, 24644
-  02d58f8  <unknown>
+  02d58f8  lvlx 3, 31, 3
   02d58fc  lis 3, 267
   02d5900  vspltw 3, 3, 0
   02d5904  stvewx 3, 0, 5

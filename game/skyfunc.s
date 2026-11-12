@@ -729,16 +729,16 @@ SkyLevel_00:   # 0x153e00, 0x3e4 bytes
   015409c  li 6, 1808
   01540a0  li 7, 8
   01540a4  stvx 2, 3, 1
-  01540a8  <unknown>
+  01540a8  lvlx 2, 0, 4
   01540ac  li 3, 4
   01540b0  vspltw 2, 2, 0
-  01540b4  <unknown>
-  01540b8  <unknown>
+  01540b4  lvlx 3, 6, 5
+  01540b8  lvlx 4, 7, 4
   01540bc  li 5, 12
   01540c0  vand 2, 3, 2
   01540c4  vspltw 3, 4, 0
-  01540c8  <unknown>
-  01540cc  <unknown>
+  01540c8  lvlx 4, 3, 4
+  01540cc  lvlx 5, 5, 4
   01540d0  vcfsx 2, 2, 0
   01540d4  vspltw 4, 4, 0
   01540d8  vspltw 5, 5, 0
@@ -893,20 +893,20 @@ SkyLevel_01:   # 0x154208, 0x37c bytes
   0154348  li 4, 12
   015434c  li 5, 16
   0154350  li 8, 20
-  0154354  <unknown>
-  0154358  <unknown>
+  0154354  lvlx 25, 0, 3
+  0154358  lvlx 24, 6, 3
   015435c  lis 31, 165
   0154360  li 6, 24
-  0154364  <unknown>
+  0154364  lvlx 26, 7, 3
   0154368  li 7, 28
-  015436c  <unknown>
-  0154370  <unknown>
+  015436c  lvlx 27, 4, 3
+  0154370  lvlx 28, 5, 3
   0154374  li 29, 0
-  0154378  <unknown>
+  0154378  lvlx 29, 8, 3
   015437c  addic 31, 31, 24960
   0154380  vspltw 25, 25, 0
-  0154384  <unknown>
-  0154388  <unknown>
+  0154384  lvlx 30, 6, 3
+  0154388  lvlx 31, 7, 3
   015438c  vspltw 24, 24, 0
   0154390  vspltw 26, 26, 0
   0154394  vspltw 27, 27, 0
@@ -927,7 +927,7 @@ SkyLevel_01:   # 0x154208, 0x37c bytes
   01543d0  lis 3, 161
   01543d4  li 4, 1808
   01543d8  li 5, 136
-  01543dc  <unknown>
+  01543dc  lvlx 2, 4, 3
   01543e0  vand 2, 2, 29
   01543e4  ori 3, 31, 0
   01543e8  ori 4, 28, 0
@@ -942,7 +942,7 @@ SkyLevel_01:   # 0x154208, 0x37c bytes
   015440c  lis 3, 161
   0154410  li 4, 1808
   0154414  li 5, 136
-  0154418  <unknown>
+  0154418  lvlx 2, 4, 3
   015441c  vand 2, 2, 30
   0154420  ori 3, 31, 0
   0154424  ori 4, 28, 0
@@ -957,7 +957,7 @@ SkyLevel_01:   # 0x154208, 0x37c bytes
   0154448  lis 3, 161
   015444c  li 4, 1808
   0154450  li 5, 136
-  0154454  <unknown>
+  0154454  lvlx 2, 4, 3
   0154458  vand 2, 2, 31
   015445c  ori 3, 31, 0
   0154460  ori 4, 28, 0
@@ -1684,18 +1684,18 @@ SkyLevel_03:   # 0x154e28, 0x354 bytes
   0154fe0  li 4, 4
   0154fe4  li 14, 136
   0154fe8  stvx 2, 3, 1
-  0154fec  <unknown>
-  0154ff0  <unknown>
+  0154fec  lvlx 2, 0, 31
+  0154ff0  lvlx 3, 15, 16
   0154ff4  li 3, 8
   0154ff8  vspltw 2, 2, 0
-  0154ffc  <unknown>
+  0154ffc  lvlx 4, 4, 31
   0155000  li 4, 12
   0155004  vand 2, 3, 2
   0155008  vspltw 3, 4, 0
-  015500c  <unknown>
+  015500c  lvlx 4, 3, 31
   0155010  vcfsx 2, 2, 0
   0155014  vspltw 31, 4, 0
-  0155018  <unknown>
+  0155018  lvlx 4, 4, 31
   015501c  ori 3, 29, 0
   0155020  addic 4, 1, 128
   0155024  vspltw 30, 4, 0
@@ -1724,10 +1724,10 @@ SkyLevel_03:   # 0x154e28, 0x354 bytes
   0155080  bl 0x50a538
   0155084  nop
   0155088  li 3, 16
-  015508c  <unknown>
+  015508c  lvlx 2, 15, 16
   0155090  li 4, 20
-  0155094  <unknown>
-  0155098  <unknown>
+  0155094  lvlx 3, 3, 31
+  0155098  lvlx 4, 4, 31
   015509c  vspltw 3, 3, 0
   01550a0  ori 3, 29, 0
   01550a4  addic 4, 1, 128
@@ -1865,15 +1865,15 @@ SkyLevel_04:   # 0x155198, 0x300 bytes
   01552c8  li 4, 12
   01552cc  li 5, 16
   01552d0  li 7, 20
-  01552d4  <unknown>
-  01552d8  <unknown>
+  01552d4  lvlx 27, 0, 3
+  01552d8  lvlx 26, 6, 3
   01552dc  lis 31, 165
-  01552e0  <unknown>
+  01552e0  lvlx 28, 8, 3
   01552e4  li 29, 0
-  01552e8  <unknown>
+  01552e8  lvlx 29, 4, 3
   01552ec  addic 31, 31, 24960
-  01552f0  <unknown>
-  01552f4  <unknown>
+  01552f0  lvlx 30, 5, 3
+  01552f4  lvlx 31, 7, 3
   01552f8  vspltw 27, 27, 0
   01552fc  vspltw 26, 26, 0
   0155300  vspltw 28, 28, 0
@@ -1891,7 +1891,7 @@ SkyLevel_04:   # 0x155198, 0x300 bytes
   0155330  lis 3, 161
   0155334  li 4, 1808
   0155338  li 5, 136
-  015533c  <unknown>
+  015533c  lvlx 2, 4, 3
   0155340  vand 2, 2, 30
   0155344  ori 3, 31, 0
   0155348  ori 4, 28, 0
@@ -1906,7 +1906,7 @@ SkyLevel_04:   # 0x155198, 0x300 bytes
   015536c  lis 3, 161
   0155370  li 4, 1808
   0155374  li 5, 136
-  0155378  <unknown>
+  0155378  lvlx 2, 4, 3
   015537c  vand 2, 2, 31
   0155380  ori 3, 31, 0
   0155384  ori 4, 28, 0
@@ -2790,17 +2790,17 @@ SkyLevel_07:   # 0x156148, 0x400 bytes
   0156178  li 4, 20
   015617c  vslw 4, 4, 4
   0156180  li 6, 24
-  0156184  <unknown>
+  0156184  lvlx 2, 0, 3
   0156188  lwz 7, 24(31)
   015618c  vspltw 2, 2, 0
   0156190  vspltisw 8, 8
-  0156194  <unknown>
-  0156198  <unknown>
+  0156194  lvlx 5, 5, 7
+  0156198  lvlx 6, 4, 7
   015619c  vmaddfp 3, 5, 2, 3
   01561a0  li 4, 4
   01561a4  vspltisw 5, -1
   01561a8  vmaddfp 4, 6, 2, 4
-  01561ac  <unknown>
+  01561ac  lvlx 7, 6, 7
   01561b0  li 5, 8
   01561b4  lis 6, 144
   01561b8  vspltisw 6, -16
@@ -2808,16 +2808,16 @@ SkyLevel_07:   # 0x156148, 0x400 bytes
   01561c0  vslw 5, 5, 5
   01561c4  lis 8, 4
   01561c8  vmaddfp 2, 7, 2, 5
-  01561cc  <unknown>
+  01561cc  lvlx 5, 4, 3
   01561d0  li 4, 12
   01561d4  vctuxs 3, 3, 0
   01561d8  vspltw 5, 5, 0
   01561dc  vctuxs 4, 4, 0
-  01561e0  <unknown>
+  01561e0  lvlx 7, 5, 3
   01561e4  lwz 5, -23532(6)
   01561e8  vspltw 7, 7, 0
-  01561ec  <unknown>
-  01561f0  <unknown>
+  01561ec  lvlx 9, 4, 3
+  01561f0  lvlx 10, 7, 3
   01561f4  lis 4, 4
   01561f8  lwz 7, 8(5)
   01561fc  vctuxs 2, 2, 0
@@ -3535,19 +3535,19 @@ SkyLevel_10:   # 0x156bd8, 0x434 bytes
   0156d34  vrlw 30, 30, 28
   0156d38  li 8, 24
   0156d3c  vrlw 28, 2, 28
-  0156d40  <unknown>
+  0156d40  lvlx 24, 0, 3
   0156d44  lis 31, 165
-  0156d48  <unknown>
+  0156d48  lvlx 23, 5, 3
   0156d4c  li 29, 0
   0156d50  li 5, 20
-  0156d54  <unknown>
-  0156d58  <unknown>
+  0156d54  lvlx 25, 7, 3
+  0156d58  lvlx 26, 4, 3
   0156d5c  addic 31, 31, 24960
-  0156d60  <unknown>
+  0156d60  lvlx 27, 6, 3
   0156d64  vspltw 24, 24, 0
   0156d68  vspltw 23, 23, 0
-  0156d6c  <unknown>
-  0156d70  <unknown>
+  0156d6c  lvlx 29, 5, 3
+  0156d70  lvlx 31, 8, 3
   0156d74  vspltw 25, 25, 0
   0156d78  vspltw 26, 26, 0
   0156d7c  vspltw 27, 27, 0
@@ -3569,7 +3569,7 @@ SkyLevel_10:   # 0x156bd8, 0x434 bytes
   0156dbc  vspltisw 2, 1
   0156dc0  li 4, 1808
   0156dc4  li 5, 136
-  0156dc8  <unknown>
+  0156dc8  lvlx 3, 4, 3
   0156dcc  vrlw 2, 3, 2
   0156dd0  ori 3, 31, 0
   0156dd4  ori 4, 28, 0
@@ -3588,7 +3588,7 @@ SkyLevel_10:   # 0x156bd8, 0x434 bytes
   0156e08  vspltisw 3, 5
   0156e0c  vspltisw 4, -16
   0156e10  li 5, 136
-  0156e14  <unknown>
+  0156e14  lvlx 5, 4, 3
   0156e18  vmsumshm 2, 5, 28, 2
   0156e1c  vmulouh 3, 5, 3
   0156e20  ori 3, 31, 0
@@ -3610,7 +3610,7 @@ SkyLevel_10:   # 0x156bd8, 0x434 bytes
   0156e60  vspltisw 3, 10
   0156e64  vspltisw 4, -16
   0156e68  li 5, 136
-  0156e6c  <unknown>
+  0156e6c  lvlx 5, 4, 3
   0156e70  vmsumshm 2, 5, 30, 2
   0156e74  vmulouh 3, 5, 3
   0156e78  ori 3, 31, 0
@@ -3632,7 +3632,7 @@ SkyLevel_10:   # 0x156bd8, 0x434 bytes
   0156eb8  vspltisw 3, 10
   0156ebc  vspltisw 4, -16
   0156ec0  li 5, 136
-  0156ec4  <unknown>
+  0156ec4  lvlx 5, 4, 3
   0156ec8  vmsumshm 2, 5, 30, 2
   0156ecc  vmulouh 3, 5, 3
   0156ed0  ori 3, 31, 0
@@ -3799,20 +3799,20 @@ SkyLevel_11:   # 0x157030, 0x37c bytes
   0157170  li 4, 12
   0157174  li 5, 16
   0157178  li 8, 20
-  015717c  <unknown>
-  0157180  <unknown>
+  015717c  lvlx 25, 0, 3
+  0157180  lvlx 24, 6, 3
   0157184  lis 31, 165
   0157188  li 6, 24
-  015718c  <unknown>
+  015718c  lvlx 26, 7, 3
   0157190  li 7, 28
-  0157194  <unknown>
-  0157198  <unknown>
+  0157194  lvlx 27, 4, 3
+  0157198  lvlx 28, 5, 3
   015719c  li 29, 0
-  01571a0  <unknown>
+  01571a0  lvlx 29, 8, 3
   01571a4  addic 31, 31, 24960
   01571a8  vspltw 25, 25, 0
-  01571ac  <unknown>
-  01571b0  <unknown>
+  01571ac  lvlx 30, 6, 3
+  01571b0  lvlx 31, 7, 3
   01571b4  vspltw 24, 24, 0
   01571b8  vspltw 26, 26, 0
   01571bc  vspltw 27, 27, 0
@@ -3833,7 +3833,7 @@ SkyLevel_11:   # 0x157030, 0x37c bytes
   01571f8  lis 3, 161
   01571fc  li 4, 1808
   0157200  li 5, 136
-  0157204  <unknown>
+  0157204  lvlx 2, 4, 3
   0157208  vand 2, 2, 29
   015720c  ori 3, 31, 0
   0157210  ori 4, 28, 0
@@ -3848,7 +3848,7 @@ SkyLevel_11:   # 0x157030, 0x37c bytes
   0157234  lis 3, 161
   0157238  li 4, 1808
   015723c  li 5, 136
-  0157240  <unknown>
+  0157240  lvlx 2, 4, 3
   0157244  vand 2, 2, 30
   0157248  ori 3, 31, 0
   015724c  ori 4, 28, 0
@@ -3863,7 +3863,7 @@ SkyLevel_11:   # 0x157030, 0x37c bytes
   0157270  lis 3, 161
   0157274  li 4, 1808
   0157278  li 5, 136
-  015727c  <unknown>
+  015727c  lvlx 2, 4, 3
   0157280  vand 2, 2, 31
   0157284  ori 3, 31, 0
   0157288  ori 4, 28, 0
@@ -4024,20 +4024,20 @@ SkyLevel_12:   # 0x1573d0, 0x37c bytes
   0157510  li 4, 12
   0157514  li 5, 16
   0157518  li 8, 20
-  015751c  <unknown>
-  0157520  <unknown>
+  015751c  lvlx 25, 0, 3
+  0157520  lvlx 24, 6, 3
   0157524  lis 31, 165
   0157528  li 6, 24
-  015752c  <unknown>
+  015752c  lvlx 26, 7, 3
   0157530  li 7, 28
-  0157534  <unknown>
-  0157538  <unknown>
+  0157534  lvlx 27, 4, 3
+  0157538  lvlx 28, 5, 3
   015753c  li 29, 0
-  0157540  <unknown>
+  0157540  lvlx 29, 8, 3
   0157544  addic 31, 31, 24960
   0157548  vspltw 25, 25, 0
-  015754c  <unknown>
-  0157550  <unknown>
+  015754c  lvlx 30, 6, 3
+  0157550  lvlx 31, 7, 3
   0157554  vspltw 24, 24, 0
   0157558  vspltw 26, 26, 0
   015755c  vspltw 27, 27, 0
@@ -4058,7 +4058,7 @@ SkyLevel_12:   # 0x1573d0, 0x37c bytes
   0157598  lis 3, 161
   015759c  li 4, 1808
   01575a0  li 5, 136
-  01575a4  <unknown>
+  01575a4  lvlx 2, 4, 3
   01575a8  vand 2, 2, 29
   01575ac  ori 3, 31, 0
   01575b0  ori 4, 28, 0
@@ -4073,7 +4073,7 @@ SkyLevel_12:   # 0x1573d0, 0x37c bytes
   01575d4  lis 3, 161
   01575d8  li 4, 1808
   01575dc  li 5, 136
-  01575e0  <unknown>
+  01575e0  lvlx 2, 4, 3
   01575e4  vand 2, 2, 30
   01575e8  ori 3, 31, 0
   01575ec  ori 4, 28, 0
@@ -4088,7 +4088,7 @@ SkyLevel_12:   # 0x1573d0, 0x37c bytes
   0157610  lis 3, 161
   0157614  li 4, 1808
   0157618  li 5, 136
-  015761c  <unknown>
+  015761c  lvlx 2, 4, 3
   0157620  vand 2, 2, 31
   0157624  ori 3, 31, 0
   0157628  ori 4, 28, 0
@@ -4578,17 +4578,17 @@ SkyLevel_15:   # 0x157d98, 0x2fc bytes
   0157dc8  li 4, 20
   0157dcc  vslw 4, 4, 4
   0157dd0  li 6, 24
-  0157dd4  <unknown>
+  0157dd4  lvlx 2, 0, 3
   0157dd8  lwz 7, 24(31)
   0157ddc  vspltw 2, 2, 0
   0157de0  vspltisw 8, 8
-  0157de4  <unknown>
-  0157de8  <unknown>
+  0157de4  lvlx 5, 5, 7
+  0157de8  lvlx 6, 4, 7
   0157dec  vmaddfp 3, 5, 2, 3
   0157df0  li 4, 4
   0157df4  vspltisw 5, -1
   0157df8  vmaddfp 4, 6, 2, 4
-  0157dfc  <unknown>
+  0157dfc  lvlx 7, 6, 7
   0157e00  li 5, 8
   0157e04  lis 6, 144
   0157e08  vspltisw 6, -16
@@ -4596,16 +4596,16 @@ SkyLevel_15:   # 0x157d98, 0x2fc bytes
   0157e10  vslw 5, 5, 5
   0157e14  lis 8, 4
   0157e18  vmaddfp 2, 7, 2, 5
-  0157e1c  <unknown>
+  0157e1c  lvlx 5, 4, 3
   0157e20  li 4, 12
   0157e24  vctuxs 3, 3, 0
   0157e28  vspltw 5, 5, 0
   0157e2c  vctuxs 4, 4, 0
-  0157e30  <unknown>
+  0157e30  lvlx 7, 5, 3
   0157e34  lwz 5, -23532(6)
   0157e38  vspltw 7, 7, 0
-  0157e3c  <unknown>
-  0157e40  <unknown>
+  0157e3c  lvlx 9, 4, 3
+  0157e40  lvlx 10, 7, 3
   0157e44  lis 4, 4
   0157e48  lwz 7, 8(5)
   0157e4c  vctuxs 2, 2, 0
@@ -4839,20 +4839,20 @@ SkyLevel_16:   # 0x1580b8, 0x37c bytes
   01581f8  li 4, 12
   01581fc  li 5, 16
   0158200  li 8, 20
-  0158204  <unknown>
-  0158208  <unknown>
+  0158204  lvlx 25, 0, 3
+  0158208  lvlx 24, 6, 3
   015820c  lis 31, 165
   0158210  li 6, 24
-  0158214  <unknown>
+  0158214  lvlx 26, 7, 3
   0158218  li 7, 28
-  015821c  <unknown>
-  0158220  <unknown>
+  015821c  lvlx 27, 4, 3
+  0158220  lvlx 28, 5, 3
   0158224  li 29, 0
-  0158228  <unknown>
+  0158228  lvlx 29, 8, 3
   015822c  addic 31, 31, 24960
   0158230  vspltw 25, 25, 0
-  0158234  <unknown>
-  0158238  <unknown>
+  0158234  lvlx 30, 6, 3
+  0158238  lvlx 31, 7, 3
   015823c  vspltw 24, 24, 0
   0158240  vspltw 26, 26, 0
   0158244  vspltw 27, 27, 0
@@ -4873,7 +4873,7 @@ SkyLevel_16:   # 0x1580b8, 0x37c bytes
   0158280  lis 3, 161
   0158284  li 4, 1808
   0158288  li 5, 136
-  015828c  <unknown>
+  015828c  lvlx 2, 4, 3
   0158290  vand 2, 2, 29
   0158294  ori 3, 31, 0
   0158298  ori 4, 28, 0
@@ -4888,7 +4888,7 @@ SkyLevel_16:   # 0x1580b8, 0x37c bytes
   01582bc  lis 3, 161
   01582c0  li 4, 1808
   01582c4  li 5, 136
-  01582c8  <unknown>
+  01582c8  lvlx 2, 4, 3
   01582cc  vand 2, 2, 30
   01582d0  ori 3, 31, 0
   01582d4  ori 4, 28, 0
@@ -4903,7 +4903,7 @@ SkyLevel_16:   # 0x1580b8, 0x37c bytes
   01582f8  lis 3, 161
   01582fc  li 4, 1808
   0158300  li 5, 136
-  0158304  <unknown>
+  0158304  lvlx 2, 4, 3
   0158308  vand 2, 2, 31
   015830c  ori 3, 31, 0
   0158310  ori 4, 28, 0

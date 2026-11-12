@@ -155,16 +155,16 @@ UpdateMoby_737:   # 0x4382a8, 0x490 bytes
   04383f8  vspltisw 4, -1
   04383fc  addi 4, 3, 16
   0438400  addi 5, 5, -32096
-  0438404  <unknown>
+  0438404  lvlx 2, 3, 30
   0438408  vslw 4, 4, 4
-  043840c  <unknown>
+  043840c  lvrx 3, 4, 30
   0438410  lis 4, 114
   0438414  vor 2, 2, 3
-  0438418  <unknown>
+  0438418  lvlx 3, 0, 5
   043841c  li 5, -3056
   0438420  vspltw 3, 3, 0
   0438424  vcfsx 2, 2, 0
-  0438428  <unknown>
+  0438428  lvlx 5, 5, 4
   043842c  li 4, 255
   0438430  li 5, 1
   0438434  vaddfp 2, 2, 3

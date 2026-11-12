@@ -304,8 +304,8 @@ M1059_001a8ac0:   # 0x1a8ac0, 0x230 bytes
   01a8c88  vslw 2, 2, 2
   01a8c8c  stfs 1, 0(31)
   01a8c90  stb 4, 103(30)
-  01a8c94  <unknown>
-  01a8c98  <unknown>
+  01a8c94  lvlx 3, 0, 3
+  01a8c98  lvlx 4, 6, 5
   01a8c9c  vspltw 3, 3, 0
   01a8ca0  li 5, 38
   01a8ca4  ori 3, 29, 0

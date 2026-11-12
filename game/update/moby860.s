@@ -291,8 +291,8 @@ UpdateMoby_860:   # 0x497300, 0x91c bytes
   0497440  lfs 1, 16(4)
   0497444  fmuls 1, 4, 1
   0497448  stfs 1, 260(30)
-  049744c  <unknown>
-  0497450  <unknown>
+  049744c  lvlx 3, 3, 4
+  0497450  lvlx 4, 8, 7
   0497454  vspltw 3, 3, 0
   0497458  vmaddfp 2, 4, 3, 2
   049745c  vctsxs 2, 2, 0
@@ -747,10 +747,10 @@ UpdateMoby_860:   # 0x497300, 0x91c bytes
   0497b60  lis 4, 114
   0497b64  li 6, -3056
   0497b68  vslw 2, 2, 2
-  0497b6c  <unknown>
+  0497b6c  lvlx 3, 5, 3
   0497b70  li 3, 276
   0497b74  vspltw 3, 3, 0
-  0497b78  <unknown>
+  0497b78  lvlx 4, 6, 4
   0497b7c  li 4, 1
   0497b80  vmaddfp 2, 4, 3, 2
   0497b84  vctsxs 2, 2, 0

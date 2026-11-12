@@ -498,10 +498,10 @@ UpdateMoby_1012:   # 0x186e60, 0x6d8 bytes
   0187370  li 6, -3056
   0187374  stb 4, 32(31)
   0187378  vslw 2, 2, 2
-  018737c  <unknown>
+  018737c  lvlx 3, 0, 3
   0187380  li 3, 136
   0187384  vspltw 3, 3, 0
-  0187388  <unknown>
+  0187388  lvlx 4, 6, 5
   018738c  vmaddfp 2, 4, 3, 2
   0187390  vctsxs 2, 2, 0
   0187394  vspltw 2, 2, 0

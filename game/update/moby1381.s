@@ -106,8 +106,8 @@ UpdateMoby_1381:   # 0x266758, 0x7c4 bytes
   02668d4  li 5, -3056
   02668d8  vslw 3, 3, 3
   02668dc  li 6, 844
-  02668e0  <unknown>
-  02668e4  <unknown>
+  02668e0  lvlx 2, 0, 3
+  02668e4  lvlx 4, 5, 4
   02668e8  vspltw 2, 2, 0
   02668ec  ori 3, 31, 0
   02668f0  addic 4, 30, 48
@@ -175,7 +175,7 @@ UpdateMoby_1381:   # 0x266758, 0x7c4 bytes
   02669e8  lis 4, 122
   02669ec  li 5, -14272
   02669f0  li 6, 836
-  02669f4  <unknown>
+  02669f4  lvlx 2, 5, 4
   02669f8  vcfsx 2, 2, 0
   02669fc  vspltw 2, 2, 0
   0266a00  stvewx 2, 6, 30

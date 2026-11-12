@@ -546,8 +546,8 @@ M158_002a0818:   # 0x2a0818, 0x1dc bytes
   02a0980  vslw 2, 2, 2
   02a0984  stfs 1, 0(31)
   02a0988  stb 4, 103(30)
-  02a098c  <unknown>
-  02a0990  <unknown>
+  02a098c  lvlx 3, 0, 3
+  02a0990  lvlx 4, 6, 5
   02a0994  vspltw 3, 3, 0
   02a0998  li 5, 38
   02a099c  addic 4, 30, 96

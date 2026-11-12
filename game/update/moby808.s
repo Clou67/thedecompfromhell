@@ -383,11 +383,11 @@ M808_0046a830:   # 0x46a830, 0x640 bytes
   046ac58  vslw 2, 2, 2
   046ac5c  stb 3, 103(30)
   046ac60  li 3, -3056
-  046ac64  <unknown>
+  046ac64  lvlx 3, 5, 4
   046ac68  li 5, 38
   046ac6c  vspltw 3, 3, 0
   046ac70  addic 4, 30, 96
-  046ac74  <unknown>
+  046ac74  lvlx 4, 3, 6
   046ac78  vmaddfp 2, 4, 3, 2
   046ac7c  ori 3, 31, 0
   046ac80  vctsxs 2, 2, 0
@@ -1230,10 +1230,10 @@ UpdateMoby_808:   # 0x46aec0, 0x146c bytes
   046b9dc  li 5, 128
   046b9e0  lfs 2, 148(1)
   046b9e4  li 6, 148
-  046b9e8  <unknown>
-  046b9ec  <unknown>
-  046b9f0  <unknown>
-  046b9f4  <unknown>
+  046b9e8  lvlx 2, 3, 1
+  046b9ec  lvlx 5, 4, 1
+  046b9f0  lvlx 3, 5, 1
+  046b9f4  lvlx 4, 6, 1
   046b9f8  fcmpu 0, 3, 4
   046b9fc  stfs 3, 152(1)
   046ba00  lfs 9, 132(1)
@@ -1254,10 +1254,10 @@ UpdateMoby_808:   # 0x46aec0, 0x146c bytes
   046ba3c  vslw 7, 7, 7
   046ba40  lfs 1, 64(3)
   046ba44  lfs 5, -3056(4)
-  046ba48  <unknown>
+  046ba48  lvlx 6, 5, 3
   046ba4c  fmuls 1, 5, 1
   046ba50  vspltw 6, 6, 0
-  046ba54  <unknown>
+  046ba54  lvlx 8, 6, 4
   046ba58  lfs 5, 68(3)
   046ba5c  vmaddfp 6, 8, 6, 7
   046ba60  li 4, 72
@@ -1267,7 +1267,7 @@ UpdateMoby_808:   # 0x46aec0, 0x146c bytes
   046ba70  vsubfp 2, 2, 3
   046ba74  fmr 6, 1
   046ba78  vslw 8, 8, 8
-  046ba7c  <unknown>
+  046ba7c  lvlx 7, 4, 3
   046ba80  vslw 5, 11, 11
   046ba84  vspltw 7, 7, 0
   046ba88  fsubs 7, 2, 9

@@ -180,10 +180,10 @@ UpdateMoby_1293:   # 0x23f010, 0x810 bytes
   023f2b4  vslw 3, 3, 3
   023f2b8  lfs 1, 16(4)
   023f2bc  lfs 2, -3056(5)
-  023f2c0  <unknown>
+  023f2c0  lvlx 2, 6, 4
   023f2c4  fmuls 1, 2, 1
   023f2c8  vspltw 2, 2, 0
-  023f2cc  <unknown>
+  023f2cc  lvlx 4, 7, 5
   023f2d0  vmaddfp 2, 4, 2, 3
   023f2d4  fctiwz 1, 1
   023f2d8  vctsxs 2, 2, 0

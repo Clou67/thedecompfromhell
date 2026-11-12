@@ -160,21 +160,21 @@ UpdateMoby_1513:   # 0x2902e8, 0xba4 bytes
   0290424  stfs 1, 88(30)
   0290428  lfs 1, 28(31)
   029042c  stfs 1, 92(30)
-  0290430  <unknown>
-  0290434  <unknown>
-  0290438  <unknown>
-  029043c  <unknown>
+  0290430  lvlx 4, 4, 28
+  0290434  lvlx 5, 3, 28
+  0290438  lvlx 2, 5, 28
+  029043c  lvlx 6, 6, 28
   0290440  li 6, 44
-  0290444  <unknown>
-  0290448  <unknown>
+  0290444  lvlx 10, 7, 28
+  0290448  lvlx 9, 8, 28
   029044c  lis 5, 251
-  0290450  <unknown>
+  0290450  lvlx 8, 9, 28
   0290454  li 7, 13
-  0290458  <unknown>
+  0290458  lvlx 7, 10, 28
   029045c  addic 5, 5, -9600
-  0290460  <unknown>
+  0290460  lvlx 3, 11, 28
   0290464  mtctr 7
-  0290468  <unknown>
+  0290468  lvlx 12, 6, 28
   029046c  addic 3, 5, 4
   0290470  vspltw 4, 4, 0
   0290474  addic 4, 5, 8

@@ -103,10 +103,10 @@ FUN_0038c8a0:   # 0x38c8a0, 0x440 bytes
   038ca10  lis 3, 114
   038ca14  li 5, -3056
   038ca18  vslw 2, 2, 2
-  038ca1c  <unknown>
+  038ca1c  lvlx 3, 4, 31
   038ca20  li 27, 0
   038ca24  vspltw 3, 3, 0
-  038ca28  <unknown>
+  038ca28  lvlx 4, 5, 3
   038ca2c  li 3, 36
   038ca30  vmaddfp 2, 4, 3, 2
   038ca34  vctsxs 2, 2, 0

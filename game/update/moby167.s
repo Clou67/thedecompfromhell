@@ -171,9 +171,9 @@ UpdateMoby_167:   # 0x2aa9c0, 0x5dc bytes
   02aabe8  stb 4, 32(31)
   02aabec  li 4, -3056
   02aabf0  vslw 2, 2, 2
-  02aabf4  <unknown>
+  02aabf4  lvlx 3, 6, 3
   02aabf8  vspltw 3, 3, 0
-  02aabfc  <unknown>
+  02aabfc  lvlx 4, 4, 5
   02aac00  li 4, 24
   02aac04  vmaddfp 2, 4, 3, 2
   02aac08  vspltisw 3, -1
@@ -192,11 +192,11 @@ UpdateMoby_167:   # 0x2aa9c0, 0x5dc bytes
   02aac3c  vcfsx 4, 2, 0
   02aac40  vspltw 2, 2, 0
   02aac44  stvewx 2, 0, 27
-  02aac48  <unknown>
+  02aac48  lvlx 2, 4, 3
   02aac4c  vspltw 2, 2, 0
   02aac50  vrefp 5, 4
   02aac54  li 4, 20
-  02aac58  <unknown>
+  02aac58  lvlx 9, 4, 3
   02aac5c  li 4, 48
   02aac60  vspltw 9, 9, 0
   02aac64  vnmsubfp 7, 5, 4, 2
@@ -215,18 +215,18 @@ UpdateMoby_167:   # 0x2aa9c0, 0x5dc bytes
   02aac98  vslw 5, 5, 5
   02aac9c  vspltw 4, 4, 0
   02aaca0  stvewx 4, 4, 27
-  02aaca4  <unknown>
+  02aaca4  lvlx 4, 5, 3
   02aaca8  vspltw 4, 4, 0
   02aacac  li 4, 60
   02aacb0  vmaddfp 4, 2, 4, 6
   02aacb4  vspltw 4, 4, 0
   02aacb8  stvewx 4, 6, 27
-  02aacbc  <unknown>
+  02aacbc  lvlx 4, 7, 3
   02aacc0  vspltw 4, 4, 0
   02aacc4  vmaddfp 3, 2, 4, 3
   02aacc8  vspltw 3, 3, 0
   02aaccc  stvewx 3, 8, 27
-  02aacd0  <unknown>
+  02aacd0  lvlx 3, 9, 3
   02aacd4  vspltw 3, 3, 0
   02aacd8  vmaddfp 2, 2, 3, 5
   02aacdc  vspltw 2, 2, 0
@@ -298,9 +298,9 @@ UpdateMoby_167:   # 0x2aa9c0, 0x5dc bytes
   02aade4  stb 4, 32(31)
   02aade8  li 4, -3056
   02aadec  vslw 2, 2, 2
-  02aadf0  <unknown>
+  02aadf0  lvlx 3, 5, 3
   02aadf4  vspltw 3, 3, 0
-  02aadf8  <unknown>
+  02aadf8  lvlx 4, 4, 6
   02aadfc  li 4, 24
   02aae00  vmaddfp 2, 4, 3, 2
   02aae04  vspltisw 3, -1
@@ -318,11 +318,11 @@ UpdateMoby_167:   # 0x2aa9c0, 0x5dc bytes
   02aae34  vcfsx 5, 2, 0
   02aae38  vspltw 2, 2, 0
   02aae3c  stvewx 2, 0, 27
-  02aae40  <unknown>
+  02aae40  lvlx 2, 4, 3
   02aae44  vspltw 2, 2, 0
   02aae48  vrefp 6, 5
   02aae4c  li 4, 20
-  02aae50  <unknown>
+  02aae50  lvlx 9, 4, 3
   02aae54  li 4, 48
   02aae58  vspltw 9, 9, 0
   02aae5c  vnmsubfp 8, 6, 5, 2
@@ -340,7 +340,7 @@ UpdateMoby_167:   # 0x2aa9c0, 0x5dc bytes
   02aae8c  vmaddfp 5, 2, 9, 6
   02aae90  vspltw 5, 5, 0
   02aae94  stvewx 5, 4, 27
-  02aae98  <unknown>
+  02aae98  lvlx 5, 5, 3
   02aae9c  vspltw 5, 5, 0
   02aaea0  li 4, 60
   02aaea4  vmaddfp 4, 2, 5, 4
@@ -348,12 +348,12 @@ UpdateMoby_167:   # 0x2aa9c0, 0x5dc bytes
   02aaeac  vslw 5, 5, 5
   02aaeb0  vspltw 4, 4, 0
   02aaeb4  stvewx 4, 6, 27
-  02aaeb8  <unknown>
+  02aaeb8  lvlx 4, 7, 3
   02aaebc  vspltw 4, 4, 0
   02aaec0  vmaddfp 3, 2, 4, 3
   02aaec4  vspltw 3, 3, 0
   02aaec8  stvewx 3, 8, 27
-  02aaecc  <unknown>
+  02aaecc  lvlx 3, 9, 3
   02aaed0  vspltw 3, 3, 0
   02aaed4  vmaddfp 2, 2, 3, 5
   02aaed8  vspltw 2, 2, 0

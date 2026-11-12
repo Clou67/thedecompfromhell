@@ -110,9 +110,9 @@ FUN_0028e510:   # 0x28e510, 0x208 bytes
   028e6b8  lis 4, 114
   028e6bc  li 5, -3056
   028e6c0  vslw 2, 2, 2
-  028e6c4  <unknown>
+  028e6c4  lvlx 3, 3, 31
   028e6c8  vspltw 3, 3, 0
-  028e6cc  <unknown>
+  028e6cc  lvlx 4, 5, 4
   028e6d0  ori 3, 29, 0
   028e6d4  li 4, 32
   028e6d8  vmaddfp 2, 4, 3, 2

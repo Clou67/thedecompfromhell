@@ -735,10 +735,10 @@ UpdateMoby_666:   # 0x4091a0, 0xc78 bytes
   0409d0c  li 9, -3056
   0409d10  stw 6, 488(5)
   0409d14  vslw 2, 2, 2
-  0409d18  <unknown>
+  0409d18  lvlx 3, 7, 3
   0409d1c  li 3, 492
   0409d20  vspltw 3, 3, 0
-  0409d24  <unknown>
+  0409d24  lvlx 4, 9, 8
   0409d28  vmaddfp 2, 4, 3, 2
   0409d2c  vctsxs 2, 2, 0
   0409d30  vsplth 2, 2, 1

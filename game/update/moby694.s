@@ -133,15 +133,15 @@ M694_00421f08:   # 0x421f08, 0x7a4 bytes
   042210c  li 7, 16
   0422110  li 9, 20
   0422114  li 11, 24
-  0422118  <unknown>
-  042211c  <unknown>
-  0422120  <unknown>
-  0422124  <unknown>
-  0422128  <unknown>
-  042212c  <unknown>
-  0422130  <unknown>
-  0422134  <unknown>
-  0422138  <unknown>
+  0422118  lvlx 5, 3, 1
+  042211c  lvlx 7, 4, 1
+  0422120  lvlx 9, 5, 1
+  0422124  lvlx 2, 6, 1
+  0422128  lvlx 3, 8, 30
+  042212c  lvlx 4, 10, 30
+  0422130  lvlx 6, 7, 31
+  0422134  lvlx 8, 9, 31
+  0422138  lvlx 10, 11, 31
   042213c  fdivs 5, 5, 4
   0422140  fsub 20, 30, 4
   0422144  fsub 18, 30, 4
@@ -237,7 +237,7 @@ M694_00421f08:   # 0x421f08, 0x7a4 bytes
   04222ac  vmaddfp 3, 9, 3, 10
   04222b0  vmaddfp 7, 4, 7, 13
   04222b4  vmaddfp 9, 4, 9, 0
-  04222b8  <unknown>
+  04222b8  lvlx 11, 7, 6
   04222bc  vmaddfp 2, 4, 2, 1
   04222c0  vspltw 11, 11, 0
   04222c4  li 6, 120
@@ -352,10 +352,10 @@ M694_00421f08:   # 0x421f08, 0x7a4 bytes
   0422478  lis 5, 114
   042247c  li 6, -3056
   0422480  vslw 2, 2, 2
-  0422484  <unknown>
+  0422484  lvlx 3, 4, 3
   0422488  li 3, 388
   042248c  vspltw 3, 3, 0
-  0422490  <unknown>
+  0422490  lvlx 4, 6, 5
   0422494  vmaddfp 2, 4, 3, 2
   0422498  vctsxs 2, 2, 0
   042249c  vspltw 2, 2, 0
@@ -1156,8 +1156,8 @@ UpdateMoby_694:   # 0x422f08, 0x1eb0 bytes
   0423174  li 4, -3056
   0423178  vslw 2, 2, 2
   042317c  stfs 1, 32(30)
-  0423180  <unknown>
-  0423184  <unknown>
+  0423180  lvlx 3, 6, 3
+  0423184  lvlx 4, 4, 5
   0423188  vspltw 3, 3, 0
   042318c  li 5, 38
   0423190  addic 4, 30, 352
@@ -1315,16 +1315,16 @@ UpdateMoby_694:   # 0x422f08, 0x1eb0 bytes
   04233f0  lis 5, 66
   04233f4  vspltisw 4, -1
   04233f8  li 4, 28
-  04233fc  <unknown>
+  04233fc  lvlx 3, 3, 30
   0423400  addi 3, 5, 11944
   0423404  vslw 4, 4, 4
   0423408  vsrw 2, 3, 2
   042340c  lis 5, 114
   0423410  vcfsx 2, 2, 0
-  0423414  <unknown>
+  0423414  lvlx 3, 4, 3
   0423418  li 3, -3056
   042341c  vspltw 3, 3, 0
-  0423420  <unknown>
+  0423420  lvlx 5, 3, 5
   0423424  li 3, 172
   0423428  vaddfp 2, 2, 3
   042342c  vmaddfp 2, 5, 2, 4

@@ -508,10 +508,10 @@ UpdateMoby_1144:   # 0x1df770, 0xcd8 bytes
   01dfe18  lis 4, 114
   01dfe1c  li 6, -3056
   01dfe20  vslw 2, 2, 2
-  01dfe24  <unknown>
+  01dfe24  lvlx 3, 5, 3
   01dfe28  li 3, 404
   01dfe2c  vspltw 3, 3, 0
-  01dfe30  <unknown>
+  01dfe30  lvlx 4, 6, 4
   01dfe34  vmaddfp 2, 4, 3, 2
   01dfe38  vctsxs 2, 2, 0
   01dfe3c  vspltw 2, 2, 0

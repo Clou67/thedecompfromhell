@@ -1154,10 +1154,10 @@ M230_002fe758:   # 0x2fe758, 0xa84 bytes
   02feca4  lis 4, 114
   02feca8  li 5, -3056
   02fecac  vslw 2, 2, 2
-  02fecb0  <unknown>
+  02fecb0  lvlx 3, 3, 26
   02fecb4  li 3, 192
   02fecb8  vspltw 3, 3, 0
-  02fecbc  <unknown>
+  02fecbc  lvlx 4, 5, 4
   02fecc0  vmaddfp 2, 4, 3, 2
   02fecc4  vctsxs 2, 2, 0
   02fecc8  vspltw 2, 2, 0
@@ -1626,10 +1626,10 @@ UpdateMoby_230:   # 0x2ff240, 0xeec bytes
   02ff460  stb 4, 32(31)
   02ff464  li 4, -3056
   02ff468  vslw 2, 2, 2
-  02ff46c  <unknown>
+  02ff46c  lvlx 3, 6, 3
   02ff470  li 3, 52
   02ff474  vspltw 3, 3, 0
-  02ff478  <unknown>
+  02ff478  lvlx 4, 4, 5
   02ff47c  li 4, 0
   02ff480  vmaddfp 2, 4, 3, 2
   02ff484  vctsxs 2, 2, 0
@@ -1670,10 +1670,10 @@ UpdateMoby_230:   # 0x2ff240, 0xeec bytes
   02ff510  lis 4, 114
   02ff514  li 6, -3056
   02ff518  vslw 2, 2, 2
-  02ff51c  <unknown>
+  02ff51c  lvlx 3, 5, 3
   02ff520  li 3, 52
   02ff524  vspltw 3, 3, 0
-  02ff528  <unknown>
+  02ff528  lvlx 4, 6, 4
   02ff52c  vmaddfp 2, 4, 3, 2
   02ff530  vctsxs 2, 2, 0
   02ff534  vspltw 2, 2, 0
@@ -1743,9 +1743,9 @@ UpdateMoby_230:   # 0x2ff240, 0xeec bytes
   02ff634  lis 4, 114
   02ff638  li 6, -3056
   02ff63c  vslw 2, 2, 2
-  02ff640  <unknown>
+  02ff640  lvlx 3, 5, 3
   02ff644  vspltw 3, 3, 0
-  02ff648  <unknown>
+  02ff648  lvlx 4, 6, 4
   02ff64c  li 4, 52
   02ff650  vmaddfp 2, 4, 3, 2
   02ff654  ori 3, 31, 0
@@ -2148,10 +2148,10 @@ UpdateMoby_230:   # 0x2ff240, 0xeec bytes
   02ffc88  lis 5, 114
   02ffc8c  li 6, -3056
   02ffc90  vslw 2, 2, 2
-  02ffc94  <unknown>
+  02ffc94  lvlx 3, 4, 3
   02ffc98  li 3, 56
   02ffc9c  vspltw 3, 3, 0
-  02ffca0  <unknown>
+  02ffca0  lvlx 4, 6, 5
   02ffca4  vmaddfp 2, 4, 3, 2
   02ffca8  vctsxs 2, 2, 0
   02ffcac  vsplth 2, 2, 1
@@ -2161,27 +2161,27 @@ UpdateMoby_230:   # 0x2ff240, 0xeec bytes
   02ffcbc  lis 6, 48
   02ffcc0  addi 4, 3, 16
   02ffcc4  li 5, 52
-  02ffcc8  <unknown>
-  02ffccc  <unknown>
+  02ffcc8  lvlx 2, 3, 30
+  02ffccc  lvrx 3, 4, 30
   02ffcd0  addi 4, 6, -3620
   02ffcd4  vor 2, 2, 3
   02ffcd8  li 6, 8
   02ffcdc  vspltisw 3, -1
   02ffce0  vcfsx 2, 2, 0
-  02ffce4  <unknown>
+  02ffce4  lvlx 4, 5, 4
   02ffce8  vslw 3, 3, 3
   02ffcec  vspltw 4, 4, 0
   02ffcf0  li 5, 56
-  02ffcf4  <unknown>
+  02ffcf4  lvlx 5, 6, 4
   02ffcf8  li 6, 60
   02ffcfc  vspltw 5, 5, 0
-  02ffd00  <unknown>
+  02ffd00  lvlx 6, 5, 4
   02ffd04  li 5, 64
   02ffd08  vspltw 6, 6, 0
   02ffd0c  vmaddfp 2, 2, 4, 3
-  02ffd10  <unknown>
+  02ffd10  lvlx 3, 6, 4
   02ffd14  vspltw 7, 3, 0
-  02ffd18  <unknown>
+  02ffd18  lvlx 3, 5, 4
   02ffd1c  vspltisw 10, -1
   02ffd20  vspltw 8, 3, 0
   02ffd24  vspltisw 3, -1
@@ -2190,7 +2190,7 @@ UpdateMoby_230:   # 0x2ff240, 0xeec bytes
   02ffd30  vslw 10, 10, 10
   02ffd34  vmaddfp 2, 2, 5, 6
   02ffd38  vslw 3, 3, 3
-  02ffd3c  <unknown>
+  02ffd3c  lvlx 11, 5, 4
   02ffd40  li 7, -3064
   02ffd44  li 5, 72
   02ffd48  vspltisw 13, -1
@@ -2202,8 +2202,8 @@ UpdateMoby_230:   # 0x2ff240, 0xeec bytes
   02ffd60  vsubfp 9, 8, 2
   02ffd64  vcmpgtfp 12, 6, 2
   02ffd68  vsel 2, 6, 2, 12
-  02ffd6c  <unknown>
-  02ffd70  <unknown>
+  02ffd6c  lvlx 12, 5, 4
+  02ffd70  lvlx 0, 6, 4
   02ffd74  vcmpgtfp 6, 2, 9
   02ffd78  vspltw 12, 12, 0
   02ffd7c  vsel 2, 9, 2, 6
@@ -2219,13 +2219,13 @@ UpdateMoby_230:   # 0x2ff240, 0xeec bytes
   02ffda4  vmaddfp 10, 3, 2, 10
   02ffda8  vmaddfp 6, 3, 10, 6
   02ffdac  vmaddfp 2, 10, 9, 2
-  02ffdb0  <unknown>
+  02ffdb0  lvlx 10, 5, 4
   02ffdb4  li 5, 12
   02ffdb8  vspltw 10, 10, 0
   02ffdbc  vmaddfp 11, 3, 6, 11
   02ffdc0  vmaddfp 2, 6, 12, 2
-  02ffdc4  <unknown>
-  02ffdc8  <unknown>
+  02ffdc4  lvlx 6, 5, 4
+  02ffdc8  lvlx 14, 7, 6
   02ffdcc  vspltw 6, 6, 0
   02ffdd0  li 5, 192
   02ffdd4  addi 7, 3, 16
@@ -2242,8 +2242,8 @@ UpdateMoby_230:   # 0x2ff240, 0xeec bytes
   02ffe00  vslw 11, 1, 1
   02ffe04  vspltw 13, 3, 0
   02ffe08  stvewx 13, 5, 1
-  02ffe0c  <unknown>
-  02ffe10  <unknown>
+  02ffe0c  lvlx 13, 3, 30
+  02ffe10  lvrx 1, 7, 30
   02ffe14  vor 13, 13, 1
   02ffe18  vspltisw 1, -1
   02ffe1c  vcfsx 13, 13, 0
@@ -2294,14 +2294,14 @@ UpdateMoby_230:   # 0x2ff240, 0xeec bytes
   02ffed0  lfs 1, 200(1)
   02ffed4  li 5, 196
   02ffed8  cmpwi 3, 0
-  02ffedc  <unknown>
-  02ffee0  <unknown>
+  02ffedc  lvlx 3, 4, 1
+  02ffee0  lvlx 2, 5, 1
   02ffee4  bt 2, 0x2fff24
   02ffee8  li 3, 256
   02ffeec  li 4, 260
   02ffef0  li 5, 196
-  02ffef4  <unknown>
-  02ffef8  <unknown>
+  02ffef4  lvlx 4, 3, 28
+  02ffef8  lvlx 5, 4, 28
   02ffefc  vaddfp 3, 3, 4
   02fff00  lfs 2, 264(28)
   02fff04  vaddfp 2, 2, 5
@@ -2318,8 +2318,8 @@ UpdateMoby_230:   # 0x2ff240, 0xeec bytes
   02fff30  vspltw 2, 2, 0
   02fff34  li 6, 180
   02fff38  addic 5, 1, 192
-  02fff3c  <unknown>
-  02fff40  <unknown>
+  02fff3c  lvlx 4, 3, 31
+  02fff40  lvlx 5, 4, 31
   02fff44  vaddfp 3, 3, 4
   02fff48  lfs 2, 24(31)
   02fff4c  vaddfp 2, 2, 5
@@ -2343,10 +2343,10 @@ UpdateMoby_230:   # 0x2ff240, 0xeec bytes
   02fff94  lis 5, 114
   02fff98  li 6, -3056
   02fff9c  vslw 2, 2, 2
-  02fffa0  <unknown>
+  02fffa0  lvlx 3, 4, 3
   02fffa4  li 3, 56
   02fffa8  vspltw 3, 3, 0
-  02fffac  <unknown>
+  02fffac  lvlx 4, 6, 5
   02fffb0  vmaddfp 2, 4, 3, 2
   02fffb4  vctsxs 2, 2, 0
   02fffb8  vsplth 2, 2, 1
@@ -2373,9 +2373,9 @@ UpdateMoby_230:   # 0x2ff240, 0xeec bytes
   030000c  lis 4, 114
   0300010  li 6, -3056
   0300014  vslw 2, 2, 2
-  0300018  <unknown>
+  0300018  lvlx 3, 5, 3
   030001c  vspltw 3, 3, 0
-  0300020  <unknown>
+  0300020  lvlx 4, 6, 4
   0300024  li 4, 52
   0300028  vmaddfp 2, 4, 3, 2
   030002c  ori 3, 31, 0

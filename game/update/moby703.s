@@ -63,11 +63,11 @@ UpdateMoby_703:   # 0x429290, 0x3b0 bytes
   042931c  lbz 4, 164(30)
   0429320  stfs 1, 160(30)
   0429324  stb 4, 188(31)
-  0429328  <unknown>
+  0429328  lvlx 2, 0, 6
   042932c  vslw 3, 3, 3
   0429330  vspltw 2, 2, 0
   0429334  li 4, 1
-  0429338  <unknown>
+  0429338  lvlx 4, 5, 3
   042933c  li 6, -1
   0429340  li 3, 166
   0429344  li 5, 255
@@ -224,8 +224,8 @@ UpdateMoby_703:   # 0x429290, 0x3b0 bytes
   04295a0  addi 3, 3, -28032
   04295a4  lis 5, 114
   04295a8  vslw 2, 2, 2
-  04295ac  <unknown>
-  04295b0  <unknown>
+  04295ac  lvlx 3, 0, 3
+  04295b0  lvlx 4, 4, 5
   04295b4  li 3, 166
   04295b8  vspltw 3, 3, 0
   04295bc  vmaddfp 2, 4, 3, 2

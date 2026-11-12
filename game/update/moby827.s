@@ -1292,9 +1292,9 @@ M827_0047aa38:   # 0x47aa38, 0x740 bytes
   047ad48  addic 3, 3, -1
   047ad4c  addi 5, 4, 16
   047ad50  li 6, 15
-  047ad54  <unknown>
+  047ad54  lvlx 3, 4, 30
   047ad58  li 4, 32
-  047ad5c  <unknown>
+  047ad5c  lvrx 4, 5, 30
   047ad60  sth 3, 576(30)
   047ad64  vor 3, 3, 4
   047ad68  li 3, 0

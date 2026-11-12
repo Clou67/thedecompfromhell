@@ -24,13 +24,13 @@ M1199_001f6f08:   # 0x1f6f08, 0xa0 bytes
   01f6f3c  lis 7, 164
   01f6f40  li 6, 25408
   01f6f44  li 5, -3056
-  01f6f48  <unknown>
+  01f6f48  lvlx 2, 0, 4
   01f6f4c  li 4, 188
   01f6f50  vspltw 2, 2, 0
-  01f6f54  <unknown>
+  01f6f54  lvlx 3, 6, 9
   01f6f58  vspltisw 4, -1
   01f6f5c  vcfsx 3, 3, 0
-  01f6f60  <unknown>
+  01f6f60  lvlx 5, 5, 8
   01f6f64  lhz 10, 0(3)
   01f6f68  vslw 4, 4, 4
   01f6f6c  lwz 11, -28512(7)
@@ -436,8 +436,8 @@ M1199_001f6fe0:   # 0x1f6fe0, 0x8f8 bytes
   01f75dc  li 4, -3056
   01f75e0  vslw 2, 2, 2
   01f75e4  stfs 1, 32(30)
-  01f75e8  <unknown>
-  01f75ec  <unknown>
+  01f75e8  lvlx 3, 6, 3
+  01f75ec  lvlx 4, 4, 5
   01f75f0  vspltw 3, 3, 0
   01f75f4  li 5, 38
   01f75f8  addic 4, 30, 272
@@ -2307,10 +2307,10 @@ UpdateMoby_1199:   # 0x1f7980, 0x1bec bytes
   01f93b8  stb 4, 32(31)
   01f93bc  li 4, -3056
   01f93c0  vslw 2, 2, 2
-  01f93c4  <unknown>
+  01f93c4  lvlx 3, 3, 29
   01f93c8  li 3, 188
   01f93cc  vspltw 3, 3, 0
-  01f93d0  <unknown>
+  01f93d0  lvlx 4, 4, 28
   01f93d4  lis 4, 118
   01f93d8  fmr 1, 31
   01f93dc  vmaddfp 2, 4, 3, 2

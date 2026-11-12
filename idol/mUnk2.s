@@ -776,17 +776,17 @@ FUN_004f0ac8:   # 0x4f0ac8, 0x1bc bytes
   04f0b3c  bf 26, 0x4f0b84
   04f0b40  li 7, 4
   04f0b44  lfs 1, 4(4)
-  04f0b48  <unknown>
+  04f0b48  lvlx 2, 7, 4
   04f0b4c  vspltw 2, 2, 0
   04f0b50  b 0x4f0b84
   04f0b54  li 7, 8
   04f0b58  lfs 1, 8(4)
-  04f0b5c  <unknown>
+  04f0b5c  lvlx 2, 7, 4
   04f0b60  vspltw 2, 2, 0
   04f0b64  b 0x4f0b84
   04f0b68  li 7, 4
   04f0b6c  lfs 1, 4(4)
-  04f0b70  <unknown>
+  04f0b70  lvlx 2, 7, 4
   04f0b74  vspltw 2, 2, 0
   04f0b78  b 0x4f0b84
   04f0b7c  li 8, 100
@@ -807,7 +807,7 @@ FUN_004f0ac8:   # 0x4f0ac8, 0x1bc bytes
   04f0bb8  vslw 10, 10, 10
   04f0bbc  lfd 2, 64(1)
   04f0bc0  std 6, 64(1)
-  04f0bc4  <unknown>
+  04f0bc4  lvlx 7, 5, 4
   04f0bc8  lfd 3, 64(1)
   04f0bcc  fcfid 2, 2
   04f0bd0  vspltw 7, 7, 0
@@ -825,7 +825,7 @@ FUN_004f0ac8:   # 0x4f0ac8, 0x1bc bytes
   04f0c00  lfs 3, -21420(4)
   04f0c04  vnmsubfp 8, 5, 3, 7
   04f0c08  vmaddfp 5, 5, 8, 6
-  04f0c0c  <unknown>
+  04f0c0c  lvlx 6, 5, 4
   04f0c10  vnmsubfp 3, 5, 3, 7
   04f0c14  vmaddfp 3, 5, 3, 9
   04f0c18  vmaddfp 3, 3, 4, 10
@@ -839,7 +839,7 @@ FUN_004f0ac8:   # 0x4f0ac8, 0x1bc bytes
   04f0c38  lis 4, 144
   04f0c3c  li 5, -21424
   04f0c40  vspltw 2, 2, 0
-  04f0c44  <unknown>
+  04f0c44  lvlx 3, 5, 4
   04f0c48  lfs 2, -21424(4)
   04f0c4c  vspltw 3, 3, 0
   04f0c50  vcmpgefp. 3, 3, 2

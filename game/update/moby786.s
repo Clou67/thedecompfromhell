@@ -275,7 +275,7 @@ M786_0045aa28:   # 0x45aa28, 0x5d4 bytes
   045ae64  li 8, 2
   045ae68  li 9, 400
   045ae6c  li 5, 264
-  045ae70  <unknown>
+  045ae70  lvlx 2, 4, 3
   045ae74  li 3, 408
   045ae78  li 7, 280
   045ae7c  li 10, 416
@@ -288,8 +288,8 @@ M786_0045aa28:   # 0x45aa28, 0x5d4 bytes
   045ae98  addc 6, 1, 9
   045ae9c  addc 8, 1, 10
   045aea0  vcfsx 5, 3, 0
-  045aea4  <unknown>
-  045aea8  <unknown>
+  045aea4  lvlx 6, 0, 5
+  045aea8  lvlx 7, 0, 7
   045aeac  vspltw 8, 6, 0
   045aeb0  addic 5, 5, 4
   045aeb4  vspltw 9, 7, 0
@@ -1275,10 +1275,10 @@ UpdateMoby_786:   # 0x45b190, 0x1328 bytes
   045be78  lis 4, 114
   045be7c  li 6, -3056
   045be80  vslw 2, 2, 2
-  045be84  <unknown>
+  045be84  lvlx 3, 5, 3
   045be88  li 3, 372
   045be8c  vspltw 3, 3, 0
-  045be90  <unknown>
+  045be90  lvlx 4, 6, 4
   045be94  vmaddfp 2, 4, 3, 2
   045be98  vctsxs 2, 2, 0
   045be9c  vsplth 2, 2, 1

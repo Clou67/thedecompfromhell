@@ -43,9 +43,9 @@ M1264_00230bb8:   # 0x230bb8, 0x53c bytes
   0230c54  li 5, 255
   0230c58  addi 6, 4, 16
   0230c5c  ori 29, 27, 0
-  0230c60  <unknown>
+  0230c60  lvlx 3, 4, 3
   0230c64  lwz 4, 112(28)
-  0230c68  <unknown>
+  0230c68  lvrx 4, 6, 3
   0230c6c  vor 3, 3, 4
   0230c70  stb 5, 164(4)
   0230c74  vaddfp 2, 2, 3
@@ -75,19 +75,19 @@ M1264_00230bb8:   # 0x230bb8, 0x53c bytes
   0230cd4  li 4, 4
   0230cd8  addi 6, 6, 2968
   0230cdc  vslw 2, 2, 2
-  0230ce0  <unknown>
+  0230ce0  lvlx 3, 3, 30
   0230ce4  li 3, 100
-  0230ce8  <unknown>
+  0230ce8  lvrx 4, 5, 30
   0230cec  addi 5, 3, 16
   0230cf0  vor 3, 3, 4
-  0230cf4  <unknown>
+  0230cf4  lvlx 4, 4, 6
   0230cf8  li 4, 8
-  0230cfc  <unknown>
+  0230cfc  lvlx 5, 3, 30
   0230d00  vspltw 4, 4, 0
   0230d04  vslw 6, 6, 6
   0230d08  vmaddfp 2, 3, 4, 2
-  0230d0c  <unknown>
-  0230d10  <unknown>
+  0230d0c  lvlx 3, 4, 6
+  0230d10  lvrx 4, 5, 30
   0230d14  vspltw 3, 3, 0
   0230d18  vor 4, 5, 4
   0230d1c  vspltisw 5, 1
@@ -165,11 +165,11 @@ M1264_00230bb8:   # 0x230bb8, 0x53c bytes
   0230e3c  addi 7, 5, 16
   0230e40  ori 9, 3, 0
   0230e44  ori 3, 29, 0
-  0230e48  <unknown>
-  0230e4c  <unknown>
-  0230e50  <unknown>
+  0230e48  lvlx 3, 6, 4
+  0230e4c  lvlx 4, 5, 4
+  0230e50  lvrx 5, 8, 4
   0230e54  cmpw 3, 9
-  0230e58  <unknown>
+  0230e58  lvrx 6, 7, 4
   0230e5c  vor 3, 3, 5
   0230e60  vor 4, 4, 6
   0230e64  vsraw 3, 3, 2
@@ -189,8 +189,8 @@ M1264_00230bb8:   # 0x230bb8, 0x53c bytes
   0230e9c  bt 0, 0x230e84
   0230ea0  li 3, 192
   0230ea4  addi 4, 3, 16
-  0230ea8  <unknown>
-  0230eac  <unknown>
+  0230ea8  lvlx 3, 3, 28
+  0230eac  lvrx 4, 4, 28
   0230eb0  vor 3, 3, 4
   0230eb4  vaddfp 2, 3, 2
   0230eb8  vspltisw 3, 0
@@ -200,7 +200,7 @@ M1264_00230bb8:   # 0x230bb8, 0x53c bytes
   0230ec8  bf 26, 0x230ee8
   0230ecc  lwz 4, 240(30)
   0230ed0  li 3, 192
-  0230ed4  <unknown>
+  0230ed4  lvlx 3, 0, 4
   0230ed8  vcfsx 3, 3, 0
   0230edc  vaddfp 2, 2, 3
   0230ee0  vspltw 2, 2, 0
@@ -501,13 +501,13 @@ M1264_00231108:   # 0x231108, 0xc30 bytes
   0231388  li 5, 4
   023138c  addi 6, 6, 4340
   0231390  vslw 4, 4, 4
-  0231394  <unknown>
+  0231394  lvlx 2, 4, 3
   0231398  lis 3, 114
   023139c  vcfsx 2, 2, 0
   02313a0  li 4, -3056
-  02313a4  <unknown>
+  02313a4  lvlx 3, 5, 6
   02313a8  vspltw 3, 3, 0
-  02313ac  <unknown>
+  02313ac  lvlx 5, 4, 3
   02313b0  li 3, 40
   02313b4  vaddfp 2, 2, 3
   02313b8  vmaddfp 2, 5, 2, 4

@@ -1631,7 +1631,7 @@ UpdateMoby_1772:   # 0x2b90b8, 0x3c4 bytes
   02b919c  stb 4, 32(31)
   02b91a0  li 4, 5
   02b91a4  addic 3, 3, 2096
-  02b91a8  <unknown>
+  02b91a8  lvlx 4, 6, 5
   02b91ac  mtctr 4
   02b91b0  vspltw 4, 4, 0
   02b91b4  vcfsx 5, 3, 0

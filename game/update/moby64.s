@@ -657,7 +657,7 @@ M795_00447b40:   # 0x447b40, 0x7a0 bytes
   04481b8  subc 8, 8, 4
   04481bc  subc 4, 6, 4
   04481c0  ori 6, 5, 41088
-  04481c4  <unknown>
+  04481c4  lvlx 2, 9, 7
   04481c8  cntlzw 4, 4
   04481cc  ori 5, 10, 37024
   04481d0  sldi 4, 4, 58
@@ -688,7 +688,7 @@ M795_00447b40:   # 0x447b40, 0x7a0 bytes
   0448234  vspltisw 2, -1
   0448238  li 3, -3056
   044823c  vslw 2, 2, 2
-  0448240  <unknown>
+  0448240  lvlx 3, 3, 29
   0448244  li 3, 303
   0448248  vmaddfp 2, 3, 31, 2
   044824c  vctsxs 2, 2, 0
@@ -701,10 +701,10 @@ M795_00447b40:   # 0x447b40, 0x7a0 bytes
   0448268  lis 4, 114
   044826c  li 6, -3056
   0448270  vslw 2, 2, 2
-  0448274  <unknown>
+  0448274  lvlx 3, 5, 3
   0448278  li 3, 302
   044827c  vspltw 3, 3, 0
-  0448280  <unknown>
+  0448280  lvlx 4, 6, 4
   0448284  vmaddfp 2, 4, 3, 2
   0448288  vctsxs 2, 2, 0
   044828c  vspltb 2, 2, 3
@@ -1336,10 +1336,10 @@ M795_00448ab0:   # 0x448ab0, 0xacc bytes
   0448cb8  lis 3, 114
   0448cbc  li 5, -3056
   0448cc0  vslw 2, 2, 2
-  0448cc4  <unknown>
+  0448cc4  lvlx 3, 4, 25
   0448cc8  li 6, 330
   0448ccc  vspltw 3, 3, 0
-  0448cd0  <unknown>
+  0448cd0  lvlx 4, 5, 3
   0448cd4  li 11, -1
   0448cd8  fmr 1, 31
   0448cdc  vmaddfp 2, 4, 3, 2
@@ -1987,7 +1987,7 @@ UpdateMoby_64:   # 0x4495b8, 0x10dc bytes
   0449718  bt 2, 0x449784
   044971c  lis 4, 69
   0449720  addi 4, 4, -27268
-  0449724  <unknown>
+  0449724  lvlx 31, 0, 4
   0449728  vspltw 31, 31, 0
   044972c  vspltisw 2, -1
   0449730  li 4, 3
@@ -1996,7 +1996,7 @@ UpdateMoby_64:   # 0x4495b8, 0x10dc bytes
   044973c  li 7, 300
   0449740  vslw 2, 2, 2
   0449744  stb 4, 32(3)
-  0449748  <unknown>
+  0449748  lvlx 3, 6, 5
   044974c  lwz 4, 120(3)
   0449750  vmaddfp 2, 3, 31, 2
   0449754  ori 3, 28, 0

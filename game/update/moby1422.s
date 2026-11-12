@@ -1754,24 +1754,24 @@ M1422_00275240:   # 0x275240, 0x1364 bytes
   02752c0  li 5, 4
   02752c4  addi 4, 3, 16
   02752c8  li 29, 0
-  02752cc  <unknown>
+  02752cc  lvlx 2, 3, 30
   02752d0  li 3, 8
-  02752d4  <unknown>
+  02752d4  lvrx 3, 4, 30
   02752d8  li 4, 12
   02752dc  vor 2, 2, 3
-  02752e0  <unknown>
+  02752e0  lvlx 3, 5, 28
   02752e4  ori 25, 29, 0
-  02752e8  <unknown>
+  02752e8  lvlx 4, 3, 28
   02752ec  vspltw 3, 3, 0
   02752f0  vcfsx 2, 2, 0
   02752f4  vspltw 4, 4, 0
-  02752f8  <unknown>
+  02752f8  lvlx 6, 4, 28
   02752fc  li 3, 16
   0275300  lfs 29, 20(28)
   0275304  lis 4, 51
   0275308  vspltw 6, 6, 0
   027530c  li 5, 0
-  0275310  <unknown>
+  0275310  lvlx 7, 3, 28
   0275314  ori 3, 31, 0
   0275318  stw 25, 276(1)
   027531c  vsubfp 2, 3, 2
@@ -1854,10 +1854,10 @@ M1422_00275240:   # 0x275240, 0x1364 bytes
   0275450  li 3, 912
   0275454  li 5, 276
   0275458  addi 4, 3, 16
-  027545c  <unknown>
-  0275460  <unknown>
+  027545c  lvlx 2, 3, 30
+  0275460  lvrx 3, 4, 30
   0275464  vor 2, 2, 3
-  0275468  <unknown>
+  0275468  lvlx 3, 5, 1
   027546c  vaddfp 2, 2, 3
   0275470  vspltw 2, 2, 0
   0275474  stvewx 2, 3, 30
@@ -1865,10 +1865,10 @@ M1422_00275240:   # 0x275240, 0x1364 bytes
   027547c  li 3, 916
   0275480  li 5, 276
   0275484  addi 4, 3, 16
-  0275488  <unknown>
-  027548c  <unknown>
+  0275488  lvlx 2, 3, 30
+  027548c  lvrx 3, 4, 30
   0275490  vor 2, 2, 3
-  0275494  <unknown>
+  0275494  lvlx 3, 5, 1
   0275498  vaddfp 2, 2, 3
   027549c  vspltw 2, 2, 0
   02754a0  stvewx 2, 3, 30
@@ -1899,13 +1899,13 @@ M1422_00275240:   # 0x275240, 0x1364 bytes
   0275504  bl 0xfddc0
   0275508  nop
   027550c  li 3, 276
-  0275510  <unknown>
+  0275510  lvlx 2, 3, 1
   0275514  li 3, 908
   0275518  vspltw 3, 2, 0
   027551c  addi 4, 3, 16
   0275520  vspltw 31, 31, 0
-  0275524  <unknown>
-  0275528  <unknown>
+  0275524  lvlx 2, 3, 30
+  0275528  lvrx 4, 4, 30
   027552c  vor 2, 2, 4
   0275530  vspltw 4, 2, 0
   0275534  vcmpgefp. 4, 4, 31
@@ -2159,8 +2159,8 @@ M1422_00275240:   # 0x275240, 0x1364 bytes
   0275914  li 6, -3056
   0275918  vslw 2, 2, 2
   027591c  li 7, 852
-  0275920  <unknown>
-  0275924  <unknown>
+  0275920  lvlx 3, 3, 5
+  0275924  lvlx 4, 6, 4
   0275928  vspltw 3, 3, 0
   027592c  li 3, 856
   0275930  li 6, 32
@@ -2171,7 +2171,7 @@ M1422_00275240:   # 0x275240, 0x1364 bytes
   0275944  vctsxs 2, 2, 0
   0275948  vspltw 2, 2, 0
   027594c  stvewx 2, 3, 30
-  0275950  <unknown>
+  0275950  lvlx 2, 6, 5
   0275954  ori 3, 31, 0
   0275958  vspltw 2, 2, 0
   027595c  vmaddfp 2, 4, 2, 3
@@ -3682,11 +3682,11 @@ UpdateMoby_1422:   # 0x2766e0, 0x398c bytes
   02771a0  vspltisw 2, -8
   02771a4  lis 5, 39
   02771a8  li 4, 36
-  02771ac  <unknown>
+  02771ac  lvlx 3, 3, 31
   02771b0  addi 3, 5, 26128
   02771b4  vsrw 2, 3, 2
   02771b8  vcfux 2, 2, 0
-  02771bc  <unknown>
+  02771bc  lvlx 3, 4, 3
   02771c0  vspltw 3, 3, 0
   02771c4  vspltw 2, 2, 0
   02771c8  vcmpgefp. 2, 2, 3
@@ -5278,14 +5278,14 @@ UpdateMoby_1422:   # 0x2766e0, 0x398c bytes
   0278a90  bf 1, 0x279dec
   0278a94  li 3, 844
   0278a98  addi 4, 3, 16
-  0278a9c  <unknown>
+  0278a9c  lvlx 2, 3, 30
   0278aa0  lis 3, 39
-  0278aa4  <unknown>
+  0278aa4  lvrx 3, 4, 30
   0278aa8  addi 3, 3, 26128
   0278aac  vor 2, 2, 3
   0278ab0  li 4, 112
   0278ab4  vcfsx 2, 2, 0
-  0278ab8  <unknown>
+  0278ab8  lvlx 3, 4, 3
   0278abc  vspltw 3, 3, 0
   0278ac0  vspltw 2, 2, 0
   0278ac4  vcmpgefp. 2, 2, 3

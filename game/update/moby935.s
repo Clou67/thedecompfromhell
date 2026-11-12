@@ -60,8 +60,8 @@ FUN_004c0208:   # 0x4c0208, 0x4ac bytes
   04c02e8  stfs 1, 8(3)
   04c02ec  lfs 1, 12(30)
   04c02f0  stfs 1, 12(3)
-  04c02f4  <unknown>
-  04c02f8  <unknown>
+  04c02f4  lvlx 3, 4, 6
+  04c02f8  lvlx 4, 7, 5
   04c02fc  vspltw 3, 3, 0
   04c0300  vmaddfp 2, 4, 3, 2
   04c0304  vctsxs 2, 2, 0

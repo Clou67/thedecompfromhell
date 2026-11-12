@@ -131,10 +131,10 @@ FUN_003426d8:   # 0x3426d8, 0x264 bytes
   03428d4  lis 4, 114
   03428d8  stfs 1, 24(28)
   03428dc  li 5, -3056
-  03428e0  <unknown>
+  03428e0  lvlx 3, 3, 30
   03428e4  vslw 2, 2, 2
   03428e8  vspltw 3, 3, 0
-  03428ec  <unknown>
+  03428ec  lvlx 4, 5, 4
   03428f0  li 4, 32
   03428f4  vmaddfp 2, 4, 3, 2
   03428f8  ori 3, 29, 0

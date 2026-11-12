@@ -42,7 +42,7 @@ UpdateMoby_384:   # 0x359408, 0x690 bytes
   0359484  addi 4, 3, -27672
   0359488  lbz 3, 188(31)
   035948c  rlwinm 5, 3, 0, 28, 28
-  0359490  <unknown>
+  0359490  lvlx 2, 0, 4
   0359494  cmpwi 5, 0
   0359498  vspltw 2, 2, 0
   035949c  bt 2, 0x3594e8
@@ -53,10 +53,10 @@ UpdateMoby_384:   # 0x359408, 0x690 bytes
   03594b0  stb 3, 188(31)
   03594b4  lis 3, 114
   03594b8  vslw 4, 4, 4
-  03594bc  <unknown>
+  03594bc  lvlx 3, 5, 4
   03594c0  li 4, -3056
   03594c4  vcfsx 3, 3, 0
-  03594c8  <unknown>
+  03594c8  lvlx 5, 4, 3
   03594cc  li 3, 4
   03594d0  vaddfp 2, 3, 2
   03594d4  vmaddfp 2, 5, 2, 4
@@ -74,10 +74,10 @@ UpdateMoby_384:   # 0x359408, 0x690 bytes
   0359504  stb 3, 188(31)
   0359508  lis 3, 114
   035950c  vslw 4, 4, 4
-  0359510  <unknown>
+  0359510  lvlx 3, 5, 4
   0359514  li 4, -3056
   0359518  vcfsx 3, 3, 0
-  035951c  <unknown>
+  035951c  lvlx 5, 4, 3
   0359520  li 3, 4
   0359524  vaddfp 2, 3, 2
   0359528  vmaddfp 2, 5, 2, 4
@@ -170,31 +170,31 @@ UpdateMoby_384:   # 0x359408, 0x690 bytes
   0359684  li 6, 136
   0359688  li 4, 152
   035968c  li 7, 132
-  0359690  <unknown>
+  0359690  lvlx 2, 3, 1
   0359694  li 9, 148
-  0359698  <unknown>
+  0359698  lvlx 3, 5, 1
   035969c  li 10, 2052
-  03596a0  <unknown>
+  03596a0  lvlx 4, 6, 1
   03596a4  lis 5, 132
-  03596a8  <unknown>
+  03596a8  lvlx 5, 4, 1
   03596ac  li 8, 2048
   03596b0  lis 4, 132
-  03596b4  <unknown>
+  03596b4  lvlx 8, 7, 1
   03596b8  vsubfp 6, 2, 3
   03596bc  lis 11, 132
-  03596c0  <unknown>
+  03596c0  lvlx 9, 9, 1
   03596c4  li 12, 2032
   03596c8  vsubfp 7, 4, 5
   03596cc  li 9, 168
   03596d0  vsubfp 11, 8, 9
-  03596d4  <unknown>
-  03596d8  <unknown>
+  03596d4  lvlx 10, 10, 5
+  03596d8  lvlx 12, 8, 4
   03596dc  li 5, 176
   03596e0  li 4, 160
   03596e4  vsubfp 12, 10, 12
   03596e8  li 10, 164
   03596ec  li 8, 180
-  03596f0  <unknown>
+  03596f0  lvlx 0, 4, 1
   03596f4  vspltw 13, 6, 0
   03596f8  vsubfp 0, 3, 0
   03596fc  li 4, 184
@@ -203,17 +203,17 @@ UpdateMoby_384:   # 0x359408, 0x690 bytes
   0359708  vspltw 3, 11, 0
   035970c  stvewx 13, 5, 1
   0359710  vaddfp 7, 7, 12
-  0359714  <unknown>
+  0359714  lvlx 12, 10, 1
   0359718  stvewx 3, 8, 1
   035971c  li 10, 192
   0359720  stvewx 1, 4, 1
   0359724  vsubfp 9, 9, 12
-  0359728  <unknown>
+  0359728  lvlx 3, 9, 1
   035972c  lfs 1, 140(1)
   0359730  vsubfp 3, 5, 3
   0359734  li 9, 196
   0359738  stfs 1, 188(1)
-  035973c  <unknown>
+  035973c  lvlx 12, 12, 11
   0359740  vspltw 5, 0, 0
   0359744  li 11, 200
   0359748  vcfsx 12, 12, 0
@@ -232,7 +232,7 @@ UpdateMoby_384:   # 0x359408, 0x690 bytes
   035977c  vslw 15, 15, 15
   0359780  stvewx 5, 11, 1
   0359784  stfs 1, 204(1)
-  0359788  <unknown>
+  0359788  lvlx 5, 29, 12
   035978c  vslw 1, 1, 1
   0359790  vspltw 5, 5, 0
   0359794  lis 12, 132
@@ -243,7 +243,7 @@ UpdateMoby_384:   # 0x359408, 0x690 bytes
   03597a8  vspltisw 19, -1
   03597ac  vnmsubfp 14, 13, 12, 5
   03597b0  vmaddfp 13, 13, 14, 1
-  03597b4  <unknown>
+  03597b4  lvlx 1, 29, 12
   03597b8  vspltisw 14, -1
   03597bc  li 12, 16
   03597c0  vsubfp 10, 1, 10
@@ -264,11 +264,11 @@ UpdateMoby_384:   # 0x359408, 0x690 bytes
   03597fc  vnmsubfp 12, 13, 12, 5
   0359800  vmaddfp 12, 13, 12, 14
   0359804  vslw 13, 3, 3
-  0359808  <unknown>
+  0359808  lvlx 3, 12, 31
   035980c  vslw 14, 19, 19
   0359810  vaddfp 2, 2, 3
-  0359814  <unknown>
-  0359818  <unknown>
+  0359814  lvlx 19, 29, 31
+  0359818  lvlx 3, 28, 31
   035981c  vaddfp 8, 8, 19
   0359820  vaddfp 3, 4, 3
   0359824  lbz 12, 188(31)
@@ -306,10 +306,10 @@ UpdateMoby_384:   # 0x359408, 0x690 bytes
   03598a4  lis 5, 132
   03598a8  li 6, 2056
   03598ac  li 7, 200
-  03598b0  <unknown>
+  03598b0  lvlx 5, 4, 3
   03598b4  li 3, 184
   03598b8  vspltw 5, 5, 0
-  03598bc  <unknown>
+  03598bc  lvlx 6, 6, 5
   03598c0  vxor 4, 5, 4
   03598c4  vxor 5, 5, 2
   03598c8  vsldoi 2, 6, 6, 0
@@ -320,7 +320,7 @@ UpdateMoby_384:   # 0x359408, 0x690 bytes
   03598dc  b 0x3598ec
   03598e0  lis 3, 132
   03598e4  li 4, 2048
-  03598e8  <unknown>
+  03598e8  lvlx 2, 4, 3
   03598ec  vspltw 2, 2, 0
   03598f0  lis 29, 132
   03598f4  lis 28, 132

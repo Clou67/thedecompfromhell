@@ -54,8 +54,8 @@ M871_0049dc90:   # 0x49dc90, 0xec bytes
   049dd3c  li 4, 4
   049dd40  vspltisw 2, -16
   049dd44  addi 5, 4, 16
-  049dd48  <unknown>
-  049dd4c  <unknown>
+  049dd48  lvlx 3, 4, 3
+  049dd4c  lvrx 4, 5, 3
   049dd50  vor 3, 3, 4
   049dd54  vsraw 2, 3, 2
   049dd58  vcfsx 2, 2, 0
@@ -184,8 +184,8 @@ UpdateMoby_871:   # 0x49dda0, 0x780 bytes
   049df60  li 4, -3056
   049df64  vslw 2, 2, 2
   049df68  stfs 1, 32(30)
-  049df6c  <unknown>
-  049df70  <unknown>
+  049df6c  lvlx 3, 6, 3
+  049df70  lvlx 4, 4, 5
   049df74  vspltw 3, 3, 0
   049df78  li 5, 38
   049df7c  addic 4, 30, 96
@@ -514,8 +514,8 @@ UpdateMoby_871:   # 0x49dda0, 0x780 bytes
   049e488  li 4, 4
   049e48c  vspltisw 2, -16
   049e490  addi 5, 4, 16
-  049e494  <unknown>
-  049e498  <unknown>
+  049e494  lvlx 3, 4, 3
+  049e498  lvrx 4, 5, 3
   049e49c  vor 3, 3, 4
   049e4a0  vsraw 2, 3, 2
   049e4a4  vcfsx 2, 2, 0

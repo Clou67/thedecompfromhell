@@ -311,10 +311,10 @@ UpdateMoby_90:   # 0x4a4bd0, 0xafc bytes
   04a509c  lis 4, 114
   04a50a0  li 6, -3056
   04a50a4  vslw 2, 2, 2
-  04a50a8  <unknown>
+  04a50a8  lvlx 3, 5, 3
   04a50ac  li 3, 388
   04a50b0  vspltw 3, 3, 0
-  04a50b4  <unknown>
+  04a50b4  lvlx 4, 6, 4
   04a50b8  vmaddfp 2, 4, 3, 2
   04a50bc  vctsxs 2, 2, 0
   04a50c0  vspltw 2, 2, 0

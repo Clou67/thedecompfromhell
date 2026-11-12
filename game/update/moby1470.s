@@ -157,9 +157,9 @@ UpdateMoby_1470:   # 0x286ae0, 0xc84 bytes
   0286d28  stb 4, 48(31)
   0286d2c  li 4, -3056
   0286d30  vslw 2, 2, 2
-  0286d34  <unknown>
+  0286d34  lvlx 3, 5, 3
   0286d38  vspltw 3, 3, 0
-  0286d3c  <unknown>
+  0286d3c  lvlx 4, 4, 6
   0286d40  li 5, 0
   0286d44  li 4, 56
   0286d48  lwz 3, 68(30)
@@ -283,11 +283,11 @@ UpdateMoby_1470:   # 0x286ae0, 0xc84 bytes
   0286f20  lis 5, 114
   0286f24  li 6, -3056
   0286f28  vslw 2, 2, 2
-  0286f2c  <unknown>
+  0286f2c  lvlx 3, 4, 3
   0286f30  lis 4, 161
   0286f34  vspltw 3, 3, 0
   0286f38  li 3, 56
-  0286f3c  <unknown>
+  0286f3c  lvlx 4, 6, 5
   0286f40  addic 4, 4, 12
   0286f44  vmaddfp 2, 4, 3, 2
   0286f48  vctsxs 2, 2, 0
@@ -472,10 +472,10 @@ UpdateMoby_1470:   # 0x286ae0, 0xc84 bytes
   0287214  li 3, -3056
   0287218  vslw 2, 2, 2
   028721c  stb 6, 32(31)
-  0287220  <unknown>
+  0287220  lvlx 3, 4, 5
   0287224  li 5, 92
   0287228  vspltw 3, 3, 0
-  028722c  <unknown>
+  028722c  lvlx 4, 3, 7
   0287230  li 4, 0
   0287234  li 3, 114
   0287238  vmaddfp 2, 4, 3, 2
@@ -635,10 +635,10 @@ UpdateMoby_1470:   # 0x286ae0, 0xc84 bytes
   02874a0  stb 4, 32(31)
   02874a4  li 4, -3056
   02874a8  vslw 2, 2, 2
-  02874ac  <unknown>
+  02874ac  lvlx 3, 5, 3
   02874b0  li 3, 92
   02874b4  vspltw 3, 3, 0
-  02874b8  <unknown>
+  02874b8  lvlx 4, 4, 6
   02874bc  vmaddfp 2, 4, 3, 2
   02874c0  vctsxs 2, 2, 0
   02874c4  vspltw 2, 2, 0

@@ -244,7 +244,7 @@ M610_003d9760:   # 0x3d9760, 0x428 bytes
   03d98d4  addic 24, 28, 800
   03d98d8  addic 30, 28, 36
   03d98dc  addic 25, 28, 896
-  03d98e0  <unknown>
+  03d98e0  lvlx 31, 3, 23
   03d98e4  addic 26, 28, 992
   03d98e8  addic 27, 28, 1088
   03d98ec  lfs 31, 40(23)
@@ -368,7 +368,7 @@ M610_003d9760:   # 0x3d9760, 0x428 bytes
   03d9ac4  li 4, -3056
   03d9ac8  vslw 2, 2, 2
   03d9acc  lfs 1, -3056(3)
-  03d9ad0  <unknown>
+  03d9ad0  lvlx 3, 4, 3
   03d9ad4  fmuls 1, 1, 31
   03d9ad8  vmaddfp 2, 3, 31, 2
   03d9adc  lhz 3, 0(23)
@@ -512,8 +512,8 @@ UpdateMoby_610_WindControl:   # 0x3d9bb8, 0x8b4 bytes
   03d9d2c  fmuls 1, 1, 1
   03d9d30  lfs 3, 24(3)
   03d9d34  std 4, 128(1)
-  03d9d38  <unknown>
-  03d9d3c  <unknown>
+  03d9d38  lvlx 4, 5, 30
+  03d9d3c  lvrx 5, 6, 30
   03d9d40  fmadds 1, 2, 2, 1
   03d9d44  vor 4, 4, 5
   03d9d48  li 4, 4
@@ -533,8 +533,8 @@ UpdateMoby_610_WindControl:   # 0x3d9bb8, 0x8b4 bytes
   03d9d80  lfd 1, 128(1)
   03d9d84  lfs 2, 4(28)
   03d9d88  fcfid 1, 1
-  03d9d8c  <unknown>
-  03d9d90  <unknown>
+  03d9d8c  lvlx 4, 4, 28
+  03d9d90  lvlx 5, 8, 7
   03d9d94  vspltw 4, 4, 0
   03d9d98  lfs 3, -3056(7)
   03d9d9c  vaddfp 2, 2, 4
@@ -740,7 +740,7 @@ UpdateMoby_610_WindControl:   # 0x3d9bb8, 0x8b4 bytes
   03da0bc  fmuls 9, 5, 3
   03da0c0  fmuls 10, 6, 7
   03da0c4  fmadds 2, 7, 27, 2
-  03da0c8  <unknown>
+  03da0c8  lvlx 2, 4, 3
   03da0cc  lis 5, 114
   03da0d0  lis 3, 62
   03da0d4  vcfsx 2, 2, 0
@@ -765,8 +765,8 @@ UpdateMoby_610_WindControl:   # 0x3d9bb8, 0x8b4 bytes
   03da120  lfd 1, 128(1)
   03da124  lfs 2, 4(3)
   03da128  fcfid 1, 1
-  03da12c  <unknown>
-  03da130  <unknown>
+  03da12c  lvlx 4, 4, 3
+  03da130  lvlx 5, 6, 5
   03da134  vspltw 4, 4, 0
   03da138  lfs 3, -3056(5)
   03da13c  li 3, 12
@@ -804,9 +804,9 @@ UpdateMoby_610_WindControl:   # 0x3d9bb8, 0x8b4 bytes
   03da1bc  addi 5, 3, 16
   03da1c0  vspltisw 4, -1
   03da1c4  extsh 6, 6
-  03da1c8  <unknown>
+  03da1c8  lvlx 2, 3, 30
   03da1cc  lis 3, 62
-  03da1d0  <unknown>
+  03da1d0  lvrx 3, 5, 30
   03da1d4  extsw 6, 6
   03da1d8  sth 4, 14(30)
   03da1dc  vor 2, 2, 3
@@ -818,7 +818,7 @@ UpdateMoby_610_WindControl:   # 0x3d9bb8, 0x8b4 bytes
   03da1f4  std 6, 128(1)
   03da1f8  vsraw 2, 2, 3
   03da1fc  lfs 1, 4(28)
-  03da200  <unknown>
+  03da200  lvlx 3, 4, 28
   03da204  lfd 2, 128(1)
   03da208  li 4, -3056
   03da20c  vcfsx 2, 2, 0
@@ -826,7 +826,7 @@ UpdateMoby_610_WindControl:   # 0x3d9bb8, 0x8b4 bytes
   03da214  fcfid 2, 2
   03da218  frsp 2, 2
   03da21c  vaddfp 2, 2, 3
-  03da220  <unknown>
+  03da220  lvlx 3, 4, 3
   03da224  lfs 3, -3056(3)
   03da228  li 3, 1290
   03da22c  fadds 1, 2, 1
@@ -859,10 +859,10 @@ UpdateMoby_610_WindControl:   # 0x3d9bb8, 0x8b4 bytes
   03da298  vslw 3, 3, 3
   03da29c  lfs 1, 40(3)
   03da2a0  lfs 2, -3056(4)
-  03da2a4  <unknown>
+  03da2a4  lvlx 2, 5, 3
   03da2a8  fmuls 1, 2, 1
   03da2ac  vspltw 2, 2, 0
-  03da2b0  <unknown>
+  03da2b0  lvlx 4, 6, 4
   03da2b4  lhz 3, 12(30)
   03da2b8  vmaddfp 2, 4, 2, 3
   03da2bc  extsh 3, 3
@@ -881,7 +881,7 @@ UpdateMoby_610_WindControl:   # 0x3d9bb8, 0x8b4 bytes
   03da2f0  vspltisw 6, -1
   03da2f4  stvehx 4, 3, 30
   03da2f8  vsraw 2, 2, 3
-  03da2fc  <unknown>
+  03da2fc  lvlx 3, 0, 4
   03da300  vspltisw 4, -1
   03da304  vspltw 3, 3, 0
   03da308  vcfsx 2, 2, 0

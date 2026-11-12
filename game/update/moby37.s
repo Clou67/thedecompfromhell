@@ -102,10 +102,10 @@ UpdateMoby_37:   # 0x355200, 0xf0 bytes
   03552a0  lis 5, 114
   03552a4  li 6, -3056
   03552a8  vslw 2, 2, 2
-  03552ac  <unknown>
+  03552ac  lvlx 3, 4, 3
   03552b0  lis 4, 161
   03552b4  vspltw 3, 3, 0
-  03552b8  <unknown>
+  03552b8  lvlx 4, 6, 5
   03552bc  li 5, 23680
   03552c0  vmaddfp 2, 4, 3, 2
   03552c4  ori 3, 31, 0

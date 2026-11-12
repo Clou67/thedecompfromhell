@@ -170,7 +170,7 @@ Cam3_InitSplinePos:   # 0x451f0, 0x50c bytes
   004546c  addic 23, 23, 1
   0045470  stfs 1, 16(26)
   0045474  ori 26, 22, 0
-  0045478  <unknown>
+  0045478  lvlx 2, 3, 1
   004547c  vcfsx 2, 2, 0
   0045480  vspltw 2, 2, 0
   0045484  stvewx 2, 0, 24
@@ -255,7 +255,7 @@ Cam3_InitSplinePos:   # 0x451f0, 0x50c bytes
   00455c0  addic 26, 26, 1
   00455c4  stfs 1, 16(30)
   00455c8  ori 30, 24, 0
-  00455cc  <unknown>
+  00455cc  lvlx 2, 3, 1
   00455d0  vcfsx 2, 2, 0
   00455d4  vspltw 2, 2, 0
   00455d8  stvewx 2, 0, 28

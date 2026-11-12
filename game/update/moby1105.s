@@ -197,11 +197,11 @@ UpdateMoby_1105:   # 0x1be558, 0x1330 bytes
   01be85c  lis 5, 114
   01be860  li 6, -3056
   01be864  vslw 2, 2, 2
-  01be868  <unknown>
+  01be868  lvlx 3, 4, 3
   01be86c  li 3, 372
   01be870  vspltw 3, 3, 0
   01be874  lis 4, 164
-  01be878  <unknown>
+  01be878  lvlx 4, 6, 5
   01be87c  lwz 5, 352(30)
   01be880  vmaddfp 2, 4, 3, 2
   01be884  slwi 5, 5, 8
@@ -833,10 +833,10 @@ UpdateMoby_1105:   # 0x1be558, 0x1330 bytes
   01bf24c  lis 5, 114
   01bf250  li 6, -3056
   01bf254  vslw 2, 2, 2
-  01bf258  <unknown>
+  01bf258  lvlx 3, 4, 3
   01bf25c  li 3, 344
   01bf260  vspltw 3, 3, 0
-  01bf264  <unknown>
+  01bf264  lvlx 4, 6, 5
   01bf268  vmaddfp 2, 4, 3, 2
   01bf26c  vctsxs 2, 2, 0
   01bf270  vspltw 2, 2, 0

@@ -41,8 +41,8 @@ FUN_001b7028:   # 0x1b7028, 0xd8 bytes
   01b70bc  stfs 1, 8(4)
   01b70c0  lfs 1, 12(31)
   01b70c4  stfs 1, 12(4)
-  01b70c8  <unknown>
-  01b70cc  <unknown>
+  01b70c8  lvlx 2, 0, 5
+  01b70cc  lvlx 4, 7, 6
   01b70d0  vspltw 2, 2, 0
   01b70d4  li 5, 16
   01b70d8  vmaddfp 2, 4, 2, 3

@@ -361,8 +361,8 @@ Spawn_Moby1046:   # 0x19ddd0, 0x19c bytes
   019def0  fsqrts 1, 1
   019def4  fnmsubs 1, 1, 2, 3
   019def8  stfs 1, 352(4)
-  019defc  <unknown>
-  019df00  <unknown>
+  019defc  lvlx 3, 6, 5
+  019df00  lvlx 4, 8, 7
   019df04  vspltw 3, 3, 0
   019df08  vmaddfp 2, 4, 3, 2
   019df0c  vctsxs 2, 2, 0
@@ -483,7 +483,7 @@ M1046_0019e010:   # 0x19e010, 0x824 bytes
   019e174  std 3, 248(1)
   019e178  lfs 31, 0(26)
   019e17c  li 3, 448
-  019e180  <unknown>
+  019e180  lvlx 2, 4, 26
   019e184  vspltisw 20, 0
   019e188  vspltw 2, 2, 0
   019e18c  li 4, 432
@@ -500,7 +500,7 @@ M1046_0019e010:   # 0x19e010, 0x824 bytes
   019e1b8  addi 7, 4, 16
   019e1bc  vslw 4, 4, 4
   019e1c0  ori 3, 3, 128
-  019e1c4  <unknown>
+  019e1c4  lvlx 2, 4, 28
   019e1c8  addi 25, 5, -8336
   019e1cc  li 6, 8
   019e1d0  li 26, 16
@@ -510,11 +510,11 @@ M1046_0019e010:   # 0x19e010, 0x824 bytes
   019e1e0  stw 3, 180(1)
   019e1e4  lis 5, 161
   019e1e8  stw 3, 176(1)
-  019e1ec  <unknown>
+  019e1ec  lvrx 3, 7, 28
   019e1f0  lfs 1, 8(25)
   019e1f4  addi 3, 26, 16
   019e1f8  vor 2, 2, 3
-  019e1fc  <unknown>
+  019e1fc  lvlx 3, 6, 25
   019e200  lfs 2, 8(28)
   019e204  vspltw 3, 3, 0
   019e208  lfs 4, 12(25)
@@ -525,11 +525,11 @@ M1046_0019e010:   # 0x19e010, 0x824 bytes
   019e21c  fsub 1, 2, 1
   019e220  fmr 2, 4
   019e224  vcmpgtfp 2, 3, 2
-  019e228  <unknown>
-  019e22c  <unknown>
+  019e228  lvlx 5, 26, 28
+  019e22c  lvrx 6, 3, 28
   019e230  li 3, 432
   019e234  lfs 30, 16(28)
-  019e238  <unknown>
+  019e238  lvlx 3, 4, 25
   019e23c  vor 31, 5, 6
   019e240  vspltw 3, 3, 0
   019e244  lvx 28, 3, 1
@@ -585,7 +585,7 @@ M1046_0019e010:   # 0x19e010, 0x824 bytes
   019e30c  li 6, 24
   019e310  lvx 2, 3, 1
   019e314  li 7, 24
-  019e318  <unknown>
+  019e318  lvlx 14, 26, 31
   019e31c  li 3, 20
   019e320  li 8, 128
   019e324  li 9, 160
@@ -599,14 +599,14 @@ M1046_0019e010:   # 0x19e010, 0x824 bytes
   019e344  stfs 27, 204(1)
   019e348  stw 5, 212(1)
   019e34c  stw 5, 220(1)
-  019e350  <unknown>
+  019e350  lvlx 4, 3, 25
   019e354  li 5, 20
-  019e358  <unknown>
+  019e358  lvlx 5, 6, 25
   019e35c  li 3, 136
   019e360  vspltw 4, 4, 0
   019e364  li 6, 168
   019e368  vspltw 5, 5, 0
-  019e36c  <unknown>
+  019e36c  lvlx 6, 7, 31
   019e370  lfs 2, 20(25)
   019e374  li 7, 32
   019e378  vmaddfp 7, 29, 31, 6
@@ -616,7 +616,7 @@ M1046_0019e010:   # 0x19e010, 0x824 bytes
   019e388  lvx 4, 8, 1
   019e38c  lvx 5, 9, 1
   019e390  li 9, 48
-  019e394  <unknown>
+  019e394  lvlx 1, 5, 31
   019e398  li 8, 80
   019e39c  fnmsubs 3, 31, 2, 3
   019e3a0  li 5, 144
@@ -689,7 +689,7 @@ M1046_0019e010:   # 0x19e010, 0x824 bytes
   019e4ac  li 6, 116
   019e4b0  stvx 5, 5, 1
   019e4b4  li 8, 128
-  019e4b8  <unknown>
+  019e4b8  lvlx 2, 3, 25
   019e4bc  li 5, 124
   019e4c0  li 3, 280
   019e4c4  fsubs 4, 4, 28
@@ -706,17 +706,17 @@ M1046_0019e010:   # 0x19e010, 0x824 bytes
   019e4f0  vspltw 2, 2, 0
   019e4f4  stvewx 2, 3, 1
   019e4f8  stvewx 2, 4, 1
-  019e4fc  <unknown>
+  019e4fc  lvlx 31, 6, 25
   019e500  lfs 30, 116(25)
   019e504  lfs 28, 120(25)
-  019e508  <unknown>
-  019e50c  <unknown>
-  019e510  <unknown>
-  019e514  <unknown>
-  019e518  <unknown>
-  019e51c  <unknown>
-  019e520  <unknown>
-  019e524  <unknown>
+  019e508  lvlx 21, 5, 25
+  019e50c  lvlx 23, 8, 25
+  019e510  lvlx 24, 10, 25
+  019e514  lvlx 28, 7, 25
+  019e518  lvlx 27, 9, 25
+  019e51c  lvlx 26, 12, 25
+  019e520  lvlx 25, 24, 25
+  019e524  lvlx 22, 11, 25
   019e528  vspltw 31, 31, 0
   019e52c  vspltw 21, 21, 0
   019e530  vspltw 23, 23, 0
@@ -852,10 +852,10 @@ M1046_0019e010:   # 0x19e010, 0x824 bytes
   019e738  lfs 3, 136(1)
   019e73c  vaddfp 31, 31, 22
   019e740  lfs 4, 160(1)
-  019e744  <unknown>
+  019e744  lvlx 1, 3, 31
   019e748  lfs 5, 164(1)
   019e74c  lfs 6, 168(1)
-  019e750  <unknown>
+  019e750  lvlx 14, 4, 31
   019e754  fcmpu 0, 30, 28
   019e758  bt 0, 0x19e550
   019e75c  lis 3, 26
@@ -864,7 +864,7 @@ M1046_0019e010:   # 0x19e010, 0x824 bytes
   019e768  addic 29, 29, -11
   019e76c  clrlwi 29, 29, 24
   019e770  lfs 1, 156(3)
-  019e774  <unknown>
+  019e774  lvlx 2, 4, 3
   019e778  fadds 31, 31, 1
   019e77c  vspltw 2, 2, 0
   019e780  vaddfp 20, 20, 2

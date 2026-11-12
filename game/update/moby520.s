@@ -213,8 +213,8 @@ M520_003ab4e8:   # 0x3ab4e8, 0x38c bytes
   03ab810  li 6, -3056
   03ab814  vslw 2, 2, 2
   03ab818  sth 3, 52(31)
-  03ab81c  <unknown>
-  03ab820  <unknown>
+  03ab81c  lvlx 3, 4, 5
+  03ab820  lvlx 4, 6, 7
   03ab824  li 3, 188
   03ab828  vspltw 3, 3, 0
   03ab82c  vmaddfp 2, 4, 3, 2

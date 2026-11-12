@@ -334,14 +334,14 @@ M711_0042ab78:   # 0x42ab78, 0x5dc bytes
   042abec  bt 2, 0x42b0ec
   042abf0  li 3, 112
   042abf4  addi 4, 3, 16
-  042abf8  <unknown>
-  042abfc  <unknown>
+  042abf8  lvlx 2, 3, 31
+  042abfc  lvrx 3, 4, 31
   042ac00  vor 2, 2, 3
   042ac04  vspltisw 3, 0
   042ac08  vspltw 4, 2, 0
   042ac0c  vcmpeqfp. 3, 4, 3
   042ac10  bf 26, 0x42b0ec
-  042ac14  <unknown>
+  042ac14  lvlx 3, 0, 21
   042ac18  lfs 29, 0(21)
   042ac1c  vspltw 3, 3, 0
   042ac20  vcmpeqfp. 5, 4, 3
@@ -459,17 +459,17 @@ M711_0042ab78:   # 0x42ab78, 0x5dc bytes
   042ade0  li 5, 1808
   042ade4  lis 6, 269
   042ade8  li 7, -13080
-  042adec  <unknown>
+  042adec  lvlx 4, 5, 4
   042adf0  li 4, 72
-  042adf4  <unknown>
+  042adf4  lvlx 5, 7, 6
   042adf8  addi 5, 4, 16
   042adfc  vsubuwm 5, 4, 5
   042ae00  vspltw 4, 4, 0
-  042ae04  <unknown>
+  042ae04  lvlx 7, 4, 29
   042ae08  vcmpgtsw 6, 3, 5
   042ae0c  li 4, 112
   042ae10  vsel 3, 5, 3, 6
-  042ae14  <unknown>
+  042ae14  lvrx 5, 5, 29
   042ae18  li 5, 88
   042ae1c  vspltisw 6, -16
   042ae20  vor 5, 7, 5
@@ -480,8 +480,8 @@ M711_0042ab78:   # 0x42ab78, 0x5dc bytes
   042ae34  vspltw 2, 2, 0
   042ae38  stvewx 2, 4, 31
   042ae3c  stvewx 4, 7, 6
-  042ae40  <unknown>
-  042ae44  <unknown>
+  042ae40  lvlx 3, 5, 29
+  042ae44  lvrx 4, 8, 29
   042ae48  vor 3, 3, 4
   042ae4c  vsraw 3, 3, 6
   042ae50  vmulosh 3, 3, 7

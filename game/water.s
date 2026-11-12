@@ -1461,13 +1461,13 @@ WaterTile_DrawCellOvl:   # 0x17c888, 0x28c bytes
   017c8e0  lwz 5, 11976(7)
   017c8e4  li 10, 4
   017c8e8  addc 6, 3, 3
-  017c8ec  <unknown>
+  017c8ec  lvlx 6, 0, 30
   017c8f0  slwi 4, 3, 2
   017c8f4  slwi 7, 3, 3
   017c8f8  addc 3, 3, 6
   017c8fc  vspltw 6, 6, 0
   017c900  li 11, 8
-  017c904  <unknown>
+  017c904  lvlx 5, 10, 30
   017c908  sldi 3, 3, 2
   017c90c  li 12, 12
   017c910  li 31, 16
@@ -1475,11 +1475,11 @@ WaterTile_DrawCellOvl:   # 0x17c888, 0x28c bytes
   017c918  addc 3, 5, 3
   017c91c  addc 6, 5, 7
   017c920  addic 7, 3, 8192
-  017c924  <unknown>
+  017c924  lvlx 4, 11, 30
   017c928  addc 4, 5, 4
-  017c92c  <unknown>
+  017c92c  lvlx 3, 12, 30
   017c930  lis 3, 116
-  017c934  <unknown>
+  017c934  lvlx 2, 31, 30
   017c938  ori 8, 9, 0
   017c93c  vspltw 4, 4, 0
   017c940  addic 6, 6, 1920
@@ -1528,8 +1528,8 @@ WaterTile_DrawCellOvl:   # 0x17c888, 0x28c bytes
   017c9ec  lfsx 1, 6, 11
   017c9f0  vspltisw 13, -1
   017c9f4  stfs 1, 16(8)
-  017c9f8  <unknown>
-  017c9fc  <unknown>
+  017c9f8  lvlx 7, 10, 5
+  017c9fc  lvrx 8, 12, 5
   017ca00  vslw 11, 11, 11
   017ca04  vor 7, 7, 8
   017ca08  vspltisw 8, -16
@@ -1636,21 +1636,21 @@ WaterTile_CullAndDrawCell:   # 0x17cb20, 0x494 bytes
   017cba0  li 7, 12
   017cba4  vand 3, 2, 3
   017cba8  vslw 6, 6, 6
-  017cbac  <unknown>
+  017cbac  lvlx 4, 0, 4
   017cbb0  vslw 7, 7, 7
   017cbb4  vspltw 4, 4, 0
-  017cbb8  <unknown>
+  017cbb8  lvlx 5, 6, 5
   017cbbc  vcfsx 3, 3, 0
-  017cbc0  <unknown>
+  017cbc0  lvlx 9, 7, 5
   017cbc4  vmaddfp 6, 5, 4, 6
   017cbc8  vsraw 2, 2, 8
   017cbcc  li 5, 4
   017cbd0  vmaddfp 4, 9, 4, 7
-  017cbd4  <unknown>
+  017cbd4  lvlx 7, 0, 3
   017cbd8  li 6, 148
   017cbdc  vcfsx 2, 2, 0
   017cbe0  vaddfp 5, 7, 5
-  017cbe4  <unknown>
+  017cbe4  lvlx 7, 5, 3
   017cbe8  li 5, 144
   017cbec  lfs 1, 8(3)
   017cbf0  vaddfp 7, 7, 9
@@ -2477,10 +2477,10 @@ SubmitOceanCell:   # 0x17d8f8, 0x3a4 bytes
   017d91c  lis 3, 24
   017d920  li 10, 16
   017d924  addi 9, 3, -10112
-  017d928  <unknown>
+  017d928  lvlx 2, 4, 29
   017d92c  li 7, 144
   017d930  li 4, 20
-  017d934  <unknown>
+  017d934  lvlx 3, 5, 29
   017d938  li 5, 128
   017d93c  vspltw 2, 2, 0
   017d940  li 12, 32
@@ -2488,7 +2488,7 @@ SubmitOceanCell:   # 0x17d8f8, 0x3a4 bytes
   017d948  lvx 4, 0, 9
   017d94c  li 3, 112
   017d950  li 11, 120
-  017d954  <unknown>
+  017d954  lvlx 5, 4, 29
   017d958  lvx 8, 5, 1
   017d95c  li 4, 0
   017d960  lvx 6, 10, 9
@@ -2569,12 +2569,12 @@ SubmitOceanCell:   # 0x17d8f8, 0x3a4 bytes
   017da8c  li 7, 100
   017da90  li 6, 108
   017da94  li 11, 116
-  017da98  <unknown>
-  017da9c  <unknown>
+  017da98  lvlx 5, 5, 4
+  017da9c  lvlx 7, 3, 4
   017daa0  lis 5, 230
   017daa4  li 3, 112
-  017daa8  <unknown>
-  017daac  <unknown>
+  017daa8  lvlx 6, 7, 4
+  017daac  lvlx 4, 6, 4
   017dab0  ori 10, 30, 0
   017dab4  lis 9, 116
   017dab8  vspltw 5, 5, 0
@@ -2582,9 +2582,9 @@ SubmitOceanCell:   # 0x17d8f8, 0x3a4 bytes
   017dac0  vspltw 7, 7, 0
   017dac4  li 12, 124
   017dac8  vspltw 6, 6, 0
-  017dacc  <unknown>
+  017dacc  lvlx 3, 3, 4
   017dad0  addic 7, 5, -21804
-  017dad4  <unknown>
+  017dad4  lvlx 2, 11, 4
   017dad8  addic 9, 9, -19664
   017dadc  addic 8, 8, -21808
   017dae0  vspltw 4, 4, 0
@@ -2622,7 +2622,7 @@ SubmitOceanCell:   # 0x17d8f8, 0x3a4 bytes
   017db60  lfs 1, 0(7)
   017db64  stfs 31, 20(10)
   017db68  stfs 1, 16(10)
-  017db6c  <unknown>
+  017db6c  lvlx 9, 0, 4
   017db70  vrlw 8, 9, 8
   017db74  vrlw 10, 9, 10
   017db78  vand 11, 9, 4
@@ -2918,17 +2918,17 @@ OceanPass:   # 0x17dd20, 0x5fc bytes
   017e07c  lfs 30, 12(31)
   017e080  fmuls 1, 1, 26
   017e084  fmuls 2, 2, 26
-  017e088  <unknown>
+  017e088  lvlx 3, 3, 4
   017e08c  vslw 2, 2, 2
   017e090  vspltw 5, 3, 0
   017e094  li 3, 4
   017e098  vspltisw 3, -1
-  017e09c  <unknown>
+  017e09c  lvlx 29, 5, 31
   017e0a0  lfs 3, 12(4)
   017e0a4  li 5, 8
   017e0a8  vmaddfp 29, 29, 5, 2
   017e0ac  vslw 2, 3, 3
-  017e0b0  <unknown>
+  017e0b0  lvlx 4, 6, 31
   017e0b4  fsub 4, 1, 2
   017e0b8  lwz 28, 52(31)
   017e0bc  li 6, 16
@@ -2936,11 +2936,11 @@ OceanPass:   # 0x17dd20, 0x5fc bytes
   017e0c4  lfs 28, 4(31)
   017e0c8  vmaddfp 5, 4, 5, 2
   017e0cc  lhz 7, 26(31)
-  017e0d0  <unknown>
-  017e0d4  <unknown>
+  017e0d0  lvlx 2, 3, 31
+  017e0d4  lvlx 3, 5, 31
   017e0d8  lhz 3, 24(31)
   017e0dc  extsh 5, 7
-  017e0e0  <unknown>
+  017e0e0  lvlx 6, 6, 4
   017e0e4  fsel 1, 4, 1, 2
   017e0e8  vspltw 6, 6, 0
   017e0ec  cmpwi 5, 0
@@ -2959,7 +2959,7 @@ OceanPass:   # 0x17dd20, 0x5fc bytes
   017e120  li 8, 116
   017e124  lvx 8, 4, 1
   017e128  li 9, 144
-  017e12c  <unknown>
+  017e12c  lvlx 30, 7, 5
   017e130  stvewx 6, 6, 1
   017e134  li 7, 64
   017e138  li 6, 32
@@ -2988,7 +2988,7 @@ OceanPass:   # 0x17dd20, 0x5fc bytes
   017e194  lvx 29, 11, 5
   017e198  vperm 27, 5, 6, 27
   017e19c  vspltw 3, 4, 0
-  017e1a0  <unknown>
+  017e1a0  lvlx 5, 0, 31
   017e1a4  li 4, 112
   017e1a8  extsh 5, 3
   017e1ac  lfs 27, 0(31)
@@ -3031,7 +3031,7 @@ OceanPass:   # 0x17dd20, 0x5fc bytes
   017e240  addic 22, 22, 512
   017e244  ori 28, 22, 0
   017e248  fmadds 27, 1, 26, 27
-  017e24c  <unknown>
+  017e24c  lvlx 4, 4, 31
   017e250  extsh 4, 3
   017e254  cmpw 25, 4
   017e258  vsldoi 31, 2, 2, 0

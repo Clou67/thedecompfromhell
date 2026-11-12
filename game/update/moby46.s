@@ -823,10 +823,10 @@ UpdateMoby_46:   # 0x392910, 0x500 bytes
   03929a0  sth 4, 36(30)
   03929a4  li 4, -3056
   03929a8  stb 6, 40(30)
-  03929ac  <unknown>
+  03929ac  lvlx 3, 0, 3
   03929b0  li 3, 292
   03929b4  vspltw 3, 3, 0
-  03929b8  <unknown>
+  03929b8  lvlx 4, 4, 7
   03929bc  li 4, 0
   03929c0  lfs 1, -3056(7)
   03929c4  vmaddfp 2, 4, 3, 2

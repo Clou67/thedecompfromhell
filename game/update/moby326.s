@@ -917,8 +917,8 @@ M326_0001c618:   # 0x1c618, 0x4b8 bytes
   001ca54  li 9, 5
   001ca58  li 3, 1
   001ca5c  stfs 1, 148(30)
-  001ca60  <unknown>
-  001ca64  <unknown>
+  001ca60  lvlx 3, 5, 4
+  001ca64  lvlx 4, 7, 6
   001ca68  vspltw 3, 3, 0
   001ca6c  li 4, 0
   001ca70  ori 5, 31, 0
@@ -1346,12 +1346,12 @@ UpdateMoby_326:   # 0x1cb80, 0x1b48 bytes
   001d1b0  lwz 7, 28976(3)
   001d1b4  li 8, 5
   001d1b8  vslw 2, 2, 2
-  001d1bc  <unknown>
+  001d1bc  lvlx 4, 5, 3
   001d1c0  lfs 1, 24(4)
   001d1c4  addic 7, 7, -3
   001d1c8  vsubuwm 3, 4, 3
   001d1cc  li 5, 5
-  001d1d0  <unknown>
+  001d1d0  lvlx 4, 6, 4
   001d1d4  extsw 3, 7
   001d1d8  lis 4, 114
   001d1dc  li 6, -3056
@@ -1360,7 +1360,7 @@ UpdateMoby_326:   # 0x1cb80, 0x1b48 bytes
   001d1e8  subc 5, 5, 7
   001d1ec  sradi 3, 3, 63
   001d1f0  vcmpgtsw 7, 3, 5
-  001d1f4  <unknown>
+  001d1f4  lvlx 6, 6, 4
   001d1f8  lfs 2, -3056(4)
   001d1fc  and 3, 3, 5
   001d200  vmaddfp 2, 6, 4, 2
@@ -2101,8 +2101,8 @@ UpdateMoby_326:   # 0x1cb80, 0x1b48 bytes
   001dd7c  addi 3, 3, -13616
   001dd80  li 5, 88
   001dd84  vslw 2, 2, 2
-  001dd88  <unknown>
-  001dd8c  <unknown>
+  001dd88  lvlx 3, 4, 26
+  001dd8c  lvlx 4, 5, 3
   001dd90  li 3, 140
   001dd94  vspltw 4, 4, 0
   001dd98  vmaddfp 2, 3, 4, 2
@@ -2315,10 +2315,10 @@ UpdateMoby_326:   # 0x1cb80, 0x1b48 bytes
   001e0d4  lis 5, 114
   001e0d8  li 6, -3056
   001e0dc  vslw 2, 2, 2
-  001e0e0  <unknown>
+  001e0e0  lvlx 3, 4, 3
   001e0e4  li 4, 140
   001e0e8  vspltw 3, 3, 0
-  001e0ec  <unknown>
+  001e0ec  lvlx 4, 6, 5
   001e0f0  lhz 3, 190(30)
   001e0f4  li 5, 3
   001e0f8  vmaddfp 2, 4, 3, 2

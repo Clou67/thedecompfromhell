@@ -118,7 +118,7 @@ UpdateMoby_885:   # 0x4a1708, 0x994 bytes
   04a1884  li 30, 0
   04a1888  addi 3, 3, 5808
   04a188c  ori 29, 30, 0
-  04a1890  <unknown>
+  04a1890  lvlx 30, 0, 3
   04a1894  lfs 31, 0(3)
   04a1898  vspltw 30, 30, 0
   04a189c  vcmpgefp. 2, 31, 30

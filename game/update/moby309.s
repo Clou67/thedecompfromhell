@@ -201,10 +201,10 @@ M309_0033bfc0:   # 0x33bfc0, 0x548 bytes
   033c2d4  lis 5, 114
   033c2d8  li 6, -3056
   033c2dc  vslw 2, 2, 2
-  033c2e0  <unknown>
+  033c2e0  lvlx 3, 4, 3
   033c2e4  li 8, 112
   033c2e8  vspltw 3, 3, 0
-  033c2ec  <unknown>
+  033c2ec  lvlx 4, 6, 5
   033c2f0  li 7, 1024
   033c2f4  vmaddfp 2, 4, 3, 2
   033c2f8  addic 6, 31, 16
@@ -525,7 +525,7 @@ M31_0033c6e0:   # 0x33c6e0, 0x3e4 bytes
   033c828  lfs 31, 44(29)
   033c82c  lfs 28, 48(29)
   033c830  lfs 29, 52(29)
-  033c834  <unknown>
+  033c834  lvlx 31, 3, 29
   033c838  vspltw 31, 31, 0
   033c83c  li 3, 2
   033c840  bl 0xfc620
@@ -575,7 +575,7 @@ M31_0033c6e0:   # 0x33c6e0, 0x3e4 bytes
   033c8f0  vslw 2, 2, 2
   033c8f4  li 6, 127
   033c8f8  li 7, 43
-  033c8fc  <unknown>
+  033c8fc  lvlx 3, 5, 4
   033c900  li 4, 10
   033c904  vmaddfp 2, 3, 31, 2
   033c908  li 5, 2

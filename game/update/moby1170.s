@@ -458,10 +458,10 @@ UpdateMoby_1170:   # 0x1ecb08, 0x6c8 bytes
   01ecfec  stb 4, 32(31)
   01ecff0  li 4, -3056
   01ecff4  vslw 2, 2, 2
-  01ecff8  <unknown>
+  01ecff8  lvlx 3, 5, 3
   01ecffc  li 3, 204
   01ed000  vspltw 3, 3, 0
-  01ed004  <unknown>
+  01ed004  lvlx 4, 4, 6
   01ed008  vmaddfp 2, 4, 3, 2
   01ed00c  vctsxs 2, 2, 0
   01ed010  vspltw 2, 2, 0
@@ -474,10 +474,10 @@ UpdateMoby_1170:   # 0x1ecb08, 0x6c8 bytes
   01ed02c  lis 5, 114
   01ed030  li 6, -3056
   01ed034  vslw 2, 2, 2
-  01ed038  <unknown>
+  01ed038  lvlx 3, 4, 3
   01ed03c  li 3, 204
   01ed040  vspltw 3, 3, 0
-  01ed044  <unknown>
+  01ed044  lvlx 4, 6, 5
   01ed048  vmaddfp 2, 4, 3, 2
   01ed04c  vctsxs 2, 2, 0
   01ed050  vspltw 2, 2, 0

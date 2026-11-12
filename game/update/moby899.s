@@ -256,14 +256,14 @@ UpdateMoby_899:   # 0x4a4820, 0x25c bytes
   04a493c  lis 3, 74
   04a4940  stb 4, 32(31)
   04a4944  stw 5, 8(29)
-  04a4948  <unknown>
+  04a4948  lvlx 3, 0, 30
   04a494c  addi 3, 3, 18448
   04a4950  vslw 2, 2, 2
   04a4954  li 4, 4
   04a4958  vcfsx 3, 3, 0
-  04a495c  <unknown>
+  04a495c  lvlx 4, 6, 30
   04a4960  lfs 30, 4(3)
-  04a4964  <unknown>
+  04a4964  lvlx 5, 4, 3
   04a4968  fmr 31, 30
   04a496c  vmaddfp 2, 3, 4, 2
   04a4970  vspltw 3, 5, 0

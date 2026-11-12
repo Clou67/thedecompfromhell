@@ -2850,8 +2850,8 @@ UpdateMoby_638:   # 0x3fc1c0, 0x1718 bytes
   03fcb1c  lis 6, 114
   03fcb20  sth 5, 768(30)
   03fcb24  stb 4, 32(31)
-  03fcb28  <unknown>
-  03fcb2c  <unknown>
+  03fcb28  lvlx 3, 7, 3
+  03fcb2c  lvlx 4, 8, 6
   03fcb30  li 4, 770
   03fcb34  vspltw 3, 3, 0
   03fcb38  ori 3, 31, 0
@@ -3346,10 +3346,10 @@ UpdateMoby_638:   # 0x3fc1c0, 0x1718 bytes
   03fd2dc  lis 4, 114
   03fd2e0  li 6, -3056
   03fd2e4  vslw 2, 2, 2
-  03fd2e8  <unknown>
+  03fd2e8  lvlx 3, 5, 3
   03fd2ec  li 3, 732
   03fd2f0  vspltw 3, 3, 0
-  03fd2f4  <unknown>
+  03fd2f4  lvlx 4, 6, 4
   03fd2f8  li 4, 0
   03fd2fc  vmaddfp 2, 4, 3, 2
   03fd300  vctsxs 2, 2, 0

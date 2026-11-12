@@ -65,8 +65,8 @@ FUN_003ec060:   # 0x3ec060, 0xcc bytes
   03ec0bc  addi 4, 5, -16292
   03ec0c0  li 5, 16752
   03ec0c4  lfs 1, 0(4)
-  03ec0c8  <unknown>
-  03ec0cc  <unknown>
+  03ec0c8  lvlx 2, 5, 6
+  03ec0cc  lvlx 3, 0, 4
   03ec0d0  lfs 2, -3056(8)
   03ec0d4  lfd 3, 48(1)
   03ec0d8  vcfsx 2, 2, 0
@@ -75,7 +75,7 @@ FUN_003ec060:   # 0x3ec060, 0xcc bytes
   03ec0e4  li 4, -3056
   03ec0e8  frsp 3, 3
   03ec0ec  vaddfp 2, 2, 3
-  03ec0f0  <unknown>
+  03ec0f0  lvlx 3, 4, 8
   03ec0f4  fadds 1, 3, 1
   03ec0f8  vmaddfp 2, 3, 2, 4
   03ec0fc  fmuls 1, 2, 1
@@ -374,8 +374,8 @@ M629_003ec168:   # 0x3ec168, 0x5f4 bytes
   03ec5c4  vspltisw 7, -1
   03ec5c8  vspltisw 8, -1
   03ec5cc  vslw 5, 5, 5
-  03ec5d0  <unknown>
-  03ec5d4  <unknown>
+  03ec5d0  lvlx 2, 3, 31
+  03ec5d4  lvlx 4, 4, 29
   03ec5d8  vrefp 3, 2
   03ec5dc  vspltw 4, 4, 0
   03ec5e0  vslw 7, 7, 7
@@ -385,7 +385,7 @@ M629_003ec168:   # 0x3ec168, 0x5f4 bytes
   03ec5f0  vmaddfp 3, 3, 6, 5
   03ec5f4  vslw 6, 8, 8
   03ec5f8  vspltisw 8, -1
-  03ec5fc  <unknown>
+  03ec5fc  lvlx 5, 3, 29
   03ec600  vspltw 5, 5, 0
   03ec604  vslw 8, 8, 8
   03ec608  lfs 31, 52(29)

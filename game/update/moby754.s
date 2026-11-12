@@ -84,10 +84,10 @@ UpdateMoby_754:   # 0x44d9d0, 0x47c bytes
   044daf4  vspltisw 5, -1
   044daf8  addi 5, 5, -9832
   044dafc  vspltisw 8, -1
-  044db00  <unknown>
+  044db00  lvlx 2, 4, 3
   044db04  vslw 5, 5, 5
   044db08  vrefp 3, 2
-  044db0c  <unknown>
+  044db0c  lvlx 4, 0, 5
   044db10  vspltw 4, 4, 0
   044db14  li 3, 44
   044db18  vspltisw 7, -1
@@ -98,13 +98,13 @@ UpdateMoby_754:   # 0x44d9d0, 0x47c bytes
   044db2c  vspltisw 31, 0
   044db30  vslw 7, 7, 7
   044db34  li 8, 32
-  044db38  <unknown>
+  044db38  lvlx 28, 3, 31
   044db3c  li 9, 44
   044db40  li 3, 4
   044db44  li 10, 48
   044db48  vnmsubfp 6, 3, 2, 4
   044db4c  li 28, 0
-  044db50  <unknown>
+  044db50  lvlx 21, 3, 5
   044db54  lis 29, 161
   044db58  li 3, 16
   044db5c  lfs 29, 4(5)
@@ -113,17 +113,17 @@ UpdateMoby_754:   # 0x44d9d0, 0x47c bytes
   044db68  lfs 31, 12(5)
   044db6c  addic 29, 29, 23856
   044db70  vspltw 21, 21, 0
-  044db74  <unknown>
+  044db74  lvlx 22, 3, 5
   044db78  li 3, 36
-  044db7c  <unknown>
-  044db80  <unknown>
+  044db7c  lvlx 20, 4, 5
+  044db80  lvlx 23, 6, 5
   044db84  li 4, 40
   044db88  vmaddfp 3, 3, 6, 5
   044db8c  vslw 5, 8, 8
   044db90  vspltisw 6, -1
-  044db94  <unknown>
-  044db98  <unknown>
-  044db9c  <unknown>
+  044db94  lvlx 27, 7, 5
+  044db98  lvlx 26, 8, 5
+  044db9c  lvlx 25, 3, 5
   044dba0  vslw 6, 6, 6
   044dba4  vspltw 22, 22, 0
   044dba8  vspltw 20, 20, 0
@@ -135,10 +135,10 @@ UpdateMoby_754:   # 0x44d9d0, 0x47c bytes
   044dbc0  vmaddfp 3, 3, 8, 7
   044dbc4  vnmsubfp 2, 3, 2, 4
   044dbc8  vmaddfp 2, 3, 2, 5
-  044dbcc  <unknown>
-  044dbd0  <unknown>
+  044dbcc  lvlx 3, 9, 5
+  044dbd0  lvlx 24, 4, 5
   044dbd4  vspltw 29, 3, 0
-  044dbd8  <unknown>
+  044dbd8  lvlx 30, 10, 5
   044dbdc  vspltw 24, 24, 0
   044dbe0  vspltw 30, 30, 0
   044dbe4  vmaddfp 28, 2, 28, 6
@@ -200,7 +200,7 @@ UpdateMoby_754:   # 0x44d9d0, 0x47c bytes
   044dcc4  vslw 5, 5, 5
   044dcc8  vslw 9, 9, 9
   044dccc  vmaddfp 5, 3, 3, 5
-  044dcd0  <unknown>
+  044dcd0  lvlx 13, 3, 31
   044dcd4  vmaddfp 6, 4, 2, 6
   044dcd8  li 12, 136
   044dcdc  li 8, 0
@@ -218,8 +218,8 @@ UpdateMoby_754:   # 0x44d9d0, 0x47c bytes
   044dd0c  vmaddfp 3, 8, 27, 3
   044dd10  vmaddfp 8, 4, 7, 9
   044dd14  vmaddfp 2, 7, 26, 2
-  044dd18  <unknown>
-  044dd1c  <unknown>
+  044dd18  lvlx 7, 4, 31
+  044dd1c  lvlx 9, 5, 31
   044dd20  li 4, 1817
   044dd24  addic 5, 1, 128
   044dd28  vmaddfp 11, 5, 10, 11

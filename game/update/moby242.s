@@ -48,15 +48,15 @@ M242_0030e980:   # 0x30e980, 0x458 bytes
   030ea14  bl 0x500b64
   030ea18  nop
   030ea1c  li 3, 4
-  030ea20  <unknown>
+  030ea20  lvlx 2, 0, 29
   030ea24  li 4, 192
-  030ea28  <unknown>
+  030ea28  lvlx 3, 0, 21
   030ea2c  li 5, 196
   030ea30  li 6, 200
   030ea34  vspltisw 11, 0
   030ea38  vspltw 3, 3, 0
   030ea3c  li 7, 16
-  030ea40  <unknown>
+  030ea40  lvlx 4, 3, 29
   030ea44  li 8, 20
   030ea48  li 3, 204
   030ea4c  lfs 1, 0(29)
@@ -66,22 +66,22 @@ M242_0030e980:   # 0x30e980, 0x458 bytes
   030ea5c  vsel 2, 4, 2, 5
   030ea60  vspltisw 4, -1
   030ea64  fsub 3, 2, 1
-  030ea68  <unknown>
+  030ea68  lvlx 5, 4, 31
   030ea6c  li 10, 136
-  030ea70  <unknown>
+  030ea70  lvlx 6, 5, 31
   030ea74  li 4, 128
-  030ea78  <unknown>
+  030ea78  lvlx 7, 3, 31
   030ea7c  vslw 4, 4, 4
-  030ea80  <unknown>
+  030ea80  lvlx 8, 6, 31
   030ea84  addic 3, 31, 128
-  030ea88  <unknown>
+  030ea88  lvlx 9, 7, 30
   030ea8c  li 5, 16
   030ea90  vmaddfp 2, 2, 3, 4
   030ea94  ori 6, 30, 0
   030ea98  vspltisw 3, -1
   030ea9c  li 7, 0
-  030eaa0  <unknown>
-  030eaa4  <unknown>
+  030eaa0  lvlx 4, 8, 30
+  030eaa4  lvlx 10, 9, 30
   030eaa8  fsel 1, 3, 2, 1
   030eaac  li 8, 140
   030eab0  vslw 3, 3, 3

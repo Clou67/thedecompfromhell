@@ -398,10 +398,10 @@ UpdateMoby_447:   # 0x4b2db8, 0xb54 bytes
   04b32d4  lis 5, 114
   04b32d8  li 6, -3056
   04b32dc  vslw 2, 2, 2
-  04b32e0  <unknown>
+  04b32e0  lvlx 3, 4, 3
   04b32e4  li 3, 280
   04b32e8  vspltw 3, 3, 0
-  04b32ec  <unknown>
+  04b32ec  lvlx 4, 6, 5
   04b32f0  vmaddfp 2, 4, 3, 2
   04b32f4  vctsxs 2, 2, 0
   04b32f8  vspltw 2, 2, 0

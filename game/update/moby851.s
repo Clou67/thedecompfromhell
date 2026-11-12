@@ -523,10 +523,10 @@ UpdateMoby_851:   # 0x48d9d8, 0xd58 bytes
   048e0f8  lis 5, 114
   048e0fc  li 6, -3056
   048e100  vslw 2, 2, 2
-  048e104  <unknown>
+  048e104  lvlx 3, 4, 3
   048e108  li 3, 404
   048e10c  vspltw 3, 3, 0
-  048e110  <unknown>
+  048e110  lvlx 4, 6, 5
   048e114  vmaddfp 2, 4, 3, 2
   048e118  vctsxs 2, 2, 0
   048e11c  vspltw 2, 2, 0

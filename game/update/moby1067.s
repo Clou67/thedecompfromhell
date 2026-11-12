@@ -155,12 +155,12 @@ UpdateMoby_1067:   # 0x1ae060, 0x56c bytes
   01ae2a0  lis 3, 27
   01ae2a4  lfs 1, 8(30)
   01ae2a8  addi 3, 3, -8120
-  01ae2ac  <unknown>
+  01ae2ac  lvlx 2, 4, 30
   01ae2b0  lis 4, 149
   01ae2b4  addic 4, 4, 5056
   01ae2b8  lfs 2, 8(3)
-  01ae2bc  <unknown>
-  01ae2c0  <unknown>
+  01ae2bc  lvrx 3, 5, 30
+  01ae2c0  lvlx 4, 6, 3
   01ae2c4  lfs 3, 0(30)
   01ae2c8  lfs 4, 16(31)
   01ae2cc  lfd 5, 160(1)
@@ -185,8 +185,8 @@ UpdateMoby_1067:   # 0x1ae060, 0x56c bytes
   01ae318  lfs 5, 328(4)
   01ae31c  fsubs 5, 7, 5
   01ae320  li 4, 24
-  01ae324  <unknown>
-  01ae328  <unknown>
+  01ae324  lvlx 5, 5, 30
+  01ae328  lvrx 6, 6, 30
   01ae32c  vor 5, 5, 6
   01ae330  vspltisw 6, -1
   01ae334  fmuls 1, 1, 2
@@ -197,7 +197,7 @@ UpdateMoby_1067:   # 0x1ae060, 0x56c bytes
   01ae348  fmadds 1, 1, 1, 3
   01ae34c  fmadds 2, 5, 5, 2
   01ae350  vmaddfp 2, 5, 2, 3
-  01ae354  <unknown>
+  01ae354  lvlx 3, 4, 31
   01ae358  fsqrts 1, 1
   01ae35c  fsqrts 2, 2
   01ae360  vmaddfp 2, 2, 4, 3
@@ -274,12 +274,12 @@ UpdateMoby_1067:   # 0x1ae060, 0x56c bytes
   01ae47c  addi 3, 3, -8120
   01ae480  lfs 1, 8(30)
   01ae484  addi 5, 4, 16
-  01ae488  <unknown>
+  01ae488  lvlx 2, 4, 30
   01ae48c  lfs 2, 8(3)
   01ae490  lis 4, 149
-  01ae494  <unknown>
+  01ae494  lvrx 3, 5, 30
   01ae498  lfs 3, 0(30)
-  01ae49c  <unknown>
+  01ae49c  lvlx 4, 6, 3
   01ae4a0  addic 4, 4, 5056
   01ae4a4  lfs 4, 16(31)
   01ae4a8  fmuls 3, 3, 2
@@ -301,10 +301,10 @@ UpdateMoby_1067:   # 0x1ae060, 0x56c bytes
   01ae4e8  frsp 6, 6
   01ae4ec  fmuls 5, 5, 5
   01ae4f0  addi 6, 5, 16
-  01ae4f4  <unknown>
+  01ae4f4  lvlx 5, 5, 30
   01ae4f8  vspltw 4, 4, 0
   01ae4fc  li 5, 136
-  01ae500  <unknown>
+  01ae500  lvrx 6, 6, 30
   01ae504  vor 5, 5, 6
   01ae508  fmuls 1, 6, 1
   01ae50c  fsubs 6, 8, 7
@@ -315,7 +315,7 @@ UpdateMoby_1067:   # 0x1ae060, 0x56c bytes
   01ae520  fmuls 1, 1, 2
   01ae524  fmadds 2, 6, 6, 4
   01ae528  vmaddfp 2, 5, 2, 3
-  01ae52c  <unknown>
+  01ae52c  lvlx 3, 4, 31
   01ae530  fmadds 1, 1, 1, 3
   01ae534  fsqrts 2, 2
   01ae538  fsqrts 1, 1

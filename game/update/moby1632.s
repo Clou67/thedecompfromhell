@@ -106,22 +106,22 @@ UpdateMoby_1632:   # 0x2a4fa0, 0x1a4 bytes
   02a5024  addi 6, 4, 16
   02a5028  li 8, 20
   02a502c  addi 7, 5, 16
-  02a5030  <unknown>
+  02a5030  lvlx 2, 4, 3
   02a5034  addi 4, 8, 16
-  02a5038  <unknown>
+  02a5038  lvrx 3, 6, 3
   02a503c  li 9, 28
-  02a5040  <unknown>
+  02a5040  lvlx 4, 5, 3
   02a5044  vor 2, 2, 3
   02a5048  addi 6, 9, 16
-  02a504c  <unknown>
-  02a5050  <unknown>
-  02a5054  <unknown>
+  02a504c  lvlx 3, 8, 3
+  02a5050  lvrx 5, 4, 3
+  02a5054  lvrx 6, 7, 3
   02a5058  li 4, 48
   02a505c  vor 3, 3, 5
   02a5060  vor 4, 4, 6
-  02a5064  <unknown>
+  02a5064  lvlx 5, 9, 3
   02a5068  addi 5, 4, 16
-  02a506c  <unknown>
+  02a506c  lvrx 6, 6, 3
   02a5070  lis 9, 42
   02a5074  lwz 6, 32(3)
   02a5078  lwz 7, 36(3)
@@ -139,8 +139,8 @@ UpdateMoby_1632:   # 0x2a4fa0, 0x1a4 bytes
   02a50a8  vor 5, 5, 6
   02a50ac  stfs 1, 140(1)
   02a50b0  addi 6, 9, 20352
-  02a50b4  <unknown>
-  02a50b8  <unknown>
+  02a50b4  lvlx 6, 4, 3
+  02a50b8  lvrx 7, 5, 3
   02a50bc  vmrghw 2, 2, 3
   02a50c0  li 3, 128
   02a50c4  vor 3, 6, 7

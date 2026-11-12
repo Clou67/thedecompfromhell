@@ -38,12 +38,12 @@ FUN_00315198:   # 0x315198, 0x2e8 bytes
   0315204  stb 4, 49(31)
   0315208  stb 4, 32(31)
   031520c  stw 28, 48(7)
-  0315210  <unknown>
+  0315210  lvlx 2, 0, 27
   0315214  vslw 3, 3, 3
   0315218  li 3, 32
   031521c  vspltw 2, 2, 0
   0315220  li 4, 0
-  0315224  <unknown>
+  0315224  lvlx 4, 5, 6
   0315228  lis 5, 16256
   031522c  vmaddfp 2, 4, 2, 3
   0315230  vctsxs 2, 2, 0
@@ -622,8 +622,8 @@ UpdateMoby_248:   # 0x3154d8, 0xb30 bytes
   0315b74  stfs 2, 20(30)
   0315b78  stfs 3, 16(30)
   0315b7c  stfs 1, 24(30)
-  0315b80  <unknown>
-  0315b84  <unknown>
+  0315b80  lvlx 3, 3, 28
+  0315b84  lvlx 4, 5, 4
   0315b88  vspltw 3, 3, 0
   0315b8c  fmadds 2, 3, 3, 4
   0315b90  vmaddfp 2, 4, 3, 2
@@ -644,9 +644,9 @@ UpdateMoby_248:   # 0x3154d8, 0xb30 bytes
   0315bcc  stb 4, 32(31)
   0315bd0  li 4, -3056
   0315bd4  vslw 2, 2, 2
-  0315bd8  <unknown>
+  0315bd8  lvlx 3, 5, 3
   0315bdc  vspltw 3, 3, 0
-  0315be0  <unknown>
+  0315be0  lvlx 4, 4, 6
   0315be4  li 5, 4
   0315be8  li 4, 32
   0315bec  vmaddfp 2, 4, 3, 2
@@ -660,11 +660,11 @@ UpdateMoby_248:   # 0x3154d8, 0xb30 bytes
   0315c0c  vcfsx 4, 2, 0
   0315c10  vspltw 2, 2, 0
   0315c14  stvewx 2, 4, 30
-  0315c18  <unknown>
+  0315c18  lvlx 2, 5, 3
   0315c1c  vspltw 2, 2, 0
   0315c20  vrefp 5, 4
   0315c24  li 4, 48
-  0315c28  <unknown>
+  0315c28  lvlx 9, 4, 3
   0315c2c  li 3, 40
   0315c30  vspltw 9, 9, 0
   0315c34  li 4, 0

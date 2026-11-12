@@ -398,7 +398,7 @@ DrawShrub:   # 0x508c10, 0x1138 bytes
   0509238  std 6, 368(1)
   050923c  lwz 22, 0(3)
   0509240  lis 6, 81
-  0509244  <unknown>
+  0509244  lvlx 3, 4, 18
   0509248  addi 6, 6, -29824
   050924c  vsrw 2, 3, 2
   0509250  ori 3, 24, 0
@@ -408,7 +408,7 @@ DrawShrub:   # 0x508c10, 0x1138 bytes
   0509260  lfs 1, 0(6)
   0509264  vcfux 2, 2, 0
   0509268  lwz 23, 108(22)
-  050926c  <unknown>
+  050926c  lvlx 3, 0, 6
   0509270  lfd 2, 368(1)
   0509274  vspltw 3, 3, 0
   0509278  fcfid 2, 2
@@ -423,7 +423,7 @@ DrawShrub:   # 0x508c10, 0x1138 bytes
   050929c  li 17, 190
   05092a0  vslw 4, 4, 4
   05092a4  lfs 2, 4(3)
-  05092a8  <unknown>
+  05092a8  lvlx 3, 4, 3
   05092ac  fmuls 1, 1, 2
   05092b0  vspltw 3, 3, 0
   05092b4  li 3, 1
@@ -551,30 +551,30 @@ DrawShrub:   # 0x508c10, 0x1138 bytes
   050949c  li 4, 112
   05094a0  vslw 2, 2, 2
   05094a4  lis 5, 144
-  05094a8  <unknown>
+  05094a8  lvlx 3, 3, 1
   05094ac  addic 6, 5, 12256
-  05094b0  <unknown>
+  05094b0  lvlx 4, 4, 1
   05094b4  li 3, 120
   05094b8  vmaddfp 2, 3, 3, 2
   05094bc  li 4, 20
   05094c0  li 7, 16
   05094c4  li 8, 8
   05094c8  li 9, 12256
-  05094cc  <unknown>
-  05094d0  <unknown>
+  05094cc  lvlx 10, 3, 1
+  05094d0  lvlx 3, 4, 6
   05094d4  li 3, 24
   05094d8  ld 4, 336(1)
   05094dc  li 10, 12
   05094e0  vspltw 5, 3, 0
-  05094e4  <unknown>
+  05094e4  lvlx 11, 3, 6
   05094e8  vmaddfp 2, 4, 4, 2
-  05094ec  <unknown>
-  05094f0  <unknown>
-  05094f4  <unknown>
-  05094f8  <unknown>
+  05094ec  lvlx 8, 7, 6
+  05094f0  lvlx 6, 4, 6
+  05094f4  lvlx 7, 8, 6
+  05094f8  lvlx 9, 9, 5
   05094fc  vmaddfp 10, 10, 10, 2
   0509500  lvx 2, 28, 1
-  0509504  <unknown>
+  0509504  lvlx 12, 10, 6
   0509508  lvx 3, 30, 1
   050950c  lvx 4, 29, 1
   0509510  vspltw 13, 10, 0
@@ -602,8 +602,8 @@ DrawShrub:   # 0x508c10, 0x1138 bytes
   0509568  sldi 9, 22, 2
   050956c  vspltisw 14, -1
   0509570  vspltisw 15, -1
-  0509574  <unknown>
-  0509578  <unknown>
+  0509574  lvlx 2, 5, 6
+  0509578  lvlx 4, 5, 4
   050957c  addi 6, 8, -29824
   0509580  vsraw 2, 2, 3
   0509584  sldi 4, 22, 7
@@ -613,7 +613,7 @@ DrawShrub:   # 0x508c10, 0x1138 bytes
   0509594  vcfsx 2, 2, 0
   0509598  vcfsx 4, 4, 0
   050959c  subc 4, 4, 9
-  05095a0  <unknown>
+  05095a0  lvlx 5, 7, 6
   05095a4  rlwinm 8, 8, 0, 29, 29
   05095a8  li 7, 0
   05095ac  addc 9, 3, 4
@@ -634,13 +634,13 @@ DrawShrub:   # 0x508c10, 0x1138 bytes
   05095e8  vslw 13, 13, 13
   05095ec  addic 4, 3, 64
   05095f0  rlwinm 3, 3, 31, 24, 31
-  05095f4  <unknown>
+  05095f4  lvlx 0, 7, 6
   05095f8  clrlwi 4, 4, 24
   05095fc  vspltw 0, 0, 0
   0509600  vmaddfp 2, 2, 4, 13
   0509604  vsubfp 4, 0, 8
-  0509608  <unknown>
-  050960c  <unknown>
+  0509608  lvlx 13, 5, 4
+  050960c  lvlx 1, 5, 3
   0509610  vsraw 13, 13, 3
   0509614  vnmsubfp 10, 10, 11, 0
   0509618  vsraw 3, 1, 3
@@ -675,7 +675,7 @@ DrawShrub:   # 0x508c10, 0x1138 bytes
   050968c  vmaddfp 2, 2, 9, 7
   0509690  vspltisw 7, -1
   0509694  vspltisw 9, -1
-  0509698  <unknown>
+  0509698  lvlx 5, 3, 6
   050969c  li 3, 96
   05096a0  vspltw 5, 5, 0
   05096a4  vmaddfp 4, 11, 6, 4
@@ -1650,25 +1650,25 @@ idol_draw::DrawSkyShell:   # 0x50a538, 0x82c bytes
   050a5e8  li 8, 104
   050a5ec  std 10, 104(4)
   050a5f0  li 25, 96
-  050a5f4  <unknown>
+  050a5f4  lvlx 31, 5, 4
   050a5f8  li 9, 84
   050a5fc  std 26, 416(1)
-  050a600  <unknown>
+  050a600  lvlx 2, 6, 4
   050a604  lis 26, 144
-  050a608  <unknown>
+  050a608  lvlx 30, 7, 4
   050a60c  li 6, 100
   050a610  std 28, 432(1)
-  050a614  <unknown>
+  050a614  lvlx 3, 3, 4
   050a618  lis 28, 144
-  050a61c  <unknown>
+  050a61c  lvlx 29, 11, 4
   050a620  addic 26, 26, -23532
   050a624  std 27, 424(1)
-  050a628  <unknown>
+  050a628  lvlx 4, 8, 4
   050a62c  li 27, 0
-  050a630  <unknown>
+  050a630  lvlx 28, 25, 4
   050a634  li 5, 3
-  050a638  <unknown>
-  050a63c  <unknown>
+  050a638  lvlx 26, 9, 4
+  050a63c  lvlx 24, 6, 4
   050a640  lwz 28, -23196(28)
   050a644  lwz 4, 8(26)
   050a648  vspltw 27, 2, 0
@@ -1841,7 +1841,7 @@ idol_draw::DrawSkyShell:   # 0x50a538, 0x82c bytes
   050a8e4  vmaddfp 7, 3, 7, 22
   050a8e8  vmaddfp 2, 2, 22, 22
   050a8ec  vmaddfp 3, 3, 22, 22
-  050a8f0  <unknown>
+  050a8f0  lvlx 12, 8, 31
   050a8f4  vmaddfp 10, 4, 25, 10
   050a8f8  vspltw 12, 12, 0
   050a8fc  vmaddfp 8, 4, 27, 8

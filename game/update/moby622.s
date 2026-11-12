@@ -243,8 +243,8 @@ UpdateMoby_622:   # 0x3e2da8, 0x2f8 bytes
   03e2e38  addi 3, 3, 11660
   03e2e3c  li 5, -3056
   03e2e40  vslw 2, 2, 2
-  03e2e44  <unknown>
-  03e2e48  <unknown>
+  03e2e44  lvlx 3, 0, 3
+  03e2e48  lvlx 4, 5, 4
   03e2e4c  li 3, 4
   03e2e50  vspltw 3, 3, 0
   03e2e54  lwz 4, 608(30)
@@ -329,8 +329,8 @@ UpdateMoby_622:   # 0x3e2da8, 0x2f8 bytes
   03e2f90  addi 3, 3, 11660
   03e2f94  li 5, -3056
   03e2f98  vslw 2, 2, 2
-  03e2f9c  <unknown>
-  03e2fa0  <unknown>
+  03e2f9c  lvlx 3, 0, 3
+  03e2fa0  lvlx 4, 5, 4
   03e2fa4  vspltw 3, 3, 0
   03e2fa8  li 4, 4
   03e2fac  li 3, 4

@@ -1176,10 +1176,10 @@ UpdateMoby_1241:   # 0x21b8c0, 0x13fc bytes
   021c8c4  lis 4, 114
   021c8c8  li 6, -3056
   021c8cc  vslw 2, 2, 2
-  021c8d0  <unknown>
+  021c8d0  lvlx 3, 5, 3
   021c8d4  li 3, 60
   021c8d8  vspltw 3, 3, 0
-  021c8dc  <unknown>
+  021c8dc  lvlx 4, 6, 4
   021c8e0  lis 4, 16256
   021c8e4  vmaddfp 2, 4, 3, 2
   021c8e8  vctsxs 2, 2, 0
@@ -1214,10 +1214,10 @@ UpdateMoby_1241:   # 0x21b8c0, 0x13fc bytes
   021c95c  lis 4, 114
   021c960  li 6, -3056
   021c964  vslw 2, 2, 2
-  021c968  <unknown>
+  021c968  lvlx 3, 5, 3
   021c96c  li 3, 60
   021c970  vspltw 3, 3, 0
-  021c974  <unknown>
+  021c974  lvlx 4, 6, 4
   021c978  lis 4, 16256
   021c97c  vmaddfp 2, 4, 3, 2
   021c980  vctsxs 2, 2, 0
@@ -1250,10 +1250,10 @@ UpdateMoby_1241:   # 0x21b8c0, 0x13fc bytes
   021c9ec  lis 4, 114
   021c9f0  li 6, -3056
   021c9f4  vslw 2, 2, 2
-  021c9f8  <unknown>
+  021c9f8  lvlx 3, 5, 3
   021c9fc  li 3, 60
   021ca00  vspltw 3, 3, 0
-  021ca04  <unknown>
+  021ca04  lvlx 4, 6, 4
   021ca08  lis 4, 16256
   021ca0c  vmaddfp 2, 4, 3, 2
   021ca10  vctsxs 2, 2, 0

@@ -214,10 +214,10 @@ UpdateMoby_1054:   # 0x1a7c58, 0xb80 bytes
   01a7f84  stb 4, 32(31)
   01a7f88  li 4, -3056
   01a7f8c  vslw 2, 2, 2
-  01a7f90  <unknown>
+  01a7f90  lvlx 3, 6, 3
   01a7f94  li 3, 76
   01a7f98  vspltw 3, 3, 0
-  01a7f9c  <unknown>
+  01a7f9c  lvlx 4, 4, 5
   01a7fa0  vmaddfp 2, 4, 3, 2
   01a7fa4  vctsxs 2, 2, 0
   01a7fa8  vspltw 2, 2, 0

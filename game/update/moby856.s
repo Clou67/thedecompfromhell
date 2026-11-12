@@ -50,7 +50,7 @@ UpdateMoby_856:   # 0x48f650, 0xb24 bytes
   048f6ec  lis 26, 151
   048f6f0  ori 4, 4, 255
   048f6f4  li 29, 0
-  048f6f8  <unknown>
+  048f6f8  lvlx 31, 0, 3
   048f6fc  addic 28, 28, 7136
   048f700  lfs 31, 4(3)
   048f704  addic 26, 26, -25376
@@ -71,19 +71,19 @@ UpdateMoby_856:   # 0x48f650, 0xb24 bytes
   048f740  fmr 1, 31
   048f744  li 12, 116
   048f748  vmaddfp 2, 2, 31, 3
-  048f74c  <unknown>
-  048f750  <unknown>
+  048f74c  lvlx 3, 3, 7
+  048f750  lvlx 4, 4, 7
   048f754  li 4, 20
-  048f758  <unknown>
+  048f758  lvlx 5, 6, 7
   048f75c  vsubfp 3, 3, 4
   048f760  lfs 2, 44(7)
   048f764  li 3, 40
   048f768  li 24, 120
-  048f76c  <unknown>
+  048f76c  lvlx 6, 4, 7
   048f770  ori 6, 25, 0
   048f774  vsubfp 5, 5, 6
-  048f778  <unknown>
-  048f77c  <unknown>
+  048f778  lvlx 6, 3, 7
+  048f77c  lvlx 7, 11, 7
   048f780  addic 3, 1, 112
   048f784  li 8, 127
   048f788  vmaddfp 3, 2, 3, 4
@@ -92,13 +92,13 @@ UpdateMoby_856:   # 0x48f650, 0xb24 bytes
   048f794  li 10, 255
   048f798  vspltw 3, 3, 0
   048f79c  stvewx 3, 5, 1
-  048f7a0  <unknown>
+  048f7a0  lvlx 3, 4, 7
   048f7a4  lwz 4, 8320(26)
   048f7a8  vmaddfp 3, 2, 5, 3
   048f7ac  li 5, 2
   048f7b0  vspltw 3, 3, 0
   048f7b4  stvewx 3, 12, 1
-  048f7b8  <unknown>
+  048f7b8  lvlx 3, 11, 7
   048f7bc  vmaddfp 2, 2, 4, 3
   048f7c0  vspltw 2, 2, 0
   048f7c4  stvewx 2, 24, 1
@@ -125,7 +125,7 @@ UpdateMoby_856:   # 0x48f650, 0xb24 bytes
   048f818  lis 26, 165
   048f81c  ori 4, 4, 255
   048f820  li 28, 0
-  048f824  <unknown>
+  048f824  lvlx 31, 0, 3
   048f828  addic 25, 25, -25376
   048f82c  addic 26, 26, 7136
   048f830  lfs 31, 4(3)
@@ -146,34 +146,34 @@ UpdateMoby_856:   # 0x48f650, 0xb24 bytes
   048f86c  li 5, 128
   048f870  fmr 1, 31
   048f874  vmaddfp 2, 2, 31, 3
-  048f878  <unknown>
-  048f87c  <unknown>
+  048f878  lvlx 3, 3, 7
+  048f87c  lvlx 4, 4, 7
   048f880  li 3, 36
   048f884  li 4, 20
   048f888  vsubfp 3, 3, 4
   048f88c  li 23, 136
-  048f890  <unknown>
-  048f894  <unknown>
+  048f890  lvlx 5, 3, 7
+  048f894  lvlx 6, 4, 7
   048f898  lfs 2, 44(7)
   048f89c  vsubfp 5, 5, 6
-  048f8a0  <unknown>
+  048f8a0  lvlx 6, 6, 7
   048f8a4  addic 3, 1, 128
   048f8a8  ori 6, 24, 0
   048f8ac  vmaddfp 3, 2, 3, 4
-  048f8b0  <unknown>
+  048f8b0  lvlx 4, 11, 7
   048f8b4  vsubfp 4, 6, 4
   048f8b8  li 8, 127
   048f8bc  li 9, 2
   048f8c0  li 10, 255
   048f8c4  vspltw 3, 3, 0
   048f8c8  stvewx 3, 5, 1
-  048f8cc  <unknown>
+  048f8cc  lvlx 3, 4, 7
   048f8d0  li 5, 2
   048f8d4  lwz 4, 8320(25)
   048f8d8  vmaddfp 3, 2, 5, 3
   048f8dc  vspltw 3, 3, 0
   048f8e0  stvewx 3, 12, 1
-  048f8e4  <unknown>
+  048f8e4  lvlx 3, 11, 7
   048f8e8  vmaddfp 2, 2, 4, 3
   048f8ec  vspltw 2, 2, 0
   048f8f0  stvewx 2, 23, 1
@@ -203,7 +203,7 @@ UpdateMoby_856:   # 0x48f650, 0xb24 bytes
   048f950  lis 26, 165
   048f954  ori 4, 4, 255
   048f958  li 28, 0
-  048f95c  <unknown>
+  048f95c  lvlx 31, 0, 3
   048f960  addic 25, 25, -25376
   048f964  addic 26, 26, 7136
   048f968  lfs 31, 4(3)
@@ -224,34 +224,34 @@ UpdateMoby_856:   # 0x48f650, 0xb24 bytes
   048f9a4  li 5, 144
   048f9a8  fmr 1, 31
   048f9ac  vmaddfp 2, 2, 31, 3
-  048f9b0  <unknown>
-  048f9b4  <unknown>
+  048f9b0  lvlx 3, 3, 7
+  048f9b4  lvlx 4, 4, 7
   048f9b8  li 3, 36
   048f9bc  li 4, 20
   048f9c0  vsubfp 3, 3, 4
   048f9c4  li 23, 152
-  048f9c8  <unknown>
-  048f9cc  <unknown>
+  048f9c8  lvlx 5, 3, 7
+  048f9cc  lvlx 6, 4, 7
   048f9d0  lfs 2, 44(7)
   048f9d4  vsubfp 5, 5, 6
-  048f9d8  <unknown>
+  048f9d8  lvlx 6, 6, 7
   048f9dc  addic 3, 1, 144
   048f9e0  ori 6, 24, 0
   048f9e4  vmaddfp 3, 2, 3, 4
-  048f9e8  <unknown>
+  048f9e8  lvlx 4, 11, 7
   048f9ec  vsubfp 4, 6, 4
   048f9f0  li 8, 127
   048f9f4  li 9, 2
   048f9f8  li 10, 255
   048f9fc  vspltw 3, 3, 0
   048fa00  stvewx 3, 5, 1
-  048fa04  <unknown>
+  048fa04  lvlx 3, 4, 7
   048fa08  li 5, 2
   048fa0c  lwz 4, 8320(25)
   048fa10  vmaddfp 3, 2, 5, 3
   048fa14  vspltw 3, 3, 0
   048fa18  stvewx 3, 12, 1
-  048fa1c  <unknown>
+  048fa1c  lvlx 3, 11, 7
   048fa20  vmaddfp 2, 2, 4, 3
   048fa24  vspltw 2, 2, 0
   048fa28  stvewx 2, 23, 1
@@ -281,7 +281,7 @@ UpdateMoby_856:   # 0x48f650, 0xb24 bytes
   048fa88  lis 26, 165
   048fa8c  ori 4, 4, 255
   048fa90  li 28, 0
-  048fa94  <unknown>
+  048fa94  lvlx 31, 0, 3
   048fa98  addic 25, 25, -25376
   048fa9c  addic 26, 26, 7136
   048faa0  lfs 31, 4(3)
@@ -302,34 +302,34 @@ UpdateMoby_856:   # 0x48f650, 0xb24 bytes
   048fadc  li 5, 160
   048fae0  fmr 1, 31
   048fae4  vmaddfp 2, 2, 31, 3
-  048fae8  <unknown>
-  048faec  <unknown>
+  048fae8  lvlx 3, 3, 7
+  048faec  lvlx 4, 4, 7
   048faf0  li 3, 36
   048faf4  li 4, 20
   048faf8  vsubfp 3, 3, 4
   048fafc  li 23, 168
-  048fb00  <unknown>
-  048fb04  <unknown>
+  048fb00  lvlx 5, 3, 7
+  048fb04  lvlx 6, 4, 7
   048fb08  lfs 2, 44(7)
   048fb0c  vsubfp 5, 5, 6
-  048fb10  <unknown>
+  048fb10  lvlx 6, 6, 7
   048fb14  addic 3, 1, 160
   048fb18  ori 6, 24, 0
   048fb1c  vmaddfp 3, 2, 3, 4
-  048fb20  <unknown>
+  048fb20  lvlx 4, 11, 7
   048fb24  vsubfp 4, 6, 4
   048fb28  li 8, 127
   048fb2c  li 9, 2
   048fb30  li 10, 255
   048fb34  vspltw 3, 3, 0
   048fb38  stvewx 3, 5, 1
-  048fb3c  <unknown>
+  048fb3c  lvlx 3, 4, 7
   048fb40  li 5, 2
   048fb44  lwz 4, 8320(25)
   048fb48  vmaddfp 3, 2, 5, 3
   048fb4c  vspltw 3, 3, 0
   048fb50  stvewx 3, 12, 1
-  048fb54  <unknown>
+  048fb54  lvlx 3, 11, 7
   048fb58  vmaddfp 2, 2, 4, 3
   048fb5c  vspltw 2, 2, 0
   048fb60  stvewx 2, 23, 1

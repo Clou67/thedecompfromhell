@@ -228,9 +228,9 @@ UpdateMoby_291:   # 0x32f988, 0x1ac8 bytes
   032fa3c  addi 3, 3, -1848
   032fa40  li 5, 4
   032fa44  vslw 2, 2, 2
-  032fa48  <unknown>
-  032fa4c  <unknown>
-  032fa50  <unknown>
+  032fa48  lvlx 3, 4, 27
+  032fa4c  lvlx 4, 0, 3
+  032fa50  lvlx 5, 5, 3
   032fa54  vspltw 4, 4, 0
   032fa58  li 3, 5640
   032fa5c  vmaddfp 2, 3, 4, 2
@@ -486,8 +486,8 @@ UpdateMoby_291:   # 0x32f988, 0x1ac8 bytes
   032fe44  fmuls 4, 5, 4
   032fe48  li 6, 50
   032fe4c  stfs 4, 140(30)
-  032fe50  <unknown>
-  032fe54  <unknown>
+  032fe50  lvlx 4, 4, 3
+  032fe54  lvlx 5, 7, 5
   032fe58  vspltw 4, 4, 0
   032fe5c  li 4, 148
   032fe60  vmaddfp 2, 5, 4, 2
@@ -499,7 +499,7 @@ UpdateMoby_291:   # 0x32f988, 0x1ac8 bytes
   032fe78  stvebx 2, 8, 30
   032fe7c  stb 6, 145(30)
   032fe80  stb 9, 146(30)
-  032fe84  <unknown>
+  032fe84  lvlx 2, 10, 3
   032fe88  ori 6, 12, 52429
   032fe8c  vspltw 2, 2, 0
   032fe90  lis 8, 16128
@@ -760,7 +760,7 @@ UpdateMoby_291:   # 0x32f988, 0x1ac8 bytes
   033028c  li 29, 0
   0330290  ori 26, 29, 0
   0330294  lwz 3, 160(3)
-  0330298  <unknown>
+  0330298  lvlx 3, 4, 30
   033029c  rlwinm 3, 3, 0, 26, 26
   03302a0  vsrw 2, 3, 2
   03302a4  cmpwi 3, 0
@@ -896,10 +896,10 @@ UpdateMoby_291:   # 0x32f988, 0x1ac8 bytes
   03304ac  vspltisw 3, -1
   03304b0  lis 4, 114
   03304b4  li 5, -3056
-  03304b8  <unknown>
+  03304b8  lvlx 4, 3, 25
   03304bc  vslw 3, 3, 3
   03304c0  vspltw 4, 4, 0
-  03304c4  <unknown>
+  03304c4  lvlx 5, 5, 4
   03304c8  li 3, 147
   03304cc  vaddfp 2, 2, 4
   03304d0  vmaddfp 2, 5, 2, 3

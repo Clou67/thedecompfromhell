@@ -383,10 +383,10 @@ UpdateMoby_1389:   # 0x267af8, 0xf24 bytes
   0267fcc  vslw 2, 2, 2
   0267fd0  stb 4, 32(31)
   0267fd4  li 4, -3056
-  0267fd8  <unknown>
+  0267fd8  lvlx 3, 0, 3
   0267fdc  li 3, 348
   0267fe0  vspltw 3, 3, 0
-  0267fe4  <unknown>
+  0267fe4  lvlx 4, 4, 5
   0267fe8  vmaddfp 2, 4, 3, 2
   0267fec  vctsxs 2, 2, 0
   0267ff0  vspltw 2, 2, 0
@@ -645,8 +645,8 @@ UpdateMoby_1389:   # 0x267af8, 0xf24 bytes
   02683e4  addi 3, 3, 31388
   02683e8  li 5, -3056
   02683ec  vslw 2, 2, 2
-  02683f0  <unknown>
-  02683f4  <unknown>
+  02683f0  lvlx 3, 0, 3
+  02683f4  lvlx 4, 5, 4
   02683f8  vspltw 3, 3, 0
   02683fc  li 3, 628
   0268400  vmaddfp 2, 4, 3, 2

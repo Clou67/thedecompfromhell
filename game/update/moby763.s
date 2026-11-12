@@ -96,10 +96,10 @@ M763_00451730:   # 0x451730, 0x3ec bytes
   0451780  vslw 2, 2, 2
   0451784  stw 4, 56(29)
   0451788  li 4, -3056
-  045178c  <unknown>
+  045178c  lvlx 3, 0, 3
   0451790  li 3, 532
   0451794  vspltw 3, 3, 0
-  0451798  <unknown>
+  0451798  lvlx 4, 4, 5
   045179c  vmaddfp 2, 4, 3, 2
   04517a0  vctsxs 2, 2, 0
   04517a4  vspltw 2, 2, 0
@@ -295,8 +295,8 @@ M763_00451730:   # 0x451730, 0x3ec bytes
   0451a9c  stfs 1, 196(29)
   0451aa0  stb 6, 32(31)
   0451aa4  stb 3, 103(29)
-  0451aa8  <unknown>
-  0451aac  <unknown>
+  0451aa8  lvlx 2, 5, 7
+  0451aac  lvlx 4, 8, 4
   0451ab0  li 5, 38
   0451ab4  vspltw 2, 2, 0
   0451ab8  addic 4, 29, 96

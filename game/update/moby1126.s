@@ -60,11 +60,11 @@ UpdateMoby_1126:   # 0x1d6b28, 0xd28 bytes
   01d6c08  li 28, -3056
   01d6c0c  sth 4, 52(31)
   01d6c10  stb 6, 103(30)
-  01d6c14  <unknown>
+  01d6c14  lvlx 3, 0, 5
   01d6c18  vslw 2, 2, 2
   01d6c1c  vspltw 31, 3, 0
   01d6c20  li 5, 38
-  01d6c24  <unknown>
+  01d6c24  lvlx 3, 28, 29
   01d6c28  addic 4, 30, 96
   01d6c2c  ori 3, 31, 0
   01d6c30  vmaddfp 2, 3, 31, 2
@@ -74,7 +74,7 @@ UpdateMoby_1126:   # 0x1d6b28, 0xd28 bytes
   01d6c40  bl 0x10c808
   01d6c44  nop
   01d6c48  vspltisw 2, -1
-  01d6c4c  <unknown>
+  01d6c4c  lvlx 3, 28, 29
   01d6c50  li 3, 124
   01d6c54  vslw 2, 2, 2
   01d6c58  vmaddfp 2, 3, 31, 2
@@ -593,10 +593,10 @@ UpdateMoby_1126:   # 0x1d6b28, 0xd28 bytes
   01d745c  lis 4, 114
   01d7460  li 6, -3056
   01d7464  vslw 2, 2, 2
-  01d7468  <unknown>
+  01d7468  lvlx 3, 5, 3
   01d746c  lis 5, 151
   01d7470  vspltw 3, 3, 0
-  01d7474  <unknown>
+  01d7474  lvlx 4, 6, 4
   01d7478  addic 5, 5, -25376
   01d747c  li 4, 124
   01d7480  vmaddfp 2, 4, 3, 2
@@ -697,10 +697,10 @@ UpdateMoby_1126:   # 0x1d6b28, 0xd28 bytes
   01d75fc  lis 4, 114
   01d7600  li 6, -3056
   01d7604  vslw 2, 2, 2
-  01d7608  <unknown>
+  01d7608  lvlx 3, 5, 3
   01d760c  li 3, 124
   01d7610  vspltw 3, 3, 0
-  01d7614  <unknown>
+  01d7614  lvlx 4, 6, 4
   01d7618  li 4, 3
   01d761c  vmaddfp 2, 4, 3, 2
   01d7620  vctsxs 2, 2, 0

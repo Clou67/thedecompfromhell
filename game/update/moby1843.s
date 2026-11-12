@@ -268,11 +268,11 @@ M1843_002c1fc8:   # 0x2c1fc8, 0x238 bytes
   02c1ff8  lis 9, 123
   02c1ffc  addi 8, 7, 16
   02c2000  addic 6, 6, 1
-  02c2004  <unknown>
+  02c2004  lvlx 2, 7, 5
   02c2008  li 7, 32724
-  02c200c  <unknown>
+  02c200c  lvrx 3, 8, 5
   02c2010  vor 2, 2, 3
-  02c2014  <unknown>
+  02c2014  lvlx 3, 7, 9
   02c2018  srawi 7, 6, 4
   02c201c  vcfsx 4, 2, 0
   02c2020  vspltw 3, 3, 0

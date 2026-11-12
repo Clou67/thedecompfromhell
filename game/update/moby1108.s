@@ -935,9 +935,9 @@ UpdateMoby_1108:   # 0x1c96c0, 0xed4 bytes
   01ca3dc  li 6, -3056
   01ca3e0  vslw 2, 2, 2
   01ca3e4  stw 3, 352(4)
-  01ca3e8  <unknown>
+  01ca3e8  lvlx 3, 5, 29
   01ca3ec  li 3, 360
-  01ca3f0  <unknown>
+  01ca3f0  lvlx 4, 6, 28
   01ca3f4  vspltw 3, 3, 0
   01ca3f8  vmaddfp 2, 4, 3, 2
   01ca3fc  vctsxs 2, 2, 0
@@ -978,10 +978,10 @@ UpdateMoby_1108:   # 0x1c96c0, 0xed4 bytes
   01ca488  stb 4, 32(31)
   01ca48c  lis 4, 114
   01ca490  vslw 2, 2, 2
-  01ca494  <unknown>
+  01ca494  lvlx 3, 6, 3
   01ca498  li 3, 188
   01ca49c  vspltw 3, 3, 0
-  01ca4a0  <unknown>
+  01ca4a0  lvlx 4, 5, 4
   01ca4a4  li 4, 0
   01ca4a8  lis 5, 164
   01ca4ac  lwz 6, 48(30)

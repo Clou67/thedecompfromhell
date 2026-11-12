@@ -1109,7 +1109,7 @@ UpdateMoby_1919:   # 0x2da688, 0x350 bytes
   02da7f4  stw 4, 8(8)
   02da7f8  addic 5, 12, 8
   02da7fc  li 7, -29596
-  02da800  <unknown>
+  02da800  lvlx 3, 31, 3
   02da804  lis 3, 268
   02da808  vspltw 3, 3, 0
   02da80c  stvewx 3, 0, 5

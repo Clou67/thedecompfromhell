@@ -185,8 +185,8 @@ InitCamera_19:   # 0x3fde8, 0x620 bytes
   003fe60  stw 28, 64(29)
   003fe64  lfs 4, 0(3)
   003fe68  sth 28, 84(29)
-  003fe6c  <unknown>
-  003fe70  <unknown>
+  003fe6c  lvlx 3, 4, 30
+  003fe70  lvrx 4, 5, 30
   003fe74  lis 4, 114
   003fe78  stw 28, 68(29)
   003fe7c  li 5, -3056
@@ -195,11 +195,11 @@ InitCamera_19:   # 0x3fde8, 0x620 bytes
   003fe88  stw 28, 76(29)
   003fe8c  stw 28, 80(29)
   003fe90  vsraw 2, 3, 2
-  003fe94  <unknown>
+  003fe94  lvlx 3, 6, 3
   003fe98  vspltisw 4, -1
   003fe9c  vspltw 3, 3, 0
   003fea0  vcfsx 2, 2, 0
-  003fea4  <unknown>
+  003fea4  lvlx 5, 5, 4
   003fea8  vslw 4, 4, 4
   003feac  li 5, -1
   003feb0  lfs 5, 4(3)

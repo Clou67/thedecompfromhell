@@ -433,8 +433,8 @@ FUN_00299400:   # 0x299400, 0x540 bytes
   02994f4  stfs 1, 40(31)
   02994f8  lfs 1, 12(26)
   02994fc  stfs 1, 44(31)
-  0299500  <unknown>
-  0299504  <unknown>
+  0299500  lvlx 2, 0, 30
+  0299504  lvlx 4, 4, 3
   0299508  vspltw 2, 2, 0
   029950c  lis 3, 123
   0299510  lis 4, 123
@@ -1071,9 +1071,9 @@ UpdateMoby_156:   # 0x299958, 0x684 bytes
   0299efc  lis 5, 114
   0299f00  li 6, -3056
   0299f04  vslw 2, 2, 2
-  0299f08  <unknown>
+  0299f08  lvlx 3, 4, 3
   0299f0c  vspltw 3, 3, 0
-  0299f10  <unknown>
+  0299f10  lvlx 4, 6, 5
   0299f14  li 3, 2
   0299f18  vmaddfp 2, 4, 3, 2
   0299f1c  vctsxs 2, 2, 0

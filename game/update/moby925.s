@@ -458,10 +458,10 @@ UpdateMoby_925:   # 0x4b8b48, 0xc38 bytes
   04b9148  lis 5, 114
   04b914c  li 6, -3056
   04b9150  vslw 2, 2, 2
-  04b9154  <unknown>
+  04b9154  lvlx 3, 4, 3
   04b9158  li 3, 344
   04b915c  vspltw 3, 3, 0
-  04b9160  <unknown>
+  04b9160  lvlx 4, 6, 5
   04b9164  vmaddfp 2, 4, 3, 2
   04b9168  vctsxs 2, 2, 0
   04b916c  vspltw 2, 2, 0

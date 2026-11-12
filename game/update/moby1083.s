@@ -464,10 +464,10 @@ UpdateMoby_1083:   # 0x1b9d68, 0xa2c bytes
   01b9eb0  stb 4, 32(31)
   01b9eb4  li 4, -3056
   01b9eb8  vslw 2, 2, 2
-  01b9ebc  <unknown>
+  01b9ebc  lvlx 3, 5, 3
   01b9ec0  li 3, 36
   01b9ec4  vspltw 3, 3, 0
-  01b9ec8  <unknown>
+  01b9ec8  lvlx 4, 4, 6
   01b9ecc  vmaddfp 2, 4, 3, 2
   01b9ed0  vctsxs 2, 2, 0
   01b9ed4  vspltw 2, 2, 0

@@ -477,10 +477,10 @@ Help_Suspend:   # 0x7b7d8, 0x90 bytes
   007b80c  vslw 2, 2, 2
   007b810  sth 5, 56(3)
   007b814  li 5, -3056
-  007b818  <unknown>
+  007b818  lvlx 3, 0, 4
   007b81c  li 4, 60
   007b820  vspltw 3, 3, 0
-  007b824  <unknown>
+  007b824  lvlx 4, 5, 6
   007b828  vmaddfp 2, 4, 3, 2
   007b82c  vctsxs 2, 2, 0
   007b830  vspltw 2, 2, 0

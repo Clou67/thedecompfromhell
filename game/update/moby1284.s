@@ -1338,8 +1338,8 @@ M1284_00239d98:   # 0x239d98, 0x678 bytes
   0239e58  li 28, 0
   0239e5c  lis 22, 121
   0239e60  lis 20, 165
-  0239e64  <unknown>
-  0239e68  <unknown>
+  0239e64  lvlx 31, 3, 26
+  0239e68  lvlx 30, 4, 26
   0239e6c  lis 19, 121
   0239e70  ori 24, 28, 0
   0239e74  vspltw 31, 31, 0
@@ -1424,7 +1424,7 @@ M1284_00239d98:   # 0x239d98, 0x678 bytes
   0239fb0  li 5, -3056
   0239fb4  vslw 2, 2, 2
   0239fb8  stb 3, 32(31)
-  0239fbc  <unknown>
+  0239fbc  lvlx 3, 5, 4
   0239fc0  li 4, 228
   0239fc4  lwz 3, 248(25)
   0239fc8  vmaddfp 2, 3, 31, 2
@@ -1443,7 +1443,7 @@ M1284_00239d98:   # 0x239d98, 0x678 bytes
   0239ffc  vslw 2, 2, 2
   023a000  ori 3, 31, 0
   023a004  stfs 1, 32(30)
-  023a008  <unknown>
+  023a008  lvlx 3, 5, 4
   023a00c  li 5, 38
   023a010  vmaddfp 2, 3, 30, 2
   023a014  ori 4, 23, 0
@@ -1617,7 +1617,7 @@ M1284_00239d98:   # 0x239d98, 0x678 bytes
   023a2b4  li 5, -3056
   023a2b8  vslw 2, 2, 2
   023a2bc  stb 3, 32(31)
-  023a2c0  <unknown>
+  023a2c0  lvlx 3, 5, 4
   023a2c4  li 4, 228
   023a2c8  lwz 3, 128(25)
   023a2cc  vmaddfp 2, 3, 31, 2
@@ -1636,7 +1636,7 @@ M1284_00239d98:   # 0x239d98, 0x678 bytes
   023a300  vslw 2, 2, 2
   023a304  ori 3, 31, 0
   023a308  stfs 1, 32(30)
-  023a30c  <unknown>
+  023a30c  lvlx 3, 5, 4
   023a310  li 5, 38
   023a314  vmaddfp 2, 3, 30, 2
   023a318  ori 4, 23, 0
@@ -2936,8 +2936,8 @@ M1284_0023b710:   # 0x23b710, 0x6c8 bytes
   023b798  addi 3, 3, -18700
   023b79c  li 5, -3056
   023b7a0  vslw 2, 2, 2
-  023b7a4  <unknown>
-  023b7a8  <unknown>
+  023b7a4  lvlx 3, 0, 3
+  023b7a8  lvlx 4, 5, 4
   023b7ac  vspltw 3, 3, 0
   023b7b0  li 4, 228
   023b7b4  lbz 3, 233(31)
@@ -2961,9 +2961,9 @@ M1284_0023b710:   # 0x23b710, 0x6c8 bytes
   023b7fc  lis 3, 114
   023b800  vslw 2, 2, 2
   023b804  stb 6, 32(30)
-  023b808  <unknown>
+  023b808  lvlx 3, 4, 5
   023b80c  vspltw 3, 3, 0
-  023b810  <unknown>
+  023b810  lvlx 4, 7, 3
   023b814  li 3, 228
   023b818  vmaddfp 2, 4, 3, 2
   023b81c  vctsxs 2, 2, 0
@@ -3025,10 +3025,10 @@ M1284_0023b710:   # 0x23b710, 0x6c8 bytes
   023b8fc  lis 4, 114
   023b900  li 6, -3056
   023b904  vslw 2, 2, 2
-  023b908  <unknown>
+  023b908  lvlx 3, 5, 3
   023b90c  li 3, 236
   023b910  vspltw 3, 3, 0
-  023b914  <unknown>
+  023b914  lvlx 4, 6, 4
   023b918  li 5, 5
   023b91c  li 4, 0
   023b920  vmaddfp 2, 4, 3, 2
@@ -3059,8 +3059,8 @@ M1284_0023b710:   # 0x23b710, 0x6c8 bytes
   023b984  addi 3, 3, -18700
   023b988  li 5, -3056
   023b98c  vslw 2, 2, 2
-  023b990  <unknown>
-  023b994  <unknown>
+  023b990  lvlx 3, 0, 3
+  023b994  lvlx 4, 5, 4
   023b998  vspltw 3, 3, 0
   023b99c  li 3, 228
   023b9a0  vmaddfp 2, 4, 3, 2
@@ -3102,8 +3102,8 @@ M1284_0023b710:   # 0x23b710, 0x6c8 bytes
   023ba30  addi 3, 3, -18700
   023ba34  li 5, -3056
   023ba38  vslw 2, 2, 2
-  023ba3c  <unknown>
-  023ba40  <unknown>
+  023ba3c  lvlx 3, 0, 3
+  023ba40  lvlx 4, 5, 4
   023ba44  li 3, 228
   023ba48  vspltw 3, 3, 0
   023ba4c  vmaddfp 2, 4, 3, 2
@@ -3123,8 +3123,8 @@ M1284_0023b710:   # 0x23b710, 0x6c8 bytes
   023ba84  addi 3, 3, -18700
   023ba88  li 5, -3056
   023ba8c  vslw 2, 2, 2
-  023ba90  <unknown>
-  023ba94  <unknown>
+  023ba90  lvlx 3, 0, 3
+  023ba94  lvlx 4, 5, 4
   023ba98  li 3, 228
   023ba9c  vspltw 3, 3, 0
   023baa0  vmaddfp 2, 4, 3, 2
@@ -3142,10 +3142,10 @@ M1284_0023b710:   # 0x23b710, 0x6c8 bytes
   023bad0  lis 4, 114
   023bad4  li 6, -3056
   023bad8  vslw 2, 2, 2
-  023badc  <unknown>
+  023badc  lvlx 3, 5, 3
   023bae0  li 3, 228
   023bae4  vspltw 3, 3, 0
-  023bae8  <unknown>
+  023bae8  lvlx 4, 6, 4
   023baec  vmaddfp 2, 4, 3, 2
   023baf0  vctsxs 2, 2, 0
   023baf4  vspltw 2, 2, 0
@@ -3162,10 +3162,10 @@ M1284_0023b710:   # 0x23b710, 0x6c8 bytes
   023bb20  lis 4, 114
   023bb24  li 6, -3056
   023bb28  vslw 2, 2, 2
-  023bb2c  <unknown>
+  023bb2c  lvlx 3, 5, 3
   023bb30  li 5, 236
   023bb34  vspltw 3, 3, 0
-  023bb38  <unknown>
+  023bb38  lvlx 4, 6, 4
   023bb3c  li 7, 228
   023bb40  vmaddfp 2, 4, 3, 2
   023bb44  vspltisw 3, -1
@@ -3174,10 +3174,10 @@ M1284_0023b710:   # 0x23b710, 0x6c8 bytes
   023bb50  vctsxs 2, 2, 0
   023bb54  vspltw 2, 2, 0
   023bb58  stvewx 2, 5, 31
-  023bb5c  <unknown>
+  023bb5c  lvlx 2, 0, 3
   023bb60  lfs 1, 0(3)
   023bb64  vspltw 2, 2, 0
-  023bb68  <unknown>
+  023bb68  lvlx 4, 6, 4
   023bb6c  lfs 2, -3056(4)
   023bb70  vmaddfp 2, 4, 2, 3
   023bb74  fmuls 1, 2, 1
@@ -3202,8 +3202,8 @@ M1284_0023b710:   # 0x23b710, 0x6c8 bytes
   023bbc0  addi 3, 3, -18700
   023bbc4  li 5, -3056
   023bbc8  vslw 2, 2, 2
-  023bbcc  <unknown>
-  023bbd0  <unknown>
+  023bbcc  lvlx 3, 0, 3
+  023bbd0  lvlx 4, 5, 4
   023bbd4  vspltw 3, 3, 0
   023bbd8  li 3, 228
   023bbdc  vmaddfp 2, 4, 3, 2
@@ -3250,8 +3250,8 @@ M1284_0023b710:   # 0x23b710, 0x6c8 bytes
   023bc80  addi 3, 3, -18700
   023bc84  li 5, -3056
   023bc88  vslw 2, 2, 2
-  023bc8c  <unknown>
-  023bc90  <unknown>
+  023bc8c  lvlx 3, 0, 3
+  023bc90  lvlx 4, 5, 4
   023bc94  vspltw 3, 3, 0
   023bc98  li 3, 228
   023bc9c  vmaddfp 2, 4, 3, 2
@@ -3271,8 +3271,8 @@ M1284_0023b710:   # 0x23b710, 0x6c8 bytes
   023bcd4  addi 3, 3, -18700
   023bcd8  li 5, -3056
   023bcdc  vslw 2, 2, 2
-  023bce0  <unknown>
-  023bce4  <unknown>
+  023bce0  lvlx 3, 0, 3
+  023bce4  lvlx 4, 5, 4
   023bce8  vspltw 3, 3, 0
   023bcec  li 3, 228
   023bcf0  vmaddfp 2, 4, 3, 2
@@ -3290,10 +3290,10 @@ M1284_0023b710:   # 0x23b710, 0x6c8 bytes
   023bd20  lis 5, 114
   023bd24  li 6, -3056
   023bd28  vslw 2, 2, 2
-  023bd2c  <unknown>
+  023bd2c  lvlx 3, 4, 3
   023bd30  li 3, 228
   023bd34  vspltw 3, 3, 0
-  023bd38  <unknown>
+  023bd38  lvlx 4, 6, 5
   023bd3c  vmaddfp 2, 4, 3, 2
   023bd40  vctsxs 2, 2, 0
   023bd44  vspltw 2, 2, 0
@@ -3311,10 +3311,10 @@ M1284_0023b710:   # 0x23b710, 0x6c8 bytes
   023bd74  lis 5, 114
   023bd78  li 6, -3056
   023bd7c  vslw 2, 2, 2
-  023bd80  <unknown>
+  023bd80  lvlx 3, 4, 3
   023bd84  li 3, 228
   023bd88  vspltw 3, 3, 0
-  023bd8c  <unknown>
+  023bd8c  lvlx 4, 6, 5
   023bd90  vmaddfp 2, 4, 3, 2
   023bd94  vctsxs 2, 2, 0
   023bd98  vspltw 2, 2, 0

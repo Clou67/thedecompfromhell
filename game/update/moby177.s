@@ -495,7 +495,7 @@ M177_002b4818:   # 0x2b4818, 0x1b84 bytes
   02b4fc4  lfs 5, 20(16)
   02b4fc8  stfd 1, 1016(1)
   02b4fcc  fmr 1, 5
-  02b4fd0  <unknown>
+  02b4fd0  lvlx 31, 3, 16
   02b4fd4  stfs 2, 1068(1)
   02b4fd8  lfs 14, 16(16)
   02b4fdc  stfs 3, 1024(1)
@@ -1175,7 +1175,7 @@ M177_002b4818:   # 0x2b4818, 0x1b84 bytes
   02b5a64  lis 3, 114
   02b5a68  li 4, -3056
   02b5a6c  vslw 3, 3, 3
-  02b5a70  <unknown>
+  02b5a70  lvlx 4, 4, 3
   02b5a74  li 3, 68
   02b5a78  vaddfp 2, 2, 31
   02b5a7c  vmaddfp 2, 4, 2, 3
@@ -1281,7 +1281,7 @@ M177_002b4818:   # 0x2b4818, 0x1b84 bytes
   02b5c0c  lis 3, 114
   02b5c10  li 4, -3056
   02b5c14  vslw 3, 3, 3
-  02b5c18  <unknown>
+  02b5c18  lvlx 4, 4, 3
   02b5c1c  li 3, 70
   02b5c20  vaddfp 2, 2, 31
   02b5c24  vmaddfp 2, 4, 2, 3
@@ -1317,13 +1317,13 @@ M177_002b4818:   # 0x2b4818, 0x1b84 bytes
   02b5c9c  lis 4, 114
   02b5ca0  addic 3, 3, 2064
   02b5ca4  fmr 24, 30
-  02b5ca8  <unknown>
+  02b5ca8  lvlx 3, 23, 3
   02b5cac  li 3, -3056
   02b5cb0  vsraw 2, 3, 2
   02b5cb4  vspltisw 3, -1
   02b5cb8  vcfsx 2, 2, 0
   02b5cbc  vslw 3, 3, 3
-  02b5cc0  <unknown>
+  02b5cc0  lvlx 4, 3, 4
   02b5cc4  lis 3, 266
   02b5cc8  ld 4, 1048(1)
   02b5ccc  addic 3, 3, 2056
@@ -1781,7 +1781,7 @@ M177_002b63a8:   # 0x2b63a8, 0x244 bytes
   02b63e0  li 8, 0
   02b63e4  lfs 2, 0(3)
   02b63e8  fsubs 3, 3, 2
-  02b63ec  <unknown>
+  02b63ec  lvlx 2, 5, 4
   02b63f0  lfs 4, 24(3)
   02b63f4  stw 8, 30672(7)
   02b63f8  lfs 5, 8(3)
@@ -1794,12 +1794,12 @@ M177_002b63a8:   # 0x2b63a8, 0x244 bytes
   02b6414  li 6, -3056
   02b6418  li 7, 2080
   02b641c  stw 8, 2084(4)
-  02b6420  <unknown>
+  02b6420  lvlx 3, 0, 5
   02b6424  lis 4, 114
   02b6428  fmadds 5, 3, 3, 5
   02b642c  vspltw 3, 3, 0
   02b6430  lis 9, 123
-  02b6434  <unknown>
+  02b6434  lvlx 4, 6, 4
   02b6438  vaddfp 2, 2, 3
   02b643c  lis 4, 127
   02b6440  vspltisw 3, -1
@@ -2020,8 +2020,8 @@ UpdateMoby_177:   # 0x2b6630, 0x1198 bytes
   02b67d8  addi 3, 3, 26092
   02b67dc  li 5, -3056
   02b67e0  vslw 2, 2, 2
-  02b67e4  <unknown>
-  02b67e8  <unknown>
+  02b67e4  lvlx 3, 0, 3
+  02b67e8  lvlx 4, 5, 4
   02b67ec  li 3, 60
   02b67f0  vspltw 3, 3, 0
   02b67f4  vmaddfp 2, 4, 3, 2
@@ -2688,8 +2688,8 @@ UpdateMoby_177:   # 0x2b6630, 0x1198 bytes
   02b7248  li 3, 48
   02b724c  li 6, -3056
   02b7250  vslw 2, 2, 2
-  02b7254  <unknown>
-  02b7258  <unknown>
+  02b7254  lvlx 3, 3, 5
+  02b7258  lvlx 4, 6, 4
   02b725c  vspltw 3, 3, 0
   02b7260  li 4, 44
   02b7264  ori 3, 30, 0
@@ -2826,8 +2826,8 @@ UpdateMoby_177:   # 0x2b6630, 0x1198 bytes
   02b7470  li 3, 444
   02b7474  lwz 6, 444(29)
   02b7478  fmuls 2, 1, 2
-  02b747c  <unknown>
-  02b7480  <unknown>
+  02b747c  lvlx 2, 5, 4
+  02b7480  lvlx 3, 3, 29
   02b7484  fctiwz 2, 2
   02b7488  stfd 2, 200(1)
   02b748c  lwz 3, 204(1)
@@ -2890,12 +2890,12 @@ UpdateMoby_177:   # 0x2b6630, 0x1198 bytes
   02b7570  or 3, 7, 3
   02b7574  or 3, 3, 5
   02b7578  stw 3, 212(4)
-  02b757c  <unknown>
+  02b757c  lvlx 5, 6, 8
   02b7580  li 3, 8373
   02b7584  vspltw 5, 5, 0
   02b7588  vmaddfp 2, 2, 5, 4
   02b758c  vspltisw 4, -8
-  02b7590  <unknown>
+  02b7590  lvlx 5, 3, 29
   02b7594  vsrw 4, 5, 4
   02b7598  vadduwm 4, 4, 6
   02b759c  vctsxs 2, 2, 0
@@ -2925,35 +2925,35 @@ UpdateMoby_177:   # 0x2b6630, 0x1198 bytes
   02b75fc  vslw 4, 4, 4
   02b7600  vslw 5, 5, 5
   02b7604  li 6, 1608
-  02b7608  <unknown>
+  02b7608  lvlx 2, 5, 27
   02b760c  li 8, 1632
-  02b7610  <unknown>
+  02b7610  lvlx 3, 4, 29
   02b7614  li 5, 1640
   02b7618  vspltw 2, 2, 0
   02b761c  li 4, 1636
-  02b7620  <unknown>
+  02b7620  lvlx 6, 7, 29
   02b7624  slwi 3, 3, 5
   02b7628  li 9, 24
   02b762c  vmaddfp 3, 3, 2, 4
   02b7630  vmaddfp 5, 6, 2, 5
   02b7634  vslw 6, 7, 7
-  02b7638  <unknown>
+  02b7638  lvlx 4, 6, 29
   02b763c  extsw 3, 3
-  02b7640  <unknown>
+  02b7640  lvlx 7, 8, 29
   02b7644  li 6, 16
-  02b7648  <unknown>
+  02b7648  lvlx 8, 4, 29
   02b764c  vmaddfp 4, 4, 2, 6
   02b7650  li 4, 128
-  02b7654  <unknown>
+  02b7654  lvlx 6, 5, 29
   02b7658  li 5, 136
   02b765c  lis 10, 16624
   02b7660  vmaddfp 3, 7, 2, 3
   02b7664  vmaddfp 5, 8, 2, 5
-  02b7668  <unknown>
+  02b7668  lvlx 7, 4, 29
   02b766c  li 4, 132
   02b7670  vmaddfp 2, 6, 2, 4
-  02b7674  <unknown>
-  02b7678  <unknown>
+  02b7674  lvlx 4, 4, 29
+  02b7678  lvlx 6, 5, 29
   02b767c  lis 4, 162
   02b7680  li 5, 20
   02b7684  addic 26, 4, -8448

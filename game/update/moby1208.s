@@ -343,11 +343,11 @@ UpdateMoby_1208:   # 0x1ff4d0, 0x614 bytes
   01ffa1c  lfs 1, -3056(26)
   01ffa20  li 5, -3056
   01ffa24  vslw 2, 2, 2
-  01ffa28  <unknown>
+  01ffa28  lvlx 3, 4, 3
   01ffa2c  lfs 2, 72(3)
   01ffa30  vspltw 3, 3, 0
   01ffa34  li 3, 16
-  01ffa38  <unknown>
+  01ffa38  lvlx 4, 5, 26
   01ffa3c  fmuls 1, 1, 2
   01ffa40  vmaddfp 2, 4, 3, 2
   01ffa44  fctiwz 1, 1

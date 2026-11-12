@@ -95,10 +95,10 @@ M1229_002113b8:   # 0x2113b8, 0x320 bytes
   0211508  stb 4, 199(30)
   021150c  li 4, -3056
   0211510  vslw 2, 2, 2
-  0211514  <unknown>
+  0211514  lvlx 3, 3, 29
   0211518  li 5, 38
   021151c  vspltw 3, 3, 0
-  0211520  <unknown>
+  0211520  lvlx 4, 4, 28
   0211524  addic 4, 30, 192
   0211528  vmaddfp 2, 4, 3, 2
   021152c  ori 3, 31, 0
@@ -308,7 +308,7 @@ UpdateMoby_1229:   # 0x211748, 0x150c bytes
   02118c4  vspltisw 4, -1
   02118c8  lwzx 3, 4, 3
   02118cc  li 4, -3056
-  02118d0  <unknown>
+  02118d0  lvlx 2, 7, 5
   02118d4  lfs 1, 16(3)
   02118d8  vcfsx 2, 2, 0
   02118dc  stfs 1, 16(31)
@@ -319,11 +319,11 @@ UpdateMoby_1229:   # 0x211748, 0x150c bytes
   02118f0  lfs 1, 28(3)
   02118f4  lis 3, 114
   02118f8  stfs 1, 28(31)
-  02118fc  <unknown>
+  02118fc  lvlx 3, 8, 29
   0211900  vspltw 3, 3, 0
   0211904  vaddfp 2, 2, 3
   0211908  vslw 3, 4, 4
-  021190c  <unknown>
+  021190c  lvlx 4, 4, 3
   0211910  li 3, 406
   0211914  vmaddfp 2, 4, 2, 3
   0211918  vctsxs 2, 2, 0

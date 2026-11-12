@@ -223,13 +223,13 @@ M825_00478e68:   # 0x478e68, 0x604 bytes
   04791d4  li 5, 56
   04791d8  vspltisw 31, 1
   04791dc  lis 23, 135
-  04791e0  <unknown>
-  04791e4  <unknown>
+  04791e0  lvlx 25, 4, 30
+  04791e4  lvlx 27, 6, 30
   04791e8  lis 25, 135
-  04791ec  <unknown>
+  04791ec  lvlx 23, 3, 30
   04791f0  li 26, 208
   04791f4  li 27, 216
-  04791f8  <unknown>
+  04791f8  lvlx 26, 5, 30
   04791fc  li 28, 352
   0479200  vspltw 25, 25, 0
   0479204  li 29, 360
@@ -290,19 +290,19 @@ M825_00478e68:   # 0x478e68, 0x604 bytes
   04792e0  vspltisw 2, -1
   04792e4  vspltisw 3, -1
   04792e8  addic 20, 20, 1
-  04792ec  <unknown>
+  04792ec  lvlx 4, 0, 26
   04792f0  addic 22, 22, 16
-  04792f4  <unknown>
+  04792f4  lvlx 5, 0, 27
   04792f8  vslw 2, 2, 2
   04792fc  vslw 3, 3, 3
   0479300  vmaddfp 5, 24, 25, 5
-  0479304  <unknown>
+  0479304  lvlx 6, 0, 28
   0479308  cmpwi 20, 4
   047930c  stw 3, 416(21)
   0479310  vmaddfp 2, 22, 23, 2
   0479314  vmaddfp 3, 22, 26, 3
   0479318  vadduwm 28, 28, 31
-  047931c  <unknown>
+  047931c  lvlx 7, 0, 29
   0479320  addic 23, 23, 16
   0479324  stw 3, 272(21)
   0479328  addic 24, 24, 16

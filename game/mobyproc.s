@@ -2193,7 +2193,7 @@ MB_BlendJointFrames:   # 0xf3fe0, 0x1844 bytes
   00f40c4  vspltw 2, 2, 0
   00f40c8  vspltw 2, 2, 0
   00f40cc  vspltw 2, 2, 0
-  00f40d0  <unknown>
+  00f40d0  lvlx 5, 0, 29
   00f40d4  vspltw 2, 2, 0
   00f40d8  li 0, 4480
   00f40dc  stfs 29, 4480(1)
@@ -3984,7 +3984,7 @@ MB_DrawEntries:   # 0xf5b80, 0x1ec4 bytes
   00f5d90  vspltw 2, 2, 0
   00f5d94  vspltw 3, 3, 0
   00f5d98  ori 10, 6, 0
-  00f5d9c  <unknown>
+  00f5d9c  lvlx 29, 0, 21
   00f5da0  vspltw 2, 2, 0
   00f5da4  vspltw 3, 3, 0
   00f5da8  cmplw 8, 10

@@ -322,8 +322,8 @@ M36_00354768:   # 0x354768, 0x448 bytes
   0354b3c  li 4, -3056
   0354b40  vslw 2, 2, 2
   0354b44  stfs 1, 32(31)
-  0354b48  <unknown>
-  0354b4c  <unknown>
+  0354b48  lvlx 3, 6, 3
+  0354b4c  lvlx 4, 4, 5
   0354b50  vspltw 3, 3, 0
   0354b54  li 5, 38
   0354b58  addic 4, 31, 96

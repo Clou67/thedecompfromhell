@@ -321,10 +321,10 @@ M47_00398ce8:   # 0x398ce8, 0x1d8 bytes
   0398de4  stb 4, 32(31)
   0398de8  li 4, -3056
   0398dec  vslw 2, 2, 2
-  0398df0  <unknown>
+  0398df0  lvlx 3, 6, 3
   0398df4  li 3, 224
   0398df8  vspltw 3, 3, 0
-  0398dfc  <unknown>
+  0398dfc  lvlx 4, 4, 5
   0398e00  li 4, 120
   0398e04  vmaddfp 2, 4, 3, 2
   0398e08  vctsxs 2, 2, 0
@@ -647,10 +647,10 @@ UpdateMoby_47:   # 0x398ed8, 0x5d0 bytes
   039930c  stb 4, 32(31)
   0399310  li 4, -3056
   0399314  vslw 2, 2, 2
-  0399318  <unknown>
+  0399318  lvlx 3, 6, 3
   039931c  li 3, 228
   0399320  vspltw 3, 3, 0
-  0399324  <unknown>
+  0399324  lvlx 4, 4, 5
   0399328  vmaddfp 2, 4, 3, 2
   039932c  vctsxs 2, 2, 0
   0399330  vspltw 2, 2, 0

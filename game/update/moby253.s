@@ -2678,17 +2678,17 @@ M253_0031b438:   # 0x31b438, 0xd84 bytes
   031b5e0  bt 2, 0x31b5e8
   031b5e4  bf 6, 0x31b604
   031b5e8  lis 5, 50
-  031b5ec  <unknown>
+  031b5ec  lvlx 3, 4, 3
   031b5f0  li 6, 8
   031b5f4  addi 5, 5, -19468
-  031b5f8  <unknown>
+  031b5f8  lvlx 2, 6, 5
   031b5fc  vspltw 2, 2, 0
   031b600  b 0x31b61c
   031b604  lis 5, 50
   031b608  li 6, 12
-  031b60c  <unknown>
+  031b60c  lvlx 3, 4, 3
   031b610  addi 5, 5, -19468
-  031b614  <unknown>
+  031b614  lvlx 2, 6, 5
   031b618  vspltw 2, 2, 0
   031b61c  vspltisw 4, -1
   031b620  vspltw 3, 3, 0
@@ -2712,8 +2712,8 @@ M253_0031b438:   # 0x31b438, 0xd84 bytes
   031b668  li 7, 12
   031b66c  vslw 2, 2, 2
   031b670  stb 6, 167(30)
-  031b674  <unknown>
-  031b678  <unknown>
+  031b674  lvlx 3, 4, 3
+  031b678  lvlx 4, 7, 5
   031b67c  li 3, 38
   031b680  vspltw 4, 4, 0
   031b684  vmaddfp 2, 3, 4, 2
@@ -2728,8 +2728,8 @@ M253_0031b438:   # 0x31b438, 0xd84 bytes
   031b6a8  li 7, 12
   031b6ac  vslw 2, 2, 2
   031b6b0  stb 6, 167(30)
-  031b6b4  <unknown>
-  031b6b8  <unknown>
+  031b6b4  lvlx 3, 4, 3
+  031b6b8  lvlx 4, 7, 5
   031b6bc  li 3, 38
   031b6c0  vspltw 4, 4, 0
   031b6c4  vmaddfp 2, 3, 4, 2

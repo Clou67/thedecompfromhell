@@ -204,10 +204,10 @@ FUN_0043ce28:   # 0x43ce28, 0x400 bytes
   043cfd4  lis 5, 114
   043cfd8  li 6, -3056
   043cfdc  vslw 2, 2, 2
-  043cfe0  <unknown>
+  043cfe0  lvlx 3, 4, 3
   043cfe4  lis 3, 164
   043cfe8  vspltw 3, 3, 0
-  043cfec  <unknown>
+  043cfec  lvlx 4, 6, 5
   043cff0  li 6, 52
   043cff4  li 5, 0
   043cff8  vmaddfp 2, 4, 3, 2
@@ -682,10 +682,10 @@ M74_0043d268:   # 0x43d268, 0x878 bytes
   043d784  lis 4, 114
   043d788  li 5, -3056
   043d78c  vslw 2, 2, 2
-  043d790  <unknown>
+  043d790  lvlx 3, 3, 27
   043d794  li 3, 160
   043d798  vspltw 3, 3, 0
-  043d79c  <unknown>
+  043d79c  lvlx 4, 5, 4
   043d7a0  vmaddfp 2, 4, 3, 2
   043d7a4  vctsxs 2, 2, 0
   043d7a8  vspltw 2, 2, 0
@@ -1849,9 +1849,9 @@ UpdateMoby_74:   # 0x43dc00, 0x2760 bytes
   043ead8  stw 3, 104(30)
   043eadc  li 3, -3056
   043eae0  stw 19, 8(30)
-  043eae4  <unknown>
+  043eae4  lvlx 3, 4, 5
   043eae8  vspltw 3, 3, 0
-  043eaec  <unknown>
+  043eaec  lvlx 4, 3, 24
   043eaf0  li 3, 52
   043eaf4  vmaddfp 2, 4, 3, 2
   043eaf8  vctsxs 2, 2, 0
@@ -1917,9 +1917,9 @@ UpdateMoby_74:   # 0x43dc00, 0x2760 bytes
   043ebe8  stw 3, 104(30)
   043ebec  li 3, -3056
   043ebf0  stw 19, 8(30)
-  043ebf4  <unknown>
+  043ebf4  lvlx 3, 4, 5
   043ebf8  vspltw 3, 3, 0
-  043ebfc  <unknown>
+  043ebfc  lvlx 4, 3, 24
   043ec00  li 3, 52
   043ec04  vmaddfp 2, 4, 3, 2
   043ec08  vctsxs 2, 2, 0
@@ -1971,8 +1971,8 @@ UpdateMoby_74:   # 0x43dc00, 0x2760 bytes
   043ecc0  stw 19, 8(30)
   043ecc4  stw 19, 84(30)
   043ecc8  vslw 2, 2, 2
-  043eccc  <unknown>
-  043ecd0  <unknown>
+  043eccc  lvlx 3, 6, 4
+  043ecd0  lvlx 4, 5, 24
   043ecd4  li 3, 52
   043ecd8  vspltw 3, 3, 0
   043ecdc  vmaddfp 2, 4, 3, 2
@@ -2062,8 +2062,8 @@ UpdateMoby_74:   # 0x43dc00, 0x2760 bytes
   043ee2c  addi 3, 3, -9504
   043ee30  li 5, 100
   043ee34  vslw 2, 2, 2
-  043ee38  <unknown>
-  043ee3c  <unknown>
+  043ee38  lvlx 3, 4, 24
+  043ee3c  lvlx 4, 5, 3
   043ee40  li 3, 72
   043ee44  vspltw 4, 4, 0
   043ee48  li 4, 2
@@ -2372,8 +2372,8 @@ UpdateMoby_74:   # 0x43dc00, 0x2760 bytes
   043f304  lfs 26, 124(3)
   043f308  lfs 25, 128(3)
   043f30c  lfs 24, 132(3)
-  043f310  <unknown>
-  043f314  <unknown>
+  043f310  lvlx 31, 4, 3
+  043f314  lvlx 30, 5, 3
   043f318  vspltw 31, 31, 0
   043f31c  vspltw 30, 30, 0
   043f320  addic 23, 28, 16
@@ -2470,7 +2470,7 @@ UpdateMoby_74:   # 0x43dc00, 0x2760 bytes
   043f48c  li 4, 88
   043f490  vslw 2, 2, 2
   043f494  vslw 3, 3, 3
-  043f498  <unknown>
+  043f498  lvlx 4, 3, 24
   043f49c  ori 29, 28, 0
   043f4a0  li 3, 72
   043f4a4  vmaddfp 2, 4, 31, 2
@@ -3330,7 +3330,7 @@ UpdateMoby_74:   # 0x43dc00, 0x2760 bytes
   04401fc  lfs 4, 104(5)
   0440200  fmuls 1, 1, 3
   0440204  lfs 5, 1068(1)
-  0440208  <unknown>
+  0440208  lvlx 3, 3, 24
   044020c  li 7, 360
   0440210  vslw 2, 2, 2
   0440214  ori 3, 26, 0
@@ -3338,7 +3338,7 @@ UpdateMoby_74:   # 0x43dc00, 0x2760 bytes
   044021c  fsel 1, 2, 4, 1
   0440220  fsubs 1, 5, 1
   0440224  stfs 1, 352(29)
-  0440228  <unknown>
+  0440228  lvlx 4, 6, 5
   044022c  vspltw 4, 4, 0
   0440230  vmaddfp 2, 3, 4, 2
   0440234  vctsxs 2, 2, 0

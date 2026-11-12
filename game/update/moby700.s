@@ -59,8 +59,8 @@ UpdateMoby_700:   # 0x427ff0, 0x574 bytes
   04280b0  addi 4, 4, 32672
   04280b4  li 6, -3056
   04280b8  vslw 2, 2, 2
-  04280bc  <unknown>
-  04280c0  <unknown>
+  04280bc  lvlx 3, 0, 4
+  04280c0  lvlx 4, 6, 5
   04280c4  li 4, 4
   04280c8  vspltw 3, 3, 0
   04280cc  vmaddfp 2, 4, 3, 2

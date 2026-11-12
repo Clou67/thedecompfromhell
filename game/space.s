@@ -992,20 +992,20 @@ StartLeaveLevelCutscene:   # 0x15e8a0, 0x1e4 bytes
   015e978  lwzx 6, 4, 3
   015e97c  extsw 6, 6
   015e980  std 6, 112(1)
-  015e984  <unknown>
+  015e984  lvlx 2, 3, 4
   015e988  lis 3, 150
   015e98c  lfs 1, 0(5)
   015e990  lis 4, 114
   015e994  vcfsx 2, 2, 0
   015e998  li 6, 0
   015e99c  lwz 3, 27368(3)
-  015e9a0  <unknown>
+  015e9a0  lvlx 3, 0, 5
   015e9a4  lfs 2, -3056(4)
   015e9a8  lfd 3, 112(1)
   015e9ac  subc 3, 6, 3
   015e9b0  vspltw 3, 3, 0
   015e9b4  fcfid 3, 3
-  015e9b8  <unknown>
+  015e9b8  lvlx 4, 7, 4
   015e9bc  cntlzw 3, 3
   015e9c0  li 5, 96
   015e9c4  vaddfp 2, 2, 3
@@ -2537,8 +2537,8 @@ ChooseLoadingScreen:   # 0x15fe00, 0x9a4 bytes
   01601ec  lfs 31, 8(28)
   01601f0  lwz 31, 88(26)
   01601f4  cmpwi 31, 4
-  01601f8  <unknown>
-  01601fc  <unknown>
+  01601f8  lvlx 3, 3, 28
+  01601fc  lvlx 2, 4, 27
   0160200  vspltw 3, 3, 0
   0160204  lhz 3, 68(27)
   0160208  bf 2, 0x1602d0
@@ -2547,8 +2547,8 @@ ChooseLoadingScreen:   # 0x15fe00, 0x9a4 bytes
   0160214  li 5, 12
   0160218  vspltisw 6, -1
   016021c  vspltisw 10, -1
-  0160220  <unknown>
-  0160224  <unknown>
+  0160220  lvlx 4, 4, 27
+  0160224  lvlx 5, 5, 28
   0160228  vsraw 3, 4, 3
   016022c  vspltw 5, 5, 0
   0160230  vslw 6, 6, 6
@@ -2568,18 +2568,18 @@ ChooseLoadingScreen:   # 0x15fe00, 0x9a4 bytes
   0160268  vmaddfp 6, 7, 9, 6
   016026c  vslw 7, 10, 10
   0160270  vslw 9, 11, 11
-  0160274  <unknown>
+  0160274  lvlx 11, 5, 4
   0160278  lis 5, 165
   016027c  li 4, 4
   0160280  addic 7, 5, 25056
   0160284  vnmsubfp 10, 6, 4, 5
   0160288  vmaddfp 6, 6, 10, 8
-  016028c  <unknown>
-  0160290  <unknown>
-  0160294  <unknown>
+  016028c  lvlx 8, 4, 6
+  0160290  lvlx 10, 4, 7
+  0160294  lvlx 12, 8, 6
   0160298  vnmsubfp 4, 6, 4, 5
-  016029c  <unknown>
-  01602a0  <unknown>
+  016029c  lvlx 5, 9, 5
+  01602a0  lvlx 13, 8, 7
   01602a4  vmaddfp 4, 6, 4, 7
   01602a8  vmaddfp 3, 4, 3, 9
   01602ac  vmaddfp 4, 11, 3, 5
@@ -2596,9 +2596,9 @@ ChooseLoadingScreen:   # 0x15fe00, 0x9a4 bytes
   01602d8  lis 5, 114
   01602dc  li 6, -3056
   01602e0  vslw 4, 4, 4
-  01602e4  <unknown>
+  01602e4  lvlx 5, 4, 28
   01602e8  vspltw 5, 5, 0
-  01602ec  <unknown>
+  01602ec  lvlx 6, 6, 5
   01602f0  li 4, 20
   01602f4  vspltisw 7, -1
   01602f8  vmaddfp 4, 6, 5, 4
@@ -2607,7 +2607,7 @@ ChooseLoadingScreen:   # 0x15fe00, 0x9a4 bytes
   0160304  lis 5, 115
   0160308  vslw 7, 7, 7
   016030c  slwi 6, 31, 4
-  0160310  <unknown>
+  0160310  lvlx 6, 4, 28
   0160314  addic 5, 5, 8224
   0160318  vspltisw 8, -1
   016031c  vslw 5, 5, 5
@@ -2626,7 +2626,7 @@ ChooseLoadingScreen:   # 0x15fe00, 0x9a4 bytes
   0160350  cmpwi 3, 0
   0160354  vsubuwm 2, 2, 4
   0160358  vslw 4, 8, 8
-  016035c  <unknown>
+  016035c  lvlx 8, 0, 4
   0160360  vcfsx 2, 2, 0
   0160364  vmaddfp 2, 2, 6, 5
   0160368  vspltisw 5, -1
@@ -2637,7 +2637,7 @@ ChooseLoadingScreen:   # 0x15fe00, 0x9a4 bytes
   016037c  vmaddfp 4, 8, 2, 4
   0160380  vspltw 4, 4, 0
   0160384  stvewx 4, 6, 5
-  0160388  <unknown>
+  0160388  lvlx 4, 7, 4
   016038c  slwi 5, 31, 2
   0160390  addic 6, 10, 8304
   0160394  vmaddfp 4, 4, 2, 5
@@ -2647,7 +2647,7 @@ ChooseLoadingScreen:   # 0x15fe00, 0x9a4 bytes
   01603a4  lfsx 1, 6, 5
   01603a8  vspltw 4, 4, 0
   01603ac  stvewx 4, 7, 8
-  01603b0  <unknown>
+  01603b0  lvlx 4, 9, 4
   01603b4  vmaddfp 2, 4, 2, 3
   01603b8  vspltw 2, 2, 0
   01603bc  stvewx 2, 9, 8
@@ -2821,9 +2821,9 @@ ChooseLoadingScreen:   # 0x15fe00, 0x9a4 bytes
   016065c  lwz 6, 52(27)
   0160660  extsh 5, 5
   0160664  vspltisw 2, -16
-  0160668  <unknown>
+  0160668  lvlx 3, 3, 27
   016066c  addic 3, 5, -56
-  0160670  <unknown>
+  0160670  lvlx 4, 4, 27
   0160674  cmpw 6, 3
   0160678  vsraw 2, 4, 2
   016067c  bf 1, 0x160708
@@ -2834,12 +2834,12 @@ ChooseLoadingScreen:   # 0x15fe00, 0x9a4 bytes
   0160690  vspltisw 5, -1
   0160694  li 6, 44
   0160698  vcfsx 2, 2, 0
-  016069c  <unknown>
+  016069c  lvlx 4, 3, 28
   01606a0  vslw 3, 3, 3
   01606a4  vspltw 4, 4, 0
   01606a8  lwz 3, 36(30)
   01606ac  vslw 5, 5, 5
-  01606b0  <unknown>
+  01606b0  lvlx 6, 4, 3
   01606b4  lhz 5, 64(27)
   01606b8  lwz 7, 52(27)
   01606bc  lis 4, 115
@@ -3429,10 +3429,10 @@ Space_DrawShipEffects:   # 0x1607c0, 0x98c bytes
   0160ff0  lis 4, 114
   0160ff4  li 6, -3056
   0160ff8  vslw 2, 2, 2
-  0160ffc  <unknown>
+  0160ffc  lvlx 3, 5, 3
   0161000  lis 3, 165
   0161004  vspltw 3, 3, 0
-  0161008  <unknown>
+  0161008  lvlx 4, 6, 4
   016100c  li 4, 25028
   0161010  vmaddfp 2, 4, 3, 2
   0161014  vctsxs 2, 2, 0
@@ -4075,13 +4075,13 @@ UpdateSpace:   # 0x161788, 0x2220 bytes
   0161ac0  extsw 5, 5
   0161ac4  std 5, 288(1)
   0161ac8  lis 5, 22
-  0161acc  <unknown>
+  0161acc  lvlx 2, 4, 3
   0161ad0  addi 5, 5, 5828
   0161ad4  li 3, 12
   0161ad8  vcfsx 2, 2, 0
   0161adc  lis 4, 114
   0161ae0  lfs 1, 12(5)
-  0161ae4  <unknown>
+  0161ae4  lvlx 3, 3, 5
   0161ae8  lfs 2, -3056(4)
   0161aec  lfd 3, 288(1)
   0161af0  li 3, -3056
@@ -4089,7 +4089,7 @@ UpdateSpace:   # 0x161788, 0x2220 bytes
   0161af8  fcfid 3, 3
   0161afc  vaddfp 2, 2, 3
   0161b00  vspltisw 3, -1
-  0161b04  <unknown>
+  0161b04  lvlx 4, 3, 4
   0161b08  li 3, 52
   0161b0c  vslw 3, 3, 3
   0161b10  frsp 3, 3
@@ -4396,13 +4396,13 @@ UpdateSpace:   # 0x161788, 0x2220 bytes
   0161fc4  lfs 3, 28(3)
   0161fc8  lfs 21, 16(3)
   0161fcc  lfs 4, 32(3)
-  0161fd0  <unknown>
-  0161fd4  <unknown>
+  0161fd0  lvlx 2, 4, 3
+  0161fd4  lvlx 24, 5, 3
   0161fd8  li 4, 224
   0161fdc  vspltw 2, 2, 0
   0161fe0  li 5, 240
   0161fe4  lfs 22, 24(3)
-  0161fe8  <unknown>
+  0161fe8  lvlx 3, 6, 3
   0161fec  stfs 1, 276(1)
   0161ff0  li 6, 88
   0161ff4  vspltw 3, 3, 0
@@ -4435,13 +4435,13 @@ UpdateSpace:   # 0x161788, 0x2220 bytes
   0162060  ori 20, 26, 0
   0162064  lfs 30, 64(3)
   0162068  lfs 31, 68(3)
-  016206c  <unknown>
-  0162070  <unknown>
-  0162074  <unknown>
+  016206c  lvlx 25, 4, 3
+  0162070  lvlx 26, 5, 3
+  0162074  lvlx 20, 6, 3
   0162078  li 4, 124
   016207c  stfs 1, 260(1)
   0162080  li 5, 128
-  0162084  <unknown>
+  0162084  lvlx 21, 7, 3
   0162088  li 6, 132
   016208c  lfs 14, 96(3)
   0162090  li 7, 136
@@ -4452,14 +4452,14 @@ UpdateSpace:   # 0x161788, 0x2220 bytes
   01620a4  lfs 17, 112(3)
   01620a8  lfs 18, 116(3)
   01620ac  lfs 19, 120(3)
-  01620b0  <unknown>
+  01620b0  lvlx 22, 4, 3
   01620b4  li 4, 148
-  01620b8  <unknown>
-  01620bc  <unknown>
-  01620c0  <unknown>
-  01620c4  <unknown>
-  01620c8  <unknown>
-  01620cc  <unknown>
+  01620b8  lvlx 23, 5, 3
+  01620bc  lvlx 31, 6, 3
+  01620c0  lvlx 27, 7, 3
+  01620c4  lvlx 28, 8, 3
+  01620c8  lvlx 29, 9, 3
+  01620cc  lvlx 30, 4, 3
   01620d0  vspltw 24, 24, 0
   01620d4  vspltw 25, 25, 0
   01620d8  vspltw 26, 26, 0
@@ -4556,8 +4556,8 @@ UpdateSpace:   # 0x161788, 0x2220 bytes
   0162244  li 5, -3056
   0162248  lwz 7, 52(26)
   016224c  cmpwi 8, 0
-  0162250  <unknown>
-  0162254  <unknown>
+  0162250  lvlx 2, 3, 26
+  0162254  lvlx 3, 5, 4
   0162258  lfs 11, -3056(4)
   016225c  bf 2, 0x162348
   0162260  lwz 3, 32(27)
@@ -4640,7 +4640,7 @@ UpdateSpace:   # 0x161788, 0x2220 bytes
   0162394  lwz 4, 32(27)
   0162398  li 9, 24
   016239c  fmuls 2, 11, 2
-  01623a0  <unknown>
+  01623a0  lvlx 5, 3, 27
   01623a4  li 3, 24
   01623a8  subc 6, 6, 3
   01623ac  fctiwz 1, 1
@@ -4750,8 +4750,8 @@ UpdateSpace:   # 0x161788, 0x2220 bytes
   016254c  lfs 1, -3056(3)
   0162550  lwz 8, 52(26)
   0162554  fmuls 2, 1, 22
-  0162558  <unknown>
-  016255c  <unknown>
+  0162558  lvlx 2, 4, 26
+  016255c  lvlx 3, 5, 3
   0162560  fctiwz 2, 2
   0162564  stfd 2, 288(1)
   0162568  lwz 3, 292(1)
@@ -4814,15 +4814,15 @@ UpdateSpace:   # 0x161788, 0x2220 bytes
   016264c  vspltisw 7, -16
   0162650  vslw 4, 4, 4
   0162654  vslw 6, 6, 6
-  0162658  <unknown>
+  0162658  lvlx 2, 4, 3
   016265c  li 3, 166
   0162660  vmaddfp 4, 2, 25, 4
   0162664  addi 4, 3, 16
   0162668  vnmsubfp 5, 3, 26, 5
-  016266c  <unknown>
+  016266c  lvlx 8, 3, 29
   0162670  li 3, 144
   0162674  vmaddfp 4, 4, 5, 6
-  0162678  <unknown>
+  0162678  lvrx 5, 4, 29
   016267c  vspltisw 6, 8
   0162680  vor 5, 8, 5
   0162684  lfs 2, 256(1)
@@ -4843,7 +4843,7 @@ UpdateSpace:   # 0x161788, 0x2220 bytes
   01626c0  stvewx 4, 3, 29
   01626c4  lwz 29, 52(26)
   01626c8  stfd 2, 288(1)
-  01626cc  <unknown>
+  01626cc  lvlx 4, 4, 26
   01626d0  lwz 3, 292(1)
   01626d4  cmpw 29, 3
   01626d8  bf 1, 0x162730
@@ -4905,8 +4905,8 @@ UpdateSpace:   # 0x161788, 0x2220 bytes
   01627b8  lfs 1, -3056(3)
   01627bc  lwz 8, 52(26)
   01627c0  fmuls 2, 1, 15
-  01627c4  <unknown>
-  01627c8  <unknown>
+  01627c4  lvlx 2, 4, 3
+  01627c8  lvlx 3, 5, 26
   01627cc  fctiwz 2, 2
   01627d0  stfd 2, 288(1)
   01627d4  lwz 3, 292(1)
@@ -5000,7 +5000,7 @@ UpdateSpace:   # 0x161788, 0x2220 bytes
   0162934  li 5, 188
   0162938  vslw 4, 4, 4
   016293c  vslw 5, 5, 5
-  0162940  <unknown>
+  0162940  lvlx 6, 4, 3
   0162944  vmaddfp 4, 6, 22, 4
   0162948  ori 3, 21, 0
   016294c  lwz 6, 17776(28)
@@ -5017,8 +5017,8 @@ UpdateSpace:   # 0x161788, 0x2220 bytes
   0162978  lis 3, 114
   016297c  li 4, -3056
   0162980  li 5, 52
-  0162984  <unknown>
-  0162988  <unknown>
+  0162984  lvlx 5, 4, 3
+  0162988  lvlx 4, 5, 26
   016298c  vspltw 2, 4, 0
   0162990  lis 3, 114
   0162994  vspltw 3, 5, 0
@@ -5026,19 +5026,19 @@ UpdateSpace:   # 0x161788, 0x2220 bytes
   016299c  vspltisw 4, -1
   01629a0  vcfsx 2, 2, 0
   01629a4  vslw 4, 4, 4
-  01629a8  <unknown>
+  01629a8  lvlx 5, 4, 3
   01629ac  li 3, 166
   01629b0  vmaddfp 4, 5, 25, 4
   01629b4  vspltisw 5, -1
   01629b8  addi 4, 3, 16
-  01629bc  <unknown>
+  01629bc  lvlx 6, 3, 29
   01629c0  li 3, 144
   01629c4  vnmsubfp 2, 3, 26, 2
   01629c8  vslw 3, 5, 5
   01629cc  vspltisw 5, -16
   01629d0  vxor 2, 2, 30
   01629d4  vmaddfp 2, 4, 2, 3
-  01629d8  <unknown>
+  01629d8  lvrx 3, 4, 29
   01629dc  vspltisw 4, 8
   01629e0  vor 3, 6, 3
   01629e4  vsrw 3, 3, 5
@@ -5641,9 +5641,9 @@ UpdateSpace:   # 0x161788, 0x2220 bytes
   0163338  lis 6, 165
   016333c  slwi 7, 31, 2
   0163340  addic 31, 6, 7136
-  0163344  <unknown>
+  0163344  lvlx 2, 4, 3
   0163348  extsw 6, 7
-  016334c  <unknown>
+  016334c  lvlx 3, 5, 27
   0163350  li 4, 184
   0163354  vspltw 2, 2, 0
   0163358  lfs 2, 64(27)
@@ -5653,7 +5653,7 @@ UpdateSpace:   # 0x161788, 0x2220 bytes
   0163368  fadds 2, 2, 1
   016336c  vspltw 4, 3, 0
   0163370  stvewx 4, 5, 27
-  0163374  <unknown>
+  0163374  lvlx 2, 4, 3
   0163378  lfs 1, 184(3)
   016337c  vspltw 2, 2, 0
   0163380  vcmpgtfp. 4, 4, 2
@@ -5683,9 +5683,9 @@ UpdateSpace:   # 0x161788, 0x2220 bytes
   01633e0  stw 4, -12528(3)
   01633e4  vspltisw 2, 6
   01633e8  li 3, 60
-  01633ec  <unknown>
+  01633ec  lvlx 4, 0, 31
   01633f0  vsubuwm 4, 4, 2
-  01633f4  <unknown>
+  01633f4  lvlx 2, 3, 27
   01633f8  lfs 1, 60(27)
   01633fc  vspltw 5, 2, 0
   0163400  vcfsx 4, 4, 0
@@ -5725,8 +5725,8 @@ UpdateSpace:   # 0x161788, 0x2220 bytes
   0163488  lfs 1, 60(27)
   016348c  li 4, 64
   0163490  lfs 2, 64(27)
-  0163494  <unknown>
-  0163498  <unknown>
+  0163494  lvlx 3, 3, 27
+  0163498  lvlx 2, 4, 27
   016349c  li 3, 68
   01634a0  vspltisw 7, -1
   01634a4  lis 5, 22
@@ -5734,10 +5734,10 @@ UpdateSpace:   # 0x161788, 0x2220 bytes
   01634ac  addi 5, 5, 5828
   01634b0  vspltisw 9, -1
   01634b4  vslw 7, 7, 7
-  01634b8  <unknown>
+  01634b8  lvlx 4, 3, 27
   01634bc  vrefp 5, 4
   01634c0  lis 3, 114
-  01634c4  <unknown>
+  01634c4  lvlx 6, 4, 5
   01634c8  vspltw 6, 6, 0
   01634cc  vslw 9, 9, 9
   01634d0  lfs 3, -3052(3)
@@ -5754,9 +5754,9 @@ UpdateSpace:   # 0x161788, 0x2220 bytes
   01634fc  vspltw 3, 3, 0
   0163500  fdivs 2, 2, 3
   0163504  vmaddfp 5, 5, 8, 7
-  0163508  <unknown>
+  0163508  lvlx 7, 4, 3
   016350c  vmaddfp 2, 2, 7, 10
-  0163510  <unknown>
+  0163510  lvlx 7, 0, 31
   0163514  vsubuwm 7, 7, 12
   0163518  li 3, 60
   016351c  vcfsx 7, 7, 0

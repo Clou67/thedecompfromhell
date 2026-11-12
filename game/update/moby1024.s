@@ -407,21 +407,21 @@ M1302_0018cd58:   # 0x18cd58, 0x794 bytes
   018d388  stfs 1, 224(1)
   018d38c  stfs 2, 228(1)
   018d390  stfs 4, 232(1)
-  018d394  <unknown>
-  018d398  <unknown>
+  018d394  lvlx 2, 3, 30
+  018d398  lvrx 3, 4, 30
   018d39c  li 3, 32
-  018d3a0  <unknown>
+  018d3a0  lvlx 4, 5, 29
   018d3a4  vor 2, 2, 3
   018d3a8  vspltw 3, 4, 0
   018d3ac  li 8, 240
-  018d3b0  <unknown>
+  018d3b0  lvlx 4, 3, 29
   018d3b4  li 3, 36
   018d3b8  vsubfp 2, 3, 2
   018d3bc  vspltw 4, 4, 0
   018d3c0  vspltisw 3, -1
   018d3c4  li 9, 244
   018d3c8  li 10, 248
-  018d3cc  <unknown>
+  018d3cc  lvlx 5, 3, 29
   018d3d0  vslw 3, 3, 3
   018d3d4  li 3, 40
   018d3d8  vspltw 5, 5, 0
@@ -429,7 +429,7 @@ M1302_0018cd58:   # 0x18cd58, 0x794 bytes
   018d3e0  lis 11, 16256
   018d3e4  li 4, 0
   018d3e8  li 5, 1
-  018d3ec  <unknown>
+  018d3ec  lvlx 7, 3, 29
   018d3f0  vmaddfp 2, 2, 4, 3
   018d3f4  vspltw 7, 7, 0
   018d3f8  vspltisw 3, -16

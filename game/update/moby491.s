@@ -52,8 +52,8 @@ FUN_003a01e0:   # 0x3a01e0, 0x45c bytes
   03a02a0  stfs 1, 8(4)
   03a02a4  lfs 1, 12(30)
   03a02a8  stfs 1, 12(4)
-  03a02ac  <unknown>
-  03a02b0  <unknown>
+  03a02ac  lvlx 3, 5, 7
+  03a02b0  lvlx 4, 9, 8
   03a02b4  vspltw 3, 3, 0
   03a02b8  li 5, 20
   03a02bc  vmaddfp 2, 4, 3, 2
@@ -1552,10 +1552,10 @@ UpdateMoby_491:   # 0x3a14a8, 0x2284 bytes
   03a1af0  li 6, -3056
   03a1af4  stb 3, 32(31)
   03a1af8  vslw 2, 2, 2
-  03a1afc  <unknown>
+  03a1afc  lvlx 3, 5, 26
   03a1b00  li 3, 448
   03a1b04  vspltw 3, 3, 0
-  03a1b08  <unknown>
+  03a1b08  lvlx 4, 6, 4
   03a1b0c  vmaddfp 2, 4, 3, 2
   03a1b10  vctsxs 2, 2, 0
   03a1b14  vspltw 2, 2, 0
@@ -1771,10 +1771,10 @@ UpdateMoby_491:   # 0x3a14a8, 0x2284 bytes
   03a1e5c  lis 6, 114
   03a1e60  stb 3, 32(31)
   03a1e64  vslw 3, 3, 3
-  03a1e68  <unknown>
+  03a1e68  lvlx 2, 5, 26
   03a1e6c  li 3, 448
   03a1e70  vspltw 2, 2, 0
-  03a1e74  <unknown>
+  03a1e74  lvlx 4, 4, 6
   03a1e78  vmaddfp 2, 4, 2, 3
   03a1e7c  vctsxs 2, 2, 0
   03a1e80  vspltw 2, 2, 0
@@ -2067,10 +2067,10 @@ UpdateMoby_491:   # 0x3a14a8, 0x2284 bytes
   03a22fc  li 4, 452
   03a2300  li 6, 80
   03a2304  addi 5, 4, 16
-  03a2308  <unknown>
-  03a230c  <unknown>
+  03a2308  lvlx 2, 4, 30
+  03a230c  lvrx 3, 5, 30
   03a2310  vor 2, 2, 3
-  03a2314  <unknown>
+  03a2314  lvlx 3, 6, 26
   03a2318  vspltw 3, 3, 0
   03a231c  vcfsx 2, 2, 0
   03a2320  vspltw 2, 2, 0

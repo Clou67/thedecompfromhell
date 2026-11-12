@@ -134,10 +134,10 @@ UpdateMoby_867:   # 0x499c40, 0x770 bytes
   0499e2c  lis 4, 114
   0499e30  li 6, -3056
   0499e34  vslw 2, 2, 2
-  0499e38  <unknown>
+  0499e38  lvlx 3, 5, 3
   0499e3c  li 3, 120
   0499e40  vspltw 3, 3, 0
-  0499e44  <unknown>
+  0499e44  lvlx 4, 6, 4
   0499e48  vmaddfp 2, 4, 3, 2
   0499e4c  vctsxs 2, 2, 0
   0499e50  vspltw 2, 2, 0
@@ -173,11 +173,11 @@ UpdateMoby_867:   # 0x499c40, 0x770 bytes
   0499ec8  lis 7, 114
   0499ecc  li 5, -3056
   0499ed0  stb 6, 188(31)
-  0499ed4  <unknown>
+  0499ed4  lvlx 3, 3, 4
   0499ed8  vslw 2, 2, 2
   0499edc  vspltw 3, 3, 0
   0499ee0  li 3, 124
-  0499ee4  <unknown>
+  0499ee4  lvlx 4, 5, 7
   0499ee8  li 4, 2
   0499eec  vmaddfp 2, 4, 3, 2
   0499ef0  vctsxs 2, 2, 0
@@ -232,10 +232,10 @@ UpdateMoby_867:   # 0x499c40, 0x770 bytes
   0499fb4  lis 4, 114
   0499fb8  li 6, -3056
   0499fbc  vslw 2, 2, 2
-  0499fc0  <unknown>
+  0499fc0  lvlx 3, 5, 3
   0499fc4  li 3, 124
   0499fc8  vspltw 3, 3, 0
-  0499fcc  <unknown>
+  0499fcc  lvlx 4, 6, 4
   0499fd0  li 4, 2
   0499fd4  vmaddfp 2, 4, 3, 2
   0499fd8  vctsxs 2, 2, 0

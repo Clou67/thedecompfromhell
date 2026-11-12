@@ -80,10 +80,10 @@ FUN_00400670:   # 0x400670, 0x1d8 bytes
   04007a0  vspltisw 11, -1
   04007a4  vslw 8, 8, 8
   04007a8  stfs 1, 104(10)
-  04007ac  <unknown>
-  04007b0  <unknown>
+  04007ac  lvlx 5, 3, 12
+  04007b0  lvlx 6, 5, 4
   04007b4  vspltw 5, 5, 0
-  04007b8  <unknown>
+  04007b8  lvlx 7, 6, 12
   04007bc  vaddfp 3, 3, 5
   04007c0  vspltw 7, 7, 0
   04007c4  vaddfp 2, 2, 5
@@ -515,16 +515,16 @@ UpdateMoby_646:   # 0x4009e0, 0x544 bytes
   0400e4c  lis 3, 64
   0400e50  vslw 4, 4, 4
   0400e54  stb 5, 32(31)
-  0400e58  <unknown>
-  0400e5c  <unknown>
+  0400e58  lvlx 2, 4, 30
+  0400e5c  lvrx 3, 6, 30
   0400e60  addi 3, 3, 2516
   0400e64  lis 4, 114
   0400e68  vor 2, 2, 3
-  0400e6c  <unknown>
+  0400e6c  lvlx 3, 0, 3
   0400e70  vcfsx 2, 2, 0
   0400e74  vspltw 3, 3, 0
   0400e78  li 3, -3056
-  0400e7c  <unknown>
+  0400e7c  lvlx 5, 3, 4
   0400e80  li 3, 232
   0400e84  vaddfp 2, 2, 3
   0400e88  vmaddfp 2, 5, 2, 4

@@ -122,8 +122,8 @@ DisplayPrompt:   # 0x78178, 0x334 bytes
   0078318  addi 3, 3, -32404
   007831c  li 5, -3056
   0078320  vslw 2, 2, 2
-  0078324  <unknown>
-  0078328  <unknown>
+  0078324  lvlx 3, 0, 3
+  0078328  lvlx 4, 5, 4
   007832c  vspltw 3, 3, 0
   0078330  li 3, 4
   0078334  li 4, 0
@@ -141,8 +141,8 @@ DisplayPrompt:   # 0x78178, 0x334 bytes
   0078364  addi 3, 3, -32404
   0078368  li 5, -3056
   007836c  vslw 2, 2, 2
-  0078370  <unknown>
-  0078374  <unknown>
+  0078370  lvlx 3, 0, 3
+  0078374  lvlx 4, 5, 4
   0078378  li 3, 4
   007837c  vspltw 3, 3, 0
   0078380  li 4, -1
@@ -161,8 +161,8 @@ DisplayPrompt:   # 0x78178, 0x334 bytes
   00783b4  li 5, -3056
   00783b8  vslw 2, 2, 2
   00783bc  li 6, 36
-  00783c0  <unknown>
-  00783c4  <unknown>
+  00783c0  lvlx 3, 0, 3
+  00783c4  lvlx 4, 5, 4
   00783c8  vspltw 3, 3, 0
   00783cc  li 4, 4
   00783d0  lis 5, 114
@@ -180,7 +180,7 @@ DisplayPrompt:   # 0x78178, 0x334 bytes
   0078400  stw 8, 32(29)
   0078404  stvewx 2, 6, 29
   0078408  stw 9, 176(5)
-  007840c  <unknown>
+  007840c  lvlx 2, 7, 3
   0078410  vspltw 2, 2, 0
   0078414  vmaddfp 2, 4, 2, 3
   0078418  vctsxs 2, 2, 0
@@ -193,8 +193,8 @@ DisplayPrompt:   # 0x78178, 0x334 bytes
   0078434  addi 3, 3, -32404
   0078438  li 5, -3056
   007843c  vslw 2, 2, 2
-  0078440  <unknown>
-  0078444  <unknown>
+  0078440  lvlx 3, 0, 3
+  0078444  lvlx 4, 5, 4
   0078448  li 3, 4
   007844c  vspltw 3, 3, 0
   0078450  li 4, 0
@@ -847,15 +847,15 @@ DrawDialogText:   # 0x784e8, 0x1620 bytes
   0078ea0  vspltisw 2, -1
   0078ea4  extsw 5, 5
   0078ea8  ori 27, 3, 0
-  0078eac  <unknown>
+  0078eac  lvlx 3, 4, 31
   0078eb0  std 5, 760(1)
   0078eb4  vcfsx 4, 3, 0
   0078eb8  vslw 2, 2, 2
-  0078ebc  <unknown>
+  0078ebc  lvlx 3, 6, 30
   0078ec0  li 4, 4
   0078ec4  lfs 30, 48(30)
   0078ec8  vspltw 3, 3, 0
-  0078ecc  <unknown>
+  0078ecc  lvlx 5, 4, 30
   0078ed0  lfs 1, 4(30)
   0078ed4  lwz 3, 36(31)
   0078ed8  li 4, 36
@@ -865,7 +865,7 @@ DrawDialogText:   # 0x784e8, 0x1620 bytes
   0078ee8  vspltw 2, 5, 0
   0078eec  frsp 31, 2
   0078ef0  vspltw 5, 4, 0
-  0078ef4  <unknown>
+  0078ef4  lvlx 4, 4, 31
   0078ef8  vcmpgtfp. 6, 5, 2
   0078efc  fmuls 31, 31, 30
   0078f00  bt 26, 0x78f0c
@@ -874,7 +874,7 @@ DrawDialogText:   # 0x784e8, 0x1620 bytes
   0078f0c  lis 4, 8
   0078f10  li 5, 52
   0078f14  addi 4, 4, -31572
-  0078f18  <unknown>
+  0078f18  lvlx 6, 5, 4
   0078f1c  lfs 2, 52(4)
   0078f20  vspltw 6, 6, 0
   0078f24  vcmpgefp. 5, 5, 6
@@ -1784,8 +1784,8 @@ UpdateFreeze:   # 0x79b18, 0x820 bytes
   0079d4c  vslw 2, 2, 2
   0079d50  stw 6, 28(31)
   0079d54  li 4, -3056
-  0079d58  <unknown>
-  0079d5c  <unknown>
+  0079d58  lvlx 3, 0, 3
+  0079d5c  lvlx 4, 4, 7
   0079d60  vspltw 3, 3, 0
   0079d64  li 3, 32
   0079d68  vmaddfp 2, 4, 3, 2

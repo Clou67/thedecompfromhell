@@ -566,14 +566,14 @@ UpdateMoby_1123:   # 0x1d5cc0, 0x7e8 bytes
   01d61f4  vcfsx 2, 31, 0
   01d61f8  li 6, 28
   01d61fc  fadds 2, 3, 2
-  01d6200  <unknown>
-  01d6204  <unknown>
+  01d6200  lvlx 3, 3, 1
+  01d6204  lvlx 4, 5, 31
   01d6208  vaddfp 3, 3, 4
   01d620c  ori 29, 26, 0
   01d6210  stfs 1, 256(1)
   01d6214  stfs 2, 260(1)
-  01d6218  <unknown>
-  01d621c  <unknown>
+  01d6218  lvlx 4, 4, 27
+  01d621c  lvlx 5, 6, 27
   01d6220  vspltw 4, 4, 0
   01d6224  vspltw 5, 5, 0
   01d6228  lis 4, 16256

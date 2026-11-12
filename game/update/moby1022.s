@@ -1350,10 +1350,10 @@ UpdateMoby_1022:   # 0x189bd8, 0xc34 bytes
   018a4e8  stb 4, 32(31)
   018a4ec  li 4, -3056
   018a4f0  vslw 2, 2, 2
-  018a4f4  <unknown>
+  018a4f4  lvlx 3, 6, 3
   018a4f8  li 3, 400
   018a4fc  vspltw 3, 3, 0
-  018a500  <unknown>
+  018a500  lvlx 4, 4, 5
   018a504  vmaddfp 2, 4, 3, 2
   018a508  vctsxs 2, 2, 0
   018a50c  vspltw 2, 2, 0
@@ -1423,10 +1423,10 @@ UpdateMoby_1022:   # 0x189bd8, 0xc34 bytes
   018a60c  lis 5, 114
   018a610  li 6, -3056
   018a614  vslw 2, 2, 2
-  018a618  <unknown>
+  018a618  lvlx 3, 4, 3
   018a61c  li 3, 400
   018a620  vspltw 3, 3, 0
-  018a624  <unknown>
+  018a624  lvlx 4, 6, 5
   018a628  vmaddfp 2, 4, 3, 2
   018a62c  vctsxs 2, 2, 0
   018a630  vspltw 2, 2, 0

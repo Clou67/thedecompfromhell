@@ -19,13 +19,13 @@ M1112_001d2188:   # 0x1d2188, 0x78 bytes
   01d21a8  lis 7, 29
   01d21ac  addi 7, 7, 8576
   01d21b0  vslw 4, 4, 4
-  01d21b4  <unknown>
+  01d21b4  lvlx 2, 6, 4
   01d21b8  lis 4, 114
   01d21bc  vcfsx 2, 2, 0
-  01d21c0  <unknown>
+  01d21c0  lvlx 3, 0, 7
   01d21c4  li 6, -3056
   01d21c8  vspltw 3, 3, 0
-  01d21cc  <unknown>
+  01d21cc  lvlx 5, 6, 4
   01d21d0  li 4, 152
   01d21d4  vaddfp 2, 2, 3
   01d21d8  vmaddfp 2, 5, 2, 4
@@ -166,17 +166,17 @@ UpdateMoby_1112:   # 0x1d2258, 0x1530 bytes
   01d2444  lis 6, 29
   01d2448  addi 5, 4, 16
   01d244c  vslw 4, 4, 4
-  01d2450  <unknown>
+  01d2450  lvlx 2, 4, 30
   01d2454  addi 4, 6, 8704
-  01d2458  <unknown>
+  01d2458  lvrx 3, 5, 30
   01d245c  li 5, 24
   01d2460  vor 2, 2, 3
   01d2464  vcfsx 2, 2, 0
-  01d2468  <unknown>
+  01d2468  lvlx 3, 5, 4
   01d246c  lis 4, 114
   01d2470  vspltw 3, 3, 0
   01d2474  li 5, -3056
-  01d2478  <unknown>
+  01d2478  lvlx 5, 5, 4
   01d247c  li 4, 152
   01d2480  vaddfp 2, 2, 3
   01d2484  vmaddfp 2, 5, 2, 4
@@ -685,8 +685,8 @@ UpdateMoby_1112:   # 0x1d2258, 0x1530 bytes
   01d2c60  li 9, 172
   01d2c64  li 10, 2
   01d2c68  stfs 1, 156(28)
-  01d2c6c  <unknown>
-  01d2c70  <unknown>
+  01d2c6c  lvlx 3, 4, 3
+  01d2c70  lvlx 4, 5, 6
   01d2c74  vspltw 3, 3, 0
   01d2c78  li 4, 1
   01d2c7c  vmaddfp 2, 4, 3, 2
@@ -696,8 +696,8 @@ UpdateMoby_1112:   # 0x1d2258, 0x1530 bytes
   01d2c8c  vspltw 2, 2, 0
   01d2c90  stvewx 2, 7, 28
   01d2c94  stb 4, 188(31)
-  01d2c98  <unknown>
-  01d2c9c  <unknown>
+  01d2c98  lvlx 2, 8, 3
+  01d2c9c  lvlx 4, 5, 6
   01d2ca0  vspltw 2, 2, 0
   01d2ca4  vmaddfp 2, 4, 2, 3
   01d2ca8  vctsxs 2, 2, 0
@@ -745,11 +745,11 @@ UpdateMoby_1112:   # 0x1d2258, 0x1530 bytes
   01d2d50  lis 5, 114
   01d2d54  li 6, -3056
   01d2d58  vslw 2, 2, 2
-  01d2d5c  <unknown>
+  01d2d5c  lvlx 3, 4, 3
   01d2d60  li 3, 172
   01d2d64  vspltw 3, 3, 0
   01d2d68  li 4, 2
-  01d2d6c  <unknown>
+  01d2d6c  lvlx 4, 6, 5
   01d2d70  vmaddfp 2, 4, 3, 2
   01d2d74  vctsxs 2, 2, 0
   01d2d78  vspltw 2, 2, 0
@@ -1130,17 +1130,17 @@ UpdateMoby_1112:   # 0x1d2258, 0x1530 bytes
   01d3354  lis 6, 29
   01d3358  addi 5, 4, 16
   01d335c  vslw 4, 4, 4
-  01d3360  <unknown>
+  01d3360  lvlx 2, 4, 30
   01d3364  addi 4, 6, 8704
-  01d3368  <unknown>
+  01d3368  lvrx 3, 5, 30
   01d336c  li 5, 24
   01d3370  vor 2, 2, 3
   01d3374  vcfsx 2, 2, 0
-  01d3378  <unknown>
+  01d3378  lvlx 3, 5, 4
   01d337c  lis 4, 114
   01d3380  vspltw 3, 3, 0
   01d3384  li 5, -3056
-  01d3388  <unknown>
+  01d3388  lvlx 5, 5, 4
   01d338c  li 4, 152
   01d3390  vaddfp 2, 2, 3
   01d3394  vmaddfp 2, 5, 2, 4
@@ -1230,18 +1230,18 @@ UpdateMoby_1112:   # 0x1d2258, 0x1530 bytes
   01d34e4  li 5, 24
   01d34e8  vspltisw 4, -1
   01d34ec  addi 4, 3, 16
-  01d34f0  <unknown>
+  01d34f0  lvlx 2, 3, 30
   01d34f4  lis 3, 29
   01d34f8  vslw 4, 4, 4
-  01d34fc  <unknown>
+  01d34fc  lvrx 3, 4, 30
   01d3500  addi 3, 3, 8704
   01d3504  vor 2, 2, 3
   01d3508  lis 4, 114
   01d350c  vcfsx 2, 2, 0
-  01d3510  <unknown>
+  01d3510  lvlx 3, 5, 3
   01d3514  li 3, -3056
   01d3518  vspltw 3, 3, 0
-  01d351c  <unknown>
+  01d351c  lvlx 5, 3, 4
   01d3520  li 3, 152
   01d3524  vaddfp 2, 2, 3
   01d3528  vmaddfp 2, 5, 2, 4
@@ -1302,17 +1302,17 @@ UpdateMoby_1112:   # 0x1d2258, 0x1530 bytes
   01d3604  lis 6, 29
   01d3608  addi 5, 4, 16
   01d360c  vslw 4, 4, 4
-  01d3610  <unknown>
+  01d3610  lvlx 2, 4, 30
   01d3614  addi 4, 6, 8704
-  01d3618  <unknown>
+  01d3618  lvrx 3, 5, 30
   01d361c  li 5, 24
   01d3620  vor 2, 2, 3
   01d3624  vcfsx 2, 2, 0
-  01d3628  <unknown>
+  01d3628  lvlx 3, 5, 4
   01d362c  lis 4, 114
   01d3630  vspltw 3, 3, 0
   01d3634  li 5, -3056
-  01d3638  <unknown>
+  01d3638  lvlx 5, 5, 4
   01d363c  li 4, 152
   01d3640  vaddfp 2, 2, 3
   01d3644  vmaddfp 2, 5, 2, 4
@@ -1356,18 +1356,18 @@ UpdateMoby_1112:   # 0x1d2258, 0x1530 bytes
   01d36dc  li 5, 24
   01d36e0  vspltisw 4, -1
   01d36e4  addi 4, 3, 16
-  01d36e8  <unknown>
+  01d36e8  lvlx 2, 3, 30
   01d36ec  lis 3, 29
   01d36f0  vslw 4, 4, 4
-  01d36f4  <unknown>
+  01d36f4  lvrx 3, 4, 30
   01d36f8  addi 3, 3, 8704
   01d36fc  vor 2, 2, 3
   01d3700  lis 4, 114
   01d3704  vcfsx 2, 2, 0
-  01d3708  <unknown>
+  01d3708  lvlx 3, 5, 3
   01d370c  li 3, -3056
   01d3710  vspltw 3, 3, 0
-  01d3714  <unknown>
+  01d3714  lvlx 5, 3, 4
   01d3718  li 3, 152
   01d371c  vaddfp 2, 2, 3
   01d3720  vmaddfp 2, 5, 2, 4

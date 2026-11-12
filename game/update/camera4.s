@@ -956,10 +956,10 @@ ActivateCamera_4:   # 0x473f0, 0x4fc bytes
   00477bc  lis 4, 114
   00477c0  li 6, -3056
   00477c4  vslw 2, 2, 2
-  00477c8  <unknown>
+  00477c8  lvlx 3, 5, 3
   00477cc  li 3, 36
   00477d0  vspltw 3, 3, 0
-  00477d4  <unknown>
+  00477d4  lvlx 4, 6, 4
   00477d8  vmaddfp 2, 4, 3, 2
   00477dc  vctsxs 2, 2, 0
   00477e0  vspltw 2, 2, 0

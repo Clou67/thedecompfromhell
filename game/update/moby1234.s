@@ -20,8 +20,8 @@ M1234_00217798:   # 0x217798, 0x70 bytes
   02177d8  addi 4, 4, 30608
   02177dc  li 6, -3056
   02177e0  vslw 2, 2, 2
-  02177e4  <unknown>
-  02177e8  <unknown>
+  02177e4  lvlx 3, 0, 4
+  02177e8  lvlx 4, 6, 5
   02177ec  li 4, 232
   02177f0  vspltw 3, 3, 0
   02177f4  vmaddfp 2, 4, 3, 2
@@ -457,10 +457,10 @@ UpdateMoby_1234:   # 0x217af8, 0x990 bytes
   0217f1c  lis 5, 114
   0217f20  li 6, -3056
   0217f24  vslw 3, 3, 3
-  0217f28  <unknown>
+  0217f28  lvlx 2, 4, 3
   0217f2c  li 3, 236
   0217f30  vspltw 2, 2, 0
-  0217f34  <unknown>
+  0217f34  lvlx 4, 6, 5
   0217f38  li 4, 3
   0217f3c  vmaddfp 3, 4, 2, 3
   0217f40  vctsxs 3, 3, 0
@@ -484,7 +484,7 @@ UpdateMoby_1234:   # 0x217af8, 0x990 bytes
   0217f88  lis 3, 114
   0217f8c  li 4, -3056
   0217f90  vslw 3, 3, 3
-  0217f94  <unknown>
+  0217f94  lvlx 4, 4, 3
   0217f98  li 3, 232
   0217f9c  vmaddfp 2, 4, 2, 3
   0217fa0  vctsxs 2, 2, 0

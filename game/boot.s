@@ -1144,10 +1144,10 @@ FrontEnd_Update:   # 0x11020, 0x4a8 bytes
   00113e8  vslw 2, 2, 2
   00113ec  li 9, 0
   00113f0  li 10, 0
-  00113f4  <unknown>
+  00113f4  lvlx 3, 5, 3
   00113f8  lis 3, 145
   00113fc  vspltw 3, 3, 0
-  0011400  <unknown>
+  0011400  lvlx 4, 6, 4
   0011404  li 12, 0
   0011408  lis 4, 145
   001140c  lis 5, 145
@@ -2447,12 +2447,12 @@ DrawSplashScreen:   # 0x127e0, 0x32c bytes
   0012830  bl 0x4d86b0
   0012834  nop
   0012838  li 3, 24
-  001283c  <unknown>
+  001283c  lvlx 2, 0, 31
   0012840  li 4, 4
   0012844  vspltisw 4, -1
   0012848  vspltw 2, 2, 0
-  001284c  <unknown>
-  0012850  <unknown>
+  001284c  lvlx 31, 3, 30
+  0012850  lvlx 3, 4, 31
   0012854  vsrw 2, 31, 2
   0012858  li 3, 12
   001285c  vspltw 3, 3, 0
@@ -2461,7 +2461,7 @@ DrawSplashScreen:   # 0x127e0, 0x32c bytes
   0012868  li 28, 0
   001286c  vcfux 5, 2, 0
   0012870  addic 27, 4, -23532
-  0012874  <unknown>
+  0012874  lvlx 6, 3, 29
   0012878  li 4, 0
   001287c  lis 3, 271
   0012880  ori 5, 30, 0
@@ -2522,7 +2522,7 @@ DrawSplashScreen:   # 0x127e0, 0x32c bytes
   001295c  li 4, 4
   0012960  lwz 7, 8(3)
   0012964  stw 6, 0(7)
-  0012968  <unknown>
+  0012968  lvlx 2, 8, 31
   001296c  lwz 7, 8(3)
   0012970  lis 8, 4
   0012974  vspltw 2, 2, 0
@@ -2548,7 +2548,7 @@ DrawSplashScreen:   # 0x127e0, 0x32c bytes
   00129c4  lwz 3, 40(27)
   00129c8  lwz 9, 8(3)
   00129cc  stw 6, 0(9)
-  00129d0  <unknown>
+  00129d0  lvlx 5, 7, 31
   00129d4  lwz 7, 8(3)
   00129d8  vspltw 5, 5, 0
   00129dc  lis 9, 416

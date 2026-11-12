@@ -429,10 +429,10 @@ UpdateMoby_919:   # 0x4b1a88, 0xbb8 bytes
   04b2010  lis 5, 114
   04b2014  li 6, -3056
   04b2018  vslw 2, 2, 2
-  04b201c  <unknown>
+  04b201c  lvlx 3, 4, 3
   04b2020  li 3, 328
   04b2024  vspltw 3, 3, 0
-  04b2028  <unknown>
+  04b2028  lvlx 4, 6, 5
   04b202c  vmaddfp 2, 4, 3, 2
   04b2030  vctsxs 2, 2, 0
   04b2034  vspltw 2, 2, 0

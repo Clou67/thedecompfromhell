@@ -370,11 +370,11 @@ M1888_002d0630:   # 0x2d0630, 0x624 bytes
   02d0bdc  stfs 1, 20(31)
   02d0be0  li 6, -3056
   02d0be4  ori 3, 30, 0
-  02d0be8  <unknown>
+  02d0be8  lvlx 3, 4, 29
   02d0bec  vslw 2, 2, 2
   02d0bf0  li 4, 28
   02d0bf4  vspltw 3, 3, 0
-  02d0bf8  <unknown>
+  02d0bf8  lvlx 4, 6, 5
   02d0bfc  vmaddfp 2, 4, 3, 2
   02d0c00  vctsxs 2, 2, 0
   02d0c04  vspltw 2, 2, 0

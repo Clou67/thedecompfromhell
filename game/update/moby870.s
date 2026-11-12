@@ -588,10 +588,10 @@ M870_0049bff8:   # 0x49bff8, 0x760 bytes
   049c198  stb 4, 32(31)
   049c19c  li 4, -3056
   049c1a0  vslw 2, 2, 2
-  049c1a4  <unknown>
+  049c1a4  lvlx 3, 6, 3
   049c1a8  lis 3, 140
   049c1ac  vspltw 3, 3, 0
-  049c1b0  <unknown>
+  049c1b0  lvlx 4, 4, 5
   049c1b4  lis 6, 16872
   049c1b8  lis 4, 114
   049c1bc  li 5, 38
@@ -1092,10 +1092,10 @@ UpdateMoby_870:   # 0x49c7d8, 0x14a0 bytes
   049c9f0  stb 4, 32(31)
   049c9f4  li 4, -3056
   049c9f8  vslw 2, 2, 2
-  049c9fc  <unknown>
+  049c9fc  lvlx 3, 6, 3
   049ca00  li 3, 424
   049ca04  vspltw 3, 3, 0
-  049ca08  <unknown>
+  049ca08  lvlx 4, 4, 5
   049ca0c  vmaddfp 2, 4, 3, 2
   049ca10  vctsxs 2, 2, 0
   049ca14  vspltw 2, 2, 0
@@ -1162,10 +1162,10 @@ UpdateMoby_870:   # 0x49c7d8, 0x14a0 bytes
   049cb08  stb 3, 32(31)
   049cb0c  li 7, -3056
   049cb10  vslw 2, 2, 2
-  049cb14  <unknown>
+  049cb14  lvlx 3, 6, 4
   049cb18  li 4, 424
   049cb1c  vspltw 3, 3, 0
-  049cb20  <unknown>
+  049cb20  lvlx 4, 7, 5
   049cb24  vmaddfp 2, 4, 3, 2
   049cb28  vctsxs 2, 2, 0
   049cb2c  vspltw 2, 2, 0
@@ -2213,10 +2213,10 @@ UpdateMoby_870:   # 0x49c7d8, 0x14a0 bytes
   049db74  lis 4, 114
   049db78  li 6, -3056
   049db7c  vslw 2, 2, 2
-  049db80  <unknown>
+  049db80  lvlx 3, 5, 3
   049db84  li 3, 424
   049db88  vspltw 3, 3, 0
-  049db8c  <unknown>
+  049db8c  lvlx 4, 6, 4
   049db90  vmaddfp 2, 4, 3, 2
   049db94  vctsxs 2, 2, 0
   049db98  vspltw 2, 2, 0

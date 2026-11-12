@@ -450,7 +450,7 @@ M806_00466640:   # 0x466640, 0x4fc bytes
   0466794  stfs 1, 116(1)
   0466798  fmadds 6, 5, 5, 6
   046679c  stfs 22, 120(1)
-  04667a0  <unknown>
+  04667a0  lvlx 31, 3, 5
   04667a4  lfs 24, 16(5)
   04667a8  lfs 25, 20(5)
   04667ac  lfs 26, 24(5)
@@ -489,13 +489,13 @@ M806_00466640:   # 0x466640, 0x4fc bytes
   0466830  li 5, 16
   0466834  vspltisw 5, 1
   0466838  vslw 2, 2, 2
-  046683c  <unknown>
+  046683c  lvlx 3, 4, 3
   0466840  lfs 1, 96(27)
   0466844  lfs 2, 0(29)
   0466848  vmaddfp 2, 3, 31, 2
   046684c  fadds 1, 1, 2
-  0466850  <unknown>
-  0466854  <unknown>
+  0466850  lvlx 3, 0, 24
+  0466854  lvrx 4, 5, 24
   0466858  lfs 21, -3056(3)
   046685c  vor 3, 3, 4
   0466860  vspltisw 4, -16
@@ -988,16 +988,16 @@ UpdateMoby_806:   # 0x466e98, 0x1924 bytes
   0467040  lis 5, 70
   0467044  addic 6, 30, 92
   0467048  vslw 5, 5, 5
-  046704c  <unknown>
+  046704c  lvlx 2, 4, 3
   0467050  addi 3, 5, 28224
   0467054  vspltw 2, 2, 0
   0467058  lis 4, 114
   046705c  li 5, -3056
   0467060  vcfsx 2, 2, 0
-  0467064  <unknown>
+  0467064  lvlx 3, 0, 3
   0467068  vspltw 3, 3, 0
   046706c  addic 3, 30, 88
-  0467070  <unknown>
+  0467070  lvlx 4, 5, 4
   0467074  li 7, 0
   0467078  addic 5, 30, 90
   046707c  addic 4, 30, 94
@@ -1634,10 +1634,10 @@ UpdateMoby_806:   # 0x466e98, 0x1924 bytes
   0467a58  lis 5, 114
   0467a5c  li 6, -3056
   0467a60  vslw 2, 2, 2
-  0467a64  <unknown>
+  0467a64  lvlx 3, 4, 3
   0467a68  li 3, 448
   0467a6c  vspltw 3, 3, 0
-  0467a70  <unknown>
+  0467a70  lvlx 4, 6, 5
   0467a74  vmaddfp 2, 4, 3, 2
   0467a78  vctsxs 2, 2, 0
   0467a7c  vspltw 2, 2, 0
@@ -1648,13 +1648,13 @@ UpdateMoby_806:   # 0x466e98, 0x1924 bytes
   0467a90  lis 5, 70
   0467a94  addi 28, 5, 28224
   0467a98  vslw 4, 4, 4
-  0467a9c  <unknown>
+  0467a9c  lvlx 2, 4, 3
   0467aa0  lis 3, 114
   0467aa4  vcfsx 2, 2, 0
   0467aa8  li 4, -3056
-  0467aac  <unknown>
+  0467aac  lvlx 3, 0, 28
   0467ab0  vspltw 3, 3, 0
-  0467ab4  <unknown>
+  0467ab4  lvlx 5, 4, 3
   0467ab8  li 3, 84
   0467abc  lis 4, 135
   0467ac0  lis 27, 135
@@ -2165,8 +2165,8 @@ UpdateMoby_806:   # 0x466e98, 0x1924 bytes
   04682a4  li 5, 19572
   04682a8  lfs 1, 0(4)
   04682ac  vslw 4, 4, 4
-  04682b0  <unknown>
-  04682b4  <unknown>
+  04682b0  lvlx 2, 5, 3
+  04682b4  lvlx 3, 0, 4
   04682b8  lfs 2, -3056(6)
   04682bc  lfd 3, 288(1)
   04682c0  vcfsx 2, 2, 0
@@ -2175,7 +2175,7 @@ UpdateMoby_806:   # 0x466e98, 0x1924 bytes
   04682cc  li 3, -3056
   04682d0  frsp 3, 3
   04682d4  vaddfp 2, 2, 3
-  04682d8  <unknown>
+  04682d8  lvlx 3, 3, 6
   04682dc  lhz 3, 84(30)
   04682e0  extsh 3, 3
   04682e4  fadds 1, 3, 1

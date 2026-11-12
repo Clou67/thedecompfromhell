@@ -3862,9 +3862,9 @@ UpdateMoby_1160_JetFighterUnused:   # 0x1e8018, 0xf9c bytes
   01e8128  li 6, -3056
   01e812c  vslw 3, 3, 3
   01e8130  stw 3, 352(4)
-  01e8134  <unknown>
+  01e8134  lvlx 2, 0, 28
   01e8138  vspltw 2, 2, 0
-  01e813c  <unknown>
+  01e813c  lvlx 4, 6, 5
   01e8140  lis 6, 118
   01e8144  li 5, 360
   01e8148  vmaddfp 2, 4, 2, 3
@@ -4154,9 +4154,9 @@ UpdateMoby_1160_JetFighterUnused:   # 0x1e8018, 0xf9c bytes
   01e85b8  lis 5, 114
   01e85bc  li 7, -3056
   01e85c0  stw 3, 352(6)
-  01e85c4  <unknown>
+  01e85c4  lvlx 2, 4, 27
   01e85c8  vspltw 2, 2, 0
-  01e85cc  <unknown>
+  01e85cc  lvlx 4, 7, 5
   01e85d0  li 5, 360
   01e85d4  li 26, 0
   01e85d8  vmaddfp 2, 4, 2, 3
@@ -4218,9 +4218,9 @@ UpdateMoby_1160_JetFighterUnused:   # 0x1e8018, 0xf9c bytes
   01e86b8  addi 6, 6, 32724
   01e86bc  vspltisw 7, -1
   01e86c0  vslw 5, 5, 5
-  01e86c4  <unknown>
+  01e86c4  lvlx 2, 4, 3
   01e86c8  vrefp 3, 2
-  01e86cc  <unknown>
+  01e86cc  lvlx 4, 5, 6
   01e86d0  vspltw 4, 4, 0
   01e86d4  vslw 7, 7, 7
   01e86d8  vspltisw 8, -1
@@ -4230,10 +4230,10 @@ UpdateMoby_1160_JetFighterUnused:   # 0x1e8018, 0xf9c bytes
   01e86e8  vnmsubfp 6, 3, 2, 4
   01e86ec  vmaddfp 3, 3, 6, 5
   01e86f0  vspltisw 5, -1
-  01e86f4  <unknown>
+  01e86f4  lvlx 6, 3, 29
   01e86f8  li 3, 40
   01e86fc  vslw 5, 5, 5
-  01e8700  <unknown>
+  01e8700  lvlx 10, 3, 6
   01e8704  li 3, 5640
   01e8708  vspltw 10, 10, 0
   01e870c  vnmsubfp 9, 3, 2, 4

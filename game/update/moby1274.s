@@ -863,8 +863,8 @@ M1274_00018238:   # 0x18238, 0x1788 bytes
   00189c8  addi 3, 3, -32428
   00189cc  li 5, -3056
   00189d0  vslw 2, 2, 2
-  00189d4  <unknown>
-  00189d8  <unknown>
+  00189d4  lvlx 3, 4, 3
+  00189d8  lvlx 4, 5, 22
   00189dc  li 3, 158
   00189e0  vspltw 3, 3, 0
   00189e4  vmaddfp 2, 4, 3, 2
@@ -897,8 +897,8 @@ M1274_00018238:   # 0x18238, 0x1788 bytes
   0018a50  addi 3, 3, -32428
   0018a54  li 5, -3056
   0018a58  vslw 2, 2, 2
-  0018a5c  <unknown>
-  0018a60  <unknown>
+  0018a5c  lvlx 3, 4, 3
+  0018a60  lvlx 4, 5, 22
   0018a64  li 3, 147
   0018a68  vspltw 3, 3, 0
   0018a6c  vmaddfp 2, 4, 3, 2
@@ -1152,9 +1152,9 @@ M1274_00018238:   # 0x18238, 0x1788 bytes
   0018e4c  addi 3, 3, -32428
   0018e50  li 5, 84
   0018e54  vslw 2, 2, 2
-  0018e58  <unknown>
+  0018e58  lvlx 3, 4, 22
   0018e5c  ori 25, 16, 0
-  0018e60  <unknown>
+  0018e60  lvlx 4, 5, 3
   0018e64  li 4, 146
   0018e68  vspltw 4, 4, 0
   0018e6c  vmaddfp 2, 3, 4, 2
@@ -1236,9 +1236,9 @@ M1274_00018238:   # 0x18238, 0x1788 bytes
   0018f9c  li 5, -3056
   0018fa0  li 6, 124
   0018fa4  vslw 2, 2, 2
-  0018fa8  <unknown>
-  0018fac  <unknown>
-  0018fb0  <unknown>
+  0018fa8  lvlx 3, 4, 3
+  0018fac  lvlx 4, 5, 22
+  0018fb0  lvlx 5, 6, 3
   0018fb4  lis 4, 146
   0018fb8  vspltw 3, 3, 0
   0018fbc  li 3, 28976
@@ -1246,7 +1246,7 @@ M1274_00018238:   # 0x18238, 0x1788 bytes
   0018fc4  vmaddfp 2, 4, 5, 2
   0018fc8  vslw 5, 6, 6
   0018fcc  vmaddfp 3, 4, 3, 5
-  0018fd0  <unknown>
+  0018fd0  lvlx 4, 3, 4
   0018fd4  vspltisw 5, 0
   0018fd8  li 3, 156
   0018fdc  vctsxs 2, 2, 0
@@ -1323,8 +1323,8 @@ M1274_00018238:   # 0x18238, 0x1788 bytes
   00190f8  addi 3, 3, -32428
   00190fc  li 5, -3056
   0019100  vslw 2, 2, 2
-  0019104  <unknown>
-  0019108  <unknown>
+  0019104  lvlx 3, 4, 3
+  0019108  lvlx 4, 5, 22
   001910c  li 3, 28984
   0019110  vspltw 3, 3, 0
   0019114  lis 4, 146
@@ -1339,8 +1339,8 @@ M1274_00018238:   # 0x18238, 0x1788 bytes
   0019138  addi 3, 3, -32428
   001913c  li 5, -3056
   0019140  vslw 2, 2, 2
-  0019144  <unknown>
-  0019148  <unknown>
+  0019144  lvlx 3, 4, 3
+  0019148  lvlx 4, 5, 22
   001914c  li 3, 132
   0019150  vspltw 3, 3, 0
   0019154  vmaddfp 2, 4, 3, 2
@@ -2423,10 +2423,10 @@ UpdateMoby_1274:   # 0x19cb8, 0x1410 bytes
   001a2a4  lis 5, 114
   001a2a8  li 6, -3056
   001a2ac  vslw 2, 2, 2
-  001a2b0  <unknown>
+  001a2b0  lvlx 3, 4, 3
   001a2b4  li 3, 1568
   001a2b8  vspltw 3, 3, 0
-  001a2bc  <unknown>
+  001a2bc  lvlx 4, 6, 5
   001a2c0  vmaddfp 2, 4, 3, 2
   001a2c4  vctsxs 2, 2, 0
   001a2c8  vspltw 2, 2, 0

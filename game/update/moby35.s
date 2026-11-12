@@ -248,7 +248,7 @@ M35_003531d0:   # 0x3531d0, 0x250 bytes
   0353284  addic 30, 28, 8
   0353288  lfs 29, 28(27)
   035328c  lfs 30, 36(27)
-  0353290  <unknown>
+  0353290  lvlx 31, 3, 27
   0353294  lfs 31, 40(27)
   0353298  vspltw 31, 31, 0
   035329c  lfs 1, 72(31)
@@ -308,7 +308,7 @@ M35_003531d0:   # 0x3531d0, 0x250 bytes
   0353374  lis 4, 114
   0353378  li 5, -3056
   035337c  vslw 2, 2, 2
-  0353380  <unknown>
+  0353380  lvlx 3, 5, 4
   0353384  li 4, 10
   0353388  vmaddfp 2, 3, 31, 2
   035338c  vctsxs 2, 2, 0
@@ -398,8 +398,8 @@ UpdateMoby_35:   # 0x353470, 0xcd8 bytes
   0353524  stfs 1, 116(30)
   0353528  vslw 3, 3, 3
   035352c  sth 3, 52(31)
-  0353530  <unknown>
-  0353534  <unknown>
+  0353530  lvlx 2, 0, 5
+  0353534  lvlx 4, 7, 6
   0353538  li 3, 124
   035353c  vspltw 2, 2, 0
   0353540  vmaddfp 2, 4, 2, 3
@@ -431,10 +431,10 @@ UpdateMoby_35:   # 0x353470, 0xcd8 bytes
   03535a8  lis 5, 114
   03535ac  li 6, -3056
   03535b0  vslw 2, 2, 2
-  03535b4  <unknown>
+  03535b4  lvlx 3, 3, 4
   03535b8  li 3, 108
   03535bc  vspltw 3, 3, 0
-  03535c0  <unknown>
+  03535c0  lvlx 4, 6, 5
   03535c4  lfs 1, -3056(5)
   03535c8  vmaddfp 2, 4, 3, 2
   03535cc  vctsxs 2, 2, 0
@@ -682,8 +682,8 @@ UpdateMoby_35:   # 0x353470, 0xcd8 bytes
   0353994  subc 3, 3, 4
   0353998  lis 4, 114
   035399c  stw 3, 104(30)
-  03539a0  <unknown>
-  03539a4  <unknown>
+  03539a0  lvlx 3, 6, 5
+  03539a4  lvlx 4, 7, 4
   03539a8  li 3, 108
   03539ac  vspltw 3, 3, 0
   03539b0  vmaddfp 2, 4, 3, 2
@@ -891,17 +891,17 @@ UpdateMoby_35:   # 0x353470, 0xcd8 bytes
   0353cd8  addi 3, 3, 13344
   0353cdc  lis 5, 114
   0353ce0  li 6, -3056
-  0353ce4  <unknown>
+  0353ce4  lvlx 2, 4, 3
   0353ce8  vspltw 2, 2, 0
-  0353cec  <unknown>
+  0353cec  lvlx 3, 6, 5
   0353cf0  b 0x353d14
   0353cf4  lis 3, 53
   0353cf8  li 4, 56
   0353cfc  addi 3, 3, 13344
   0353d00  li 5, -3056
   0353d04  lis 6, 114
-  0353d08  <unknown>
-  0353d0c  <unknown>
+  0353d08  lvlx 2, 4, 3
+  0353d0c  lvlx 3, 5, 6
   0353d10  vspltw 2, 2, 0
   0353d14  vspltisw 4, -1
   0353d18  vspltw 3, 3, 0

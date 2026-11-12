@@ -46,12 +46,12 @@ M1327_0024bb50:   # 0x24bb50, 0x100 bytes
   024bbf8  addi 3, 3, -17588
   024bbfc  li 5, -3056
   024bc00  vslw 2, 2, 2
-  024bc04  <unknown>
-  024bc08  <unknown>
+  024bc04  lvlx 3, 0, 3
+  024bc08  lvlx 4, 5, 4
   024bc0c  li 3, 2244
   024bc10  vspltw 3, 3, 0
   024bc14  vmaddfp 2, 4, 3, 2
-  024bc18  <unknown>
+  024bc18  lvlx 3, 3, 30
   024bc1c  vctsxs 2, 2, 0
   024bc20  vadduwm 2, 3, 2
   024bc24  vspltw 2, 2, 0
@@ -115,12 +115,12 @@ UpdateMoby_133:   # 0x24bc98, 0x660 bytes
   024bd4c  addi 3, 3, -17328
   024bd50  li 5, -3056
   024bd54  vslw 2, 2, 2
-  024bd58  <unknown>
-  024bd5c  <unknown>
+  024bd58  lvlx 3, 0, 3
+  024bd5c  lvlx 4, 5, 4
   024bd60  vspltw 3, 3, 0
   024bd64  li 3, 2244
   024bd68  vmaddfp 2, 4, 3, 2
-  024bd6c  <unknown>
+  024bd6c  lvlx 3, 3, 29
   024bd70  vctsxs 2, 2, 0
   024bd74  vadduwm 2, 3, 2
   024bd78  vspltw 2, 2, 0
@@ -429,9 +429,9 @@ UpdateMoby_133:   # 0x24bc98, 0x660 bytes
   024c234  li 5, 60
   024c238  stw 3, 180(30)
   024c23c  li 3, -3056
-  024c240  <unknown>
+  024c240  lvlx 3, 5, 4
   024c244  vspltw 3, 3, 0
-  024c248  <unknown>
+  024c248  lvlx 4, 3, 6
   024c24c  li 3, 184
   024c250  vmaddfp 2, 4, 3, 2
   024c254  vctsxs 2, 2, 0

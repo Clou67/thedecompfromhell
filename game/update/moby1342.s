@@ -263,10 +263,10 @@ UpdateMoby_1342:   # 0x24fd10, 0xf44 bytes
   0250100  li 7, -3056
   0250104  vslw 2, 2, 2
   0250108  stw 5, 80(31)
-  025010c  <unknown>
+  025010c  lvlx 3, 4, 3
   0250110  li 3, 88
   0250114  vspltw 3, 3, 0
-  0250118  <unknown>
+  0250118  lvlx 4, 7, 6
   025011c  vmaddfp 2, 4, 3, 2
   0250120  vctsxs 2, 2, 0
   0250124  vspltw 2, 2, 0

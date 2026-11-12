@@ -75,7 +75,7 @@ M1120_001d5168:   # 0x1d5168, 0x324 bytes
   01d5284  fmadds 8, 7, 7, 8
   01d5288  stfs 2, 120(1)
   01d528c  lfs 26, 16(4)
-  01d5290  <unknown>
+  01d5290  lvlx 31, 5, 4
   01d5294  lfs 27, 20(4)
   01d5298  fsqrts 8, 8
   01d529c  vspltw 31, 31, 0
@@ -118,7 +118,7 @@ M1120_001d5168:   # 0x1d5168, 0x324 bytes
   01d5330  lwz 29, 48(30)
   01d5334  cmpwi 3, 0
   01d5338  lfs 1, -3056(4)
-  01d533c  <unknown>
+  01d533c  lvlx 2, 5, 4
   01d5340  bt 2, 0x1d536c
   01d5344  vspltisw 3, -1
   01d5348  fmuls 2, 1, 27
@@ -242,12 +242,12 @@ M1120_001d5498:   # 0x1d5498, 0x120 bytes
   01d5524  li 8, 8
   01d5528  stw 3, 44(31)
   01d552c  li 9, 4
-  01d5530  <unknown>
-  01d5534  <unknown>
+  01d5530  lvlx 6, 0, 4
+  01d5534  lvlx 5, 5, 7
   01d5538  addic 3, 31, 48
-  01d553c  <unknown>
+  01d553c  lvlx 3, 6, 4
   01d5540  mtctr 9
-  01d5544  <unknown>
+  01d5544  lvlx 2, 8, 4
   01d5548  vspltw 6, 6, 0
   01d554c  vspltw 3, 3, 0
   01d5550  vspltw 2, 2, 0

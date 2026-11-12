@@ -12,13 +12,13 @@ M869_0049a3b8:   # 0x49a3b8, 0x78 bytes
   049a3d8  lis 7, 74
   049a3dc  addi 7, 7, -23632
   049a3e0  vslw 4, 4, 4
-  049a3e4  <unknown>
+  049a3e4  lvlx 2, 6, 4
   049a3e8  lis 4, 114
   049a3ec  vcfsx 2, 2, 0
-  049a3f0  <unknown>
+  049a3f0  lvlx 3, 0, 7
   049a3f4  li 6, -3056
   049a3f8  vspltw 3, 3, 0
-  049a3fc  <unknown>
+  049a3fc  lvlx 5, 6, 4
   049a400  li 4, 152
   049a404  vaddfp 2, 2, 3
   049a408  vmaddfp 2, 5, 2, 4
@@ -127,18 +127,18 @@ UpdateMoby_869:   # 0x49a478, 0x13d8 bytes
   049a5e4  li 6, 20
   049a5e8  vspltisw 4, -1
   049a5ec  addi 5, 4, 16
-  049a5f0  <unknown>
+  049a5f0  lvlx 2, 4, 30
   049a5f4  lis 4, 74
   049a5f8  vslw 4, 4, 4
-  049a5fc  <unknown>
+  049a5fc  lvrx 3, 5, 30
   049a600  addi 4, 4, -23504
   049a604  vor 2, 2, 3
   049a608  lis 5, 114
   049a60c  vcfsx 2, 2, 0
-  049a610  <unknown>
+  049a610  lvlx 3, 6, 4
   049a614  li 4, -3056
   049a618  vspltw 3, 3, 0
-  049a61c  <unknown>
+  049a61c  lvlx 5, 4, 5
   049a620  li 4, 152
   049a624  vaddfp 2, 2, 3
   049a628  vmaddfp 2, 5, 2, 4
@@ -613,8 +613,8 @@ UpdateMoby_869:   # 0x49a478, 0x13d8 bytes
   049ad7c  li 9, 172
   049ad80  li 10, 2
   049ad84  stfs 1, 156(28)
-  049ad88  <unknown>
-  049ad8c  <unknown>
+  049ad88  lvlx 3, 4, 3
+  049ad8c  lvlx 4, 6, 5
   049ad90  li 4, 152
   049ad94  vspltw 3, 3, 0
   049ad98  vmaddfp 2, 4, 3, 2
@@ -624,8 +624,8 @@ UpdateMoby_869:   # 0x49a478, 0x13d8 bytes
   049ada8  vspltw 2, 2, 0
   049adac  stvewx 2, 4, 28
   049adb0  stb 7, 188(31)
-  049adb4  <unknown>
-  049adb8  <unknown>
+  049adb4  lvlx 2, 8, 3
+  049adb8  lvlx 4, 6, 5
   049adbc  vspltw 2, 2, 0
   049adc0  vmaddfp 2, 4, 2, 3
   049adc4  vctsxs 2, 2, 0
@@ -657,10 +657,10 @@ UpdateMoby_869:   # 0x49a478, 0x13d8 bytes
   049ae2c  lis 4, 114
   049ae30  li 6, -3056
   049ae34  vslw 2, 2, 2
-  049ae38  <unknown>
+  049ae38  lvlx 3, 5, 3
   049ae3c  li 3, 172
   049ae40  vspltw 3, 3, 0
-  049ae44  <unknown>
+  049ae44  lvlx 4, 6, 4
   049ae48  li 4, 2
   049ae4c  vmaddfp 2, 4, 3, 2
   049ae50  vctsxs 2, 2, 0
@@ -1043,17 +1043,17 @@ UpdateMoby_869:   # 0x49a478, 0x13d8 bytes
   049b434  lis 6, 74
   049b438  addi 5, 4, 16
   049b43c  vslw 4, 4, 4
-  049b440  <unknown>
+  049b440  lvlx 2, 4, 30
   049b444  addi 4, 6, -23504
-  049b448  <unknown>
+  049b448  lvrx 3, 5, 30
   049b44c  li 5, 20
   049b450  vor 2, 2, 3
   049b454  vcfsx 2, 2, 0
-  049b458  <unknown>
+  049b458  lvlx 3, 5, 4
   049b45c  lis 4, 114
   049b460  vspltw 3, 3, 0
   049b464  li 5, -3056
-  049b468  <unknown>
+  049b468  lvlx 5, 5, 4
   049b46c  li 4, 152
   049b470  vaddfp 2, 2, 3
   049b474  vmaddfp 2, 5, 2, 4
@@ -1139,17 +1139,17 @@ UpdateMoby_869:   # 0x49a478, 0x13d8 bytes
   049b5b4  lis 5, 74
   049b5b8  addi 4, 3, 16
   049b5bc  vslw 4, 4, 4
-  049b5c0  <unknown>
+  049b5c0  lvlx 2, 3, 30
   049b5c4  addi 3, 5, -23504
-  049b5c8  <unknown>
+  049b5c8  lvrx 3, 4, 30
   049b5cc  li 4, 20
   049b5d0  vor 2, 2, 3
   049b5d4  vcfsx 2, 2, 0
-  049b5d8  <unknown>
+  049b5d8  lvlx 3, 4, 3
   049b5dc  lis 3, 114
   049b5e0  vspltw 3, 3, 0
   049b5e4  li 4, -3056
-  049b5e8  <unknown>
+  049b5e8  lvlx 5, 4, 3
   049b5ec  li 3, 152
   049b5f0  vaddfp 2, 2, 3
   049b5f4  vmaddfp 2, 5, 2, 4
@@ -1209,18 +1209,18 @@ UpdateMoby_869:   # 0x49a478, 0x13d8 bytes
   049b6cc  li 6, 20
   049b6d0  vspltisw 4, -1
   049b6d4  addi 5, 4, 16
-  049b6d8  <unknown>
+  049b6d8  lvlx 2, 4, 30
   049b6dc  lis 4, 74
   049b6e0  vslw 4, 4, 4
-  049b6e4  <unknown>
+  049b6e4  lvrx 3, 5, 30
   049b6e8  addi 4, 4, -23504
   049b6ec  vor 2, 2, 3
   049b6f0  lis 5, 114
   049b6f4  vcfsx 2, 2, 0
-  049b6f8  <unknown>
+  049b6f8  lvlx 3, 6, 4
   049b6fc  li 4, -3056
   049b700  vspltw 3, 3, 0
-  049b704  <unknown>
+  049b704  lvlx 5, 4, 5
   049b708  li 4, 152
   049b70c  vaddfp 2, 2, 3
   049b710  vmaddfp 2, 5, 2, 4
@@ -1263,18 +1263,18 @@ UpdateMoby_869:   # 0x49a478, 0x13d8 bytes
   049b7a4  li 5, 20
   049b7a8  vspltisw 4, -1
   049b7ac  addi 4, 3, 16
-  049b7b0  <unknown>
+  049b7b0  lvlx 2, 3, 30
   049b7b4  lis 3, 74
   049b7b8  vslw 4, 4, 4
-  049b7bc  <unknown>
+  049b7bc  lvrx 3, 4, 30
   049b7c0  addi 3, 3, -23504
   049b7c4  vor 2, 2, 3
   049b7c8  lis 4, 114
   049b7cc  vcfsx 2, 2, 0
-  049b7d0  <unknown>
+  049b7d0  lvlx 3, 5, 3
   049b7d4  li 3, -3056
   049b7d8  vspltw 3, 3, 0
-  049b7dc  <unknown>
+  049b7dc  lvlx 5, 3, 4
   049b7e0  li 3, 152
   049b7e4  vaddfp 2, 2, 3
   049b7e8  vmaddfp 2, 5, 2, 4

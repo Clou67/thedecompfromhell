@@ -2014,10 +2014,10 @@ UpdateMoby_912:   # 0x4ad900, 0x1a40 bytes
   04af250  lis 5, 114
   04af254  li 6, -3056
   04af258  vslw 2, 2, 2
-  04af25c  <unknown>
+  04af25c  lvlx 3, 4, 3
   04af260  li 3, 424
   04af264  vspltw 3, 3, 0
-  04af268  <unknown>
+  04af268  lvlx 4, 6, 5
   04af26c  vmaddfp 2, 4, 3, 2
   04af270  vctsxs 2, 2, 0
   04af274  vspltw 2, 2, 0

@@ -7,13 +7,13 @@ M1880_002cdf60:   # 0x2cdf60, 0xac bytes
   02cdf6c  addi 3, 3, -8368
   02cdf70  li 5, -3056
   02cdf74  vslw 2, 2, 2
-  02cdf78  <unknown>
-  02cdf7c  <unknown>
+  02cdf78  lvlx 3, 0, 3
+  02cdf7c  lvlx 4, 5, 4
   02cdf80  vspltw 3, 3, 0
   02cdf84  li 4, 8
   02cdf88  vspltisw 5, -1
   02cdf8c  vmaddfp 2, 4, 3, 2
-  02cdf90  <unknown>
+  02cdf90  lvlx 4, 4, 3
   02cdf94  vspltisw 3, -1
   02cdf98  vspltw 4, 4, 0
   02cdf9c  li 4, 4
@@ -24,7 +24,7 @@ M1880_002cdf60:   # 0x2cdf60, 0xac bytes
   02cdfb0  vspltisw 8, -1
   02cdfb4  vctsxs 2, 2, 0
   02cdfb8  vslw 6, 6, 6
-  02cdfbc  <unknown>
+  02cdfbc  lvlx 9, 4, 3
   02cdfc0  vslw 8, 8, 8
   02cdfc4  addic 4, 5, -10952
   02cdfc8  vspltw 9, 9, 0

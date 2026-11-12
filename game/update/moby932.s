@@ -663,10 +663,10 @@ UpdateMoby_932:   # 0x4bf1d0, 0x64c bytes
   04bf388  lis 5, 114
   04bf38c  li 6, -3056
   04bf390  vslw 2, 2, 2
-  04bf394  <unknown>
+  04bf394  lvlx 3, 4, 3
   04bf398  li 3, 388
   04bf39c  vspltw 3, 3, 0
-  04bf3a0  <unknown>
+  04bf3a0  lvlx 4, 6, 5
   04bf3a4  vmaddfp 2, 4, 3, 2
   04bf3a8  vctsxs 2, 2, 0
   04bf3ac  vspltw 2, 2, 0

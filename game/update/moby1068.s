@@ -571,11 +571,11 @@ M1068_001aec28:   # 0x1aec28, 0x368 bytes
   01aeef4  lis 5, 114
   01aeef8  li 6, -3056
   01aeefc  vslw 4, 4, 4
-  01aef00  <unknown>
-  01aef04  <unknown>
+  01aef00  lvlx 2, 4, 3
+  01aef04  lvlx 3, 0, 30
   01aef08  vcfsx 2, 2, 0
   01aef0c  vspltw 3, 3, 0
-  01aef10  <unknown>
+  01aef10  lvlx 5, 6, 5
   01aef14  li 3, 540
   01aef18  vaddfp 2, 2, 3
   01aef1c  vmaddfp 2, 5, 2, 4
@@ -948,7 +948,7 @@ M1068_001af4c0:   # 0x1af4c0, 0x520 bytes
   01af528  li 4, 192
   01af52c  li 5, 540
   01af530  lwz 3, 192(1)
-  01af534  <unknown>
+  01af534  lvlx 2, 4, 1
   01af538  cmpwi 3, 0
   01af53c  vcfsx 2, 2, 0
   01af540  vspltw 2, 2, 0
@@ -1377,11 +1377,11 @@ M1068_001afa30:   # 0x1afa30, 0xce4 bytes
   01afc24  li 6, -3056
   01afc28  stb 3, 32(31)
   01afc2c  vslw 2, 2, 2
-  01afc30  <unknown>
+  01afc30  lvlx 3, 4, 26
   01afc34  lis 3, 117
   01afc38  lis 4, 114
   01afc3c  vspltw 3, 3, 0
-  01afc40  <unknown>
+  01afc40  lvlx 4, 6, 5
   01afc44  lis 5, 16640
   01afc48  lfs 1, 31576(3)
   01afc4c  vmaddfp 2, 4, 3, 2
@@ -2626,13 +2626,13 @@ UpdateMoby_1068:   # 0x1b07a8, 0x16fc bytes
   01b1034  li 5, 112
   01b1038  addi 6, 6, 1812
   01b103c  vslw 4, 4, 4
-  01b1040  <unknown>
+  01b1040  lvlx 2, 4, 3
   01b1044  lis 3, 114
   01b1048  vcfsx 2, 2, 0
   01b104c  li 4, -3056
-  01b1050  <unknown>
+  01b1050  lvlx 3, 5, 6
   01b1054  vspltw 3, 3, 0
-  01b1058  <unknown>
+  01b1058  lvlx 5, 4, 3
   01b105c  li 3, 412
   01b1060  vaddfp 2, 2, 3
   01b1064  vmaddfp 2, 5, 2, 4

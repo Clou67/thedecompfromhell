@@ -118,10 +118,10 @@ UpdateMoby_76:   # 0x44f060, 0x2e8 bytes
   044f228  lis 7, 114
   044f22c  vslw 2, 2, 2
   044f230  stw 5, 12(30)
-  044f234  <unknown>
+  044f234  lvlx 3, 4, 3
   044f238  li 3, 8
   044f23c  vspltw 3, 3, 0
-  044f240  <unknown>
+  044f240  lvlx 4, 6, 7
   044f244  vmaddfp 2, 4, 3, 2
   044f248  vctsxs 2, 2, 0
   044f24c  vspltw 2, 2, 0

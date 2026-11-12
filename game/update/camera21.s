@@ -579,11 +579,11 @@ UpdateCamera_21:   # 0x42b48, 0x122c bytes
   0042df4  lis 6, 114
   0042df8  li 7, -3056
   0042dfc  vslw 2, 2, 2
-  0042e00  <unknown>
+  0042e00  lvlx 3, 5, 4
   0042e04  li 8, 5
   0042e08  li 5, 456
   0042e0c  vspltw 3, 3, 0
-  0042e10  <unknown>
+  0042e10  lvlx 4, 7, 6
   0042e14  li 9, 8
   0042e18  vmaddfp 2, 4, 3, 2
   0042e1c  vspltisw 3, -1
@@ -592,8 +592,8 @@ UpdateCamera_21:   # 0x42b48, 0x122c bytes
   0042e28  vspltw 2, 2, 0
   0042e2c  stvewx 2, 5, 3
   0042e30  stb 8, 188(26)
-  0042e34  <unknown>
-  0042e38  <unknown>
+  0042e34  lvlx 2, 9, 4
+  0042e38  lvlx 4, 7, 6
   0042e3c  vspltw 2, 2, 0
   0042e40  lwz 3, 120(26)
   0042e44  vmaddfp 2, 4, 2, 3
@@ -607,8 +607,8 @@ UpdateCamera_21:   # 0x42b48, 0x122c bytes
   0042e64  addi 4, 4, 11036
   0042e68  li 6, -3056
   0042e6c  lis 7, 114
-  0042e70  <unknown>
-  0042e74  <unknown>
+  0042e70  lvlx 2, 5, 4
+  0042e74  lvlx 3, 6, 7
   0042e78  vspltw 2, 2, 0
   0042e7c  b 0x42ea0
   0042e80  lis 4, 4
@@ -616,9 +616,9 @@ UpdateCamera_21:   # 0x42b48, 0x122c bytes
   0042e88  addi 4, 4, 11036
   0042e8c  lis 6, 114
   0042e90  li 7, -3056
-  0042e94  <unknown>
+  0042e94  lvlx 2, 5, 4
   0042e98  vspltw 2, 2, 0
-  0042e9c  <unknown>
+  0042e9c  lvlx 3, 7, 6
   0042ea0  vspltisw 4, -1
   0042ea4  li 4, 456
   0042ea8  vspltw 3, 3, 0
@@ -661,11 +661,11 @@ UpdateCamera_21:   # 0x42b48, 0x122c bytes
   0042f3c  li 7, -3056
   0042f40  vslw 2, 2, 2
   0042f44  li 8, 5
-  0042f48  <unknown>
+  0042f48  lvlx 3, 6, 4
   0042f4c  li 9, 8
   0042f50  li 6, 456
   0042f54  vspltw 3, 3, 0
-  0042f58  <unknown>
+  0042f58  lvlx 4, 7, 5
   0042f5c  vmaddfp 2, 4, 3, 2
   0042f60  vspltisw 3, -1
   0042f64  vslw 3, 3, 3
@@ -673,8 +673,8 @@ UpdateCamera_21:   # 0x42b48, 0x122c bytes
   0042f6c  vspltw 2, 2, 0
   0042f70  stvewx 2, 6, 3
   0042f74  stb 8, 188(26)
-  0042f78  <unknown>
-  0042f7c  <unknown>
+  0042f78  lvlx 2, 9, 4
+  0042f7c  lvlx 4, 7, 5
   0042f80  vspltw 2, 2, 0
   0042f84  lwz 3, 120(26)
   0042f88  vmaddfp 2, 4, 2, 3
@@ -688,17 +688,17 @@ UpdateCamera_21:   # 0x42b48, 0x122c bytes
   0042fa8  addi 4, 4, 11036
   0042fac  lis 6, 114
   0042fb0  li 7, -3056
-  0042fb4  <unknown>
+  0042fb4  lvlx 2, 5, 4
   0042fb8  vspltw 2, 2, 0
-  0042fbc  <unknown>
+  0042fbc  lvlx 3, 7, 6
   0042fc0  b 0x42fe4
   0042fc4  lis 4, 4
   0042fc8  li 5, 12
   0042fcc  addi 4, 4, 11036
   0042fd0  li 6, -3056
   0042fd4  lis 7, 114
-  0042fd8  <unknown>
-  0042fdc  <unknown>
+  0042fd8  lvlx 2, 5, 4
+  0042fdc  lvlx 3, 6, 7
   0042fe0  vspltw 2, 2, 0
   0042fe4  vspltisw 4, -1
   0042fe8  vspltw 3, 3, 0
@@ -723,11 +723,11 @@ UpdateCamera_21:   # 0x42b48, 0x122c bytes
   0043034  li 7, -3056
   0043038  vslw 2, 2, 2
   004303c  li 8, 5
-  0043040  <unknown>
+  0043040  lvlx 3, 6, 4
   0043044  li 9, 8
   0043048  li 6, 456
   004304c  vspltw 3, 3, 0
-  0043050  <unknown>
+  0043050  lvlx 4, 7, 5
   0043054  vmaddfp 2, 4, 3, 2
   0043058  vspltisw 3, -1
   004305c  vslw 3, 3, 3
@@ -735,8 +735,8 @@ UpdateCamera_21:   # 0x42b48, 0x122c bytes
   0043064  vspltw 2, 2, 0
   0043068  stvewx 2, 6, 3
   004306c  stb 8, 188(27)
-  0043070  <unknown>
-  0043074  <unknown>
+  0043070  lvlx 2, 9, 4
+  0043074  lvlx 4, 7, 5
   0043078  vspltw 2, 2, 0
   004307c  lwz 3, 120(27)
   0043080  vmaddfp 2, 4, 2, 3
@@ -750,17 +750,17 @@ UpdateCamera_21:   # 0x42b48, 0x122c bytes
   00430a0  addi 4, 4, 11036
   00430a4  lis 6, 114
   00430a8  li 7, -3056
-  00430ac  <unknown>
+  00430ac  lvlx 2, 5, 4
   00430b0  vspltw 2, 2, 0
-  00430b4  <unknown>
+  00430b4  lvlx 3, 7, 6
   00430b8  b 0x430dc
   00430bc  lis 4, 4
   00430c0  li 5, 12
   00430c4  addi 4, 4, 11036
   00430c8  li 6, -3056
   00430cc  lis 7, 114
-  00430d0  <unknown>
-  00430d4  <unknown>
+  00430d0  lvlx 2, 5, 4
+  00430d4  lvlx 3, 6, 7
   00430d8  vspltw 2, 2, 0
   00430dc  vspltisw 4, -1
   00430e0  vspltw 3, 3, 0
@@ -791,11 +791,11 @@ UpdateCamera_21:   # 0x42b48, 0x122c bytes
   0043144  li 7, -3056
   0043148  vslw 2, 2, 2
   004314c  li 8, 5
-  0043150  <unknown>
+  0043150  lvlx 3, 6, 4
   0043154  li 9, 8
   0043158  li 6, 456
   004315c  vspltw 3, 3, 0
-  0043160  <unknown>
+  0043160  lvlx 4, 7, 5
   0043164  vmaddfp 2, 4, 3, 2
   0043168  vspltisw 3, -1
   004316c  vslw 3, 3, 3
@@ -803,8 +803,8 @@ UpdateCamera_21:   # 0x42b48, 0x122c bytes
   0043174  vspltw 2, 2, 0
   0043178  stvewx 2, 6, 3
   004317c  stb 8, 188(27)
-  0043180  <unknown>
-  0043184  <unknown>
+  0043180  lvlx 2, 9, 4
+  0043184  lvlx 4, 7, 5
   0043188  vspltw 2, 2, 0
   004318c  lwz 3, 120(27)
   0043190  vmaddfp 2, 4, 2, 3
@@ -818,17 +818,17 @@ UpdateCamera_21:   # 0x42b48, 0x122c bytes
   00431b0  addi 4, 4, 11036
   00431b4  lis 6, 114
   00431b8  li 7, -3056
-  00431bc  <unknown>
+  00431bc  lvlx 2, 5, 4
   00431c0  vspltw 2, 2, 0
-  00431c4  <unknown>
+  00431c4  lvlx 3, 7, 6
   00431c8  b 0x431ec
   00431cc  lis 4, 4
   00431d0  li 5, 12
   00431d4  addi 4, 4, 11036
   00431d8  li 6, -3056
   00431dc  lis 7, 114
-  00431e0  <unknown>
-  00431e4  <unknown>
+  00431e0  lvlx 2, 5, 4
+  00431e4  lvlx 3, 6, 7
   00431e8  vspltw 2, 2, 0
   00431ec  vspltisw 4, -1
   00431f0  vspltw 3, 3, 0

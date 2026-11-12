@@ -864,9 +864,9 @@ FUN_003216b8:   # 0x3216b8, 0x2b8 bytes
   032190c  stb 6, 32(31)
   0321910  li 3, -3056
   0321914  stw 8, 148(31)
-  0321918  <unknown>
+  0321918  lvlx 2, 4, 5
   032191c  vspltw 2, 2, 0
-  0321920  <unknown>
+  0321920  lvlx 4, 3, 7
   0321924  li 3, 102
   0321928  vmaddfp 2, 4, 2, 3
   032192c  vctsxs 2, 2, 0
@@ -1185,8 +1185,8 @@ UpdateMoby_270:   # 0x321a20, 0x1f7c bytes
   0321e94  li 6, -3056
   0321e98  vslw 2, 2, 2
   0321e9c  stfs 1, 120(30)
-  0321ea0  <unknown>
-  0321ea4  <unknown>
+  0321ea0  lvlx 3, 4, 3
+  0321ea4  lvlx 4, 6, 5
   0321ea8  li 3, 124
   0321eac  vspltw 3, 3, 0
   0321eb0  vmaddfp 2, 4, 3, 2

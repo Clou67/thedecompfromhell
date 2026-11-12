@@ -305,17 +305,17 @@ UpdateMoby_868:   # 0x4a70f0, 0x890 bytes
   04a757c  lis 3, 74
   04a7580  vslw 4, 4, 4
   04a7584  stb 5, 32(31)
-  04a7588  <unknown>
-  04a758c  <unknown>
+  04a7588  lvlx 2, 4, 30
+  04a758c  lvrx 3, 6, 30
   04a7590  li 4, 12
   04a7594  addi 3, 3, 28892
   04a7598  vor 2, 2, 3
   04a759c  vcfsx 2, 2, 0
-  04a75a0  <unknown>
+  04a75a0  lvlx 3, 4, 3
   04a75a4  li 3, -3056
   04a75a8  vspltw 3, 3, 0
   04a75ac  lis 4, 114
-  04a75b0  <unknown>
+  04a75b0  lvlx 5, 3, 4
   04a75b4  li 3, 232
   04a75b8  vaddfp 2, 2, 3
   04a75bc  vmaddfp 2, 5, 2, 4
@@ -503,17 +503,17 @@ UpdateMoby_868:   # 0x4a70f0, 0x890 bytes
   04a7894  lis 3, 74
   04a7898  vslw 4, 4, 4
   04a789c  stb 5, 32(31)
-  04a78a0  <unknown>
-  04a78a4  <unknown>
+  04a78a0  lvlx 2, 4, 30
+  04a78a4  lvrx 3, 6, 30
   04a78a8  li 4, 12
   04a78ac  addi 3, 3, 28892
   04a78b0  vor 2, 2, 3
   04a78b4  vcfsx 2, 2, 0
-  04a78b8  <unknown>
+  04a78b8  lvlx 3, 4, 3
   04a78bc  lis 3, 114
   04a78c0  vspltw 3, 3, 0
   04a78c4  li 4, -3056
-  04a78c8  <unknown>
+  04a78c8  lvlx 5, 4, 3
   04a78cc  li 3, 232
   04a78d0  vaddfp 2, 2, 3
   04a78d4  vmaddfp 2, 5, 2, 4

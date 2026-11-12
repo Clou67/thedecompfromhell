@@ -85,10 +85,10 @@ M602_003d6d70:   # 0x3d6d70, 0x46c bytes
   03d6dc8  stw 4, 24(30)
   03d6dcc  li 4, -3056
   03d6dd0  vslw 2, 2, 2
-  03d6dd4  <unknown>
+  03d6dd4  lvlx 3, 5, 3
   03d6dd8  li 3, 500
   03d6ddc  vspltw 3, 3, 0
-  03d6de0  <unknown>
+  03d6de0  lvlx 4, 4, 6
   03d6de4  vmaddfp 2, 4, 3, 2
   03d6de8  vctsxs 2, 2, 0
   03d6dec  vsplth 2, 2, 1
@@ -1753,9 +1753,9 @@ UpdateMoby_602:   # 0x3d7240, 0x18b0 bytes
   03d8834  lis 5, 114
   03d8838  li 7, -3056
   03d883c  vslw 2, 2, 2
-  03d8840  <unknown>
+  03d8840  lvlx 3, 6, 4
   03d8844  vspltw 3, 3, 0
-  03d8848  <unknown>
+  03d8848  lvlx 4, 7, 5
   03d884c  li 5, 188
   03d8850  vmaddfp 2, 4, 3, 2
   03d8854  lis 6, 133

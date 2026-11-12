@@ -857,10 +857,10 @@ UpdateMoby_788:   # 0x45d0f8, 0xd68 bytes
   045d828  lis 4, 114
   045d82c  li 6, -3056
   045d830  vslw 2, 2, 2
-  045d834  <unknown>
+  045d834  lvlx 3, 5, 3
   045d838  li 3, 392
   045d83c  vspltw 3, 3, 0
-  045d840  <unknown>
+  045d840  lvlx 4, 6, 4
   045d844  vmaddfp 2, 4, 3, 2
   045d848  vctsxs 2, 2, 0
   045d84c  vspltw 2, 2, 0

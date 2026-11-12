@@ -69,11 +69,11 @@ FUN_003affa0:   # 0x3affa0, 0x1a0 bytes
   03b0088  lis 6, 114
   03b008c  li 7, -3056
   03b0090  stw 4, 24(25)
-  03b0094  <unknown>
+  03b0094  lvlx 3, 5, 29
   03b0098  vslw 2, 2, 2
   03b009c  vspltw 3, 3, 0
   03b00a0  li 5, 20
-  03b00a4  <unknown>
+  03b00a4  lvlx 4, 7, 6
   03b00a8  ori 3, 27, 0
   03b00ac  li 6, 1
   03b00b0  vmaddfp 2, 4, 3, 2

@@ -365,8 +365,8 @@ InitCamera_14:   # 0x3ace0, 0x1b8 bytes
   003adbc  stfs 2, 4(29)
   003adc0  stfs 3, 8(29)
   003adc4  stfs 4, 12(29)
-  003adc8  <unknown>
-  003adcc  <unknown>
+  003adc8  lvlx 2, 0, 7
+  003adcc  lvlx 4, 4, 6
   003add0  vspltw 2, 2, 0
   003add4  li 6, 48
   003add8  lwz 3, 16468(3)

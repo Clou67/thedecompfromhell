@@ -33,7 +33,7 @@ M1224_0020ca00:   # 0x20ca00, 0x260 bytes
   020ca74  vspltisw 2, 0
   020ca78  li 7, 0
   020ca7c  addi 3, 3, -13832
-  020ca80  <unknown>
+  020ca80  lvlx 3, 0, 3
   020ca84  lfs 1, 0(3)
   020ca88  vspltw 3, 3, 0
   020ca8c  vcmpgefp. 2, 2, 3
@@ -1254,18 +1254,18 @@ UpdateMoby_1224:   # 0x20dd00, 0x3f8 bytes
   020ddc4  lis 5, 33
   020ddc8  addi 4, 3, 16
   020ddcc  vslw 4, 4, 4
-  020ddd0  <unknown>
+  020ddd0  lvlx 2, 3, 30
   020ddd4  addi 3, 5, -8972
-  020ddd8  <unknown>
+  020ddd8  lvrx 3, 4, 30
   020dddc  li 4, 4
   020dde0  vor 2, 2, 3
   020dde4  lis 5, 165
   020dde8  vcfsx 2, 2, 0
-  020ddec  <unknown>
+  020ddec  lvlx 3, 4, 3
   020ddf0  lis 3, 114
   020ddf4  vspltw 3, 3, 0
   020ddf8  li 4, -3056
-  020ddfc  <unknown>
+  020ddfc  lvlx 5, 4, 3
   020de00  li 3, 16
   020de04  li 4, 2
   020de08  vaddfp 2, 2, 3
@@ -1314,9 +1314,9 @@ UpdateMoby_1224:   # 0x20dd00, 0x3f8 bytes
   020deb4  addi 5, 3, 16
   020deb8  vspltisw 4, -1
   020debc  stb 4, 32(31)
-  020dec0  <unknown>
+  020dec0  lvlx 2, 3, 30
   020dec4  li 4, 4
-  020dec8  <unknown>
+  020dec8  lvrx 3, 5, 30
   020decc  lis 3, 33
   020ded0  lis 5, 114
   020ded4  vslw 4, 4, 4
@@ -1324,12 +1324,12 @@ UpdateMoby_1224:   # 0x20dd00, 0x3f8 bytes
   020dedc  addi 3, 3, -8972
   020dee0  vspltisw 3, -16
   020dee4  vsraw 2, 2, 3
-  020dee8  <unknown>
+  020dee8  lvlx 3, 4, 3
   020deec  li 3, -3056
   020def0  vspltw 3, 3, 0
   020def4  vcfsx 2, 2, 0
   020def8  li 4, 16
-  020defc  <unknown>
+  020defc  lvlx 5, 3, 5
   020df00  ori 3, 31, 0
   020df04  vaddfp 2, 2, 3
   020df08  vmaddfp 2, 5, 2, 4
@@ -1351,9 +1351,9 @@ UpdateMoby_1224:   # 0x20dd00, 0x3f8 bytes
   020df48  addi 5, 3, 16
   020df4c  vspltisw 4, -1
   020df50  stb 4, 32(31)
-  020df54  <unknown>
+  020df54  lvlx 2, 3, 30
   020df58  li 4, 4
-  020df5c  <unknown>
+  020df5c  lvrx 3, 5, 30
   020df60  lis 3, 33
   020df64  lis 5, 114
   020df68  vslw 4, 4, 4
@@ -1361,11 +1361,11 @@ UpdateMoby_1224:   # 0x20dd00, 0x3f8 bytes
   020df70  addi 3, 3, -8972
   020df74  vspltisw 3, -16
   020df78  vsraw 2, 2, 3
-  020df7c  <unknown>
+  020df7c  lvlx 3, 4, 3
   020df80  li 3, -3056
   020df84  vspltw 3, 3, 0
   020df88  vcfsx 2, 2, 0
-  020df8c  <unknown>
+  020df8c  lvlx 5, 3, 5
   020df90  li 3, 16
   020df94  vaddfp 2, 2, 3
   020df98  vmaddfp 2, 5, 2, 4
@@ -1376,21 +1376,21 @@ UpdateMoby_1224:   # 0x20dd00, 0x3f8 bytes
   020dfac  li 3, 4
   020dfb0  vspltisw 4, -1
   020dfb4  addi 4, 3, 16
-  020dfb8  <unknown>
+  020dfb8  lvlx 2, 3, 30
   020dfbc  lis 3, 33
-  020dfc0  <unknown>
+  020dfc0  lvrx 3, 4, 30
   020dfc4  addi 3, 3, -8972
   020dfc8  vslw 4, 4, 4
   020dfcc  vor 2, 2, 3
   020dfd0  li 4, 4
   020dfd4  vspltisw 3, -16
   020dfd8  vsraw 2, 2, 3
-  020dfdc  <unknown>
+  020dfdc  lvlx 3, 4, 3
   020dfe0  lis 3, 114
   020dfe4  vspltw 3, 3, 0
   020dfe8  li 4, -3056
   020dfec  vcfsx 2, 2, 0
-  020dff0  <unknown>
+  020dff0  lvlx 5, 4, 3
   020dff4  li 3, 16
   020dff8  vaddfp 2, 2, 3
   020dffc  vmaddfp 2, 5, 2, 4

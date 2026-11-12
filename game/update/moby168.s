@@ -555,9 +555,9 @@ UpdateMoby_168:   # 0x2ab988, 0x12d8 bytes
   02aba9c  lis 5, 114
   02abaa0  li 6, -3056
   02abaa4  vslw 2, 2, 2
-  02abaa8  <unknown>
+  02abaa8  lvlx 3, 4, 3
   02abaac  vspltw 3, 3, 0
-  02abab0  <unknown>
+  02abab0  lvlx 4, 6, 5
   02abab4  vmaddfp 2, 4, 3, 2
   02abab8  vctsxs 2, 2, 0
   02ababc  vspltw 2, 2, 0
@@ -923,8 +923,8 @@ UpdateMoby_168:   # 0x2ab988, 0x12d8 bytes
   02ac05c  addi 3, 3, -18176
   02ac060  li 5, -3056
   02ac064  vslw 2, 2, 2
-  02ac068  <unknown>
-  02ac06c  <unknown>
+  02ac068  lvlx 3, 4, 3
+  02ac06c  lvlx 4, 5, 28
   02ac070  vspltw 3, 3, 0
   02ac074  vmaddfp 2, 4, 3, 2
   02ac078  vctsxs 2, 2, 0
@@ -1156,11 +1156,11 @@ UpdateMoby_168:   # 0x2ab988, 0x12d8 bytes
   02ac400  li 4, -3056
   02ac404  lis 26, 114
   02ac408  ori 29, 24, 0
-  02ac40c  <unknown>
+  02ac40c  lvlx 3, 3, 23
   02ac410  vslw 2, 2, 2
   02ac414  vspltw 3, 3, 0
   02ac418  li 3, 20
-  02ac41c  <unknown>
+  02ac41c  lvlx 4, 4, 28
   02ac420  addic 25, 1, 144
   02ac424  vmaddfp 2, 4, 3, 2
   02ac428  vctsxs 2, 2, 0

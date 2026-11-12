@@ -8,8 +8,8 @@ M1660_002a8470:   # 0x2a8470, 0x7c bytes
   02a8480  li 5, -3056
   02a8484  vslw 2, 2, 2
   02a8488  lis 7, 123
-  02a848c  <unknown>
-  02a8490  <unknown>
+  02a848c  lvlx 3, 0, 3
+  02a8490  lvlx 4, 5, 4
   02a8494  addic 7, 7, 23060
   02a8498  vspltw 3, 3, 0
   02a849c  lis 4, 251
@@ -25,7 +25,7 @@ M1660_002a8470:   # 0x2a8470, 0x7c bytes
   02a84c4  vctsxs 2, 2, 0
   02a84c8  vspltw 2, 2, 0
   02a84cc  stvewx 2, 5, 4
-  02a84d0  <unknown>
+  02a84d0  lvlx 2, 6, 3
   02a84d4  vspltw 2, 2, 0
   02a84d8  vmaddfp 2, 4, 2, 3
   02a84dc  vctsxs 2, 2, 0

@@ -2618,19 +2618,19 @@ M1140_001de6a0:   # 0x1de6a0, 0x708 bytes
   01dea28  addi 4, 3, 16
   01dea2c  li 6, 20
   01dea30  vspltisw 6, -1
-  01dea34  <unknown>
+  01dea34  lvlx 2, 3, 31
   01dea38  li 3, 292
-  01dea3c  <unknown>
-  01dea40  <unknown>
+  01dea3c  lvrx 3, 4, 31
+  01dea40  lvlx 4, 5, 30
   01dea44  vor 2, 2, 3
   01dea48  addi 4, 3, 16
   01dea4c  lfs 1, 16(30)
   01dea50  li 5, 304
-  01dea54  <unknown>
+  01dea54  lvlx 3, 3, 31
   01dea58  li 8, 308
   01dea5c  vsubfp 2, 2, 4
   01dea60  li 3, 24
-  01dea64  <unknown>
+  01dea64  lvrx 4, 4, 31
   01dea68  li 7, -3056
   01dea6c  lis 4, 30
   01dea70  vor 3, 3, 4
@@ -2644,7 +2644,7 @@ M1140_001de6a0:   # 0x1de6a0, 0x708 bytes
   01dea90  vspltw 4, 2, 0
   01dea94  vslw 10, 10, 10
   01dea98  stvewx 4, 5, 31
-  01dea9c  <unknown>
+  01dea9c  lvlx 4, 6, 30
   01deaa0  lfs 2, 20(30)
   01deaa4  vsubfp 3, 3, 4
   01deaa8  lfs 3, 300(31)
@@ -2652,18 +2652,18 @@ M1140_001de6a0:   # 0x1de6a0, 0x708 bytes
   01deab0  vslw 12, 12, 12
   01deab4  vspltw 4, 3, 0
   01deab8  stvewx 4, 8, 31
-  01deabc  <unknown>
+  01deabc  lvlx 4, 3, 30
   01deac0  stfs 3, 316(31)
   01deac4  lfs 3, 52(9)
-  01deac8  <unknown>
-  01deacc  <unknown>
+  01deac8  lvlx 5, 6, 9
+  01deacc  lvlx 7, 7, 4
   01dead0  vspltw 5, 5, 0
   01dead4  lfs 4, -3056(4)
   01dead8  li 3, 60
   01deadc  fmuls 3, 4, 3
   01deae0  vmaddfp 5, 7, 5, 6
   01deae4  lfs 4, 56(9)
-  01deae8  <unknown>
+  01deae8  lvlx 6, 3, 9
   01deaec  vspltisw 7, -1
   01deaf0  vspltw 6, 6, 0
   01deaf4  li 3, 296
@@ -2672,7 +2672,7 @@ M1140_001de6a0:   # 0x1de6a0, 0x708 bytes
   01deb00  fctidz 3, 3
   01deb04  vctsxs 5, 5, 0
   01deb08  addi 4, 3, 16
-  01deb0c  <unknown>
+  01deb0c  lvlx 9, 3, 31
   01deb10  fsubs 2, 5, 2
   01deb14  li 6, 312
   01deb18  fcfid 3, 3
@@ -2686,7 +2686,7 @@ M1140_001de6a0:   # 0x1de6a0, 0x708 bytes
   01deb38  vnmsubfp 11, 8, 5, 6
   01deb3c  fsubs 1, 4, 1
   01deb40  vmaddfp 7, 8, 11, 7
-  01deb44  <unknown>
+  01deb44  lvrx 8, 4, 31
   01deb48  vor 8, 9, 8
   01deb4c  vslw 9, 13, 13
   01deb50  vspltisw 13, -1

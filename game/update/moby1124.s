@@ -92,13 +92,13 @@ M1124_001d64b0:   # 0x1d64b0, 0x30c bytes
   01d6610  nop
   01d6614  li 3, 4
   01d6618  ori 23, 1, 0
-  01d661c  <unknown>
+  01d661c  lvlx 29, 0, 30
   01d6620  li 22, 0
   01d6624  vspltisw 31, 0
   01d6628  lis 25, 118
   01d662c  vspltw 29, 29, 0
   01d6630  addic 24, 23, 240
-  01d6634  <unknown>
+  01d6634  lvlx 30, 3, 30
   01d6638  li 27, 296
   01d663c  ori 30, 22, 0
   01d6640  ori 31, 24, 0
@@ -136,7 +136,7 @@ M1124_001d64b0:   # 0x1d64b0, 0x30c bytes
   01d66c0  lfs 1, 24(28)
   01d66c4  fadds 1, 3, 1
   01d66c8  stfs 1, 8(26)
-  01d66cc  <unknown>
+  01d66cc  lvlx 3, 0, 27
   01d66d0  addic 26, 26, 64
   01d66d4  vaddfp 2, 2, 3
   01d66d8  vspltw 2, 2, 0

@@ -299,7 +299,7 @@ UpdateMoby_1326:   # 0x24a600, 0x514 bytes
   024aa80  nop
   024aa84  lis 3, 114
   024aa88  li 4, -3056
-  024aa8c  <unknown>
+  024aa8c  lvlx 2, 4, 3
   024aa90  b 0x24aab0
   024aa94  li 3, 10012
   024aa98  li 4, -1
@@ -307,7 +307,7 @@ UpdateMoby_1326:   # 0x24a600, 0x514 bytes
   024aaa0  nop
   024aaa4  lis 3, 114
   024aaa8  li 4, -3056
-  024aaac  <unknown>
+  024aaac  lvlx 2, 4, 3
   024aab0  lis 3, 37
   024aab4  vspltisw 3, -1
   024aab8  li 4, 16
@@ -316,7 +316,7 @@ UpdateMoby_1326:   # 0x24a600, 0x514 bytes
   024aac4  li 6, 4
   024aac8  vslw 3, 3, 3
   024aacc  li 5, 0
-  024aad0  <unknown>
+  024aad0  lvlx 4, 4, 3
   024aad4  lis 3, 161
   024aad8  vspltw 4, 4, 0
   024aadc  li 4, 180

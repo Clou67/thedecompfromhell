@@ -157,8 +157,8 @@ M1488_0028cce0:   # 0x28cce0, 0x22c bytes
   028ce14  stfs 1, 28(24)
   028ce18  lfs 1, 24(26)
   028ce1c  stfs 1, 4(24)
-  028ce20  <unknown>
-  028ce24  <unknown>
+  028ce20  lvlx 2, 0, 30
+  028ce24  lvlx 4, 3, 4
   028ce28  vspltw 2, 2, 0
   028ce2c  li 3, 14
   028ce30  lis 29, 251

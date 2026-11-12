@@ -751,8 +751,8 @@ M170_002ad9c0:   # 0x2ad9c0, 0x380 bytes
   02adcc4  vslw 2, 2, 2
   02adcc8  stfs 1, 0(29)
   02adccc  stb 4, 103(31)
-  02adcd0  <unknown>
-  02adcd4  <unknown>
+  02adcd0  lvlx 3, 6, 3
+  02adcd4  lvlx 4, 7, 5
   02adcd8  vspltw 3, 3, 0
   02adcdc  li 5, 38
   02adce0  addic 4, 31, 96
@@ -909,7 +909,7 @@ UpdateMoby_170:   # 0x2add88, 0x60c bytes
   02adf7c  li 7, 216
   02adf80  addic 4, 1, 208
   02adf84  stvx 2, 3, 1
-  02adf88  <unknown>
+  02adf88  lvlx 2, 5, 6
   02adf8c  lwz 3, 112(30)
   02adf90  vspltw 2, 2, 0
   02adf94  extsw 3, 3

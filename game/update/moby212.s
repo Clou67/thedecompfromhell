@@ -819,9 +819,9 @@ M1412_002f05c0:   # 0x2f05c0, 0x294 bytes
   02f06a0  stfs 1, 12(31)
   02f06a4  stfs 31, 44(30)
   02f06a8  stw 4, 64(31)
-  02f06ac  <unknown>
+  02f06ac  lvlx 2, 0, 28
   02f06b0  li 4, 76
-  02f06b4  <unknown>
+  02f06b4  lvlx 4, 5, 7
   02f06b8  vspltw 2, 2, 0
   02f06bc  vmaddfp 2, 4, 2, 3
   02f06c0  vctsxs 2, 2, 0
@@ -1147,10 +1147,10 @@ M1412_002f0898:   # 0x2f0898, 0x428 bytes
   02f0bfc  stw 4, 148(30)
   02f0c00  li 4, -3056
   02f0c04  vslw 2, 2, 2
-  02f0c08  <unknown>
+  02f0c08  lvlx 3, 6, 3
   02f0c0c  li 3, 76
   02f0c10  vspltw 3, 3, 0
-  02f0c14  <unknown>
+  02f0c14  lvlx 4, 4, 5
   02f0c18  vmaddfp 2, 4, 3, 2
   02f0c1c  vctsxs 2, 2, 0
   02f0c20  vsplth 2, 2, 1
@@ -1358,8 +1358,8 @@ UpdateMoby_212:   # 0x2f0cf8, 0x92c bytes
   02f0f78  li 5, -3056
   02f0f7c  addi 4, 4, 3264
   02f0f80  li 6, 16
-  02f0f84  <unknown>
-  02f0f88  <unknown>
+  02f0f84  lvlx 2, 5, 3
+  02f0f88  lvlx 3, 6, 4
   02f0f8c  vspltw 3, 3, 0
   02f0f90  b 0x2f0fb4
   02f0f94  lis 5, 47
@@ -1367,8 +1367,8 @@ UpdateMoby_212:   # 0x2f0cf8, 0x92c bytes
   02f0f9c  li 6, -3056
   02f0fa0  li 4, 20
   02f0fa4  addi 5, 5, 3264
-  02f0fa8  <unknown>
-  02f0fac  <unknown>
+  02f0fa8  lvlx 2, 6, 3
+  02f0fac  lvlx 3, 4, 5
   02f0fb0  vspltw 3, 3, 0
   02f0fb4  vspltisw 4, -1
   02f0fb8  li 3, 68
@@ -1837,9 +1837,9 @@ M1412_002f1710:   # 0x2f1710, 0x284 bytes
   02f172c  bf 2, 0x2f1980
   02f1730  li 3, 264
   02f1734  addi 4, 3, 16
-  02f1738  <unknown>
+  02f1738  lvlx 2, 3, 31
   02f173c  lwz 3, 264(31)
-  02f1740  <unknown>
+  02f1740  lvrx 3, 4, 31
   02f1744  cmpwi 3, 0
   02f1748  vor 2, 2, 3
   02f174c  bt 2, 0x2f1980
@@ -1848,7 +1848,7 @@ M1412_002f1710:   # 0x2f1710, 0x284 bytes
   02f1758  li 5, -19392
   02f175c  std 3, 112(1)
   02f1760  lwz 3, -19392(4)
-  02f1764  <unknown>
+  02f1764  lvlx 3, 5, 4
   02f1768  lis 4, 47
   02f176c  vcfsx 3, 3, 0
   02f1770  extsw 3, 3
@@ -1859,14 +1859,14 @@ M1412_002f1710:   # 0x2f1710, 0x284 bytes
   02f1784  std 3, 112(1)
   02f1788  vspltisw 8, -1
   02f178c  vslw 4, 4, 4
-  02f1790  <unknown>
+  02f1790  lvlx 6, 5, 4
   02f1794  lfs 2, 0(4)
   02f1798  vspltw 6, 6, 0
   02f179c  lfd 3, 112(1)
   02f17a0  vrefp 5, 3
   02f17a4  fcfid 3, 3
   02f17a8  vspltisw 10, -1
-  02f17ac  <unknown>
+  02f17ac  lvlx 9, 0, 4
   02f17b0  li 3, 8
   02f17b4  fcfid 1, 1
   02f17b8  vspltisw 11, -1
@@ -1887,7 +1887,7 @@ M1412_002f1710:   # 0x2f1710, 0x284 bytes
   02f17f4  vslw 8, 8, 8
   02f17f8  vnmsubfp 7, 4, 3, 6
   02f17fc  vmaddfp 4, 4, 7, 5
-  02f1800  <unknown>
+  02f1800  lvlx 5, 3, 4
   02f1804  li 3, 12
   02f1808  lfs 4, 12(4)
   02f180c  vspltw 5, 5, 0
@@ -1895,11 +1895,11 @@ M1412_002f1710:   # 0x2f1710, 0x284 bytes
   02f1814  vslw 7, 7, 7
   02f1818  vnmsubfp 3, 4, 3, 6
   02f181c  vmaddfp 3, 4, 3, 8
-  02f1820  <unknown>
+  02f1820  lvlx 4, 3, 4
   02f1824  vspltw 4, 4, 0
   02f1828  li 3, 16
   02f182c  fmuls 1, 1, 2
-  02f1830  <unknown>
+  02f1830  lvlx 6, 3, 4
   02f1834  li 3, 20
   02f1838  vmaddfp 3, 3, 9, 10
   02f183c  vspltw 6, 6, 0
@@ -1925,7 +1925,7 @@ M1412_002f1710:   # 0x2f1710, 0x284 bytes
   02f188c  vslw 4, 4, 4
   02f1890  lfs 2, 16(4)
   02f1894  vmaddfp 3, 2, 2, 3
-  02f1898  <unknown>
+  02f1898  lvlx 8, 3, 4
   02f189c  li 3, 24
   02f18a0  lfs 4, 20(4)
   02f18a4  vspltw 8, 8, 0
@@ -1934,7 +1934,7 @@ M1412_002f1710:   # 0x2f1710, 0x284 bytes
   02f18b0  fmuls 5, 3, 1
   02f18b4  vmaddfp 5, 3, 4, 5
   02f18b8  vmaddfp 2, 4, 6, 2
-  02f18bc  <unknown>
+  02f18bc  lvlx 6, 3, 4
   02f18c0  vslw 4, 9, 9
   02f18c4  fmadds 1, 5, 2, 1
   02f18c8  li 3, 28
@@ -1948,7 +1948,7 @@ M1412_002f1710:   # 0x2f1710, 0x284 bytes
   02f18e8  fmadds 1, 7, 4, 1
   02f18ec  vmaddfp 3, 3, 7, 4
   02f18f0  vmaddfp 2, 7, 5, 2
-  02f18f4  <unknown>
+  02f18f4  lvlx 4, 3, 4
   02f18f8  lis 3, 128
   02f18fc  vspltw 4, 4, 0
   02f1900  fmuls 3, 3, 5
@@ -1956,9 +1956,9 @@ M1412_002f1710:   # 0x2f1710, 0x284 bytes
   02f1908  lfs 4, 28(4)
   02f190c  vmaddfp 2, 3, 4, 2
   02f1910  vspltisw 3, -1
-  02f1914  <unknown>
+  02f1914  lvlx 4, 5, 3
   02f1918  fmadds 1, 3, 4, 1
-  02f191c  <unknown>
+  02f191c  lvlx 5, 6, 4
   02f1920  li 5, 260
   02f1924  vslw 3, 3, 3
   02f1928  li 6, 256

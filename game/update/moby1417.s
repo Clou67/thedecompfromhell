@@ -841,14 +841,14 @@ UpdateMoby_1417_FlyingCar:   # 0x272248, 0x9b8 bytes
   027244c  li 6, 8
   0272450  addi 5, 7, 8748
   0272454  vslw 4, 4, 4
-  0272458  <unknown>
+  0272458  lvlx 2, 3, 4
   027245c  lis 3, 114
   0272460  vcfsx 2, 2, 0
   0272464  li 4, -3056
-  0272468  <unknown>
+  0272468  lvlx 3, 6, 5
   027246c  vspltw 3, 3, 0
   0272470  li 5, 0
-  0272474  <unknown>
+  0272474  lvlx 5, 4, 3
   0272478  li 4, 140
   027247c  lwz 3, 160(30)
   0272480  cmpwi 3, 0
@@ -1028,10 +1028,10 @@ UpdateMoby_1417_FlyingCar:   # 0x272248, 0x9b8 bytes
   0272738  lis 5, 114
   027273c  li 6, -3056
   0272740  vslw 2, 2, 2
-  0272744  <unknown>
+  0272744  lvlx 3, 4, 3
   0272748  li 3, 204
   027274c  vspltw 3, 3, 0
-  0272750  <unknown>
+  0272750  lvlx 4, 6, 5
   0272754  vmaddfp 2, 4, 3, 2
   0272758  vctsxs 2, 2, 0
   027275c  vspltw 2, 2, 0
@@ -1099,18 +1099,18 @@ UpdateMoby_1417_FlyingCar:   # 0x272248, 0x9b8 bytes
   0272854  lis 8, 39
   0272858  li 4, 8
   027285c  sth 3, 52(31)
-  0272860  <unknown>
+  0272860  lvlx 2, 7, 5
   0272864  addi 3, 8, 8748
   0272868  lwz 5, 16(6)
   027286c  vcfsx 2, 2, 0
   0272870  vslw 4, 4, 4
   0272874  stw 5, 148(31)
   0272878  lis 5, 114
-  027287c  <unknown>
+  027287c  lvlx 3, 4, 3
   0272880  li 4, -3056
   0272884  vspltw 3, 3, 0
   0272888  li 6, 0
-  027288c  <unknown>
+  027288c  lvlx 5, 4, 5
   0272890  vaddfp 2, 2, 3
   0272894  li 4, 140
   0272898  li 5, 2

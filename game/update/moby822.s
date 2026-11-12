@@ -1607,8 +1607,8 @@ UpdateMoby_822:   # 0x477b98, 0x1008 bytes
   0478020  li 7, -1
   0478024  fneg 1, 1
   0478028  stfs 1, 20(28)
-  047802c  <unknown>
-  0478030  <unknown>
+  047802c  lvlx 3, 5, 3
+  0478030  lvlx 4, 6, 4
   0478034  vspltw 3, 3, 0
   0478038  li 4, 44
   047803c  li 5, 8
@@ -1619,7 +1619,7 @@ UpdateMoby_822:   # 0x477b98, 0x1008 bytes
   0478050  vctsxs 2, 2, 0
   0478054  vspltw 2, 2, 0
   0478058  stvewx 2, 4, 28
-  047805c  <unknown>
+  047805c  lvlx 2, 5, 3
   0478060  vspltw 2, 2, 0
   0478064  vmaddfp 2, 4, 2, 3
   0478068  vctsxs 2, 2, 0
@@ -2075,9 +2075,9 @@ UpdateMoby_822:   # 0x477b98, 0x1008 bytes
   0478770  clrldi 3, 3, 32
   0478774  vslw 2, 2, 2
   0478778  stfs 1, 120(3)
-  047877c  <unknown>
+  047877c  lvlx 3, 4, 25
   0478780  li 3, 44
-  0478784  <unknown>
+  0478784  lvlx 4, 6, 5
   0478788  vspltw 3, 3, 0
   047878c  vmaddfp 2, 4, 3, 2
   0478790  vctsxs 2, 2, 0

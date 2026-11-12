@@ -400,10 +400,10 @@ UpdateMoby_1377:   # 0x25d3a8, 0xb70 bytes
   025d8dc  lis 5, 114
   025d8e0  li 6, -3056
   025d8e4  vslw 2, 2, 2
-  025d8e8  <unknown>
+  025d8e8  lvlx 3, 4, 3
   025d8ec  li 3, 360
   025d8f0  vspltw 3, 3, 0
-  025d8f4  <unknown>
+  025d8f4  lvlx 4, 6, 5
   025d8f8  vmaddfp 2, 4, 3, 2
   025d8fc  vctsxs 2, 2, 0
   025d900  vspltw 2, 2, 0

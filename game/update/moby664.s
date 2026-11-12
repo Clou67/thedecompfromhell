@@ -126,10 +126,10 @@ UpdateMoby_664:   # 0x4088d0, 0x628 bytes
   0408a9c  vslw 3, 3, 3
   0408aa0  lfs 1, 8(4)
   0408aa4  lfs 2, -3056(5)
-  0408aa8  <unknown>
+  0408aa8  lvlx 2, 6, 4
   0408aac  fmuls 1, 2, 1
   0408ab0  vspltw 2, 2, 0
-  0408ab4  <unknown>
+  0408ab4  lvlx 4, 7, 5
   0408ab8  vmaddfp 2, 4, 2, 3
   0408abc  fctiwz 1, 1
   0408ac0  vctsxs 2, 2, 0

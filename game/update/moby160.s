@@ -132,10 +132,10 @@ M160_002a1a48:   # 0x2a1a48, 0x92c bytes
   02a1c48  lis 4, 114
   02a1c4c  li 5, -3056
   02a1c50  vslw 2, 2, 2
-  02a1c54  <unknown>
+  02a1c54  lvlx 3, 3, 28
   02a1c58  li 3, 160
   02a1c5c  vspltw 3, 3, 0
-  02a1c60  <unknown>
+  02a1c60  lvlx 4, 5, 4
   02a1c64  vmaddfp 2, 4, 3, 2
   02a1c68  vctsxs 2, 2, 0
   02a1c6c  vspltw 2, 2, 0
@@ -1506,10 +1506,10 @@ UpdateMoby_160:   # 0x2a2438, 0x1930 bytes
   02a327c  li 6, -3056
   02a3280  stw 24, 4(29)
   02a3284  stw 24, 0(29)
-  02a3288  <unknown>
+  02a3288  lvlx 2, 4, 5
   02a328c  vslw 3, 3, 3
   02a3290  vspltw 2, 2, 0
-  02a3294  <unknown>
+  02a3294  lvlx 4, 6, 3
   02a3298  li 3, 52
   02a329c  vmaddfp 2, 4, 2, 3
   02a32a0  vctsxs 2, 2, 0
@@ -2143,7 +2143,7 @@ UpdateMoby_160:   # 0x2a2438, 0x1930 bytes
   02a3c70  fmuls 2, 31, 2
   02a3c74  lfs 3, 188(7)
   02a3c78  lfs 4, 60(7)
-  02a3c7c  <unknown>
+  02a3c7c  lvlx 3, 4, 3
   02a3c80  vslw 2, 2, 2
   02a3c84  li 9, 360
   02a3c88  ori 4, 25, 0
@@ -2153,7 +2153,7 @@ UpdateMoby_160:   # 0x2a2438, 0x1930 bytes
   02a3c98  fsel 1, 1, 3, 2
   02a3c9c  fsubs 1, 4, 1
   02a3ca0  stfs 1, 352(30)
-  02a3ca4  <unknown>
+  02a3ca4  lvlx 4, 8, 7
   02a3ca8  vspltw 4, 4, 0
   02a3cac  vmaddfp 2, 3, 4, 2
   02a3cb0  vctsxs 2, 2, 0

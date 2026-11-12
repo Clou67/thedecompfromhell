@@ -174,14 +174,14 @@ FUN_004804e0:   # 0x4804e0, 0x390 bytes
   048076c  lis 5, 114
   0480770  li 8, 20
   0480774  li 9, 0
-  0480778  <unknown>
+  0480778  lvlx 3, 4, 3
   048077c  li 3, -3056
   0480780  vspltw 3, 3, 0
   0480784  li 7, 0
   0480788  ori 4, 30, 0
   048078c  vaddfp 2, 2, 3
   0480790  vslw 3, 4, 4
-  0480794  <unknown>
+  0480794  lvlx 4, 3, 5
   0480798  ori 6, 31, 0
   048079c  addic 3, 1, 112
   04807a0  li 5, 2
@@ -750,12 +750,12 @@ UpdateMoby_833:   # 0x480928, 0x9fc bytes
   048111c  fmadds 1, 3, 26, 1
   0481120  fmadds 1, 2, 25, 1
   0481124  stfs 1, 240(1)
-  0481128  <unknown>
-  048112c  <unknown>
-  0481130  <unknown>
+  0481128  lvlx 3, 3, 30
+  048112c  lvrx 4, 4, 30
+  0481130  lvlx 5, 5, 28
   0481134  vor 3, 3, 4
   0481138  vspltw 4, 5, 0
-  048113c  <unknown>
+  048113c  lvlx 5, 6, 28
   0481140  li 3, 16
   0481144  vspltw 5, 5, 0
   0481148  vsubfp 4, 4, 3
@@ -770,26 +770,26 @@ UpdateMoby_833:   # 0x480928, 0x9fc bytes
   048116c  vsel 3, 5, 3, 4
   0481170  vslw 4, 6, 6
   0481174  vspltisw 5, -1
-  0481178  <unknown>
+  0481178  lvlx 6, 3, 28
   048117c  vmaddfp 2, 3, 3, 2
   0481180  li 3, 20
   0481184  vspltw 6, 6, 0
   0481188  vslw 5, 5, 5
   048118c  vslw 7, 7, 7
-  0481190  <unknown>
-  0481194  <unknown>
+  0481190  lvlx 8, 3, 28
+  0481194  lvlx 9, 4, 31
   0481198  li 3, 28
   048119c  vspltw 8, 8, 0
   04811a0  li 4, 240
   04811a4  vsrw 9, 9, 10
-  04811a8  <unknown>
+  04811a8  lvlx 10, 5, 28
   04811ac  vmaddfp 4, 2, 3, 4
   04811b0  lis 5, 17839
   04811b4  ori 5, 5, 57190
   04811b8  vmaddfp 5, 2, 4, 5
   04811bc  vmaddfp 3, 4, 6, 3
   04811c0  vspltw 4, 10, 0
-  04811c4  <unknown>
+  04811c4  lvlx 6, 3, 28
   04811c8  lwz 3, 24(29)
   04811cc  vspltw 6, 6, 0
   04811d0  li 29, 128
@@ -811,7 +811,7 @@ UpdateMoby_833:   # 0x480928, 0x9fc bytes
   0481210  stvehx 5, 8, 1
   0481214  lvx 5, 10, 28
   0481218  lvx 6, 12, 28
-  048121c  <unknown>
+  048121c  lvlx 7, 29, 28
   0481220  vperm 2, 2, 5, 6
   0481224  vspltw 5, 7, 0
   0481228  lvx 6, 11, 28

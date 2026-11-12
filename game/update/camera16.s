@@ -273,8 +273,8 @@ Cam16_ModifyFollowCam:   # 0x3ca68, 0x804 bytes
   003cc68  addi 3, 3, -13776
   003cc6c  li 5, -3056
   003cc70  vslw 2, 2, 2
-  003cc74  <unknown>
-  003cc78  <unknown>
+  003cc74  lvlx 3, 0, 3
+  003cc78  lvlx 4, 5, 4
   003cc7c  vspltw 3, 3, 0
   003cc80  li 3, 48
   003cc84  li 4, 1

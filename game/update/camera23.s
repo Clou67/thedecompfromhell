@@ -369,10 +369,10 @@ Cam23_ModifyFollowCam:   # 0x44c00, 0x51c bytes
   0044ffc  vslw 2, 2, 2
   0045000  lfs 1, 32(4)
   0045004  lfs 2, -3056(5)
-  0045008  <unknown>
+  0045008  lvlx 3, 6, 4
   004500c  fmuls 1, 2, 1
   0045010  vspltw 3, 3, 0
-  0045014  <unknown>
+  0045014  lvlx 4, 7, 5
   0045018  vmaddfp 2, 4, 3, 2
   004501c  fctiwz 1, 1
   0045020  vctsxs 2, 2, 0

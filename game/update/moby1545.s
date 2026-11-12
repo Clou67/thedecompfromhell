@@ -128,7 +128,7 @@ UpdateMoby_1545:   # 0x2973c8, 0x33c bytes
   02975b8  lfs 30, 24(28)
   02975bc  li 30, 0
   02975c0  lfs 31, 28(28)
-  02975c4  <unknown>
+  02975c4  lvlx 31, 3, 28
   02975c8  vspltw 31, 31, 0
   02975cc  li 4, 128
   02975d0  li 3, 64
@@ -180,7 +180,7 @@ UpdateMoby_1545:   # 0x2973c8, 0x33c bytes
   0297688  vslw 2, 2, 2
   029768c  srawi 5, 28, 24
   0297690  li 6, 43
-  0297694  <unknown>
+  0297694  lvlx 3, 3, 4
   0297698  li 3, 10
   029769c  vmaddfp 2, 3, 31, 2
   02976a0  li 4, 2

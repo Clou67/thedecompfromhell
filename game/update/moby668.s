@@ -339,8 +339,8 @@ UpdateMoby_668:   # 0x40a4d8, 0x734 bytes
   040a5f0  addi 5, 4, 16
   040a5f4  lis 6, 16448
   040a5f8  stb 3, 32(31)
-  040a5fc  <unknown>
-  040a600  <unknown>
+  040a5fc  lvlx 2, 4, 30
+  040a600  lvrx 3, 5, 30
   040a604  li 4, 3
   040a608  lis 5, 65
   040a60c  stw 6, 32(30)
@@ -353,9 +353,9 @@ UpdateMoby_668:   # 0x40a4d8, 0x734 bytes
   040a628  vcfsx 2, 2, 0
   040a62c  lis 3, 114
   040a630  li 4, -3056
-  040a634  <unknown>
+  040a634  lvlx 3, 6, 5
   040a638  vspltw 3, 3, 0
-  040a63c  <unknown>
+  040a63c  lvlx 5, 4, 3
   040a640  li 3, 216
   040a644  lwz 31, 224(30)
   040a648  cmpwi 31, -1
@@ -410,17 +410,17 @@ UpdateMoby_668:   # 0x40a4d8, 0x734 bytes
   040a70c  lis 5, 65
   040a710  addi 4, 3, 16
   040a714  vslw 4, 4, 4
-  040a718  <unknown>
+  040a718  lvlx 2, 3, 30
   040a71c  addi 3, 5, -23392
-  040a720  <unknown>
+  040a720  lvrx 3, 4, 30
   040a724  li 4, 4
   040a728  vor 2, 2, 3
   040a72c  vcfsx 2, 2, 0
-  040a730  <unknown>
+  040a730  lvlx 3, 4, 3
   040a734  lis 3, 114
   040a738  vspltw 3, 3, 0
   040a73c  li 4, -3056
-  040a740  <unknown>
+  040a740  lvlx 5, 4, 3
   040a744  li 3, 216
   040a748  vaddfp 2, 2, 3
   040a74c  vmaddfp 2, 5, 2, 4
@@ -469,9 +469,9 @@ UpdateMoby_668:   # 0x40a4d8, 0x734 bytes
   040a7f8  lis 4, 161
   040a7fc  slwi 6, 6, 2
   040a800  addic 4, 4, -812
-  040a804  <unknown>
+  040a804  lvlx 2, 5, 3
   040a808  vspltw 2, 2, 0
-  040a80c  <unknown>
+  040a80c  lvlx 3, 6, 4
   040a810  lis 5, 114
   040a814  li 4, 4
   040a818  vcmpgtsw 4, 3, 2
@@ -481,19 +481,19 @@ UpdateMoby_668:   # 0x40a4d8, 0x734 bytes
   040a828  vrlw 6, 3, 4
   040a82c  vmulouh 3, 2, 3
   040a830  vmsumshm 2, 2, 6, 5
-  040a834  <unknown>
+  040a834  lvlx 5, 4, 3
   040a838  li 3, -3056
   040a83c  vspltw 5, 5, 0
   040a840  vslw 2, 2, 4
   040a844  vspltisw 4, -1
   040a848  vadduwm 2, 2, 3
   040a84c  vslw 4, 4, 4
-  040a850  <unknown>
+  040a850  lvlx 3, 3, 5
   040a854  vcfsx 2, 2, 0
   040a858  li 3, 212
   040a85c  addi 4, 3, 16
-  040a860  <unknown>
-  040a864  <unknown>
+  040a860  lvlx 6, 3, 30
+  040a864  lvrx 7, 4, 30
   040a868  vor 6, 6, 7
   040a86c  vaddfp 2, 2, 5
   040a870  li 4, 216

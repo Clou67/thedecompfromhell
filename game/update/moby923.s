@@ -93,7 +93,7 @@ M923_004b63a8:   # 0x4b63a8, 0x2fc bytes
   04b6478  lfs 29, 8(4)
   04b647c  lfs 30, 12(4)
   04b6480  std 26, 160(1)
-  04b6484  <unknown>
+  04b6484  lvlx 31, 5, 4
   04b6488  vspltw 31, 31, 0
   04b648c  li 3, 16
   04b6490  bl 0xfc620
@@ -129,7 +129,7 @@ M923_004b63a8:   # 0x4b63a8, 0x2fc bytes
   04b6508  li 5, 2
   04b650c  li 6, 127
   04b6510  vslw 2, 2, 2
-  04b6514  <unknown>
+  04b6514  lvlx 3, 4, 29
   04b6518  li 4, 10
   04b651c  li 7, 43
   04b6520  vmaddfp 2, 3, 31, 2

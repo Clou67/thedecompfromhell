@@ -105,7 +105,7 @@ M921_004b3950:   # 0x4b3950, 0x6b4 bytes
   04b3ac8  lfs 24, 4(3)
   04b3acc  lfs 23, 8(3)
   04b3ad0  lfs 22, 12(3)
-  04b3ad4  <unknown>
+  04b3ad4  lvlx 31, 4, 3
   04b3ad8  vspltw 31, 31, 0
   04b3adc  li 3, 16
   04b3ae0  bl 0xfc620
@@ -137,7 +137,7 @@ M921_004b3950:   # 0x4b3950, 0x6b4 bytes
   04b3b48  cmpwi 3, 0
   04b3b4c  bt 2, 0x4b3b80
   04b3b50  vspltisw 2, -1
-  04b3b54  <unknown>
+  04b3b54  lvlx 3, 22, 24
   04b3b58  li 4, 127
   04b3b5c  vslw 2, 2, 2
   04b3b60  vmaddfp 2, 3, 31, 2
@@ -270,10 +270,10 @@ M921_004b3950:   # 0x4b3950, 0x6b4 bytes
   04b3d5c  lis 3, 75
   04b3d60  vspltisw 2, -1
   04b3d64  li 4, 40
-  04b3d68  <unknown>
+  04b3d68  lvlx 3, 22, 24
   04b3d6c  addi 3, 3, 14624
   04b3d70  vslw 2, 2, 2
-  04b3d74  <unknown>
+  04b3d74  lvlx 30, 4, 3
   04b3d78  vspltw 30, 30, 0
   04b3d7c  li 3, 2
   04b3d80  vmaddfp 2, 3, 30, 2
@@ -291,7 +291,7 @@ M921_004b3950:   # 0x4b3950, 0x6b4 bytes
   04b3db0  stb 3, 42(30)
   04b3db4  vslw 2, 2, 2
   04b3db8  stw 23, 36(30)
-  04b3dbc  <unknown>
+  04b3dbc  lvlx 3, 22, 24
   04b3dc0  vmaddfp 2, 3, 30, 2
   04b3dc4  vctsxs 2, 2, 0
   04b3dc8  vspltb 2, 2, 3
@@ -339,7 +339,7 @@ M921_004b3950:   # 0x4b3950, 0x6b4 bytes
   04b3e70  cmpwi 3, 0
   04b3e74  bt 2, 0x4b3ea8
   04b3e78  vspltisw 2, -1
-  04b3e7c  <unknown>
+  04b3e7c  lvlx 3, 22, 24
   04b3e80  li 4, 127
   04b3e84  vslw 2, 2, 2
   04b3e88  vmaddfp 2, 3, 31, 2
@@ -1223,16 +1223,16 @@ UpdateMoby_921:   # 0x4b4930, 0xd9c bytes
   04b4c78  li 7, 8
   04b4c7c  lis 3, 75
   04b4c80  vslw 4, 4, 4
-  04b4c84  <unknown>
+  04b4c84  lvlx 2, 5, 4
   04b4c88  addi 3, 3, 18696
   04b4c8c  sth 6, 50(31)
   04b4c90  li 4, -3056
   04b4c94  vcfsx 2, 2, 0
-  04b4c98  <unknown>
+  04b4c98  lvlx 3, 7, 3
   04b4c9c  lis 3, 114
   04b4ca0  vspltw 3, 3, 0
   04b4ca4  vaddfp 2, 2, 3
-  04b4ca8  <unknown>
+  04b4ca8  lvlx 3, 4, 3
   04b4cac  li 3, 124
   04b4cb0  vmaddfp 2, 3, 2, 4
   04b4cb4  vctsxs 2, 2, 0
@@ -1693,7 +1693,7 @@ UpdateMoby_921:   # 0x4b4930, 0xd9c bytes
   04b53d0  and 4, 8, 4
   04b53d4  vspltisw 4, -1
   04b53d8  slwi 7, 7, 2
-  04b53dc  <unknown>
+  04b53dc  lvlx 2, 6, 5
   04b53e0  addic 3, 3, 7136
   04b53e4  extsw 7, 7
   04b53e8  lis 5, 75
@@ -1706,12 +1706,12 @@ UpdateMoby_921:   # 0x4b4930, 0xd9c bytes
   04b5404  lwzx 3, 3, 7
   04b5408  stw 5, 148(31)
   04b540c  lis 5, 114
-  04b5410  <unknown>
+  04b5410  lvlx 3, 6, 4
   04b5414  li 6, -3056
   04b5418  vspltw 3, 3, 0
   04b541c  li 7, 0
   04b5420  vaddfp 2, 2, 3
-  04b5424  <unknown>
+  04b5424  lvlx 5, 6, 5
   04b5428  li 5, 124
   04b542c  li 6, 2
   04b5430  vmaddfp 2, 5, 2, 4

@@ -161,8 +161,8 @@ InitCamera_20:   # 0x41210, 0x604 bytes
   0041288  stw 28, 64(29)
   004128c  lfs 4, 0(3)
   0041290  sth 28, 84(29)
-  0041294  <unknown>
-  0041298  <unknown>
+  0041294  lvlx 3, 4, 30
+  0041298  lvrx 4, 5, 30
   004129c  lis 4, 114
   00412a0  stw 28, 68(29)
   00412a4  li 5, -3056
@@ -171,11 +171,11 @@ InitCamera_20:   # 0x41210, 0x604 bytes
   00412b0  stw 28, 76(29)
   00412b4  stw 28, 80(29)
   00412b8  vsraw 2, 3, 2
-  00412bc  <unknown>
+  00412bc  lvlx 3, 6, 3
   00412c0  vspltisw 4, -1
   00412c4  vspltw 3, 3, 0
   00412c8  vcfsx 2, 2, 0
-  00412cc  <unknown>
+  00412cc  lvlx 5, 5, 4
   00412d0  vslw 4, 4, 4
   00412d4  li 5, -1
   00412d8  lfs 5, 4(3)

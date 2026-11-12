@@ -2026,9 +2026,9 @@ UpdateDebugSelections:   # 0x627d0, 0x168c bytes
   0062874  addic 3, 3, 5056
   0062878  li 5, 320
   006287c  li 6, 328
-  0062880  <unknown>
-  0062884  <unknown>
-  0062888  <unknown>
+  0062880  lvlx 3, 4, 3
+  0062884  lvlx 4, 5, 3
+  0062888  lvlx 5, 6, 3
   006288c  li 4, 152
   0062890  vctsxs 4, 4, 0
   0062894  li 3, 148

@@ -449,19 +449,19 @@ UpdateMissionDisplay:   # 0xea958, 0x618 bytes
   00eaa5c  li 3, 112
   00eaa60  vspltisw 4, -1
   00eaa64  li 4, 116
-  00eaa68  <unknown>
+  00eaa68  lvlx 2, 0, 25
   00eaa6c  li 5, 340
   00eaa70  vspltw 2, 2, 0
   00eaa74  vslw 3, 3, 3
   00eaa78  vslw 4, 4, 4
-  00eaa7c  <unknown>
-  00eaa80  <unknown>
+  00eaa7c  lvlx 5, 3, 1
+  00eaa80  lvlx 6, 4, 1
   00eaa84  li 3, 4
   00eaa88  vmaddfp 3, 5, 2, 3
   00eaa8c  sldi 4, 31, 2
   00eaa90  vmaddfp 2, 6, 2, 4
   00eaa94  extsw 4, 4
-  00eaa98  <unknown>
+  00eaa98  lvlx 4, 3, 25
   00eaa9c  addc 4, 24, 4
   00eaaa0  li 3, 260
   00eaaa4  vspltw 4, 4, 0

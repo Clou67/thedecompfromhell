@@ -509,10 +509,10 @@ UpdateMoby_454:   # 0x3892e8, 0xddc bytes
   0389460  stw 5, 12(30)
   0389464  vslw 2, 2, 2
   0389468  lis 5, 16256
-  038946c  <unknown>
+  038946c  lvlx 3, 6, 4
   0389470  li 4, 8
   0389474  vspltw 3, 3, 0
-  0389478  <unknown>
+  0389478  lvlx 4, 8, 7
   038947c  vmaddfp 2, 4, 3, 2
   0389480  vctsxs 2, 2, 0
   0389484  vspltw 2, 2, 0
@@ -848,8 +848,8 @@ UpdateMoby_454:   # 0x3892e8, 0xddc bytes
   03899ac  li 6, -3056
   03899b0  vslw 2, 2, 2
   03899b4  lis 28, 151
-  03899b8  <unknown>
-  03899bc  <unknown>
+  03899b8  lvlx 3, 3, 5
+  03899bc  lvlx 4, 6, 4
   03899c0  addic 3, 7, 1
   03899c4  vspltw 3, 3, 0
   03899c8  li 7, 6
@@ -1152,10 +1152,10 @@ UpdateMoby_454:   # 0x3892e8, 0xddc bytes
   0389e6c  stb 4, 32(31)
   0389e70  li 4, -3056
   0389e74  vslw 2, 2, 2
-  0389e78  <unknown>
+  0389e78  lvlx 3, 5, 3
   0389e7c  li 3, 6
   0389e80  vspltw 3, 3, 0
-  0389e84  <unknown>
+  0389e84  lvlx 4, 4, 6
   0389e88  li 4, 16
   0389e8c  vmaddfp 2, 4, 3, 2
   0389e90  vctsxs 2, 2, 0
@@ -1256,9 +1256,9 @@ UpdateMoby_454:   # 0x3892e8, 0xddc bytes
   038a00c  stw 4, 12(30)
   038a010  li 4, -3056
   038a014  vslw 2, 2, 2
-  038a018  <unknown>
+  038a018  lvlx 3, 6, 3
   038a01c  vspltw 3, 3, 0
-  038a020  <unknown>
+  038a020  lvlx 4, 4, 5
   038a024  li 4, 8
   038a028  lis 5, 16256
   038a02c  vmaddfp 2, 4, 3, 2

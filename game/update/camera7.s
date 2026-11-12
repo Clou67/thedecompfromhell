@@ -70,8 +70,8 @@ InitCamera_7:   # 0x49a50, 0x548 bytes
   0049b3c  stw 9, 20(11)
   0049b40  lfs 1, 12(5)
   0049b44  stw 7, 24(11)
-  0049b48  <unknown>
-  0049b4c  <unknown>
+  0049b48  lvlx 3, 6, 5
+  0049b4c  lvlx 4, 31, 12
   0049b50  li 6, 30
   0049b54  vspltw 3, 3, 0
   0049b58  lis 4, 15523
@@ -334,10 +334,10 @@ InitCamera_7:   # 0x49a50, 0x548 bytes
   0049f5c  li 11, -3056
   0049f60  sth 8, 624(4)
   0049f64  vslw 3, 3, 3
-  0049f68  <unknown>
+  0049f68  lvlx 2, 9, 5
   0049f6c  li 3, 756
   0049f70  vspltw 2, 2, 0
-  0049f74  <unknown>
+  0049f74  lvlx 4, 11, 10
   0049f78  vmaddfp 2, 4, 2, 3
   0049f7c  vctsxs 2, 2, 0
   0049f80  vspltw 2, 2, 0
@@ -1645,8 +1645,8 @@ UpdateCamera_7:   # 0x4b358, 0x24c bytes
   004b448  addi 3, 3, -19636
   004b44c  li 5, -3056
   004b450  vslw 2, 2, 2
-  004b454  <unknown>
-  004b458  <unknown>
+  004b454  lvlx 3, 0, 3
+  004b458  lvlx 4, 5, 4
   004b45c  vspltw 3, 3, 0
   004b460  li 3, 756
   004b464  vmaddfp 2, 4, 3, 2
@@ -1702,8 +1702,8 @@ UpdateCamera_7:   # 0x4b358, 0x24c bytes
   004b52c  addi 3, 3, -19636
   004b530  li 5, -3056
   004b534  vslw 2, 2, 2
-  004b538  <unknown>
-  004b53c  <unknown>
+  004b538  lvlx 3, 0, 3
+  004b53c  lvlx 4, 5, 4
   004b540  vspltw 3, 3, 0
   004b544  li 3, 756
   004b548  vmaddfp 2, 4, 3, 2

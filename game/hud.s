@@ -867,13 +867,13 @@ HudEntry_InitCounter:   # 0xc8f40, 0x74 bytes
   00c8f5c  li 6, -3056
   00c8f60  vslw 2, 2, 2
   00c8f64  li 7, 0
-  00c8f68  <unknown>
-  00c8f6c  <unknown>
+  00c8f68  lvlx 3, 0, 4
+  00c8f6c  lvlx 4, 6, 5
   00c8f70  vspltw 3, 3, 0
   00c8f74  li 5, 4
   00c8f78  li 6, 124
   00c8f7c  vmaddfp 2, 4, 3, 2
-  00c8f80  <unknown>
+  00c8f80  lvlx 3, 5, 4
   00c8f84  vspltw 3, 3, 0
   00c8f88  vctsxs 2, 2, 0
   00c8f8c  vadduwm 2, 2, 3
@@ -898,13 +898,13 @@ HudEntry_InitCounter32:   # 0xc8fc0, 0x80 bytes
   00c8fdc  li 6, -3056
   00c8fe0  vslw 2, 2, 2
   00c8fe4  li 7, 32
-  00c8fe8  <unknown>
-  00c8fec  <unknown>
+  00c8fe8  lvlx 3, 0, 4
+  00c8fec  lvlx 4, 6, 5
   00c8ff0  vspltw 3, 3, 0
   00c8ff4  li 5, 4
   00c8ff8  li 6, 124
   00c8ffc  vmaddfp 2, 4, 3, 2
-  00c9000  <unknown>
+  00c9000  lvlx 3, 5, 4
   00c9004  li 4, 0
   00c9008  vspltw 3, 3, 0
   00c900c  vctsxs 2, 2, 0
@@ -1171,8 +1171,8 @@ HudEntry_UpdateCounter:   # 0xc9390, 0x310 bytes
   00c9424  addi 4, 4, -27788
   00c9428  li 6, -3056
   00c942c  vslw 2, 2, 2
-  00c9430  <unknown>
-  00c9434  <unknown>
+  00c9430  lvlx 3, 0, 4
+  00c9434  lvlx 4, 6, 5
   00c9438  li 4, 124
   00c943c  vspltw 3, 3, 0
   00c9440  vmaddfp 2, 4, 3, 2
@@ -1368,10 +1368,10 @@ HudEntry_UpdateCounterSlide:   # 0xc96b0, 0x170 bytes
   00c9740  vspltisw 2, -1
   00c9744  lis 6, 114
   00c9748  li 8, -3056
-  00c974c  <unknown>
+  00c974c  lvlx 3, 0, 9
   00c9750  vspltw 3, 3, 0
   00c9754  vslw 2, 2, 2
-  00c9758  <unknown>
+  00c9758  lvlx 4, 8, 6
   00c975c  li 6, 124
   00c9760  vmaddfp 2, 4, 3, 2
   00c9764  vctsxs 2, 2, 0
@@ -1764,13 +1764,13 @@ OxygenHud_Init:   # 0xc9d28, 0x280 bytes
   00c9d74  std 27, 136(1)
   00c9d78  vslw 2, 2, 2
   00c9d7c  li 27, 0
-  00c9d80  <unknown>
-  00c9d84  <unknown>
+  00c9d80  lvlx 3, 0, 31
+  00c9d84  lvlx 4, 4, 5
   00c9d88  vspltw 3, 3, 0
   00c9d8c  li 4, 4
   00c9d90  li 5, 124
   00c9d94  vmaddfp 2, 4, 3, 2
-  00c9d98  <unknown>
+  00c9d98  lvlx 3, 4, 31
   00c9d9c  vspltw 3, 3, 0
   00c9da0  vctsxs 2, 2, 0
   00c9da4  vadduwm 2, 2, 3
@@ -3098,13 +3098,13 @@ Moby185Hud_Init:   # 0xcb228, 0x280 bytes
   00cb274  std 27, 136(1)
   00cb278  vslw 2, 2, 2
   00cb27c  li 27, 0
-  00cb280  <unknown>
-  00cb284  <unknown>
+  00cb280  lvlx 3, 0, 31
+  00cb284  lvlx 4, 4, 5
   00cb288  vspltw 3, 3, 0
   00cb28c  li 4, 4
   00cb290  li 5, 124
   00cb294  vmaddfp 2, 4, 3, 2
-  00cb298  <unknown>
+  00cb298  lvlx 3, 4, 31
   00cb29c  vspltw 3, 3, 0
   00cb2a0  vctsxs 2, 2, 0
   00cb2a4  vadduwm 2, 2, 3
@@ -3640,13 +3640,13 @@ PromptHud_Init:   # 0xcbaf8, 0x80 bytes
   00cbb14  li 6, -3056
   00cbb18  vslw 2, 2, 2
   00cbb1c  li 7, 32
-  00cbb20  <unknown>
-  00cbb24  <unknown>
+  00cbb20  lvlx 3, 0, 4
+  00cbb24  lvlx 4, 6, 5
   00cbb28  vspltw 3, 3, 0
   00cbb2c  li 5, 4
   00cbb30  li 6, 124
   00cbb34  vmaddfp 2, 4, 3, 2
-  00cbb38  <unknown>
+  00cbb38  lvlx 3, 5, 4
   00cbb3c  li 4, 0
   00cbb40  vspltw 3, 3, 0
   00cbb44  vctsxs 2, 2, 0
@@ -4865,13 +4865,13 @@ Moby849Hud_Init:   # 0xcce10, 0x74 bytes
   00cce2c  li 6, -3056
   00cce30  vslw 2, 2, 2
   00cce34  li 7, 0
-  00cce38  <unknown>
-  00cce3c  <unknown>
+  00cce38  lvlx 3, 0, 4
+  00cce3c  lvlx 4, 6, 5
   00cce40  vspltw 3, 3, 0
   00cce44  li 5, 4
   00cce48  li 6, 124
   00cce4c  vmaddfp 2, 4, 3, 2
-  00cce50  <unknown>
+  00cce50  lvlx 3, 5, 4
   00cce54  vspltw 3, 3, 0
   00cce58  vctsxs 2, 2, 0
   00cce5c  vadduwm 2, 2, 3
@@ -4910,7 +4910,7 @@ Moby849Hud_Update:   # 0xcce90, 0xe8 bytes
   00ccee4  addc 4, 6, 4
   00ccee8  stw 4, 8(31)
   00cceec  lwz 4, 4280(3)
-  00ccef0  <unknown>
+  00ccef0  lvlx 2, 0, 30
   00ccef4  cmpwi 4, 9
   00ccef8  vspltw 2, 2, 0
   00ccefc  bf 2, 0xccf44
@@ -4924,15 +4924,15 @@ Moby849Hud_Update:   # 0xcce90, 0xe8 bytes
   00ccf1c  lis 4, 114
   00ccf20  li 6, -3056
   00ccf24  vslw 3, 3, 3
-  00ccf28  <unknown>
+  00ccf28  lvlx 4, 5, 3
   00ccf2c  vspltw 4, 4, 0
-  00ccf30  <unknown>
+  00ccf30  lvlx 5, 6, 4
   00ccf34  vmaddfp 3, 5, 4, 3
   00ccf38  vctsxs 3, 3, 0
   00ccf3c  vadduwm 2, 3, 2
   00ccf40  b 0xccf54
   00ccf44  li 3, 124
-  00ccf48  <unknown>
+  00ccf48  lvlx 3, 3, 31
   00ccf4c  vcmpgtsw 4, 3, 2
   00ccf50  vsel 2, 3, 2, 4
   00ccf54  vspltw 2, 2, 0
@@ -5233,8 +5233,8 @@ QuickSelectHud_Init:   # 0xcd398, 0xec bytes
   00cd3e0  sth 9, 74(7)
   00cd3e4  stw 6, 92(7)
   00cd3e8  stw 3, 116(7)
-  00cd3ec  <unknown>
-  00cd3f0  <unknown>
+  00cd3ec  lvlx 2, 0, 5
+  00cd3f0  lvlx 4, 10, 11
   00cd3f4  lis 3, 114
   00cd3f8  vspltw 2, 2, 0
   00cd3fc  lis 5, 162
@@ -5292,9 +5292,9 @@ UpdateQuickSelect:   # 0xcd4b8, 0xa00 bytes
   00cd4f8  ori 31, 3, 0
   00cd4fc  vslw 2, 2, 2
   00cd500  std 27, 192(1)
-  00cd504  <unknown>
+  00cd504  lvlx 3, 0, 4
   00cd508  lis 27, 151
-  00cd50c  <unknown>
+  00cd50c  lvlx 4, 6, 5
   00cd510  li 4, 124
   00cd514  vspltw 3, 3, 0
   00cd518  li 5, 24
@@ -7008,11 +7008,11 @@ ClankCommandHud_Init:   # 0xcefc0, 0x8c bytes
   00ceffc  li 5, -3056
   00cf000  stw 7, 92(3)
   00cf004  lis 4, 114
-  00cf008  <unknown>
+  00cf008  lvlx 2, 0, 6
   00cf00c  addic 4, 4, 15116
   00cf010  vspltw 2, 2, 0
   00cf014  lis 6, 162
-  00cf018  <unknown>
+  00cf018  lvlx 4, 5, 8
   00cf01c  lis 5, 162
   00cf020  vmaddfp 2, 4, 2, 3
   00cf024  stw 4, -15984(5)
@@ -7038,9 +7038,9 @@ ClankCommandHud_Update:   # 0xcf070, 0x638 bytes
   00cf090  li 5, -3056
   00cf094  ori 31, 3, 0
   00cf098  vslw 2, 2, 2
-  00cf09c  <unknown>
+  00cf09c  lvlx 3, 0, 7
   00cf0a0  lis 9, 150
-  00cf0a4  <unknown>
+  00cf0a4  lvlx 4, 5, 4
   00cf0a8  li 3, 124
   00cf0ac  vspltw 3, 3, 0
   00cf0b0  li 4, 24
@@ -8185,15 +8185,15 @@ HealthHud_Init:   # 0xd02a0, 0xb8 bytes
   00d02c0  std 31, 120(1)
   00d02c4  vslw 2, 2, 2
   00d02c8  ori 31, 3, 0
-  00d02cc  <unknown>
-  00d02d0  <unknown>
+  00d02cc  lvlx 3, 0, 4
+  00d02d0  lvlx 4, 6, 5
   00d02d4  vspltw 3, 3, 0
   00d02d8  li 5, 4
   00d02dc  std 30, 112(1)
   00d02e0  li 6, 64
   00d02e4  li 30, 0
   00d02e8  vmaddfp 2, 4, 3, 2
-  00d02ec  <unknown>
+  00d02ec  lvlx 3, 5, 4
   00d02f0  li 4, 124
   00d02f4  vspltw 3, 3, 0
   00d02f8  li 5, 32
@@ -8317,8 +8317,8 @@ HealthHud_Update:   # 0xd0360, 0x264 bytes
   00d04d0  addi 4, 4, 856
   00d04d4  li 7, -3056
   00d04d8  vslw 2, 2, 2
-  00d04dc  <unknown>
-  00d04e0  <unknown>
+  00d04dc  lvlx 3, 0, 4
+  00d04e0  lvlx 4, 7, 6
   00d04e4  li 4, 124
   00d04e8  vspltw 3, 3, 0
   00d04ec  vmaddfp 2, 4, 3, 2
@@ -8939,13 +8939,13 @@ AmmoHud_Init:   # 0xd0e80, 0x74 bytes
   00d0e9c  li 6, -3056
   00d0ea0  vslw 2, 2, 2
   00d0ea4  li 7, 32
-  00d0ea8  <unknown>
-  00d0eac  <unknown>
+  00d0ea8  lvlx 3, 0, 4
+  00d0eac  lvlx 4, 6, 5
   00d0eb0  vspltw 3, 3, 0
   00d0eb4  li 5, 4
   00d0eb8  li 6, 124
   00d0ebc  vmaddfp 2, 4, 3, 2
-  00d0ec0  <unknown>
+  00d0ec0  lvlx 3, 5, 4
   00d0ec4  vspltw 3, 3, 0
   00d0ec8  vctsxs 2, 2, 0
   00d0ecc  vadduwm 2, 2, 3
@@ -8971,13 +8971,13 @@ BoltHud_Init:   # 0xd0f00, 0x94 bytes
   00d0f20  std 31, 120(1)
   00d0f24  vslw 2, 2, 2
   00d0f28  ori 31, 3, 0
-  00d0f2c  <unknown>
-  00d0f30  <unknown>
+  00d0f2c  lvlx 3, 0, 4
+  00d0f30  lvlx 4, 6, 5
   00d0f34  vspltw 3, 3, 0
   00d0f38  li 5, 4
   00d0f3c  li 6, 32
   00d0f40  vmaddfp 2, 4, 3, 2
-  00d0f44  <unknown>
+  00d0f44  lvlx 3, 5, 4
   00d0f48  li 4, 124
   00d0f4c  vspltw 3, 3, 0
   00d0f50  vctsxs 2, 2, 0
@@ -9034,10 +9034,10 @@ BoltHud_Update:   # 0xd0fa0, 0x15c bytes
   00d1020  li 9, -3056
   00d1024  vslw 3, 3, 3
   00d1028  li 7, 124
-  00d102c  <unknown>
+  00d102c  lvlx 2, 0, 6
   00d1030  lfs 1, 0(6)
   00d1034  vspltw 2, 2, 0
-  00d1038  <unknown>
+  00d1038  lvlx 4, 9, 8
   00d103c  lfs 2, -3056(8)
   00d1040  vmaddfp 2, 4, 2, 3
   00d1044  fmuls 1, 2, 1
@@ -9532,15 +9532,15 @@ UnusedIconHud_Init:   # 0xd17d8, 0xb4 bytes
   00d17f8  std 31, 120(1)
   00d17fc  vslw 2, 2, 2
   00d1800  ori 31, 3, 0
-  00d1804  <unknown>
-  00d1808  <unknown>
+  00d1804  lvlx 3, 0, 4
+  00d1808  lvlx 4, 6, 5
   00d180c  vspltw 3, 3, 0
   00d1810  li 5, 4
   00d1814  std 30, 112(1)
   00d1818  li 6, 64
   00d181c  li 30, 0
   00d1820  vmaddfp 2, 4, 3, 2
-  00d1824  <unknown>
+  00d1824  lvlx 3, 5, 4
   00d1828  li 4, 124
   00d182c  vspltw 3, 3, 0
   00d1830  li 5, 32
@@ -9605,12 +9605,12 @@ UnusedIconHud_Update:   # 0xd1898, 0x2f4 bytes
   00d1920  bf 2, 0xd19c8
   00d1924  vspltisw 2, -1
   00d1928  lis 9, 114
-  00d192c  <unknown>
+  00d192c  lvlx 3, 0, 4
   00d1930  li 10, -3056
   00d1934  vspltw 3, 3, 0
   00d1938  vslw 2, 2, 2
   00d193c  cmpwi 6, 0
-  00d1940  <unknown>
+  00d1940  lvlx 4, 10, 9
   00d1944  li 9, 124
   00d1948  vmaddfp 2, 4, 3, 2
   00d194c  vctsxs 2, 2, 0
@@ -9655,10 +9655,10 @@ UnusedIconHud_Update:   # 0xd1898, 0x2f4 bytes
   00d19e8  vspltisw 2, -1
   00d19ec  lis 6, 114
   00d19f0  li 7, -3056
-  00d19f4  <unknown>
+  00d19f4  lvlx 3, 0, 4
   00d19f8  vspltw 3, 3, 0
   00d19fc  vslw 2, 2, 2
-  00d1a00  <unknown>
+  00d1a00  lvlx 4, 7, 6
   00d1a04  li 8, 0
   00d1a08  li 6, 124
   00d1a0c  vmaddfp 2, 4, 3, 2
@@ -9687,10 +9687,10 @@ UnusedIconHud_Update:   # 0xd1898, 0x2f4 bytes
   00d1a68  lis 7, 114
   00d1a6c  li 8, -3056
   00d1a70  vslw 2, 2, 2
-  00d1a74  <unknown>
+  00d1a74  lvlx 3, 6, 4
   00d1a78  li 6, 124
   00d1a7c  vspltw 3, 3, 0
-  00d1a80  <unknown>
+  00d1a80  lvlx 4, 8, 7
   00d1a84  lwz 7, 108(3)
   00d1a88  vmaddfp 2, 4, 3, 2
   00d1a8c  cmpwi 7, 24
@@ -10052,14 +10052,14 @@ TrickHud_Init:   # 0xd1ff0, 0x90 bytes
   00d200c  li 6, -3056
   00d2010  vslw 2, 2, 2
   00d2014  lis 7, 162
-  00d2018  <unknown>
-  00d201c  <unknown>
+  00d2018  lvlx 3, 0, 4
+  00d201c  lvlx 4, 6, 5
   00d2020  vspltw 3, 3, 0
   00d2024  li 5, 4
   00d2028  li 6, 124
   00d202c  addic 8, 7, -14332
   00d2030  vmaddfp 2, 4, 3, 2
-  00d2034  <unknown>
+  00d2034  lvlx 3, 5, 4
   00d2038  li 4, 0
   00d203c  vspltw 3, 3, 0
   00d2040  li 5, -1
@@ -10087,7 +10087,7 @@ TrickHud_Update:   # 0xd20a0, 0x44c bytes
   00d20b0  ori 31, 3, 0
   00d20b4  li 3, 116
   00d20b8  li 4, 112
-  00d20bc  <unknown>
+  00d20bc  lvlx 2, 3, 31
   00d20c0  lwz 5, 12(31)
   00d20c4  vcfsx 2, 2, 0
   00d20c8  lis 3, 13
@@ -10130,9 +10130,9 @@ TrickHud_Update:   # 0xd20a0, 0x44c bytes
   00d215c  lis 5, 13
   00d2160  li 6, 4
   00d2164  addi 5, 5, 8320
-  00d2168  <unknown>
+  00d2168  lvlx 2, 4, 3
   00d216c  vcfsx 3, 2, 0
-  00d2170  <unknown>
+  00d2170  lvlx 4, 6, 5
   00d2174  vspltw 4, 4, 0
   00d2178  vspltw 3, 3, 0
   00d217c  vcmpgefp. 3, 3, 4
@@ -10242,10 +10242,10 @@ TrickHud_Update:   # 0xd20a0, 0x44c bytes
   00d231c  li 7, -3056
   00d2320  vslw 3, 3, 3
   00d2324  stb 3, 113(31)
-  00d2328  <unknown>
+  00d2328  lvlx 2, 5, 6
   00d232c  li 3, 112
   00d2330  vspltw 2, 2, 0
-  00d2334  <unknown>
+  00d2334  lvlx 4, 7, 4
   00d2338  vmaddfp 2, 4, 2, 3
   00d233c  vctsxs 2, 2, 0
   00d2340  vspltb 2, 2, 3
@@ -10262,9 +10262,9 @@ TrickHud_Update:   # 0xd20a0, 0x44c bytes
   00d236c  li 7, -3056
   00d2370  vslw 3, 3, 3
   00d2374  stb 4, 113(31)
-  00d2378  <unknown>
+  00d2378  lvlx 2, 5, 6
   00d237c  vspltw 2, 2, 0
-  00d2380  <unknown>
+  00d2380  lvlx 4, 7, 3
   00d2384  li 3, 112
   00d2388  vmaddfp 2, 4, 2, 3
   00d238c  vctsxs 2, 2, 0
@@ -10297,7 +10297,7 @@ TrickHud_Update:   # 0xd20a0, 0x44c bytes
   00d23f8  li 6, -3056
   00d23fc  lfs 2, 16(4)
   00d2400  lfs 1, -3056(5)
-  00d2404  <unknown>
+  00d2404  lvlx 2, 6, 5
   00d2408  fmuls 2, 1, 2
   00d240c  fctiwz 2, 2
   00d2410  stfd 2, 120(1)
@@ -10323,14 +10323,14 @@ TrickHud_Update:   # 0xd20a0, 0x44c bytes
   00d2460  stw 5, 2148(4)
   00d2464  lfs 2, 20(6)
   00d2468  fmuls 1, 1, 2
-  00d246c  <unknown>
+  00d246c  lvlx 4, 7, 6
   00d2470  lfs 2, 24(6)
   00d2474  vspltw 4, 4, 0
   00d2478  li 7, 24
   00d247c  vmaddfp 2, 2, 4, 3
   00d2480  vspltisw 3, -1
   00d2484  fctidz 1, 1
-  00d2488  <unknown>
+  00d2488  lvlx 4, 7, 6
   00d248c  vslw 3, 3, 3
   00d2490  vspltw 4, 4, 0
   00d2494  vctsxs 2, 2, 0
@@ -11896,8 +11896,8 @@ MetalDetectorHud_Update:   # 0xd3d10, 0xd4 bytes
   00d3d30  addi 4, 4, 15624
   00d3d34  li 6, -3056
   00d3d38  vslw 2, 2, 2
-  00d3d3c  <unknown>
-  00d3d40  <unknown>
+  00d3d3c  lvlx 3, 0, 4
+  00d3d40  lvlx 4, 6, 5
   00d3d44  li 4, 124
   00d3d48  vspltw 3, 3, 0
   00d3d4c  lis 6, 114
@@ -13675,7 +13675,7 @@ UpdateAllGameplayHUD:   # 0xd56d8, 0x3c8 bytes
   00d5938  addic 27, 27, 15120
   00d593c  lis 28, 162
   00d5940  ori 30, 29, 0
-  00d5944  <unknown>
+  00d5944  lvlx 31, 0, 3
   00d5948  addic 28, 28, -16448
   00d594c  lfs 31, 0(3)
   00d5950  addic 26, 27, 124
@@ -13692,7 +13692,7 @@ UpdateAllGameplayHUD:   # 0xd56d8, 0x3c8 bytes
   00d597c  lfs 1, -3056(3)
   00d5980  vslw 2, 2, 2
   00d5984  fmuls 1, 1, 31
-  00d5988  <unknown>
+  00d5988  lvlx 3, 4, 3
   00d598c  lwz 3, 124(27)
   00d5990  vmaddfp 2, 3, 31, 2
   00d5994  fctiwz 1, 1
@@ -14076,13 +14076,13 @@ RaceHud_Init:   # 0xd5f58, 0x64 bytes
   00d5f64  addi 4, 4, 24400
   00d5f68  li 6, -3056
   00d5f6c  vslw 2, 2, 2
-  00d5f70  <unknown>
-  00d5f74  <unknown>
+  00d5f70  lvlx 3, 0, 4
+  00d5f74  lvlx 4, 6, 5
   00d5f78  vspltw 3, 3, 0
   00d5f7c  li 5, 4
   00d5f80  li 6, 124
   00d5f84  vmaddfp 2, 4, 3, 2
-  00d5f88  <unknown>
+  00d5f88  lvlx 3, 5, 4
   00d5f8c  li 4, 128
   00d5f90  vspltw 3, 3, 0
   00d5f94  li 5, 0
@@ -14109,8 +14109,8 @@ RaceHud_Update:   # 0xd5fc0, 0x5c bytes
   00d5fe4  addi 4, 4, 24508
   00d5fe8  li 6, -3056
   00d5fec  vslw 2, 2, 2
-  00d5ff0  <unknown>
-  00d5ff4  <unknown>
+  00d5ff0  lvlx 3, 0, 4
+  00d5ff4  lvlx 4, 6, 5
   00d5ff8  vspltw 3, 3, 0
   00d5ffc  li 5, 124
   00d6000  li 4, 5
@@ -14149,13 +14149,13 @@ AmmoHud_Update:   # 0xd6020, 0x128 bytes
   00d6080  stw 5, 116(3)
   00d6084  lfs 1, 0(4)
   00d6088  lfs 2, -3056(6)
-  00d608c  <unknown>
+  00d608c  lvlx 3, 0, 4
   00d6090  fmuls 1, 2, 1
   00d6094  lwz 8, 124(3)
   00d6098  vspltw 3, 3, 0
   00d609c  lbz 5, 112(3)
   00d60a0  lbz 4, 113(3)
-  00d60a4  <unknown>
+  00d60a4  lvlx 4, 7, 6
   00d60a8  cmpwi 1, 5, 0
   00d60ac  cmpwi 6, 4, 0
   00d60b0  vmaddfp 2, 4, 3, 2

@@ -162,19 +162,19 @@ UpdateMoby_107:   # 0x1b33e0, 0xa14 bytes
   01b3580  vspltisw 4, -1
   01b3584  addi 5, 3, 16
   01b3588  stb 4, 32(31)
-  01b358c  <unknown>
+  01b358c  lvlx 2, 3, 30
   01b3590  lis 4, 27
-  01b3594  <unknown>
+  01b3594  lvrx 3, 5, 30
   01b3598  addi 3, 4, 13200
   01b359c  vor 2, 2, 3
   01b35a0  li 4, 4
   01b35a4  lis 5, 114
   01b35a8  vslw 4, 4, 4
   01b35ac  vcfsx 2, 2, 0
-  01b35b0  <unknown>
+  01b35b0  lvlx 3, 4, 3
   01b35b4  li 3, -3056
   01b35b8  vspltw 3, 3, 0
-  01b35bc  <unknown>
+  01b35bc  lvlx 5, 3, 5
   01b35c0  li 3, 164
   01b35c4  vaddfp 2, 2, 3
   01b35c8  vmaddfp 2, 5, 2, 4
@@ -196,10 +196,10 @@ UpdateMoby_107:   # 0x1b33e0, 0xa14 bytes
   01b3608  stb 4, 32(31)
   01b360c  li 4, -3056
   01b3610  vslw 2, 2, 2
-  01b3614  <unknown>
+  01b3614  lvlx 3, 5, 3
   01b3618  li 3, 164
   01b361c  vspltw 3, 3, 0
-  01b3620  <unknown>
+  01b3620  lvlx 4, 4, 6
   01b3624  vmaddfp 2, 4, 3, 2
   01b3628  vctsxs 2, 2, 0
   01b362c  vspltw 2, 2, 0
@@ -241,9 +241,9 @@ UpdateMoby_107:   # 0x1b33e0, 0xa14 bytes
   01b36bc  stb 3, 32(31)
   01b36c0  vslw 2, 2, 2
   01b36c4  li 3, 164
-  01b36c8  <unknown>
+  01b36c8  lvlx 3, 4, 5
   01b36cc  vspltw 3, 3, 0
-  01b36d0  <unknown>
+  01b36d0  lvlx 4, 6, 7
   01b36d4  vmaddfp 2, 4, 3, 2
   01b36d8  vctsxs 2, 2, 0
   01b36dc  vspltw 2, 2, 0
@@ -304,10 +304,10 @@ UpdateMoby_107:   # 0x1b33e0, 0xa14 bytes
   01b37b8  li 8, -3056
   01b37bc  stw 6, 160(30)
   01b37c0  stb 4, 32(31)
-  01b37c4  <unknown>
+  01b37c4  lvlx 3, 7, 3
   01b37c8  li 3, 164
   01b37cc  vspltw 3, 3, 0
-  01b37d0  <unknown>
+  01b37d0  lvlx 4, 8, 5
   01b37d4  vmaddfp 2, 4, 3, 2
   01b37d8  vctsxs 2, 2, 0
   01b37dc  vspltw 2, 2, 0
@@ -564,9 +564,9 @@ UpdateMoby_107:   # 0x1b33e0, 0xa14 bytes
   01b3bc8  li 4, -3056
   01b3bcc  stb 3, 32(31)
   01b3bd0  vslw 2, 2, 2
-  01b3bd4  <unknown>
+  01b3bd4  lvlx 3, 5, 29
   01b3bd8  li 3, 164
-  01b3bdc  <unknown>
+  01b3bdc  lvlx 4, 4, 27
   01b3be0  vspltw 3, 3, 0
   01b3be4  vmaddfp 2, 4, 3, 2
   01b3be8  vctsxs 2, 2, 0
@@ -587,10 +587,10 @@ UpdateMoby_107:   # 0x1b33e0, 0xa14 bytes
   01b3c24  stb 4, 32(31)
   01b3c28  li 4, -3056
   01b3c2c  vslw 2, 2, 2
-  01b3c30  <unknown>
+  01b3c30  lvlx 3, 6, 3
   01b3c34  li 3, 164
   01b3c38  vspltw 3, 3, 0
-  01b3c3c  <unknown>
+  01b3c3c  lvlx 4, 4, 5
   01b3c40  vmaddfp 2, 4, 3, 2
   01b3c44  vctsxs 2, 2, 0
   01b3c48  vspltw 2, 2, 0

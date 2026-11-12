@@ -337,7 +337,7 @@ M1230_00213dd8:   # 0x213dd8, 0x104 bytes
   0213e58  lis 8, 114
   0213e5c  li 7, -3056
   0213e60  li 6, 4
-  0213e64  <unknown>
+  0213e64  lvlx 3, 0, 5
   0213e68  lwz 5, -28512(9)
   0213e6c  vspltw 3, 3, 0
   0213e70  vaddfp 2, 2, 3
@@ -350,7 +350,7 @@ M1230_00213dd8:   # 0x213dd8, 0x104 bytes
   0213e8c  bf 2, 0x213ec0
   0213e90  vspltisw 3, -1
   0213e94  stb 4, 32(10)
-  0213e98  <unknown>
+  0213e98  lvlx 4, 7, 8
   0213e9c  lwz 5, -28512(9)
   0213ea0  vslw 3, 3, 3
   0213ea4  addc 10, 5, 11

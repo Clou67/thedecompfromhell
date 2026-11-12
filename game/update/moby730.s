@@ -252,10 +252,10 @@ UpdateMoby_730:   # 0x4363f0, 0x1018 bytes
   04366d0  vslw 2, 2, 2
   04366d4  lis 8, 164
   04366d8  slwi 3, 3, 8
-  04366dc  <unknown>
+  04366dc  lvlx 3, 6, 4
   04366e0  li 6, 44
   04366e4  vspltw 3, 3, 0
-  04366e8  <unknown>
+  04366e8  lvlx 4, 7, 5
   04366ec  lwz 5, -28512(8)
   04366f0  vmaddfp 2, 4, 3, 2
   04366f4  addc 3, 5, 3
@@ -876,10 +876,10 @@ UpdateMoby_730:   # 0x4363f0, 0x1018 bytes
   0437090  lis 4, 114
   0437094  li 6, -3056
   0437098  vslw 2, 2, 2
-  043709c  <unknown>
+  043709c  lvlx 3, 5, 3
   04370a0  li 3, 8
   04370a4  vspltw 3, 3, 0
-  04370a8  <unknown>
+  04370a8  lvlx 4, 6, 4
   04370ac  li 4, 5
   04370b0  vmaddfp 2, 4, 3, 2
   04370b4  vctsxs 2, 2, 0
@@ -994,9 +994,9 @@ UpdateMoby_730:   # 0x4363f0, 0x1018 bytes
   0437268  vslw 2, 2, 2
   043726c  lis 8, 164
   0437270  slwi 3, 3, 8
-  0437274  <unknown>
+  0437274  lvlx 3, 6, 4
   0437278  vspltw 3, 3, 0
-  043727c  <unknown>
+  043727c  lvlx 4, 7, 5
   0437280  lwz 4, -28512(8)
   0437284  li 5, 44
   0437288  vmaddfp 2, 4, 3, 2

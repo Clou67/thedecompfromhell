@@ -811,13 +811,13 @@ M437_00376c48:   # 0x376c48, 0xb40 bytes
   0376cc0  li 7, 6276
   0376cc4  li 8, 20
   0376cc8  stvx 2, 3, 1
-  0376ccc  <unknown>
+  0376ccc  lvlx 2, 4, 31
   0376cd0  li 9, 132
-  0376cd4  <unknown>
+  0376cd4  lvlx 3, 5, 31
   0376cd8  addic 4, 1, 128
-  0376cdc  <unknown>
+  0376cdc  lvlx 4, 7, 6
   0376ce0  lis 5, 55
-  0376ce4  <unknown>
+  0376ce4  lvlx 5, 8, 31
   0376ce8  li 6, 136
   0376cec  vaddfp 4, 2, 4
   0376cf0  vspltw 3, 3, 0
@@ -1460,13 +1460,13 @@ M437_00376c48:   # 0x376c48, 0xb40 bytes
   03776e4  li 5, 28
   03776e8  addi 6, 6, 27688
   03776ec  vslw 4, 4, 4
-  03776f0  <unknown>
+  03776f0  lvlx 2, 4, 3
   03776f4  lis 3, 114
   03776f8  vcfsx 2, 2, 0
   03776fc  li 4, -3056
-  0377700  <unknown>
+  0377700  lvlx 3, 5, 6
   0377704  vspltw 3, 3, 0
-  0377708  <unknown>
+  0377708  lvlx 5, 4, 3
   037770c  lwz 3, 100(30)
   0377710  li 4, 78
   0377714  addic 3, 3, 1
@@ -2984,7 +2984,7 @@ UpdateMoby_437:   # 0x378778, 0x1b10 bytes
   0378f70  li 3, 40
   0378f74  fmuls 1, 3, 1
   0378f78  vspltisw 2, -1
-  0378f7c  <unknown>
+  0378f7c  lvlx 3, 5, 4
   0378f80  li 6, 1
   0378f84  li 4, 72
   0378f88  lis 5, 16457
@@ -2996,7 +2996,7 @@ UpdateMoby_437:   # 0x378778, 0x1b10 bytes
   0378fa0  stfs 1, 68(28)
   0378fa4  fmuls 1, 2, 3
   0378fa8  stfs 1, 64(28)
-  0378fac  <unknown>
+  0378fac  lvlx 4, 3, 27
   0378fb0  vspltw 4, 4, 0
   0378fb4  vmaddfp 2, 3, 4, 2
   0378fb8  vctsxs 2, 2, 0
@@ -3024,14 +3024,14 @@ UpdateMoby_437:   # 0x378778, 0x1b10 bytes
   0379010  stw 3, 100(30)
   0379014  lis 3, 56
   0379018  vslw 4, 4, 4
-  037901c  <unknown>
+  037901c  lvlx 2, 5, 4
   0379020  addi 3, 3, -30948
   0379024  lis 4, 114
   0379028  vcfsx 2, 2, 0
   037902c  li 5, -3056
-  0379030  <unknown>
+  0379030  lvlx 3, 6, 3
   0379034  vspltw 3, 3, 0
-  0379038  <unknown>
+  0379038  lvlx 5, 5, 4
   037903c  li 4, 96
   0379040  lfs 31, 44(3)
   0379044  vaddfp 2, 2, 3
@@ -3571,9 +3571,9 @@ UpdateMoby_437:   # 0x378778, 0x1b10 bytes
   037989c  stb 7, 32(31)
   03798a0  li 3, 76
   03798a4  vslw 3, 3, 3
-  03798a8  <unknown>
+  03798a8  lvlx 2, 5, 4
   03798ac  vspltw 2, 2, 0
-  03798b0  <unknown>
+  03798b0  lvlx 4, 8, 6
   03798b4  vmaddfp 2, 4, 2, 3
   03798b8  vctsxs 2, 2, 0
   03798bc  vsplth 2, 2, 1

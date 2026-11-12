@@ -452,10 +452,10 @@ UpdateMoby_902:   # 0x4a58e8, 0xc30 bytes
   04a5e24  stb 4, 32(31)
   04a5e28  li 4, -3056
   04a5e2c  vslw 2, 2, 2
-  04a5e30  <unknown>
+  04a5e30  lvlx 3, 6, 3
   04a5e34  li 3, 24
   04a5e38  vspltw 3, 3, 0
-  04a5e3c  <unknown>
+  04a5e3c  lvlx 4, 4, 5
   04a5e40  lwz 4, 4(30)
   04a5e44  vmaddfp 2, 4, 3, 2
   04a5e48  srawi 5, 4, 31
@@ -699,11 +699,11 @@ UpdateMoby_902:   # 0x4a58e8, 0xc30 bytes
   04a6200  lis 5, 114
   04a6204  li 6, -3056
   04a6208  vslw 2, 2, 2
-  04a620c  <unknown>
+  04a620c  lvlx 3, 4, 3
   04a6210  li 3, 24
   04a6214  vspltw 3, 3, 0
   04a6218  li 4, 5
-  04a621c  <unknown>
+  04a621c  lvlx 4, 6, 5
   04a6220  vmaddfp 2, 4, 3, 2
   04a6224  vctsxs 2, 2, 0
   04a6228  vspltw 2, 2, 0

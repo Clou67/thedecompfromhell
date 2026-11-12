@@ -81,7 +81,7 @@ M470_003994d8:   # 0x3994d8, 0x314 bytes
   03995f0  fmadds 8, 7, 7, 8
   03995f4  stfs 2, 120(1)
   03995f8  lfs 26, 12(4)
-  03995fc  <unknown>
+  03995fc  lvlx 31, 5, 4
   0399600  lfs 27, 16(4)
   0399604  vspltw 31, 31, 0
   0399608  fsqrts 8, 8
@@ -125,7 +125,7 @@ M470_003994d8:   # 0x3994d8, 0x314 bytes
   03996a0  lwz 3, 32(30)
   03996a4  cmpwi 6, 0
   03996a8  lfs 1, -3056(4)
-  03996ac  <unknown>
+  03996ac  lvlx 2, 5, 4
   03996b0  bt 2, 0x3996dc
   03996b4  vspltisw 3, -1
   03996b8  fmuls 2, 1, 27
@@ -245,12 +245,12 @@ M470_003997f8:   # 0x3997f8, 0x124 bytes
   0399884  li 8, 8
   0399888  stw 3, 28(31)
   039988c  li 9, 4
-  0399890  <unknown>
-  0399894  <unknown>
+  0399890  lvlx 6, 0, 4
+  0399894  lvlx 5, 5, 7
   0399898  addic 3, 31, 32
-  039989c  <unknown>
+  039989c  lvlx 3, 6, 4
   03998a0  mtctr 9
-  03998a4  <unknown>
+  03998a4  lvlx 2, 8, 4
   03998a8  vspltw 6, 6, 0
   03998ac  vspltw 3, 3, 0
   03998b0  vspltw 2, 2, 0

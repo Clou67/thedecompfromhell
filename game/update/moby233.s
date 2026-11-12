@@ -1176,8 +1176,8 @@ M233_00301800:   # 0x301800, 0x464 bytes
   0301bf8  li 7, 362
   0301bfc  li 8, 6
   0301c00  stfs 1, 368(30)
-  0301c04  <unknown>
-  0301c08  <unknown>
+  0301c04  lvlx 3, 4, 3
+  0301c08  lvlx 4, 6, 5
   0301c0c  vspltw 3, 3, 0
   0301c10  vmaddfp 2, 4, 3, 2
   0301c14  vctsxs 2, 2, 0
@@ -2148,8 +2148,8 @@ UpdateMoby_233:   # 0x301d00, 0x1af0 bytes
   0302bbc  li 3, 108
   0302bc0  li 5, -3056
   0302bc4  vslw 2, 2, 2
-  0302bc8  <unknown>
-  0302bcc  <unknown>
+  0302bc8  lvlx 3, 3, 6
+  0302bcc  lvlx 4, 5, 4
   0302bd0  li 3, 360
   0302bd4  vspltw 3, 3, 0
   0302bd8  vmaddfp 2, 4, 3, 2

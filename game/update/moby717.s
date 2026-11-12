@@ -580,8 +580,8 @@ M717_00432258:   # 0x432258, 0x4c0 bytes
   0432344  lfs 26, 8(4)
   0432348  lfs 27, 12(4)
   043234c  lfs 28, 16(4)
-  0432350  <unknown>
-  0432354  <unknown>
+  0432350  lvlx 30, 5, 4
+  0432354  lvlx 31, 6, 4
   0432358  vspltw 30, 30, 0
   043235c  vspltw 31, 31, 0
   0432360  lhz 4, 166(3)
@@ -658,12 +658,12 @@ M717_00432258:   # 0x432258, 0x4c0 bytes
   043247c  vslw 2, 2, 2
   0432480  addi 6, 5, 16
   0432484  vslw 3, 3, 3
-  0432488  <unknown>
-  043248c  <unknown>
+  0432488  lvlx 4, 4, 3
+  043248c  lvlx 5, 5, 31
   0432490  vmaddfp 2, 4, 30, 2
   0432494  vmaddfp 3, 4, 31, 3
   0432498  li 3, 612
-  043249c  <unknown>
+  043249c  lvrx 4, 6, 31
   04324a0  vor 4, 5, 4
   04324a4  vsrw 4, 4, 6
   04324a8  vctsxs 2, 2, 0
@@ -702,8 +702,8 @@ M717_00432258:   # 0x432258, 0x4c0 bytes
   043252c  lfs 26, 28(3)
   0432530  lfs 27, 32(3)
   0432534  lfs 28, 12(3)
-  0432538  <unknown>
-  043253c  <unknown>
+  0432538  lvlx 30, 4, 3
+  043253c  lvlx 31, 5, 3
   0432540  vspltw 30, 30, 0
   0432544  vspltw 31, 31, 0
   0432548  lhz 3, 166(30)
@@ -777,13 +777,13 @@ M717_00432258:   # 0x432258, 0x4c0 bytes
   0432658  li 5, 602
   043265c  vslw 2, 2, 2
   0432660  vslw 3, 3, 3
-  0432664  <unknown>
+  0432664  lvlx 4, 4, 3
   0432668  addi 3, 5, 16
   043266c  vmaddfp 2, 4, 30, 2
   0432670  vmaddfp 3, 4, 31, 3
-  0432674  <unknown>
+  0432674  lvlx 5, 5, 31
   0432678  vspltisw 4, -16
-  043267c  <unknown>
+  043267c  lvrx 6, 3, 31
   0432680  li 3, 612
   0432684  vor 5, 5, 6
   0432688  vsrw 4, 5, 4
@@ -936,10 +936,10 @@ M717_00432858:   # 0x432858, 0x1cc bytes
   04328c4  vspltisw 5, -1
   04328c8  addi 5, 5, 10320
   04328cc  vspltisw 7, -1
-  04328d0  <unknown>
+  04328d0  lvlx 2, 4, 28
   04328d4  vslw 5, 5, 5
   04328d8  vrefp 3, 2
-  04328dc  <unknown>
+  04328dc  lvlx 4, 0, 5
   04328e0  vspltw 4, 4, 0
   04328e4  li 5, 5
   04328e8  vslw 7, 7, 7
@@ -964,7 +964,7 @@ M717_00432858:   # 0x432858, 0x1cc bytes
   0432934  vnmsubfp 6, 3, 2, 4
   0432938  vcfsx 10, 31, 0
   043293c  vmaddfp 3, 3, 6, 5
-  0432940  <unknown>
+  0432940  lvlx 5, 4, 3
   0432944  lwz 4, 36(3)
   0432948  std 6, 128(1)
   043294c  addc 4, 4, 5
@@ -976,7 +976,7 @@ M717_00432858:   # 0x432858, 0x1cc bytes
   0432964  vspltisw 6, -1
   0432968  vnmsubfp 2, 3, 2, 4
   043296c  vslw 4, 6, 6
-  0432970  <unknown>
+  0432970  lvlx 6, 5, 4
   0432974  lfd 2, 128(1)
   0432978  vsrw 6, 6, 11
   043297c  fcfid 2, 2
@@ -1077,9 +1077,9 @@ M717_00432a70:   # 0x432a70, 0x930 bytes
   0432b3c  addi 6, 6, 10788
   0432b40  vspltisw 7, -1
   0432b44  vslw 5, 5, 5
-  0432b48  <unknown>
+  0432b48  lvlx 2, 4, 31
   0432b4c  vrefp 3, 2
-  0432b50  <unknown>
+  0432b50  lvlx 4, 5, 6
   0432b54  vspltw 4, 4, 0
   0432b58  li 5, 16
   0432b5c  vslw 7, 7, 7
@@ -1088,14 +1088,14 @@ M717_00432a70:   # 0x432a70, 0x930 bytes
   0432b68  vslw 9, 9, 9
   0432b6c  vnmsubfp 6, 3, 2, 4
   0432b70  vmaddfp 3, 3, 6, 5
-  0432b74  <unknown>
+  0432b74  lvlx 6, 4, 3
   0432b78  vslw 5, 8, 8
   0432b7c  lwz 4, 36(3)
   0432b80  vspltisw 8, -8
   0432b84  lwz 4, 96(4)
   0432b88  lfs 1, 92(3)
   0432b8c  vnmsubfp 10, 3, 2, 4
-  0432b90  <unknown>
+  0432b90  lvlx 11, 5, 4
   0432b94  lfs 2, 92(31)
   0432b98  fdivs 1, 1, 2
   0432b9c  vmaddfp 3, 3, 10, 7
@@ -1226,10 +1226,10 @@ M717_00432a70:   # 0x432a70, 0x930 bytes
   0432d90  vspltisw 5, -1
   0432d94  li 6, 8
   0432d98  addi 4, 4, 10788
-  0432d9c  <unknown>
+  0432d9c  lvlx 2, 5, 31
   0432da0  vslw 5, 5, 5
   0432da4  vrefp 3, 2
-  0432da8  <unknown>
+  0432da8  lvlx 4, 6, 4
   0432dac  vspltw 4, 4, 0
   0432db0  li 4, 5
   0432db4  vspltisw 7, -1
@@ -1248,7 +1248,7 @@ M717_00432a70:   # 0x432a70, 0x930 bytes
   0432de8  and 4, 4, 6
   0432dec  addc 4, 30, 4
   0432df0  vmaddfp 3, 3, 6, 5
-  0432df4  <unknown>
+  0432df4  lvlx 5, 5, 3
   0432df8  sldi 5, 4, 2
   0432dfc  lwz 6, 36(3)
   0432e00  lfs 1, 92(3)
@@ -1261,7 +1261,7 @@ M717_00432a70:   # 0x432a70, 0x930 bytes
   0432e1c  lfs 2, 92(31)
   0432e20  fdivs 1, 1, 2
   0432e24  vmaddfp 3, 3, 9, 7
-  0432e28  <unknown>
+  0432e28  lvlx 7, 6, 30
   0432e2c  vnmsubfp 2, 3, 2, 4
   0432e30  vsrw 4, 7, 6
   0432e34  vcfux 4, 4, 0
@@ -1367,9 +1367,9 @@ M717_00432a70:   # 0x432a70, 0x930 bytes
   0432fc4  addi 6, 6, 10788
   0432fc8  vspltisw 7, -1
   0432fcc  vslw 5, 5, 5
-  0432fd0  <unknown>
+  0432fd0  lvlx 2, 4, 31
   0432fd4  vrefp 3, 2
-  0432fd8  <unknown>
+  0432fd8  lvlx 4, 5, 6
   0432fdc  vspltw 4, 4, 0
   0432fe0  vslw 7, 7, 7
   0432fe4  lfs 1, 92(3)
@@ -1385,14 +1385,14 @@ M717_00432a70:   # 0x432a70, 0x930 bytes
   043300c  vslw 9, 9, 9
   0433010  vnmsubfp 6, 3, 2, 4
   0433014  vmaddfp 3, 3, 6, 5
-  0433018  <unknown>
+  0433018  lvlx 5, 4, 3
   043301c  lwz 4, 36(3)
-  0433020  <unknown>
+  0433020  lvlx 12, 5, 6
   0433024  vspltw 12, 12, 0
   0433028  lwz 4, 96(4)
   043302c  vnmsubfp 6, 3, 2, 4
   0433030  vmaddfp 3, 3, 6, 7
-  0433034  <unknown>
+  0433034  lvlx 7, 7, 4
   0433038  vslw 6, 10, 10
   043303c  vsrw 7, 7, 11
   0433040  lfs 2, 60(6)
@@ -1454,10 +1454,10 @@ M717_00432a70:   # 0x432a70, 0x930 bytes
   0433120  vspltisw 5, -1
   0433124  li 6, 8
   0433128  addi 5, 5, 10788
-  043312c  <unknown>
+  043312c  lvlx 2, 4, 31
   0433130  vslw 5, 5, 5
   0433134  vrefp 3, 2
-  0433138  <unknown>
+  0433138  lvlx 4, 6, 5
   043313c  vspltw 4, 4, 0
   0433140  vspltisw 7, -1
   0433144  lfs 1, 92(3)
@@ -1468,7 +1468,7 @@ M717_00432a70:   # 0x432a70, 0x930 bytes
   0433158  vspltisw 8, -8
   043315c  vspltisw 11, -1
   0433160  vnmsubfp 6, 3, 2, 4
-  0433164  <unknown>
+  0433164  lvlx 10, 4, 3
   0433168  lwz 4, 36(3)
   043316c  lwz 4, 96(4)
   0433170  lfs 2, 8(5)
@@ -1479,7 +1479,7 @@ M717_00432a70:   # 0x432a70, 0x930 bytes
   0433184  vslw 6, 6, 6
   0433188  vnmsubfp 9, 3, 2, 4
   043318c  vmaddfp 3, 3, 9, 7
-  0433190  <unknown>
+  0433190  lvlx 9, 6, 4
   0433194  vslw 7, 11, 11
   0433198  vsrw 8, 9, 8
   043319c  vnmsubfp 2, 3, 2, 4
@@ -1573,7 +1573,7 @@ M717_00432a70:   # 0x432a70, 0x930 bytes
   04332fc  vspltisw 3, 0
   0433300  lis 6, 67
   0433304  lwz 4, 72(4)
-  0433308  <unknown>
+  0433308  lvlx 4, 5, 4
   043330c  vsrw 2, 4, 2
   0433310  addi 5, 6, 10788
   0433314  vcfux 2, 2, 0
@@ -1832,21 +1832,21 @@ UpdateMoby_717:   # 0x433450, 0x1008 bytes
   04337b0  lis 4, 114
   04337b4  li 7, -3052
   04337b8  addi 3, 3, 13216
-  04337bc  <unknown>
+  04337bc  lvlx 3, 5, 30
   04337c0  li 8, 16
   04337c4  vslw 2, 2, 2
-  04337c8  <unknown>
+  04337c8  lvrx 4, 6, 30
   04337cc  li 5, 12
-  04337d0  <unknown>
+  04337d0  lvlx 5, 7, 4
   04337d4  vor 3, 3, 4
-  04337d8  <unknown>
+  04337d8  lvlx 6, 8, 3
   04337dc  vspltisw 4, -1
   04337e0  vspltw 6, 6, 0
   04337e4  vcfsx 3, 3, 0
   04337e8  li 4, 568
   04337ec  vslw 4, 4, 4
   04337f0  vmaddfp 2, 5, 6, 2
-  04337f4  <unknown>
+  04337f4  lvlx 6, 5, 3
   04337f8  li 5, 20
   04337fc  vspltw 6, 6, 0
   0433800  li 6, 572
@@ -1855,7 +1855,7 @@ UpdateMoby_717:   # 0x433450, 0x1008 bytes
   043380c  vmaddfp 2, 5, 6, 3
   0433810  vspltw 4, 2, 0
   0433814  stvewx 4, 4, 30
-  0433818  <unknown>
+  0433818  lvlx 4, 5, 3
   043381c  vspltw 4, 4, 0
   0433820  vmaddfp 3, 5, 4, 3
   0433824  vspltw 4, 3, 0
@@ -1868,19 +1868,19 @@ UpdateMoby_717:   # 0x433450, 0x1008 bytes
   0433840  li 4, 1352
   0433844  vspltisw 8, -1
   0433848  lis 5, 67
-  043384c  <unknown>
+  043384c  lvlx 5, 4, 3
   0433850  addi 3, 5, 13216
   0433854  vsubuwm 4, 5, 4
   0433858  li 4, 24
   043385c  vspltisw 5, 0
   0433860  li 5, 28
   0433864  vcfsx 4, 4, 0
-  0433868  <unknown>
-  043386c  <unknown>
+  0433868  lvlx 6, 4, 3
+  043386c  lvlx 7, 5, 3
   0433870  vspltw 6, 6, 0
   0433874  li 4, 32
   0433878  vspltw 7, 7, 0
-  043387c  <unknown>
+  043387c  lvlx 9, 4, 3
   0433880  li 3, 568
   0433884  vcmpgtfp 5, 5, 4
   0433888  vandc 4, 4, 5
@@ -1924,10 +1924,10 @@ UpdateMoby_717:   # 0x433450, 0x1008 bytes
   0433920  lis 7, 114
   0433924  sth 6, 600(30)
   0433928  li 8, -3056
-  043392c  <unknown>
+  043392c  lvlx 3, 3, 4
   0433930  li 3, 602
   0433934  vspltw 3, 3, 0
-  0433938  <unknown>
+  0433938  lvlx 4, 8, 7
   043393c  lwz 4, 616(30)
   0433940  vmaddfp 2, 4, 3, 2
   0433944  cmpwi 4, 0

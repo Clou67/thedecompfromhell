@@ -33,8 +33,8 @@ M251_CheckPlasmabotHatchAvailability:   # 0x316b98, 0xbc bytes
   0316c0c  addi 3, 3, 27536
   0316c10  li 5, -3056
   0316c14  vslw 2, 2, 2
-  0316c18  <unknown>
-  0316c1c  <unknown>
+  0316c18  lvlx 3, 0, 3
+  0316c1c  lvlx 4, 5, 4
   0316c20  vspltw 3, 3, 0
   0316c24  li 4, 8
   0316c28  ori 3, 31, 0

@@ -135,7 +135,7 @@ UpdateMoby_933:   # 0x4bf890, 0x554 bytes
   04bfa80  sth 4, 228(1)
   04bfa84  lis 8, 16128
   04bfa88  li 9, 7
-  04bfa8c  <unknown>
+  04bfa8c  lvlx 2, 5, 3
   04bfa90  li 11, 255
   04bfa94  ori 3, 31, 0
   04bfa98  vspltw 2, 2, 0

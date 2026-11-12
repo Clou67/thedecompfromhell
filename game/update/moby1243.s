@@ -13,7 +13,7 @@ M1243_00222588:   # 0x222588, 0x1e8 bytes
   0222590  std 0, 144(1)
   0222594  std 31, 120(1)
   0222598  ori 31, 3, 0
-  022259c  <unknown>
+  022259c  lvlx 2, 0, 4
   02225a0  li 3, 176
   02225a4  li 5, 4
   02225a8  vspltw 3, 2, 0
@@ -25,14 +25,14 @@ M1243_00222588:   # 0x222588, 0x1e8 bytes
   02225c0  li 8, 184
   02225c4  li 9, 164
   02225c8  stvewx 3, 3, 30
-  02225cc  <unknown>
+  02225cc  lvlx 3, 5, 4
   02225d0  lfs 2, 4(4)
   02225d4  li 3, 16
   02225d8  vspltw 4, 3, 0
   02225dc  li 5, 160
   02225e0  vspltisw 10, -1
   02225e4  stvewx 4, 6, 30
-  02225e8  <unknown>
+  02225e8  lvlx 4, 7, 4
   02225ec  li 6, 20
   02225f0  vspltw 5, 4, 0
   02225f4  lis 7, 34
@@ -41,7 +41,7 @@ M1243_00222588:   # 0x222588, 0x1e8 bytes
   0222600  lfs 3, 12(4)
   0222604  addi 8, 7, 9592
   0222608  stfs 3, 188(30)
-  022260c  <unknown>
+  022260c  lvlx 5, 3, 31
   0222610  lfs 4, 16(31)
   0222614  vsubfp 2, 2, 5
   0222618  li 3, 24
@@ -56,7 +56,7 @@ M1243_00222588:   # 0x222588, 0x1e8 bytes
   022263c  vspltw 5, 2, 0
   0222640  vslw 13, 13, 13
   0222644  stvewx 5, 5, 30
-  0222648  <unknown>
+  0222648  lvlx 5, 6, 31
   022264c  lfs 5, 20(31)
   0222650  vsubfp 3, 3, 5
   0222654  vspltisw 5, -1
@@ -65,11 +65,11 @@ M1243_00222588:   # 0x222588, 0x1e8 bytes
   0222660  li 6, 168
   0222664  vspltw 6, 3, 0
   0222668  stvewx 6, 9, 30
-  022266c  <unknown>
+  022266c  lvlx 6, 3, 31
   0222670  stfs 3, 172(30)
   0222674  lfs 3, 0(8)
-  0222678  <unknown>
-  022267c  <unknown>
+  0222678  lvlx 7, 0, 8
+  022267c  lvlx 8, 7, 4
   0222680  vspltw 7, 7, 0
   0222684  lfs 6, -3056(4)
   0222688  fmuls 3, 6, 3
@@ -79,7 +79,7 @@ M1243_00222588:   # 0x222588, 0x1e8 bytes
   0222698  vspltisw 8, -1
   022269c  vsubfp 4, 4, 6
   02226a0  vslw 6, 0, 0
-  02226a4  <unknown>
+  02226a4  lvlx 7, 3, 8
   02226a8  vslw 8, 8, 8
   02226ac  fctidz 3, 3
   02226b0  vspltw 7, 7, 0
@@ -951,10 +951,10 @@ UpdateMoby_1243:   # 0x222fe0, 0x1804 bytes
   0223494  stb 4, 32(31)
   0223498  li 4, -3056
   022349c  vslw 2, 2, 2
-  02234a0  <unknown>
+  02234a0  lvlx 3, 6, 3
   02234a4  li 3, 236
   02234a8  vspltw 3, 3, 0
-  02234ac  <unknown>
+  02234ac  lvlx 4, 4, 5
   02234b0  vmaddfp 2, 4, 3, 2
   02234b4  vctsxs 2, 2, 0
   02234b8  vsplth 2, 2, 1
@@ -1516,10 +1516,10 @@ UpdateMoby_1243:   # 0x222fe0, 0x1804 bytes
   0223d68  stb 4, 32(31)
   0223d6c  li 4, -3056
   0223d70  vslw 2, 2, 2
-  0223d74  <unknown>
+  0223d74  lvlx 3, 6, 3
   0223d78  li 3, 238
   0223d7c  vspltw 3, 3, 0
-  0223d80  <unknown>
+  0223d80  lvlx 4, 4, 5
   0223d84  lis 4, 151
   0223d88  li 5, 1
   0223d8c  vmaddfp 2, 4, 3, 2
@@ -1932,18 +1932,18 @@ UpdateMoby_1243:   # 0x222fe0, 0x1804 bytes
   02243e8  addc 3, 3, 5
   02243ec  li 5, 52
   02243f0  clrldi 3, 3, 32
-  02243f4  <unknown>
+  02243f4  lvlx 2, 4, 3
   02243f8  lfs 1, 48(3)
   02243fc  vspltw 3, 2, 0
   0224400  li 4, 56
   0224404  stvewx 3, 6, 30
-  0224408  <unknown>
+  0224408  lvlx 3, 5, 3
   022440c  lfs 2, 52(3)
   0224410  vspltw 4, 3, 0
   0224414  li 5, 160
   0224418  li 6, 164
   022441c  stvewx 4, 7, 30
-  0224420  <unknown>
+  0224420  lvlx 4, 4, 3
   0224424  li 4, 20
   0224428  vspltw 5, 4, 0
   022442c  li 7, 60
@@ -1951,7 +1951,7 @@ UpdateMoby_1243:   # 0x222fe0, 0x1804 bytes
   0224434  stvewx 5, 8, 30
   0224438  lfs 3, 60(3)
   022443c  stfs 3, 188(30)
-  0224440  <unknown>
+  0224440  lvlx 5, 9, 31
   0224444  lfs 4, 16(31)
   0224448  vsubfp 2, 2, 5
   022444c  li 3, 24
@@ -1965,7 +1965,7 @@ UpdateMoby_1243:   # 0x222fe0, 0x1804 bytes
   022446c  vspltw 5, 2, 0
   0224470  vslw 12, 12, 12
   0224474  stvewx 5, 5, 30
-  0224478  <unknown>
+  0224478  lvlx 5, 4, 31
   022447c  lfs 5, 20(31)
   0224480  li 4, -3056
   0224484  vsubfp 3, 3, 5
@@ -1977,11 +1977,11 @@ UpdateMoby_1243:   # 0x222fe0, 0x1804 bytes
   022449c  vspltw 6, 3, 0
   02244a0  vslw 13, 13, 13
   02244a4  stvewx 6, 6, 30
-  02244a8  <unknown>
+  02244a8  lvlx 6, 3, 31
   02244ac  stfs 3, 172(30)
   02244b0  lfs 3, 60(8)
-  02244b4  <unknown>
-  02244b8  <unknown>
+  02244b4  lvlx 7, 7, 8
+  02244b8  lvlx 8, 4, 9
   02244bc  vspltw 7, 7, 0
   02244c0  lfs 6, -3056(9)
   02244c4  fmuls 3, 6, 3
@@ -1991,7 +1991,7 @@ UpdateMoby_1243:   # 0x222fe0, 0x1804 bytes
   02244d4  vspltisw 8, -1
   02244d8  vsubfp 4, 4, 6
   02244dc  vslw 6, 0, 0
-  02244e0  <unknown>
+  02244e0  lvlx 7, 3, 8
   02244e4  vslw 8, 8, 8
   02244e8  fctidz 3, 3
   02244ec  vspltw 7, 7, 0

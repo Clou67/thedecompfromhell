@@ -199,11 +199,11 @@ M1671_002a8d68:   # 0x2a8d68, 0x298 bytes
   02a8df8  lwz 6, 0(4)
   02a8dfc  extsw 6, 6
   02a8e00  std 6, 176(1)
-  02a8e04  <unknown>
+  02a8e04  lvlx 2, 0, 4
   02a8e08  lis 4, 164
   02a8e0c  vcfsx 31, 2, 0
   02a8e10  lfs 31, 0(5)
-  02a8e14  <unknown>
+  02a8e14  lvlx 2, 0, 5
   02a8e18  vspltw 2, 2, 0
   02a8e1c  lwz 4, -28512(4)
   02a8e20  lfd 1, 176(1)
@@ -1461,31 +1461,31 @@ M167_002a9f18:   # 0x2a9f18, 0xa10 bytes
   02aa23c  lfs 3, 24(29)
   02aa240  lfs 4, 136(1)
   02aa244  addi 6, 5, 16
-  02aa248  <unknown>
+  02aa248  lvlx 2, 3, 29
   02aa24c  fsubs 3, 3, 4
   02aa250  li 3, 132
-  02aa254  <unknown>
+  02aa254  lvrx 3, 4, 29
   02aa258  fmuls 1, 1, 1
   02aa25c  vor 2, 2, 3
   02aa260  li 4, 128
-  02aa264  <unknown>
-  02aa268  <unknown>
-  02aa26c  <unknown>
+  02aa264  lvlx 3, 5, 29
+  02aa268  lvrx 4, 6, 29
+  02aa26c  lvlx 5, 3, 1
   02aa270  li 5, 136
   02aa274  vspltisw 6, -1
   02aa278  li 3, 24
   02aa27c  vsubfp 2, 2, 5
   02aa280  vor 3, 3, 4
-  02aa284  <unknown>
+  02aa284  lvlx 4, 4, 1
   02aa288  addi 4, 3, 16
   02aa28c  fmadds 1, 2, 2, 1
   02aa290  vslw 6, 6, 6
   02aa294  vsubfp 3, 3, 4
-  02aa298  <unknown>
-  02aa29c  <unknown>
+  02aa298  lvlx 7, 3, 29
+  02aa29c  lvrx 8, 4, 29
   02aa2a0  lis 3, 43
   02aa2a4  vor 7, 7, 8
-  02aa2a8  <unknown>
+  02aa2a8  lvlx 8, 5, 1
   02aa2ac  vmaddfp 6, 2, 2, 6
   02aa2b0  fmadds 1, 3, 3, 1
   02aa2b4  vsubfp 7, 7, 8
@@ -1523,8 +1523,8 @@ M167_002a9f18:   # 0x2a9f18, 0xa10 bytes
   02aa334  stfs 1, 180(1)
   02aa338  stfs 1, 184(1)
   02aa33c  stfs 1, 188(1)
-  02aa340  <unknown>
-  02aa344  <unknown>
+  02aa340  lvlx 1, 5, 3
+  02aa344  lvlx 14, 4, 3
   02aa348  vspltw 1, 1, 0
   02aa34c  vspltw 14, 14, 0
   02aa350  vmaddfp 10, 1, 13, 10
@@ -1692,10 +1692,10 @@ M167_002a9f18:   # 0x2a9f18, 0xa10 bytes
   02aa5d8  li 6, 16
   02aa5dc  fmuls 1, 1, 1
   02aa5e0  li 4, 132
-  02aa5e4  <unknown>
-  02aa5e8  <unknown>
+  02aa5e4  lvlx 2, 3, 29
+  02aa5e8  lvrx 3, 5, 29
   02aa5ec  addi 3, 6, 16
-  02aa5f0  <unknown>
+  02aa5f0  lvlx 4, 6, 29
   02aa5f4  vor 2, 2, 3
   02aa5f8  li 5, 128
   02aa5fc  vspltisw 3, -1
@@ -1712,21 +1712,21 @@ M167_002a9f18:   # 0x2a9f18, 0xa10 bytes
   02aa628  cntlzw 10, 10
   02aa62c  subc 28, 27, 28
   02aa630  vslw 6, 3, 3
-  02aa634  <unknown>
+  02aa634  lvrx 3, 3, 29
   02aa638  sldi 10, 10, 58
-  02aa63c  <unknown>
+  02aa63c  lvlx 7, 4, 1
   02aa640  fmadds 1, 3, 3, 1
   02aa644  vsubfp 2, 2, 7
   02aa648  vor 3, 4, 3
-  02aa64c  <unknown>
+  02aa64c  lvlx 4, 5, 1
   02aa650  li 27, 2
   02aa654  li 26, 4
   02aa658  lis 11, 43
   02aa65c  vsubfp 3, 3, 4
   02aa660  sradi 10, 10, 63
-  02aa664  <unknown>
+  02aa664  lvlx 4, 6, 29
   02aa668  subc 27, 27, 26
-  02aa66c  <unknown>
+  02aa66c  lvrx 7, 8, 29
   02aa670  addi 11, 11, -24912
   02aa674  fsqrts 1, 1
   02aa678  vor 4, 4, 7
@@ -1744,7 +1744,7 @@ M167_002a9f18:   # 0x2a9f18, 0xa10 bytes
   02aa6a8  addc 28, 3, 28
   02aa6ac  cmpwi 28, 1
   02aa6b0  vmaddfp 5, 2, 2, 5
-  02aa6b4  <unknown>
+  02aa6b4  lvlx 8, 9, 1
   02aa6b8  vsubfp 4, 4, 8
   02aa6bc  vmaddfp 26, 3, 3, 5
   02aa6c0  vmaddfp 26, 4, 4, 26
@@ -1752,7 +1752,7 @@ M167_002a9f18:   # 0x2a9f18, 0xa10 bytes
   02aa6c8  stfs 1, 180(1)
   02aa6cc  stfs 1, 184(1)
   02aa6d0  stfs 1, 188(1)
-  02aa6d4  <unknown>
+  02aa6d4  lvlx 5, 12, 11
   02aa6d8  lvx 31, 1, 0
   02aa6dc  vspltw 5, 5, 0
   02aa6e0  vmaddfp 5, 31, 5, 6
@@ -1768,8 +1768,8 @@ M167_002a9f18:   # 0x2a9f18, 0xa10 bytes
   02aa708  vslw 7, 7, 7
   02aa70c  vslw 8, 8, 8
   02aa710  vslw 11, 11, 11
-  02aa714  <unknown>
-  02aa718  <unknown>
+  02aa714  lvlx 9, 4, 3
+  02aa718  lvlx 10, 5, 3
   02aa71c  vspltw 9, 9, 0
   02aa720  vspltw 10, 10, 0
   02aa724  vspltisw 12, -1
@@ -1831,10 +1831,10 @@ M167_002a9f18:   # 0x2a9f18, 0xa10 bytes
   02aa804  vmaddfp 3, 2, 28, 3
   02aa808  vmaddfp 4, 2, 27, 4
   02aa80c  vmaddfp 2, 2, 26, 5
-  02aa810  <unknown>
-  02aa814  <unknown>
+  02aa810  lvlx 5, 3, 1
+  02aa814  lvlx 6, 4, 1
   02aa818  addic 3, 1, 160
-  02aa81c  <unknown>
+  02aa81c  lvlx 7, 5, 1
   02aa820  li 4, 164
   02aa824  li 5, 168
   02aa828  lfs 5, 140(1)

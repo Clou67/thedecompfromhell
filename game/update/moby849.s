@@ -3215,11 +3215,11 @@ UpdateMoby_849:   # 0x488eb0, 0x1814 bytes
   04892e0  li 5, -3056
   04892e4  lis 6, 114
   04892e8  vslw 2, 2, 2
-  04892ec  <unknown>
+  04892ec  lvlx 3, 3, 4
   04892f0  lis 4, 161
   04892f4  vspltw 3, 3, 0
   04892f8  li 3, 8
-  04892fc  <unknown>
+  04892fc  lvlx 4, 5, 6
   0489300  addic 4, 4, -732
   0489304  lfs 1, -3056(6)
   0489308  lis 5, 0
@@ -3402,10 +3402,10 @@ UpdateMoby_849:   # 0x488eb0, 0x1814 bytes
   04895cc  lis 4, 114
   04895d0  li 6, -3056
   04895d4  vslw 2, 2, 2
-  04895d8  <unknown>
+  04895d8  lvlx 3, 5, 3
   04895dc  li 3, 8
   04895e0  vspltw 3, 3, 0
-  04895e4  <unknown>
+  04895e4  lvlx 4, 6, 4
   04895e8  li 4, 3
   04895ec  vmaddfp 2, 4, 3, 2
   04895f0  vctsxs 2, 2, 0
@@ -3728,10 +3728,10 @@ UpdateMoby_849:   # 0x488eb0, 0x1814 bytes
   0489ae4  lis 7, 114
   0489ae8  li 8, -3056
   0489aec  vslw 2, 2, 2
-  0489af0  <unknown>
+  0489af0  lvlx 3, 6, 5
   0489af4  li 5, 20
   0489af8  vspltw 3, 3, 0
-  0489afc  <unknown>
+  0489afc  lvlx 4, 8, 7
   0489b00  vmaddfp 2, 4, 3, 2
   0489b04  vctsxs 2, 2, 0
   0489b08  vspltw 2, 2, 0
@@ -3792,10 +3792,10 @@ UpdateMoby_849:   # 0x488eb0, 0x1814 bytes
   0489be4  lis 4, 114
   0489be8  li 7, -3056
   0489bec  vslw 3, 3, 3
-  0489bf0  <unknown>
+  0489bf0  lvlx 2, 5, 3
   0489bf4  li 3, 20
   0489bf8  vspltw 2, 2, 0
-  0489bfc  <unknown>
+  0489bfc  lvlx 4, 7, 4
   0489c00  lis 4, 161
   0489c04  vmaddfp 2, 4, 2, 3
   0489c08  addic 4, 4, 2368
@@ -3870,8 +3870,8 @@ UpdateMoby_849:   # 0x488eb0, 0x1814 bytes
   0489d1c  li 5, 44
   0489d20  stb 3, 4268(24)
   0489d24  vslw 2, 2, 2
-  0489d28  <unknown>
-  0489d2c  <unknown>
+  0489d28  lvlx 3, 4, 28
+  0489d2c  lvlx 4, 5, 27
   0489d30  lis 3, 161
   0489d34  li 4, 8
   0489d38  vspltw 4, 4, 0
@@ -4409,10 +4409,10 @@ UpdateMoby_849:   # 0x488eb0, 0x1814 bytes
   048a588  lis 5, 114
   048a58c  li 6, -3056
   048a590  vslw 2, 2, 2
-  048a594  <unknown>
+  048a594  lvlx 3, 4, 3
   048a598  li 3, 8
   048a59c  vspltw 3, 3, 0
-  048a5a0  <unknown>
+  048a5a0  lvlx 4, 6, 5
   048a5a4  li 4, 1
   048a5a8  vmaddfp 2, 4, 3, 2
   048a5ac  vctsxs 2, 2, 0
@@ -5002,8 +5002,8 @@ M849_0048acb8:   # 0x48acb8, 0x328 bytes
   048aea0  stfs 1, 24(29)
   048aea4  lfs 1, 12(28)
   048aea8  stfs 1, 28(29)
-  048aeac  <unknown>
-  048aeb0  <unknown>
+  048aeac  lvlx 2, 5, 3
+  048aeb0  lvlx 4, 6, 4
   048aeb4  li 3, 148
   048aeb8  vspltw 2, 2, 0
   048aebc  cmpwi 30, 0
@@ -6000,7 +6000,7 @@ M849_0048b288:   # 0x48b288, 0xd80 bytes
   048bea8  fmuls 2, 27, 2
   048beac  lfs 4, 116(22)
   048beb0  vspltisw 3, -1
-  048beb4  <unknown>
+  048beb4  lvlx 2, 3, 26
   048beb8  li 8, 360
   048bebc  vslw 3, 3, 3
   048bec0  addic 3, 1, 224
@@ -6010,7 +6010,7 @@ M849_0048b288:   # 0x48b288, 0xd80 bytes
   048bed0  li 6, 0
   048bed4  fsubs 1, 4, 1
   048bed8  stfs 1, 352(24)
-  048bedc  <unknown>
+  048bedc  lvlx 4, 7, 22
   048bee0  vspltw 4, 4, 0
   048bee4  vmaddfp 2, 2, 4, 3
   048bee8  vctsxs 2, 2, 0

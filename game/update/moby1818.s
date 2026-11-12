@@ -1215,13 +1215,13 @@ M1818_002bd110:   # 0x2bd110, 0xb24 bytes
   02bdb90  li 6, 28
   02bdb94  addi 5, 5, -12052
   02bdb98  vslw 4, 4, 4
-  02bdb9c  <unknown>
+  02bdb9c  lvlx 2, 4, 3
   02bdba0  lis 3, 114
   02bdba4  vcfsx 2, 2, 0
-  02bdba8  <unknown>
+  02bdba8  lvlx 3, 6, 5
   02bdbac  li 4, -3056
   02bdbb0  vspltw 3, 3, 0
-  02bdbb4  <unknown>
+  02bdbb4  lvlx 5, 4, 3
   02bdbb8  li 3, 84
   02bdbbc  lwz 4, 92(30)
   02bdbc0  addic 4, 4, 1
@@ -2714,7 +2714,7 @@ UpdateMoby_1818:   # 0x2beb68, 0x1fcc bytes
   02bf3b8  ori 7, 7, 4059
   02bf3bc  stfs 2, 60(28)
   02bf3c0  lfs 2, 32(4)
-  02bf3c4  <unknown>
+  02bf3c4  lvlx 3, 6, 5
   02bf3c8  fmuls 1, 1, 2
   02bf3cc  li 5, 72
   02bf3d0  li 6, 1
@@ -2722,7 +2722,7 @@ UpdateMoby_1818:   # 0x2beb68, 0x1fcc bytes
   02bf3d8  lfs 1, 36(4)
   02bf3dc  fmuls 1, 3, 1
   02bf3e0  stfs 1, 68(28)
-  02bf3e4  <unknown>
+  02bf3e4  lvlx 4, 3, 4
   02bf3e8  vspltw 4, 4, 0
   02bf3ec  vmaddfp 2, 3, 4, 2
   02bf3f0  vctsxs 2, 2, 0
@@ -2750,14 +2750,14 @@ UpdateMoby_1818:   # 0x2beb68, 0x1fcc bytes
   02bf448  stw 3, 92(29)
   02bf44c  lis 3, 44
   02bf450  vslw 4, 4, 4
-  02bf454  <unknown>
+  02bf454  lvlx 2, 5, 4
   02bf458  addi 3, 3, -5380
   02bf45c  lis 4, 114
   02bf460  vcfsx 2, 2, 0
   02bf464  li 5, -3056
-  02bf468  <unknown>
+  02bf468  lvlx 3, 6, 3
   02bf46c  vspltw 3, 3, 0
-  02bf470  <unknown>
+  02bf470  lvlx 5, 5, 4
   02bf474  lfs 31, 44(3)
   02bf478  li 3, 88
   02bf47c  lfs 1, -3056(4)
@@ -3421,9 +3421,9 @@ UpdateMoby_1818:   # 0x2beb68, 0x1fcc bytes
   02bfec4  stb 7, 32(31)
   02bfec8  li 3, 82
   02bfecc  vslw 3, 3, 3
-  02bfed0  <unknown>
+  02bfed0  lvlx 2, 5, 4
   02bfed4  vspltw 2, 2, 0
-  02bfed8  <unknown>
+  02bfed8  lvlx 4, 8, 6
   02bfedc  vmaddfp 2, 4, 2, 3
   02bfee0  vctsxs 2, 2, 0
   02bfee4  vsplth 2, 2, 1

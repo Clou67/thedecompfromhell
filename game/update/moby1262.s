@@ -182,12 +182,12 @@ M1262_0022cae8:   # 0x22cae8, 0x344 bytes
   022cd94  vspltisw 4, -1
   022cd98  lis 5, 114
   022cd9c  vslw 4, 4, 4
-  022cda0  <unknown>
-  022cda4  <unknown>
+  022cda0  lvlx 2, 4, 3
+  022cda4  lvlx 3, 0, 30
   022cda8  vcfsx 2, 2, 0
   022cdac  li 3, -3056
   022cdb0  vspltw 3, 3, 0
-  022cdb4  <unknown>
+  022cdb4  lvlx 5, 3, 5
   022cdb8  li 3, 508
   022cdbc  vaddfp 2, 2, 3
   022cdc0  vmaddfp 2, 5, 2, 4
@@ -559,7 +559,7 @@ M1262_0022d358:   # 0x22d358, 0x568 bytes
   022d3c4  li 4, 224
   022d3c8  li 5, 508
   022d3cc  lwz 3, 224(1)
-  022d3d0  <unknown>
+  022d3d0  lvlx 2, 4, 1
   022d3d4  cmpwi 3, 0
   022d3d8  vcfsx 2, 2, 0
   022d3dc  vspltw 2, 2, 0
@@ -983,10 +983,10 @@ M1262_0022d900:   # 0x22d900, 0xbf8 bytes
   022da9c  stb 4, 32(31)
   022daa0  li 4, -3056
   022daa4  vslw 2, 2, 2
-  022daa8  <unknown>
+  022daa8  lvlx 3, 6, 3
   022daac  lis 3, 119
   022dab0  vspltw 3, 3, 0
-  022dab4  <unknown>
+  022dab4  lvlx 4, 4, 5
   022dab8  lis 6, 16752
   022dabc  lis 4, 114
   022dac0  li 5, 38
@@ -2010,13 +2010,13 @@ UpdateMoby_1262:   # 0x22e580, 0x1720 bytes
   022eb28  li 6, 48
   022eb2c  addi 5, 5, -6920
   022eb30  vslw 4, 4, 4
-  022eb34  <unknown>
+  022eb34  lvlx 2, 4, 3
   022eb38  lis 3, 114
   022eb3c  vcfsx 2, 2, 0
-  022eb40  <unknown>
+  022eb40  lvlx 3, 6, 5
   022eb44  li 4, -3056
   022eb48  vspltw 3, 3, 0
-  022eb4c  <unknown>
+  022eb4c  lvlx 5, 4, 3
   022eb50  li 3, 404
   022eb54  vaddfp 2, 2, 3
   022eb58  vmaddfp 2, 5, 2, 4

@@ -585,7 +585,7 @@ UpdateMoby_163:   # 0x2a4420, 0xa5c bytes
   02a4d34  ori 8, 3, 33205
   02a4d38  li 3, -3056
   02a4d3c  frsp 3, 3
-  02a4d40  <unknown>
+  02a4d40  lvlx 2, 3, 7
   02a4d44  fadds 1, 3, 1
   02a4d48  fmuls 1, 2, 1
   02a4d4c  fctiwz 1, 1
@@ -617,7 +617,7 @@ UpdateMoby_163:   # 0x2a4420, 0xa5c bytes
   02a4db4  or 3, 5, 3
   02a4db8  or 3, 3, 8
   02a4dbc  stw 3, 108(4)
-  02a4dc0  <unknown>
+  02a4dc0  lvlx 4, 7, 6
   02a4dc4  vspltw 4, 4, 0
   02a4dc8  vmaddfp 2, 2, 4, 3
   02a4dcc  vctsxs 2, 2, 0

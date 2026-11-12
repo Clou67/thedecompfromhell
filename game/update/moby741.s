@@ -1216,8 +1216,8 @@ UpdateMoby_741:   # 0x442a70, 0x1428 bytes
   0443234  li 4, -3056
   0443238  vslw 2, 2, 2
   044323c  stfs 1, 32(30)
-  0443240  <unknown>
-  0443244  <unknown>
+  0443240  lvlx 3, 6, 3
+  0443244  lvlx 4, 4, 5
   0443248  vspltw 3, 3, 0
   044324c  li 5, 38
   0443250  addic 4, 30, 272
@@ -1511,18 +1511,18 @@ UpdateMoby_741:   # 0x442a70, 0x1428 bytes
   04436d0  li 5, 60
   04436d4  vspltisw 4, -1
   04436d8  addi 4, 3, 16
-  04436dc  <unknown>
+  04436dc  lvlx 2, 3, 30
   04436e0  lis 3, 68
   04436e4  vslw 4, 4, 4
-  04436e8  <unknown>
+  04436e8  lvrx 3, 4, 30
   04436ec  addi 3, 3, 10772
   04436f0  vor 2, 2, 3
   04436f4  lis 4, 114
   04436f8  vcfsx 2, 2, 0
-  04436fc  <unknown>
+  04436fc  lvlx 3, 5, 3
   0443700  li 3, -3056
   0443704  vspltw 3, 3, 0
-  0443708  <unknown>
+  0443708  lvlx 5, 3, 4
   044370c  li 3, 604
   0443710  lfs 1, -3056(4)
   0443714  vaddfp 2, 2, 3
@@ -1632,17 +1632,17 @@ UpdateMoby_741:   # 0x442a70, 0x1428 bytes
   04438b4  lis 5, 68
   04438b8  addi 4, 3, 16
   04438bc  vslw 4, 4, 4
-  04438c0  <unknown>
+  04438c0  lvlx 2, 3, 30
   04438c4  addi 3, 5, 10772
-  04438c8  <unknown>
+  04438c8  lvrx 3, 4, 30
   04438cc  li 4, 60
   04438d0  vor 2, 2, 3
   04438d4  vcfsx 2, 2, 0
-  04438d8  <unknown>
+  04438d8  lvlx 3, 4, 3
   04438dc  lis 3, 114
   04438e0  vspltw 3, 3, 0
   04438e4  li 4, -3056
-  04438e8  <unknown>
+  04438e8  lvlx 5, 4, 3
   04438ec  li 3, 604
   04438f0  vaddfp 2, 2, 3
   04438f4  li 4, 7

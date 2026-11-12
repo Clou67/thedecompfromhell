@@ -398,17 +398,17 @@ UpdateMoby_738:   # 0x438d20, 0x13d0 bytes
   0438de0  addi 3, 3, -29532
   0438de4  lis 5, 114
   0438de8  li 6, -3056
-  0438dec  <unknown>
+  0438dec  lvlx 3, 4, 3
   0438df0  vspltw 3, 3, 0
-  0438df4  <unknown>
+  0438df4  lvlx 2, 6, 5
   0438df8  b 0x438e1c
   0438dfc  lis 3, 68
   0438e00  li 4, 8
   0438e04  addi 3, 3, -29532
   0438e08  li 5, -3056
   0438e0c  lis 6, 114
-  0438e10  <unknown>
-  0438e14  <unknown>
+  0438e10  lvlx 3, 4, 3
+  0438e14  lvlx 2, 5, 6
   0438e18  vspltw 3, 3, 0
   0438e1c  vspltisw 4, -1
   0438e20  vspltw 2, 2, 0
@@ -1031,12 +1031,12 @@ UpdateMoby_738:   # 0x438d20, 0x13d0 bytes
   04397c4  fmuls 1, 3, 3
   04397c8  addi 4, 3, 16
   04397cc  stfs 3, 212(1)
-  04397d0  <unknown>
-  04397d4  <unknown>
+  04397d0  lvlx 2, 3, 30
+  04397d4  lvrx 3, 4, 30
   04397d8  fmadds 1, 2, 2, 1
   04397dc  vor 2, 2, 3
-  04397e0  <unknown>
-  04397e4  <unknown>
+  04397e0  lvlx 4, 5, 1
+  04397e4  lvlx 3, 9, 6
   04397e8  li 8, 104
   04397ec  vsubfp 2, 2, 4
   04397f0  fsqrts 1, 1
@@ -1073,10 +1073,10 @@ UpdateMoby_738:   # 0x438d20, 0x13d0 bytes
   043986c  fsel 3, 8, 5, 3
   0439870  stfs 2, 208(1)
   0439874  stfs 3, 212(1)
-  0439878  <unknown>
+  0439878  lvlx 9, 8, 28
   043987c  vspltw 9, 9, 0
   0439880  vmaddfp 3, 3, 9, 4
-  0439884  <unknown>
+  0439884  lvlx 4, 9, 28
   0439888  vspltw 4, 4, 0
   043988c  vctsxs 3, 3, 0
   0439890  vcfsx 3, 3, 0

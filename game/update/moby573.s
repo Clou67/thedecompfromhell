@@ -32,8 +32,8 @@ M573_003c0528:   # 0x3c0528, 0x450 bytes
   03c0598  addi 3, 3, 1288
   03c059c  li 5, -3056
   03c05a0  vslw 2, 2, 2
-  03c05a4  <unknown>
-  03c05a8  <unknown>
+  03c05a4  lvlx 3, 0, 3
+  03c05a8  lvlx 4, 5, 4
   03c05ac  vspltw 3, 3, 0
   03c05b0  li 3, 576
   03c05b4  vmaddfp 2, 4, 3, 2
@@ -1280,10 +1280,10 @@ UpdateMoby_573:   # 0x3c0a18, 0x1524 bytes
   03c19b0  lis 5, 114
   03c19b4  li 6, -3056
   03c19b8  vslw 2, 2, 2
-  03c19bc  <unknown>
+  03c19bc  lvlx 3, 4, 3
   03c19c0  li 3, 580
   03c19c4  vspltw 3, 3, 0
-  03c19c8  <unknown>
+  03c19c8  lvlx 4, 6, 5
   03c19cc  vmaddfp 2, 4, 3, 2
   03c19d0  vctsxs 2, 2, 0
   03c19d4  vspltw 2, 2, 0

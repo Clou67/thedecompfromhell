@@ -43,14 +43,14 @@ M794_00461680:   # 0x461680, 0x15c bytes
   046171c  lis 5, 70
   0461720  addi 5, 5, 5752
   0461724  vslw 4, 4, 4
-  0461728  <unknown>
+  0461728  lvlx 2, 4, 3
   046172c  lis 3, 114
   0461730  vcfsx 2, 2, 0
-  0461734  <unknown>
+  0461734  lvlx 3, 0, 5
   0461738  li 4, -3056
   046173c  vspltw 3, 3, 0
   0461740  lis 5, 135
-  0461744  <unknown>
+  0461744  lvlx 5, 4, 3
   0461748  li 4, 436
   046174c  li 3, 2
   0461750  vaddfp 2, 2, 3
@@ -1132,13 +1132,13 @@ UpdateMoby_8:   # 0x462258, 0x1c98 bytes
   046287c  stb 3, 32(31)
   0462880  addi 3, 6, 8660
   0462884  vslw 4, 4, 4
-  0462888  <unknown>
+  0462888  lvlx 2, 5, 4
   046288c  li 4, -3056
   0462890  vcfsx 2, 2, 0
-  0462894  <unknown>
+  0462894  lvlx 3, 0, 3
   0462898  lis 3, 114
   046289c  vspltw 3, 3, 0
-  04628a0  <unknown>
+  04628a0  lvlx 5, 4, 3
   04628a4  li 3, 498
   04628a8  vaddfp 2, 2, 3
   04628ac  vmaddfp 2, 5, 2, 4
@@ -1193,14 +1193,14 @@ UpdateMoby_8:   # 0x462258, 0x1c98 bytes
   0462970  lis 5, 70
   0462974  addi 5, 5, 8660
   0462978  vslw 4, 4, 4
-  046297c  <unknown>
+  046297c  lvlx 2, 4, 3
   0462980  lis 3, 114
   0462984  vcfsx 2, 2, 0
   0462988  li 4, -3056
-  046298c  <unknown>
+  046298c  lvlx 3, 0, 5
   0462990  vspltw 3, 3, 0
   0462994  lis 5, 135
-  0462998  <unknown>
+  0462998  lvlx 5, 4, 3
   046299c  li 4, 436
   04629a0  li 3, 2
   04629a4  vaddfp 2, 2, 3
@@ -1347,14 +1347,14 @@ UpdateMoby_8:   # 0x462258, 0x1c98 bytes
   0462bd8  stb 3, 32(31)
   0462bdc  lis 3, 70
   0462be0  vslw 4, 4, 4
-  0462be4  <unknown>
+  0462be4  lvlx 2, 5, 4
   0462be8  addi 3, 3, 8660
   0462bec  lis 4, 114
   0462bf0  vcfsx 2, 2, 0
-  0462bf4  <unknown>
+  0462bf4  lvlx 3, 0, 3
   0462bf8  li 3, -3056
   0462bfc  vspltw 3, 3, 0
-  0462c00  <unknown>
+  0462c00  lvlx 5, 3, 4
   0462c04  li 3, 498
   0462c08  vaddfp 2, 2, 3
   0462c0c  vmaddfp 2, 5, 2, 4
@@ -1564,14 +1564,14 @@ UpdateMoby_8:   # 0x462258, 0x1c98 bytes
   0462f3c  lis 5, 70
   0462f40  addi 5, 5, 8660
   0462f44  vslw 4, 4, 4
-  0462f48  <unknown>
+  0462f48  lvlx 2, 4, 3
   0462f4c  lis 3, 114
   0462f50  vcfsx 2, 2, 0
-  0462f54  <unknown>
+  0462f54  lvlx 3, 0, 5
   0462f58  li 4, -3056
   0462f5c  vspltw 3, 3, 0
   0462f60  lis 5, 135
-  0462f64  <unknown>
+  0462f64  lvlx 5, 4, 3
   0462f68  li 4, 436
   0462f6c  li 3, 2
   0462f70  vaddfp 2, 2, 3
@@ -1758,14 +1758,14 @@ UpdateMoby_8:   # 0x462258, 0x1c98 bytes
   0463244  lis 5, 70
   0463248  addi 5, 5, 8660
   046324c  vslw 4, 4, 4
-  0463250  <unknown>
+  0463250  lvlx 2, 4, 3
   0463254  lis 3, 114
   0463258  vcfsx 2, 2, 0
-  046325c  <unknown>
+  046325c  lvlx 3, 0, 5
   0463260  li 4, -3056
   0463264  vspltw 3, 3, 0
   0463268  lis 5, 135
-  046326c  <unknown>
+  046326c  lvlx 5, 4, 3
   0463270  li 4, 436
   0463274  li 3, 2
   0463278  vaddfp 2, 2, 3
@@ -1872,14 +1872,14 @@ UpdateMoby_8:   # 0x462258, 0x1c98 bytes
   046340c  lis 5, 70
   0463410  addi 5, 5, 8660
   0463414  vslw 4, 4, 4
-  0463418  <unknown>
+  0463418  lvlx 2, 4, 3
   046341c  lis 3, 114
   0463420  vcfsx 2, 2, 0
   0463424  li 4, -3056
-  0463428  <unknown>
+  0463428  lvlx 3, 0, 5
   046342c  vspltw 3, 3, 0
   0463430  lis 5, 135
-  0463434  <unknown>
+  0463434  lvlx 5, 4, 3
   0463438  li 4, 436
   046343c  li 3, 2
   0463440  vaddfp 2, 2, 3
@@ -2044,13 +2044,13 @@ UpdateMoby_8:   # 0x462258, 0x1c98 bytes
   04636bc  lis 5, 70
   04636c0  addi 5, 5, 8660
   04636c4  vslw 4, 4, 4
-  04636c8  <unknown>
+  04636c8  lvlx 2, 4, 3
   04636cc  lis 3, 114
   04636d0  vcfsx 2, 2, 0
-  04636d4  <unknown>
+  04636d4  lvlx 3, 0, 5
   04636d8  li 4, -3056
   04636dc  vspltw 3, 3, 0
-  04636e0  <unknown>
+  04636e0  lvlx 5, 4, 3
   04636e4  li 4, 496
   04636e8  lwz 3, 112(30)
   04636ec  extsw 3, 3
@@ -2427,7 +2427,7 @@ UpdateMoby_8:   # 0x462258, 0x1c98 bytes
   0463cb8  lfs 30, 116(27)
   0463cbc  lfs 29, 120(27)
   0463cc0  lfs 28, 44(27)
-  0463cc4  <unknown>
+  0463cc4  lvlx 31, 3, 27
   0463cc8  vspltw 31, 31, 0
   0463ccc  li 3, 6
   0463cd0  bl 0xfc620
@@ -2479,7 +2479,7 @@ UpdateMoby_8:   # 0x462258, 0x1c98 bytes
   0463d88  stb 4, 3(3)
   0463d8c  li 7, 43
   0463d90  li 4, 10
-  0463d94  <unknown>
+  0463d94  lvlx 3, 6, 5
   0463d98  li 5, 2
   0463d9c  vmaddfp 2, 3, 31, 2
   0463da0  li 6, 96

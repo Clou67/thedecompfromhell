@@ -306,8 +306,8 @@ FUN_00366d48:   # 0x366d48, 0x180 bytes
   0366e0c  stfs 1, 40(27)
   0366e10  lfs 1, 12(29)
   0366e14  stfs 1, 44(27)
-  0366e18  <unknown>
-  0366e1c  <unknown>
+  0366e18  lvlx 2, 0, 30
+  0366e1c  lvlx 4, 3, 4
   0366e20  vspltw 2, 2, 0
   0366e24  lis 3, 132
   0366e28  vmaddfp 2, 4, 2, 3

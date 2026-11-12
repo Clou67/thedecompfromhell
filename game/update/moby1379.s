@@ -277,7 +277,7 @@ M1379_0025e1a8:   # 0x25e1a8, 0x5e0 bytes
   025e5ec  li 8, 400
   025e5f0  li 5, 264
   025e5f4  li 7, 280
-  025e5f8  <unknown>
+  025e5f8  lvlx 2, 4, 3
   025e5fc  mtctr 6
   025e600  li 3, 408
   025e604  li 4, 424
@@ -290,8 +290,8 @@ M1379_0025e1a8:   # 0x25e1a8, 0x5e0 bytes
   025e620  addc 4, 1, 4
   025e624  addc 8, 1, 9
   025e628  vcfsx 5, 3, 0
-  025e62c  <unknown>
-  025e630  <unknown>
+  025e62c  lvlx 6, 0, 5
+  025e630  lvlx 7, 0, 7
   025e634  addic 5, 5, 4
   025e638  vspltw 8, 6, 0
   025e63c  addic 7, 7, 4
@@ -498,9 +498,9 @@ M1379_DrawShapeScaled:   # 0x25e7a4, 0x2a8 bytes
   025e94c  ori 7, 7, 6404
   025e950  addic 30, 8, 2
   025e954  ori 6, 6, 6272
-  025e958  <unknown>
+  025e958  lvlx 3, 0, 8
   025e95c  lwz 9, 40(29)
-  025e960  <unknown>
+  025e960  lvlx 4, 0, 30
   025e964  vsraw 3, 3, 2
   025e968  vsraw 4, 4, 2
   025e96c  lwz 10, 8(9)
@@ -677,21 +677,21 @@ M1379_DrawShapeRotated:   # 0x25ea4c, 0x314 bytes
   025ec10  li 8, 148
   025ec14  lis 7, 4
   025ec18  lis 6, 8
-  025ec1c  <unknown>
+  025ec1c  lvlx 6, 3, 1
   025ec20  li 3, 132
-  025ec24  <unknown>
+  025ec24  lvlx 5, 4, 1
   025ec28  ori 5, 30, 0
   025ec2c  ori 7, 7, 6404
   025ec30  ori 6, 6, 6272
   025ec34  li 4, 4
-  025ec38  <unknown>
+  025ec38  lvlx 4, 3, 1
   025ec3c  addic 30, 5, 2
-  025ec40  <unknown>
+  025ec40  lvlx 3, 8, 1
   025ec44  li 3, 8
-  025ec48  <unknown>
+  025ec48  lvlx 8, 0, 30
   025ec4c  vspltisw 7, -1
   025ec50  vsraw 8, 8, 2
-  025ec54  <unknown>
+  025ec54  lvlx 9, 0, 5
   025ec58  vspltisw 10, -1
   025ec5c  vslw 7, 7, 7
   025ec60  vcfsx 8, 8, 0
@@ -3066,12 +3066,12 @@ M1379_Hud_Draw:   # 0x2611a0, 0x828 bytes
   0261248  vspltisw 4, -1
   026124c  addi 4, 3, 16
   0261250  li 6, 192
-  0261254  <unknown>
+  0261254  lvlx 2, 3, 30
   0261258  vslw 4, 4, 4
-  026125c  <unknown>
+  026125c  lvrx 3, 4, 30
   0261260  vor 2, 2, 3
   0261264  ori 3, 27, 0
-  0261268  <unknown>
+  0261268  lvlx 3, 0, 29
   026126c  lis 5, 101
   0261270  li 4, 13
   0261274  vspltw 3, 3, 0
@@ -3963,31 +3963,31 @@ M1379_00262030:   # 0x262030, 0x6a0 bytes
   0262080  lis 11, 165
   0262084  lfs 1, 0(6)
   0262088  lfs 2, -3056(7)
-  026208c  <unknown>
+  026208c  lvlx 2, 0, 6
   0262090  fmuls 1, 2, 1
   0262094  vspltw 2, 2, 0
   0262098  std 29, 240(1)
-  026209c  <unknown>
+  026209c  lvlx 4, 8, 7
   02620a0  lwz 29, 120(3)
   02620a4  li 7, 100
   02620a8  vmaddfp 2, 4, 2, 3
   02620ac  addi 8, 7, 16
   02620b0  lfs 2, 100(29)
-  02620b4  <unknown>
+  02620b4  lvlx 3, 7, 29
   02620b8  fctidz 1, 1
   02620bc  li 7, 16
-  02620c0  <unknown>
+  02620c0  lvrx 4, 8, 29
   02620c4  addi 9, 7, 16
   02620c8  vor 3, 3, 4
   02620cc  li 8, 20
   02620d0  vspltisw 4, -1
   02620d4  lfs 3, 16(29)
   02620d8  addi 10, 8, 16
-  02620dc  <unknown>
+  02620dc  lvlx 5, 7, 29
   02620e0  vctsxs 2, 2, 0
   02620e4  lfs 4, 20(29)
   02620e8  vslw 4, 4, 4
-  02620ec  <unknown>
+  02620ec  lvrx 6, 9, 29
   02620f0  fcfid 1, 1
   02620f4  lfs 5, 16(3)
   02620f8  std 31, 256(1)
@@ -3999,20 +3999,20 @@ M1379_00262030:   # 0x262030, 0x6a0 bytes
   0262110  frsp 1, 1
   0262114  fmuls 1, 2, 1
   0262118  vmaddfp 30, 3, 2, 4
-  026211c  <unknown>
-  0262120  <unknown>
+  026211c  lvlx 2, 8, 29
+  0262120  lvrx 3, 10, 29
   0262124  lfs 6, 20(3)
   0262128  lwz 9, 300(29)
   026212c  vor 2, 2, 3
   0262130  lwz 10, 7128(11)
   0262134  slwi 9, 9, 7
-  0262138  <unknown>
+  0262138  lvlx 3, 7, 3
   026213c  addc 7, 10, 9
   0262140  fmadds 2, 3, 1, 5
   0262144  li 10, 52
   0262148  fmadds 1, 4, 1, 6
   026214c  clrldi 7, 7, 32
-  0262150  <unknown>
+  0262150  lvlx 4, 8, 3
   0262154  li 9, 24
   0262158  vmaddfp 3, 5, 30, 3
   026215c  li 8, 48
@@ -4020,23 +4020,23 @@ M1379_00262030:   # 0x262030, 0x6a0 bytes
   0262164  addi 11, 9, 16
   0262168  lfs 3, 48(7)
   026216c  lfs 4, 52(7)
-  0262170  <unknown>
+  0262170  lvlx 4, 8, 7
   0262174  li 8, 40
   0262178  fsubs 2, 2, 3
   026217c  fsubs 1, 1, 4
   0262180  vsubfp 3, 3, 4
-  0262184  <unknown>
-  0262188  <unknown>
+  0262184  lvlx 4, 10, 7
+  0262188  lvlx 5, 9, 29
   026218c  li 10, 56
   0262190  vsubfp 2, 2, 4
-  0262194  <unknown>
+  0262194  lvrx 6, 11, 29
   0262198  fabs 5, 2
   026219c  lfs 3, 0(7)
   02621a0  fabs 6, 1
   02621a4  lfs 4, 4(7)
-  02621a8  <unknown>
+  02621a8  lvlx 31, 8, 7
   02621ac  li 8, 112
-  02621b0  <unknown>
+  02621b0  lvlx 4, 10, 7
   02621b4  li 7, 116
   02621b8  fmuls 4, 4, 4
   02621bc  vspltw 3, 3, 0
@@ -4048,7 +4048,7 @@ M1379_00262030:   # 0x262030, 0x6a0 bytes
   02621d4  stvewx 2, 7, 1
   02621d8  lwz 7, 112(1)
   02621dc  lfs 8, 112(1)
-  02621e0  <unknown>
+  02621e0  lvlx 3, 9, 3
   02621e4  fmadds 30, 3, 3, 4
   02621e8  fmadds 31, 2, 2, 1
   02621ec  vor 2, 5, 6
@@ -4165,7 +4165,7 @@ M1379_00262030:   # 0x262030, 0x6a0 bytes
   02623a8  lfs 2, 16(28)
   02623ac  li 3, 16
   02623b0  fsubs 3, 30, 2
-  02623b4  <unknown>
+  02623b4  lvlx 29, 3, 28
   02623b8  vspltw 29, 29, 0
   02623bc  fcmpu 0, 31, 3
   02623c0  cror 6, 0, 2
@@ -4221,23 +4221,23 @@ M1379_00262030:   # 0x262030, 0x6a0 bytes
   0262488  li 5, 52
   026248c  li 6, 24
   0262490  vslw 3, 3, 3
-  0262494  <unknown>
+  0262494  lvlx 4, 4, 3
   0262498  addi 4, 5, 16
-  026249c  <unknown>
+  026249c  lvlx 5, 5, 29
   02624a0  li 5, 32
   02624a4  vspltw 4, 4, 0
   02624a8  vaddfp 2, 2, 29
-  02624ac  <unknown>
+  02624ac  lvrx 6, 4, 29
   02624b0  li 4, 36
-  02624b4  <unknown>
+  02624b4  lvlx 7, 5, 3
   02624b8  vor 5, 5, 6
   02624bc  vmaddfp 3, 2, 4, 3
   02624c0  vspltw 4, 7, 0
-  02624c4  <unknown>
+  02624c4  lvlx 2, 6, 3
   02624c8  vspltw 2, 2, 0
   02624cc  vsubfp 30, 4, 5
   02624d0  vspltisw 4, -1
-  02624d4  <unknown>
+  02624d4  lvlx 5, 4, 3
   02624d8  vspltw 5, 5, 0
   02624dc  vslw 6, 4, 4
   02624e0  vspltw 4, 3, 0
@@ -4265,9 +4265,9 @@ M1379_00262030:   # 0x262030, 0x6a0 bytes
   0262538  li 4, 28
   026253c  addi 3, 3, 8196
   0262540  vspltw 3, 30, 0
-  0262544  <unknown>
+  0262544  lvlx 5, 0, 30
   0262548  vslw 2, 2, 2
-  026254c  <unknown>
+  026254c  lvlx 6, 4, 3
   0262550  lis 3, 151
   0262554  vmaddfp 2, 4, 3, 2
   0262558  vspltw 3, 6, 0
@@ -4292,23 +4292,23 @@ M1379_00262030:   # 0x262030, 0x6a0 bytes
   02625a4  li 5, 52
   02625a8  vslw 31, 3, 3
   02625ac  li 6, 24
-  02625b0  <unknown>
+  02625b0  lvlx 3, 4, 3
   02625b4  addi 4, 5, 16
-  02625b8  <unknown>
+  02625b8  lvlx 5, 5, 29
   02625bc  vspltw 3, 3, 0
   02625c0  li 5, 32
   02625c4  vaddfp 4, 2, 29
-  02625c8  <unknown>
-  02625cc  <unknown>
+  02625c8  lvlx 2, 6, 3
+  02625cc  lvrx 6, 4, 29
   02625d0  li 6, 36
-  02625d4  <unknown>
+  02625d4  lvlx 7, 5, 3
   02625d8  vor 5, 5, 6
   02625dc  vspltw 2, 2, 0
   02625e0  vspltisw 6, -1
   02625e4  vslw 6, 6, 6
   02625e8  vmaddfp 31, 4, 3, 31
   02625ec  vspltw 3, 7, 0
-  02625f0  <unknown>
+  02625f0  lvlx 4, 6, 3
   02625f4  vspltw 4, 4, 0
   02625f8  vaddfp 5, 5, 3
   02625fc  vspltw 3, 31, 0
@@ -4333,7 +4333,7 @@ M1379_00262030:   # 0x262030, 0x6a0 bytes
   0262648  vspltisw 4, 0
   026264c  vspltw 3, 4, 0
   0262650  vspltisw 4, -1
-  0262654  <unknown>
+  0262654  lvlx 5, 0, 30
   0262658  lis 3, 151
   026265c  vsubfp 2, 2, 5
   0262660  vslw 4, 4, 4
@@ -6152,9 +6152,9 @@ UpdateMoby_1379_JetFighterFleet:   # 0x264238, 0x17d8 bytes
   0264344  li 6, -3056
   0264348  vslw 3, 3, 3
   026434c  stw 3, 352(4)
-  0264350  <unknown>
+  0264350  lvlx 2, 0, 28
   0264354  vspltw 2, 2, 0
-  0264358  <unknown>
+  0264358  lvlx 4, 6, 5
   026435c  lis 6, 122
   0264360  li 5, 360
   0264364  vmaddfp 2, 4, 2, 3
@@ -6463,11 +6463,11 @@ UpdateMoby_1379_JetFighterFleet:   # 0x264238, 0x17d8 bytes
   0264820  lis 7, 114
   0264824  li 8, -3056
   0264828  stw 6, 352(3)
-  026482c  <unknown>
+  026482c  lvlx 2, 4, 27
   0264830  li 26, 0
   0264834  li 4, 360
   0264838  vspltw 2, 2, 0
-  026483c  <unknown>
+  026483c  lvlx 4, 8, 7
   0264840  li 6, 7
   0264844  li 9, 24
   0264848  vmaddfp 2, 4, 2, 3
@@ -6480,8 +6480,8 @@ UpdateMoby_1379_JetFighterFleet:   # 0x264238, 0x17d8 bytes
   0264864  lfs 31, 8(27)
   0264868  stw 26, 5628(28)
   026486c  stb 6, 32(31)
-  0264870  <unknown>
-  0264874  <unknown>
+  0264870  lvlx 2, 9, 27
+  0264874  lvlx 4, 8, 7
   0264878  vspltw 2, 2, 0
   026487c  li 3, 0
   0264880  li 4, 1
@@ -6538,9 +6538,9 @@ UpdateMoby_1379_JetFighterFleet:   # 0x264238, 0x17d8 bytes
   026494c  addi 6, 6, 16888
   0264950  vspltisw 7, -1
   0264954  vslw 5, 5, 5
-  0264958  <unknown>
+  0264958  lvlx 2, 4, 3
   026495c  vrefp 3, 2
-  0264960  <unknown>
+  0264960  lvlx 4, 5, 6
   0264964  vspltw 4, 4, 0
   0264968  vslw 7, 7, 7
   026496c  vspltisw 8, -1
@@ -6550,10 +6550,10 @@ UpdateMoby_1379_JetFighterFleet:   # 0x264238, 0x17d8 bytes
   026497c  vnmsubfp 6, 3, 2, 4
   0264980  vmaddfp 3, 3, 6, 5
   0264984  vspltisw 5, -1
-  0264988  <unknown>
+  0264988  lvlx 6, 3, 29
   026498c  li 3, 48
   0264990  vslw 5, 5, 5
-  0264994  <unknown>
+  0264994  lvlx 10, 3, 6
   0264998  li 3, 5640
   026499c  vspltw 10, 10, 0
   02649a0  vnmsubfp 9, 3, 2, 4

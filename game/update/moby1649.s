@@ -1027,7 +1027,7 @@ UpdateMoby_1649:   # 0x2a7ac0, 0x330 bytes
   02a7c08  li 10, -5996
   02a7c0c  stw 3, 4(9)
   02a7c10  addic 7, 8, -5996
-  02a7c14  <unknown>
+  02a7c14  lvlx 4, 5, 4
   02a7c18  addic 9, 6, -6000
   02a7c1c  addic 7, 7, 8
   02a7c20  vspltw 4, 4, 0

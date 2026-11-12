@@ -549,10 +549,10 @@ UpdateMoby_1130:   # 0x1d8090, 0xda4 bytes
   01d87fc  lis 5, 114
   01d8800  li 6, -3056
   01d8804  vslw 2, 2, 2
-  01d8808  <unknown>
+  01d8808  lvlx 3, 4, 3
   01d880c  li 3, 392
   01d8810  vspltw 3, 3, 0
-  01d8814  <unknown>
+  01d8814  lvlx 4, 6, 5
   01d8818  vmaddfp 2, 4, 3, 2
   01d881c  vctsxs 2, 2, 0
   01d8820  vspltw 2, 2, 0

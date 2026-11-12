@@ -865,10 +865,10 @@ UpdateMoby_542:   # 0x3af8a0, 0x6dc bytes
   03afce8  stb 4, 32(31)
   03afcec  li 4, -3056
   03afcf0  vslw 2, 2, 2
-  03afcf4  <unknown>
+  03afcf4  lvlx 3, 6, 3
   03afcf8  li 3, 52
   03afcfc  vspltw 3, 3, 0
-  03afd00  <unknown>
+  03afd00  lvlx 4, 4, 5
   03afd04  vmaddfp 2, 4, 3, 2
   03afd08  vctsxs 2, 2, 0
   03afd0c  vspltw 2, 2, 0
@@ -933,10 +933,10 @@ UpdateMoby_542:   # 0x3af8a0, 0x6dc bytes
   03afdf8  stb 4, 32(31)
   03afdfc  li 4, -3056
   03afe00  vslw 2, 2, 2
-  03afe04  <unknown>
+  03afe04  lvlx 3, 5, 3
   03afe08  li 3, 52
   03afe0c  vspltw 3, 3, 0
-  03afe10  <unknown>
+  03afe10  lvlx 4, 4, 6
   03afe14  vmaddfp 2, 4, 3, 2
   03afe18  vctsxs 2, 2, 0
   03afe1c  vspltw 2, 2, 0

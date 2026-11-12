@@ -82,7 +82,7 @@ M1331_0024c380:   # 0x24c380, 0xcfc bytes
   024c49c  stfs 1, 180(1)
   024c4a0  stfs 1, 184(1)
   024c4a4  stfs 1, 188(1)
-  024c4a8  <unknown>
+  024c4a8  lvlx 2, 0, 5
   024c4ac  li 0, 176
   024c4b0  vspltw 2, 2, 0
   024c4b4  lfs 30, 0(5)
@@ -601,11 +601,11 @@ M1331_0024c380:   # 0x24c380, 0xcfc bytes
   024ccb8  vslw 3, 3, 3
   024ccbc  stw 3, 12(31)
   024ccc0  li 3, -3056
-  024ccc4  <unknown>
+  024ccc4  lvlx 2, 4, 5
   024ccc8  lfs 1, 100(5)
   024cccc  vspltw 2, 2, 0
   024ccd0  li 4, 10
-  024ccd4  <unknown>
+  024ccd4  lvlx 4, 3, 6
   024ccd8  lfs 2, -3056(6)
   024ccdc  vmaddfp 2, 4, 2, 3
   024cce0  fmuls 1, 2, 1
@@ -671,11 +671,11 @@ M1331_0024c380:   # 0x24c380, 0xcfc bytes
   024cdd0  vslw 3, 3, 3
   024cdd4  stw 3, 12(26)
   024cdd8  li 3, -3056
-  024cddc  <unknown>
+  024cddc  lvlx 2, 4, 5
   024cde0  lfs 1, 100(5)
   024cde4  vspltw 2, 2, 0
   024cde8  li 4, 10
-  024cdec  <unknown>
+  024cdec  lvlx 4, 3, 6
   024cdf0  lfs 2, -3056(6)
   024cdf4  vmaddfp 2, 4, 2, 3
   024cdf8  fmuls 1, 2, 1

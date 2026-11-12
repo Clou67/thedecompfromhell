@@ -350,15 +350,15 @@ FUN_0033a1d0:   # 0x33a1d0, 0xa04 bytes
   033a3a0  stfs 30, 28(25)
   033a3a4  stfs 31, 24(25)
   033a3a8  addic 28, 28, -25432
-  033a3ac  <unknown>
-  033a3b0  <unknown>
+  033a3ac  lvlx 2, 4, 3
+  033a3b0  lvlx 3, 6, 5
   033a3b4  vspltw 2, 2, 0
   033a3b8  li 3, 15
   033a3bc  li 9, 36
   033a3c0  fmr 31, 1
   033a3c4  li 10, 38
   033a3c8  vmaddfp 2, 3, 2, 4
-  033a3cc  <unknown>
+  033a3cc  lvlx 6, 3, 28
   033a3d0  vspltisw 3, 10
   033a3d4  vsrw 4, 6, 5
   033a3d8  addc 4, 1, 29
@@ -1386,10 +1386,10 @@ UpdateMoby_305:   # 0x33ac30, 0x1340 bytes
   033b424  vslw 3, 3, 3
   033b428  lfs 1, 48(3)
   033b42c  lfs 2, -3056(4)
-  033b430  <unknown>
+  033b430  lvlx 2, 5, 3
   033b434  fmuls 1, 2, 1
   033b438  vspltw 2, 2, 0
-  033b43c  <unknown>
+  033b43c  lvlx 4, 6, 4
   033b440  lhz 3, 36(30)
   033b444  vmaddfp 2, 4, 2, 3
   033b448  extsh 3, 3

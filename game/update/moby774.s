@@ -489,10 +489,10 @@ UpdateMoby_774:   # 0x4556e0, 0xcc4 bytes
   0455d6c  lis 4, 114
   0455d70  li 6, -3056
   0455d74  vslw 2, 2, 2
-  0455d78  <unknown>
+  0455d78  lvlx 3, 5, 3
   0455d7c  li 3, 356
   0455d80  vspltw 3, 3, 0
-  0455d84  <unknown>
+  0455d84  lvlx 4, 6, 4
   0455d88  vmaddfp 2, 4, 3, 2
   0455d8c  vctsxs 2, 2, 0
   0455d90  vspltw 2, 2, 0

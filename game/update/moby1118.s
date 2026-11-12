@@ -343,10 +343,10 @@ UpdateMoby_1118:   # 0x1d4308, 0x9a8 bytes
   01d45ac  stb 4, 32(30)
   01d45b0  li 4, -3056
   01d45b4  vslw 2, 2, 2
-  01d45b8  <unknown>
+  01d45b8  lvlx 3, 6, 3
   01d45bc  li 3, 64
   01d45c0  vspltw 3, 3, 0
-  01d45c4  <unknown>
+  01d45c4  lvlx 4, 4, 5
   01d45c8  vmaddfp 2, 4, 3, 2
   01d45cc  vctsxs 2, 2, 0
   01d45d0  vspltw 2, 2, 0
@@ -663,8 +663,8 @@ UpdateMoby_1118:   # 0x1d4308, 0x9a8 bytes
   01d4aac  vslw 2, 2, 2
   01d4ab0  li 7, 360
   01d4ab4  stw 3, 352(6)
-  01d4ab8  <unknown>
-  01d4abc  <unknown>
+  01d4ab8  lvlx 3, 5, 31
+  01d4abc  lvlx 4, 4, 28
   01d4ac0  vspltw 3, 3, 0
   01d4ac4  li 3, 0
   01d4ac8  li 4, 0
@@ -744,10 +744,10 @@ UpdateMoby_1118:   # 0x1d4308, 0x9a8 bytes
   01d4bf0  stb 4, 32(30)
   01d4bf4  li 4, -3056
   01d4bf8  vslw 2, 2, 2
-  01d4bfc  <unknown>
+  01d4bfc  lvlx 3, 6, 3
   01d4c00  lis 3, 165
   01d4c04  vspltw 3, 3, 0
-  01d4c08  <unknown>
+  01d4c08  lvlx 4, 4, 5
   01d4c0c  li 7, 68
   01d4c10  lwz 4, 4(31)
   01d4c14  li 5, 0

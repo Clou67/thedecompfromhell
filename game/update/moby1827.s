@@ -117,42 +117,42 @@ M1827_002c11e8:   # 0x2c11e8, 0x7c0 bytes
   02c13ac  std 3, 312(1)
   02c13b0  li 4, 8
   02c13b4  li 3, 4
-  02c13b8  <unknown>
+  02c13b8  lvlx 3, 0, 26
   02c13bc  li 10, 12
   02c13c0  vspltisw 2, 0
   02c13c4  li 11, 24
   02c13c8  vspltw 3, 3, 0
   02c13cc  li 12, 32
   02c13d0  li 9, 0
-  02c13d4  <unknown>
+  02c13d4  lvlx 11, 3, 26
   02c13d8  ori 7, 1, 0
   02c13dc  lfs 24, 4(26)
   02c13e0  li 3, 16
-  02c13e4  <unknown>
+  02c13e4  lvlx 10, 4, 26
   02c13e8  lis 6, 123
   02c13ec  li 4, 20
   02c13f0  lfs 25, 8(26)
-  02c13f4  <unknown>
+  02c13f4  lvlx 12, 10, 26
   02c13f8  lis 5, 123
   02c13fc  lfs 26, 12(26)
   02c1400  li 10, 28
-  02c1404  <unknown>
+  02c1404  lvlx 9, 3, 26
   02c1408  ori 29, 9, 0
   02c140c  lfs 27, 16(26)
   02c1410  li 3, 180
-  02c1414  <unknown>
+  02c1414  lvlx 5, 4, 26
   02c1418  lis 30, 123
   02c141c  lfs 28, 20(26)
   02c1420  li 4, 176
-  02c1424  <unknown>
+  02c1424  lvlx 6, 11, 26
   02c1428  ori 8, 1, 0
   02c142c  lfs 29, 24(26)
   02c1430  addic 6, 6, 32564
-  02c1434  <unknown>
+  02c1434  lvlx 7, 10, 26
   02c1438  addic 5, 5, 32568
   02c143c  lfs 30, 28(26)
   02c1440  addc 4, 7, 4
-  02c1444  <unknown>
+  02c1444  lvlx 8, 12, 26
   02c1448  addc 3, 7, 3
   02c144c  lfs 31, 32(26)
   02c1450  vsldoi 31, 2, 2, 0
@@ -177,14 +177,14 @@ M1827_002c11e8:   # 0x2c11e8, 0x7c0 bytes
   02c149c  li 12, 32532
   02c14a0  lfs 1, 32536(10)
   02c14a4  stfs 1, 184(7)
-  02c14a8  <unknown>
+  02c14a8  lvlx 4, 12, 11
   02c14ac  b 0x2c14d0
   02c14b0  lis 10, 123
   02c14b4  lis 11, 123
   02c14b8  li 12, 32532
   02c14bc  lfs 1, 32536(10)
   02c14c0  fneg 1, 1
-  02c14c4  <unknown>
+  02c14c4  lvlx 4, 12, 11
   02c14c8  vsubfp 4, 4, 3
   02c14cc  stfs 1, 184(7)
   02c14d0  vspltisw 13, -1
@@ -194,7 +194,7 @@ M1827_002c11e8:   # 0x2c11e8, 0x7c0 bytes
   02c14e0  vspltisw 16, -1
   02c14e4  vslw 13, 13, 13
   02c14e8  vsraw 14, 2, 0
-  02c14ec  <unknown>
+  02c14ec  lvlx 1, 10, 30
   02c14f0  vslw 15, 15, 15
   02c14f4  vmaddfp 13, 1, 11, 13
   02c14f8  vslw 16, 16, 16
@@ -295,7 +295,7 @@ M1827_002c11e8:   # 0x2c11e8, 0x7c0 bytes
   02c1674  sldi 4, 4, 3
   02c1678  vslw 7, 7, 7
   02c167c  subc 4, 6, 4
-  02c1680  <unknown>
+  02c1680  lvlx 2, 5, 30
   02c1684  lis 6, 44
   02c1688  vrefp 3, 2
   02c168c  subc 3, 3, 4
@@ -303,7 +303,7 @@ M1827_002c11e8:   # 0x2c11e8, 0x7c0 bytes
   02c1694  extsw 3, 3
   02c1698  li 5, 44
   02c169c  std 3, 320(1)
-  02c16a0  <unknown>
+  02c16a0  lvlx 4, 5, 4
   02c16a4  vspltw 4, 4, 0
   02c16a8  li 3, 40
   02c16ac  vspltisw 9, -1
@@ -313,7 +313,7 @@ M1827_002c11e8:   # 0x2c11e8, 0x7c0 bytes
   02c16bc  ori 25, 29, 0
   02c16c0  vmaddfp 3, 3, 6, 5
   02c16c4  vspltisw 6, -1
-  02c16c8  <unknown>
+  02c16c8  lvlx 5, 3, 4
   02c16cc  lfd 1, 320(1)
   02c16d0  vspltw 5, 5, 0
   02c16d4  vslw 6, 6, 6

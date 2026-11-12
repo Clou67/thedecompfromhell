@@ -48,18 +48,18 @@ UpdateMoby_351:   # 0x242c28, 0xb98 bytes
   0242cd8  vslw 5, 5, 5
   0242cdc  lis 8, 121
   0242ce0  vslw 6, 6, 6
-  0242ce4  <unknown>
+  0242ce4  lvlx 2, 4, 3
   0242ce8  addi 7, 7, 11176
   0242cec  stw 6, 21924(5)
   0242cf0  li 5, -7824
   0242cf4  vcfsx 2, 2, 0
   0242cf8  lis 6, 114
-  0242cfc  <unknown>
+  0242cfc  lvlx 3, 0, 7
   0242d00  li 7, -3056
-  0242d04  <unknown>
+  0242d04  lvlx 4, 5, 8
   0242d08  vspltw 3, 3, 0
   0242d0c  vcfsx 4, 4, 0
-  0242d10  <unknown>
+  0242d10  lvlx 7, 7, 6
   0242d14  li 6, 1
   0242d18  vaddfp 2, 2, 3
   0242d1c  vaddfp 3, 4, 3
@@ -320,8 +320,8 @@ UpdateMoby_351:   # 0x242c28, 0xb98 bytes
   0243118  addi 4, 4, 11176
   024311c  li 6, 64
   0243120  vslw 2, 2, 2
-  0243124  <unknown>
-  0243128  <unknown>
+  0243124  lvlx 3, 5, 29
+  0243128  lvlx 4, 6, 4
   024312c  li 4, 32
   0243130  lwz 5, 112(3)
   0243134  vspltw 4, 4, 0

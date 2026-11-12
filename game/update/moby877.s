@@ -414,10 +414,10 @@ UpdateMoby_877:   # 0x49ede8, 0xaac bytes
   049f15c  lis 5, 114
   049f160  li 6, -3056
   049f164  vslw 2, 2, 2
-  049f168  <unknown>
+  049f168  lvlx 3, 4, 3
   049f16c  li 3, 124
   049f170  vspltw 3, 3, 0
-  049f174  <unknown>
+  049f174  lvlx 4, 6, 5
   049f178  lwz 4, 116(30)
   049f17c  vmaddfp 2, 4, 3, 2
   049f180  cmpwi 4, -1

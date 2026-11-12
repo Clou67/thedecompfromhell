@@ -194,10 +194,10 @@ UpdateMoby_1309:   # 0x244840, 0xfe4 bytes
   0244b38  vspltisw 2, -1
   0244b3c  lis 4, 114
   0244b40  li 5, -3056
-  0244b44  <unknown>
+  0244b44  lvlx 3, 3, 29
   0244b48  vslw 2, 2, 2
   0244b4c  vspltw 3, 3, 0
-  0244b50  <unknown>
+  0244b50  lvlx 4, 5, 4
   0244b54  addic 3, 30, 500
   0244b58  li 4, 496
   0244b5c  vmaddfp 2, 4, 3, 2
@@ -215,11 +215,11 @@ UpdateMoby_1309:   # 0x244840, 0xfe4 bytes
   0244b8c  lis 5, 114
   0244b90  li 6, -3056
   0244b94  vslw 2, 2, 2
-  0244b98  <unknown>
+  0244b98  lvlx 3, 4, 3
   0244b9c  li 3, 496
   0244ba0  vspltw 3, 3, 0
   0244ba4  li 4, 10
-  0244ba8  <unknown>
+  0244ba8  lvlx 4, 6, 5
   0244bac  vmaddfp 2, 4, 3, 2
   0244bb0  vctsxs 2, 2, 0
   0244bb4  vspltw 2, 2, 0

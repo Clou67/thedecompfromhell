@@ -296,8 +296,8 @@ UpdateParts:   # 0x11e8a0, 0x270 bytes
   011e8fc  li 7, 4
   011e900  lvx 7, 0, 5
   011e904  vspltw 11, 4, 0
-  011e908  <unknown>
-  011e90c  <unknown>
+  011e908  lvlx 8, 10, 5
+  011e90c  lvlx 9, 4, 5
   011e910  li 10, 0
   011e914  stvewx 6, 11, 9
   011e918  li 4, 32
@@ -1310,7 +1310,7 @@ UpdatePart_22:   # 0x11f918, 0x27c bytes
   011f924  li 5, 10
   011f928  vspltisw 2, -16
   011f92c  vspltisw 3, 1
-  011f930  <unknown>
+  011f930  lvlx 4, 5, 3
   011f934  lhz 6, 10(3)
   011f938  vsrw 4, 4, 2
   011f93c  addic 6, 6, -1
@@ -1332,7 +1332,7 @@ UpdatePart_22:   # 0x11f918, 0x27c bytes
   011f97c  li 6, 48
   011f980  vspltisw 5, 8
   011f984  stb 4, 8(3)
-  011f988  <unknown>
+  011f988  lvlx 3, 5, 3
   011f98c  lis 4, 18
   011f990  li 5, 4
   011f994  vsraw 3, 3, 4
@@ -1342,7 +1342,7 @@ UpdatePart_22:   # 0x11f918, 0x27c bytes
   011f9a4  vcmpgtsw 7, 2, 5
   011f9a8  vcfsx 3, 3, 0
   011f9ac  vsel 5, 2, 5, 7
-  011f9b0  <unknown>
+  011f9b0  lvlx 4, 5, 4
   011f9b4  li 7, 49
   011f9b8  vspltw 4, 4, 0
   011f9bc  li 5, 51
@@ -1350,21 +1350,21 @@ UpdatePart_22:   # 0x11f918, 0x27c bytes
   011f9c4  li 8, 50
   011f9c8  vslw 11, 11, 11
   011f9cc  vcfsx 2, 2, 0
-  011f9d0  <unknown>
+  011f9d0  lvlx 9, 0, 4
   011f9d4  vspltisw 13, -8
   011f9d8  vslw 5, 5, 7
   011f9dc  vspltw 7, 9, 0
   011f9e0  vrefp 8, 3
   011f9e4  vcfsx 5, 5, 0
   011f9e8  vspltisw 9, -1
-  011f9ec  <unknown>
+  011f9ec  lvlx 12, 5, 3
   011f9f0  li 5, 55
-  011f9f4  <unknown>
+  011f9f4  lvlx 0, 6, 3
   011f9f8  li 6, 52
   011f9fc  vslw 9, 9, 9
   011fa00  vnmsubfp 10, 8, 3, 4
   011fa04  vmaddfp 5, 5, 7, 9
-  011fa08  <unknown>
+  011fa08  lvlx 9, 7, 3
   011fa0c  vsrw 7, 0, 13
   011fa10  li 7, 53
   011fa14  vsrw 9, 9, 13
@@ -1373,15 +1373,15 @@ UpdatePart_22:   # 0x11f918, 0x27c bytes
   011fa20  vmaddfp 6, 8, 10, 6
   011fa24  vsrw 8, 12, 13
   011fa28  vspltisw 12, -1
-  011fa2c  <unknown>
-  011fa30  <unknown>
+  011fa2c  lvlx 10, 8, 3
+  011fa30  lvlx 0, 5, 3
   011fa34  li 5, 54
   011fa38  vslw 12, 12, 12
   011fa3c  vcfsx 8, 8, 0
-  011fa40  <unknown>
-  011fa44  <unknown>
+  011fa40  lvlx 14, 6, 3
+  011fa44  lvlx 15, 7, 3
   011fa48  lfs 1, 16(3)
-  011fa4c  <unknown>
+  011fa4c  lvlx 16, 5, 3
   011fa50  vnmsubfp 1, 6, 3, 4
   011fa54  vsrw 0, 0, 13
   011fa58  vsrw 10, 10, 13
@@ -1415,7 +1415,7 @@ UpdatePart_22:   # 0x11f918, 0x27c bytes
   011fac8  vnmsubfp 3, 6, 3, 4
   011facc  vcfsx 1, 14, 0
   011fad0  vspltisw 14, -1
-  011fad4  <unknown>
+  011fad4  lvlx 4, 5, 4
   011fad8  stfs 1, 16(3)
   011fadc  vspltw 4, 4, 0
   011fae0  stfs 2, 20(3)

@@ -473,10 +473,10 @@ M530_003abcb8:   # 0x3abcb8, 0x88c bytes
   03ac3f0  lis 5, 114
   03ac3f4  li 6, -3056
   03ac3f8  vslw 2, 2, 2
-  03ac3fc  <unknown>
+  03ac3fc  lvlx 3, 4, 3
   03ac400  li 3, 64
   03ac404  vspltw 3, 3, 0
-  03ac408  <unknown>
+  03ac408  lvlx 4, 6, 5
   03ac40c  vmaddfp 2, 4, 3, 2
   03ac410  vctsxs 2, 2, 0
   03ac414  vspltw 2, 2, 0

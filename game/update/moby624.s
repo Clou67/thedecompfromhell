@@ -786,8 +786,8 @@ UpdateMoby_624:   # 0x3e7830, 0x790 bytes
   03e7d58  li 4, -3056
   03e7d5c  vslw 2, 2, 2
   03e7d60  stfs 1, 24(31)
-  03e7d64  <unknown>
-  03e7d68  <unknown>
+  03e7d64  lvlx 3, 6, 3
+  03e7d68  lvlx 4, 4, 5
   03e7d6c  vspltw 3, 3, 0
   03e7d70  li 3, 44
   03e7d74  vmaddfp 2, 4, 3, 2

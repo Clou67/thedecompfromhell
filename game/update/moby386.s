@@ -335,7 +335,7 @@ M386_00359f28:   # 0x359f28, 0x4d0 bytes
   035a04c  lfs 31, 56(24)
   035a050  vspltisw 30, 0
   035a054  fmr 1, 3
-  035a058  <unknown>
+  035a058  lvlx 31, 3, 24
   035a05c  vspltw 31, 31, 0
   035a060  fmuls 21, 21, 1
   035a064  ori 3, 25, 0
@@ -382,10 +382,10 @@ M386_00359f28:   # 0x359f28, 0x4d0 bytes
   035a108  addi 4, 3, 16
   035a10c  extsw 7, 5
   035a110  addic 25, 25, 1
-  035a114  <unknown>
+  035a114  lvlx 3, 3, 29
   035a118  lis 6, 16256
   035a11c  addc 3, 5, 28
-  035a120  <unknown>
+  035a120  lvrx 4, 4, 29
   035a124  clrldi 3, 3, 32
   035a128  vor 3, 3, 4
   035a12c  addc 4, 5, 26
@@ -412,9 +412,9 @@ M386_00359f28:   # 0x359f28, 0x4d0 bytes
   035a180  subfic 7, 4, 9
   035a184  addi 6, 5, 16
   035a188  addic 4, 4, 1
-  035a18c  <unknown>
+  035a18c  lvlx 4, 5, 29
   035a190  sldi 5, 7, 4
-  035a194  <unknown>
+  035a194  lvrx 5, 6, 29
   035a198  addc 5, 5, 28
   035a19c  vor 4, 4, 5
   035a1a0  lis 6, 16256
@@ -441,7 +441,7 @@ M386_00359f28:   # 0x359f28, 0x4d0 bytes
   035a1f4  lfs 20, 68(3)
   035a1f8  lfs 21, 72(3)
   035a1fc  lfs 22, 76(3)
-  035a200  <unknown>
+  035a200  lvlx 30, 4, 3
   035a204  vspltw 30, 30, 0
   035a208  extsw 3, 26
   035a20c  vcfsx 29, 31, 0
@@ -594,7 +594,7 @@ M386_0035a450:   # 0x35a450, 0x10c bytes
   035a4a8  li 6, 16
   035a4ac  lvx 2, 3, 1
   035a4b0  addi 3, 7, -23552
-  035a4b4  <unknown>
+  035a4b4  lvlx 3, 5, 31
   035a4b8  stw 4, 8872(30)
   035a4bc  li 5, 48
   035a4c0  li 4, 32
@@ -650,10 +650,10 @@ M386_0035a560:   # 0x35a560, 0xcc bytes
   035a584  vcfsx 4, 3, 0
   035a588  addi 8, 6, 16
   035a58c  vspltisw 5, -1
-  035a590  <unknown>
+  035a590  lvlx 6, 6, 5
   035a594  vadduwm 3, 3, 2
   035a598  vslw 5, 5, 5
-  035a59c  <unknown>
+  035a59c  lvrx 7, 8, 5
   035a5a0  vor 6, 6, 7
   035a5a4  vmaddfp 4, 6, 4, 5
   035a5a8  vspltw 4, 4, 0
@@ -670,7 +670,7 @@ M386_0035a560:   # 0x35a560, 0xcc bytes
   035a5d4  li 9, 20
   035a5d8  addic 6, 7, 160
   035a5dc  mtctr 9
-  035a5e0  <unknown>
+  035a5e0  lvlx 4, 0, 8
   035a5e4  vspltw 4, 4, 0
   035a5e8  vcfsx 5, 3, 0
   035a5ec  vspltisw 6, -1
@@ -815,7 +815,7 @@ UpdateMoby_386:   # 0x35a6b8, 0x3dc bytes
   035a89c  lvx 2, 4, 5
   035a8a0  stw 31, 176(1)
   035a8a4  li 4, 16
-  035a8a8  <unknown>
+  035a8a8  lvlx 3, 3, 31
   035a8ac  li 3, 48
   035a8b0  lvx 5, 6, 1
   035a8b4  stw 31, 180(1)

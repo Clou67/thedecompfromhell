@@ -40,12 +40,14 @@ def regs(mn, ops):
     if mn in ('li', 'lis'): nimm = 1
     regtoks = toks[:len(toks) - nimm] if nimm else toks
     defs, uses = set(), set()
+    if mn.startswith('v') or mn in ('mtvscr', 'mfvscr'): return defs, uses     # vector registers only
     for i, t in enumerate(regtoks):
         m = re.match(r'^-?(?:\d+|0x[0-9a-f]+)\((\d+)\)$', t)
         if m:
             uses.add('r' + m[1]); continue
         if not re.match(r'^\d+$', t): continue
         if mn.startswith(('cmp', 'fcmp')) and i == 0: continue          # cr field
+        if mn.startswith(('lv', 'stv')) and i == 0: continue             # vector register
         if mn in ('lfs', 'lfd', 'lfsx', 'lfdx', 'lfsu', 'lfdu', 'stfs', 'stfd', 'stfsx', 'stfdx', 'stfiwx'):
             k = 'f' if i == 0 else 'r'
         elif mn in ('fctiwz', 'fctidz', 'fcfid', 'frsp') or (mn.startswith('f') and mn not in ('fcmpu', 'fcmpo')):

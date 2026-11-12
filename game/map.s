@@ -209,8 +209,8 @@ Map_LoadPlanetMap:   # 0xe1b28, 0x400 bytes
   00e1e40  addic 28, 28, 420
   00e1e44  ori 4, 3, 0
   00e1e48  vsldoi 6, 31, 31, 0
-  00e1e4c  <unknown>
-  00e1e50  <unknown>
+  00e1e4c  lvlx 2, 0, 6
+  00e1e50  lvlx 4, 5, 6
   00e1e54  vspltw 2, 2, 0
   00e1e58  vspltw 4, 4, 0
   00e1e5c  vcfsx 3, 6, 0
@@ -880,9 +880,9 @@ Map_UpdateZoomPan:   # 0xe2848, 0x2e0 bytes
   00e2870  lwz 3, 552(4)
   00e2874  cmpwi 6, 9, 0
   00e2878  cmpwi 7, 0
-  00e287c  <unknown>
+  00e287c  lvlx 3, 6, 5
   00e2880  cmpwi 1, 3, 0
-  00e2884  <unknown>
+  00e2884  lvlx 2, 8, 5
   00e2888  bt 2, 0xe2894
   00e288c  li 3, 1
   00e2890  b 0xe2b24
@@ -946,15 +946,15 @@ Map_UpdateZoomPan:   # 0xe2848, 0x2e0 bytes
   00e2978  vspltisw 7, -1
   00e297c  li 8, 12
   00e2980  vspltisw 9, -1
-  00e2984  <unknown>
-  00e2988  <unknown>
+  00e2984  lvlx 4, 5, 3
+  00e2988  lvrx 5, 6, 3
   00e298c  addi 5, 7, 10292
   00e2990  vslw 7, 7, 7
   00e2994  vor 4, 4, 5
   00e2998  li 6, 8
   00e299c  vslw 9, 9, 9
   00e29a0  vrefp 5, 4
-  00e29a4  <unknown>
+  00e29a4  lvlx 6, 8, 5
   00e29a8  vspltw 6, 6, 0
   00e29ac  vspltisw 10, -1
   00e29b0  li 9, 340
@@ -966,7 +966,7 @@ Map_UpdateZoomPan:   # 0xe2848, 0x2e0 bytes
   00e29c8  li 12, 0
   00e29cc  vmaddfp 5, 5, 8, 7
   00e29d0  vspltisw 8, -1
-  00e29d4  <unknown>
+  00e29d4  lvlx 7, 6, 5
   00e29d8  lwz 7, 552(4)
   00e29dc  vspltw 7, 7, 0
   00e29e0  vslw 8, 8, 8
@@ -981,13 +981,13 @@ Map_UpdateZoomPan:   # 0xe2848, 0x2e0 bytes
   00e2a04  vslw 9, 12, 12
   00e2a08  vnmsubfp 4, 5, 4, 6
   00e2a0c  vslw 6, 11, 11
-  00e2a10  <unknown>
+  00e2a10  lvlx 11, 6, 3
   00e2a14  vmaddfp 4, 5, 4, 8
-  00e2a18  <unknown>
-  00e2a1c  <unknown>
+  00e2a18  lvrx 5, 8, 3
+  00e2a1c  lvlx 8, 9, 7
   00e2a20  addi 8, 6, 16
   00e2a24  vor 5, 11, 5
-  00e2a28  <unknown>
+  00e2a28  lvrx 11, 10, 7
   00e2a2c  li 10, 16
   00e2a30  vmaddfp 4, 4, 7, 10
   00e2a34  vor 7, 8, 11
@@ -1003,7 +1003,7 @@ Map_UpdateZoomPan:   # 0xe2848, 0x2e0 bytes
   00e2a5c  stvewx 3, 6, 3
   00e2a60  stvewx 2, 9, 7
   00e2a64  lwz 3, 552(4)
-  00e2a68  <unknown>
+  00e2a68  lvlx 2, 10, 5
   00e2a6c  slwi 7, 3, 2
   00e2a70  slwi 5, 3, 2
   00e2a74  extsw 7, 7
@@ -1014,8 +1014,8 @@ Map_UpdateZoomPan:   # 0xe2848, 0x2e0 bytes
   00e2a88  slwi 9, 3, 2
   00e2a8c  slwi 3, 3, 2
   00e2a90  extsw 9, 9
-  00e2a94  <unknown>
-  00e2a98  <unknown>
+  00e2a94  lvlx 3, 6, 7
+  00e2a98  lvrx 5, 8, 7
   00e2a9c  addi 8, 6, 16
   00e2aa0  vor 3, 3, 5
   00e2aa4  addc 9, 4, 9
@@ -1026,8 +1026,8 @@ Map_UpdateZoomPan:   # 0xe2848, 0x2e0 bytes
   00e2ab8  lis 10, 4096
   00e2abc  vspltw 3, 3, 0
   00e2ac0  stvewx 3, 6, 7
-  00e2ac4  <unknown>
-  00e2ac8  <unknown>
+  00e2ac4  lvlx 3, 6, 5
+  00e2ac8  lvrx 4, 8, 5
   00e2acc  lwz 7, 340(9)
   00e2ad0  vor 3, 3, 4
   00e2ad4  extsw 8, 7
@@ -1328,22 +1328,22 @@ DrawMapFrame:   # 0xe2e10, 0x1838 bytes
   00e2fb0  lfs 1, 180(3)
   00e2fb4  lwz 6, 340(3)
   00e2fb8  addi 7, 5, 16
-  00e2fbc  <unknown>
+  00e2fbc  lvlx 2, 5, 3
   00e2fc0  li 5, 340
-  00e2fc4  <unknown>
+  00e2fc4  lvrx 3, 7, 3
   00e2fc8  lfd 2, 376(1)
   00e2fcc  addi 7, 5, 16
   00e2fd0  fcfid 2, 2
-  00e2fd4  <unknown>
+  00e2fd4  lvlx 4, 5, 3
   00e2fd8  addi 5, 23, 16
   00e2fdc  vor 2, 2, 3
   00e2fe0  srawi 6, 6, 15
-  00e2fe4  <unknown>
+  00e2fe4  lvrx 5, 7, 3
   00e2fe8  vspltisw 3, 15
   00e2fec  vor 4, 4, 5
   00e2ff0  lis 7, 151
-  00e2ff4  <unknown>
-  00e2ff8  <unknown>
+  00e2ff4  lvlx 5, 23, 3
+  00e2ff8  lvrx 6, 5, 3
   00e2ffc  addic 3, 7, -16268
   00e3000  vsraw 2, 2, 3
   00e3004  frsp 2, 2
@@ -1353,7 +1353,7 @@ DrawMapFrame:   # 0xe2e10, 0x1838 bytes
   00e3014  vspltisw 6, -8
   00e3018  li 7, 8
   00e301c  vcfsx 2, 2, 0
-  00e3020  <unknown>
+  00e3020  lvlx 5, 31, 3
   00e3024  vsrw 5, 5, 6
   00e3028  vspltisw 6, -1
   00e302c  fmuls 2, 1, 2
@@ -1375,7 +1375,7 @@ DrawMapFrame:   # 0xe2e10, 0x1838 bytes
   00e306c  lfs 2, 4(16)
   00e3070  lwz 8, 380(1)
   00e3074  fmuls 2, 1, 2
-  00e3078  <unknown>
+  00e3078  lvlx 7, 5, 16
   00e307c  extsw 5, 6
   00e3080  lbz 6, 4(3)
   00e3084  vspltw 7, 7, 0
@@ -1392,12 +1392,12 @@ DrawMapFrame:   # 0xe2e10, 0x1838 bytes
   00e30b0  vspltisw 6, -1
   00e30b4  stfd 2, 376(1)
   00e30b8  lwz 12, 380(1)
-  00e30bc  <unknown>
+  00e30bc  lvlx 9, 7, 16
   00e30c0  std 5, 376(1)
   00e30c4  std 9, 344(1)
   00e30c8  subc 5, 10, 11
   00e30cc  std 3, 368(1)
-  00e30d0  <unknown>
+  00e30d0  lvlx 10, 0, 16
   00e30d4  lfd 2, 376(1)
   00e30d8  and 5, 6, 5
   00e30dc  vspltw 31, 10, 0
@@ -1476,7 +1476,7 @@ DrawMapFrame:   # 0xe2e10, 0x1838 bytes
   00e3200  li 3, 12
   00e3204  lfs 1, 12(16)
   00e3208  extsw 4, 15
-  00e320c  <unknown>
+  00e320c  lvlx 2, 3, 16
   00e3210  frsp 26, 26
   00e3214  extsw 5, 22
   00e3218  fmuls 2, 26, 1
@@ -1827,15 +1827,15 @@ DrawMapFrame:   # 0xe2e10, 0x1838 bytes
   00e377c  slwi 8, 8, 2
   00e3780  addi 5, 23, 16
   00e3784  extsw 8, 8
-  00e3788  <unknown>
+  00e3788  lvlx 2, 7, 16
   00e378c  addc 7, 19, 8
   00e3790  lfs 2, 24(16)
-  00e3794  <unknown>
+  00e3794  lvlx 3, 6, 16
   00e3798  lis 21, 144
   00e379c  vspltw 2, 2, 0
   00e37a0  vspltw 3, 3, 0
-  00e37a4  <unknown>
-  00e37a8  <unknown>
+  00e37a4  lvlx 4, 23, 7
+  00e37a8  lvrx 5, 5, 7
   00e37ac  lfs 3, 180(7)
   00e37b0  li 5, 28
   00e37b4  vor 4, 4, 5
@@ -1843,7 +1843,7 @@ DrawMapFrame:   # 0xe2e10, 0x1838 bytes
   00e37bc  vspltisw 5, -1
   00e37c0  lfs 31, 28(16)
   00e37c4  vmaddfp 23, 4, 2, 3
-  00e37c8  <unknown>
+  00e37c8  lvlx 2, 5, 16
   00e37cc  lhz 5, 4(28)
   00e37d0  vspltw 2, 2, 0
   00e37d4  vslw 3, 5, 5
@@ -1860,9 +1860,9 @@ DrawMapFrame:   # 0xe2e10, 0x1838 bytes
   00e3800  ori 30, 21, 0
   00e3804  ori 31, 20, 0
   00e3808  addic 26, 30, 8
-  00e380c  <unknown>
+  00e380c  lvlx 21, 3, 16
   00e3810  addic 27, 30, 4
-  00e3814  <unknown>
+  00e3814  lvlx 20, 5, 16
   00e3818  addic 29, 30, 12
   00e381c  vcfsx 25, 25, 0
   00e3820  vspltw 21, 21, 0
@@ -1886,11 +1886,11 @@ DrawMapFrame:   # 0xe2e10, 0x1838 bytes
   00e3868  li 3, 40
   00e386c  rlwinm 6, 6, 0, 24, 24
   00e3870  cmpwi 6, 0
-  00e3874  <unknown>
+  00e3874  lvlx 22, 3, 16
   00e3878  vspltw 22, 22, 0
   00e387c  bt 2, 0xe388c
   00e3880  li 3, 44
-  00e3884  <unknown>
+  00e3884  lvlx 22, 3, 16
   00e3888  vspltw 22, 22, 0
   00e388c  ori 3, 5, 0
   00e3890  lhz 4, 8(4)
@@ -1916,13 +1916,13 @@ DrawMapFrame:   # 0xe2e10, 0x1838 bytes
   00e38e0  clrldi 3, 3, 32
   00e38e4  clrldi 5, 5, 32
   00e38e8  addi 7, 9, 16
-  00e38ec  <unknown>
-  00e38f0  <unknown>
-  00e38f4  <unknown>
+  00e38ec  lvlx 2, 6, 3
+  00e38f0  lvrx 3, 4, 3
+  00e38f4  lvlx 4, 6, 5
   00e38f8  vor 2, 2, 3
-  00e38fc  <unknown>
-  00e3900  <unknown>
-  00e3904  <unknown>
+  00e38fc  lvrx 3, 8, 5
+  00e3900  lvlx 5, 9, 5
+  00e3904  lvrx 7, 7, 5
   00e3908  lhz 3, 4(5)
   00e390c  vor 3, 4, 3
   00e3910  vor 5, 5, 7
@@ -1938,8 +1938,8 @@ DrawMapFrame:   # 0xe2e10, 0x1838 bytes
   00e3938  slwi 4, 4, 2
   00e393c  extsw 4, 4
   00e3940  addc 4, 4, 19
-  00e3944  <unknown>
-  00e3948  <unknown>
+  00e3944  lvlx 6, 23, 4
+  00e3948  lvrx 7, 3, 4
   00e394c  vor 6, 6, 7
   00e3950  vspltisw 7, -1
   00e3954  vspltw 6, 6, 0
@@ -2581,7 +2581,7 @@ DrawMapFrame:   # 0xe2e10, 0x1838 bytes
   00e4344  extsw 3, 3
   00e4348  vcfsx 2, 2, 0
   00e434c  li 5, 132
-  00e4350  <unknown>
+  00e4350  lvlx 3, 4, 1
   00e4354  std 3, 376(1)
   00e4358  lfs 1, 128(1)
   00e435c  subc 3, 22, 15
@@ -2590,7 +2590,7 @@ DrawMapFrame:   # 0xe2e10, 0x1838 bytes
   00e4368  extsw 3, 3
   00e436c  vmaddfp 2, 3, 2, 30
   00e4370  vcfsx 3, 4, 0
-  00e4374  <unknown>
+  00e4374  lvlx 4, 5, 1
   00e4378  lfd 2, 376(1)
   00e437c  fcfid 2, 2
   00e4380  vspltw 2, 2, 0

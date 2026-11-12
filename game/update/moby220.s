@@ -297,10 +297,10 @@ UpdateMoby_220:   # 0x2f7cf8, 0xefc bytes
   02f8170  lis 4, 114
   02f8174  li 6, -3056
   02f8178  vslw 2, 2, 2
-  02f817c  <unknown>
+  02f817c  lvlx 3, 5, 3
   02f8180  li 3, 228
   02f8184  vspltw 3, 3, 0
-  02f8188  <unknown>
+  02f8188  lvlx 4, 6, 4
   02f818c  vmaddfp 2, 4, 3, 2
   02f8190  vctsxs 2, 2, 0
   02f8194  vspltw 2, 2, 0
@@ -475,10 +475,10 @@ UpdateMoby_220:   # 0x2f7cf8, 0xefc bytes
   02f8438  lis 5, 114
   02f843c  li 6, -3056
   02f8440  vslw 2, 2, 2
-  02f8444  <unknown>
+  02f8444  lvlx 3, 4, 3
   02f8448  li 3, 228
   02f844c  vspltw 3, 3, 0
-  02f8450  <unknown>
+  02f8450  lvlx 4, 6, 5
   02f8454  li 4, 5
   02f8458  vmaddfp 2, 4, 3, 2
   02f845c  vctsxs 2, 2, 0

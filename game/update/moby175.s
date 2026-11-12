@@ -691,16 +691,16 @@ M175_002b1078:   # 0x2b1078, 0x270 bytes
   02b1190  li 9, 4
   02b1194  addi 8, 8, 4208
   02b1198  vslw 4, 4, 4
-  02b119c  <unknown>
+  02b119c  lvlx 2, 7, 4
   02b11a0  lis 4, 114
   02b11a4  vcfsx 2, 2, 0
-  02b11a8  <unknown>
+  02b11a8  lvlx 3, 9, 8
   02b11ac  li 7, -3056
   02b11b0  vspltw 3, 3, 0
   02b11b4  lis 10, 123
   02b11b8  lis 9, 251
   02b11bc  li 8, 1
-  02b11c0  <unknown>
+  02b11c0  lvlx 5, 7, 4
   02b11c4  addc 4, 6, 6
   02b11c8  li 7, 524
   02b11cc  addc 4, 6, 4

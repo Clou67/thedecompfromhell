@@ -768,10 +768,10 @@ UpdateMoby_1069:   # 0x1b2480, 0xc2c bytes
   01b2b14  vslw 3, 3, 3
   01b2b18  lfs 1, 68(4)
   01b2b1c  lfs 2, -3056(5)
-  01b2b20  <unknown>
+  01b2b20  lvlx 2, 6, 4
   01b2b24  fmuls 1, 2, 1
   01b2b28  vspltw 2, 2, 0
-  01b2b2c  <unknown>
+  01b2b2c  lvlx 4, 7, 5
   01b2b30  vmaddfp 2, 4, 2, 3
   01b2b34  fctiwz 1, 1
   01b2b38  vctsxs 2, 2, 0

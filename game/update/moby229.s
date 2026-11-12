@@ -8,8 +8,8 @@ M229_002fbcb8:   # 0x2fbcb8, 0x160 bytes
   02fbcc8  li 5, -3056
   02fbccc  vslw 2, 2, 2
   02fbcd0  li 6, 4
-  02fbcd4  <unknown>
-  02fbcd8  <unknown>
+  02fbcd4  lvlx 3, 0, 3
+  02fbcd8  lvlx 4, 5, 4
   02fbcdc  vspltw 3, 3, 0
   02fbce0  lis 4, 268
   02fbce4  li 5, -19384
@@ -25,7 +25,7 @@ M229_002fbcb8:   # 0x2fbcb8, 0x160 bytes
   02fbd0c  li 11, -19352
   02fbd10  vspltw 2, 2, 0
   02fbd14  stvewx 2, 5, 4
-  02fbd18  <unknown>
+  02fbd18  lvlx 2, 6, 3
   02fbd1c  li 4, 20
   02fbd20  vspltw 2, 2, 0
   02fbd24  lis 5, 268
@@ -36,7 +36,7 @@ M229_002fbcb8:   # 0x2fbcb8, 0x160 bytes
   02fbd38  vctsxs 2, 2, 0
   02fbd3c  vspltw 2, 2, 0
   02fbd40  stvewx 2, 8, 7
-  02fbd44  <unknown>
+  02fbd44  lvlx 2, 4, 3
   02fbd48  vspltw 2, 2, 0
   02fbd4c  lis 4, 128
   02fbd50  lfs 1, 8(3)
@@ -51,7 +51,7 @@ M229_002fbcb8:   # 0x2fbcb8, 0x160 bytes
   02fbd74  vctsxs 2, 2, 0
   02fbd78  vspltw 2, 2, 0
   02fbd7c  stvewx 2, 6, 5
-  02fbd80  <unknown>
+  02fbd80  lvlx 2, 9, 3
   02fbd84  lis 5, 268
   02fbd88  stw 7, 72(4)
   02fbd8c  lis 6, 268
@@ -75,7 +75,7 @@ M229_002fbcb8:   # 0x2fbcb8, 0x160 bytes
   02fbdd4  stfs 3, -19368(7)
   02fbdd8  vspltw 2, 2, 0
   02fbddc  stvewx 2, 11, 8
-  02fbde0  <unknown>
+  02fbde0  lvlx 2, 4, 3
   02fbde4  lis 3, 268
   02fbde8  vspltw 2, 2, 0
   02fbdec  lis 4, 268
@@ -1698,10 +1698,10 @@ UpdateMoby_229:   # 0x2fd398, 0x520 bytes
   02fd7cc  stb 4, 32(31)
   02fd7d0  li 4, -3056
   02fd7d4  vslw 2, 2, 2
-  02fd7d8  <unknown>
+  02fd7d8  lvlx 3, 6, 3
   02fd7dc  li 3, 84
   02fd7e0  vspltw 3, 3, 0
-  02fd7e4  <unknown>
+  02fd7e4  lvlx 4, 4, 5
   02fd7e8  vmaddfp 2, 4, 3, 2
   02fd7ec  vctsxs 2, 2, 0
   02fd7f0  vspltw 2, 2, 0

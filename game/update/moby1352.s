@@ -272,10 +272,10 @@ UpdateMoby_1352:   # 0x255550, 0x300 bytes
   02557a0  stb 10, 32(31)
   02557a4  lis 3, 114
   02557a8  lfs 1, 4(29)
-  02557ac  <unknown>
+  02557ac  lvlx 2, 4, 29
   02557b0  li 4, 4
   02557b4  vspltw 2, 2, 0
-  02557b8  <unknown>
+  02557b8  lvlx 4, 5, 3
   02557bc  lfs 2, -3056(3)
   02557c0  vmaddfp 2, 4, 2, 3
   02557c4  fmuls 1, 2, 1

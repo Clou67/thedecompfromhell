@@ -160,12 +160,12 @@ UpdateMoby_1073:   # 0x1b4d38, 0x520 bytes
   01b4f54  vspltisw 29, 0
   01b4f58  li 5, 16
   01b4f5c  addc 23, 23, 22
-  01b4f60  <unknown>
+  01b4f60  lvlx 31, 4, 27
   01b4f64  ori 28, 24, 0
   01b4f68  addc 4, 1, 22
-  01b4f6c  <unknown>
+  01b4f6c  lvlx 30, 3, 27
   01b4f70  addic 20, 4, 112
-  01b4f74  <unknown>
+  01b4f74  lvlx 28, 5, 27
   01b4f78  clrldi 21, 23, 32
   01b4f7c  vspltw 31, 31, 0
   01b4f80  clrldi 20, 20, 32
@@ -181,7 +181,7 @@ UpdateMoby_1073:   # 0x1b4d38, 0x520 bytes
   01b4fa8  stw 24, 0(21)
   01b4fac  vslw 2, 2, 2
   01b4fb0  vslw 4, 4, 4
-  01b4fb4  <unknown>
+  01b4fb4  lvlx 5, 4, 3
   01b4fb8  vmaddfp 2, 5, 31, 2
   01b4fbc  vmaddfp 4, 5, 30, 4
   01b4fc0  lis 4, 16256

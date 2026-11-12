@@ -278,20 +278,20 @@ UpdateMoby_557_Hoverboat:   # 0x3b5d10, 0x750 bytes
   03b613c  extsw 3, 3
   03b6140  std 3, 224(1)
   03b6144  lis 3, 59
-  03b6148  <unknown>
+  03b6148  lvlx 2, 5, 4
   03b614c  addi 31, 3, 23800
   03b6150  li 3, 4
   03b6154  vcfsx 2, 2, 0
   03b6158  lis 4, 114
   03b615c  lfs 1, 4(31)
-  03b6160  <unknown>
+  03b6160  lvlx 3, 3, 31
   03b6164  lfd 2, 224(1)
   03b6168  vspltw 3, 3, 0
   03b616c  li 3, -3056
   03b6170  fcfid 2, 2
   03b6174  vaddfp 2, 2, 3
   03b6178  vslw 3, 4, 4
-  03b617c  <unknown>
+  03b617c  lvlx 4, 3, 4
   03b6180  lfs 3, -3056(4)
   03b6184  li 3, 524
   03b6188  frsp 2, 2
@@ -347,13 +347,13 @@ UpdateMoby_557_Hoverboat:   # 0x3b5d10, 0x750 bytes
   03b6250  extsw 3, 3
   03b6254  std 3, 224(1)
   03b6258  lis 3, 59
-  03b625c  <unknown>
+  03b625c  lvlx 2, 5, 4
   03b6260  lis 4, 114
   03b6264  addi 31, 3, 23800
   03b6268  li 3, 4
   03b626c  vcfsx 2, 2, 0
   03b6270  lfs 1, 4(31)
-  03b6274  <unknown>
+  03b6274  lvlx 3, 3, 31
   03b6278  lfs 2, -3056(4)
   03b627c  li 3, -3056
   03b6280  lfd 3, 224(1)
@@ -361,7 +361,7 @@ UpdateMoby_557_Hoverboat:   # 0x3b5d10, 0x750 bytes
   03b6288  fcfid 3, 3
   03b628c  vaddfp 2, 2, 3
   03b6290  vslw 3, 4, 4
-  03b6294  <unknown>
+  03b6294  lvlx 4, 3, 4
   03b6298  li 3, 524
   03b629c  frsp 3, 3
   03b62a0  vmaddfp 2, 4, 2, 3

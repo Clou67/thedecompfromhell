@@ -443,8 +443,8 @@ M1106_001bfdb8:   # 0x1bfdb8, 0x2b0 bytes
   01bff94  vspltisw 2, -1
   01bff98  li 4, -3056
   01bff9c  vslw 2, 2, 2
-  01bffa0  <unknown>
-  01bffa4  <unknown>
+  01bffa0  lvlx 3, 3, 31
+  01bffa4  lvlx 4, 4, 27
   01bffa8  vspltw 3, 3, 0
   01bffac  li 3, 352
   01bffb0  lwz 4, 356(30)
@@ -463,10 +463,10 @@ M1106_001bfdb8:   # 0x1bfdb8, 0x2b0 bytes
   01bffe4  lis 3, 114
   01bffe8  li 6, -3056
   01bffec  vslw 2, 2, 2
-  01bfff0  <unknown>
+  01bfff0  lvlx 3, 4, 5
   01bfff4  li 4, 408
   01bfff8  vspltw 3, 3, 0
-  01bfffc  <unknown>
+  01bfffc  lvlx 4, 6, 3
   01c0000  li 6, 16
   01c0004  vmaddfp 2, 4, 3, 2
   01c0008  vspltisw 3, -1
@@ -476,7 +476,7 @@ M1106_001bfdb8:   # 0x1bfdb8, 0x2b0 bytes
   01c0018  vctsxs 2, 2, 0
   01c001c  vsplth 2, 2, 1
   01c0020  stvehx 2, 4, 30
-  01c0024  <unknown>
+  01c0024  lvlx 2, 6, 5
   01c0028  vspltw 2, 2, 0
   01c002c  vmaddfp 2, 4, 2, 3
   01c0030  vctsxs 2, 2, 0
@@ -1881,8 +1881,8 @@ M1106_001c14d0:   # 0x1c14d0, 0x560 bytes
   01c16f0  stfs 1, 164(1)
   01c16f4  lfs 1, 328(30)
   01c16f8  stfs 1, 168(1)
-  01c16fc  <unknown>
-  01c1700  <unknown>
+  01c16fc  lvlx 2, 3, 30
+  01c1700  lvrx 3, 4, 30
   01c1704  li 3, 172
   01c1708  lfs 1, 332(30)
   01c170c  lis 4, 28
@@ -2406,9 +2406,9 @@ M1106_001c1e18:   # 0x1c1e18, 0x668 bytes
   01c1f60  bf 1, 0x1c23bc
   01c1f64  li 3, 44
   01c1f68  addi 4, 3, 16
-  01c1f6c  <unknown>
-  01c1f70  <unknown>
-  01c1f74  <unknown>
+  01c1f6c  lvlx 2, 3, 28
+  01c1f70  lvlx 30, 0, 31
+  01c1f74  lvrx 3, 4, 28
   01c1f78  vspltw 31, 30, 0
   01c1f7c  vor 2, 2, 3
   01c1f80  lfs 1, 0(31)
@@ -2491,7 +2491,7 @@ M1106_001c1e18:   # 0x1c1e18, 0x668 bytes
   01c20b4  addi 27, 4, 7660
   01c20b8  vspltisw 5, -1
   01c20bc  extsw 5, 5
-  01c20c0  <unknown>
+  01c20c0  lvlx 3, 3, 31
   01c20c4  li 3, 12
   01c20c8  vslw 4, 4, 4
   01c20cc  vsraw 3, 3, 28
@@ -2499,25 +2499,25 @@ M1106_001c1e18:   # 0x1c1e18, 0x668 bytes
   01c20d4  std 5, 120(1)
   01c20d8  lfs 2, 0(27)
   01c20dc  vslw 5, 5, 5
-  01c20e0  <unknown>
+  01c20e0  lvlx 6, 3, 27
   01c20e4  li 3, 4
-  01c20e8  <unknown>
+  01c20e8  lvlx 7, 0, 27
   01c20ec  vspltw 6, 6, 0
   01c20f0  vcfsx 3, 3, 0
   01c20f4  vspltw 7, 7, 0
   01c20f8  vsldoi 27, 30, 30, 0
   01c20fc  vmaddfp 2, 2, 6, 4
-  01c2100  <unknown>
+  01c2100  lvlx 4, 3, 27
   01c2104  lfd 3, 120(1)
   01c2108  li 3, 8
   01c210c  vspltw 29, 4, 0
   01c2110  fcfid 3, 3
-  01c2114  <unknown>
+  01c2114  lvlx 4, 4, 27
   01c2118  addic 4, 1, 116
   01c211c  vspltw 4, 4, 0
   01c2120  vmaddfp 26, 3, 7, 5
   01c2124  vspltisw 5, -1
-  01c2128  <unknown>
+  01c2128  lvlx 7, 3, 27
   01c212c  li 3, 508
   01c2130  vcmpgtfp 3, 2, 6
   01c2134  vslw 5, 5, 5
@@ -2539,16 +2539,16 @@ M1106_001c1e18:   # 0x1c1e18, 0x668 bytes
   01c2174  li 4, 20
   01c2178  vspltisw 4, -1
   01c217c  li 5, 250
-  01c2180  <unknown>
-  01c2184  <unknown>
+  01c2180  lvlx 2, 3, 30
+  01c2184  lvlx 3, 4, 27
   01c2188  li 3, 24
   01c218c  vsraw 2, 2, 28
   01c2190  li 4, 116
   01c2194  vspltw 3, 3, 0
   01c2198  vslw 4, 4, 4
   01c219c  vcfsx 2, 2, 0
-  01c21a0  <unknown>
-  01c21a4  <unknown>
+  01c21a0  lvlx 5, 3, 27
+  01c21a4  lvlx 6, 4, 1
   01c21a8  vspltw 5, 5, 0
   01c21ac  lfs 1, 0(31)
   01c21b0  li 7, 28
@@ -2569,8 +2569,8 @@ M1106_001c1e18:   # 0x1c1e18, 0x668 bytes
   01c21ec  fsubs 1, 1, 2
   01c21f0  stfs 1, 0(31)
   01c21f4  stb 5, 103(30)
-  01c21f8  <unknown>
-  01c21fc  <unknown>
+  01c21f8  lvlx 2, 7, 27
+  01c21fc  lvlx 4, 8, 6
   01c2200  vspltw 2, 2, 0
   01c2204  vmaddfp 2, 4, 2, 3
   01c2208  vctsxs 2, 2, 0
@@ -2660,7 +2660,7 @@ M1106_001c1e18:   # 0x1c1e18, 0x668 bytes
   01c2358  vspltw 29, 29, 0
   01c235c  vcmpgtfp. 2, 31, 29
   01c2360  bt 26, 0x1c2380
-  01c2364  <unknown>
+  01c2364  lvlx 2, 0, 31
   01c2368  vspltw 2, 2, 0
   01c236c  vcmpgtfp. 2, 2, 29
   01c2370  bf 26, 0x1c2380
@@ -2670,7 +2670,7 @@ M1106_001c1e18:   # 0x1c1e18, 0x668 bytes
   01c2380  vspltw 30, 30, 0
   01c2384  vcmpgtfp. 2, 31, 30
   01c2388  bt 26, 0x1c23bc
-  01c238c  <unknown>
+  01c238c  lvlx 2, 0, 31
   01c2390  vspltw 2, 2, 0
   01c2394  vcmpgtfp. 2, 2, 30
   01c2398  bf 26, 0x1c23bc

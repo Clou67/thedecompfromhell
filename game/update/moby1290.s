@@ -78,7 +78,7 @@ M1290_0023dcf8:   # 0x23dcf8, 0x308 bytes
   023de04  fmadds 7, 5, 5, 7
   023de08  stfs 6, 120(1)
   023de0c  lfs 26, 12(5)
-  023de10  <unknown>
+  023de10  lvlx 31, 3, 5
   023de14  lfs 27, 16(5)
   023de18  fsqrts 7, 7
   023de1c  vspltw 31, 31, 0
@@ -122,7 +122,7 @@ M1290_0023dcf8:   # 0x23dcf8, 0x308 bytes
   023deb4  lwz 3, 48(30)
   023deb8  cmpwi 6, 0
   023debc  lfs 1, -3056(4)
-  023dec0  <unknown>
+  023dec0  lvlx 2, 5, 4
   023dec4  bt 2, 0x23def0
   023dec8  vspltisw 3, -1
   023decc  fmuls 2, 1, 27
@@ -242,12 +242,12 @@ M1290_0023e010:   # 0x23e010, 0x120 bytes
   023e09c  li 8, 8
   023e0a0  stw 3, 44(31)
   023e0a4  li 9, 4
-  023e0a8  <unknown>
-  023e0ac  <unknown>
+  023e0a8  lvlx 6, 0, 4
+  023e0ac  lvlx 5, 5, 7
   023e0b0  addic 3, 31, 48
-  023e0b4  <unknown>
+  023e0b4  lvlx 3, 6, 4
   023e0b8  mtctr 9
-  023e0bc  <unknown>
+  023e0bc  lvlx 2, 8, 4
   023e0c0  vspltw 6, 6, 0
   023e0c4  vspltw 3, 3, 0
   023e0c8  vspltw 2, 2, 0

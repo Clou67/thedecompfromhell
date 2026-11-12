@@ -2903,8 +2903,8 @@ M388_0035d338:   # 0x35d338, 0x5f8 bytes
   035d8a8  ori 4, 30, 0
   035d8ac  li 5, 34
   035d8b0  stfs 1, 172(30)
-  035d8b4  <unknown>
-  035d8b8  <unknown>
+  035d8b4  lvlx 3, 7, 6
+  035d8b8  lvlx 4, 9, 8
   035d8bc  vspltw 3, 3, 0
   035d8c0  li 6, 1
   035d8c4  vmaddfp 2, 4, 3, 2
@@ -3070,8 +3070,8 @@ M388_0035d950:   # 0x35d950, 0x94c bytes
   035db5c  ori 3, 31, 0
   035db60  li 28, 1
   035db64  stfs 1, 32(30)
-  035db68  <unknown>
-  035db6c  <unknown>
+  035db68  lvlx 3, 4, 24
+  035db6c  lvlx 4, 6, 5
   035db70  vspltw 3, 3, 0
   035db74  li 5, 38
   035db78  addic 4, 30, 96
@@ -3287,8 +3287,8 @@ M388_0035d950:   # 0x35d950, 0x94c bytes
   035dec0  ori 3, 31, 0
   035dec4  li 28, 1
   035dec8  stfs 1, 32(30)
-  035decc  <unknown>
-  035ded0  <unknown>
+  035decc  lvlx 3, 4, 24
+  035ded0  lvlx 4, 6, 5
   035ded4  vspltw 3, 3, 0
   035ded8  li 5, 38
   035dedc  addic 4, 30, 96
@@ -3443,10 +3443,10 @@ M388_0035d950:   # 0x35d950, 0x94c bytes
   035e130  lis 4, 114
   035e134  li 5, -3056
   035e138  li 7, 256
-  035e13c  <unknown>
+  035e13c  lvlx 3, 3, 24
   035e140  vslw 2, 2, 2
   035e144  vspltw 3, 3, 0
-  035e148  <unknown>
+  035e148  lvlx 4, 5, 4
   035e14c  ori 3, 31, 0
   035e150  vmaddfp 2, 4, 3, 2
   035e154  ori 4, 30, 0
@@ -4819,8 +4819,8 @@ M388_0035f670:   # 0x35f670, 0x8dc bytes
   035f704  addi 3, 3, -2488
   035f708  li 5, -3056
   035f70c  vslw 2, 2, 2
-  035f710  <unknown>
-  035f714  <unknown>
+  035f710  lvlx 3, 0, 3
+  035f714  lvlx 4, 5, 4
   035f718  li 3, 248
   035f71c  vspltw 3, 3, 0
   035f720  lbz 4, 253(31)
@@ -4844,10 +4844,10 @@ M388_0035f670:   # 0x35f670, 0x8dc bytes
   035f768  vslw 2, 2, 2
   035f76c  stb 5, 32(30)
   035f770  li 5, -3056
-  035f774  <unknown>
+  035f774  lvlx 3, 3, 4
   035f778  li 3, 248
   035f77c  vspltw 3, 3, 0
-  035f780  <unknown>
+  035f780  lvlx 4, 5, 6
   035f784  vmaddfp 2, 4, 3, 2
   035f788  vctsxs 2, 2, 0
   035f78c  vspltw 2, 2, 0
@@ -4879,11 +4879,11 @@ M388_0035f670:   # 0x35f670, 0x8dc bytes
   035f7f4  lis 5, 114
   035f7f8  li 6, -3056
   035f7fc  vslw 2, 2, 2
-  035f800  <unknown>
+  035f800  lvlx 3, 4, 3
   035f804  li 3, 248
   035f808  vspltw 3, 3, 0
   035f80c  li 4, 4
-  035f810  <unknown>
+  035f810  lvlx 4, 6, 5
   035f814  vmaddfp 2, 4, 3, 2
   035f818  vctsxs 2, 2, 0
   035f81c  vspltw 2, 2, 0
@@ -4974,10 +4974,10 @@ M388_0035f670:   # 0x35f670, 0x8dc bytes
   035f970  lis 4, 114
   035f974  li 6, -3056
   035f978  vslw 2, 2, 2
-  035f97c  <unknown>
+  035f97c  lvlx 3, 5, 3
   035f980  li 3, 256
   035f984  vspltw 3, 3, 0
-  035f988  <unknown>
+  035f988  lvlx 4, 6, 4
   035f98c  li 5, 5
   035f990  lfs 4, 124(1)
   035f994  li 4, 0
@@ -5008,9 +5008,9 @@ M388_0035f670:   # 0x35f670, 0x8dc bytes
   035f9f8  li 5, -3056
   035f9fc  li 6, 248
   035fa00  vslw 2, 2, 2
-  035fa04  <unknown>
+  035fa04  lvlx 3, 0, 3
   035fa08  li 7, 24
-  035fa0c  <unknown>
+  035fa0c  lvlx 4, 5, 4
   035fa10  vspltw 3, 3, 0
   035fa14  li 8, 292
   035fa18  vmaddfp 2, 4, 3, 2
@@ -5019,8 +5019,8 @@ M388_0035f670:   # 0x35f670, 0x8dc bytes
   035fa24  vctsxs 2, 2, 0
   035fa28  vspltw 2, 2, 0
   035fa2c  stvewx 2, 6, 31
-  035fa30  <unknown>
-  035fa34  <unknown>
+  035fa30  lvlx 2, 7, 3
+  035fa34  lvlx 4, 5, 4
   035fa38  vspltw 2, 2, 0
   035fa3c  vmaddfp 2, 4, 2, 3
   035fa40  vctsxs 2, 2, 0
@@ -5065,10 +5065,10 @@ M388_0035f670:   # 0x35f670, 0x8dc bytes
   035fadc  lis 4, 114
   035fae0  li 6, -3056
   035fae4  vslw 2, 2, 2
-  035fae8  <unknown>
+  035fae8  lvlx 3, 5, 3
   035faec  li 3, 248
   035faf0  vspltw 3, 3, 0
-  035faf4  <unknown>
+  035faf4  lvlx 4, 6, 4
   035faf8  vmaddfp 2, 4, 3, 2
   035fafc  vctsxs 2, 2, 0
   035fb00  vspltw 2, 2, 0
@@ -5086,8 +5086,8 @@ M388_0035f670:   # 0x35f670, 0x8dc bytes
   035fb30  li 5, -3056
   035fb34  vslw 2, 2, 2
   035fb38  li 6, 248
-  035fb3c  <unknown>
-  035fb40  <unknown>
+  035fb3c  lvlx 3, 0, 3
+  035fb40  lvlx 4, 5, 4
   035fb44  vspltw 3, 3, 0
   035fb48  li 7, 24
   035fb4c  vmaddfp 2, 4, 3, 2
@@ -5097,8 +5097,8 @@ M388_0035f670:   # 0x35f670, 0x8dc bytes
   035fb5c  vctsxs 2, 2, 0
   035fb60  vspltw 2, 2, 0
   035fb64  stvewx 2, 6, 31
-  035fb68  <unknown>
-  035fb6c  <unknown>
+  035fb68  lvlx 2, 7, 3
+  035fb6c  lvlx 4, 5, 4
   035fb70  vspltw 2, 2, 0
   035fb74  vmaddfp 2, 4, 2, 3
   035fb78  vctsxs 2, 2, 0
@@ -5116,10 +5116,10 @@ M388_0035f670:   # 0x35f670, 0x8dc bytes
   035fba8  li 6, -3056
   035fbac  vslw 2, 2, 2
   035fbb0  li 7, 32
-  035fbb4  <unknown>
+  035fbb4  lvlx 3, 5, 3
   035fbb8  li 5, 248
   035fbbc  vspltw 3, 3, 0
-  035fbc0  <unknown>
+  035fbc0  lvlx 4, 6, 4
   035fbc4  vmaddfp 2, 4, 3, 2
   035fbc8  vspltisw 3, -1
   035fbcc  li 8, 292
@@ -5127,8 +5127,8 @@ M388_0035f670:   # 0x35f670, 0x8dc bytes
   035fbd4  vctsxs 2, 2, 0
   035fbd8  vspltw 2, 2, 0
   035fbdc  stvewx 2, 5, 31
-  035fbe0  <unknown>
-  035fbe4  <unknown>
+  035fbe0  lvlx 2, 7, 3
+  035fbe4  lvlx 4, 6, 4
   035fbe8  vspltw 2, 2, 0
   035fbec  vmaddfp 2, 4, 2, 3
   035fbf0  vctsxs 2, 2, 0
@@ -5148,11 +5148,11 @@ M388_0035f670:   # 0x35f670, 0x8dc bytes
   035fc28  lis 7, 114
   035fc2c  li 8, -3056
   035fc30  vslw 2, 2, 2
-  035fc34  <unknown>
+  035fc34  lvlx 3, 4, 6
   035fc38  li 9, 256
   035fc3c  vspltw 3, 3, 0
   035fc40  li 10, 24
-  035fc44  <unknown>
+  035fc44  lvlx 4, 8, 7
   035fc48  li 11, 248
   035fc4c  vmaddfp 2, 4, 3, 2
   035fc50  vspltisw 3, -1
@@ -5164,8 +5164,8 @@ M388_0035f670:   # 0x35f670, 0x8dc bytes
   035fc68  vctsxs 2, 2, 0
   035fc6c  vspltw 2, 2, 0
   035fc70  stvewx 2, 9, 31
-  035fc74  <unknown>
-  035fc78  <unknown>
+  035fc74  lvlx 2, 10, 6
+  035fc78  lvlx 4, 8, 7
   035fc7c  vspltw 2, 2, 0
   035fc80  vmaddfp 2, 4, 2, 3
   035fc84  vctsxs 2, 2, 0
@@ -5191,9 +5191,9 @@ M388_0035f670:   # 0x35f670, 0x8dc bytes
   035fcd4  li 5, -3056
   035fcd8  li 6, 248
   035fcdc  vslw 2, 2, 2
-  035fce0  <unknown>
+  035fce0  lvlx 3, 0, 3
   035fce4  li 7, 24
-  035fce8  <unknown>
+  035fce8  lvlx 4, 5, 4
   035fcec  vspltw 3, 3, 0
   035fcf0  li 8, 292
   035fcf4  vmaddfp 2, 4, 3, 2
@@ -5202,8 +5202,8 @@ M388_0035f670:   # 0x35f670, 0x8dc bytes
   035fd00  vctsxs 2, 2, 0
   035fd04  vspltw 2, 2, 0
   035fd08  stvewx 2, 6, 31
-  035fd0c  <unknown>
-  035fd10  <unknown>
+  035fd0c  lvlx 2, 7, 3
+  035fd10  lvlx 4, 5, 4
   035fd14  vspltw 2, 2, 0
   035fd18  vmaddfp 2, 4, 2, 3
   035fd1c  vctsxs 2, 2, 0
@@ -5249,8 +5249,8 @@ M388_0035f670:   # 0x35f670, 0x8dc bytes
   035fdbc  addi 3, 3, -2488
   035fdc0  li 5, -3056
   035fdc4  vslw 2, 2, 2
-  035fdc8  <unknown>
-  035fdcc  <unknown>
+  035fdc8  lvlx 3, 0, 3
+  035fdcc  lvlx 4, 5, 4
   035fdd0  vspltw 3, 3, 0
   035fdd4  li 3, 248
   035fdd8  vmaddfp 2, 4, 3, 2
@@ -5270,8 +5270,8 @@ M388_0035f670:   # 0x35f670, 0x8dc bytes
   035fe10  addi 3, 3, -2488
   035fe14  li 5, -3056
   035fe18  vslw 2, 2, 2
-  035fe1c  <unknown>
-  035fe20  <unknown>
+  035fe1c  lvlx 3, 0, 3
+  035fe20  lvlx 4, 5, 4
   035fe24  vspltw 3, 3, 0
   035fe28  li 3, 248
   035fe2c  vmaddfp 2, 4, 3, 2
@@ -5289,10 +5289,10 @@ M388_0035f670:   # 0x35f670, 0x8dc bytes
   035fe5c  lis 5, 114
   035fe60  li 6, -3056
   035fe64  vslw 2, 2, 2
-  035fe68  <unknown>
+  035fe68  lvlx 3, 4, 3
   035fe6c  li 3, 248
   035fe70  vspltw 3, 3, 0
-  035fe74  <unknown>
+  035fe74  lvlx 4, 6, 5
   035fe78  vmaddfp 2, 4, 3, 2
   035fe7c  vctsxs 2, 2, 0
   035fe80  vspltw 2, 2, 0
@@ -5310,10 +5310,10 @@ M388_0035f670:   # 0x35f670, 0x8dc bytes
   035feb0  lis 5, 114
   035feb4  li 6, -3056
   035feb8  vslw 2, 2, 2
-  035febc  <unknown>
+  035febc  lvlx 3, 4, 3
   035fec0  li 3, 248
   035fec4  vspltw 3, 3, 0
-  035fec8  <unknown>
+  035fec8  lvlx 4, 6, 5
   035fecc  vmaddfp 2, 4, 3, 2
   035fed0  vctsxs 2, 2, 0
   035fed4  vspltw 2, 2, 0
@@ -5579,8 +5579,8 @@ UpdateMoby_388:   # 0x35ffd8, 0x21d4 bytes
   0360368  stb 26, 252(30)
   036036c  stb 3, 268(30)
   0360370  stb 3, 32(31)
-  0360374  <unknown>
-  0360378  <unknown>
+  0360374  lvlx 2, 5, 30
+  0360378  lvrx 3, 4, 30
   036037c  li 3, 8
   0360380  li 4, -1
   0360384  stw 26, 272(30)
@@ -5684,7 +5684,7 @@ UpdateMoby_388:   # 0x35ffd8, 0x21d4 bytes
   036050c  li 6, 545
   0360510  sth 4, 36(30)
   0360514  li 4, 32
-  0360518  <unknown>
+  0360518  lvlx 2, 5, 3
   036051c  vspltw 2, 2, 0
   0360520  stvewx 2, 4, 30
   0360524  stw 6, 312(29)
@@ -5701,7 +5701,7 @@ UpdateMoby_388:   # 0x35ffd8, 0x21d4 bytes
   0360550  li 6, 564
   0360554  sth 4, 36(30)
   0360558  li 4, 32
-  036055c  <unknown>
+  036055c  lvlx 2, 5, 3
   0360560  vspltw 2, 2, 0
   0360564  stvewx 2, 4, 30
   0360568  stw 6, 312(29)

@@ -1144,11 +1144,11 @@ M866_003be2b8:   # 0x3be2b8, 0x8dc bytes
   03be8c0  lis 5, 114
   03be8c4  li 6, -3056
   03be8c8  vslw 2, 2, 2
-  03be8cc  <unknown>
+  03be8cc  lvlx 3, 4, 3
   03be8d0  li 3, 556
   03be8d4  vspltw 3, 3, 0
   03be8d8  li 4, 0
-  03be8dc  <unknown>
+  03be8dc  lvlx 4, 6, 5
   03be8e0  vmaddfp 2, 4, 3, 2
   03be8e4  vctsxs 2, 2, 0
   03be8e8  vspltw 2, 2, 0

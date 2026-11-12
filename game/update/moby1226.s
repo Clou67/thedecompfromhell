@@ -131,8 +131,8 @@ M1226_0020ebd8:   # 0x20ebd8, 0x15c bytes
   020ec60  addi 3, 3, -5168
   020ec64  li 5, -3056
   020ec68  vslw 2, 2, 2
-  020ec6c  <unknown>
-  020ec70  <unknown>
+  020ec6c  lvlx 3, 0, 3
+  020ec70  lvlx 4, 5, 4
   020ec74  li 3, 344
   020ec78  vspltw 3, 3, 0
   020ec7c  vmaddfp 2, 4, 3, 2
@@ -152,7 +152,7 @@ M1226_0020ebd8:   # 0x20ebd8, 0x15c bytes
   020ecb4  lis 6, 114
   020ecb8  li 5, -3056
   020ecbc  li 4, 344
-  020ecc0  <unknown>
+  020ecc0  lvlx 2, 0, 8
   020ecc4  vspltw 2, 2, 0
   020ecc8  lhz 8, 0(3)
   020eccc  lwz 9, -28512(7)
@@ -163,7 +163,7 @@ M1226_0020ebd8:   # 0x20ebd8, 0x15c bytes
   020ece0  cmpwi 9, 128
   020ece4  bf 0, 0x20ed08
   020ece8  vspltisw 3, -1
-  020ecec  <unknown>
+  020ecec  lvlx 4, 5, 6
   020ecf0  lwz 8, 120(8)
   020ecf4  vslw 3, 3, 3
   020ecf8  vmaddfp 3, 4, 2, 3
@@ -1347,7 +1347,7 @@ UpdateMoby_1226:   # 0x20fda8, 0xe94 bytes
   020ffe8  li 4, 328
   020ffec  vslw 4, 4, 4
   020fff0  lwz 3, 0(3)
-  020fff4  <unknown>
+  020fff4  lvlx 2, 4, 30
   020fff8  divw 6, 5, 3
   020fffc  mullw 3, 6, 3
   0210000  addi 6, 4, 16
@@ -1355,15 +1355,15 @@ UpdateMoby_1226:   # 0x20fda8, 0xe94 bytes
   0210008  subc 3, 5, 3
   021000c  li 5, 4
   0210010  addi 4, 4, -664
-  0210014  <unknown>
+  0210014  lvrx 3, 6, 30
   0210018  stw 3, 316(30)
   021001c  vor 2, 2, 3
   0210020  lis 3, 114
-  0210024  <unknown>
+  0210024  lvlx 3, 5, 4
   0210028  li 4, -3056
   021002c  vcfsx 2, 2, 0
   0210030  vspltw 3, 3, 0
-  0210034  <unknown>
+  0210034  lvlx 5, 4, 3
   0210038  li 3, 332
   021003c  li 4, 2
   0210040  vaddfp 2, 2, 3

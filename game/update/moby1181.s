@@ -152,8 +152,8 @@ M1181_001eee28:   # 0x1eee28, 0x25c bytes
   01ef030  li 5, -3056
   01ef034  vslw 2, 2, 2
   01ef038  stfs 1, 0(29)
-  01ef03c  <unknown>
-  01ef040  <unknown>
+  01ef03c  lvlx 3, 0, 3
+  01ef040  lvlx 4, 5, 4
   01ef044  li 3, 38
   01ef048  vspltw 3, 3, 0
   01ef04c  vmaddfp 2, 4, 3, 2
@@ -1099,11 +1099,11 @@ UpdateMoby_1181:   # 0x1ef268, 0x13f0 bytes
   01eff28  lis 5, 114
   01eff2c  li 6, -3056
   01eff30  vslw 2, 2, 2
-  01eff34  <unknown>
+  01eff34  lvlx 3, 4, 3
   01eff38  li 3, 106
   01eff3c  vspltw 3, 3, 0
   01eff40  li 4, 255
-  01eff44  <unknown>
+  01eff44  lvlx 4, 6, 5
   01eff48  li 5, 2
   01eff4c  vmaddfp 2, 4, 3, 2
   01eff50  vctsxs 2, 2, 0

@@ -225,18 +225,18 @@ ShadeVerts:   # 0xe9470, 0x78c bytes
   00e9504  lfs 3, 56(29)
   00e9508  li 9, 12
   00e950c  std 25, 664(1)
-  00e9510  <unknown>
+  00e9510  lvlx 2, 5, 29
   00e9514  lis 25, 15
-  00e9518  <unknown>
+  00e9518  lvlx 3, 6, 29
   00e951c  lis 5, 149
   00e9520  stvx 2, 4, 1
   00e9524  li 6, 320
-  00e9528  <unknown>
+  00e9528  lvlx 2, 7, 3
   00e952c  li 4, 0
   00e9530  stvx 3, 8, 1
   00e9534  addic 5, 5, 5056
   00e9538  std 26, 672(1)
-  00e953c  <unknown>
+  00e953c  lvlx 3, 9, 29
   00e9540  addic 26, 27, 1920
   00e9544  stfs 1, 48(1)
   00e9548  addi 25, 25, -27744
@@ -273,13 +273,13 @@ ShadeVerts:   # 0xe9470, 0x78c bytes
   00e95c4  li 8, 352
   00e95c8  lvx 2, 5, 1
   00e95cc  li 9, 32
-  00e95d0  <unknown>
+  00e95d0  lvlx 3, 0, 25
   00e95d4  li 10, 48
   00e95d8  vspltw 2, 2, 0
   00e95dc  li 11, 64
   00e95e0  lvx 27, 7, 1
   00e95e4  li 23, 88
-  00e95e8  <unknown>
+  00e95e8  lvlx 4, 0, 3
   00e95ec  li 7, 16
   00e95f0  vspltw 3, 3, 0
   00e95f4  li 19, 112
@@ -288,7 +288,7 @@ ShadeVerts:   # 0xe9470, 0x78c bytes
   00e9600  li 17, 272
   00e9604  stvx 2, 6, 1
   00e9608  ld 6, 344(1)
-  00e960c  <unknown>
+  00e960c  lvlx 2, 20, 29
   00e9610  ld 31, 336(1)
   00e9614  addic 30, 6, 112
   00e9618  lvx 31, 8, 1
@@ -303,12 +303,12 @@ ShadeVerts:   # 0xe9470, 0x78c bytes
   00e963c  vxor 29, 3, 31
   00e9640  lvx 6, 11, 25
   00e9644  addic 9, 6, 108
-  00e9648  <unknown>
+  00e9648  lvlx 3, 7, 25
   00e964c  addc 24, 31, 10
   00e9650  li 11, 100
   00e9654  vaddfp 2, 4, 2
   00e9658  addic 7, 6, 16
-  00e965c  <unknown>
+  00e965c  lvlx 4, 30, 25
   00e9660  li 10, 104
   00e9664  vspltw 3, 3, 0
   00e9668  addic 6, 6, 208
@@ -316,9 +316,9 @@ ShadeVerts:   # 0xe9470, 0x78c bytes
   00e9670  addc 9, 31, 9
   00e9674  addc 7, 31, 7
   00e9678  addc 6, 31, 6
-  00e967c  <unknown>
+  00e967c  lvlx 5, 11, 25
   00e9680  li 30, 80
-  00e9684  <unknown>
+  00e9684  lvlx 9, 10, 25
   00e9688  li 31, 240
   00e968c  vspltw 10, 5, 0
   00e9690  li 10, 84
@@ -327,14 +327,14 @@ ShadeVerts:   # 0xe9470, 0x78c bytes
   00e969c  vspltw 28, 29, 0
   00e96a0  ori 5, 26, 0
   00e96a4  vspltw 30, 31, 0
-  00e96a8  <unknown>
+  00e96a8  lvlx 5, 30, 25
   00e96ac  ori 28, 27, 0
   00e96b0  li 30, 288
   00e96b4  stvx 3, 31, 1
   00e96b8  li 31, 256
-  00e96bc  <unknown>
+  00e96bc  lvlx 11, 10, 25
   00e96c0  li 10, 128
-  00e96c4  <unknown>
+  00e96c4  lvlx 16, 23, 25
   00e96c8  stvx 4, 11, 1
   00e96cc  ori 12, 4, 0
   00e96d0  clrldi 11, 8, 32
@@ -373,12 +373,12 @@ ShadeVerts:   # 0xe9470, 0x78c bytes
   00e9754  vperm 27, 27, 3, 15
   00e9758  stvx 8, 30, 1
   00e975c  li 24, 24
-  00e9760  <unknown>
+  00e9760  lvlx 19, 19, 25
   00e9764  addic 6, 5, 4
-  00e9768  <unknown>
+  00e9768  lvlx 1, 18, 25
   00e976c  li 19, 88
-  00e9770  <unknown>
-  00e9774  <unknown>
+  00e9770  lvlx 18, 17, 25
+  00e9774  lvlx 17, 31, 25
   00e9778  vperm 29, 3, 29, 10
   00e977c  vperm 31, 3, 31, 10
   00e9780  vspltw 19, 19, 0
@@ -386,12 +386,12 @@ ShadeVerts:   # 0xe9470, 0x78c bytes
   00e9788  vspltw 18, 18, 0
   00e978c  vspltw 17, 17, 0
   00e9790  li 31, 16
-  00e9794  <unknown>
+  00e9794  lvlx 4, 0, 11
   00e9798  li 30, 96
   00e979c  li 18, 192
   00e97a0  li 17, 120
   00e97a4  li 16, 16
-  00e97a8  <unknown>
+  00e97a8  lvrx 8, 31, 11
   00e97ac  li 31, 104
   00e97b0  vor 4, 4, 8
   00e97b4  lvx 8, 30, 1
@@ -401,9 +401,9 @@ ShadeVerts:   # 0xe9470, 0x78c bytes
   00e97c4  vspltw 0, 4, 0
   00e97c8  li 15, 148
   00e97cc  stvewx 0, 31, 1
-  00e97d0  <unknown>
+  00e97d0  lvlx 0, 0, 10
   00e97d4  li 31, 208
-  00e97d8  <unknown>
+  00e97d8  lvrx 14, 30, 10
   00e97dc  lvx 25, 18, 1
   00e97e0  vor 0, 0, 14
   00e97e4  li 30, 136
@@ -414,8 +414,8 @@ ShadeVerts:   # 0xe9470, 0x78c bytes
   00e97f8  vspltw 25, 0, 0
   00e97fc  vperm 0, 0, 14, 15
   00e9800  stvewx 25, 17, 1
-  00e9804  <unknown>
-  00e9808  <unknown>
+  00e9804  lvlx 25, 0, 9
+  00e9808  lvrx 24, 16, 9
   00e980c  li 17, 272
   00e9810  li 16, 16
   00e9814  vor 25, 25, 24
@@ -430,8 +430,8 @@ ShadeVerts:   # 0xe9470, 0x78c bytes
   00e9838  vperm 25, 25, 24, 15
   00e983c  li 17, 16
   00e9840  stvewx 22, 30, 1
-  00e9844  <unknown>
-  00e9848  <unknown>
+  00e9844  lvlx 14, 0, 8
+  00e9848  lvrx 22, 16, 8
   00e984c  li 30, 152
   00e9850  vperm 4, 4, 8, 23
   00e9854  vor 8, 14, 22
@@ -445,8 +445,8 @@ ShadeVerts:   # 0xe9470, 0x78c bytes
   00e9874  vperm 8, 8, 23, 10
   00e9878  stvewx 14, 30, 1
   00e987c  vperm 14, 27, 25, 9
-  00e9880  <unknown>
-  00e9884  <unknown>
+  00e9880  lvlx 25, 0, 7
+  00e9884  lvrx 24, 17, 7
   00e9888  lvx 23, 31, 1
   00e988c  vor 25, 25, 24
   00e9890  vperm 8, 29, 8, 9
@@ -535,9 +535,9 @@ ShadeVerts:   # 0xe9470, 0x78c bytes
   00e99dc  vor 14, 14, 1
   00e99e0  vspltw 14, 14, 0
   00e99e4  stvewx 14, 0, 27
-  00e99e8  <unknown>
+  00e99e8  lvlx 25, 20, 3
   00e99ec  lvx 24, 23, 1
-  00e99f0  <unknown>
+  00e99f0  lvlx 14, 24, 29
   00e99f4  vperm 24, 25, 24, 10
   00e99f8  vspltw 25, 25, 0
   00e99fc  stvewx 0, 23, 1
@@ -603,13 +603,13 @@ ShadeVerts:   # 0xe9470, 0x78c bytes
   00e9aec  vmaddfp 2, 2, 5, 5
   00e9af0  vspltw 2, 2, 0
   00e9af4  stvewx 2, 0, 26
-  00e9af8  <unknown>
+  00e9af8  lvlx 2, 24, 29
   00e9afc  addic 26, 30, 8
   00e9b00  vmaddfp 2, 4, 2, 8
   00e9b04  vmaddfp 2, 2, 5, 5
   00e9b08  vspltw 2, 2, 0
   00e9b0c  stvewx 2, 0, 31
-  00e9b10  <unknown>
+  00e9b10  lvlx 2, 18, 29
   00e9b14  vaddfp 2, 0, 2
   00e9b18  bt 0, 0xe9790
   00e9b1c  li 5, 304
@@ -894,14 +894,14 @@ BuildVerts:   # 0xe9f48, 0x2a0 bytes
   00e9f88  li 7, 4
   00e9f8c  vspltisw 7, -1
   00e9f90  vspltisw 8, -1
-  00e9f94  <unknown>
-  00e9f98  <unknown>
+  00e9f94  lvlx 4, 6, 3
+  00e9f98  lvlx 5, 0, 5
   00e9f9c  vrlw 2, 4, 2
   00e9fa0  vspltw 31, 5, 0
   00e9fa4  vrlw 3, 4, 3
   00e9fa8  vspltisw 5, -1
   00e9fac  li 6, 8
-  00e9fb0  <unknown>
+  00e9fb0  lvlx 6, 7, 5
   00e9fb4  vand 4, 4, 31
   00e9fb8  vand 2, 2, 31
   00e9fbc  vand 3, 3, 31
@@ -923,8 +923,8 @@ BuildVerts:   # 0xe9f48, 0x2a0 bytes
   00e9ffc  vmaddfp 2, 2, 6, 7
   00ea000  vmaddfp 3, 3, 6, 8
   00ea004  vspltisw 5, 8
-  00ea008  <unknown>
-  00ea00c  <unknown>
+  00ea008  lvlx 6, 6, 5
+  00ea00c  lvlx 7, 7, 5
   00ea010  vspltw 6, 6, 0
   00ea014  vspltw 7, 7, 0
   00ea018  vctuxs 4, 4, 0

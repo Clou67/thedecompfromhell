@@ -82,16 +82,16 @@ FUN_00292d88:   # 0x292d88, 0x424 bytes
   0292ec0  sth 8, 30(3)
   0292ec4  cmpwi 9, 0
   0292ec8  lfs 30, -3052(4)
-  0292ecc  <unknown>
-  0292ed0  <unknown>
-  0292ed4  <unknown>
+  0292ecc  lvlx 4, 6, 4
+  0292ed0  lvlx 2, 5, 29
+  0292ed4  lvrx 3, 7, 29
   0292ed8  vor 2, 2, 3
   0292edc  bt 2, 0x292ee8
   0292ee0  li 4, 0
   0292ee4  stw 4, 56(29)
   0292ee8  li 4, 12
   0292eec  vspltisw 3, -8
-  0292ef0  <unknown>
+  0292ef0  lvlx 5, 4, 3
   0292ef4  lbz 3, 12(3)
   0292ef8  vsrw 3, 5, 3
   0292efc  cmpwi 3, 0
@@ -108,7 +108,7 @@ FUN_00292d88:   # 0x292d88, 0x424 bytes
   0292f28  vspltw 2, 2, 0
   0292f2c  addi 3, 3, 11624
   0292f30  vslw 3, 3, 3
-  0292f34  <unknown>
+  0292f34  lvlx 5, 0, 3
   0292f38  vspltw 5, 5, 0
   0292f3c  vmaddfp 3, 4, 5, 3
   0292f40  vspltw 3, 3, 0
@@ -125,11 +125,11 @@ FUN_00292d88:   # 0x292d88, 0x424 bytes
   0292f6c  stfs 28, 48(29)
   0292f70  li 6, -3056
   0292f74  vslw 3, 3, 3
-  0292f78  <unknown>
+  0292f78  lvlx 2, 4, 3
   0292f7c  cmpwi 27, 0
   0292f80  li 3, 20
   0292f84  vspltw 4, 2, 0
-  0292f88  <unknown>
+  0292f88  lvlx 2, 6, 5
   0292f8c  vmaddfp 3, 2, 4, 3
   0292f90  vctsxs 3, 3, 0
   0292f94  vspltw 3, 3, 0
@@ -167,7 +167,7 @@ FUN_00292d88:   # 0x292d88, 0x424 bytes
   0293014  vspltisw 3, -1
   0293018  addi 4, 4, 11624
   029301c  vslw 3, 3, 3
-  0293020  <unknown>
+  0293020  lvlx 4, 5, 4
   0293024  li 4, 62
   0293028  vspltw 4, 4, 0
   029302c  vmaddfp 2, 2, 4, 3
@@ -180,7 +180,7 @@ FUN_00292d88:   # 0x292d88, 0x424 bytes
   0293048  li 5, 20
   029304c  addi 4, 4, 11624
   0293050  vslw 3, 3, 3
-  0293054  <unknown>
+  0293054  lvlx 4, 5, 4
   0293058  li 4, 62
   029305c  vspltw 4, 4, 0
   0293060  vmaddfp 2, 2, 4, 3
@@ -2575,7 +2575,7 @@ UpdateMoby_153:   # 0x293c48, 0x1d20 bytes
   029569c  fmuls 2, 30, 2
   02956a0  lfs 3, 180(6)
   02956a4  lfs 4, 184(6)
-  02956a8  <unknown>
+  02956a8  lvlx 2, 3, 23
   02956ac  vslw 3, 3, 3
   02956b0  li 8, 360
   02956b4  li 3, 0
@@ -2584,7 +2584,7 @@ UpdateMoby_153:   # 0x293c48, 0x1d20 bytes
   02956c0  fsel 1, 1, 3, 2
   02956c4  fsubs 1, 4, 1
   02956c8  stfs 1, 352(21)
-  02956cc  <unknown>
+  02956cc  lvlx 4, 7, 6
   02956d0  vspltw 4, 4, 0
   02956d4  vmaddfp 2, 2, 4, 3
   02956d8  vctsxs 2, 2, 0
@@ -2679,7 +2679,7 @@ UpdateMoby_153:   # 0x293c48, 0x1d20 bytes
   029583c  stfs 2, 20(31)
   0295840  stfs 3, 24(31)
   0295844  lwz 3, 68(30)
-  0295848  <unknown>
+  0295848  lvlx 2, 4, 23
   029584c  bt 2, 0x295854
   0295850  stw 25, 16(30)
   0295854  cmpwi 3, 0
@@ -2689,7 +2689,7 @@ UpdateMoby_153:   # 0x293c48, 0x1d20 bytes
   0295864  vspltisw 3, -1
   0295868  addi 3, 3, 15240
   029586c  vslw 3, 3, 3
-  0295870  <unknown>
+  0295870  lvlx 4, 4, 3
   0295874  li 3, 68
   0295878  vspltw 4, 4, 0
   029587c  vmaddfp 2, 2, 4, 3

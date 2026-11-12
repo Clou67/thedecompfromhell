@@ -560,7 +560,7 @@ FastVecFromPackedBits:   # 0x500720, 0x98 bytes
   0500748  vspltisw 3, -16
   050074c  li 8, 12
   0500750  vspltisw 4, -8
-  0500754  <unknown>
+  0500754  lvlx 2, 0, 5
   0500758  li 0, 48
   050075c  vspltw 2, 2, 0
   0500760  lvx 5, 1, 0
@@ -570,7 +570,7 @@ FastVecFromPackedBits:   # 0x500720, 0x98 bytes
   0500770  vcfux 2, 2, 0
   0500774  vspltw 2, 2, 0
   0500778  stvewx 2, 0, 3
-  050077c  <unknown>
+  050077c  lvlx 2, 4, 5
   0500780  vspltw 2, 2, 0
   0500784  vand 3, 3, 2
   0500788  vand 4, 4, 2
@@ -660,13 +660,13 @@ FastVecFromSignedShort:   # 0x5008d0, 0x80 bytes
   05008e0  vspltisw 2, -16
   05008e4  li 6, 52
   05008e8  li 4, 54
-  05008ec  <unknown>
-  05008f0  <unknown>
+  05008ec  lvlx 3, 5, 1
+  05008f0  lvlx 4, 7, 1
   05008f4  vsraw 3, 3, 2
   05008f8  li 5, 8
-  05008fc  <unknown>
+  05008fc  lvlx 5, 6, 1
   0500900  vsraw 4, 4, 2
-  0500904  <unknown>
+  0500904  lvlx 6, 4, 1
   0500908  li 6, 12
   050090c  vsraw 5, 5, 2
   0500910  vcfsx 3, 3, 0
@@ -727,7 +727,7 @@ FastVecFromPackedChar:   # 0x5009c8, 0x7c bytes
   05009e8  li 7, 8
   05009ec  li 4, 4
   05009f0  vspltisw 3, -10
-  05009f4  <unknown>
+  05009f4  lvlx 2, 0, 5
   05009f8  li 0, 48
   05009fc  vspltw 2, 2, 0
   0500a00  lvx 4, 1, 0
@@ -739,7 +739,7 @@ FastVecFromPackedChar:   # 0x5009c8, 0x7c bytes
   0500a18  stvewx 3, 0, 3
   0500a1c  vspltw 2, 2, 0
   0500a20  stvewx 2, 4, 3
-  0500a24  <unknown>
+  0500a24  lvlx 2, 6, 5
   0500a28  vspltw 2, 2, 0
   0500a2c  vsrw 2, 4, 2
   0500a30  vcfux 2, 2, 0
@@ -1927,7 +1927,7 @@ FastQuaternionToMtx4:   # 0x501ab0, 0x144 bytes
 
 FastVecFromSignedShort:   # 0x501bf8, 0x220 bytes
   0501bf8  li 5, 16
-  0501bfc  <unknown>
+  0501bfc  lvlx 3, 0, 3
   0501c00  li 6, 2
   0501c04  vspltisw 2, -16
   0501c08  lis 8, 80
@@ -1935,32 +1935,32 @@ FastVecFromSignedShort:   # 0x501bf8, 0x220 bytes
   0501c10  addi 7, 6, 16
   0501c14  vspltisw 11, -1
   0501c18  addi 8, 8, 7156
-  0501c1c  <unknown>
+  0501c1c  lvrx 4, 5, 3
   0501c20  li 5, 4
   0501c24  vslw 6, 6, 6
   0501c28  vor 3, 3, 4
   0501c2c  li 9, 6
-  0501c30  <unknown>
-  0501c34  <unknown>
+  0501c30  lvlx 4, 6, 3
+  0501c34  lvrx 5, 7, 3
   0501c38  addi 6, 5, 16
   0501c3c  vsraw 3, 3, 2
   0501c40  vor 4, 4, 5
   0501c44  li 7, 8
-  0501c48  <unknown>
+  0501c48  lvlx 5, 0, 8
   0501c4c  li 10, 12
-  0501c50  <unknown>
+  0501c50  lvlx 7, 5, 3
   0501c54  addi 8, 9, 16
   0501c58  vcfsx 3, 3, 0
   0501c5c  vspltw 5, 5, 0
   0501c60  vsraw 4, 4, 2
   0501c64  addi 11, 7, 16
-  0501c68  <unknown>
-  0501c6c  <unknown>
+  0501c68  lvrx 8, 6, 3
+  0501c6c  lvlx 9, 9, 3
   0501c70  vor 7, 7, 8
   0501c74  li 6, 10
   0501c78  vcfsx 4, 4, 0
   0501c7c  vspltisw 8, -1
-  0501c80  <unknown>
+  0501c80  lvrx 10, 8, 3
   0501c84  addi 8, 6, 16
   0501c88  vsraw 7, 7, 2
   0501c8c  vslw 8, 8, 8
@@ -1968,19 +1968,19 @@ FastVecFromSignedShort:   # 0x501bf8, 0x220 bytes
   0501c94  vmaddfp 3, 3, 5, 6
   0501c98  vcfsx 6, 7, 0
   0501c9c  vor 7, 9, 10
-  0501ca0  <unknown>
-  0501ca4  <unknown>
+  0501ca0  lvlx 9, 7, 3
+  0501ca4  lvrx 10, 11, 3
   0501ca8  vmaddfp 4, 4, 5, 8
   0501cac  vor 8, 9, 10
   0501cb0  vsraw 7, 7, 2
   0501cb4  vslw 10, 11, 11
   0501cb8  vspltisw 11, 3
   0501cbc  vsrw 8, 8, 2
-  0501cc0  <unknown>
+  0501cc0  lvlx 9, 6, 3
   0501cc4  vspltw 3, 3, 0
   0501cc8  vcfsx 7, 7, 0
   0501ccc  addi 6, 10, 16
-  0501cd0  <unknown>
+  0501cd0  lvrx 12, 8, 3
   0501cd4  vmaddfp 6, 6, 5, 10
   0501cd8  vslw 8, 8, 11
   0501cdc  vspltisw 10, -1
@@ -1990,9 +1990,9 @@ FastVecFromSignedShort:   # 0x501bf8, 0x220 bytes
   0501cec  vcfsx 4, 8, 0
   0501cf0  vslw 8, 10, 10
   0501cf4  vsrw 9, 9, 2
-  0501cf8  <unknown>
+  0501cf8  lvlx 10, 10, 3
   0501cfc  li 8, 20
-  0501d00  <unknown>
+  0501d00  lvrx 12, 6, 3
   0501d04  stvewx 3, 5, 4
   0501d08  vslw 3, 9, 11
   0501d0c  vmaddfp 7, 7, 5, 8
@@ -2012,18 +2012,18 @@ FastVecFromSignedShort:   # 0x501bf8, 0x220 bytes
   0501d44  addi 7, 6, 16
   0501d48  vspltw 7, 7, 0
   0501d4c  vspltisw 9, -1
-  0501d50  <unknown>
+  0501d50  lvlx 10, 9, 3
   0501d54  vmaddfp 3, 3, 5, 8
   0501d58  vcfsx 6, 6, 0
   0501d5c  stvewx 7, 10, 4
-  0501d60  <unknown>
+  0501d60  lvrx 8, 5, 3
   0501d64  addi 10, 8, 16
   0501d68  vspltw 4, 4, 0
   0501d6c  li 5, 22
   0501d70  vslw 7, 9, 9
   0501d74  vor 8, 10, 8
-  0501d78  <unknown>
-  0501d7c  <unknown>
+  0501d78  lvlx 9, 6, 3
+  0501d7c  lvrx 10, 7, 3
   0501d80  addi 6, 5, 16
   0501d84  stvewx 4, 9, 4
   0501d88  vspltw 3, 3, 0
@@ -2032,15 +2032,15 @@ FastVecFromSignedShort:   # 0x501bf8, 0x220 bytes
   0501d94  vor 4, 9, 10
   0501d98  vsraw 6, 8, 2
   0501d9c  li 9, 0
-  0501da0  <unknown>
-  0501da4  <unknown>
+  0501da0  lvlx 7, 8, 3
+  0501da4  lvrx 8, 10, 3
   0501da8  vsraw 4, 4, 2
   0501dac  stvewx 3, 8, 4
   0501db0  vor 3, 7, 8
   0501db4  vcfsx 6, 6, 0
-  0501db8  <unknown>
+  0501db8  lvlx 7, 5, 3
   0501dbc  li 8, 32
-  0501dc0  <unknown>
+  0501dc0  lvrx 8, 6, 3
   0501dc4  li 5, 40
   0501dc8  vcfsx 4, 4, 0
   0501dcc  li 3, 36
@@ -2345,7 +2345,7 @@ FastVecMtx4MultBatch4VMX:   # 0x502238, 0x184 bytes
   05022a0  vslw 6, 6, 6
   05022a4  lvx 4, 5, 1
   05022a8  li 4, 32
-  05022ac  <unknown>
+  05022ac  lvlx 7, 0, 30
   05022b0  vspltw 11, 2, 2
   05022b4  vmaddfp 5, 5, 7, 6
   05022b8  vspltw 9, 2, 1
@@ -2361,21 +2361,21 @@ FastVecMtx4MultBatch4VMX:   # 0x502238, 0x184 bytes
   05022e0  vspltw 7, 3, 1
   05022e4  vslw 10, 10, 10
   05022e8  vslw 11, 11, 11
-  05022ec  <unknown>
+  05022ec  lvlx 12, 6, 30
   05022f0  vspltisw 15, -1
   05022f4  vmaddfp 9, 9, 12, 10
   05022f8  vspltisw 17, -1
   05022fc  vmaddfp 7, 7, 12, 11
   0502300  vspltw 18, 4, 2
-  0502304  <unknown>
+  0502304  lvlx 13, 0, 29
   0502308  li 5, 48
   050230c  vmaddfp 12, 14, 12, 0
   0502310  vspltw 11, 4, 0
-  0502314  <unknown>
+  0502314  lvlx 1, 6, 29
   0502318  vslw 14, 15, 15
-  050231c  <unknown>
+  050231c  lvlx 10, 3, 29
   0502320  vspltisw 15, -1
-  0502324  <unknown>
+  0502324  lvlx 16, 3, 30
   0502328  vspltw 0, 4, 1
   050232c  vmaddfp 11, 11, 16, 14
   0502330  vslw 17, 17, 17
@@ -2390,7 +2390,7 @@ FastVecMtx4MultBatch4VMX:   # 0x502238, 0x184 bytes
   0502354  vperm 2, 6, 2, 15
   0502358  vperm 6, 9, 7, 15
   050235c  vperm 3, 12, 3, 15
-  0502360  <unknown>
+  0502360  lvlx 7, 4, 28
   0502364  vperm 2, 5, 2, 19
   0502368  li 4, 32
   050236c  vspltw 5, 7, 0
@@ -2698,8 +2698,8 @@ FastLerpColor:   # 0x5027bc, 0x94 bytes
   05027f0  addic 5, 1, 52
   05027f4  vspltisw 2, -8
   05027f8  lvx 3, 1, 0
-  05027fc  <unknown>
-  0502800  <unknown>
+  05027fc  lvlx 4, 4, 6
+  0502800  lvlx 5, 4, 5
   0502804  vsrw 4, 4, 2
   0502808  vsrw 5, 5, 2
   050280c  addc 7, 4, 1
@@ -2765,14 +2765,14 @@ FastCheckBsphereInView:   # 0x502910, 0x88 bytes
   0502918  std 0, 144(1)
   050291c  lis 4, 80
   0502920  li 5, 4
-  0502924  <unknown>
+  0502924  lvlx 2, 0, 3
   0502928  li 6, 8
   050292c  fmr 2, 1
   0502930  addi 4, 4, 10480
   0502934  li 7, 112
   0502938  lis 8, 144
-  050293c  <unknown>
-  0502940  <unknown>
+  050293c  lvlx 3, 5, 3
+  0502940  lvlx 4, 6, 3
   0502944  li 5, 16
   0502948  lvx 5, 0, 4
   050294c  lvx 6, 7, 1
@@ -2801,14 +2801,14 @@ FUN_005029c0:   # 0x5029c0, 0x88 bytes
   05029c8  std 0, 144(1)
   05029cc  lis 4, 80
   05029d0  li 5, 4
-  05029d4  <unknown>
+  05029d4  lvlx 2, 0, 3
   05029d8  li 6, 8
   05029dc  fmr 2, 1
   05029e0  addi 4, 4, 10656
   05029e4  li 7, 112
   05029e8  lis 8, 144
-  05029ec  <unknown>
-  05029f0  <unknown>
+  05029ec  lvlx 3, 5, 3
+  05029f0  lvlx 4, 6, 3
   05029f4  li 5, 16
   05029f8  lvx 5, 0, 4
   05029fc  lvx 6, 7, 1

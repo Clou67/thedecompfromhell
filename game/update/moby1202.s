@@ -1473,10 +1473,10 @@ M1202_001fbc78:   # 0x1fbc78, 0x102c bytes
   01fc514  stb 4, 32(31)
   01fc518  li 4, -3056
   01fc51c  vslw 2, 2, 2
-  01fc520  <unknown>
+  01fc520  lvlx 3, 6, 3
   01fc524  vspltw 3, 3, 0
   01fc528  lis 6, 118
-  01fc52c  <unknown>
+  01fc52c  lvlx 4, 4, 5
   01fc530  lis 7, 114
   01fc534  li 4, 38
   01fc538  vmaddfp 2, 4, 3, 2
@@ -1536,9 +1536,9 @@ M1202_001fbc78:   # 0x1fbc78, 0x102c bytes
   01fc610  stb 4, 32(31)
   01fc614  li 4, -3056
   01fc618  vslw 2, 2, 2
-  01fc61c  <unknown>
+  01fc61c  lvlx 3, 5, 3
   01fc620  vspltw 3, 3, 0
-  01fc624  <unknown>
+  01fc624  lvlx 4, 4, 6
   01fc628  lis 5, 118
   01fc62c  li 4, 38
   01fc630  lis 6, 114
@@ -2312,10 +2312,10 @@ UpdateMoby_1202:   # 0x1fcd60, 0x2484 bytes
   01fd2e4  stb 4, 32(31)
   01fd2e8  li 4, -3056
   01fd2ec  vslw 2, 2, 2
-  01fd2f0  <unknown>
+  01fd2f0  lvlx 3, 5, 3
   01fd2f4  li 3, 424
   01fd2f8  vspltw 3, 3, 0
-  01fd2fc  <unknown>
+  01fd2fc  lvlx 4, 4, 6
   01fd300  vmaddfp 2, 4, 3, 2
   01fd304  vctsxs 2, 2, 0
   01fd308  vspltw 2, 2, 0
@@ -2340,10 +2340,10 @@ UpdateMoby_1202:   # 0x1fcd60, 0x2484 bytes
   01fd354  stb 4, 32(31)
   01fd358  li 4, -3056
   01fd35c  vslw 2, 2, 2
-  01fd360  <unknown>
+  01fd360  lvlx 3, 6, 3
   01fd364  li 3, 424
   01fd368  vspltw 3, 3, 0
-  01fd36c  <unknown>
+  01fd36c  lvlx 4, 4, 5
   01fd370  vmaddfp 2, 4, 3, 2
   01fd374  vctsxs 2, 2, 0
   01fd378  vspltw 2, 2, 0
@@ -2857,10 +2857,10 @@ UpdateMoby_1202:   # 0x1fcd60, 0x2484 bytes
   01fdb68  stb 4, 32(31)
   01fdb6c  li 4, -3056
   01fdb70  vslw 2, 2, 2
-  01fdb74  <unknown>
+  01fdb74  lvlx 3, 5, 3
   01fdb78  li 3, 424
   01fdb7c  vspltw 3, 3, 0
-  01fdb80  <unknown>
+  01fdb80  lvlx 4, 4, 6
   01fdb84  lfs 1, -3056(6)
   01fdb88  vmaddfp 2, 4, 3, 2
   01fdb8c  vctsxs 2, 2, 0
@@ -2948,10 +2948,10 @@ UpdateMoby_1202:   # 0x1fcd60, 0x2484 bytes
   01fdcd4  stb 4, 32(31)
   01fdcd8  li 4, -3056
   01fdcdc  vslw 2, 2, 2
-  01fdce0  <unknown>
+  01fdce0  lvlx 3, 6, 3
   01fdce4  li 3, 424
   01fdce8  vspltw 3, 3, 0
-  01fdcec  <unknown>
+  01fdcec  lvlx 4, 4, 5
   01fdcf0  lfs 1, -3056(5)
   01fdcf4  vmaddfp 2, 4, 3, 2
   01fdcf8  vctsxs 2, 2, 0
@@ -3300,8 +3300,8 @@ UpdateMoby_1202:   # 0x1fcd60, 0x2484 bytes
   01fe254  lfs 1, 28(31)
   01fe258  stw 4, 244(30)
   01fe25c  stfs 1, 460(30)
-  01fe260  <unknown>
-  01fe264  <unknown>
+  01fe260  lvlx 2, 5, 3
+  01fe264  lvlx 4, 7, 6
   01fe268  li 3, 424
   01fe26c  vspltw 2, 2, 0
   01fe270  vmaddfp 2, 4, 2, 3

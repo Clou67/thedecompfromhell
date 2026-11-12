@@ -154,8 +154,8 @@ FUN_001d4d88:   # 0x1d4d88, 0x278 bytes
   01d4f10  stfs 30, 72(24)
   01d4f14  stw 20, 76(24)
   01d4f18  stw 28, 20(21)
-  01d4f1c  <unknown>
-  01d4f20  <unknown>
+  01d4f1c  lvlx 3, 3, 22
+  01d4f20  lvlx 4, 5, 4
   01d4f24  vspltw 3, 3, 0
   01d4f28  li 4, 28
   01d4f2c  stw 28, 112(1)

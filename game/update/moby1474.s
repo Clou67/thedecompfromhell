@@ -1900,10 +1900,10 @@ UpdateMoby_1474:   # 0x28a138, 0x850 bytes
   028a508  lis 5, 114
   028a50c  li 6, -3056
   028a510  vslw 2, 2, 2
-  028a514  <unknown>
+  028a514  lvlx 3, 4, 3
   028a518  li 3, 186
   028a51c  vspltw 3, 3, 0
-  028a520  <unknown>
+  028a520  lvlx 4, 6, 5
   028a524  vmaddfp 2, 4, 3, 2
   028a528  vctsxs 2, 2, 0
   028a52c  vsplth 2, 2, 1
@@ -2014,10 +2014,10 @@ UpdateMoby_1474:   # 0x28a138, 0x850 bytes
   028a6d0  stw 4, 168(30)
   028a6d4  li 4, -3056
   028a6d8  vslw 2, 2, 2
-  028a6dc  <unknown>
+  028a6dc  lvlx 3, 6, 3
   028a6e0  li 3, 186
   028a6e4  vspltw 3, 3, 0
-  028a6e8  <unknown>
+  028a6e8  lvlx 4, 4, 5
   028a6ec  lwz 4, 196(30)
   028a6f0  vmaddfp 2, 4, 3, 2
   028a6f4  cmpwi 4, -1

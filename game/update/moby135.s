@@ -132,13 +132,13 @@ UpdateMoby_135:   # 0x254ea0, 0x3a0 bytes
   02550a0  li 4, 12
   02550a4  addi 5, 3, 16
   02550a8  addi 6, 4, 16
-  02550ac  <unknown>
-  02550b0  <unknown>
-  02550b4  <unknown>
-  02550b8  <unknown>
+  02550ac  lvlx 2, 3, 29
+  02550b0  lvlx 3, 4, 29
+  02550b4  lvrx 4, 5, 29
+  02550b8  lvrx 5, 6, 29
   02550bc  vor 2, 2, 4
   02550c0  vor 3, 3, 5
-  02550c4  <unknown>
+  02550c4  lvlx 4, 0, 28
   02550c8  vcfsx 4, 4, 0
   02550cc  vaddfp 2, 2, 3
   02550d0  lwz 28, 120(31)

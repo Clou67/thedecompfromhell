@@ -633,10 +633,10 @@ UpdateMoby_890:   # 0x4a2d38, 0xe90 bytes
   04a3598  lis 4, 114
   04a359c  li 6, -3056
   04a35a0  vslw 2, 2, 2
-  04a35a4  <unknown>
+  04a35a4  lvlx 3, 5, 3
   04a35a8  li 3, 496
   04a35ac  vspltw 3, 3, 0
-  04a35b0  <unknown>
+  04a35b0  lvlx 4, 6, 4
   04a35b4  vmaddfp 2, 4, 3, 2
   04a35b8  vctsxs 2, 2, 0
   04a35bc  vspltw 2, 2, 0

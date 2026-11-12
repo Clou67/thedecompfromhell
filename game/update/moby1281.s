@@ -86,8 +86,8 @@ M1281_00237660:   # 0x237660, 0x198 bytes
   02377a8  li 3, 4
   02377ac  vspltisw 2, -16
   02377b0  addi 4, 3, 16
-  02377b4  <unknown>
-  02377b8  <unknown>
+  02377b4  lvlx 3, 3, 31
+  02377b8  lvrx 4, 4, 31
   02377bc  vor 3, 3, 4
   02377c0  vsraw 2, 3, 2
   02377c4  vcfsx 2, 2, 0
@@ -124,8 +124,8 @@ M1281_00237808:   # 0x237808, 0x14c bytes
   0237848  addi 3, 3, 30712
   023784c  li 5, -3056
   0237850  vslw 2, 2, 2
-  0237854  <unknown>
-  0237858  <unknown>
+  0237854  lvlx 3, 0, 3
+  0237858  lvlx 4, 5, 4
   023785c  li 3, 254
   0237860  vspltw 3, 3, 0
   0237864  vmaddfp 2, 4, 3, 2
@@ -324,10 +324,10 @@ UpdateMoby_1281:   # 0x237960, 0x344 bytes
   0237b6c  li 7, -3056
   0237b70  vslw 3, 3, 3
   0237b74  stb 3, 188(31)
-  0237b78  <unknown>
+  0237b78  lvlx 2, 5, 4
   0237b7c  li 4, 252
   0237b80  vspltw 2, 2, 0
-  0237b84  <unknown>
+  0237b84  lvlx 4, 7, 6
   0237b88  lwz 3, 240(30)
   0237b8c  vmaddfp 2, 4, 2, 3
   0237b90  vctsxs 2, 2, 0

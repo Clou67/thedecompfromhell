@@ -93,12 +93,12 @@ UpdateMoby_257:   # 0x31cff8, 0x378 bytes
   031d140  li 4, 12
   031d144  addi 5, 3, 16
   031d148  addi 6, 4, 16
-  031d14c  <unknown>
-  031d150  <unknown>
-  031d154  <unknown>
-  031d158  <unknown>
+  031d14c  lvlx 3, 3, 30
+  031d150  lvlx 4, 4, 30
+  031d154  lvrx 5, 5, 30
+  031d158  lvrx 6, 6, 30
   031d15c  vor 3, 3, 5
-  031d160  <unknown>
+  031d160  lvlx 5, 0, 29
   031d164  vor 4, 4, 6
   031d168  vsubuwm 2, 5, 2
   031d16c  lfs 1, 16(30)

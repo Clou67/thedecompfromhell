@@ -507,10 +507,10 @@ UpdateMoby_575:   # 0x3c6c48, 0x438 bytes
   03c6d98  li 3, -3056
   03c6d9c  vslw 2, 2, 2
   03c6da0  li 8, 16
-  03c6da4  <unknown>
+  03c6da4  lvlx 3, 4, 28
   03c6da8  lfs 1, 4(28)
   03c6dac  vspltw 3, 3, 0
-  03c6db0  <unknown>
+  03c6db0  lvlx 4, 3, 27
   03c6db4  lfs 2, -3056(27)
   03c6db8  addic 26, 1, 128
   03c6dbc  addic 25, 1, 144

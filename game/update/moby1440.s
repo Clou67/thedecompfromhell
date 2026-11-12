@@ -63,7 +63,7 @@ M1440_0027cb28:   # 0x27cb28, 0x208 bytes
   027cbf8  lfs 30, 28(30)
   027cbfc  li 26, 0
   027cc00  addic 28, 28, 23856
-  027cc04  <unknown>
+  027cc04  lvlx 31, 3, 30
   027cc08  lfs 31, 32(30)
   027cc0c  vspltw 31, 31, 0
   027cc10  ori 3, 29, 0
@@ -93,7 +93,7 @@ M1440_0027cb28:   # 0x27cb28, 0x208 bytes
   027cc70  li 4, -3056
   027cc74  stfs 1, 12(27)
   027cc78  vslw 2, 2, 2
-  027cc7c  <unknown>
+  027cc7c  lvlx 3, 4, 3
   027cc80  lfs 1, -3056(3)
   027cc84  li 4, 10
   027cc88  vmaddfp 2, 3, 31, 2
@@ -445,9 +445,9 @@ M1440_0027cd50:   # 0x27cd50, 0x70c bytes
   027d208  vslw 2, 2, 2
   027d20c  li 6, -3056
   027d210  stb 7, 103(30)
-  027d214  <unknown>
+  027d214  lvlx 3, 4, 3
   027d218  vspltw 3, 3, 0
-  027d21c  <unknown>
+  027d21c  lvlx 4, 6, 5
   027d220  addic 4, 30, 96
   027d224  li 5, 38
   027d228  vmaddfp 2, 4, 3, 2

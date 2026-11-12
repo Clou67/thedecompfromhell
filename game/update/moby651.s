@@ -89,8 +89,8 @@ FUN_00402050:   # 0x402050, 0xc8 bytes
   04020d8  addi 3, 3, 8268
   04020dc  li 5, -3056
   04020e0  vslw 2, 2, 2
-  04020e4  <unknown>
-  04020e8  <unknown>
+  04020e4  lvlx 3, 0, 3
+  04020e8  lvlx 4, 5, 4
   04020ec  vspltw 3, 3, 0
   04020f0  li 3, 8
   04020f4  vmaddfp 2, 4, 3, 2

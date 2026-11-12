@@ -61,15 +61,15 @@ M1028_0018f448:   # 0x18f448, 0x964 bytes
   018f510  lfs 31, 0(4)
   018f514  lis 26, 116
   018f518  std 25, 272(1)
-  018f51c  <unknown>
+  018f51c  lvlx 31, 5, 4
   018f520  lis 25, 116
   018f524  std 27, 288(1)
-  018f528  <unknown>
+  018f528  lvlx 30, 7, 4
   018f52c  ori 27, 29, 0
   018f530  std 28, 296(1)
-  018f534  <unknown>
+  018f534  lvlx 23, 6, 4
   018f538  ori 28, 30, 0
-  018f53c  <unknown>
+  018f53c  lvlx 28, 8, 4
   018f540  addic 26, 26, -864
   018f544  vspltw 31, 31, 0
   018f548  addic 25, 25, -848
@@ -198,7 +198,7 @@ M1028_0018f448:   # 0x18f448, 0x964 bytes
   018f734  stfs 2, 20(4)
   018f738  stfs 4, 28(4)
   018f73c  stfs 3, 24(4)
-  018f740  <unknown>
+  018f740  lvlx 3, 5, 3
   018f744  vnmsubfp 2, 3, 31, 2
   018f748  lwz 3, 112(28)
   018f74c  vxor 2, 2, 23
@@ -233,7 +233,7 @@ M1028_0018f448:   # 0x18f448, 0x964 bytes
   018f7c0  vsldoi 25, 24, 24, 0
   018f7c4  lfs 30, 20(3)
   018f7c8  lfs 29, 24(3)
-  018f7cc  <unknown>
+  018f7cc  lvlx 29, 4, 3
   018f7d0  vspltw 29, 29, 0
   018f7d4  lfs 1, 196(31)
   018f7d8  subfic 3, 27, 4
@@ -390,10 +390,10 @@ M1028_0018f448:   # 0x18f448, 0x964 bytes
   018fa34  stfs 1, 20(3)
   018fa38  stfs 3, 28(3)
   018fa3c  stfs 4, 24(3)
-  018fa40  <unknown>
+  018fa40  lvlx 4, 5, 4
   018fa44  li 3, -4128
   018fa48  vnmsubfp 27, 4, 31, 28
-  018fa4c  <unknown>
+  018fa4c  lvlx 3, 3, 6
   018fa50  vxor 27, 27, 23
   018fa54  vspltw 5, 27, 0
   018fa58  vnmsubfp 2, 3, 31, 27
@@ -431,8 +431,8 @@ M1028_0018f448:   # 0x18f448, 0x964 bytes
   018fad8  li 4, -4140
   018fadc  lis 5, 230
   018fae0  li 6, -4128
-  018fae4  <unknown>
-  018fae8  <unknown>
+  018fae4  lvlx 5, 4, 3
+  018fae8  lvlx 6, 6, 5
   018faec  vspltw 2, 5, 0
   018faf0  vspltw 3, 6, 0
   018faf4  vnmsubfp 2, 2, 31, 28
@@ -471,11 +471,11 @@ M1028_0018f448:   # 0x18f448, 0x964 bytes
   018fb78  stvewx 2, 3, 6
   018fb7c  lwz 6, 312(30)
   018fb80  stvewx 26, 3, 6
-  018fb84  <unknown>
+  018fb84  lvlx 3, 5, 4
   018fb88  vnmsubfp 27, 3, 31, 28
   018fb8c  lis 3, 230
   018fb90  li 4, -4124
-  018fb94  <unknown>
+  018fb94  lvlx 2, 4, 3
   018fb98  vxor 27, 27, 23
   018fb9c  vspltw 5, 27, 0
   018fba0  vnmsubfp 4, 2, 31, 27
@@ -513,8 +513,8 @@ M1028_0018f448:   # 0x18f448, 0x964 bytes
   018fc20  li 4, -4136
   018fc24  lis 5, 230
   018fc28  li 6, -4124
-  018fc2c  <unknown>
-  018fc30  <unknown>
+  018fc2c  lvlx 5, 4, 3
+  018fc30  lvlx 6, 6, 5
   018fc34  vspltw 2, 5, 0
   018fc38  vnmsubfp 3, 2, 31, 28
   018fc3c  vspltw 2, 6, 0

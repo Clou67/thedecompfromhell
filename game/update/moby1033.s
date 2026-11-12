@@ -80,10 +80,10 @@ UpdateMoby_1033:   # 0x192100, 0x230 bytes
   0192214  lis 8, 114
   0192218  stb 5, 32(31)
   019221c  vslw 3, 3, 3
-  0192220  <unknown>
+  0192220  lvlx 2, 7, 3
   0192224  li 3, 176
   0192228  vspltw 2, 2, 0
-  019222c  <unknown>
+  019222c  lvlx 4, 6, 8
   0192230  vmaddfp 2, 4, 2, 3
   0192234  vctsxs 2, 2, 0
   0192238  vspltw 2, 2, 0
@@ -122,10 +122,10 @@ UpdateMoby_1033:   # 0x192100, 0x230 bytes
   01922bc  lis 8, 114
   01922c0  stb 5, 32(31)
   01922c4  vslw 3, 3, 3
-  01922c8  <unknown>
+  01922c8  lvlx 2, 7, 3
   01922cc  li 3, 176
   01922d0  vspltw 2, 2, 0
-  01922d4  <unknown>
+  01922d4  lvlx 4, 6, 8
   01922d8  vmaddfp 2, 4, 2, 3
   01922dc  vctsxs 2, 2, 0
   01922e0  vspltw 2, 2, 0

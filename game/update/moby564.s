@@ -772,12 +772,12 @@ UpdateMoby_564:   # 0x3baaf0, 0x9ac bytes
   03bb344  lwz 5, 44(30)
   03bb348  addi 8, 6, 16
   03bb34c  cmpwi 3, 0
-  03bb350  <unknown>
-  03bb354  <unknown>
-  03bb358  <unknown>
+  03bb350  lvlx 3, 4, 30
+  03bb354  lvlx 2, 6, 30
+  03bb358  lvrx 4, 7, 30
   03bb35c  lwz 6, 52(30)
   03bb360  vor 3, 3, 4
-  03bb364  <unknown>
+  03bb364  lvrx 4, 8, 30
   03bb368  vor 2, 2, 4
   03bb36c  bt 2, 0x3bb3ac
   03bb370  lis 4, 161
@@ -827,8 +827,8 @@ UpdateMoby_564:   # 0x3baaf0, 0x9ac bytes
   03bb420  li 6, -3056
   03bb424  vcfsx 2, 2, 0
   03bb428  vslw 3, 3, 3
-  03bb42c  <unknown>
-  03bb430  <unknown>
+  03bb42c  lvlx 4, 4, 3
+  03bb430  lvlx 5, 6, 5
   03bb434  vmaddfp 3, 4, 5, 3
   03bb438  vspltw 2, 2, 0
   03bb43c  vspltw 3, 3, 0

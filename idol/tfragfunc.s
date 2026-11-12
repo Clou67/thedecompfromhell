@@ -1140,29 +1140,29 @@ FUN_0050c020:   # 0x50c020, 0x590 bytes
   050c26c  li 4, 112
   050c270  vslw 2, 2, 2
   050c274  lis 5, 144
-  050c278  <unknown>
+  050c278  lvlx 3, 3, 1
   050c27c  addic 6, 5, 12256
-  050c280  <unknown>
+  050c280  lvlx 4, 4, 1
   050c284  li 3, 120
   050c288  vmaddfp 2, 3, 3, 2
   050c28c  li 4, 20
   050c290  li 7, 4
   050c294  li 8, 8
-  050c298  <unknown>
+  050c298  lvlx 5, 3, 1
   050c29c  li 9, 12
   050c2a0  li 3, 24
   050c2a4  vmaddfp 4, 4, 4, 2
-  050c2a8  <unknown>
+  050c2a8  lvlx 2, 4, 6
   050c2ac  li 4, 16
   050c2b0  vspltw 9, 2, 0
-  050c2b4  <unknown>
+  050c2b4  lvlx 3, 3, 6
   050c2b8  li 3, 12256
-  050c2bc  <unknown>
-  050c2c0  <unknown>
-  050c2c4  <unknown>
+  050c2bc  lvlx 6, 4, 6
+  050c2c0  lvlx 8, 7, 6
+  050c2c4  lvlx 7, 8, 6
   050c2c8  vmaddfp 4, 5, 5, 4
-  050c2cc  <unknown>
-  050c2d0  <unknown>
+  050c2cc  lvlx 5, 3, 5
+  050c2d0  lvlx 2, 9, 6
   050c2d4  vspltw 10, 4, 0
   050c2d8  vcmpgefp. 9, 10, 9
   050c2dc  bf 26, 0x50c494
@@ -1183,8 +1183,8 @@ FUN_0050c020:   # 0x50c020, 0x590 bytes
   050c318  clrlwi 5, 5, 24
   050c31c  vspltisw 1, -1
   050c320  addic 20, 1, 192
-  050c324  <unknown>
-  050c328  <unknown>
+  050c324  lvlx 9, 4, 5
+  050c328  lvlx 11, 4, 6
   050c32c  addi 5, 8, -16368
   050c330  vsraw 9, 9, 10
   050c334  rlwinm 6, 9, 0, 28, 30
@@ -1194,7 +1194,7 @@ FUN_0050c020:   # 0x50c020, 0x590 bytes
   050c344  vcfsx 9, 9, 0
   050c348  vcfsx 11, 11, 0
   050c34c  cntlzw 6, 6
-  050c350  <unknown>
+  050c350  lvlx 12, 7, 5
   050c354  addc 7, 3, 30
   050c358  slwi 3, 3, 1
   050c35c  vspltw 12, 12, 0
@@ -1209,7 +1209,7 @@ FUN_0050c020:   # 0x50c020, 0x590 bytes
   050c380  vmaddfp 11, 11, 12, 0
   050c384  vspltisw 13, -1
   050c388  addc 3, 3, 6
-  050c38c  <unknown>
+  050c38c  lvlx 0, 7, 5
   050c390  addic 6, 3, 64
   050c394  vslw 13, 13, 13
   050c398  vspltw 0, 0, 0
@@ -1217,10 +1217,10 @@ FUN_0050c020:   # 0x50c020, 0x590 bytes
   050c3a0  clrlwi 6, 6, 24
   050c3a4  vsubfp 14, 0, 6
   050c3a8  vnmsubfp 3, 4, 3, 0
-  050c3ac  <unknown>
+  050c3ac  lvlx 15, 4, 6
   050c3b0  vmaddfp 9, 9, 11, 13
   050c3b4  vsraw 11, 15, 10
-  050c3b8  <unknown>
+  050c3b8  lvlx 13, 4, 3
   050c3bc  vspltisw 15, -1
   050c3c0  vsraw 10, 13, 10
   050c3c4  vcfsx 11, 11, 0
@@ -1248,7 +1248,7 @@ FUN_0050c020:   # 0x50c020, 0x590 bytes
   050c41c  vmaddfp 2, 2, 5, 6
   050c420  vslw 5, 10, 10
   050c424  vspltisw 10, -1
-  050c428  <unknown>
+  050c428  lvlx 6, 3, 5
   050c42c  lfs 1, 8(5)
   050c430  vspltw 6, 6, 0
   050c434  ori 3, 20, 0

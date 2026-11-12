@@ -456,10 +456,10 @@ UpdateMoby_903:   # 0x4a66d0, 0x9f0 bytes
   04a6ca8  lis 5, 114
   04a6cac  li 6, -3056
   04a6cb0  vslw 2, 2, 2
-  04a6cb4  <unknown>
+  04a6cb4  lvlx 3, 4, 3
   04a6cb8  li 3, 186
   04a6cbc  vspltw 3, 3, 0
-  04a6cc0  <unknown>
+  04a6cc0  lvlx 4, 6, 5
   04a6cc4  vmaddfp 2, 4, 3, 2
   04a6cc8  vctsxs 2, 2, 0
   04a6ccc  vsplth 2, 2, 1
@@ -544,10 +544,10 @@ UpdateMoby_903:   # 0x4a66d0, 0x9f0 bytes
   04a6e08  stw 28, 168(30)
   04a6e0c  li 6, -3056
   04a6e10  vslw 3, 3, 3
-  04a6e14  <unknown>
+  04a6e14  lvlx 2, 4, 3
   04a6e18  li 3, 186
   04a6e1c  vspltw 2, 2, 0
-  04a6e20  <unknown>
+  04a6e20  lvlx 4, 6, 5
   04a6e24  lwz 28, 196(30)
   04a6e28  vmaddfp 2, 4, 2, 3
   04a6e2c  cmpwi 28, -1

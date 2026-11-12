@@ -367,10 +367,10 @@ UpdateMoby_176:   # 0x2b2590, 0xecc bytes
   02b2884  lis 4, 114
   02b2888  li 6, -3056
   02b288c  vslw 2, 2, 2
-  02b2890  <unknown>
+  02b2890  lvlx 3, 5, 3
   02b2894  li 3, 76
   02b2898  vspltw 3, 3, 0
-  02b289c  <unknown>
+  02b289c  lvlx 4, 6, 4
   02b28a0  lhz 4, 68(28)
   02b28a4  vmaddfp 2, 4, 3, 2
   02b28a8  extsh 4, 4

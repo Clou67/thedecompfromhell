@@ -1044,18 +1044,18 @@ UpdateMoby_691:   # 0x41fb90, 0x235c bytes
   04207ec  li 5, 36
   04207f0  vspltisw 4, -1
   04207f4  addi 4, 3, 16
-  04207f8  <unknown>
+  04207f8  lvlx 2, 3, 30
   04207fc  lis 3, 66
   0420800  vslw 4, 4, 4
-  0420804  <unknown>
+  0420804  lvrx 3, 4, 30
   0420808  addi 3, 3, -1208
   042080c  vor 2, 2, 3
   0420810  lis 4, 114
   0420814  vcfsx 2, 2, 0
-  0420818  <unknown>
+  0420818  lvlx 3, 5, 3
   042081c  li 3, -3056
   0420820  vspltw 3, 3, 0
-  0420824  <unknown>
+  0420824  lvlx 5, 3, 4
   0420828  li 3, 380
   042082c  lfs 1, -3056(4)
   0420830  vaddfp 2, 2, 3
@@ -1257,17 +1257,17 @@ UpdateMoby_691:   # 0x41fb90, 0x235c bytes
   0420b40  lis 5, 66
   0420b44  addi 4, 3, 16
   0420b48  vslw 4, 4, 4
-  0420b4c  <unknown>
+  0420b4c  lvlx 2, 3, 30
   0420b50  addi 3, 5, -1208
-  0420b54  <unknown>
+  0420b54  lvrx 3, 4, 30
   0420b58  li 4, 36
   0420b5c  vor 2, 2, 3
   0420b60  vcfsx 2, 2, 0
-  0420b64  <unknown>
+  0420b64  lvlx 3, 4, 3
   0420b68  lis 3, 114
   0420b6c  vspltw 3, 3, 0
   0420b70  li 4, -3056
-  0420b74  <unknown>
+  0420b74  lvlx 5, 4, 3
   0420b78  li 4, 380
   0420b7c  lfs 1, -3056(3)
   0420b80  vaddfp 2, 2, 3
@@ -1303,17 +1303,17 @@ UpdateMoby_691:   # 0x41fb90, 0x235c bytes
   0420bf8  lis 5, 66
   0420bfc  addi 4, 3, 16
   0420c00  vslw 4, 4, 4
-  0420c04  <unknown>
+  0420c04  lvlx 2, 3, 30
   0420c08  addi 3, 5, -1208
-  0420c0c  <unknown>
+  0420c0c  lvrx 3, 4, 30
   0420c10  li 4, 36
   0420c14  vor 2, 2, 3
   0420c18  vcfsx 2, 2, 0
-  0420c1c  <unknown>
+  0420c1c  lvlx 3, 4, 3
   0420c20  lis 3, 114
   0420c24  vspltw 3, 3, 0
   0420c28  li 4, -3056
-  0420c2c  <unknown>
+  0420c2c  lvlx 5, 4, 3
   0420c30  li 4, 380
   0420c34  lfs 1, -3056(3)
   0420c38  vaddfp 2, 2, 3
@@ -1345,17 +1345,17 @@ UpdateMoby_691:   # 0x41fb90, 0x235c bytes
   0420ca0  lis 5, 66
   0420ca4  addi 4, 3, 16
   0420ca8  vslw 4, 4, 4
-  0420cac  <unknown>
+  0420cac  lvlx 2, 3, 30
   0420cb0  addi 3, 5, -1208
-  0420cb4  <unknown>
+  0420cb4  lvrx 3, 4, 30
   0420cb8  li 4, 36
   0420cbc  vor 2, 2, 3
   0420cc0  vcfsx 2, 2, 0
-  0420cc4  <unknown>
+  0420cc4  lvlx 3, 4, 3
   0420cc8  lis 3, 114
   0420ccc  vspltw 3, 3, 0
   0420cd0  li 4, -3056
-  0420cd4  <unknown>
+  0420cd4  lvlx 5, 4, 3
   0420cd8  li 4, 380
   0420cdc  lfs 1, -3056(3)
   0420ce0  vaddfp 2, 2, 3
@@ -1685,18 +1685,18 @@ UpdateMoby_691:   # 0x41fb90, 0x235c bytes
   04211f0  li 5, 36
   04211f4  vspltisw 4, -1
   04211f8  addi 4, 3, 16
-  04211fc  <unknown>
+  04211fc  lvlx 2, 3, 30
   0421200  lis 3, 66
   0421204  vslw 4, 4, 4
-  0421208  <unknown>
+  0421208  lvrx 3, 4, 30
   042120c  addi 3, 3, -1208
   0421210  vor 2, 2, 3
   0421214  lis 4, 114
   0421218  vcfsx 2, 2, 0
-  042121c  <unknown>
+  042121c  lvlx 3, 5, 3
   0421220  li 3, -3056
   0421224  vspltw 3, 3, 0
-  0421228  <unknown>
+  0421228  lvlx 5, 3, 4
   042122c  li 3, 380
   0421230  lfs 1, -3056(4)
   0421234  vaddfp 2, 2, 3
@@ -2053,17 +2053,17 @@ UpdateMoby_691:   # 0x41fb90, 0x235c bytes
   04217b0  lis 5, 66
   04217b4  addi 4, 3, 16
   04217b8  vslw 4, 4, 4
-  04217bc  <unknown>
+  04217bc  lvlx 2, 3, 30
   04217c0  addi 3, 5, -1208
-  04217c4  <unknown>
+  04217c4  lvrx 3, 4, 30
   04217c8  li 4, 36
   04217cc  vor 2, 2, 3
   04217d0  vcfsx 2, 2, 0
-  04217d4  <unknown>
+  04217d4  lvlx 3, 4, 3
   04217d8  lis 3, 114
   04217dc  vspltw 3, 3, 0
   04217e0  li 4, -3056
-  04217e4  <unknown>
+  04217e4  lvlx 5, 4, 3
   04217e8  li 4, 380
   04217ec  lfs 1, -3056(3)
   04217f0  vaddfp 2, 2, 3
@@ -2141,18 +2141,18 @@ UpdateMoby_691:   # 0x41fb90, 0x235c bytes
   0421910  li 5, 36
   0421914  vspltisw 4, -1
   0421918  addi 4, 3, 16
-  042191c  <unknown>
+  042191c  lvlx 2, 3, 30
   0421920  lis 3, 66
   0421924  vslw 4, 4, 4
-  0421928  <unknown>
+  0421928  lvrx 3, 4, 30
   042192c  addi 3, 3, -1208
   0421930  vor 2, 2, 3
   0421934  lis 4, 114
   0421938  vcfsx 2, 2, 0
-  042193c  <unknown>
+  042193c  lvlx 3, 5, 3
   0421940  li 3, -3056
   0421944  vspltw 3, 3, 0
-  0421948  <unknown>
+  0421948  lvlx 5, 3, 4
   042194c  li 3, 380
   0421950  lfs 1, -3056(4)
   0421954  vaddfp 2, 2, 3

@@ -1586,10 +1586,10 @@ UpdateMoby_190:   # 0x2d2780, 0x1608 bytes
   02d3bdc  stw 4, 80(30)
   02d3be0  lis 4, 114
   02d3be4  vslw 2, 2, 2
-  02d3be8  <unknown>
+  02d3be8  lvlx 3, 6, 3
   02d3bec  li 3, 84
   02d3bf0  vspltw 3, 3, 0
-  02d3bf4  <unknown>
+  02d3bf4  lvlx 4, 5, 4
   02d3bf8  vmaddfp 2, 4, 3, 2
   02d3bfc  vctsxs 2, 2, 0
   02d3c00  vspltw 2, 2, 0
@@ -1603,10 +1603,10 @@ UpdateMoby_190:   # 0x2d2780, 0x1608 bytes
   02d3c20  stb 4, 32(31)
   02d3c24  li 4, -3056
   02d3c28  vslw 2, 2, 2
-  02d3c2c  <unknown>
+  02d3c2c  lvlx 3, 5, 3
   02d3c30  li 3, 88
   02d3c34  vspltw 3, 3, 0
-  02d3c38  <unknown>
+  02d3c38  lvlx 4, 4, 6
   02d3c3c  vmaddfp 2, 4, 3, 2
   02d3c40  vctsxs 2, 2, 0
   02d3c44  vspltw 2, 2, 0

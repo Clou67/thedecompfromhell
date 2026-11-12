@@ -636,8 +636,8 @@ SpawnPart_1:   # 0x1204c0, 0x128 bytes
   0120598  stw 4, 12(29)
   012059c  stb 3, 2(29)
   01205a0  stb 5, 8(29)
-  01205a4  <unknown>
-  01205a8  <unknown>
+  01205a4  lvlx 2, 6, 28
+  01205a8  lvlx 4, 8, 7
   01205ac  li 3, 10
   01205b0  vspltw 2, 2, 0
   01205b4  vmaddfp 2, 4, 2, 3
@@ -916,8 +916,8 @@ UpdatePart_2:   # 0x120918, 0x39c bytes
   0120a08  li 3, 54
   0120a0c  vspltisw 2, -16
   0120a10  li 4, 4
-  0120a14  <unknown>
-  0120a18  <unknown>
+  0120a14  lvlx 3, 3, 31
+  0120a18  lvlx 4, 4, 30
   0120a1c  vsraw 2, 3, 2
   0120a20  vspltw 3, 4, 0
   0120a24  li 4, 12
@@ -1059,9 +1059,9 @@ UpdatePart_2:   # 0x120918, 0x39c bytes
   0120c44  vspltisw 2, -16
   0120c48  li 5, 4
   0120c4c  addi 4, 4, 2316
-  0120c50  <unknown>
+  0120c50  lvlx 3, 3, 31
   0120c54  vsraw 2, 3, 2
-  0120c58  <unknown>
+  0120c58  lvlx 3, 5, 4
   0120c5c  addic 3, 31, 10
   0120c60  li 4, 12
   0120c64  vspltw 3, 3, 0
@@ -1198,10 +1198,10 @@ SpawnPart_3:   # 0x120cc8, 0x22c bytes
   0120e7c  li 6, -3056
   0120e80  vslw 2, 2, 2
   0120e84  stw 4, 12(26)
-  0120e88  <unknown>
+  0120e88  lvlx 3, 3, 31
   0120e8c  li 4, 10
   0120e90  vspltw 3, 3, 0
-  0120e94  <unknown>
+  0120e94  lvlx 4, 6, 5
   0120e98  li 3, 1
   0120e9c  vmaddfp 2, 4, 3, 2
   0120ea0  vctsxs 2, 2, 0
@@ -1276,11 +1276,11 @@ UpdatePart_3:   # 0x120f48, 0x7f0 bytes
   0121000  lis 6, 114
   0121004  stw 3, 52(31)
   0121008  vslw 2, 2, 2
-  012100c  <unknown>
+  012100c  lvlx 3, 0, 4
   0121010  li 3, 10
   0121014  vspltw 3, 3, 0
   0121018  li 4, -1
-  012101c  <unknown>
+  012101c  lvlx 4, 5, 6
   0121020  vmaddfp 2, 4, 3, 2
   0121024  vctsxs 2, 2, 0
   0121028  vsplth 2, 2, 1
@@ -2092,7 +2092,7 @@ SpawnPart_6:   # 0x121c28, 0x2d4 bytes
   0121cc8  lwz 24, 164(28)
   0121ccc  lwz 25, 172(28)
   0121cd0  clrlwi 26, 26, 24
-  0121cd4  <unknown>
+  0121cd4  lvlx 31, 4, 28
   0121cd8  fmr 27, 5
   0121cdc  fmr 28, 6
   0121ce0  fmr 29, 7
@@ -2175,7 +2175,7 @@ SpawnPart_6:   # 0x121c28, 0x2d4 bytes
   0121e14  stw 29, 44(27)
   0121e18  li 4, 12
   0121e1c  vspltisw 4, -1
-  0121e20  <unknown>
+  0121e20  lvlx 3, 3, 30
   0121e24  vslw 2, 2, 2
   0121e28  vspltw 3, 3, 0
   0121e2c  li 3, 8
@@ -2193,8 +2193,8 @@ SpawnPart_6:   # 0x121c28, 0x2d4 bytes
   0121e5c  vspltb 2, 2, 3
   0121e60  stvebx 2, 3, 27
   0121e64  stfs 26, 12(27)
-  0121e68  <unknown>
-  0121e6c  <unknown>
+  0121e68  lvlx 2, 4, 30
+  0121e6c  lvlx 5, 6, 5
   0121e70  vspltw 2, 2, 0
   0121e74  vaddfp 2, 3, 2
   0121e78  vmaddfp 2, 5, 2, 4
@@ -3204,13 +3204,13 @@ SpawnPart_9:   # 0x122c70, 0x244 bytes
   0122e3c  li 5, 20
   0122e40  vspltisw 4, -1
   0122e44  lis 6, 114
-  0122e48  <unknown>
-  0122e4c  <unknown>
+  0122e48  lvlx 2, 4, 3
+  0122e4c  lvlx 3, 5, 29
   0122e50  vcfsx 2, 2, 0
   0122e54  li 3, -3056
   0122e58  vspltw 3, 3, 0
   0122e5c  vslw 4, 4, 4
-  0122e60  <unknown>
+  0122e60  lvlx 5, 3, 6
   0122e64  li 3, 32
   0122e68  vaddfp 2, 2, 3
   0122e6c  vmaddfp 2, 5, 2, 4
@@ -3392,9 +3392,9 @@ SpawnPart_10:   # 0x123048, 0x168 bytes
   0123144  stw 4, 52(29)
   0123148  stw 5, 56(29)
   012314c  stw 6, 60(29)
-  0123150  <unknown>
+  0123150  lvlx 2, 8, 28
   0123154  li 3, 10
-  0123158  <unknown>
+  0123158  lvlx 4, 9, 7
   012315c  vspltw 2, 2, 0
   0123160  vmaddfp 2, 4, 2, 3
   0123164  vctsxs 2, 2, 0
@@ -4805,8 +4805,8 @@ SpawnPart_13:   # 0x1246b8, 0x1f8 bytes
   01247f0  li 5, -3056
   01247f4  vslw 2, 2, 2
   01247f8  stfs 1, 24(28)
-  01247fc  <unknown>
-  0124800  <unknown>
+  01247fc  lvlx 3, 3, 27
+  0124800  lvlx 4, 5, 4
   0124804  vspltw 3, 3, 0
   0124808  li 4, 10
   012480c  li 3, 2
@@ -4885,10 +4885,10 @@ UpdatePart_13:   # 0x1248c0, 0x1d0 bytes
   0124938  vslw 2, 2, 2
   012493c  stw 4, 36(31)
   0124940  li 4, -3056
-  0124944  <unknown>
+  0124944  lvlx 3, 0, 3
   0124948  li 3, 10
   012494c  vspltw 3, 3, 0
-  0124950  <unknown>
+  0124950  lvlx 4, 4, 5
   0124954  vmaddfp 2, 4, 3, 2
   0124958  vctsxs 2, 2, 0
   012495c  vsplth 2, 2, 1
@@ -5051,9 +5051,9 @@ SpawnPart_14:   # 0x124aa0, 0x1d8 bytes
   0124bd8  cmpwi 30, 0
   0124bdc  lbz 3, 0(3)
   0124be0  stb 3, 2(29)
-  0124be4  <unknown>
+  0124be4  lvlx 3, 4, 27
   0124be8  li 3, 10
-  0124bec  <unknown>
+  0124bec  lvlx 4, 6, 5
   0124bf0  vspltw 3, 3, 0
   0124bf4  li 4, 1
   0124bf8  vmaddfp 2, 4, 3, 2
@@ -6028,11 +6028,11 @@ SpawnPart_18:   # 0x1259b8, 0x270 bytes
   0125b90  lis 4, 114
   0125b94  stfs 1, 12(29)
   0125b98  li 5, -3056
-  0125b9c  <unknown>
+  0125b9c  lvlx 3, 3, 28
   0125ba0  vslw 2, 2, 2
   0125ba4  vspltw 3, 3, 0
   0125ba8  li 3, 10
-  0125bac  <unknown>
+  0125bac  lvlx 4, 5, 4
   0125bb0  lis 4, 16256
   0125bb4  vmaddfp 2, 4, 3, 2
   0125bb8  vctsxs 2, 2, 0
@@ -6135,15 +6135,15 @@ UpdatePart_18:   # 0x125c48, 0x1bc bytes
   0125d54  rlwimi 4, 3, 24, 0, 7
   0125d58  li 3, -3064
   0125d5c  stw 4, 4(31)
-  0125d60  <unknown>
-  0125d64  <unknown>
+  0125d60  lvlx 2, 5, 30
+  0125d64  lvlx 3, 6, 31
   0125d68  vspltw 2, 2, 0
-  0125d6c  <unknown>
+  0125d6c  lvlx 4, 3, 29
   0125d70  li 3, 20
   0125d74  vmaddfp 3, 4, 2, 3
   0125d78  vspltw 4, 3, 0
   0125d7c  stvewx 4, 6, 31
-  0125d80  <unknown>
+  0125d80  lvlx 2, 3, 30
   0125d84  lfs 2, 24(31)
   0125d88  vspltw 2, 2, 0
   0125d8c  vcmpgtfp. 4, 4, 2
@@ -6158,7 +6158,7 @@ UpdatePart_18:   # 0x125c48, 0x1bc bytes
   0125db0  vspltisw 3, -1
   0125db4  addi 3, 3, 23592
   0125db8  vslw 3, 3, 3
-  0125dbc  <unknown>
+  0125dbc  lvlx 4, 4, 3
   0125dc0  li 4, 8
   0125dc4  vspltw 4, 4, 0
   0125dc8  vmaddfp 2, 2, 4, 3
@@ -6764,7 +6764,7 @@ UpdatePart_20:   # 0x126398, 0x558 bytes
   0126788  lis 5, 16256
   012678c  srwi 8, 7, 1
   0126790  xor 6, 8, 6
-  0126794  <unknown>
+  0126794  lvlx 31, 4, 3
   0126798  subc 3, 6, 7
   012679c  vspltw 31, 31, 0
   01267a0  cmpw 3, 5
@@ -6797,10 +6797,10 @@ UpdatePart_20:   # 0x126398, 0x558 bytes
   012680c  rlwimi 4, 3, 24, 0, 7
   0126810  li 3, 40
   0126814  stw 4, 4(31)
-  0126818  <unknown>
-  012681c  <unknown>
+  0126818  lvlx 2, 5, 30
+  012681c  lvlx 3, 3, 31
   0126820  vspltw 2, 2, 0
-  0126824  <unknown>
+  0126824  lvlx 4, 6, 29
   0126828  vmaddfp 2, 4, 2, 3
   012682c  vspltw 3, 2, 0
   0126830  vcmpgtfp. 4, 3, 31
@@ -6816,7 +6816,7 @@ UpdatePart_20:   # 0x126398, 0x558 bytes
   0126858  addi 3, 3, 25432
   012685c  vspltw 2, 2, 0
   0126860  vslw 3, 3, 3
-  0126864  <unknown>
+  0126864  lvlx 4, 4, 3
   0126868  li 3, 8
   012686c  vspltw 4, 4, 0
   0126870  vmaddfp 2, 2, 4, 3
@@ -7330,8 +7330,8 @@ SpawnPart_23:   # 0x126f50, 0x258 bytes
   0127090  li 6, 10
   0127094  vslw 2, 2, 2
   0127098  stfs 1, 24(29)
-  012709c  <unknown>
-  01270a0  <unknown>
+  012709c  lvlx 3, 3, 26
+  01270a0  lvlx 4, 5, 4
   01270a4  vspltw 3, 3, 0
   01270a8  li 3, 2
   01270ac  vmaddfp 2, 4, 3, 2
@@ -7456,10 +7456,10 @@ UpdatePart_23:   # 0x1271c0, 0x3ec bytes
   0127298  stw 4, 36(31)
   012729c  li 4, -3056
   01272a0  vslw 2, 2, 2
-  01272a4  <unknown>
+  01272a4  lvlx 3, 5, 3
   01272a8  li 3, 10
   01272ac  vspltw 3, 3, 0
-  01272b0  <unknown>
+  01272b0  lvlx 4, 4, 6
   01272b4  vmaddfp 2, 4, 3, 2
   01272b8  vctsxs 2, 2, 0
   01272bc  vsplth 2, 2, 1
@@ -7552,7 +7552,7 @@ UpdatePart_23:   # 0x1271c0, 0x3ec bytes
   0127418  li 4, 16
   012741c  lfs 30, 16(3)
   0127420  lfs 2, -3056(30)
-  0127424  <unknown>
+  0127424  lvlx 2, 4, 3
   0127428  fmuls 1, 2, 30
   012742c  vspltw 31, 2, 0
   0127430  fctiwz 1, 1
@@ -7584,12 +7584,12 @@ UpdatePart_23:   # 0x1271c0, 0x3ec bytes
   0127498  rlwimi 4, 3, 24, 0, 7
   012749c  vslw 2, 2, 2
   01274a0  lhz 3, 10(31)
-  01274a4  <unknown>
+  01274a4  lvlx 3, 5, 30
   01274a8  lbz 5, 43(31)
   01274ac  extsh 3, 3
   01274b0  vmaddfp 2, 3, 31, 2
   01274b4  stw 4, 4(31)
-  01274b8  <unknown>
+  01274b8  lvlx 3, 6, 31
   01274bc  subc 3, 5, 3
   01274c0  fctiwz 1, 1
   01274c4  vsrw 3, 3, 4
@@ -7942,9 +7942,9 @@ SpawnPart_25:   # 0x127918, 0x1a8 bytes
   0127a50  lbz 3, 0(3)
   0127a54  stw 4, 60(30)
   0127a58  stb 3, 2(30)
-  0127a5c  <unknown>
+  0127a5c  lvlx 3, 6, 29
   0127a60  li 3, 10
-  0127a64  <unknown>
+  0127a64  lvlx 4, 7, 5
   0127a68  vspltw 3, 3, 0
   0127a6c  vmaddfp 2, 4, 3, 2
   0127a70  vctsxs 2, 2, 0
@@ -8749,11 +8749,11 @@ SpawnPart_28:   # 0x128438, 0x470 bytes
   012872c  li 5, -3056
   0128730  stw 28, 40(29)
   0128734  cmpwi 31, 0
-  0128738  <unknown>
+  0128738  lvlx 3, 3, 30
   012873c  vslw 2, 2, 2
   0128740  vspltw 3, 3, 0
   0128744  li 3, 10
-  0128748  <unknown>
+  0128748  lvlx 4, 5, 4
   012874c  lis 4, 16256
   0128750  vmaddfp 2, 4, 3, 2
   0128754  vctsxs 2, 2, 0
@@ -8765,13 +8765,13 @@ SpawnPart_28:   # 0x128438, 0x470 bytes
   012876c  li 3, 4
   0128770  vspltisw 3, -1
   0128774  lis 4, 19
-  0128778  <unknown>
+  0128778  lvlx 4, 0, 31
   012877c  li 5, 40
   0128780  addi 4, 4, -31736
   0128784  vslw 2, 2, 2
   0128788  vslw 3, 3, 3
   012878c  li 6, 32
-  0128790  <unknown>
+  0128790  lvlx 5, 3, 31
   0128794  li 7, 8
   0128798  li 8, 12
   012879c  vmaddfp 2, 4, 31, 2
@@ -8779,24 +8779,24 @@ SpawnPart_28:   # 0x128438, 0x470 bytes
   01287a4  vmaddfp 3, 5, 31, 3
   01287a8  vspltisw 5, -1
   01287ac  li 3, 36
-  01287b0  <unknown>
-  01287b4  <unknown>
+  01287b0  lvlx 6, 5, 4
+  01287b4  lvlx 7, 6, 31
   01287b8  vslw 4, 4, 4
   01287bc  li 4, 40
-  01287c0  <unknown>
+  01287c0  lvlx 8, 7, 31
   01287c4  li 5, 44
   01287c8  vslw 5, 5, 5
   01287cc  li 6, 56
   01287d0  vspltw 6, 6, 0
   01287d4  vmaddfp 4, 8, 31, 4
-  01287d8  <unknown>
-  01287dc  <unknown>
+  01287d8  lvlx 8, 8, 31
+  01287dc  lvlx 9, 3, 31
   01287e0  vmaddfp 5, 8, 31, 5
   01287e4  li 3, 48
   01287e8  vmaddfp 2, 7, 6, 2
   01287ec  vmaddfp 3, 9, 6, 3
-  01287f0  <unknown>
-  01287f4  <unknown>
+  01287f0  lvlx 7, 4, 31
+  01287f4  lvlx 8, 5, 31
   01287f8  li 5, 52
   01287fc  li 4, 60
   0128800  vmaddfp 4, 7, 6, 4
@@ -8949,10 +8949,10 @@ UpdatePart_28:   # 0x1288c8, 0x26c bytes
   0128a64  rlwimi 4, 3, 24, 0, 7
   0128a68  li 3, -3064
   0128a6c  stw 4, 4(31)
-  0128a70  <unknown>
-  0128a74  <unknown>
+  0128a70  lvlx 2, 5, 30
+  0128a74  lvlx 3, 6, 31
   0128a78  vspltw 2, 2, 0
-  0128a7c  <unknown>
+  0128a7c  lvlx 4, 3, 29
   0128a80  li 3, 24
   0128a84  lfs 5, 48(31)
   0128a88  vmaddfp 3, 4, 2, 3
@@ -8960,7 +8960,7 @@ UpdatePart_28:   # 0x1288c8, 0x26c bytes
   0128a90  lfs 2, 56(31)
   0128a94  vspltw 4, 3, 0
   0128a98  stvewx 4, 6, 31
-  0128a9c  <unknown>
+  0128a9c  lvlx 2, 3, 30
   0128aa0  lfs 6, 16(31)
   0128aa4  vspltw 2, 2, 0
   0128aa8  lfs 4, 20(31)
@@ -8980,7 +8980,7 @@ UpdatePart_28:   # 0x1288c8, 0x26c bytes
   0128ae0  fadds 3, 4, 3
   0128ae4  fadds 1, 1, 2
   0128ae8  vslw 3, 3, 3
-  0128aec  <unknown>
+  0128aec  lvlx 4, 4, 3
   0128af0  li 3, 8
   0128af4  vspltw 4, 4, 0
   0128af8  vmaddfp 2, 2, 4, 3
@@ -9029,8 +9029,8 @@ SpawnPart_29:   # 0x128b50, 0x248 bytes
   0128bb8  fmr 29, 31
   0128bbc  vslw 2, 2, 2
   0128bc0  li 31, 0
-  0128bc4  <unknown>
-  0128bc8  <unknown>
+  0128bc4  lvlx 3, 0, 28
+  0128bc8  lvlx 4, 3, 4
   0128bcc  vspltw 3, 3, 0
   0128bd0  li 3, 10
   0128bd4  vmaddfp 2, 4, 3, 2
@@ -10063,12 +10063,12 @@ SpawnPart_31:   # 0x129b00, 0x1a8 bytes
   0129c40  stb 5, 1(27)
   0129c44  li 4, -3056
   0129c48  vslw 4, 4, 4
-  0129c4c  <unknown>
-  0129c50  <unknown>
+  0129c4c  lvlx 2, 7, 6
+  0129c50  lvlx 3, 3, 26
   0129c54  vcfsx 2, 2, 0
   0129c58  vspltw 3, 3, 0
   0129c5c  lis 3, 114
-  0129c60  <unknown>
+  0129c60  lvlx 5, 4, 3
   0129c64  li 3, 10
   0129c68  vaddfp 2, 2, 3
   0129c6c  vmaddfp 2, 5, 2, 4
@@ -10728,11 +10728,11 @@ UpdatePart_34:   # 0x12a6a0, 0x450 bytes
   012a734  lis 3, 114
   012a738  vslw 2, 2, 2
   012a73c  lfs 3, 0(4)
-  012a740  <unknown>
+  012a740  lvlx 3, 0, 4
   012a744  lfs 4, -3056(3)
   012a748  vspltw 3, 3, 0
   012a74c  fmuls 3, 4, 3
-  012a750  <unknown>
+  012a750  lvlx 4, 5, 3
   012a754  lhz 3, 10(31)
   012a758  vmaddfp 2, 4, 3, 2
   012a75c  vspltisw 3, 2
@@ -10771,11 +10771,11 @@ UpdatePart_34:   # 0x12a6a0, 0x450 bytes
   012a7e0  li 4, -3056
   012a7e4  vslw 2, 2, 2
   012a7e8  lfs 1, 0(3)
-  012a7ec  <unknown>
+  012a7ec  lvlx 3, 0, 3
   012a7f0  lfs 2, -3056(5)
   012a7f4  vspltw 3, 3, 0
   012a7f8  fmuls 1, 2, 1
-  012a7fc  <unknown>
+  012a7fc  lvlx 4, 4, 5
   012a800  lhz 3, 10(31)
   012a804  vmaddfp 2, 4, 3, 2
   012a808  vspltisw 3, 2
@@ -11567,9 +11567,9 @@ SpawnPart_36:   # 0x12b408, 0x14c bytes
   012b4c0  lbz 5, 0(5)
   012b4c4  stw 3, 12(29)
   012b4c8  stb 5, 2(29)
-  012b4cc  <unknown>
+  012b4cc  lvlx 3, 4, 27
   012b4d0  li 3, 10
-  012b4d4  <unknown>
+  012b4d4  lvlx 4, 6, 7
   012b4d8  vspltw 3, 3, 0
   012b4dc  lis 4, 32528
   012b4e0  lis 6, 15830
@@ -11954,11 +11954,11 @@ SpawnPart_37:   # 0x12ba18, 0x150 bytes
   012baf4  stw 4, 12(30)
   012baf8  stb 3, 2(30)
   012bafc  lfs 1, 4(28)
-  012bb00  <unknown>
+  012bb00  lvlx 3, 5, 28
   012bb04  li 3, 10
   012bb08  lfs 2, -3056(6)
   012bb0c  vspltw 3, 3, 0
-  012bb10  <unknown>
+  012bb10  lvlx 4, 7, 6
   012bb14  fmuls 1, 2, 1
   012bb18  vmaddfp 2, 4, 3, 2
   012bb1c  fctiwz 1, 1
@@ -12152,8 +12152,8 @@ SpawnPart_38:   # 0x12bd28, 0x14c bytes
   012be1c  fmuls 1, 31, 1
   012be20  ori 7, 7, 39322
   012be24  stfs 2, 12(29)
-  012be28  <unknown>
-  012be2c  <unknown>
+  012be28  lvlx 3, 3, 30
+  012be2c  lvlx 4, 5, 4
   012be30  vspltw 3, 3, 0
   012be34  vmaddfp 2, 4, 3, 2
   012be38  vctsxs 2, 2, 0
@@ -12337,8 +12337,8 @@ SpawnPart_39:   # 0x12bfd8, 0x198 bytes
   012c114  stb 3, 2(30)
   012c118  lfs 1, -26856(4)
   012c11c  stfs 1, 12(30)
-  012c120  <unknown>
-  012c124  <unknown>
+  012c120  lvlx 3, 5, 29
+  012c124  lvlx 4, 8, 7
   012c128  li 3, 10
   012c12c  vspltw 3, 3, 0
   012c130  lis 4, 17279
@@ -12585,13 +12585,13 @@ SpawnPart_40:   # 0x12c320, 0x2ac bytes
   012c514  stw 3, 12(28)
   012c518  vslw 4, 4, 4
   012c51c  li 3, 32
-  012c520  <unknown>
+  012c520  lvlx 2, 5, 4
   012c524  vspltw 2, 2, 0
-  012c528  <unknown>
+  012c528  lvlx 3, 6, 7
   012c52c  vspltisw 8, -1
   012c530  vmaddfp 2, 3, 2, 4
   012c534  vspltisw 9, -1
-  012c538  <unknown>
+  012c538  lvlx 3, 3, 4
   012c53c  vspltisw 4, -1
   012c540  vspltw 3, 3, 0
   012c544  vspltisw 6, -1
@@ -12603,7 +12603,7 @@ SpawnPart_40:   # 0x12c320, 0x2ac bytes
   012c55c  vmaddfp 4, 5, 7, 4
   012c560  vslw 5, 8, 8
   012c564  vslw 8, 9, 9
-  012c568  <unknown>
+  012c568  lvlx 7, 3, 4
   012c56c  li 3, 10
   012c570  vspltw 7, 7, 0
   012c574  vnmsubfp 9, 4, 2, 3
@@ -12745,10 +12745,10 @@ UpdatePart_40:   # 0x12c638, 0xaa8 bytes
   012c7f8  lis 5, 114
   012c7fc  li 7, -3056
   012c800  vslw 2, 2, 2
-  012c804  <unknown>
+  012c804  lvlx 3, 6, 4
   012c808  li 4, 10
   012c80c  vspltw 3, 3, 0
-  012c810  <unknown>
+  012c810  lvlx 4, 7, 5
   012c814  vmaddfp 2, 4, 3, 2
   012c818  vctsxs 2, 2, 0
   012c81c  vsplth 2, 2, 1
@@ -13028,13 +13028,13 @@ UpdatePart_40:   # 0x12c638, 0xaa8 bytes
   012cc64  li 7, -3064
   012cc68  vslw 4, 4, 4
   012cc6c  sth 6, 54(31)
-  012cc70  <unknown>
+  012cc70  lvlx 2, 4, 3
   012cc74  li 4, 48
   012cc78  vspltw 2, 2, 0
-  012cc7c  <unknown>
+  012cc7c  lvlx 3, 7, 5
   012cc80  vspltisw 5, -1
   012cc84  vmaddfp 2, 3, 2, 4
-  012cc88  <unknown>
+  012cc88  lvlx 4, 4, 3
   012cc8c  vslw 5, 5, 5
   012cc90  vspltw 4, 4, 0
   012cc94  vspltisw 7, -1
@@ -13043,7 +13043,7 @@ UpdatePart_40:   # 0x12c638, 0xaa8 bytes
   012cca0  vslw 7, 7, 7
   012cca4  vslw 9, 9, 9
   012cca8  vrefp 6, 2
-  012ccac  <unknown>
+  012ccac  lvlx 10, 4, 3
   012ccb0  vspltw 10, 10, 0
   012ccb4  vspltisw 12, -1
   012ccb8  li 4, 60
@@ -13060,13 +13060,13 @@ UpdatePart_40:   # 0x12c638, 0xaa8 bytes
   012cce4  vnmsubfp 2, 5, 2, 4
   012cce8  vmaddfp 2, 5, 2, 9
   012ccec  vslw 5, 7, 7
-  012ccf0  <unknown>
+  012ccf0  lvlx 9, 4, 3
   012ccf4  li 4, 64
-  012ccf8  <unknown>
+  012ccf8  lvlx 11, 5, 31
   012ccfc  vspltw 9, 9, 0
   012cd00  vmaddfp 2, 2, 10, 6
   012cd04  vspltisw 6, -1
-  012cd08  <unknown>
+  012cd08  lvlx 13, 4, 3
   012cd0c  vslw 6, 6, 6
   012cd10  vctsxs 2, 2, 0
   012cd14  vcfsx 2, 2, 0
@@ -13100,13 +13100,13 @@ UpdatePart_40:   # 0x12c638, 0xaa8 bytes
   012cd84  lis 5, 114
   012cd88  li 6, -3064
   012cd8c  vslw 4, 4, 4
-  012cd90  <unknown>
+  012cd90  lvlx 2, 4, 3
   012cd94  li 4, 48
   012cd98  vspltw 2, 2, 0
-  012cd9c  <unknown>
+  012cd9c  lvlx 3, 6, 5
   012cda0  vspltisw 5, -1
   012cda4  vmaddfp 2, 3, 2, 4
-  012cda8  <unknown>
+  012cda8  lvlx 4, 4, 3
   012cdac  vslw 5, 5, 5
   012cdb0  vspltw 4, 4, 0
   012cdb4  vspltisw 10, -1
@@ -13114,7 +13114,7 @@ UpdatePart_40:   # 0x12c638, 0xaa8 bytes
   012cdbc  li 4, 56
   012cdc0  vslw 7, 7, 7
   012cdc4  vrefp 6, 2
-  012cdc8  <unknown>
+  012cdc8  lvlx 9, 4, 3
   012cdcc  vspltw 9, 9, 0
   012cdd0  li 4, 12
   012cdd4  li 5, 60
@@ -13133,8 +13133,8 @@ UpdatePart_40:   # 0x12c638, 0xaa8 bytes
   012ce08  vslw 6, 6, 6
   012ce0c  vmaddfp 2, 2, 9, 8
   012ce10  vspltisw 9, -1
-  012ce14  <unknown>
-  012ce18  <unknown>
+  012ce14  lvlx 8, 4, 31
+  012ce18  lvlx 11, 5, 3
   012ce1c  vslw 9, 9, 9
   012ce20  vspltw 11, 11, 0
   012ce24  vctsxs 2, 2, 0
@@ -13563,13 +13563,13 @@ SpawnPart_42:   # 0x12d2e0, 0x2b4 bytes
   012d4dc  stw 3, 12(28)
   012d4e0  vslw 4, 4, 4
   012d4e4  li 3, 40
-  012d4e8  <unknown>
+  012d4e8  lvlx 2, 5, 4
   012d4ec  vspltw 2, 2, 0
-  012d4f0  <unknown>
+  012d4f0  lvlx 3, 6, 7
   012d4f4  vspltisw 8, -1
   012d4f8  vmaddfp 2, 3, 2, 4
   012d4fc  vspltisw 9, -1
-  012d500  <unknown>
+  012d500  lvlx 3, 3, 4
   012d504  vspltisw 4, -1
   012d508  vspltw 3, 3, 0
   012d50c  vspltisw 6, -1
@@ -13581,7 +13581,7 @@ SpawnPart_42:   # 0x12d2e0, 0x2b4 bytes
   012d524  vmaddfp 4, 5, 7, 4
   012d528  vslw 5, 8, 8
   012d52c  vslw 8, 9, 9
-  012d530  <unknown>
+  012d530  lvlx 7, 3, 4
   012d534  li 3, 10
   012d538  vspltw 7, 7, 0
   012d53c  vnmsubfp 9, 4, 2, 3
@@ -13721,10 +13721,10 @@ UpdatePart_42:   # 0x12d5f8, 0x96c bytes
   012d7b0  lis 6, 114
   012d7b4  li 7, -3056
   012d7b8  vslw 2, 2, 2
-  012d7bc  <unknown>
+  012d7bc  lvlx 3, 5, 4
   012d7c0  li 4, 10
   012d7c4  vspltw 3, 3, 0
-  012d7c8  <unknown>
+  012d7c8  lvlx 4, 7, 6
   012d7cc  vmaddfp 2, 4, 3, 2
   012d7d0  vctsxs 2, 2, 0
   012d7d4  vsplth 2, 2, 1
@@ -13928,13 +13928,13 @@ UpdatePart_42:   # 0x12d5f8, 0x96c bytes
   012daec  li 7, -3064
   012daf0  vslw 4, 4, 4
   012daf4  sth 6, 54(31)
-  012daf8  <unknown>
+  012daf8  lvlx 2, 4, 3
   012dafc  li 4, 48
   012db00  vspltw 2, 2, 0
-  012db04  <unknown>
+  012db04  lvlx 3, 7, 5
   012db08  vspltisw 5, -1
   012db0c  vmaddfp 2, 3, 2, 4
-  012db10  <unknown>
+  012db10  lvlx 4, 4, 3
   012db14  vslw 5, 5, 5
   012db18  vspltw 4, 4, 0
   012db1c  vspltisw 10, -1
@@ -13942,21 +13942,21 @@ UpdatePart_42:   # 0x12d5f8, 0x96c bytes
   012db24  li 4, 44
   012db28  vslw 7, 7, 7
   012db2c  vrefp 6, 2
-  012db30  <unknown>
+  012db30  lvlx 9, 4, 3
   012db34  vspltw 9, 9, 0
   012db38  li 4, 52
   012db3c  li 5, 12
   012db40  vnmsubfp 8, 6, 2, 4
-  012db44  <unknown>
+  012db44  lvlx 11, 4, 3
   012db48  li 4, 56
-  012db4c  <unknown>
+  012db4c  lvlx 12, 5, 31
   012db50  vspltw 11, 11, 0
   012db54  vmaddfp 5, 6, 8, 5
   012db58  vslw 6, 10, 10
   012db5c  vspltisw 8, -1
   012db60  vslw 8, 8, 8
   012db64  vnmsubfp 10, 5, 2, 4
-  012db68  <unknown>
+  012db68  lvlx 13, 4, 3
   012db6c  vmaddfp 5, 5, 10, 7
   012db70  vnmsubfp 2, 5, 2, 4
   012db74  vmaddfp 2, 5, 2, 6
@@ -14000,13 +14000,13 @@ UpdatePart_42:   # 0x12d5f8, 0x96c bytes
   012dc0c  lis 5, 114
   012dc10  li 6, -3064
   012dc14  vslw 4, 4, 4
-  012dc18  <unknown>
+  012dc18  lvlx 2, 4, 3
   012dc1c  li 4, 48
   012dc20  vspltw 2, 2, 0
-  012dc24  <unknown>
+  012dc24  lvlx 3, 6, 5
   012dc28  vspltisw 5, -1
   012dc2c  vmaddfp 2, 3, 2, 4
-  012dc30  <unknown>
+  012dc30  lvlx 4, 4, 3
   012dc34  vslw 5, 5, 5
   012dc38  vspltw 4, 4, 0
   012dc3c  vspltisw 7, -1
@@ -14015,7 +14015,7 @@ UpdatePart_42:   # 0x12d5f8, 0x96c bytes
   012dc48  vslw 7, 7, 7
   012dc4c  vslw 9, 9, 9
   012dc50  vrefp 6, 2
-  012dc54  <unknown>
+  012dc54  lvlx 10, 4, 3
   012dc58  vspltw 10, 10, 0
   012dc5c  li 4, 12
   012dc60  li 5, 52
@@ -14026,8 +14026,8 @@ UpdatePart_42:   # 0x12d5f8, 0x96c bytes
   012dc74  vnmsubfp 8, 5, 2, 4
   012dc78  vmaddfp 5, 5, 8, 7
   012dc7c  vspltisw 7, -1
-  012dc80  <unknown>
-  012dc84  <unknown>
+  012dc80  lvlx 8, 4, 31
+  012dc84  lvlx 11, 5, 3
   012dc88  vspltw 11, 11, 0
   012dc8c  vnmsubfp 2, 5, 2, 4
   012dc90  vmaddfp 2, 5, 2, 9
@@ -14303,12 +14303,12 @@ SpawnPart_43:   # 0x12df70, 0x1e0 bytes
   012e0cc  stb 4, 2(26)
   012e0d0  sth 30, 10(26)
   012e0d4  stfs 31, 12(26)
-  012e0d8  <unknown>
+  012e0d8  lvlx 3, 3, 31
   012e0dc  li 3, -3056
   012e0e0  vspltw 3, 3, 0
   012e0e4  vaddfp 2, 2, 3
   012e0e8  vslw 3, 4, 4
-  012e0ec  <unknown>
+  012e0ec  lvlx 4, 3, 5
   012e0f0  li 3, 56
   012e0f4  vmaddfp 2, 4, 2, 3
   012e0f8  vctsxs 2, 2, 0
@@ -15446,8 +15446,8 @@ SpawnPart_50:   # 0x12f1f8, 0x1a4 bytes
   012f2f4  stfd 1, 112(1)
   012f2f8  lwz 6, 116(1)
   012f2fc  stb 6, 8(27)
-  012f300  <unknown>
-  012f304  <unknown>
+  012f300  lvlx 3, 3, 26
+  012f304  lvlx 4, 5, 4
   012f308  li 3, 10
   012f30c  vspltw 3, 3, 0
   012f310  lfs 1, 0(29)
@@ -15930,11 +15930,11 @@ UpdatePart_53:   # 0x12fa78, 0x27c bytes
   012faac  lhz 8, 40(31)
   012fab0  addc 3, 3, 4
   012fab4  lhz 9, 10(31)
-  012fab8  <unknown>
+  012fab8  lvlx 2, 5, 31
   012fabc  extsh 4, 8
   012fac0  vsraw 2, 2, 3
   012fac4  stb 3, 8(31)
-  012fac8  <unknown>
+  012fac8  lvlx 4, 6, 31
   012facc  extsh 3, 9
   012fad0  lfs 31, 0(7)
   012fad4  vsraw 4, 4, 3
@@ -15950,19 +15950,19 @@ UpdatePart_53:   # 0x12fa78, 0x27c bytes
   012fafc  lis 4, 19
   012fb00  std 3, 112(1)
   012fb04  addi 4, 4, -1436
-  012fb08  <unknown>
+  012fb08  lvlx 3, 5, 31
   012fb0c  li 3, 4
-  012fb10  <unknown>
+  012fb10  lvlx 5, 6, 31
   012fb14  li 5, 8
   012fb18  vslw 4, 4, 4
   012fb1c  vaddfp 3, 3, 5
-  012fb20  <unknown>
-  012fb24  <unknown>
+  012fb20  lvlx 6, 3, 4
+  012fb24  lvlx 7, 0, 4
   012fb28  vspltw 6, 6, 0
   012fb2c  vspltw 7, 7, 0
   012fb30  li 3, 12
   012fb34  vmaddfp 2, 2, 6, 4
-  012fb38  <unknown>
+  012fb38  lvlx 4, 5, 4
   012fb3c  lfs 1, 4(4)
   012fb40  vspltw 4, 4, 0
   012fb44  vnmsubfp 3, 3, 7, 5
@@ -16155,11 +16155,11 @@ SpawnPart_54:   # 0x12fd10, 0x198 bytes
   012fe44  stfs 31, 44(28)
   012fe48  stw 29, 52(28)
   012fe4c  stw 4, 12(28)
-  012fe50  <unknown>
+  012fe50  lvlx 2, 6, 27
   012fe54  li 3, 10
   012fe58  vslw 3, 3, 3
   012fe5c  vspltw 2, 2, 0
-  012fe60  <unknown>
+  012fe60  lvlx 4, 7, 5
   012fe64  vmaddfp 2, 4, 2, 3
   012fe68  vctsxs 2, 2, 0
   012fe6c  vsplth 2, 2, 1
@@ -16217,17 +16217,17 @@ UpdatePart_54:   # 0x12fec8, 0x204 bytes
   012ff54  lis 3, 114
   012ff58  vslw 2, 2, 2
   012ff5c  vspltisw 5, -1
-  012ff60  <unknown>
-  012ff64  <unknown>
+  012ff60  lvlx 3, 0, 4
+  012ff64  lvlx 4, 5, 3
   012ff68  vspltw 3, 3, 0
   012ff6c  li 3, 10
   012ff70  vslw 5, 5, 5
   012ff74  li 5, 4
   012ff78  vmaddfp 2, 4, 3, 2
   012ff7c  vspltisw 3, -16
-  012ff80  <unknown>
+  012ff80  lvlx 4, 3, 31
   012ff84  vsraw 3, 4, 3
-  012ff88  <unknown>
+  012ff88  lvlx 4, 5, 4
   012ff8c  vspltw 4, 4, 0
   012ff90  vcfsx 3, 3, 0
   012ff94  lhz 3, 10(31)
@@ -17592,8 +17592,8 @@ SpawnPart_61:   # 0x1314c8, 0x23c bytes
   0131528  stw 31, 32(30)
   013152c  li 3, -3056
   0131530  vslw 2, 2, 2
-  0131534  <unknown>
-  0131538  <unknown>
+  0131534  lvlx 3, 0, 28
+  0131538  lvlx 4, 3, 4
   013153c  vspltw 3, 3, 0
   0131540  li 3, 10
   0131544  li 31, 0
@@ -18710,9 +18710,9 @@ SpawnPart_65:   # 0x132650, 0x160 bytes
   0132744  stw 4, 52(29)
   0132748  stw 4, 56(29)
   013274c  stw 6, 60(29)
-  0132750  <unknown>
+  0132750  lvlx 3, 5, 28
   0132754  li 3, 10
-  0132758  <unknown>
+  0132758  lvlx 4, 8, 7
   013275c  vspltw 3, 3, 0
   0132760  vmaddfp 2, 4, 3, 2
   0132764  vctsxs 2, 2, 0
@@ -19960,10 +19960,10 @@ SpawnPart_70:   # 0x133a48, 0x148 bytes
   0133b3c  li 7, -3056
   0133b40  vslw 3, 3, 3
   0133b44  stw 4, 12(29)
-  0133b48  <unknown>
+  0133b48  lvlx 2, 5, 28
   0133b4c  li 3, 10
   0133b50  vspltw 2, 2, 0
-  0133b54  <unknown>
+  0133b54  lvlx 4, 7, 6
   0133b58  vmaddfp 2, 4, 2, 3
   0133b5c  vctsxs 2, 2, 0
   0133b60  vsplth 2, 2, 1
@@ -20645,11 +20645,11 @@ SpawnPart_73:   # 0x134540, 0x210 bytes
   0134644  lis 4, 114
   0134648  li 6, -3056
   013464c  vslw 2, 2, 2
-  0134650  <unknown>
+  0134650  lvlx 3, 5, 27
   0134654  slwi 3, 3, 24
   0134658  lis 5, 255
   013465c  vspltw 3, 3, 0
-  0134660  <unknown>
+  0134660  lvlx 4, 6, 4
   0134664  ori 5, 5, 65535
   0134668  li 4, 10
   013466c  or 3, 3, 5
@@ -21222,13 +21222,13 @@ SpawnPart_75:   # 0x134e48, 0x264 bytes
   0134f58  lwz 3, 300(3)
   0134f5c  lbz 3, 0(3)
   0134f60  stb 3, 2(26)
-  0134f64  <unknown>
+  0134f64  lvlx 3, 4, 25
   0134f68  li 3, -3056
   0134f6c  lfs 1, 4(25)
   0134f70  lfd 2, 128(1)
   0134f74  vspltw 3, 3, 0
   0134f78  fcfid 2, 2
-  0134f7c  <unknown>
+  0134f7c  lvlx 4, 3, 30
   0134f80  lfs 3, -3056(30)
   0134f84  vaddfp 2, 2, 3
   0134f88  vspltisw 3, -1
@@ -21564,11 +21564,11 @@ SpawnPart_77:   # 0x1353b0, 0x1b8 bytes
   01354b4  lis 3, 114
   01354b8  stfs 1, 12(28)
   01354bc  lfd 1, 128(1)
-  01354c0  <unknown>
+  01354c0  lvlx 4, 4, 27
   01354c4  fcfid 1, 1
   01354c8  vspltw 4, 4, 0
   01354cc  lfs 2, 8(27)
-  01354d0  <unknown>
+  01354d0  lvlx 5, 5, 3
   01354d4  lfs 3, -3056(3)
   01354d8  vaddfp 2, 2, 4
   01354dc  li 3, 10
@@ -21808,11 +21808,11 @@ UpdatePart_78:   # 0x135860, 0x3f0 bytes
   01358a8  lhz 8, 40(31)
   01358ac  addc 3, 3, 4
   01358b0  lhz 9, 10(31)
-  01358b4  <unknown>
+  01358b4  lvlx 2, 5, 31
   01358b8  extsh 4, 8
   01358bc  vsraw 2, 2, 3
   01358c0  stb 3, 8(31)
-  01358c4  <unknown>
+  01358c4  lvlx 4, 6, 31
   01358c8  extsh 3, 9
   01358cc  lfs 31, 0(7)
   01358d0  vsraw 4, 4, 3
@@ -21828,19 +21828,19 @@ UpdatePart_78:   # 0x135860, 0x3f0 bytes
   01358f8  lis 4, 19
   01358fc  std 3, 112(1)
   0135900  addi 4, 4, 22592
-  0135904  <unknown>
+  0135904  lvlx 3, 5, 31
   0135908  li 3, 4
-  013590c  <unknown>
+  013590c  lvlx 5, 6, 31
   0135910  li 5, 8
   0135914  vslw 4, 4, 4
   0135918  vaddfp 3, 3, 5
-  013591c  <unknown>
-  0135920  <unknown>
+  013591c  lvlx 6, 3, 4
+  0135920  lvlx 7, 0, 4
   0135924  vspltw 6, 6, 0
   0135928  vspltw 7, 7, 0
   013592c  li 3, 12
   0135930  vmaddfp 2, 2, 6, 4
-  0135934  <unknown>
+  0135934  lvlx 4, 5, 4
   0135938  lfs 1, 4(4)
   013593c  vspltw 4, 4, 0
   0135940  vnmsubfp 3, 3, 7, 5

@@ -1833,13 +1833,13 @@ LoadMusic:   # 0x11d1f0, 0x7f0 bytes
   011d52c  addi 3, 3, -11804
   011d530  li 5, -3056
   011d534  vslw 2, 2, 2
-  011d538  <unknown>
-  011d53c  <unknown>
+  011d538  lvlx 3, 0, 3
+  011d53c  lvlx 4, 5, 4
   011d540  vspltw 3, 3, 0
   011d544  li 4, 4
   011d548  vmaddfp 2, 4, 3, 2
   011d54c  vspltisw 3, -1
-  011d550  <unknown>
+  011d550  lvlx 4, 4, 3
   011d554  li 3, 44
   011d558  vspltw 4, 4, 0
   011d55c  vslw 3, 3, 3

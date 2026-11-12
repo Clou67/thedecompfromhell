@@ -124,10 +124,10 @@ UpdateMoby_1101:   # 0x1be0e0, 0x2d4 bytes
   01be240  li 6, -3056
   01be244  stb 4, 32(31)
   01be248  vslw 2, 2, 2
-  01be24c  <unknown>
+  01be24c  lvlx 3, 0, 3
   01be250  li 3, 8
   01be254  vspltw 3, 3, 0
-  01be258  <unknown>
+  01be258  lvlx 4, 6, 5
   01be25c  vmaddfp 2, 4, 3, 2
   01be260  vctsxs 2, 2, 0
   01be264  vspltw 2, 2, 0

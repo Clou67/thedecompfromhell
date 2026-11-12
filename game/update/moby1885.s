@@ -166,8 +166,8 @@ FUN_002ce020:   # 0x2ce020, 0x310 bytes
   02ce2a8  li 4, 4
   02ce2ac  vspltisw 2, -16
   02ce2b0  addi 5, 4, 16
-  02ce2b4  <unknown>
-  02ce2b8  <unknown>
+  02ce2b4  lvlx 3, 4, 3
+  02ce2b8  lvrx 4, 5, 3
   02ce2bc  vor 3, 3, 4
   02ce2c0  vsraw 2, 3, 2
   02ce2c4  vcfsx 2, 2, 0
@@ -1019,9 +1019,9 @@ UpdateMoby_1885:   # 0x2ce590, 0xc54 bytes
   02cf030  vspltisw 4, -1
   02cf034  sldi 6, 29, 2
   02cf038  addi 5, 4, 16
-  02cf03c  <unknown>
+  02cf03c  lvlx 2, 4, 30
   02cf040  addc 4, 30, 6
-  02cf044  <unknown>
+  02cf044  lvrx 3, 5, 30
   02cf048  clrldi 4, 4, 32
   02cf04c  vor 2, 2, 3
   02cf050  li 5, 16
@@ -1029,12 +1029,12 @@ UpdateMoby_1885:   # 0x2ce590, 0xc54 bytes
   02cf058  vslw 4, 4, 4
   02cf05c  stw 3, 176(4)
   02cf060  vsraw 2, 2, 3
-  02cf064  <unknown>
+  02cf064  lvlx 3, 5, 28
   02cf068  lis 3, 114
   02cf06c  li 4, -3056
   02cf070  vspltw 3, 3, 0
   02cf074  vcfsx 2, 2, 0
-  02cf078  <unknown>
+  02cf078  lvlx 5, 4, 3
   02cf07c  lbz 3, 145(30)
   02cf080  li 4, 142
   02cf084  addic 3, 3, 1

@@ -967,7 +967,7 @@ UpdateMoby_1523_GC_Blueball:   # 0xec6f0, 0xcbc bytes
   00ed264  lis 29, 161
   00ed268  lfs 27, 136(24)
   00ed26c  addic 29, 29, 23856
-  00ed270  <unknown>
+  00ed270  lvlx 31, 3, 24
   00ed274  vspltw 31, 31, 0
   00ed278  ori 3, 25, 0
   00ed27c  ori 4, 29, 0
@@ -997,7 +997,7 @@ UpdateMoby_1523_GC_Blueball:   # 0xec6f0, 0xcbc bytes
   00ed2dc  li 4, 10
   00ed2e0  vslw 2, 2, 2
   00ed2e4  stfs 1, 12(28)
-  00ed2e8  <unknown>
+  00ed2e8  lvlx 3, 3, 26
   00ed2ec  lfs 1, -3056(26)
   00ed2f0  vmaddfp 2, 3, 31, 2
   00ed2f4  fmuls 1, 1, 27

@@ -1635,10 +1635,10 @@ UpdateMoby_562:   # 0x3b7c48, 0x59c bytes
   03b80c8  stb 4, 32(31)
   03b80cc  li 4, -3056
   03b80d0  vslw 2, 2, 2
-  03b80d4  <unknown>
+  03b80d4  lvlx 3, 6, 3
   03b80d8  li 3, 84
   03b80dc  vspltw 3, 3, 0
-  03b80e0  <unknown>
+  03b80e0  lvlx 4, 4, 5
   03b80e4  vmaddfp 2, 4, 3, 2
   03b80e8  vctsxs 2, 2, 0
   03b80ec  vspltw 2, 2, 0

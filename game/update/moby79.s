@@ -12,9 +12,9 @@ M789_0045e140:   # 0x45e140, 0x14c bytes
   045e160  addi 8, 6, 16
   045e164  vspltisw 5, -1
   045e168  vspltisw 9, -1
-  045e16c  <unknown>
-  045e170  <unknown>
-  045e174  <unknown>
+  045e16c  lvlx 2, 0, 7
+  045e170  lvlx 3, 6, 4
+  045e174  lvrx 4, 8, 4
   045e178  vslw 5, 5, 5
   045e17c  vor 3, 3, 4
   045e180  vspltw 4, 2, 0
@@ -29,25 +29,25 @@ M789_0045e140:   # 0x45e140, 0x14c bytes
   045e1a4  li 9, 8
   045e1a8  vslw 6, 6, 6
   045e1ac  fmuls 1, 1, 2
-  045e1b0  <unknown>
+  045e1b0  lvlx 8, 8, 6
   045e1b4  addi 11, 9, 16
   045e1b8  lfs 2, 12(4)
-  045e1bc  <unknown>
+  045e1bc  lvlx 10, 10, 7
   045e1c0  std 31, 136(1)
-  045e1c4  <unknown>
+  045e1c4  lvlx 11, 9, 4
   045e1c8  ori 31, 3, 0
   045e1cc  vnmsubfp 7, 2, 3, 4
   045e1d0  fdivs 1, 1, 2
   045e1d4  ori 3, 5, 0
   045e1d8  vmaddfp 2, 2, 7, 5
   045e1dc  vslw 5, 9, 9
-  045e1e0  <unknown>
+  045e1e0  lvrx 7, 11, 4
   045e1e4  lfs 2, 8(4)
   045e1e8  vor 7, 11, 7
   045e1ec  vmaddfp 5, 8, 10, 5
   045e1f0  vspltisw 8, -1
   045e1f4  lwz 6, 0(5)
-  045e1f8  <unknown>
+  045e1f8  lvlx 10, 0, 5
   045e1fc  vslw 8, 8, 8
   045e200  vnmsubfp 9, 2, 3, 4
   045e204  extsw 6, 6
@@ -880,10 +880,10 @@ UpdateMoby_79:   # 0x45e2e0, 0x139c bytes
   045ef3c  fsqrts 1, 1
   045ef40  stfs 1, 12(28)
   045ef44  stb 3, 32(31)
-  045ef48  <unknown>
-  045ef4c  <unknown>
+  045ef48  lvlx 3, 0, 27
+  045ef4c  lvlx 4, 4, 28
   045ef50  vcfsx 3, 3, 0
-  045ef54  <unknown>
+  045ef54  lvrx 5, 5, 28
   045ef58  vor 4, 4, 5
   045ef5c  vmaddfp 2, 3, 4, 2
   045ef60  vspltw 2, 2, 0
@@ -941,12 +941,12 @@ UpdateMoby_79:   # 0x45e2e0, 0x139c bytes
   045f030  vspltisw 9, -1
   045f034  li 7, -3052
   045f038  vspltisw 6, -1
-  045f03c  <unknown>
-  045f040  <unknown>
+  045f03c  lvlx 2, 4, 3
+  045f040  lvrx 3, 5, 3
   045f044  lis 4, 135
   045f048  vslw 5, 5, 5
   045f04c  vor 2, 2, 3
-  045f050  <unknown>
+  045f050  lvlx 3, 6, 27
   045f054  li 5, 15424
   045f058  vspltw 3, 3, 0
   045f05c  vrefp 4, 2
@@ -955,16 +955,16 @@ UpdateMoby_79:   # 0x45e2e0, 0x139c bytes
   045f068  vslw 6, 6, 6
   045f06c  lfs 2, -3052(26)
   045f070  addi 8, 6, 16
-  045f074  <unknown>
+  045f074  lvlx 8, 5, 4
   045f078  fmuls 1, 1, 2
-  045f07c  <unknown>
-  045f080  <unknown>
+  045f07c  lvlx 10, 7, 26
+  045f080  lvlx 11, 6, 3
   045f084  lis 4, 165
   045f088  addic 4, 4, 7136
   045f08c  vnmsubfp 7, 4, 2, 3
   045f090  vmaddfp 4, 4, 7, 5
   045f094  vslw 5, 9, 9
-  045f098  <unknown>
+  045f098  lvrx 7, 8, 3
   045f09c  lfs 2, 12(3)
   045f0a0  vor 7, 11, 7
   045f0a4  fdivs 2, 1, 2
@@ -985,7 +985,7 @@ UpdateMoby_79:   # 0x45e2e0, 0x139c bytes
   045f0e0  vspltw 4, 2, 0
   045f0e4  stvewx 4, 6, 3
   045f0e8  lwz 5, 0(4)
-  045f0ec  <unknown>
+  045f0ec  lvlx 3, 0, 4
   045f0f0  extsw 5, 5
   045f0f4  vcfsx 3, 3, 0
   045f0f8  std 5, 408(1)
@@ -1031,13 +1031,13 @@ UpdateMoby_79:   # 0x45e2e0, 0x139c bytes
   045f198  li 4, 800
   045f19c  vspltisw 2, -16
   045f1a0  addi 5, 4, 16
-  045f1a4  <unknown>
+  045f1a4  lvlx 3, 4, 28
   045f1a8  lis 4, 135
-  045f1ac  <unknown>
+  045f1ac  lvrx 4, 5, 28
   045f1b0  li 5, 15440
   045f1b4  vor 3, 3, 4
   045f1b8  vsraw 4, 3, 2
-  045f1bc  <unknown>
+  045f1bc  lvlx 5, 5, 4
   045f1c0  vsrw 2, 3, 2
   045f1c4  vspltw 5, 5, 0
   045f1c8  vcfsx 4, 4, 0

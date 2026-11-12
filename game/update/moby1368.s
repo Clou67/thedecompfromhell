@@ -479,11 +479,11 @@ UpdateMoby_1368:   # 0x25bcf8, 0xaf4 bytes
   025c464  lis 5, 114
   025c468  li 6, -3056
   025c46c  vslw 2, 2, 2
-  025c470  <unknown>
+  025c470  lvlx 3, 4, 3
   025c474  li 3, 56
   025c478  vspltw 3, 3, 0
   025c47c  li 4, 1
-  025c480  <unknown>
+  025c480  lvlx 4, 6, 5
   025c484  vmaddfp 2, 4, 3, 2
   025c488  vctsxs 2, 2, 0
   025c48c  vspltw 2, 2, 0
@@ -522,8 +522,8 @@ UpdateMoby_1368:   # 0x25bcf8, 0xaf4 bytes
   025c510  stfs 1, 24(31)
   025c514  lfs 1, 44(28)
   025c518  stfs 1, 28(31)
-  025c51c  <unknown>
-  025c520  <unknown>
+  025c51c  lvlx 2, 4, 3
+  025c520  lvlx 4, 6, 5
   025c524  vspltw 2, 2, 0
   025c528  li 3, 56
   025c52c  li 4, 1
@@ -542,11 +542,11 @@ UpdateMoby_1368:   # 0x25bcf8, 0xaf4 bytes
   025c560  vslw 3, 3, 3
   025c564  lfs 1, 48(3)
   025c568  lfs 2, -3056(4)
-  025c56c  <unknown>
+  025c56c  lvlx 2, 5, 3
   025c570  fmuls 1, 2, 1
   025c574  vspltw 2, 2, 0
   025c578  lwz 3, 56(30)
-  025c57c  <unknown>
+  025c57c  lvlx 4, 6, 4
   025c580  vmaddfp 2, 4, 2, 3
   025c584  fctiwz 1, 1
   025c588  vctsxs 2, 2, 0

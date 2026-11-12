@@ -302,8 +302,8 @@ UpdateMoby_861:   # 0x497ff8, 0xfe8 bytes
   0498114  fmuls 1, 4, 1
   0498118  cmpwi 6, 0
   049811c  stfs 1, 260(30)
-  0498120  <unknown>
-  0498124  <unknown>
+  0498120  lvlx 3, 3, 4
+  0498124  lvlx 4, 8, 7
   0498128  vspltw 3, 3, 0
   049812c  lfs 1, 72(31)
   0498130  vmaddfp 2, 4, 3, 2
@@ -1197,10 +1197,10 @@ UpdateMoby_861:   # 0x497ff8, 0xfe8 bytes
   0498f10  lis 5, 114
   0498f14  li 6, -3056
   0498f18  vslw 2, 2, 2
-  0498f1c  <unknown>
+  0498f1c  lvlx 3, 4, 3
   0498f20  li 3, 292
   0498f24  vspltw 3, 3, 0
-  0498f28  <unknown>
+  0498f28  lvlx 4, 6, 5
   0498f2c  lfs 1, -3056(5)
   0498f30  vmaddfp 2, 4, 3, 2
   0498f34  vctsxs 2, 2, 0

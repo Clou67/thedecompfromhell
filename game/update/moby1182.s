@@ -714,10 +714,10 @@ UpdateMoby_1182:   # 0x1f0948, 0x10e4 bytes
   01f11e0  addi 5, 3, 16
   01f11e4  addi 6, 4, 16
   01f11e8  lis 7, 31
-  01f11ec  <unknown>
-  01f11f0  <unknown>
-  01f11f4  <unknown>
-  01f11f8  <unknown>
+  01f11ec  lvlx 2, 3, 30
+  01f11f0  lvlx 3, 4, 30
+  01f11f4  lvrx 4, 5, 30
+  01f11f8  lvrx 5, 6, 30
   01f11fc  addi 4, 7, 2248
   01f1200  vor 2, 2, 4
   01f1204  li 5, 40
@@ -726,7 +726,7 @@ UpdateMoby_1182:   # 0x1f0948, 0x10e4 bytes
   01f1210  vspltisw 6, -1
   01f1214  vrefp 5, 2
   01f1218  vsraw 3, 3, 4
-  01f121c  <unknown>
+  01f121c  lvlx 4, 5, 4
   01f1220  vslw 6, 6, 6
   01f1224  vspltw 4, 4, 0
   01f1228  vcfsx 3, 3, 0
@@ -748,7 +748,7 @@ UpdateMoby_1182:   # 0x1f0948, 0x10e4 bytes
   01f1268  vslw 8, 12, 12
   01f126c  vmaddfp 5, 5, 11, 6
   01f1270  vspltisw 6, -1
-  01f1274  <unknown>
+  01f1274  lvlx 11, 5, 4
   01f1278  vspltw 11, 11, 0
   01f127c  vnmsubfp 9, 7, 3, 4
   01f1280  vslw 6, 6, 6

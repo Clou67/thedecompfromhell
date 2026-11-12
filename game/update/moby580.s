@@ -1829,10 +1829,10 @@ UpdateMoby_580:   # 0x3ce680, 0x2498 bytes
   03cebec  li 3, -3056
   03cebf0  stw 8, 148(31)
   03cebf4  stw 6, 600(30)
-  03cebf8  <unknown>
+  03cebf8  lvlx 2, 4, 5
   03cebfc  vspltw 2, 2, 0
   03cec00  li 4, 0
-  03cec04  <unknown>
+  03cec04  lvlx 4, 3, 7
   03cec08  lis 5, 132
   03cec0c  li 3, 604
   03cec10  vmaddfp 2, 4, 2, 3
@@ -1925,9 +1925,9 @@ UpdateMoby_580:   # 0x3ce680, 0x2498 bytes
   03ced6c  lis 4, 114
   03ced70  li 6, -3056
   03ced74  vslw 2, 2, 2
-  03ced78  <unknown>
+  03ced78  lvlx 3, 5, 3
   03ced7c  vspltw 3, 3, 0
-  03ced80  <unknown>
+  03ced80  lvlx 4, 6, 4
   03ced84  li 4, 608
   03ced88  vmaddfp 2, 4, 3, 2
   03ced8c  vctsxs 2, 2, 0
@@ -2001,16 +2001,16 @@ UpdateMoby_580:   # 0x3ce680, 0x2498 bytes
   03cee9c  addi 5, 3, 16
   03ceea0  li 4, 40
   03ceea4  addi 6, 6, -6676
-  03ceea8  <unknown>
+  03ceea8  lvlx 3, 3, 30
   03ceeac  li 3, 644
-  03ceeb0  <unknown>
+  03ceeb0  lvrx 4, 5, 30
   03ceeb4  addi 5, 3, 16
   03ceeb8  vor 3, 3, 4
-  03ceebc  <unknown>
+  03ceebc  lvlx 4, 4, 6
   03ceec0  vslw 2, 2, 2
   03ceec4  vspltw 4, 4, 0
-  03ceec8  <unknown>
-  03ceecc  <unknown>
+  03ceec8  lvlx 5, 3, 30
+  03ceecc  lvrx 6, 5, 30
   03ceed0  lwz 3, 644(30)
   03ceed4  vmaddfp 3, 3, 4, 2
   03ceed8  cmpwi 3, 0

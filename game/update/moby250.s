@@ -51,16 +51,16 @@ UpdateMoby_250:   # 0x316950, 0x240 bytes
   0316a0c  lis 6, 49
   0316a10  vslw 4, 4, 4
   0316a14  stb 4, 32(31)
-  0316a18  <unknown>
-  0316a1c  <unknown>
+  0316a18  lvlx 2, 3, 7
+  0316a1c  lvrx 3, 5, 7
   0316a20  addi 3, 6, 26952
   0316a24  lis 4, 114
   0316a28  vor 2, 2, 3
-  0316a2c  <unknown>
+  0316a2c  lvlx 3, 0, 3
   0316a30  vcfsx 2, 2, 0
   0316a34  vspltw 3, 3, 0
   0316a38  li 3, -3056
-  0316a3c  <unknown>
+  0316a3c  lvlx 5, 3, 4
   0316a40  li 3, 8
   0316a44  vaddfp 2, 2, 3
   0316a48  vmaddfp 2, 5, 2, 4

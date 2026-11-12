@@ -347,35 +347,35 @@ UploadViewMatricesToPasses:   # 0x65a00, 0x684 bytes
   0065c2c  li 6, 4
   0065c30  li 9, 16
   0065c34  li 8, 20
-  0065c38  <unknown>
+  0065c38  lvlx 2, 5, 3
   0065c3c  li 29, 8
   0065c40  li 3, 36
-  0065c44  <unknown>
-  0065c48  <unknown>
+  0065c44  lvlx 3, 4, 7
+  0065c48  lvlx 4, 6, 7
   0065c4c  li 4, 24
-  0065c50  <unknown>
+  0065c50  lvlx 5, 9, 7
   0065c54  li 10, 40
-  0065c58  <unknown>
+  0065c58  lvlx 6, 8, 7
   0065c5c  li 5, 320
   0065c60  li 6, 324
-  0065c64  <unknown>
+  0065c64  lvlx 7, 3, 7
   0065c68  ld 2, 40(1)
   0065c6c  li 3, 328
-  0065c70  <unknown>
+  0065c70  lvlx 8, 29, 7
   0065c74  li 8, 32
-  0065c78  <unknown>
+  0065c78  lvlx 9, 4, 7
   0065c7c  li 9, 48
-  0065c80  <unknown>
+  0065c80  lvlx 10, 10, 7
   0065c84  li 4, 128
-  0065c88  <unknown>
+  0065c88  lvlx 11, 5, 7
   0065c8c  li 10, 208
-  0065c90  <unknown>
+  0065c90  lvlx 12, 6, 7
   0065c94  li 5, 144
-  0065c98  <unknown>
+  0065c98  lvlx 13, 3, 7
   0065c9c  li 6, 224
   0065ca0  lvx 1, 8, 28
   0065ca4  li 3, 112
-  0065ca8  <unknown>
+  0065ca8  lvlx 14, 0, 28
   0065cac  li 8, 256
   0065cb0  vperm 11, 11, 12, 1
   0065cb4  li 7, 240
@@ -975,9 +975,9 @@ RebuildSharedWaveTables:   # 0x66598, 0x278 bytes
   00665fc  li 12, 19
   0066600  stfs 2, 32(9)
   0066604  lfs 3, 540(6)
-  0066608  <unknown>
+  0066608  lvlx 2, 7, 6
   006660c  fmuls 1, 3, 1
-  0066610  <unknown>
+  0066610  lvlx 3, 8, 6
   0066614  vcfsx 2, 2, 0
   0066618  vcfsx 3, 3, 0
   006661c  li 7, 16
@@ -987,11 +987,11 @@ RebuildSharedWaveTables:   # 0x66598, 0x278 bytes
   006662c  lfs 3, 8(3)
   0066630  lfs 4, 4(3)
   0066634  lfs 5, 552(6)
-  0066638  <unknown>
+  0066638  lvlx 5, 4, 3
   006663c  fnmsubs 5, 5, 4, 3
   0066640  vspltw 5, 5, 0
   0066644  lis 4, 144
-  0066648  <unknown>
+  0066648  lvlx 6, 10, 6
   006664c  li 3, 2
   0066650  addic 4, 4, -23532
   0066654  vmaddfp 2, 2, 5, 4
@@ -1818,9 +1818,9 @@ UpdateViewContext:   # 0x668d0, 0x1008 bytes
   00673e0  vspltisw 12, -1
   00673e4  vspltisw 10, -1
   00673e8  vslw 7, 7, 7
-  00673ec  <unknown>
-  00673f0  <unknown>
-  00673f4  <unknown>
+  00673ec  lvlx 2, 3, 31
+  00673f0  lvlx 4, 4, 30
+  00673f4  lvlx 5, 5, 31
   00673f8  li 3, 528
   00673fc  vrefp 3, 2
   0067400  vrefp 6, 5
@@ -1840,14 +1840,14 @@ UpdateViewContext:   # 0x668d0, 0x1008 bytes
   0067438  li 12, 128
   006743c  vmaddfp 3, 3, 9, 7
   0067440  vmaddfp 6, 6, 11, 8
-  0067444  <unknown>
+  0067444  lvlx 9, 3, 31
   0067448  vslw 7, 12, 12
   006744c  vrefp 8, 9
   0067450  li 3, 192
   0067454  vspltisw 11, -1
-  0067458  <unknown>
+  0067458  lvlx 13, 3, 31
   006745c  li 3, 212
-  0067460  <unknown>
+  0067460  lvlx 14, 4, 31
   0067464  vrefp 1, 13
   0067468  vnmsubfp 12, 3, 2, 4
   006746c  vnmsubfp 0, 6, 5, 4
@@ -1858,14 +1858,14 @@ UpdateViewContext:   # 0x668d0, 0x1008 bytes
   0067480  vmaddfp 6, 6, 0, 7
   0067484  vspltisw 10, -1
   0067488  vnmsubfp 16, 1, 13, 4
-  006748c  <unknown>
+  006748c  lvlx 0, 3, 31
   0067490  vspltisw 7, -1
   0067494  vrefp 18, 0
   0067498  li 3, 512
   006749c  vslw 10, 10, 10
   00674a0  vspltisw 12, -1
   00674a4  vslw 7, 7, 7
-  00674a8  <unknown>
+  00674a8  lvlx 19, 5, 31
   00674ac  vmaddfp 8, 8, 15, 10
   00674b0  vspltisw 15, -1
   00674b4  vnmsubfp 17, 3, 2, 4
@@ -1880,7 +1880,7 @@ UpdateViewContext:   # 0x668d0, 0x1008 bytes
   00674d8  vslw 11, 31, 31
   00674dc  vnmsubfp 7, 18, 0, 4
   00674e0  vspltisw 10, -1
-  00674e4  <unknown>
+  00674e4  lvlx 17, 3, 31
   00674e8  vslw 15, 15, 15
   00674ec  vrefp 31, 17
   00674f0  li 3, 384
@@ -1894,7 +1894,7 @@ UpdateViewContext:   # 0x668d0, 0x1008 bytes
   0067510  vnmsubfp 14, 1, 13, 4
   0067514  vmaddfp 7, 18, 7, 10
   0067518  vslw 15, 15, 15
-  006751c  <unknown>
+  006751c  lvlx 10, 6, 31
   0067520  vspltisw 18, -1
   0067524  vspltisw 19, -1
   0067528  fdivs 1, 30, 1
@@ -1984,7 +1984,7 @@ UpdateViewContext:   # 0x668d0, 0x1008 bytes
   0067678  vspltisw 12, -1
   006767c  vslw 14, 14, 14
   0067680  li 4, 444
-  0067684  <unknown>
+  0067684  lvlx 15, 5, 31
   0067688  li 5, 428
   006768c  vslw 12, 12, 12
   0067690  vspltw 16, 15, 0
@@ -2044,7 +2044,7 @@ UpdateViewContext:   # 0x668d0, 0x1008 bytes
   0067768  stb 11, 146(31)
   006776c  stb 26, 147(31)
   0067770  li 11, 144
-  0067774  <unknown>
+  0067774  lvlx 11, 3, 30
   0067778  lvx 0, 5, 30
   006777c  vspltw 11, 11, 0
   0067780  li 3, 112
@@ -2056,7 +2056,7 @@ UpdateViewContext:   # 0x668d0, 0x1008 bytes
   0067798  stvx 11, 4, 31
   006779c  lvx 11, 3, 30
   00677a0  li 4, 60
-  00677a4  <unknown>
+  00677a4  lvlx 13, 5, 30
   00677a8  li 3, 48
   00677ac  vperm 4, 7, 4, 11
   00677b0  vspltw 11, 13, 0
@@ -2065,7 +2065,7 @@ UpdateViewContext:   # 0x668d0, 0x1008 bytes
   00677bc  li 6, 176
   00677c0  vperm 4, 4, 11, 7
   00677c4  stvx 4, 7, 31
-  00677c8  <unknown>
+  00677c8  lvlx 11, 8, 30
   00677cc  lvx 13, 11, 30
   00677d0  vspltw 11, 11, 0
   00677d4  vperm 3, 3, 6, 13
@@ -2075,7 +2075,7 @@ UpdateViewContext:   # 0x668d0, 0x1008 bytes
   00677e4  vperm 6, 11, 8, 13
   00677e8  vperm 3, 3, 6, 7
   00677ec  stvx 3, 3, 31
-  00677f0  <unknown>
+  00677f0  lvlx 5, 4, 30
   00677f4  lis 4, 115
   00677f8  vspltw 5, 5, 0
   00677fc  li 3, 80
@@ -3881,7 +3881,7 @@ FontPrintOptJapanese:   # 0x690e0, 0x5ac bytes
   00693cc  addic 5, 5, 1
   00693d0  extsw 5, 5
   00693d4  lbz 8, 3(6)
-  00693d8  <unknown>
+  00693d8  lvlx 4, 7, 6
   00693dc  extsb 8, 8
   00693e0  extsw 8, 8
   00693e4  vsraw 4, 4, 3
@@ -4610,32 +4610,32 @@ FontPrintOptWestern:   # 0x69db8, 0x750 bytes
   0069f38  bt 1, 0x69fa8
   0069f3c  li 3, 8
   0069f40  lfs 31, 8(18)
-  0069f44  <unknown>
+  0069f44  lvlx 31, 3, 18
   0069f48  vspltw 31, 31, 0
   0069f4c  b 0x69fb0
   0069f50  li 3, 8
   0069f54  lfs 31, 8(18)
-  0069f58  <unknown>
+  0069f58  lvlx 31, 3, 18
   0069f5c  vspltw 31, 31, 0
   0069f60  b 0x69fb0
   0069f64  li 3, 8
   0069f68  lfs 31, 8(18)
   0069f6c  rlwinm 4, 14, 0, 27, 27
   0069f70  cmpwi 4, 0
-  0069f74  <unknown>
+  0069f74  lvlx 31, 3, 18
   0069f78  vspltw 31, 31, 0
   0069f7c  bt 2, 0x69fb0
   0069f80  li 3, 12
   0069f84  lfs 31, 12(18)
-  0069f88  <unknown>
+  0069f88  lvlx 31, 3, 18
   0069f8c  vspltw 31, 31, 0
   0069f90  b 0x69fb0
   0069f94  li 3, 8
   0069f98  lfs 31, 8(18)
-  0069f9c  <unknown>
+  0069f9c  lvlx 31, 3, 18
   0069fa0  vspltw 31, 31, 0
   0069fa4  b 0x69fb0
-  0069fa8  <unknown>
+  0069fa8  lvlx 31, 0, 18
   0069fac  vspltw 31, 31, 0
   0069fb0  ori 8, 24, 0
   0069fb4  ori 17, 30, 0
@@ -4806,7 +4806,7 @@ FontPrintOptWestern:   # 0x69db8, 0x750 bytes
   006a248  extsb 8, 8
   006a24c  extsw 8, 8
   006a250  std 8, 336(1)
-  006a254  <unknown>
+  006a254  lvlx 4, 7, 6
   006a258  lfd 2, 336(1)
   006a25c  vsraw 4, 4, 3
   006a260  fcfid 2, 2
@@ -7887,11 +7887,11 @@ DrawTimedHelpMsg:   # 0x6d190, 0x3f8 bytes
   006d1c8  addi 3, 3, -11908
   006d1cc  stw 4, 372(1)
   006d1d0  stw 4, 376(1)
-  006d1d4  <unknown>
+  006d1d4  lvlx 4, 6, 31
   006d1d8  extsh 5, 5
   006d1dc  stw 4, 380(1)
   006d1e0  lhz 6, 10(31)
-  006d1e4  <unknown>
+  006d1e4  lvlx 3, 7, 31
   006d1e8  cmpw 4, 5
   006d1ec  extsh 6, 6
   006d1f0  vsraw 4, 4, 2
@@ -7938,7 +7938,7 @@ DrawTimedHelpMsg:   # 0x6d190, 0x3f8 bytes
   006d294  subc 5, 4, 5
   006d298  vspltisw 6, -1
   006d29c  addic 5, 5, -16
-  006d2a0  <unknown>
+  006d2a0  lvlx 5, 7, 3
   006d2a4  extsw 5, 5
   006d2a8  li 7, 4
   006d2ac  vslw 6, 6, 6
@@ -7946,7 +7946,7 @@ DrawTimedHelpMsg:   # 0x6d190, 0x3f8 bytes
   006d2b4  vspltisw 7, 0
   006d2b8  std 5, 384(1)
   006d2bc  vsubuwm 4, 4, 5
-  006d2c0  <unknown>
+  006d2c0  lvlx 5, 7, 3
   006d2c4  lfs 31, 4(3)
   006d2c8  vspltw 5, 5, 0
   006d2cc  vcfsx 4, 4, 0
@@ -7973,7 +7973,7 @@ DrawTimedHelpMsg:   # 0x6d190, 0x3f8 bytes
   006d320  vspltisw 3, -1
   006d324  std 4, 384(1)
   006d328  vcfsx 2, 2, 0
-  006d32c  <unknown>
+  006d32c  lvlx 4, 5, 3
   006d330  vslw 3, 3, 3
   006d334  vspltw 4, 4, 0
   006d338  lfs 31, 8(3)
@@ -8533,9 +8533,9 @@ FadeToBlack:   # 0x6dad0, 0x598 bytes
   006dbb8  vsubuwm 29, 31, 30
   006dbbc  addi 3, 3, -9536
   006dbc0  li 5, 8
-  006dbc4  <unknown>
-  006dbc8  <unknown>
-  006dbcc  <unknown>
+  006dbc4  lvlx 27, 0, 3
+  006dbc8  lvlx 28, 4, 3
+  006dbcc  lvlx 31, 5, 3
   006dbd0  vspltw 27, 27, 0
   006dbd4  vspltw 28, 28, 0
   006dbd8  vspltw 31, 31, 0
@@ -9700,19 +9700,19 @@ DrawTexturedQuadHud:   # 0x6ecf8, 0x3a8 bytes
   006ee0c  stw 4, 8(3)
   006ee10  lfs 1, 0(6)
   006ee14  addic 3, 5, 27392
-  006ee18  <unknown>
+  006ee18  lvlx 7, 10, 6
   006ee1c  li 5, 12
-  006ee20  <unknown>
+  006ee20  lvlx 6, 8, 6
   006ee24  ori 4, 1, 0
   006ee28  li 8, 24
-  006ee2c  <unknown>
+  006ee2c  lvlx 4, 7, 6
   006ee30  li 7, 4
   006ee34  vspltw 7, 7, 0
   006ee38  vspltw 6, 6, 0
-  006ee3c  <unknown>
-  006ee40  <unknown>
+  006ee3c  lvlx 5, 5, 6
+  006ee40  lvlx 3, 9, 6
   006ee44  mtctr 7
-  006ee48  <unknown>
+  006ee48  lvlx 2, 8, 6
   006ee4c  vspltw 5, 5, 0
   006ee50  vspltw 4, 4, 0
   006ee54  vspltw 3, 3, 0
@@ -9724,7 +9724,7 @@ DrawTexturedQuadHud:   # 0x6ecf8, 0x3a8 bytes
   006ee6c  vspltisw 12, -1
   006ee70  vspltisw 13, -1
   006ee74  vspltisw 0, -1
-  006ee78  <unknown>
+  006ee78  lvlx 10, 6, 31
   006ee7c  vslw 12, 12, 12
   006ee80  vrlw 8, 10, 8
   006ee84  vrlw 9, 10, 9
@@ -12399,7 +12399,7 @@ SetScreenResolution:   # 0x71180, 0x940 bytes
   0071794  lwz 6, 8(4)
   0071798  addic 6, 6, 8
   007179c  stw 6, 8(4)
-  00717a0  <unknown>
+  00717a0  lvlx 6, 0, 5
   00717a4  li 4, 112
   00717a8  li 6, 116
   00717ac  vspltw 6, 6, 0
@@ -12412,7 +12412,7 @@ SetScreenResolution:   # 0x71180, 0x940 bytes
   00717c8  stvewx 3, 4, 1
   00717cc  stvewx 2, 6, 1
   00717d0  stvewx 3, 7, 1
-  00717d4  <unknown>
+  00717d4  lvlx 6, 8, 5
   00717d8  lwz 4, 40(25)
   00717dc  li 8, 2
   00717e0  vspltw 6, 6, 0
@@ -14183,16 +14183,16 @@ DrawTexturedStrips:   # 0x731c8, 0x4b0 bytes
   0073390  li 8, 68
   0073394  li 4, 76
   0073398  li 9, 80
-  007339c  <unknown>
+  007339c  lvlx 2, 5, 7
   00733a0  li 10, 84
-  00733a4  <unknown>
-  00733a8  <unknown>
+  00733a4  lvlx 4, 6, 7
+  00733a8  lvlx 3, 8, 7
   00733ac  ori 5, 31, 0
-  00733b0  <unknown>
-  00733b4  <unknown>
+  00733b0  lvlx 5, 4, 7
+  00733b4  lvlx 8, 9, 7
   00733b8  vspltw 2, 2, 0
   00733bc  addic 4, 3, 28
-  00733c0  <unknown>
+  00733c0  lvlx 10, 10, 7
   00733c4  vspltw 3, 3, 0
   00733c8  vspltw 4, 4, 0
   00733cc  vspltw 5, 5, 0
@@ -14217,7 +14217,7 @@ DrawTexturedStrips:   # 0x731c8, 0x4b0 bytes
   0073418  lfs 1, 4(23)
   007341c  vslw 14, 14, 14
   0073420  stfs 1, 24(3)
-  0073424  <unknown>
+  0073424  lvlx 11, 0, 25
   0073428  vslw 15, 15, 15
   007342c  vrlw 12, 11, 6
   0073430  vrlw 13, 11, 7
@@ -16022,8 +16022,8 @@ ImpactSprite_Draw:   # 0x74fa0, 0x92c bytes
   00751a0  vmaddfp 6, 1, 1, 14
   00751a4  vperm 3, 5, 3, 20
   00751a8  vperm 8, 0, 8, 20
-  00751ac  <unknown>
-  00751b0  <unknown>
+  00751ac  lvlx 30, 3, 30
+  00751b0  lvlx 29, 4, 30
   00751b4  vspltw 30, 30, 0
   00751b8  vspltw 29, 29, 0
   00751bc  li 3, 16
@@ -16079,32 +16079,32 @@ ImpactSprite_Draw:   # 0x74fa0, 0x92c bytes
   0075284  vcmpeqfp 3, 2, 2
   0075288  vmaddfp 24, 24, 4, 7
   007528c  vsel 2, 9, 2, 3
-  0075290  <unknown>
+  0075290  lvlx 3, 4, 30
   0075294  li 4, 136
-  0075298  <unknown>
+  0075298  lvlx 4, 5, 30
   007529c  vmaddfp 2, 10, 2, 7
   00752a0  li 5, 140
-  00752a4  <unknown>
+  00752a4  lvlx 5, 6, 30
   00752a8  vspltw 3, 3, 0
   00752ac  li 6, 112
-  00752b0  <unknown>
+  00752b0  lvlx 6, 4, 30
   00752b4  li 4, 288
   00752b8  vspltw 5, 5, 0
   00752bc  vspltw 4, 4, 0
   00752c0  vspltw 6, 6, 0
   00752c4  stvx 2, 3, 1
-  00752c8  <unknown>
+  00752c8  lvlx 2, 5, 30
   00752cc  li 3, 544
   00752d0  lfs 30, 112(30)
   00752d4  li 5, 528
   00752d8  lfs 29, 116(30)
   00752dc  stvx 3, 4, 1
   00752e0  li 4, 124
-  00752e4  <unknown>
+  00752e4  lvlx 3, 7, 30
   00752e8  li 7, 152
   00752ec  lfs 28, 72(30)
   00752f0  stvx 5, 3, 1
-  00752f4  <unknown>
+  00752f4  lvlx 5, 8, 30
   00752f8  vspltw 2, 2, 0
   00752fc  li 3, 512
   0075300  stvx 4, 5, 1
@@ -16112,11 +16112,11 @@ ImpactSprite_Draw:   # 0x74fa0, 0x92c bytes
   0075308  vspltw 3, 3, 0
   007530c  li 5, 496
   0075310  vspltw 4, 5, 0
-  0075314  <unknown>
-  0075318  <unknown>
+  0075314  lvlx 26, 4, 30
+  0075318  lvlx 5, 7, 30
   007531c  li 4, 464
   0075320  li 7, 160
-  0075324  <unknown>
+  0075324  lvlx 7, 9, 30
   0075328  vspltw 5, 5, 0
   007532c  li 9, 448
   0075330  stvx 6, 3, 1
@@ -16127,7 +16127,7 @@ ImpactSprite_Draw:   # 0x74fa0, 0x92c bytes
   0075344  li 5, 208
   0075348  stvx 4, 4, 1
   007534c  li 8, 176
-  0075350  <unknown>
+  0075350  lvlx 2, 7, 30
   0075354  li 4, 416
   0075358  stvx 5, 9, 1
   007535c  li 7, 368
@@ -16164,10 +16164,10 @@ ImpactSprite_Draw:   # 0x74fa0, 0x92c bytes
   00753d8  extsh 3, 3
   00753dc  cmpwi 3, 0
   00753e0  bf 1, 0x757cc
-  00753e4  <unknown>
-  00753e8  <unknown>
+  00753e4  lvlx 2, 0, 26
+  00753e8  lvlx 3, 0, 24
   00753ec  li 3, 560
-  00753f0  <unknown>
+  00753f0  lvlx 4, 0, 23
   00753f4  vperm 5, 2, 3, 21
   00753f8  vperm 6, 4, 31, 21
   00753fc  lvx 7, 3, 1
@@ -16242,7 +16242,7 @@ ImpactSprite_Draw:   # 0x74fa0, 0x92c bytes
   0075510  vslw 3, 3, 3
   0075514  li 3, 544
   0075518  std 4, 264(1)
-  007551c  <unknown>
+  007551c  lvlx 4, 0, 22
   0075520  vspltisw 5, 0
   0075524  vmaddfp 2, 4, 2, 3
   0075528  lvx 3, 3, 1
@@ -16976,7 +16976,7 @@ DrawWaterPatch:   # 0x75fb0, 0x34 bytes
   0076090  sth 31, 4(4)
   0076094  sth 30, 6(4)
   0076098  sth 28, 8(4)
-  007609c  <unknown>
+  007609c  lvlx 11, 0, 12
   00760a0  li 0, 48
   00760a4  stfs 3, 48(1)
   00760a8  stfs 3, 52(1)
@@ -17028,7 +17028,7 @@ DrawWaterPatch:   # 0x75fb0, 0x34 bytes
   0076160  sth 10, 10(4)
   0076164  li 31, -32672
   0076168  li 30, 24672
-  007616c  <unknown>
+  007616c  lvlx 8, 11, 29
   0076170  ori 12, 3, 0
   0076174  vsldoi 5, 3, 3, 0
   0076178  vspltw 8, 8, 0

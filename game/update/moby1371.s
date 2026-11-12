@@ -50,8 +50,8 @@ FUN_0025c7f8:   # 0x25c7f8, 0x50c bytes
   025c8b0  stfs 3, 24(4)
   025c8b4  lfs 4, 12(31)
   025c8b8  stfs 4, 28(4)
-  025c8bc  <unknown>
-  025c8c0  <unknown>
+  025c8bc  lvlx 2, 0, 5
+  025c8c0  lvlx 4, 7, 6
   025c8c4  vspltw 2, 2, 0
   025c8c8  li 6, 56
   025c8cc  vmaddfp 2, 4, 2, 3

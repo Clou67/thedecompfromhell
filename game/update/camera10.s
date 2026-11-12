@@ -1343,8 +1343,8 @@ InitCamera_10:   # 0x36810, 0x214 bytes
   00368a8  stw 10, 8(5)
   00368ac  stw 10, 4(5)
   00368b0  stw 10, 0(5)
-  00368b4  <unknown>
-  00368b8  <unknown>
+  00368b4  lvlx 2, 4, 7
+  00368b8  lvlx 4, 8, 6
   00368bc  vspltw 2, 2, 0
   00368c0  lis 7, 149
   00368c4  lwz 4, 112(31)

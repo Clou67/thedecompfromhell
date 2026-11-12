@@ -928,8 +928,8 @@ Cam18_ModifyFollowCam:   # 0x3eaa8, 0x102c bytes
   003f178  li 6, 32
   003f17c  addi 7, 7, -5608
   003f180  lfs 5, -3056(4)
-  003f184  <unknown>
-  003f188  <unknown>
+  003f184  lvlx 2, 5, 4
+  003f188  lvlx 31, 6, 7
   003f18c  lfs 2, 32(7)
   003f190  vspltw 31, 31, 0
   003f194  b 0x3f1c0
@@ -939,9 +939,9 @@ Cam18_ModifyFollowCam:   # 0x3eaa8, 0x102c bytes
   003f1a4  addi 7, 7, -5608
   003f1a8  li 6, 24
   003f1ac  lfs 5, -3056(4)
-  003f1b0  <unknown>
+  003f1b0  lvlx 2, 5, 4
   003f1b4  lfs 4, 36(7)
-  003f1b8  <unknown>
+  003f1b8  lvlx 31, 6, 7
   003f1bc  vspltw 31, 31, 0
   003f1c0  fmuls 3, 5, 3
   003f1c4  lis 4, 4
@@ -956,7 +956,7 @@ Cam18_ModifyFollowCam:   # 0x3eaa8, 0x102c bytes
   003f1e8  fmuls 4, 5, 4
   003f1ec  li 6, 20
   003f1f0  vspltisw 7, -1
-  003f1f4  <unknown>
+  003f1f4  lvlx 5, 5, 4
   003f1f8  fctiwz 3, 3
   003f1fc  vspltw 5, 5, 0
   003f200  fctiwz 1, 1
@@ -967,7 +967,7 @@ Cam18_ModifyFollowCam:   # 0x3eaa8, 0x102c bytes
   003f214  vslw 5, 7, 7
   003f218  vmaddfp 29, 4, 31, 3
   003f21c  stfd 3, 248(1)
-  003f220  <unknown>
+  003f220  lvlx 3, 6, 4
   003f224  lwz 25, 252(1)
   003f228  vspltw 3, 3, 0
   003f22c  stfd 1, 248(1)

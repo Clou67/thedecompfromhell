@@ -358,7 +358,7 @@ M1099_001bc8c8:   # 0x1bc8c8, 0xb18 bytes
   01bce08  lfs 5, 28(30)
   01bce0c  fmadds 31, 16, 3, 4
   01bce10  ld 4, 336(1)
-  01bce14  <unknown>
+  01bce14  lvlx 29, 3, 30
   01bce18  addic 3, 1, 144
   01bce1c  vspltw 29, 29, 0
   01bce20  fmuls 30, 6, 18
@@ -445,16 +445,16 @@ M1099_001bc8c8:   # 0x1bc8c8, 0xb18 bytes
   01bcf64  stfs 1, 240(1)
   01bcf68  stfs 2, 244(1)
   01bcf6c  stfs 5, 248(1)
-  01bcf70  <unknown>
-  01bcf74  <unknown>
+  01bcf70  lvlx 2, 3, 30
+  01bcf74  lvlx 3, 4, 5
   01bcf78  li 3, 36
   01bcf7c  vspltw 2, 2, 0
-  01bcf80  <unknown>
+  01bcf80  lvlx 4, 6, 30
   01bcf84  vspltisw 30, 0
   01bcf88  vspltw 4, 4, 0
   01bcf8c  vsubfp 2, 2, 3
   01bcf90  vspltisw 3, -1
-  01bcf94  <unknown>
+  01bcf94  lvlx 5, 3, 30
   01bcf98  li 8, 256
   01bcf9c  li 3, 40
   01bcfa0  vspltw 5, 5, 0
@@ -462,7 +462,7 @@ M1099_001bc8c8:   # 0x1bc8c8, 0xb18 bytes
   01bcfa8  li 9, 260
   01bcfac  li 10, 264
   01bcfb0  li 11, 268
-  01bcfb4  <unknown>
+  01bcfb4  lvlx 6, 3, 30
   01bcfb8  lis 12, 16256
   01bcfbc  lwz 6, 28(23)
   01bcfc0  ori 3, 24, 0
@@ -500,26 +500,26 @@ M1099_001bc8c8:   # 0x1bc8c8, 0xb18 bytes
   01bd040  li 4, 56
   01bd044  li 6, 60
   01bd048  li 8, 64
-  01bd04c  <unknown>
+  01bd04c  lvlx 20, 3, 30
   01bd050  li 9, 84
-  01bd054  <unknown>
+  01bd054  lvlx 21, 5, 30
   01bd058  li 3, 80
-  01bd05c  <unknown>
+  01bd05c  lvlx 23, 7, 30
   01bd060  li 5, 68
-  01bd064  <unknown>
+  01bd064  lvlx 24, 4, 30
   01bd068  li 7, 72
-  01bd06c  <unknown>
+  01bd06c  lvlx 28, 6, 30
   01bd070  li 4, 88
-  01bd074  <unknown>
+  01bd074  lvlx 27, 8, 30
   01bd078  li 6, 368
-  01bd07c  <unknown>
+  01bd07c  lvlx 2, 3, 30
   01bd080  ori 24, 29, 0
-  01bd084  <unknown>
+  01bd084  lvlx 26, 5, 30
   01bd088  vspltw 2, 2, 0
-  01bd08c  <unknown>
+  01bd08c  lvlx 25, 7, 30
   01bd090  lfs 18, 76(30)
-  01bd094  <unknown>
-  01bd098  <unknown>
+  01bd094  lvlx 31, 9, 30
+  01bd098  lvlx 22, 4, 30
   01bd09c  vspltw 20, 20, 0
   01bd0a0  vspltw 21, 21, 0
   01bd0a4  vspltw 23, 23, 0
@@ -607,12 +607,12 @@ M1099_001bc8c8:   # 0x1bc8c8, 0xb18 bytes
   01bd1ec  vspltisw 5, -1
   01bd1f0  vmaddfp 2, 2, 29, 6
   01bd1f4  vslw 5, 5, 5
-  01bd1f8  <unknown>
+  01bd1f8  lvlx 6, 3, 31
   01bd1fc  li 3, 204
   01bd200  vmaddfp 3, 3, 29, 7
-  01bd204  <unknown>
-  01bd208  <unknown>
-  01bd20c  <unknown>
+  01bd204  lvlx 7, 4, 31
+  01bd208  lvlx 9, 5, 31
+  01bd20c  lvlx 10, 6, 31
   01bd210  li 4, 196
   01bd214  li 5, 224
   01bd218  vmaddfp 4, 6, 2, 4
@@ -620,27 +620,27 @@ M1099_001bc8c8:   # 0x1bc8c8, 0xb18 bytes
   01bd220  vslw 6, 8, 8
   01bd224  vspltisw 8, -1
   01bd228  li 6, 228
-  01bd22c  <unknown>
-  01bd230  <unknown>
+  01bd22c  lvlx 7, 3, 31
+  01bd230  lvlx 11, 7, 31
   01bd234  vmaddfp 6, 9, 2, 6
   01bd238  li 3, 200
   01bd23c  vslw 8, 8, 8
   01bd240  li 7, 140
-  01bd244  <unknown>
+  01bd244  lvlx 9, 4, 31
   01bd248  li 4, 236
   01bd24c  vmaddfp 2, 11, 2, 8
-  01bd250  <unknown>
+  01bd250  lvlx 12, 3, 31
   01bd254  vmaddfp 4, 10, 3, 4
   01bd258  vmaddfp 5, 7, 3, 5
-  01bd25c  <unknown>
+  01bd25c  lvlx 13, 5, 31
   01bd260  li 3, 232
-  01bd264  <unknown>
+  01bd264  lvlx 7, 4, 31
   01bd268  li 5, 16
-  01bd26c  <unknown>
+  01bd26c  lvlx 8, 6, 31
   01bd270  vmaddfp 6, 9, 3, 6
-  01bd274  <unknown>
+  01bd274  lvlx 9, 7, 1
   01bd278  li 6, 20
-  01bd27c  <unknown>
+  01bd27c  lvlx 10, 3, 31
   01bd280  lwz 4, 144(31)
   01bd284  vmaddfp 2, 12, 3, 2
   01bd288  lfd 2, 360(1)
@@ -653,11 +653,11 @@ M1099_001bc8c8:   # 0x1bc8c8, 0xb18 bytes
   01bd2a4  vaddfp 4, 4, 9
   01bd2a8  vspltw 4, 4, 0
   01bd2ac  stvewx 4, 7, 1
-  01bd2b0  <unknown>
-  01bd2b4  <unknown>
+  01bd2b0  lvlx 4, 5, 31
+  01bd2b4  lvlx 6, 6, 31
   01bd2b8  vaddfp 3, 3, 4
   01bd2bc  vaddfp 4, 5, 6
-  01bd2c0  <unknown>
+  01bd2c0  lvlx 5, 8, 31
   01bd2c4  vaddfp 2, 2, 5
   01bd2c8  vspltw 3, 3, 0
   01bd2cc  vspltw 4, 4, 0

@@ -66,7 +66,7 @@ M1394_00269d18:   # 0x269d18, 0x448 bytes
   0269e10  fmadds 2, 3, 3, 2
   0269e14  lfs 3, 4(3)
   0269e18  lfs 31, 8(3)
-  0269e1c  <unknown>
+  0269e1c  lvlx 30, 4, 3
   0269e20  vspltw 30, 30, 0
   0269e24  fmadds 2, 4, 4, 2
   0269e28  fsqrts 2, 2
@@ -172,7 +172,7 @@ M1394_00269d18:   # 0x269d18, 0x448 bytes
   0269fb8  clrldi 6, 6, 32
   0269fbc  addic 9, 9, -13576
   0269fc0  addc 3, 4, 27
-  0269fc4  <unknown>
+  0269fc4  lvlx 2, 0, 10
   0269fc8  lfs 1, 0(9)
   0269fcc  clrlwi 27, 11, 31
   0269fd0  vmaddfp 2, 29, 30, 2

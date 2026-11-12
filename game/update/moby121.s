@@ -229,8 +229,8 @@ FUN_00200fd0:   # 0x200fd0, 0xd84 bytes
   020100c  std 27, 400(1)
   0201010  vslw 2, 2, 2
   0201014  lis 27, 151
-  0201018  <unknown>
-  020101c  <unknown>
+  0201018  lvlx 3, 0, 6
+  020101c  lvlx 4, 8, 7
   0201020  vspltw 3, 3, 0
   0201024  std 28, 408(1)
   0201028  li 6, 106
@@ -990,10 +990,10 @@ FUN_00200fd0:   # 0x200fd0, 0xd84 bytes
   0201bf0  lis 5, 114
   0201bf4  li 6, -3056
   0201bf8  vslw 2, 2, 2
-  0201bfc  <unknown>
+  0201bfc  lvlx 3, 4, 3
   0201c00  li 8, 84
   0201c04  vspltw 3, 3, 0
-  0201c08  <unknown>
+  0201c08  lvlx 4, 6, 5
   0201c0c  lwz 9, 8320(27)
   0201c10  addic 3, 1, 112
   0201c14  vmaddfp 2, 4, 3, 2
@@ -1428,10 +1428,10 @@ M121_00201da8:   # 0x201da8, 0xd08 bytes
   0202314  lis 5, 114
   0202318  li 6, -3056
   020231c  vslw 2, 2, 2
-  0202320  <unknown>
+  0202320  lvlx 3, 4, 3
   0202324  li 3, 224
   0202328  vspltw 3, 3, 0
-  020232c  <unknown>
+  020232c  lvlx 4, 6, 5
   0202330  vmaddfp 2, 4, 3, 2
   0202334  vctsxs 2, 2, 0
   0202338  vspltw 2, 2, 0
@@ -3732,7 +3732,7 @@ UpdateMoby_121:   # 0x202b98, 0x1f1c bytes
   02047f4  lfs 3, 180(7)
   02047f8  fmuls 2, 31, 2
   02047fc  lfs 4, 212(7)
-  0204800  <unknown>
+  0204800  lvlx 3, 3, 26
   0204804  li 9, 360
   0204808  vslw 2, 2, 2
   020480c  addic 3, 1, 544
@@ -3742,7 +3742,7 @@ UpdateMoby_121:   # 0x202b98, 0x1f1c bytes
   020481c  fsel 1, 1, 3, 2
   0204820  fsubs 1, 4, 1
   0204824  stfs 1, 352(23)
-  0204828  <unknown>
+  0204828  lvlx 4, 8, 7
   020482c  vspltw 4, 4, 0
   0204830  vmaddfp 2, 3, 4, 2
   0204834  vctsxs 2, 2, 0

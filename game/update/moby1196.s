@@ -577,8 +577,8 @@ M1196_001f2d58:   # 0x1f2d58, 0x8a4 bytes
   01f32fc  li 4, -3056
   01f3300  vslw 2, 2, 2
   01f3304  stfs 1, 32(30)
-  01f3308  <unknown>
-  01f330c  <unknown>
+  01f3308  lvlx 3, 5, 3
+  01f330c  lvlx 4, 4, 6
   01f3310  li 5, 38
   01f3314  vspltw 3, 3, 0
   01f3318  addic 4, 30, 272
@@ -1879,9 +1879,9 @@ UpdateMoby_1196:   # 0x1f3688, 0x1624 bytes
   01f47d8  lis 3, 114
   01f47dc  li 5, -3056
   01f47e0  vslw 2, 2, 2
-  01f47e4  <unknown>
+  01f47e4  lvlx 3, 4, 29
   01f47e8  vspltw 3, 3, 0
-  01f47ec  <unknown>
+  01f47ec  lvlx 4, 5, 3
   01f47f0  li 3, 412
   01f47f4  vmaddfp 2, 4, 3, 2
   01f47f8  vctsxs 2, 2, 0

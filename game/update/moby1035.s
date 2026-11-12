@@ -467,9 +467,9 @@ UpdateMoby_1035:   # 0x1933d8, 0xf1c bytes
   01937f8  li 3, 60
   01937fc  vspltisw 2, -1
   0193800  addic 6, 6, 1
-  0193804  <unknown>
+  0193804  lvlx 3, 5, 4
   0193808  sth 6, 20(30)
-  019380c  <unknown>
+  019380c  lvlx 4, 3, 28
   0193810  vslw 2, 2, 2
   0193814  li 3, 22
   0193818  vspltw 4, 4, 0
@@ -627,9 +627,9 @@ UpdateMoby_1035:   # 0x1933d8, 0xf1c bytes
   0193a78  li 3, 60
   0193a7c  vspltisw 2, -1
   0193a80  addic 6, 6, 1
-  0193a84  <unknown>
+  0193a84  lvlx 3, 5, 4
   0193a88  sth 6, 20(30)
-  0193a8c  <unknown>
+  0193a8c  lvlx 4, 3, 28
   0193a90  vslw 2, 2, 2
   0193a94  li 3, 22
   0193a98  vspltw 4, 4, 0
@@ -749,9 +749,9 @@ UpdateMoby_1035:   # 0x1933d8, 0xf1c bytes
   0193c60  li 3, 60
   0193c64  addic 6, 6, 1
   0193c68  vslw 2, 2, 2
-  0193c6c  <unknown>
+  0193c6c  lvlx 3, 5, 4
   0193c70  sth 6, 20(30)
-  0193c74  <unknown>
+  0193c74  lvlx 4, 3, 28
   0193c78  li 3, 22
   0193c7c  vspltw 4, 4, 0
   0193c80  vmaddfp 2, 3, 4, 2
@@ -797,9 +797,9 @@ UpdateMoby_1035:   # 0x1933d8, 0xf1c bytes
   0193d20  li 3, 60
   0193d24  vspltisw 2, -1
   0193d28  addic 6, 6, 1
-  0193d2c  <unknown>
+  0193d2c  lvlx 3, 5, 4
   0193d30  sth 6, 20(30)
-  0193d34  <unknown>
+  0193d34  lvlx 4, 3, 28
   0193d38  vslw 2, 2, 2
   0193d3c  li 3, 22
   0193d40  vspltw 4, 4, 0

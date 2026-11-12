@@ -8,10 +8,10 @@ M217_002f19c8:   # 0x2f19c8, 0x1a4 bytes
   02f19d8  lis 5, 114
   02f19dc  li 6, -3056
   02f19e0  vslw 2, 2, 2
-  02f19e4  <unknown>
+  02f19e4  lvlx 3, 4, 3
   02f19e8  lis 4, 268
   02f19ec  vspltw 3, 3, 0
-  02f19f0  <unknown>
+  02f19f0  lvlx 4, 6, 5
   02f19f4  li 5, -19420
   02f19f8  lfs 1, 0(3)
   02f19fc  li 6, 24
@@ -29,7 +29,7 @@ M217_002f19c8:   # 0x2f19c8, 0x1a4 bytes
   02f1a2c  vctsxs 2, 2, 0
   02f1a30  vspltw 2, 2, 0
   02f1a34  stvewx 2, 5, 4
-  02f1a38  <unknown>
+  02f1a38  lvlx 2, 6, 3
   02f1a3c  vspltw 2, 2, 0
   02f1a40  lfs 5, 20(3)
   02f1a44  lis 4, 268
@@ -41,7 +41,7 @@ M217_002f19c8:   # 0x2f19c8, 0x1a4 bytes
   02f1a5c  vctsxs 2, 2, 0
   02f1a60  vspltw 2, 2, 0
   02f1a64  stvewx 2, 8, 7
-  02f1a68  <unknown>
+  02f1a68  lvlx 5, 9, 3
   02f1a6c  vspltw 5, 5, 0
   02f1a70  lis 7, 268
   02f1a74  vmaddfp 3, 4, 5, 3
@@ -53,7 +53,7 @@ M217_002f19c8:   # 0x2f19c8, 0x1a4 bytes
   02f1a8c  vspltw 3, 3, 0
   02f1a90  stvewx 3, 5, 4
   02f1a94  stvewx 2, 10, 6
-  02f1a98  <unknown>
+  02f1a98  lvlx 2, 11, 3
   02f1a9c  lis 4, 114
   02f1aa0  lis 6, 128
   02f1aa4  vspltw 2, 2, 0
@@ -81,7 +81,7 @@ M217_002f19c8:   # 0x2f19c8, 0x1a4 bytes
   02f1afc  li 4, -19392
   02f1b00  vspltw 2, 2, 0
   02f1b04  stvewx 2, 9, 7
-  02f1b08  <unknown>
+  02f1b08  lvlx 2, 8, 3
   02f1b0c  stfs 2, -19432(5)
   02f1b10  vspltw 2, 2, 0
   02f1b14  li 5, 40
@@ -99,7 +99,7 @@ M217_002f19c8:   # 0x2f19c8, 0x1a4 bytes
   02f1b44  vctsxs 2, 2, 0
   02f1b48  vspltw 2, 2, 0
   02f1b4c  stvewx 2, 4, 11
-  02f1b50  <unknown>
+  02f1b50  lvlx 2, 5, 3
   02f1b54  vspltw 2, 2, 0
   02f1b58  vmaddfp 2, 4, 2, 3
   02f1b5c  vctsxs 2, 2, 0
@@ -2058,10 +2058,10 @@ UpdateMoby_217:   # 0x2f20a0, 0x23b8 bytes
   02f3a84  li 6, -3056
   02f3a88  vslw 2, 2, 2
   02f3a8c  ori 30, 23, 0
-  02f3a90  <unknown>
+  02f3a90  lvlx 3, 5, 3
   02f3a94  li 3, 1026
   02f3a98  vspltw 3, 3, 0
-  02f3a9c  <unknown>
+  02f3a9c  lvlx 4, 6, 4
   02f3aa0  lfs 2, -3056(4)
   02f3aa4  vmaddfp 2, 4, 3, 2
   02f3aa8  vctsxs 2, 2, 0

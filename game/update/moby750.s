@@ -721,7 +721,7 @@ M750_0044b130:   # 0x44b130, 0x324 bytes
   044b250  fmadds 7, 6, 6, 7
   044b254  stfs 5, 120(1)
   044b258  lfs 26, 12(3)
-  044b25c  <unknown>
+  044b25c  lvlx 31, 4, 3
   044b260  lfs 27, 16(3)
   044b264  fsqrts 7, 7
   044b268  vspltw 31, 31, 0
@@ -763,7 +763,7 @@ M750_0044b130:   # 0x44b130, 0x324 bytes
   044b2f8  lwz 28, 48(30)
   044b2fc  cmpwi 3, 0
   044b300  lfs 1, -3056(4)
-  044b304  <unknown>
+  044b304  lvlx 2, 5, 4
   044b308  bt 2, 0x44b334
   044b30c  vspltisw 3, -1
   044b310  fmuls 2, 1, 27
@@ -887,12 +887,12 @@ M750_0044b460:   # 0x44b460, 0x120 bytes
   044b4ec  li 8, 8
   044b4f0  stw 3, 44(31)
   044b4f4  li 9, 4
-  044b4f8  <unknown>
-  044b4fc  <unknown>
+  044b4f8  lvlx 6, 0, 4
+  044b4fc  lvlx 5, 5, 7
   044b500  addic 3, 31, 48
-  044b504  <unknown>
+  044b504  lvlx 3, 6, 4
   044b508  mtctr 9
-  044b50c  <unknown>
+  044b50c  lvlx 2, 8, 4
   044b510  vspltw 6, 6, 0
   044b514  vspltw 3, 3, 0
   044b518  vspltw 2, 2, 0

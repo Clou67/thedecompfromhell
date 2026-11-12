@@ -210,15 +210,15 @@ M820_00473158:   # 0x473158, 0x7dc bytes
   0473300  li 11, 24
   0473304  lfs 23, 24(31)
   0473308  lfs 22, 388(30)
-  047330c  <unknown>
-  0473310  <unknown>
-  0473314  <unknown>
-  0473318  <unknown>
-  047331c  <unknown>
-  0473320  <unknown>
-  0473324  <unknown>
-  0473328  <unknown>
-  047332c  <unknown>
+  047330c  lvlx 5, 3, 1
+  0473310  lvlx 7, 4, 1
+  0473314  lvlx 9, 5, 1
+  0473318  lvlx 2, 6, 1
+  047331c  lvlx 3, 7, 30
+  0473320  lvlx 4, 8, 30
+  0473324  lvlx 6, 9, 31
+  0473328  lvlx 8, 10, 31
+  047332c  lvlx 10, 11, 31
   0473330  fdivs 2, 2, 1
   0473334  fsub 3, 30, 1
   0473338  fsub 21, 30, 1
@@ -314,7 +314,7 @@ M820_00473158:   # 0x473158, 0x7dc bytes
   04734a0  vmaddfp 7, 4, 7, 13
   04734a4  vmaddfp 9, 4, 9, 0
   04734a8  vspltw 13, 14, 0
-  04734ac  <unknown>
+  04734ac  lvlx 11, 7, 6
   04734b0  vmaddfp 2, 4, 2, 1
   04734b4  vspltw 11, 11, 0
   04734b8  li 6, 120
@@ -3239,9 +3239,9 @@ UpdateMoby_820:   # 0x4743a8, 0x2120 bytes
   04762bc  lis 6, 114
   04762c0  li 3, -3056
   04762c4  vslw 2, 2, 2
-  04762c8  <unknown>
+  04762c8  lvlx 3, 4, 5
   04762cc  vspltw 3, 3, 0
-  04762d0  <unknown>
+  04762d0  lvlx 4, 3, 6
   04762d4  li 4, 19
   04762d8  li 3, 426
   04762dc  vmaddfp 2, 4, 3, 2

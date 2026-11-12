@@ -51,10 +51,10 @@ FUN_00363aa0:   # 0x363aa0, 0x328 bytes
   0363b5c  li 6, -3056
   0363b60  vslw 2, 2, 2
   0363b64  li 7, 4
-  0363b68  <unknown>
+  0363b68  lvlx 3, 5, 3
   0363b6c  lis 8, 114
   0363b70  vspltw 3, 3, 0
-  0363b74  <unknown>
+  0363b74  lvlx 4, 6, 4
   0363b78  li 10, 0
   0363b7c  vmaddfp 2, 4, 3, 2
   0363b80  lis 11, 162
@@ -93,11 +93,11 @@ FUN_00363aa0:   # 0x363aa0, 0x328 bytes
   0363c04  lis 3, 114
   0363c08  li 5, -3056
   0363c0c  vslw 2, 2, 2
-  0363c10  <unknown>
+  0363c10  lvlx 3, 4, 30
   0363c14  lis 27, 114
   0363c18  lis 4, 151
   0363c1c  vspltw 3, 3, 0
-  0363c20  <unknown>
+  0363c20  lvlx 4, 5, 3
   0363c24  addic 29, 4, -25376
   0363c28  li 3, 4
   0363c2c  vmaddfp 2, 4, 3, 2
@@ -256,8 +256,8 @@ M405_00363df8:   # 0x363df8, 0x600 bytes
   0363e9c  lhz 6, 8(29)
   0363ea0  lhz 7, 10(29)
   0363ea4  vspltisw 3, -16
-  0363ea8  <unknown>
-  0363eac  <unknown>
+  0363ea8  lvlx 2, 3, 29
+  0363eac  lvlx 4, 5, 29
   0363eb0  vsraw 5, 2, 3
   0363eb4  extsh 3, 6
   0363eb8  vsraw 6, 4, 3
@@ -283,24 +283,24 @@ M405_00363df8:   # 0x363df8, 0x600 bytes
   0363f08  li 8, 24
   0363f0c  extsw 3, 3
   0363f10  vsraw 2, 2, 3
-  0363f14  <unknown>
+  0363f14  lvlx 3, 5, 31
   0363f18  li 5, 196
   0363f1c  std 3, 272(31)
   0363f20  vcfsx 2, 2, 0
   0363f24  li 3, 16
   0363f28  li 4, 140
-  0363f2c  <unknown>
-  0363f30  <unknown>
+  0363f2c  lvlx 4, 5, 31
+  0363f30  lvlx 30, 0, 28
   0363f34  li 5, 16
-  0363f38  <unknown>
+  0363f38  lvlx 5, 7, 31
   0363f3c  vspltw 30, 30, 0
-  0363f40  <unknown>
+  0363f40  lvlx 7, 9, 31
   0363f44  li 7, 128
-  0363f48  <unknown>
+  0363f48  lvlx 8, 3, 30
   0363f4c  li 9, 136
-  0363f50  <unknown>
+  0363f50  lvlx 9, 6, 30
   0363f54  addic 3, 31, 128
-  0363f58  <unknown>
+  0363f58  lvlx 10, 8, 30
   0363f5c  ori 6, 30, 0
   0363f60  lfs 1, 0(28)
   0363f64  li 8, 132
@@ -366,17 +366,17 @@ M405_00363df8:   # 0x363df8, 0x600 bytes
   0364054  li 19, 24
   0364058  li 5, 28
   036405c  addic 3, 31, 208
-  0364060  <unknown>
+  0364060  lvlx 2, 23, 24
   0364064  addic 4, 31, 160
-  0364068  <unknown>
-  036406c  <unknown>
-  0364070  <unknown>
+  0364068  lvlx 3, 23, 30
+  036406c  lvlx 4, 22, 24
+  0364070  lvlx 5, 22, 30
   0364074  vsubfp 29, 2, 3
-  0364078  <unknown>
-  036407c  <unknown>
+  0364078  lvlx 2, 19, 24
+  036407c  lvlx 3, 19, 30
   0364080  vsubfp 28, 4, 5
   0364084  vsubfp 27, 2, 3
-  0364088  <unknown>
+  0364088  lvlx 31, 5, 24
   036408c  bl 0x5010c0
   0364090  nop
   0364094  vspltisw 2, -1
@@ -385,21 +385,21 @@ M405_00363df8:   # 0x363df8, 0x600 bytes
   03640a0  li 5, 8
   03640a4  vslw 2, 2, 2
   03640a8  li 6, 232
-  03640ac  <unknown>
-  03640b0  <unknown>
+  03640ac  lvlx 3, 3, 31
+  03640b0  lvlx 4, 4, 31
   03640b4  li 3, 240
   03640b8  vmaddfp 2, 3, 29, 2
   03640bc  li 4, 256
   03640c0  vspltisw 3, -1
   03640c4  li 7, 8
   03640c8  li 8, 168
-  03640cc  <unknown>
-  03640d0  <unknown>
+  03640cc  lvlx 5, 3, 31
+  03640d0  lvlx 7, 4, 31
   03640d4  li 3, 216
   03640d8  vslw 3, 3, 3
   03640dc  lis 4, 54
-  03640e0  <unknown>
-  03640e4  <unknown>
+  03640e0  lvlx 8, 5, 29
+  03640e4  lvlx 6, 6, 31
   03640e8  addi 4, 4, 15840
   03640ec  vmaddfp 3, 6, 29, 3
   03640f0  li 5, 4
@@ -407,8 +407,8 @@ M405_00363df8:   # 0x363df8, 0x600 bytes
   03640f8  vspltisw 4, -16
   03640fc  li 6, 220
   0364100  vsraw 8, 8, 4
-  0364104  <unknown>
-  0364108  <unknown>
+  0364104  lvlx 4, 3, 31
+  0364108  lvlx 10, 5, 4
   036410c  li 3, 236
   0364110  li 5, 248
   0364114  vcfsx 9, 8, 0
@@ -416,50 +416,50 @@ M405_00363df8:   # 0x363df8, 0x600 bytes
   036411c  vmaddfp 3, 4, 28, 3
   0364120  vmaddfp 2, 5, 27, 2
   0364124  vspltisw 5, -1
-  0364128  <unknown>
+  0364128  lvlx 6, 3, 31
   036412c  li 3, 264
   0364130  vslw 4, 5, 5
-  0364134  <unknown>
-  0364138  <unknown>
+  0364134  lvlx 5, 5, 31
+  0364138  lvlx 12, 6, 31
   036413c  li 5, 252
-  0364140  <unknown>
+  0364140  lvlx 11, 7, 4
   0364144  li 6, 268
   0364148  vmaddfp 4, 6, 29, 4
   036414c  li 7, 164
   0364150  vspltw 11, 11, 0
   0364154  vmaddfp 5, 5, 27, 3
-  0364158  <unknown>
+  0364158  lvlx 3, 3, 31
   036415c  vmaddfp 7, 7, 31, 2
   0364160  vmaddfp 2, 9, 30, 10
   0364164  li 3, 10
-  0364168  <unknown>
+  0364168  lvlx 14, 5, 31
   036416c  li 5, 160
-  0364170  <unknown>
+  0364170  lvlx 1, 6, 31
   0364174  li 6, 192
   0364178  lfs 1, 4(4)
   036417c  li 4, 196
-  0364180  <unknown>
+  0364180  lvlx 6, 3, 29
   0364184  vmaddfp 4, 12, 28, 4
   0364188  li 3, 200
-  036418c  <unknown>
+  036418c  lvlx 15, 5, 31
   0364190  li 5, 172
-  0364194  <unknown>
+  0364194  lvlx 16, 6, 31
   0364198  vspltw 12, 7, 0
   036419c  li 6, 204
   03641a0  vxor 2, 2, 11
   03641a4  vmaddfp 5, 3, 31, 5
-  03641a8  <unknown>
-  03641ac  <unknown>
-  03641b0  <unknown>
+  03641a8  lvlx 18, 7, 31
+  03641ac  lvlx 19, 4, 31
+  03641b0  lvlx 28, 8, 31
   03641b4  vspltw 2, 2, 0
   03641b8  vcmpgefp. 2, 12, 2
   03641bc  vmaddfp 14, 14, 27, 4
-  03641c0  <unknown>
-  03641c4  <unknown>
-  03641c8  <unknown>
-  03641cc  <unknown>
-  03641d0  <unknown>
-  03641d4  <unknown>
+  03641c0  lvlx 27, 3, 31
+  03641c4  lvlx 0, 5, 31
+  03641c8  lvlx 13, 6, 31
+  03641cc  lvlx 17, 22, 30
+  03641d0  lvlx 29, 23, 30
+  03641d4  lvlx 26, 19, 30
   03641d8  bf 26, 0x3641f8
   03641dc  vspltisw 2, 0
   03641e0  vspltisw 3, -1
@@ -483,7 +483,7 @@ M405_00363df8:   # 0x363df8, 0x600 bytes
   0364228  addi 3, 3, 15840
   036422c  vspltw 7, 7, 0
   0364230  vsraw 6, 6, 2
-  0364234  <unknown>
+  0364234  lvlx 3, 4, 3
   0364238  vcfsx 2, 6, 0
   036423c  vspltw 3, 3, 0
   0364240  vmaddfp 8, 2, 30, 3

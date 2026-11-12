@@ -68,8 +68,8 @@ Spawn_Moby1475_KaleboRocket:   # 0xeb520, 0x130 bytes
   00eb604  lfs 2, 44(3)
   00eb608  fmuls 1, 2, 1
   00eb60c  stfs 1, 44(3)
-  00eb610  <unknown>
-  00eb614  <unknown>
+  00eb610  lvlx 3, 5, 4
+  00eb614  lvlx 4, 8, 6
   00eb618  vspltw 3, 3, 0
   00eb61c  vmaddfp 2, 4, 3, 2
   00eb620  vctsxs 2, 2, 0

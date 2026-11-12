@@ -108,8 +108,8 @@ M1219_0020b7a8:   # 0x20b7a8, 0x238 bytes
   020b948  vslw 2, 2, 2
   020b94c  stfs 1, 0(29)
   020b950  stb 4, 103(31)
-  020b954  <unknown>
-  020b958  <unknown>
+  020b954  lvlx 3, 0, 3
+  020b958  lvlx 4, 6, 5
   020b95c  vspltw 3, 3, 0
   020b960  li 5, 38
   020b964  ori 3, 30, 0

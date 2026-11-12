@@ -150,8 +150,8 @@ UpdateMoby_1269:   # 0x235aa0, 0xbe4 bytes
   0235ccc  lis 5, 35
   0235cd0  addi 4, 3, 16
   0235cd4  li 7, 32
-  0235cd8  <unknown>
-  0235cdc  <unknown>
+  0235cd8  lvlx 3, 3, 30
+  0235cdc  lvrx 4, 4, 30
   0235ce0  addi 4, 5, 23072
   0235ce4  lwz 6, 132(30)
   0235ce8  vor 3, 3, 4
@@ -164,11 +164,11 @@ UpdateMoby_1269:   # 0x235aa0, 0xbe4 bytes
   0235d04  stvewx 3, 3, 30
   0235d08  lfs 30, 32(4)
   0235d0c  addic 3, 6, 1
-  0235d10  <unknown>
+  0235d10  lvlx 3, 7, 4
   0235d14  fmuls 2, 1, 30
   0235d18  li 4, -3056
   0235d1c  vspltw 3, 3, 0
-  0235d20  <unknown>
+  0235d20  lvlx 5, 4, 5
   0235d24  vmaddfp 3, 5, 3, 4
   0235d28  fctiwz 2, 2
   0235d2c  stfd 2, 400(1)
@@ -185,12 +185,12 @@ UpdateMoby_1269:   # 0x235aa0, 0xbe4 bytes
   0235d58  vspltisw 7, -1
   0235d5c  vslw 5, 5, 5
   0235d60  vslw 8, 8, 8
-  0235d64  <unknown>
+  0235d64  lvlx 4, 4, 3
   0235d68  li 4, 36
   0235d6c  vspltw 4, 4, 0
   0235d70  vcfsx 3, 3, 0
   0235d74  vslw 7, 7, 7
-  0235d78  <unknown>
+  0235d78  lvlx 9, 4, 3
   0235d7c  vspltw 9, 9, 0
   0235d80  li 4, 44
   0235d84  vmaddfp 2, 2, 9, 8
@@ -202,13 +202,13 @@ UpdateMoby_1269:   # 0x235aa0, 0xbe4 bytes
   0235d9c  vnmsubfp 10, 6, 3, 4
   0235da0  vmaddfp 5, 6, 10, 5
   0235da4  vspltisw 6, -1
-  0235da8  <unknown>
+  0235da8  lvlx 10, 4, 3
   0235dac  li 4, 48
   0235db0  vspltw 10, 10, 0
   0235db4  vslw 6, 6, 6
   0235db8  vnmsubfp 9, 5, 3, 4
   0235dbc  vmaddfp 5, 5, 9, 7
-  0235dc0  <unknown>
+  0235dc0  lvlx 7, 4, 3
   0235dc4  vspltw 7, 7, 0
   0235dc8  li 4, 52
   0235dcc  vnmsubfp 3, 5, 3, 4
@@ -219,7 +219,7 @@ UpdateMoby_1269:   # 0x235aa0, 0xbe4 bytes
   0235de0  vmaddfp 2, 3, 2, 8
   0235de4  vslw 3, 5, 5
   0235de8  vspltisw 8, -1
-  0235dec  <unknown>
+  0235dec  lvlx 5, 4, 3
   0235df0  li 4, 24
   0235df4  vspltw 5, 5, 0
   0235df8  vsubfp 6, 10, 2
@@ -232,23 +232,23 @@ UpdateMoby_1269:   # 0x235aa0, 0xbe4 bytes
   0235e14  vsel 2, 7, 2, 6
   0235e18  vslw 6, 8, 8
   0235e1c  vspltisw 7, -1
-  0235e20  <unknown>
+  0235e20  lvlx 8, 4, 31
   0235e24  vmaddfp 4, 2, 2, 4
-  0235e28  <unknown>
+  0235e28  lvlx 9, 5, 3
   0235e2c  vslw 7, 7, 7
   0235e30  vspltw 9, 9, 0
   0235e34  li 5, 64
-  0235e38  <unknown>
+  0235e38  lvlx 11, 6, 3
   0235e3c  li 6, 68
   0235e40  vspltw 11, 11, 0
   0235e44  vmaddfp 3, 4, 2, 3
   0235e48  vmaddfp 6, 4, 3, 6
   0235e4c  vmaddfp 2, 3, 5, 2
-  0235e50  <unknown>
+  0235e50  lvlx 3, 5, 3
   0235e54  vspltw 3, 3, 0
   0235e58  vmaddfp 5, 4, 6, 7
   0235e5c  vmaddfp 2, 6, 9, 2
-  0235e60  <unknown>
+  0235e60  lvlx 6, 6, 3
   0235e64  lis 3, 114
   0235e68  vspltw 6, 6, 0
   0235e6c  vmaddfp 4, 4, 5, 10

@@ -992,10 +992,10 @@ UpdateMoby_1455:   # 0x284e60, 0x12c8 bytes
   0285aec  lis 5, 114
   0285af0  li 6, -3056
   0285af4  vslw 2, 2, 2
-  0285af8  <unknown>
+  0285af8  lvlx 3, 4, 3
   0285afc  li 3, 200
   0285b00  vspltw 3, 3, 0
-  0285b04  <unknown>
+  0285b04  lvlx 4, 6, 5
   0285b08  vmaddfp 2, 4, 3, 2
   0285b0c  vctsxs 2, 2, 0
   0285b10  vspltw 2, 2, 0

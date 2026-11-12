@@ -1033,10 +1033,10 @@ M294_00332560:   # 0x332560, 0x640 bytes
   03325c4  vslw 2, 2, 2
   03325c8  stw 4, 56(30)
   03325cc  li 4, -3056
-  03325d0  <unknown>
+  03325d0  lvlx 3, 0, 3
   03325d4  li 3, 576
   03325d8  vspltw 3, 3, 0
-  03325dc  <unknown>
+  03325dc  lvlx 4, 4, 5
   03325e0  vmaddfp 2, 4, 3, 2
   03325e4  vctsxs 2, 2, 0
   03325e8  vsplth 2, 2, 1
@@ -1370,11 +1370,11 @@ M294_00332560:   # 0x332560, 0x640 bytes
   0332b08  lis 3, 114
   0332b0c  li 4, -3056
   0332b10  stb 7, 103(30)
-  0332b14  <unknown>
+  0332b14  lvlx 2, 5, 27
   0332b18  vslw 3, 3, 3
   0332b1c  vspltw 2, 2, 0
   0332b20  li 5, 38
-  0332b24  <unknown>
+  0332b24  lvlx 4, 4, 3
   0332b28  vmaddfp 2, 4, 2, 3
   0332b2c  addic 4, 30, 96
   0332b30  ori 3, 31, 0

@@ -642,10 +642,10 @@ M426_0036b630:   # 0x36b630, 0x244 bytes
   036b740  li 8, -3056
   036b744  stw 5, 120(31)
   036b748  vslw 2, 2, 2
-  036b74c  <unknown>
+  036b74c  lvlx 3, 6, 3
   036b750  ori 3, 4, 0
   036b754  vspltw 3, 3, 0
-  036b758  <unknown>
+  036b758  lvlx 4, 8, 7
   036b75c  li 4, 116
   036b760  vmaddfp 2, 4, 3, 2
   036b764  vctsxs 2, 2, 0
@@ -1918,11 +1918,11 @@ UpdateMoby_426:   # 0x36cab0, 0xfa4 bytes
   036cbbc  vslw 2, 2, 2
   036cbc0  stw 3, 352(5)
   036cbc4  li 3, -3056
-  036cbc8  <unknown>
+  036cbc8  lvlx 3, 0, 28
   036cbcc  lis 6, 132
   036cbd0  vspltw 3, 3, 0
   036cbd4  addic 27, 1, 192
-  036cbd8  <unknown>
+  036cbd8  lvlx 4, 3, 4
   036cbdc  li 4, 360
   036cbe0  vmaddfp 2, 4, 3, 2
   036cbe4  lfs 2, 72(31)
@@ -2211,9 +2211,9 @@ UpdateMoby_426:   # 0x36cab0, 0xfa4 bytes
   036d050  lis 5, 114
   036d054  li 7, -3056
   036d058  stw 3, 352(6)
-  036d05c  <unknown>
+  036d05c  lvlx 2, 4, 27
   036d060  vspltw 2, 2, 0
-  036d064  <unknown>
+  036d064  lvlx 4, 7, 5
   036d068  li 5, 360
   036d06c  li 26, 0
   036d070  vmaddfp 2, 4, 2, 3
@@ -2275,9 +2275,9 @@ UpdateMoby_426:   # 0x36cab0, 0xfa4 bytes
   036d150  addi 6, 6, -13720
   036d154  vspltisw 7, -1
   036d158  vslw 5, 5, 5
-  036d15c  <unknown>
+  036d15c  lvlx 2, 4, 3
   036d160  vrefp 3, 2
-  036d164  <unknown>
+  036d164  lvlx 4, 5, 6
   036d168  vspltw 4, 4, 0
   036d16c  vslw 7, 7, 7
   036d170  vspltisw 8, -1
@@ -2287,10 +2287,10 @@ UpdateMoby_426:   # 0x36cab0, 0xfa4 bytes
   036d180  vnmsubfp 6, 3, 2, 4
   036d184  vmaddfp 3, 3, 6, 5
   036d188  vspltisw 5, -1
-  036d18c  <unknown>
+  036d18c  lvlx 6, 3, 29
   036d190  li 3, 40
   036d194  vslw 5, 5, 5
-  036d198  <unknown>
+  036d198  lvlx 10, 3, 6
   036d19c  li 3, 5640
   036d1a0  vspltw 10, 10, 0
   036d1a4  vnmsubfp 9, 3, 2, 4

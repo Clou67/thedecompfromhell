@@ -48,15 +48,15 @@ M794_004603e0:   # 0x4603e0, 0x458 bytes
   0460474  bl 0x500b64
   0460478  nop
   046047c  li 3, 4
-  0460480  <unknown>
+  0460480  lvlx 2, 0, 29
   0460484  li 4, 192
-  0460488  <unknown>
+  0460488  lvlx 3, 0, 21
   046048c  li 5, 196
   0460490  li 6, 200
   0460494  vspltisw 11, 0
   0460498  vspltw 3, 3, 0
   046049c  li 7, 16
-  04604a0  <unknown>
+  04604a0  lvlx 4, 3, 29
   04604a4  li 8, 20
   04604a8  li 3, 204
   04604ac  lfs 1, 0(29)
@@ -66,22 +66,22 @@ M794_004603e0:   # 0x4603e0, 0x458 bytes
   04604bc  vsel 2, 4, 2, 5
   04604c0  vspltisw 4, -1
   04604c4  fsub 3, 2, 1
-  04604c8  <unknown>
+  04604c8  lvlx 5, 4, 31
   04604cc  li 10, 136
-  04604d0  <unknown>
+  04604d0  lvlx 6, 5, 31
   04604d4  li 4, 128
-  04604d8  <unknown>
+  04604d8  lvlx 7, 3, 31
   04604dc  vslw 4, 4, 4
-  04604e0  <unknown>
+  04604e0  lvlx 8, 6, 31
   04604e4  addic 3, 31, 128
-  04604e8  <unknown>
+  04604e8  lvlx 9, 7, 30
   04604ec  li 5, 16
   04604f0  vmaddfp 2, 2, 3, 4
   04604f4  ori 6, 30, 0
   04604f8  vspltisw 3, -1
   04604fc  li 7, 0
-  0460500  <unknown>
-  0460504  <unknown>
+  0460500  lvlx 4, 8, 30
+  0460504  lvlx 10, 9, 30
   0460508  fsel 1, 3, 2, 1
   046050c  li 8, 140
   0460510  vslw 3, 3, 3

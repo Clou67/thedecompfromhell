@@ -192,9 +192,9 @@ UpdateMoby_466:   # 0x3968d8, 0x19e4 bytes
   0396bac  stw 25, 124(30)
   0396bb0  stfs 1, 332(30)
   0396bb4  stb 3, 32(31)
-  0396bb8  <unknown>
+  0396bb8  lvlx 2, 4, 5
   0396bbc  li 3, 284
-  0396bc0  <unknown>
+  0396bc0  lvlx 4, 7, 6
   0396bc4  vspltw 2, 2, 0
   0396bc8  vmaddfp 2, 4, 2, 3
   0396bcc  vctsxs 2, 2, 0
@@ -265,10 +265,10 @@ UpdateMoby_466:   # 0x3968d8, 0x19e4 bytes
   0396cd0  stb 4, 329(30)
   0396cd4  li 4, -3056
   0396cd8  vslw 2, 2, 2
-  0396cdc  <unknown>
+  0396cdc  lvlx 3, 6, 3
   0396ce0  li 3, 330
   0396ce4  vspltw 3, 3, 0
-  0396ce8  <unknown>
+  0396ce8  lvlx 4, 4, 5
   0396cec  vmaddfp 2, 4, 3, 2
   0396cf0  vctsxs 2, 2, 0
   0396cf4  vsplth 2, 2, 1
@@ -377,10 +377,10 @@ UpdateMoby_466:   # 0x3968d8, 0x19e4 bytes
   0396e90  stb 4, 329(30)
   0396e94  li 7, -3056
   0396e98  vslw 2, 2, 2
-  0396e9c  <unknown>
+  0396e9c  lvlx 3, 6, 3
   0396ea0  li 3, 330
   0396ea4  vspltw 3, 3, 0
-  0396ea8  <unknown>
+  0396ea8  lvlx 4, 7, 5
   0396eac  vmaddfp 2, 4, 3, 2
   0396eb0  vctsxs 2, 2, 0
   0396eb4  vsplth 2, 2, 1
@@ -823,10 +823,10 @@ UpdateMoby_466:   # 0x3968d8, 0x19e4 bytes
   0397588  lis 4, 114
   039758c  li 6, -3056
   0397590  vslw 2, 2, 2
-  0397594  <unknown>
+  0397594  lvlx 3, 5, 3
   0397598  li 3, 368
   039759c  vspltw 3, 3, 0
-  03975a0  <unknown>
+  03975a0  lvlx 4, 6, 4
   03975a4  li 4, 1
   03975a8  vmaddfp 2, 4, 3, 2
   03975ac  vctsxs 2, 2, 0
@@ -933,10 +933,10 @@ UpdateMoby_466:   # 0x3968d8, 0x19e4 bytes
   0397740  lis 4, 114
   0397744  li 5, -3056
   0397748  vslw 2, 2, 2
-  039774c  <unknown>
+  039774c  lvlx 3, 3, 28
   0397750  li 3, 368
   0397754  vspltw 3, 3, 0
-  0397758  <unknown>
+  0397758  lvlx 4, 5, 4
   039775c  vmaddfp 2, 4, 3, 2
   0397760  vctsxs 2, 2, 0
   0397764  vspltw 2, 2, 0

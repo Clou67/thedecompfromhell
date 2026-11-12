@@ -863,10 +863,10 @@ UpdateMoby_1343:   # 0x250c88, 0xe70 bytes
   02519d8  li 7, -3056
   02519dc  vslw 2, 2, 2
   02519e0  stw 5, 36(31)
-  02519e4  <unknown>
+  02519e4  lvlx 3, 4, 3
   02519e8  li 3, 40
   02519ec  vspltw 3, 3, 0
-  02519f0  <unknown>
+  02519f0  lvlx 4, 7, 6
   02519f4  vmaddfp 2, 4, 3, 2
   02519f8  vctsxs 2, 2, 0
   02519fc  vspltw 2, 2, 0

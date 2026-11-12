@@ -519,10 +519,10 @@ UpdateMoby_1270:   # 0x236ba0, 0x810 bytes
   0236f08  lis 5, 114
   0236f0c  li 6, -3056
   0236f10  vslw 2, 2, 2
-  0236f14  <unknown>
+  0236f14  lvlx 3, 4, 3
   0236f18  li 3, 132
   0236f1c  vspltw 3, 3, 0
-  0236f20  <unknown>
+  0236f20  lvlx 4, 6, 5
   0236f24  li 5, 2
   0236f28  vmaddfp 2, 4, 3, 2
   0236f2c  li 4, 6

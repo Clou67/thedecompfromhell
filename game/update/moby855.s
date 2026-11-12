@@ -257,7 +257,7 @@ UpdateMoby_855:   # 0x48ecd0, 0x92c bytes
   048f0a8  li 4, 31616
   048f0ac  li 29, 0
   048f0b0  ori 26, 29, 0
-  048f0b4  <unknown>
+  048f0b4  lvlx 3, 4, 3
   048f0b8  vspltw 3, 3, 0
   048f0bc  vcmpgefp. 2, 2, 3
   048f0c0  bf 26, 0x48f584

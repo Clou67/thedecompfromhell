@@ -65,9 +65,9 @@ M388_003621c8:   # 0x3621c8, 0x154 bytes
   03622bc  stvx 3, 5, 29
   03622c0  vspltisw 3, -1
   03622c4  stvx 4, 6, 29
-  03622c8  <unknown>
+  03622c8  lvlx 2, 0, 7
   03622cc  li 4, 64
-  03622d0  <unknown>
+  03622d0  lvlx 4, 3, 8
   03622d4  vspltw 2, 2, 0
   03622d8  vslw 3, 3, 3
   03622dc  ori 3, 29, 0

@@ -166,10 +166,10 @@ UpdateMoby_627:   # 0x3ead68, 0xcd8 bytes
   03eaf58  lis 5, 114
   03eaf5c  li 6, -3056
   03eaf60  vslw 2, 2, 2
-  03eaf64  <unknown>
+  03eaf64  lvlx 3, 4, 3
   03eaf68  li 3, 100
   03eaf6c  vspltw 3, 3, 0
-  03eaf70  <unknown>
+  03eaf70  lvlx 4, 6, 5
   03eaf74  vmaddfp 2, 4, 3, 2
   03eaf78  vctsxs 2, 2, 0
   03eaf7c  vspltw 2, 2, 0
@@ -778,7 +778,7 @@ UpdateMoby_627:   # 0x3ead68, 0xcd8 bytes
   03eb8e8  fmuls 2, 31, 2
   03eb8ec  lfs 3, 156(7)
   03eb8f0  lfs 4, 160(7)
-  03eb8f4  <unknown>
+  03eb8f4  lvlx 3, 4, 3
   03eb8f8  li 9, 360
   03eb8fc  ori 4, 26, 0
   03eb900  addic 3, 1, 192
@@ -787,7 +787,7 @@ UpdateMoby_627:   # 0x3ead68, 0xcd8 bytes
   03eb90c  fsel 1, 1, 3, 2
   03eb910  fsubs 1, 4, 1
   03eb914  stfs 1, 352(30)
-  03eb918  <unknown>
+  03eb918  lvlx 4, 8, 7
   03eb91c  vspltw 4, 4, 0
   03eb920  vmaddfp 2, 3, 4, 2
   03eb924  vctsxs 2, 2, 0

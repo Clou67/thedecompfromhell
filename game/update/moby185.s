@@ -968,8 +968,8 @@ M185_002c5f88:   # 0x2c5f88, 0x1364 bytes
   02c6d14  li 4, -11372
   02c6d18  li 5, 16
   02c6d1c  li 31, 0
-  02c6d20  <unknown>
-  02c6d24  <unknown>
+  02c6d20  lvlx 2, 4, 3
+  02c6d24  lvlx 3, 5, 24
   02c6d28  lis 3, 114
   02c6d2c  vcfsx 4, 2, 0
   02c6d30  li 4, -3056
@@ -977,7 +977,7 @@ M185_002c5f88:   # 0x2c5f88, 0x1364 bytes
   02c6d38  vspltisw 2, -1
   02c6d3c  lis 5, 266
   02c6d40  vslw 5, 2, 2
-  02c6d44  <unknown>
+  02c6d44  lvlx 2, 4, 3
   02c6d48  li 4, 8884
   02c6d4c  lis 3, 266
   02c6d50  lfs 31, 16(24)
@@ -996,7 +996,7 @@ M185_002c5f88:   # 0x2c5f88, 0x1364 bytes
   02c6d84  lis 6, 266
   02c6d88  lis 8, 124
   02c6d8c  vslw 4, 4, 4
-  02c6d90  <unknown>
+  02c6d90  lvlx 5, 5, 4
   02c6d94  vcfsx 5, 5, 0
   02c6d98  stbx 19, 3, 31
   02c6d9c  lis 5, 124
@@ -1480,10 +1480,10 @@ UpdateMoby_185:   # 0x2c7328, 0xc78 bytes
   02c7548  lis 5, 114
   02c754c  li 6, -3056
   02c7550  vslw 2, 2, 2
-  02c7554  <unknown>
+  02c7554  lvlx 3, 4, 3
   02c7558  li 3, 28
   02c755c  vspltw 3, 3, 0
-  02c7560  <unknown>
+  02c7560  lvlx 4, 6, 5
   02c7564  vmaddfp 2, 4, 3, 2
   02c7568  vctsxs 2, 2, 0
   02c756c  vsplth 2, 2, 1
@@ -1811,10 +1811,10 @@ UpdateMoby_185:   # 0x2c7328, 0xc78 bytes
   02c7a74  lis 5, 114
   02c7a78  li 6, -3056
   02c7a7c  vslw 2, 2, 2
-  02c7a80  <unknown>
+  02c7a80  lvlx 3, 4, 3
   02c7a84  li 4, 68
   02c7a88  vspltw 3, 3, 0
-  02c7a8c  <unknown>
+  02c7a8c  lvlx 4, 6, 5
   02c7a90  vmaddfp 2, 4, 3, 2
   02c7a94  vctsxs 2, 2, 0
   02c7a98  vspltw 2, 2, 0
@@ -1920,10 +1920,10 @@ UpdateMoby_185:   # 0x2c7328, 0xc78 bytes
   02c7c28  lis 6, 114
   02c7c2c  li 7, -3056
   02c7c30  vslw 2, 2, 2
-  02c7c34  <unknown>
+  02c7c34  lvlx 3, 5, 4
   02c7c38  lis 5, 266
   02c7c3c  vspltw 3, 3, 0
-  02c7c40  <unknown>
+  02c7c40  lvlx 4, 7, 6
   02c7c44  li 6, 4264
   02c7c48  vmaddfp 2, 4, 3, 2
   02c7c4c  slwi 3, 3, 5

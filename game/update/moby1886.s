@@ -62,10 +62,10 @@ M1885_002cf208:   # 0x2cf208, 0x198 bytes
   02cf2f0  lis 5, 114
   02cf2f4  li 6, -3056
   02cf2f8  stw 4, 20(25)
-  02cf2fc  <unknown>
+  02cf2fc  lvlx 3, 3, 30
   02cf300  vslw 2, 2, 2
   02cf304  vspltw 3, 3, 0
-  02cf308  <unknown>
+  02cf308  lvlx 4, 6, 5
   02cf30c  li 5, 24
   02cf310  li 6, 255
   02cf314  vmaddfp 2, 4, 3, 2

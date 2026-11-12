@@ -1652,14 +1652,14 @@ UpdateMoby_931:   # 0x4bcd20, 0x1ba0 bytes
   04bd848  b 0x4be890
   04bd84c  li 4, 452
   04bd850  addi 5, 4, 16
-  04bd854  <unknown>
+  04bd854  lvlx 2, 4, 30
   04bd858  lis 4, 76
-  04bd85c  <unknown>
+  04bd85c  lvrx 3, 5, 30
   04bd860  addi 4, 4, -13148
   04bd864  vor 2, 2, 3
   04bd868  li 5, 68
   04bd86c  vcfsx 2, 2, 0
-  04bd870  <unknown>
+  04bd870  lvlx 3, 5, 4
   04bd874  vspltw 3, 3, 0
   04bd878  vspltw 2, 2, 0
   04bd87c  vcmpgefp. 2, 2, 3

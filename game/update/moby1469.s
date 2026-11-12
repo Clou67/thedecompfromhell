@@ -37,10 +37,10 @@ UpdateMoby_1469:   # 0x286158, 0x948 bytes
   02861c0  li 7, -3056
   02861c4  stb 5, 48(3)
   02861c8  vslw 2, 2, 2
-  02861cc  <unknown>
+  02861cc  lvlx 3, 0, 4
   02861d0  li 4, 52
   02861d4  vspltw 3, 3, 0
-  02861d8  <unknown>
+  02861d8  lvlx 4, 7, 6
   02861dc  li 5, 1
   02861e0  vmaddfp 2, 4, 3, 2
   02861e4  vctsxs 2, 2, 0
@@ -400,11 +400,11 @@ UpdateMoby_1469:   # 0x286158, 0x948 bytes
   028676c  lis 5, 114
   0286770  li 6, -3056
   0286774  vslw 2, 2, 2
-  0286778  <unknown>
+  0286778  lvlx 3, 4, 3
   028677c  lis 4, 161
   0286780  vspltw 3, 3, 0
   0286784  li 3, 52
-  0286788  <unknown>
+  0286788  lvlx 4, 6, 5
   028678c  addic 4, 4, 12
   0286790  vmaddfp 2, 4, 3, 2
   0286794  vctsxs 2, 2, 0

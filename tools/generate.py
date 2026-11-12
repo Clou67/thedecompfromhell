@@ -331,6 +331,6 @@ print('files', len(files), 'functions', len(rows), 'missing', missing, 'globals'
 # per-module headers + real includes (see restructure.py)
 subprocess.run(['python3', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'restructure.py'), out], check=True)
 # original instructions next to each .cpp (the reference when cleaning)
-_dis = os.path.join(DATA, 'eboot.dis')   # optional: llvm-objdump -d --no-show-raw-insn --triple=powerpc64-unknown-linux-gnu --mattr=+altivec EBOOT.ELF > data/eboot.dis
+_dis = os.path.join(DATA, 'eboot.dis')   # optional: llvm-objdump -d --no-show-raw-insn --triple=powerpc64-unknown-linux-gnu --mattr=+altivec EBOOT.ELF > data/eboot.dis; python3 fixdis.py EBOOT.ELF data/eboot.dis
 if os.path.exists(_dis):
     subprocess.run(['python3', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'asmlist.py'), out, _dis], check=True)

@@ -81,11 +81,11 @@ UpdateMoby_1395:   # 0x26a268, 0x5e8 bytes
   026a39c  stfs 1, 24(29)
   026a3a0  lfs 1, 28(31)
   026a3a4  stfs 1, 28(29)
-  026a3a8  <unknown>
-  026a3ac  <unknown>
+  026a3a8  lvlx 5, 9, 7
+  026a3ac  lvlx 6, 10, 8
   026a3b0  lwz 12, 4(4)
   026a3b4  vmaddfp 4, 5, 4, 6
-  026a3b8  <unknown>
+  026a3b8  lvlx 5, 11, 12
   026a3bc  vaddfp 4, 4, 5
   026a3c0  vspltw 4, 4, 0
   026a3c4  stvewx 4, 11, 12
@@ -122,14 +122,14 @@ UpdateMoby_1395:   # 0x26a268, 0x5e8 bytes
   026a440  std 3, 112(1)
   026a444  lis 3, 39
   026a448  sth 6, 34(30)
-  026a44c  <unknown>
+  026a44c  lvlx 2, 5, 4
   026a450  addi 31, 3, -23984
   026a454  lis 3, 114
   026a458  vcfsx 2, 2, 0
   026a45c  li 4, -3056
-  026a460  <unknown>
+  026a460  lvlx 3, 0, 31
   026a464  lfs 1, 0(31)
-  026a468  <unknown>
+  026a468  lvlx 4, 4, 3
   026a46c  lfd 2, 112(1)
   026a470  vspltw 3, 3, 0
   026a474  fcfid 2, 2
@@ -196,13 +196,13 @@ UpdateMoby_1395:   # 0x26a268, 0x5e8 bytes
   026a568  lis 5, 39
   026a56c  addi 5, 5, -23984
   026a570  vslw 4, 4, 4
-  026a574  <unknown>
+  026a574  lvlx 2, 4, 3
   026a578  lis 3, 114
   026a57c  vcfsx 3, 2, 0
   026a580  li 4, -3056
-  026a584  <unknown>
+  026a584  lvlx 2, 0, 5
   026a588  vspltw 2, 2, 0
-  026a58c  <unknown>
+  026a58c  lvlx 5, 4, 3
   026a590  lfs 1, 0(5)
   026a594  lhz 3, 34(30)
   026a598  li 4, 32
@@ -225,11 +225,11 @@ UpdateMoby_1395:   # 0x26a268, 0x5e8 bytes
   026a5dc  extsw 3, 3
   026a5e0  vslw 4, 4, 4
   026a5e4  std 3, 112(1)
-  026a5e8  <unknown>
+  026a5e8  lvlx 3, 5, 4
   026a5ec  lis 3, 114
   026a5f0  li 4, -3056
   026a5f4  vcfsx 3, 3, 0
-  026a5f8  <unknown>
+  026a5f8  lvlx 5, 4, 3
   026a5fc  lfs 2, -3056(3)
   026a600  lfd 3, 112(1)
   026a604  fcfid 3, 3
@@ -307,30 +307,30 @@ UpdateMoby_1395:   # 0x26a268, 0x5e8 bytes
   026a724  lis 6, 250
   026a728  li 7, 17232
   026a72c  li 8, 20
-  026a730  <unknown>
+  026a730  lvlx 4, 5, 4
   026a734  li 4, 224
-  026a738  <unknown>
+  026a738  lvlx 5, 7, 6
   026a73c  li 5, 16
   026a740  li 7, 232
   026a744  vmaddfp 3, 4, 3, 5
-  026a748  <unknown>
+  026a748  lvlx 4, 4, 29
   026a74c  li 4, 228
-  026a750  <unknown>
+  026a750  lvlx 5, 5, 29
   026a754  lwz 6, 4(3)
   026a758  addic 3, 3, 4
-  026a75c  <unknown>
-  026a760  <unknown>
+  026a75c  lvlx 6, 4, 29
+  026a760  lvlx 7, 7, 29
   026a764  li 4, 24
   026a768  vmaddfp 4, 4, 3, 5
   026a76c  vspltisw 5, 1
   026a770  vadduwm 2, 2, 5
   026a774  vspltw 4, 4, 0
   026a778  stvewx 4, 5, 6
-  026a77c  <unknown>
+  026a77c  lvlx 4, 8, 29
   026a780  vmaddfp 4, 6, 3, 4
   026a784  vspltw 4, 4, 0
   026a788  stvewx 4, 8, 6
-  026a78c  <unknown>
+  026a78c  lvlx 4, 4, 29
   026a790  vmaddfp 3, 7, 3, 4
   026a794  vspltw 3, 3, 0
   026a798  stvewx 3, 4, 6

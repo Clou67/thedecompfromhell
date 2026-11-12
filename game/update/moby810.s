@@ -128,9 +128,9 @@ FUN_0046cf30:   # 0x46cf30, 0x268 bytes
   046d120  lis 4, 114
   046d124  li 5, -3056
   046d128  vslw 2, 2, 2
-  046d12c  <unknown>
+  046d12c  lvlx 3, 3, 31
   046d130  vspltw 3, 3, 0
-  046d134  <unknown>
+  046d134  lvlx 4, 5, 4
   046d138  ori 3, 27, 0
   046d13c  li 4, 16
   046d140  li 5, -1

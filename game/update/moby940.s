@@ -316,14 +316,14 @@ M940_004c4df8:   # 0x4c4df8, 0x7c8 bytes
   04c51d0  vslw 3, 3, 3
   04c51d4  lis 5, 114
   04c51d8  stb 6, 103(30)
-  04c51dc  <unknown>
-  04c51e0  <unknown>
+  04c51dc  lvlx 2, 4, 3
+  04c51e0  lvlx 4, 7, 5
   04c51e4  vspltw 2, 2, 0
   04c51e8  li 3, 408
   04c51ec  addi 4, 3, 16
   04c51f0  vmaddfp 2, 4, 2, 3
-  04c51f4  <unknown>
-  04c51f8  <unknown>
+  04c51f4  lvlx 3, 3, 30
+  04c51f8  lvrx 4, 4, 30
   04c51fc  vor 3, 3, 4
   04c5200  vctsxs 2, 2, 0
   04c5204  vadduwm 2, 3, 2
@@ -985,10 +985,10 @@ UpdateMoby_940:   # 0x4c5630, 0x1520 bytes
   04c5cac  lis 3, 114
   04c5cb0  li 5, -3056
   04c5cb4  vslw 2, 2, 2
-  04c5cb8  <unknown>
+  04c5cb8  lvlx 3, 4, 31
   04c5cbc  lis 4, 165
   04c5cc0  vspltw 3, 3, 0
-  04c5cc4  <unknown>
+  04c5cc4  lvlx 4, 5, 3
   04c5cc8  lwz 3, 400(29)
   04c5ccc  addic 4, 4, 7136
   04c5cd0  li 5, 408
@@ -1058,8 +1058,8 @@ UpdateMoby_940:   # 0x4c5630, 0x1520 bytes
   04c5dd0  li 3, 72
   04c5dd4  lis 5, 114
   04c5dd8  vslw 2, 2, 2
-  04c5ddc  <unknown>
-  04c5de0  <unknown>
+  04c5ddc  lvlx 3, 3, 31
+  04c5de0  lvlx 4, 4, 5
   04c5de4  lis 3, 165
   04c5de8  vspltw 3, 3, 0
   04c5dec  li 5, 408
@@ -1469,10 +1469,10 @@ UpdateMoby_940:   # 0x4c5630, 0x1520 bytes
   04c643c  li 6, -3056
   04c6440  vslw 2, 2, 2
   04c6444  fsubs 1, 1, 2
-  04c6448  <unknown>
+  04c6448  lvlx 3, 5, 3
   04c644c  li 3, 408
   04c6450  vspltw 3, 3, 0
-  04c6454  <unknown>
+  04c6454  lvlx 4, 6, 4
   04c6458  lfs 4, 20(30)
   04c645c  lfs 3, 20(31)
   04c6460  vmaddfp 2, 4, 3, 2

@@ -1778,11 +1778,11 @@ FUN_004d4328:   # 0x4d4328, 0xdc bytes
   04d4334  vspltisw 5, -1
   04d4338  vspltisw 6, -1
   04d433c  addi 5, 5, 17184
-  04d4340  <unknown>
-  04d4344  <unknown>
+  04d4340  lvlx 2, 0, 6
+  04d4344  lvlx 3, 4, 6
   04d4348  vcfux 2, 2, 0
   04d434c  vcfux 3, 3, 0
-  04d4350  <unknown>
+  04d4350  lvlx 4, 0, 5
   04d4354  vslw 5, 5, 5
   04d4358  vspltw 4, 4, 0
   04d435c  vslw 6, 6, 6
@@ -1801,7 +1801,7 @@ FUN_004d4328:   # 0x4d4328, 0xdc bytes
   04d4390  vmaddfp 5, 7, 11, 5
   04d4394  vmaddfp 6, 8, 12, 6
   04d4398  vspltisw 8, -1
-  04d439c  <unknown>
+  04d439c  lvlx 7, 4, 3
   04d43a0  li 4, 40
   04d43a4  vslw 8, 8, 8
   04d43a8  vnmsubfp 11, 5, 2, 4
@@ -1811,7 +1811,7 @@ FUN_004d4328:   # 0x4d4328, 0xdc bytes
   04d43b8  vslw 10, 0, 0
   04d43bc  vspltisw 12, -1
   04d43c0  vslw 9, 13, 13
-  04d43c4  <unknown>
+  04d43c4  lvlx 11, 5, 3
   04d43c8  lis 5, 16256
   04d43cc  vnmsubfp 2, 5, 2, 4
   04d43d0  vnmsubfp 3, 6, 3, 4
@@ -2687,12 +2687,12 @@ FUN_004d4dd0:   # 0x4d4dd0, 0x48c bytes
   04d5124  lis 5, 77
   04d5128  vspltisw 8, -1
   04d512c  addi 5, 5, 19916
-  04d5130  <unknown>
-  04d5134  <unknown>
+  04d5130  lvlx 2, 0, 3
+  04d5134  lvlx 3, 4, 3
   04d5138  vcfux 2, 2, 0
   04d513c  vcfux 3, 3, 0
   04d5140  vslw 5, 5, 5
-  04d5144  <unknown>
+  04d5144  lvlx 4, 0, 5
   04d5148  vslw 8, 8, 8
   04d514c  vspltw 4, 4, 0
   04d5150  vspltisw 12, -1
@@ -2711,7 +2711,7 @@ FUN_004d4dd0:   # 0x4d4dd0, 0x48c bytes
   04d5184  vmaddfp 6, 7, 11, 8
   04d5188  vspltisw 10, -1
   04d518c  vslw 7, 12, 12
-  04d5190  <unknown>
+  04d5190  lvlx 8, 4, 31
   04d5194  li 4, 24
   04d5198  vslw 10, 10, 10
   04d519c  vnmsubfp 11, 5, 2, 4
@@ -2721,7 +2721,7 @@ FUN_004d4dd0:   # 0x4d4dd0, 0x48c bytes
   04d51ac  vslw 9, 0, 0
   04d51b0  vspltisw 12, -1
   04d51b4  vslw 7, 13, 13
-  04d51b8  <unknown>
+  04d51b8  lvlx 11, 4, 31
   04d51bc  li 4, 40
   04d51c0  vnmsubfp 2, 5, 2, 4
   04d51c4  vnmsubfp 3, 6, 3, 4
@@ -4687,20 +4687,20 @@ FUN_004d6f50:   # 0x4d6f50, 0x138 bytes
   04d6fa4  vslw 6, 6, 6
   04d6fa8  li 9, 12
   04d6fac  ori 6, 6, 34216
-  04d6fb0  <unknown>
-  04d6fb4  <unknown>
+  04d6fb0  lvlx 3, 7, 5
+  04d6fb4  lvlx 4, 8, 5
   04d6fb8  vspltw 3, 3, 0
   04d6fbc  vspltw 4, 4, 0
-  04d6fc0  <unknown>
-  04d6fc4  <unknown>
+  04d6fc0  lvlx 5, 6, 3
+  04d6fc4  lvlx 7, 0, 5
   04d6fc8  li 6, 16
-  04d6fcc  <unknown>
+  04d6fcc  lvlx 10, 9, 5
   04d6fd0  vnmsubfp 8, 5, 3, 4
   04d6fd4  vmaddfp 3, 5, 3, 6
   04d6fd8  vspltw 6, 10, 0
   04d6fdc  vspltw 5, 7, 0
   04d6fe0  vslw 7, 9, 9
-  04d6fe4  <unknown>
+  04d6fe4  lvlx 9, 6, 5
   04d6fe8  li 7, 20
   04d6fec  li 6, 6776
   04d6ff0  stw 4, 6784(3)
@@ -4723,8 +4723,8 @@ FUN_004d6f50:   # 0x4d6f50, 0x138 bytes
   04d7034  vspltw 3, 2, 0
   04d7038  vsubfp 2, 2, 5
   04d703c  stvewx 3, 6, 3
-  04d7040  <unknown>
-  04d7044  <unknown>
+  04d7040  lvlx 3, 7, 5
+  04d7044  lvlx 5, 8, 5
   04d7048  vspltw 3, 3, 0
   04d704c  vmaddfp 2, 2, 3, 7
   04d7050  vspltw 3, 5, 0
@@ -12630,7 +12630,7 @@ FUN_004deab8:   # 0x4deab8, 0x124 bytes
   04deb04  stw 4, 136(1)
   04deb08  ori 11, 5, 7932
   04deb0c  stw 4, 140(1)
-  04deb10  <unknown>
+  04deb10  lvlx 5, 0, 3
   04deb14  lis 4, 144
   04deb18  vslw 2, 2, 2
   04deb1c  li 0, 128
@@ -12655,7 +12655,7 @@ FUN_004deab8:   # 0x4deab8, 0x124 bytes
   04deb68  stvewx 2, 6, 1
   04deb6c  stvewx 3, 7, 1
   04deb70  stvewx 2, 8, 1
-  04deb74  <unknown>
+  04deb74  lvlx 2, 9, 3
   04deb78  vspltw 2, 2, 0
   04deb7c  vmaddfp 2, 4, 2, 6
   04deb80  stvewx 2, 10, 1
@@ -13096,7 +13096,7 @@ FUN_004df1c0:   # 0x4df1c0, 0x2d0 bytes
   04df2ac  li 7, 96
   04df2b0  vspltisw 12, 0
   04df2b4  vrefp 4, 2
-  04df2b8  <unknown>
+  04df2b8  lvlx 5, 3, 30
   04df2bc  vspltw 5, 5, 0
   04df2c0  vaddfp 8, 30, 31
   04df2c4  li 3, 32
@@ -13130,7 +13130,7 @@ FUN_004df1c0:   # 0x4df1c0, 0x2d0 bytes
   04df334  vperm 6, 6, 12, 11
   04df338  vmaddfp 7, 8, 2, 7
   04df33c  vmaddfp 2, 4, 2, 9
-  04df340  <unknown>
+  04df340  lvlx 4, 4, 30
   04df344  lvx 8, 5, 30
   04df348  vspltw 4, 4, 0
   04df34c  lvx 9, 6, 30
@@ -13360,7 +13360,7 @@ FUN_004df600:   # 0x4df600, 0x62c bytes
   04df834  vnmsubfp 12, 31, 15, 19
   04df838  vnmsubfp 13, 28, 1, 14
   04df83c  vnmsubfp 5, 5, 0, 17
-  04df840  <unknown>
+  04df840  lvlx 0, 3, 5
   04df844  li 8, 208
   04df848  vmaddfp 7, 7, 11, 10
   04df84c  li 3, 160
@@ -13389,27 +13389,27 @@ FUN_004df600:   # 0x4df600, 0x62c bytes
   04df8a8  stvx 7, 4, 28
   04df8ac  stvx 4, 6, 28
   04df8b0  stvx 3, 8, 28
-  04df8b4  <unknown>
-  04df8b8  <unknown>
+  04df8b4  lvlx 3, 9, 5
+  04df8b8  lvlx 4, 10, 5
   04df8bc  vspltw 3, 3, 0
   04df8c0  li 9, 304
-  04df8c4  <unknown>
+  04df8c4  lvlx 5, 11, 5
   04df8c8  vspltw 4, 4, 0
   04df8cc  vspltw 5, 5, 0
   04df8d0  vctsxs 3, 3, 0
-  04df8d4  <unknown>
+  04df8d4  lvlx 6, 12, 5
   04df8d8  li 11, 308
   04df8dc  li 12, 312
-  04df8e0  <unknown>
+  04df8e0  lvlx 8, 9, 5
   04df8e4  vspltw 6, 6, 0
   04df8e8  li 10, 316
   04df8ec  vspltw 8, 8, 0
   04df8f0  li 9, 320
   04df8f4  vcfsx 7, 3, 0
   04df8f8  vnmsubfp 4, 7, 5, 4
-  04df8fc  <unknown>
-  04df900  <unknown>
-  04df904  <unknown>
+  04df8fc  lvlx 5, 11, 5
+  04df900  lvlx 9, 12, 5
+  04df904  lvlx 10, 10, 5
   04df908  vspltw 5, 5, 0
   04df90c  vspltw 9, 9, 0
   04df910  li 10, 324
@@ -13417,13 +13417,13 @@ FUN_004df600:   # 0x4df600, 0x62c bytes
   04df918  li 11, 288
   04df91c  addic 12, 28, 192
   04df920  vnmsubfp 4, 7, 6, 4
-  04df924  <unknown>
-  04df928  <unknown>
+  04df924  lvlx 7, 9, 5
+  04df928  lvlx 11, 10, 5
   04df92c  vspltw 2, 7, 0
   04df930  li 9, 256
   04df934  vspltw 11, 11, 0
   04df938  vspltisw 6, 3
-  04df93c  <unknown>
+  04df93c  lvlx 7, 11, 5
   04df940  addic 10, 28, 176
   04df944  li 11, 352
   04df948  vspltw 7, 7, 0
@@ -13929,15 +13929,15 @@ FUN_004dfe70:   # 0x4dfe70, 0xe04 bytes
   04e0348  li 5, 15
   04e034c  bl 0x4d82b8
   04e0350  li 25, 8
-  04e0354  <unknown>
+  04e0354  lvlx 2, 0, 29
   04e0358  li 3, 4
   04e035c  vspltisw 29, 0
   04e0360  li 4, 32
   04e0364  li 5, 112
   04e0368  li 6, 16
-  04e036c  <unknown>
-  04e0370  <unknown>
-  04e0374  <unknown>
+  04e036c  lvlx 3, 25, 29
+  04e0370  lvlx 4, 3, 29
+  04e0374  lvlx 6, 4, 27
   04e0378  lvx 7, 5, 1
   04e037c  li 3, 80
   04e0380  vspltw 30, 6, 0
@@ -13973,7 +13973,7 @@ FUN_004dfe70:   # 0x4dfe70, 0xe04 bytes
   04e03f8  li 3, 144
   04e03fc  li 4, 148
   04e0400  vperm 2, 2, 3, 8
-  04e0404  <unknown>
+  04e0404  lvlx 14, 3, 27
   04e0408  vmaddfp 13, 5, 5, 29
   04e040c  vperm 0, 5, 5, 10
   04e0410  vperm 1, 5, 5, 11
@@ -13981,7 +13981,7 @@ FUN_004dfe70:   # 0x4dfe70, 0xe04 bytes
   04e0418  li 3, 48
   04e041c  li 7, 128
   04e0420  vmaddfp 13, 0, 0, 13
-  04e0424  <unknown>
+  04e0424  lvlx 0, 4, 27
   04e0428  vspltw 30, 0, 0
   04e042c  li 4, 64
   04e0430  lvx 0, 3, 27
@@ -14031,7 +14031,7 @@ FUN_004dfe70:   # 0x4dfe70, 0xe04 bytes
   04e04e0  vmaddfp 3, 5, 3, 29
   04e04e4  stvx 3, 7, 1
   04e04e8  lvx 28, 1, 0
-  04e04ec  <unknown>
+  04e04ec  lvlx 3, 8, 27
   04e04f0  vmaddfp 2, 2, 28, 29
   04e04f4  vspltw 3, 3, 0
   04e04f8  vmaddfp 2, 2, 3, 29
@@ -14144,7 +14144,7 @@ FUN_004dfe70:   # 0x4dfe70, 0xe04 bytes
   04e06a4  vnmsubfp 2, 3, 2, 16
   04e06a8  lvx 25, 6, 1
   04e06ac  lvx 22, 7, 1
-  04e06b0  <unknown>
+  04e06b0  lvlx 10, 8, 27
   04e06b4  vperm 6, 7, 6, 19
   04e06b8  vspltw 10, 10, 0
   04e06bc  vspltw 11, 15, 0
@@ -14228,8 +14228,8 @@ FUN_004dfe70:   # 0x4dfe70, 0xe04 bytes
   04e07f4  li 4, 256
   04e07f8  lvx 0, 3, 1
   04e07fc  li 0, 704
-  04e0800  <unknown>
-  04e0804  <unknown>
+  04e0800  lvlx 1, 5, 27
+  04e0804  lvlx 14, 7, 27
   04e0808  vspltw 1, 1, 0
   04e080c  vspltw 14, 14, 0
   04e0810  vperm 13, 28, 13, 31
@@ -14626,7 +14626,7 @@ FUN_004e0d50:   # 0x4e0d50, 0xc20 bytes
   04e0f00  li 5, 16
   04e0f04  li 4, 48
   04e0f08  lvx 2, 30, 1
-  04e0f0c  <unknown>
+  04e0f0c  lvlx 4, 0, 29
   04e0f10  vspltw 3, 2, 2
   04e0f14  vspltw 4, 4, 0
   04e0f18  lvx 5, 5, 29
@@ -14648,7 +14648,7 @@ FUN_004e0d50:   # 0x4e0d50, 0xc20 bytes
   04e0f58  vnmsubfp 2, 9, 2, 6
   04e0f5c  lvx 6, 5, 29
   04e0f60  li 5, 116
-  04e0f64  <unknown>
+  04e0f64  lvlx 12, 4, 29
   04e0f68  li 7, 144
   04e0f6c  vmaddfp 8, 2, 2, 29
   04e0f70  vperm 10, 2, 2, 3
@@ -14658,7 +14658,7 @@ FUN_004e0d50:   # 0x4e0d50, 0xc20 bytes
   04e0f80  addic 4, 1, 128
   04e0f84  vmaddfp 8, 10, 10, 8
   04e0f88  vspltw 10, 12, 0
-  04e0f8c  <unknown>
+  04e0f8c  lvlx 12, 5, 29
   04e0f90  vspltw 28, 12, 0
   04e0f94  vmaddfp 8, 11, 11, 8
   04e0f98  addc 5, 1, 3
@@ -14706,7 +14706,7 @@ FUN_004e0d50:   # 0x4e0d50, 0xc20 bytes
   04e1040  vslw 3, 3, 3
   04e1044  vspltw 4, 4, 2
   04e1048  li 3, 128
-  04e104c  <unknown>
+  04e104c  lvlx 5, 4, 29
   04e1050  li 4, 144
   04e1054  vspltw 5, 5, 0
   04e1058  vsubfp 4, 4, 30
@@ -15729,7 +15729,7 @@ FUN_004e1b80:   # 0x4e1b80, 0xca8 bytes
   04e214c  vnmsubfp 12, 30, 0, 1
   04e2150  vnmsubfp 4, 4, 14, 16
   04e2154  vnmsubfp 11, 17, 13, 18
-  04e2158  <unknown>
+  04e2158  lvlx 13, 3, 28
   04e215c  clrldi 3, 5, 32
   04e2160  li 5, 560
   04e2164  addic 4, 3, 544
@@ -16106,7 +16106,7 @@ FUN_004e1b80:   # 0x4e1b80, 0xca8 bytes
   04e2730  li 5, 22
   04e2734  bl 0x4d82b8
   04e2738  li 3, 4
-  04e273c  <unknown>
+  04e273c  lvlx 2, 0, 30
   04e2740  li 4, 8
   04e2744  fmr 1, 31
   04e2748  lis 5, 78
@@ -16114,8 +16114,8 @@ FUN_004e1b80:   # 0x4e1b80, 0xca8 bytes
   04e2750  li 6, 832
   04e2754  addi 5, 5, 6752
   04e2758  li 7, 256
-  04e275c  <unknown>
-  04e2760  <unknown>
+  04e275c  lvlx 3, 3, 30
+  04e2760  lvlx 4, 4, 30
   04e2764  li 8, 272
   04e2768  ori 3, 31, 0
   04e276c  lvx 5, 6, 1
@@ -16195,7 +16195,7 @@ FUN_004e2860:   # 0x4e2860, 0x18c bytes
   04e28c4  li 11, 192
   04e28c8  vslw 5, 5, 5
   04e28cc  li 9, 16
-  04e28d0  <unknown>
+  04e28d0  lvlx 4, 0, 4
   04e28d4  lvx 6, 7, 3
   04e28d8  vspltw 4, 4, 0
   04e28dc  lvx 7, 6, 3
@@ -16313,8 +16313,8 @@ FUN_004e2a60:   # 0x4e2a60, 0x2e0 bytes
   04e2b08  li 9, 208
   04e2b0c  vmaddfp 9, 10, 10, 9
   04e2b10  vmaddfp 10, 13, 13, 11
-  04e2b14  <unknown>
-  04e2b18  <unknown>
+  04e2b14  lvlx 11, 6, 4
+  04e2b18  lvlx 13, 7, 4
   04e2b1c  vspltw 11, 11, 0
   04e2b20  li 6, 160
   04e2b24  vspltw 13, 13, 0
@@ -16826,10 +16826,10 @@ FUN_004e3348:   # 0x4e3348, 0x1f0 bytes
   04e3390  stw 5, 52(1)
   04e3394  stw 5, 56(1)
   04e3398  stw 5, 60(1)
-  04e339c  <unknown>
+  04e339c  lvlx 3, 0, 3
   04e33a0  li 5, 0
-  04e33a4  <unknown>
-  04e33a8  <unknown>
+  04e33a4  lvlx 4, 7, 3
+  04e33a8  lvlx 5, 9, 3
   04e33ac  lis 3, 8
   04e33b0  vspltw 3, 3, 0
   04e33b4  li 0, 48
@@ -25483,22 +25483,22 @@ FUN_004eb6e8:   # 0x4eb6e8, 0xa6c bytes
   04eb7d4  li 12, 16
   04eb7d8  li 26, 20
   04eb7dc  addic 7, 4, 76
-  04eb7e0  <unknown>
+  04eb7e0  lvlx 2, 8, 11
   04eb7e4  ori 5, 30, 0
-  04eb7e8  <unknown>
+  04eb7e8  lvlx 4, 9, 11
   04eb7ec  addc 7, 1, 7
-  04eb7f0  <unknown>
+  04eb7f0  lvlx 6, 10, 11
   04eb7f4  ori 8, 31, 0
-  04eb7f8  <unknown>
+  04eb7f8  lvlx 8, 12, 11
   04eb7fc  clrldi 7, 7, 32
-  04eb800  <unknown>
+  04eb800  lvlx 9, 26, 11
   04eb804  ori 9, 7, 0
   04eb808  vspltw 2, 2, 0
   04eb80c  vspltw 4, 4, 0
   04eb810  vspltw 6, 6, 0
   04eb814  vspltw 8, 8, 0
   04eb818  vspltw 9, 9, 0
-  04eb81c  <unknown>
+  04eb81c  lvlx 3, 0, 7
   04eb820  lhz 11, 0(7)
   04eb824  li 10, 0
   04eb828  vsrw 3, 3, 5
@@ -25541,17 +25541,17 @@ FUN_004eb6e8:   # 0x4eb6e8, 0xa6c bytes
   04eb8bc  addic 9, 9, 8
   04eb8c0  addic 5, 31, 16
   04eb8c4  mtctr 10
-  04eb8c8  <unknown>
+  04eb8c8  lvlx 2, 7, 8
   04eb8cc  vspltw 2, 2, 0
   04eb8d0  li 7, 16
-  04eb8d4  <unknown>
+  04eb8d4  lvlx 4, 0, 9
   04eb8d8  addic 8, 9, 2
   04eb8dc  vspltisw 3, -1
   04eb8e0  li 10, 16
-  04eb8e4  <unknown>
-  04eb8e8  <unknown>
+  04eb8e4  lvrx 6, 7, 9
+  04eb8e8  lvlx 7, 0, 8
   04eb8ec  vor 4, 4, 6
-  04eb8f0  <unknown>
+  04eb8f0  lvrx 6, 10, 8
   04eb8f4  addic 7, 5, 4
   04eb8f8  vslw 3, 3, 3
   04eb8fc  vor 6, 7, 6
@@ -28178,7 +28178,7 @@ FUN_004ee0a8:   # 0x4ee0a8, 0x138 bytes
   04ee178  lis 8, 345
   04ee17c  stvx 2, 4, 3
   04ee180  li 10, 0
-  04ee184  <unknown>
+  04ee184  lvlx 2, 0, 31
   04ee188  lis 9, 345
   04ee18c  lis 11, 345
   04ee190  vspltw 2, 2, 0
@@ -28186,7 +28186,7 @@ FUN_004ee0a8:   # 0x4ee0a8, 0x138 bytes
   04ee198  li 4, 5824
   04ee19c  stvx 2, 6, 5
   04ee1a0  lis 5, 345
-  04ee1a4  <unknown>
+  04ee1a4  lvlx 2, 7, 31
   04ee1a8  li 6, -1
   04ee1ac  lis 7, 345
   04ee1b0  stw 10, 7968(8)

@@ -65,7 +65,7 @@ UpdateMoby_420:   # 0x367de0, 0x15c bytes
   0367eb8  bt 6, 0x367f24
   0367ebc  li 3, 50
   0367ec0  vspltisw 2, -16
-  0367ec4  <unknown>
+  0367ec4  lvlx 3, 3, 31
   0367ec8  vsraw 2, 3, 2
   0367ecc  vspltisw 3, 0
   0367ed0  vcfsx 2, 2, 0

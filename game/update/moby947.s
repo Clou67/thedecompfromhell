@@ -228,10 +228,10 @@ UpdateMoby_947:   # 0x4c70d0, 0x3d4 bytes
   04c7450  stb 4, 32(31)
   04c7454  li 4, -3056
   04c7458  vslw 2, 2, 2
-  04c745c  <unknown>
+  04c745c  lvlx 3, 5, 3
   04c7460  li 3, 8
   04c7464  vspltw 3, 3, 0
-  04c7468  <unknown>
+  04c7468  lvlx 4, 4, 6
   04c746c  vmaddfp 2, 4, 3, 2
   04c7470  vctsxs 2, 2, 0
   04c7474  vspltw 2, 2, 0

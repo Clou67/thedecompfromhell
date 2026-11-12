@@ -1175,13 +1175,13 @@ LoadSpaceshipModel:   # 0xdc210, 0x5ec bytes
   00dc41c  li 4, 176
   00dc420  lis 7, 114
   00dc424  li 6, 10
-  00dc428  <unknown>
+  00dc428  lvlx 3, 3, 31
   00dc42c  addic 27, 7, 18368
-  00dc430  <unknown>
+  00dc430  lvlx 4, 5, 31
   00dc434  li 3, 18368
   00dc438  vsraw 3, 3, 2
   00dc43c  li 8, 12
-  00dc440  <unknown>
+  00dc440  lvlx 5, 4, 31
   00dc444  lis 18, 163
   00dc448  vsraw 4, 4, 2
   00dc44c  li 5, 14
@@ -1305,7 +1305,7 @@ LoadSpaceshipModel:   # 0xdc210, 0x5ec bytes
   00dc624  lis 9, 28672
   00dc628  addc 8, 25, 28
   00dc62c  stw 5, 29576(27)
-  00dc630  <unknown>
+  00dc630  lvlx 3, 3, 31
   00dc634  li 3, 10
   00dc638  vsraw 2, 3, 2
   00dc63c  lvx 3, 6, 4
@@ -1738,7 +1738,7 @@ PrintMobyMemory:   # 0xdcc50, 0x1ec bytes
   00dcca8  lfs 31, 0(26)
   00dccac  addic 28, 25, 4
   00dccb0  addc 29, 27, 29
-  00dccb4  <unknown>
+  00dccb4  lvlx 2, 0, 28
   00dccb8  lwz 4, 0(25)
   00dccbc  vcfsx 2, 2, 0
   00dccc0  cmpwi 4, 0

@@ -589,9 +589,9 @@ M228_002f9f70:   # 0x2f9f70, 0x284 bytes
   02f9f8c  bf 2, 0x2fa1e0
   02f9f90  li 3, 312
   02f9f94  addi 4, 3, 16
-  02f9f98  <unknown>
+  02f9f98  lvlx 2, 3, 31
   02f9f9c  lwz 3, 312(31)
-  02f9fa0  <unknown>
+  02f9fa0  lvrx 3, 4, 31
   02f9fa4  cmpwi 3, 0
   02f9fa8  vor 2, 2, 3
   02f9fac  bt 2, 0x2fa1e0
@@ -600,7 +600,7 @@ M228_002f9f70:   # 0x2f9f70, 0x284 bytes
   02f9fb8  li 5, -19384
   02f9fbc  std 3, 112(1)
   02f9fc0  lwz 3, -19384(4)
-  02f9fc4  <unknown>
+  02f9fc4  lvlx 3, 5, 4
   02f9fc8  lis 4, 48
   02f9fcc  vcfsx 3, 3, 0
   02f9fd0  extsw 3, 3
@@ -611,14 +611,14 @@ M228_002f9f70:   # 0x2f9f70, 0x284 bytes
   02f9fe4  std 3, 112(1)
   02f9fe8  vspltisw 8, -1
   02f9fec  vslw 4, 4, 4
-  02f9ff0  <unknown>
+  02f9ff0  lvlx 6, 5, 4
   02f9ff4  lfs 2, 0(4)
   02f9ff8  vspltw 6, 6, 0
   02f9ffc  lfd 3, 112(1)
   02fa000  vrefp 5, 3
   02fa004  fcfid 3, 3
   02fa008  vspltisw 10, -1
-  02fa00c  <unknown>
+  02fa00c  lvlx 9, 0, 4
   02fa010  li 3, 8
   02fa014  fcfid 1, 1
   02fa018  vspltisw 11, -1
@@ -639,7 +639,7 @@ M228_002f9f70:   # 0x2f9f70, 0x284 bytes
   02fa054  vslw 8, 8, 8
   02fa058  vnmsubfp 7, 4, 3, 6
   02fa05c  vmaddfp 4, 4, 7, 5
-  02fa060  <unknown>
+  02fa060  lvlx 5, 3, 4
   02fa064  li 3, 12
   02fa068  lfs 4, 12(4)
   02fa06c  vspltw 5, 5, 0
@@ -647,11 +647,11 @@ M228_002f9f70:   # 0x2f9f70, 0x284 bytes
   02fa074  vslw 7, 7, 7
   02fa078  vnmsubfp 3, 4, 3, 6
   02fa07c  vmaddfp 3, 4, 3, 8
-  02fa080  <unknown>
+  02fa080  lvlx 4, 3, 4
   02fa084  vspltw 4, 4, 0
   02fa088  li 3, 16
   02fa08c  fmuls 1, 1, 2
-  02fa090  <unknown>
+  02fa090  lvlx 6, 3, 4
   02fa094  li 3, 20
   02fa098  vmaddfp 3, 3, 9, 10
   02fa09c  vspltw 6, 6, 0
@@ -677,7 +677,7 @@ M228_002f9f70:   # 0x2f9f70, 0x284 bytes
   02fa0ec  vslw 4, 4, 4
   02fa0f0  lfs 2, 16(4)
   02fa0f4  vmaddfp 3, 2, 2, 3
-  02fa0f8  <unknown>
+  02fa0f8  lvlx 8, 3, 4
   02fa0fc  li 3, 24
   02fa100  lfs 4, 20(4)
   02fa104  vspltw 8, 8, 0
@@ -686,7 +686,7 @@ M228_002f9f70:   # 0x2f9f70, 0x284 bytes
   02fa110  fmuls 5, 3, 1
   02fa114  vmaddfp 5, 3, 4, 5
   02fa118  vmaddfp 2, 4, 6, 2
-  02fa11c  <unknown>
+  02fa11c  lvlx 6, 3, 4
   02fa120  vslw 4, 9, 9
   02fa124  fmadds 1, 5, 2, 1
   02fa128  li 3, 28
@@ -700,7 +700,7 @@ M228_002f9f70:   # 0x2f9f70, 0x284 bytes
   02fa148  fmadds 1, 7, 4, 1
   02fa14c  vmaddfp 3, 3, 7, 4
   02fa150  vmaddfp 2, 7, 5, 2
-  02fa154  <unknown>
+  02fa154  lvlx 4, 3, 4
   02fa158  lis 3, 128
   02fa15c  vspltw 4, 4, 0
   02fa160  fmuls 3, 3, 5
@@ -708,9 +708,9 @@ M228_002f9f70:   # 0x2f9f70, 0x284 bytes
   02fa168  lfs 4, 28(4)
   02fa16c  vmaddfp 2, 3, 4, 2
   02fa170  vspltisw 3, -1
-  02fa174  <unknown>
+  02fa174  lvlx 4, 5, 3
   02fa178  fmadds 1, 3, 4, 1
-  02fa17c  <unknown>
+  02fa17c  lvlx 5, 6, 4
   02fa180  li 5, 308
   02fa184  vslw 3, 3, 3
   02fa188  li 6, 304

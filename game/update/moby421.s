@@ -306,11 +306,11 @@ UpdateMoby_421:   # 0x367f78, 0x904 bytes
   0368414  li 3, 50
   0368418  vspltisw 2, -16
   036841c  lis 4, 54
-  0368420  <unknown>
+  0368420  lvlx 3, 3, 31
   0368424  addi 3, 4, 32592
   0368428  vsraw 2, 3, 2
   036842c  vcfsx 4, 2, 0
-  0368430  <unknown>
+  0368430  lvlx 2, 0, 3
   0368434  vspltw 5, 2, 0
   0368438  vsldoi 2, 3, 3, 0
   036843c  vspltw 3, 4, 0
@@ -512,7 +512,7 @@ UpdateMoby_421:   # 0x367f78, 0x904 bytes
   036874c  bl 0x1268f8
   0368750  nop
   0368754  li 3, 50
-  0368758  <unknown>
+  0368758  lvlx 2, 3, 31
   036875c  lis 3, 164
   0368760  lwz 4, 4(30)
   0368764  vspltisw 3, -16

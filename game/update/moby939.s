@@ -157,11 +157,11 @@ M939_004c48b8:   # 0x4c48b8, 0xc0 bytes
   04c48e4  li 8, -3056
   04c48e8  vslw 2, 2, 2
   04c48ec  stw 5, 16(31)
-  04c48f0  <unknown>
+  04c48f0  lvlx 3, 0, 4
   04c48f4  li 4, 20
   04c48f8  vspltw 3, 3, 0
   04c48fc  std 30, 112(1)
-  04c4900  <unknown>
+  04c4900  lvlx 4, 8, 6
   04c4904  li 30, 0
   04c4908  vmaddfp 2, 4, 3, 2
   04c490c  vctsxs 2, 2, 0

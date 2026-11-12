@@ -30,15 +30,15 @@ FUN_00505fa8:   # 0x505fa8, 0x98 bytes
   0505fc0  lis 6, 80
   0505fc4  vspltisw 6, -1
   0505fc8  addi 6, 6, 24480
-  0505fcc  <unknown>
+  0505fcc  lvlx 3, 5, 4
   0505fd0  lwz 5, 0(4)
   0505fd4  vcfsx 3, 3, 0
   0505fd8  lwz 8, 4(4)
   0505fdc  stw 5, 112(1)
   0505fe0  stw 8, 116(1)
   0505fe4  li 5, 120
-  0505fe8  <unknown>
-  0505fec  <unknown>
+  0505fe8  lvlx 4, 7, 4
+  0505fec  lvlx 5, 0, 6
   0505ff0  vcfsx 4, 4, 0
   0505ff4  vslw 2, 2, 2
   0505ff8  vspltw 5, 5, 0
@@ -155,12 +155,12 @@ FUN_00506090:   # 0x506090, 0x204 bytes
   05061a4  vslw 2, 2, 2
   05061a8  li 4, 32
   05061ac  stw 3, 20(28)
-  05061b0  <unknown>
+  05061b0  lvlx 3, 0, 5
   05061b4  li 3, 4
   05061b8  vspltw 3, 3, 0
   05061bc  vmaddfp 30, 30, 3, 2
   05061c0  stvewx 30, 4, 28
-  05061c4  <unknown>
+  05061c4  lvlx 2, 3, 5
   05061c8  vspltw 2, 2, 0
   05061cc  vcmpgtfp. 3, 30, 2
   05061d0  bt 26, 0x5061e0
@@ -170,7 +170,7 @@ FUN_00506090:   # 0x506090, 0x204 bytes
   05061e0  lis 3, 80
   05061e4  li 4, 8
   05061e8  addi 3, 3, 24696
-  05061ec  <unknown>
+  05061ec  lvlx 2, 4, 3
   05061f0  vspltw 2, 2, 0
   05061f4  vcmpgefp. 2, 30, 2
   05061f8  bf 26, 0x506204
@@ -183,12 +183,12 @@ FUN_00506090:   # 0x506090, 0x204 bytes
   0506214  vspltisw 2, -1
   0506218  li 5, 16
   050621c  vslw 2, 2, 2
-  0506220  <unknown>
+  0506220  lvlx 3, 4, 3
   0506224  li 4, 16
   0506228  vspltw 3, 3, 0
   050622c  vmaddfp 31, 31, 3, 2
   0506230  stvewx 31, 5, 28
-  0506234  <unknown>
+  0506234  lvlx 2, 4, 3
   0506238  vspltw 2, 2, 0
   050623c  vcmpgtfp. 3, 31, 2
   0506240  bt 26, 0x506250

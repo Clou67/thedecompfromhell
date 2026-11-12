@@ -104,12 +104,12 @@ M1428_0027b278:   # 0x27b278, 0x120 bytes
   027b304  li 8, 8
   027b308  stw 3, 28(31)
   027b30c  li 9, 4
-  027b310  <unknown>
-  027b314  <unknown>
+  027b310  lvlx 6, 0, 4
+  027b314  lvlx 5, 5, 7
   027b318  addic 3, 31, 32
-  027b31c  <unknown>
+  027b31c  lvlx 3, 6, 4
   027b320  mtctr 9
-  027b324  <unknown>
+  027b324  lvlx 2, 8, 4
   027b328  vspltw 6, 6, 0
   027b32c  vspltw 3, 3, 0
   027b330  vspltw 2, 2, 0
@@ -214,7 +214,7 @@ M1428_0027b3b0:   # 0x27b3b0, 0x314 bytes
   027b4cc  fmadds 7, 6, 6, 7
   027b4d0  stfs 2, 120(1)
   027b4d4  lfs 27, 16(4)
-  027b4d8  <unknown>
+  027b4d8  lvlx 31, 5, 4
   027b4dc  lfs 28, 20(4)
   027b4e0  fsqrts 7, 7
   027b4e4  vspltw 31, 31, 0
@@ -257,7 +257,7 @@ M1428_0027b3b0:   # 0x27b3b0, 0x314 bytes
   027b578  lwz 3, 32(30)
   027b57c  cmpwi 6, 0
   027b580  lfs 1, -3056(4)
-  027b584  <unknown>
+  027b584  lvlx 2, 5, 4
   027b588  bt 2, 0x27b5b4
   027b58c  vspltisw 3, -1
   027b590  fmuls 2, 1, 28
@@ -449,11 +449,11 @@ UpdateMoby_1428:   # 0x27b6d8, 0x22c bytes
   027b884  li 6, -3056
   027b888  vslw 2, 2, 2
   027b88c  li 7, 1
-  027b890  <unknown>
+  027b890  lvlx 3, 5, 3
   027b894  li 8, 3
   027b898  lis 3, 151
   027b89c  vspltw 3, 3, 0
-  027b8a0  <unknown>
+  027b8a0  lvlx 4, 6, 4
   027b8a4  lis 5, 161
   027b8a8  li 6, 23680
   027b8ac  addic 9, 3, -16400

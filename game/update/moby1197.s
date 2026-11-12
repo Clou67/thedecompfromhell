@@ -17,13 +17,13 @@ M1197_001f4cb0:   # 0x1f4cb0, 0xa0 bytes
   01f4ce4  lis 7, 164
   01f4ce8  li 6, 24932
   01f4cec  li 5, -3056
-  01f4cf0  <unknown>
+  01f4cf0  lvlx 2, 0, 4
   01f4cf4  li 4, 188
   01f4cf8  vspltw 2, 2, 0
-  01f4cfc  <unknown>
+  01f4cfc  lvlx 3, 6, 9
   01f4d00  vspltisw 4, -1
   01f4d04  vcfsx 3, 3, 0
-  01f4d08  <unknown>
+  01f4d08  lvlx 5, 5, 8
   01f4d0c  lhz 10, 0(3)
   01f4d10  vslw 4, 4, 4
   01f4d14  lwz 11, -28512(7)
@@ -393,7 +393,7 @@ M1197_001f52a0:   # 0x1f52a0, 0x8c4 bytes
   01f5318  li 4, 224
   01f531c  li 5, 124
   01f5320  lwz 3, 224(1)
-  01f5324  <unknown>
+  01f5324  lvlx 2, 4, 1
   01f5328  cmpwi 3, 0
   01f532c  vcfsx 2, 2, 0
   01f5330  vspltw 2, 2, 0
@@ -1322,10 +1322,10 @@ UpdateMoby_1197:   # 0x1f6028, 0x40c bytes
   01f61ec  stb 4, 32(31)
   01f61f0  li 4, -3056
   01f61f4  vslw 2, 2, 2
-  01f61f8  <unknown>
+  01f61f8  lvlx 3, 6, 3
   01f61fc  li 3, 100
   01f6200  vspltw 3, 3, 0
-  01f6204  <unknown>
+  01f6204  lvlx 4, 4, 5
   01f6208  vmaddfp 2, 4, 3, 2
   01f620c  vctsxs 2, 2, 0
   01f6210  vspltw 2, 2, 0
@@ -1413,10 +1413,10 @@ UpdateMoby_1197:   # 0x1f6028, 0x40c bytes
   01f6358  lis 4, 114
   01f635c  li 6, -3056
   01f6360  vslw 2, 2, 2
-  01f6364  <unknown>
+  01f6364  lvlx 3, 5, 3
   01f6368  li 3, 100
   01f636c  vspltw 3, 3, 0
-  01f6370  <unknown>
+  01f6370  lvlx 4, 6, 4
   01f6374  li 4, 1
   01f6378  vmaddfp 2, 4, 3, 2
   01f637c  vctsxs 2, 2, 0

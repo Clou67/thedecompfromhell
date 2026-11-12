@@ -11639,8 +11639,8 @@ FUN_004feb98:   # 0x4feb98, 0x624 bytes
   04feca0  vmaddfp 12, 13, 13, 12
   04feca4  vmaddfp 13, 14, 14, 1
   04feca8  vmaddfp 14, 17, 17, 15
-  04fecac  <unknown>
-  04fecb0  <unknown>
+  04fecac  lvlx 1, 4, 31
+  04fecb0  lvlx 15, 5, 31
   04fecb4  li 4, 40
   04fecb8  vperm 17, 4, 4, 6
   04fecbc  vmaddfp 30, 29, 29, 30
@@ -11653,7 +11653,7 @@ FUN_004feb98:   # 0x4feb98, 0x624 bytes
   04fecd8  vmaddfp 15, 4, 4, 8
   04fecdc  stvx 18, 1, 0
   04fece0  vmaddfp 14, 16, 16, 14
-  04fece4  <unknown>
+  04fece4  lvlx 21, 4, 31
   04fece8  vrsqrtefp 16, 12
   04fecec  vrsqrtefp 19, 13
   04fecf0  vcmpeqfp 31, 12, 8
@@ -11842,7 +11842,7 @@ FUN_004feb98:   # 0x4feb98, 0x624 bytes
   04fefcc  stvx 3, 30, 3
   04fefd0  lvx 5, 29, 31
   04fefd4  lvx 4, 28, 31
-  04fefd8  <unknown>
+  04fefd8  lvlx 3, 27, 31
   04fefdc  vspltw 3, 3, 0
   04fefe0  rlwinm 31, 12, 0, 30, 30
   04fefe4  li 29, 0
@@ -11901,7 +11901,7 @@ FUN_004feb98:   # 0x4feb98, 0x624 bytes
   04ff0b8  cmpw 1, 31, 10
   04ff0bc  bt 2, 0x4ff130
   04ff0c0  bt 6, 0x4ff130
-  04ff0c4  <unknown>
+  04ff0c4  lvlx 14, 4, 1
   04ff0c8  vspltw 0, 0, 3
   04ff0cc  vrefp 15, 14
   04ff0d0  vspltisw 1, -1
@@ -11978,7 +11978,7 @@ FUN_004ff210:   # 0x4ff210, 0xbc bytes
   04ff238  vspltisw 6, 0
   04ff23c  li 6, 0
   04ff240  li 7, 1
-  04ff244  <unknown>
+  04ff244  lvlx 3, 0, 8
   04ff248  li 11, 64
   04ff24c  lvx 7, 4, 8
   04ff250  li 0, 48
@@ -12027,7 +12027,7 @@ FastCheckBsphere:   # 0x4ff328, 0x154 bytes
   04ff350  vspltisw 7, 0
   04ff354  li 8, 0
   04ff358  li 6, 1
-  04ff35c  <unknown>
+  04ff35c  lvlx 8, 0, 9
   04ff360  li 12, 64
   04ff364  li 0, 48
   04ff368  lvx 9, 4, 9
@@ -12072,7 +12072,7 @@ FastCheckBsphere:   # 0x4ff328, 0x154 bytes
   04ff404  vmaddfp 5, 3, 3, 7
   04ff408  vperm 6, 3, 3, 6
   04ff40c  vperm 3, 3, 3, 4
-  04ff410  <unknown>
+  04ff410  lvlx 4, 6, 3
   04ff414  vspltw 4, 4, 0
   04ff418  ori 6, 5, 0
   04ff41c  stfs 2, 48(1)

@@ -56,8 +56,8 @@ FUN_004cab28:   # 0x4cab28, 0xa8 bytes
   04cab58  lfs 2, 12(4)
   04cab5c  cmpwi 7, 0
   04cab60  stfs 2, 28(3)
-  04cab64  <unknown>
-  04cab68  <unknown>
+  04cab64  lvlx 2, 0, 6
+  04cab68  lvlx 4, 9, 8
   04cab6c  li 6, 40
   04cab70  vspltw 2, 2, 0
   04cab74  lwz 4, 120(3)
@@ -2653,14 +2653,14 @@ M984_004ccd48:   # 0x4ccd48, 0xdf8 bytes
   04cd498  li 5, 40
   04cd49c  addi 7, 6, -13084
   04cd4a0  vslw 4, 4, 4
-  04cd4a4  <unknown>
+  04cd4a4  lvlx 2, 4, 3
   04cd4a8  lis 3, 114
   04cd4ac  vcfsx 2, 2, 0
   04cd4b0  li 4, -3056
-  04cd4b4  <unknown>
+  04cd4b4  lvlx 3, 5, 7
   04cd4b8  vspltw 3, 3, 0
   04cd4bc  lis 5, 143
-  04cd4c0  <unknown>
+  04cd4c0  lvlx 5, 4, 3
   04cd4c4  li 4, 412
   04cd4c8  lfs 1, 408(30)
   04cd4cc  vaddfp 2, 2, 3
