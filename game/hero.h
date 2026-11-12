@@ -1042,6 +1042,7 @@ extern float FLOAT_0071fb54; /* 0x71fb54 */
 extern float HeroDeathHeight; /* 0xa10934 */ /* type set in global_types.tsv */
 extern LevelId Level; /* 0x969c70 */
 extern pointer32 PTR_BoltHud_Init_00705810; /* 0x705810 */
+extern pointer32 PTR_BoltHud_Update_00705818; /* 0x705818 */
 extern pointer32 PTR_ClankCommandHud_Init_007057d8; /* 0x7057d8 */
 extern pointer32 PTR_ClankCommandHud_Update_007057e0; /* 0x7057e0 */
 extern pointer32 PTR_DrawOxygenMeter_00705730; /* 0x705730 */
@@ -1286,7 +1287,7 @@ void Hero_GetGrindProbePos(float *param_1);
 void Hero_CheckGrindRailAttach(void);
 void Hero_CheckGrindAtPos(void);
 void HeroUpdate(void);
-void ____Hero_AddPulsingMobyGlow(MobyInstance *param_1);
+void Hero_AddPulsingMobyGlow(MobyInstance *param_1);
 void Hero_DrawGlows(void);
 void Hero_GetPadFly(float accel,float *out,float *padWindUp);
 void Hero_ScaleAnim(float frame,float time,float scale,float rate);

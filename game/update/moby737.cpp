@@ -16,6 +16,7 @@
 #include "game/update.h"
 #include "game/update/camera5.h"
 #include "game/update/moby1130.h"
+#include "game/vendor.h"
 #include "idol/fastfunc.h"
 
 // 0x04381a0 (0x14 bytes)

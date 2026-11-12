@@ -13,6 +13,7 @@
 #include "game/space.h"
 #include "game/update.h"
 #include "game/update/moby1130.h"
+#include "game/vendor.h"
 #include "idol/fastfunc.h"
 
 // 0x01be048 (0x14 bytes)

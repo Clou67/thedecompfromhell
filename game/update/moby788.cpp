@@ -17,6 +17,7 @@
 #include "game/update.h"
 #include "game/update/moby1130.h"
 #include "game/update/moby757.h"
+#include "game/vendor.h"
 #include "idol/fastfunc.h"
 #include "idol/mUnk.h"
 
@@ -433,14 +434,14 @@ void UpdateMoby_788(MobyInstance *moby)
     }
   }
   else if (bVar1 < 3) {
-    if (DAT_0095cd9a == '\0') {
+    if (g_SceneHeroWarpPending == '\0') {
       fVar3 = (moby->transform).v0.y;
       fVar4 = (moby->transform).v0.x;
       fVar6 = (moby->transform).v0.z;
       fVar7 = 0.0;
       fVar5 = SQRT(fVar6 * fVar6 + fVar4 * fVar4 + fVar3 * fVar3);
       if (fVar5 == 0.0) {
-        DAT_0095cd6c = (moby->transform).v0.w;
+        g_SceneHeroWarpPos.w = (moby->transform).v0.w;
         fVar3 = fVar7;
         fVar6 = fVar7;
       }
@@ -448,21 +449,21 @@ void UpdateMoby_788(MobyInstance *moby)
         fVar5 = 2.5 / fVar5;
         fVar3 = fVar3 * fVar5;
         fVar7 = fVar4 * fVar5;
-        DAT_0095cd6c = (moby->transform).v0.w;
+        g_SceneHeroWarpPos.w = (moby->transform).v0.w;
         fVar6 = fVar6 * fVar5;
       }
-      DAT_0095cd60 = fVar7 + (moby->pos).x;
-      DAT_0095cd64 = fVar3 + (moby->pos).y;
-      DAT_0095cd68 = fVar6 + (moby->pos).z + 10.0;
-      dVar35 = (double)GetGroundZ(0x3fe0000000000000,&DAT_0095cd60,0);
-      DAT_0095cd68 = (float)dVar35;
-      DAT_0095cd7c = 0;
-      DAT_0095cd78 = 0.0;
-      DAT_0095cd74 = 0;
-      DAT_0095cd70 = 0;
+      g_SceneHeroWarpPos.x = fVar7 + (moby->pos).x;
+      g_SceneHeroWarpPos.y = fVar3 + (moby->pos).y;
+      g_SceneHeroWarpPos.z = fVar6 + (moby->pos).z + 10.0;
+      dVar35 = (double)GetGroundZ(0x3fe0000000000000,&g_SceneHeroWarpPos.x,0);
+      g_SceneHeroWarpPos.z = (float)dVar35;
+      g_SceneHeroWarpRot.w = 0;
+      g_SceneHeroWarpRot.z = 0.0;
+      g_SceneHeroWarpRot.y = 0;
+      g_SceneHeroWarpRot.x = 0;
       dVar35 = (double)FastWrapRot((moby->rotation).z,3.14159);
-      DAT_0095cd78 = (float)dVar35;
-      DAT_0095cd9a = '\x01';
+      g_SceneHeroWarpRot.z = (float)dVar35;
+      g_SceneHeroWarpPending = '\x01';
     }
     if (g_gameMode != GAME_MODE_SCENE) {
       moby->state = '\x01';

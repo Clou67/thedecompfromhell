@@ -1841,13 +1841,6 @@ extern undefined4 DAT_00729500; /* 0x729500 */
 extern undefined4 DAT_00729504; /* 0x729504 */
 extern undefined4 DAT_00729578; /* no defined data */
 extern undefined4 DAT_00737d42; /* no defined data */
-extern undefined4 DAT_0095cd64; /* 0x95cd64 */
-extern undefined4 DAT_0095cd6c; /* 0x95cd6c */
-extern undefined4 DAT_0095cd70; /* 0x95cd70 */
-extern undefined4 DAT_0095cd74; /* 0x95cd74 */
-extern undefined4 DAT_0095cd78; /* 0x95cd78 */
-extern undefined4 DAT_0095cd7c; /* 0x95cd7c */
-extern undefined1 DAT_0095cd9a; /* 0x95cd9a */
 extern undefined4 DAT_0095e5f8; /* 0x95e5f8 */
 extern undefined4 DAT_0095e60c; /* no defined data */
 extern undefined4 DAT_0096bda0; /* 0x96bda0 */
@@ -1889,6 +1882,9 @@ extern u32 g_LevelObjBits[][64]; /* 0xa0cd1c: per level, objects whose state was
 extern undefined4 g_MobyGroups; /* 0xa49184 */
 extern undefined4 g_NumLameShadows; /* 0x95e5e8 */
 extern undefined4 g_NumMobyGroups; /* 0xa49180 */
+extern u8 g_SceneHeroWarpPending; /* 0x95cd9a: g_SceneHeroWarpPos is set */ /* type set in global_types.tsv */
+extern Vec4 g_SceneHeroWarpPos; /* 0x95cd60: where the hero is put when the scene ends */ /* type set in global_types.tsv */
+extern Vec4 g_SceneHeroWarpRot; /* 0x95cd70 */ /* type set in global_types.tsv */
 extern undefined4 g_boltMiningActive; /* 0xa15f2c */
 extern undefined4 g_boltMiningTimer; /* 0xa0fd14 */
 extern undefined4 g_goodiesMenuActive; /* 0x969cd0 */

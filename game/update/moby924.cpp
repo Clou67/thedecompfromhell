@@ -14,6 +14,7 @@
 #include "game/space.h"
 #include "game/update.h"
 #include "game/update/moby1130.h"
+#include "game/vendor.h"
 #include "idol/fastfunc.h"
 #include "idol/mUnk.h"
 
@@ -203,15 +204,15 @@ void UpdateMoby_924(MobyInstance *moby)
       iVar19 = FUN_004d3870(moby,uVar26);
       if (iVar19 != 0) {
         iVar19 = *(int *)((int)pvVar9 + 0x48);
-        DAT_0095cd9a = 1;
-        DAT_0095cd60 = Cuboids[iVar19].pos.x;
-        DAT_0095cd64 = Cuboids[iVar19].pos.y;
-        DAT_0095cd68 = Cuboids[iVar19].pos.z;
-        DAT_0095cd6c = Cuboids[iVar19].pos.w;
-        DAT_0095cd7c = 0;
-        DAT_0095cd74 = 0;
-        DAT_0095cd70 = 0;
-        DAT_0095cd78 = Cuboids[iVar19].rot.z;
+        g_SceneHeroWarpPending = 1;
+        g_SceneHeroWarpPos.x = Cuboids[iVar19].pos.x;
+        g_SceneHeroWarpPos.y = Cuboids[iVar19].pos.y;
+        g_SceneHeroWarpPos.z = Cuboids[iVar19].pos.z;
+        g_SceneHeroWarpPos.w = Cuboids[iVar19].pos.w;
+        g_SceneHeroWarpRot.w = 0;
+        g_SceneHeroWarpRot.y = 0;
+        g_SceneHeroWarpRot.x = 0;
+        g_SceneHeroWarpRot.z = Cuboids[iVar19].rot.z;
         moby->state = '\x02';
       }
     }

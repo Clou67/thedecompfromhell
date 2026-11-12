@@ -17,6 +17,7 @@
 #include "game/update.h"
 #include "game/update/moby1118.h"
 #include "game/update/moby1130.h"
+#include "game/vendor.h"
 #include "idol/fastfunc.h"
 #include "idol/mUnk.h"
 

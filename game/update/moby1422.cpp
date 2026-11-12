@@ -35,6 +35,7 @@
 #include "game/update/moby629.h"
 #include "game/update/moby646.h"
 #include "game/update/moby984.h"
+#include "game/vendor.h"
 #include "idol/fastfunc.h"
 #include "idol/mathfunc.h"
 #include "idol/xUnk.h"
@@ -2873,9 +2874,9 @@ void UpdateMoby_1422(MobyInstance *moby)
     if (iVar13 < 7) {
       mode_sceneInit(3);
       *(undefined4 *)((int)pvVar3 + 0x34c) = 7;
-      DAT_0095cd9a = 1;
-      FUN_005e7e98(&DAT_0095cd60,&Cuboids[*(int *)((int)pvVar3 + 0x294)].pos);
-      FUN_005e7e98(&DAT_0095cd70,&Cuboids[*(int *)((int)pvVar3 + 0x294)].rot);
+      g_SceneHeroWarpPending = 1;
+      FUN_005e7e98(&g_SceneHeroWarpPos.x,&Cuboids[*(int *)((int)pvVar3 + 0x294)].pos);
+      FUN_005e7e98(&g_SceneHeroWarpRot.x,&Cuboids[*(int *)((int)pvVar3 + 0x294)].rot);
       moby->state = '\a';
       *(undefined4 *)((int)pvVar3 + 0x39c) = 0x1b;
     }

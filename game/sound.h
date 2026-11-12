@@ -71,6 +71,7 @@ extern int g_CoreSoundCnt; /* 0x71fbd0 */
 extern u8 g_FootstepSoundBase[]; /* 0x731be8: per level, first footstep sound after the core sounds */ /* type set in global_types.tsv */
 extern u8 g_ReverbDelay; /* 0x9637c9 */ /* type set in global_types.tsv */
 extern int g_ReverbDepth; /* 0x9637c4 */ /* type set in global_types.tsv */
+extern u8 g_ReverbDirty; /* 0x9637cb: 1 type, 2 delay/feedback, 4 depth, 8 off */ /* type set in global_types.tsv */
 extern u8 g_ReverbFeedback; /* 0x9637ca */ /* type set in global_types.tsv */
 extern SoundInstance *g_ReverbOwner; /* 0x9637c0: the ambient sound that set the reverb */ /* type set in global_types.tsv */
 extern u8 g_ReverbType; /* 0x9637c8 */ /* type set in global_types.tsv */

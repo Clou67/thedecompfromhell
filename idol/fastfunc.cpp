@@ -3039,7 +3039,7 @@ void FUN_00502df4(void)
 
 
 // 0x0502df8 (0x4 bytes)
-void FUN_00502df8(void)
+void sceGsExecStoreImage(void *param_1,u32 param_2)
 
 {
   return;
@@ -3047,7 +3047,7 @@ void FUN_00502df8(void)
 
 
 // 0x0502dfc (0x4 bytes)
-void FUN_00502dfc(void)
+void sceGsSetDefStoreImage(void *param_1,int param_2,int param_3,int param_4,int param_5,int param_6,int param_7,int param_8)
 
 {
   return;

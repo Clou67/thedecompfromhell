@@ -227,7 +227,7 @@ void UpdateMoby_1563(MobyInstance *moby)
         *(undefined4 *)((int)puVar10 + 0x214) = 0x49435000;
         lVar28 = uVar19 - 0x2f4;
         dVar39 = 645.5;
-        puVar27 = &DAT_0095cd5c;
+        puVar27 = &g_SceneSavedCamFlags;
         dVar37 = 736.5;
         dVar35 = 730.5;
         dVar34 = 0.4000000059604645;

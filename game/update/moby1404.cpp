@@ -28,16 +28,16 @@ void UpdateMoby_1404(MobyInstance *moby)
       fVar3 = g_heroPosition.w;
       fVar2 = g_heroPosition.y;
       if (iVar4 != 0) {
-        DAT_0095cd60 = g_heroPosition.x;
+        g_SceneHeroWarpPos.x = g_heroPosition.x;
         (&g_MiscLevelFlags.field92_0x5c)[piVar1[1]] = 1;
-        DAT_0095cd64 = fVar2;
-        DAT_0095cd6c = fVar3;
-        DAT_0095cd68 = g_heroGroundZ;
-        DAT_0095cd70 = g_heroRotation.x;
-        DAT_0095cd74 = g_heroRotation.y;
-        DAT_0095cd9a = 1;
-        DAT_0095cd78 = g_heroRotation.z;
-        DAT_0095cd7c = g_heroRotation.w;
+        g_SceneHeroWarpPos.y = fVar2;
+        g_SceneHeroWarpPos.w = fVar3;
+        g_SceneHeroWarpPos.z = g_heroGroundZ;
+        g_SceneHeroWarpRot.x = g_heroRotation.x;
+        g_SceneHeroWarpRot.y = g_heroRotation.y;
+        g_SceneHeroWarpPending = 1;
+        g_SceneHeroWarpRot.z = g_heroRotation.z;
+        g_SceneHeroWarpRot.w = g_heroRotation.w;
         mode_sceneInit(piVar1[2]);
       }
     }

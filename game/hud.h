@@ -274,6 +274,7 @@ extern undefined4 DAT_00a1bfc4; /* 0xa1bfc4 */
 extern undefined4 DAT_00a1bfcc; /* 0xa1bfcc */
 extern undefined4 DAT_00a1bfd0; /* 0xa1bfd0 */
 extern undefined4 DAT_00a1bfd4; /* 0xa1bfd4 */
+extern undefined4 DAT_00a1bfe4; /* 0xa1bfe4 */
 extern undefined4 DAT_00a1bfe8; /* 0xa1bfe8 */
 extern undefined4 DAT_00a1bff0; /* 0xa1bff0 */
 extern undefined4 DAT_00a1bff4; /* 0xa1bff4 */

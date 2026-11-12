@@ -501,7 +501,7 @@ void FUN_004d2e1c(void);
 void UnlockPurchasableItem(void);
 void FUN_004d3044(void);
 void FUN_004d3198(void);
-void FUN_004d31b0(undefined8 param_1,int param_2,int param_3);
+void Dialog_Advance(undefined8 param_1,int param_2,int param_3);
 int FUN_004d3698(int param_1);
 ulonglong FUN_004d3720(int param_1,int param_2);
 undefined8 FUN_004d3870(int param_1,int param_2);

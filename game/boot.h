@@ -168,6 +168,7 @@ extern int g_LogoMovieDone; /* 0x969cd8 */
 extern void *g_MobyClassUpdates[240]; /* 0xa34f80: update function per mClass (follows MobyClasses) */ /* type set in global_types.tsv */
 extern undefined4 g_boltsMined; /* 0xa0fd18 */
 extern undefined4 g_loadingPlanet; /* 0xa10700 */
+extern struct BinkPlayer *g_pBinkPlayer; /* 0x8fa410 */ /* type set in global_types.tsv */
 extern u32 *g_pDebugCounterMode; /* 0x9271fc */ /* type set in global_types.tsv */
 extern int * g_pLocaleBuffer; /* 0xa1092c */
 extern void * g_pNextMainFunc; /* 0x71cc70 */

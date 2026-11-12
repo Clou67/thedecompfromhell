@@ -29,7 +29,6 @@
 #include "game/pause.h"
 #include "game/respawn.h"
 #include "game/space.h"
-#include "game/update.h"
 #include "game/update/moby1118.h"
 #include "game/vendor.h"
 #include "idol/fastfunc.h"

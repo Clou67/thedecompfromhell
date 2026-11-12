@@ -28,6 +28,7 @@ extern undefined8 DAT_00a561d0; /* 0xa561d0 */
 extern pointer32 PTR_UpdateMoby_Spaceship_00707c58; /* 0x707c58 */
 extern float SceneScreenFade; /* 0x95cf10 */
 extern Planets VisitedPlanets; /* 0x96ca20 */
+extern undefined4 g_CutscenePlaying; /* 0xa1071c */
 extern undefined1 g_FinishedLoading; /* 0x9636d3 */
 extern float g_LoadScreenSkyAngles[5]; /* 0x732070 */ /* type set in global_types.tsv */
 extern Vec4 g_LoadScreenSkyDirs[5]; /* 0x732020: per loading screen, the direction the sky scrolls (w copied) */ /* type set in global_types.tsv */

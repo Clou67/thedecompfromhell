@@ -91,6 +91,7 @@ extern undefined4 DAT_0073a584; /* no defined data */
 extern undefined4 DAT_0073a588; /* no defined data */
 extern undefined4 DAT_0073a78c; /* no defined data */
 extern undefined4 DAT_0073a7dc; /* 0x73a7dc */
+extern undefined4 DAT_0095cd50; /* 0x95cd50 */
 extern undefined4 DAT_00a0f51c; /* no defined data */
 extern undefined4 DAT_00a354cc; /* no defined data */
 extern undefined4 DAT_00e5a654; /* 0xe5a654 */

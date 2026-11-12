@@ -15,6 +15,7 @@
 #include "game/update.h"
 #include "game/update/moby1130.h"
 #include "game/update/moby441.h"
+#include "game/vendor.h"
 #include "idol/fastfunc.h"
 #include "idol/mUnk.h"
 
@@ -42,18 +43,18 @@ void M1283_00237cb8(int param_1)
     puVar4 = &DAT_0095cd50;
     if ((g_SceneId == 6 && 0x26b < g_SpaceSceneFrame) &&
        (g_SpaceSceneFrame < 0x2cc)) {
-      DAT_0071fbd8 = 0x3f800000;
-      DAT_00a15f30 = 0xbe4ccccd;
+      g_SceneCheatZoom = 0x3f800000;
+      g_SceneCheatDolly = 0xbe4ccccd;
     }
     if (((g_SceneId == 6) && (0x47d < g_SpaceSceneFrame)) &&
        (g_SpaceSceneFrame < 0x5f1)) {
-      DAT_0071fbd8 = 0x3f800000;
-      DAT_00a15f30 = 0x3f000000;
+      g_SceneCheatZoom = 0x3f800000;
+      g_SceneCheatDolly = 0x3f000000;
     }
     if (((g_SceneId == 6) && (0x5f9 < g_SpaceSceneFrame)) &&
        (g_SpaceSceneFrame < 0x6ae)) {
-      DAT_0071fbd8 = 0x3f800000;
-      DAT_00a15f30 = 0xbdcccccd;
+      g_SceneCheatZoom = 0x3f800000;
+      g_SceneCheatDolly = 0xbdcccccd;
     }
     iVar3 = 0;
     sVar2 = g_SpaceSceneMobyCnt.piece<0,2>();

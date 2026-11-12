@@ -331,7 +331,7 @@ void PlaySpaceCutscene(int cutscene)
     g_SpaceCutsceneTimer = -1;
     g_SceneO2Mask = NULL;
     g_SpaceCutscene = cutscene;
-    FastMemSet(&DAT_0095cd50, 0, 0x1c0);
+    FastMemSet(g_SceneSavedCamPos, 0, 0x1c0);
     FastMemSet(&DAT_00a1be80, 0, 0x40);
     FastMemSet(&DAT_00a1bec0, 0, 0x40);
     VU1_setBufSizeByLevel();
@@ -911,7 +911,7 @@ void ChooseLoadingScreen(void)
         g_ShipTrailHead = 0;
         g_ShipTrailLen = 0;
         g_TransitionCenter = g_TransitionCenterStart;
-        FastMemSet(&DAT_0095cd50, 0, 0x1c0);
+        FastMemSet(g_SceneSavedCamPos, 0, 0x1c0);
         g_SceneLoadBuffer = g_NpcBuffer + 0x200000;
         DAT_0095cda8 = g_NpcBuffer;
 
@@ -1442,7 +1442,7 @@ static inline void SpaceSceneMoby(MobyInstance *moby, char holdKey)
     }
 
     if (moby->oClass == CLANK_000A) {
-        ____Hero_AddPulsingMobyGlow(moby);
+        Hero_AddPulsingMobyGlow(moby);
     }
 
     if (moby->oClass == RATCHET) {
@@ -2081,7 +2081,7 @@ void SpaceTransition_LoadWad(void)
         g_loadingCount = 2;
     }
 
-    FastMemSet(&DAT_0095cd50, 0, 0x1c0);
+    FastMemSet(g_SceneSavedCamPos, 0, 0x1c0);
     FastMemSet(&DAT_00a1be80, 0, 0x40);
     FastMemSet(&DAT_00a1bec0, 0, 0x40);
     DAT_0095cda8 = g_NpcBuffer;

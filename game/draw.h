@@ -106,6 +106,8 @@ extern undefined1 DAT_0073a961; /* 0x73a961 */
 extern undefined1 DAT_0073a962; /* 0x73a962 */
 extern undefined1 DAT_0073a963; /* 0x73a963 */
 extern undefined4 DAT_0073adf0; /* 0x73adf0 */
+extern undefined4 DAT_0095cae0; /* 0x95cae0 */
+extern undefined4 DAT_0095ccf0; /* 0x95ccf0 */
 extern undefined4 DAT_0095cd40; /* 0x95cd40 */
 extern undefined1 DAT_0095cf20; /* 0x95cf20 */
 extern undefined4 DAT_0095d200; /* 0x95d200 */

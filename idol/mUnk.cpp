@@ -284,7 +284,7 @@ void FUN_004d3198(void)
 // 0x04d31b0 (0x4e8 bytes)
 // strings: 00658e50: '%d%s%03d' | 0096c165: 'None'
 
-void FUN_004d31b0(undefined8 param_1,int param_2,int param_3)
+void Dialog_Advance(undefined8 param_1,int param_2,int param_3)
 
 {
   short sVar1;
@@ -324,8 +324,8 @@ void FUN_004d31b0(undefined8 param_1,int param_2,int param_3)
       *(short *)(param_2 + 0x36) = sVar2;
       *(byte *)(param_2 + 8) = (byte)*(undefined2 *)(pSVar11 + 4) & 1;
       if ((SVar5 & 0x40000) != STR_TO_USE_YOUR_BOMB_0x0000) {
-        DAT_00a15c0c = (undefined4)param_1;
-        DAT_00a15c10 = param_2;
+        g_DialogMoby = (undefined4)param_1;
+        g_DialogLine = param_2;
         if ((*(undefined2 *)(pSVar11 + 1) & 0x4000) == STR_TO_USE_YOUR_BOMB_0x0000) {
           Hud_UnregisterById(DAT_008f9418);
           DAT_008f9418 = -1;
@@ -436,7 +436,7 @@ LAB_004d3614:
                 (*(int *)(param_2 + 0x3c) +
                  ((int)((longlong)(short)uVar12 << 5) - (int)((longlong)(short)uVar12 << 2)) + 0x10)
          & 1;
-    FUN_004d31b0(param_1,param_2,0);
+    Dialog_Advance(param_1,param_2,0);
   }
   return;
 }
@@ -755,7 +755,7 @@ undefined8 FUN_004d3870(int param_1,int param_2)
               return 0;
             }
           }
-          FUN_004d31b0(param_1,param_2,0);
+          Dialog_Advance(param_1,param_2,0);
           if (worldUpdateTime < DAT_00a15c14) {
             uVar13 = 0;
           }
@@ -809,8 +809,8 @@ LAB_004d3e20:
             iVar15 = *(int *)(param_2 + 0x3c) +
                      ((int)((longlong)*(short *)(param_2 + 0x36) << 5) -
                      (int)((longlong)*(short *)(param_2 + 0x36) << 2));
-            DAT_00a15c0c = param_1;
-            DAT_00a15c10 = param_2;
+            g_DialogMoby = param_1;
+            g_DialogLine = param_2;
             if ((*(ushort *)(iVar15 + 0x10) & 8) != 0) {
               if (*(short *)(iVar15 + 8) == 1) {
                 g_boltCount = g_boltCount -
@@ -823,18 +823,18 @@ LAB_004d3e20:
             }
             uVar6 = *(ushort *)(iVar15 + 4);
             if (uVar6 == 0xffff) {
-              FUN_004d31b0(param_1,param_2,1);
+              Dialog_Advance(param_1,param_2,1);
             }
             else if ((uVar6 & 0x4000) == 0) {
-              DAT_00a15c0c = param_1;
-              DAT_00a15c10 = param_2;
+              g_DialogMoby = param_1;
+              g_DialogLine = param_2;
               Hud_UnregisterById(DAT_008f9418);
               DAT_008f9418 = -1;
               mode_sceneInit((int)*(short *)(iVar15 + 4));
             }
             else {
-              DAT_00a15c0c = param_1;
-              DAT_00a15c10 = param_2;
+              g_DialogMoby = param_1;
+              g_DialogLine = param_2;
               PlayInfobotMovie((int)(short)uVar6 ^ 0x4000);
             }
             uVar13 = 1;

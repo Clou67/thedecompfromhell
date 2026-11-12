@@ -1,6 +1,3 @@
-// game/update.cpp -- reconstructed from NPEA00385 EBOOT
-// STATUS: NOT STARTED (raw Ghidra output)
-// 22 functions, 0x166e08-0x16a0d8
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
@@ -27,6 +24,7 @@
 #include "game/pad.h"
 #include "game/partproc.h"
 #include "game/pause.h"
+#include "game/respawn.h"
 #include "game/sound.h"
 #include "game/space.h"
 #include "game/update/moby1118.h"
@@ -39,1405 +37,1090 @@
 #include "idol/sound.h"
 #include "sdk/libcgc/libcgc_cell_localize.h"
 #include "sdk/sce.h"
+// game/update.cpp -- reconstructed from NPEA00385 EBOOT
+// 22 functions, 0x166e08-0x16a0d8: the per-frame update of gameplay, scenes, movies and credits
 
-// 0x0166e08 (0x14 bytes)
-/* [update] Probably the static initializer for update.cpp (_GLOBAL_$I$update.cpp): sets
-   DAT_0073875c=0x10000 */
+#define SCENE_CHUNK_FRAMES_NTSC 0x60
+#define SCENE_CHUNK_FRAMES_PAL 0x50
+#define CREDITS_IMAGE_SIZE 0xd0000
 
-void SECTION_HEADER_UPDATE(void)
+/* the 12-byte usage records in CHAR_ARRAY_00a0feec (0x120 bytes, saved with the game);
+   record 6 is the map's */
+typedef struct UsageRecord {
+    u16 uses;          /* 0x00  saturates at 0xffff */
+    u16 lastUse;       /* 0x02  the play time of the last use, in units of 600 frames */
+    u32 levels;        /* 0x04  bit per level it was used on; bit 31 = used at all */
+    u32 unk08;         /* 0x08 */
+} UsageRecord;
 
+#define USAGE_MAP 6
+
+static inline int ScaledFrames(float frames)
 {
-  DAT_0073875c = 0x10000;
-  return;
+    return (int)(animationSpeed * frames);
 }
 
+static inline bool StepRequested(void)
+{
+    return (DebugUpdate & ENABLE_STEPPING) && (g_Pad.buttonsPressedThisFrame & L3);
+}
+
+static inline bool UpdatesMobys(void)
+{
+    return (DebugUpdate & UPDATE_MOBYS) || StepRequested();
+}
+
+/* the type of the camera being updated (0x13 is one the menus can't open over) */
+static inline short CurrentCameraType(void)
+{
+    return *(short *)((u8 *)GameCamera.pCurrentUpdCam + 0x86);
+}
+
+static inline BinkPlayer *GetBinkPlayer(void)
+{
+    if (g_pBinkPlayer == NULL) {
+        BinkPlayer *player = (BinkPlayer *)Idol_New(0x60);
+
+        if (player != NULL) {
+            BinkPlayer_Init(player);
+        }
+
+        g_pBinkPlayer = player;
+    }
+
+    return g_pBinkPlayer;
+}
+
+/* starts movies/<kind>[movieIdx].bik and returns the player */
+static inline BinkPlayer *StartBink(const char *format, int movieIdx, int language)
+{
+    char path[64];
+    char fullPath[128];
+    BinkPlayer *player = GetBinkPlayer();
+
+    sprintf(path, format, movieIdx);
+    FileSys_ResolvePath(FileSys_Get(), path, fullPath);
+    BinkPlayer_Start(player, fullPath, language, 0x400);
+
+    return player;
+}
+
+/* plays the started movie to its end; START skips it */
+static inline void RunBink(BinkPlayer *player)
+{
+    bool skipped = false;
+    int done = 0;
+
+    do {
+        UpdatePad();
+        if (g_Pad.downButtons & START) {
+            skipped = true;
+            break;
+        }
+
+        UpdateOcclusion(0);
+        int state = BinkPlayer_GetState(player);
+        cellSysutilCheckCallback();
+        if (state > 1) {
+            done = BinkPlayer_DrawFrame(player);
+        }
+
+        Render_DispatchJob();
+    } while (done == 0);
+
+    if (skipped) {
+        FUN_004d4c88((undefined4 *)player);
+    }
+}
+
+// 0x0166e08 (0x14 bytes)
+/* the static initializer of update.cpp */
+void SECTION_HEADER_UPDATE(void)
+{
+    DAT_0073875c = 0x10000;
+}
 
 // 0x0166e1c (0x4 bytes)
 void STUB_00166e1c(...)
-
 {
-  return;
 }
-
 
 // 0x0166e20 (0x8 bytes)
 undefined8 STUB_00166e20_RET_0(...)
-
 {
-  return 0;
+    return 0;
 }
-
 
 // 0x0166e28 (0x4 bytes)
 void STUB_00166e28(...)
-
 {
-  return;
 }
-
 
 // 0x0166e30 (0x4c bytes)
 void ResetGameCounters(void)
-
 {
-  g_MobyFuncListCount = 0;
-  g_PostDrawCount = 0;
-  g_NumLameShadows = 0;
-  g_PreDrawCount = 0;
-  DAT_0095cae0 = 0;
-  g_PostPreDrawCount = 0;
-  DAT_0095ccf0 = 0;
-  DAT_00a1bfe4 = 0;
-  return;
+    g_MobyFuncListCount = 0;
+    g_PostDrawCount = 0;
+    g_NumLameShadows = 0;
+    g_PreDrawCount = 0;
+    DAT_0095cae0 = 0;
+    g_PostPreDrawCount = 0;
+    DAT_0095ccf0 = 0;
+    DAT_00a1bfe4 = 0;
 }
-
 
 // 0x0166e88 (0x118 bytes)
 void UpdateGameCounters(void)
-
 {
-  if ((((g_Pad.downButtons == 0) && (g_Pad.sticks.z == 0.0)) && (g_Pad.sticks.w == 0.0)) &&
-     ((g_Pad.sticks.x == 0.0 && (g_Pad.sticks.y == 0.0)))) {
-    g_IdleFrames = g_IdleFrames + 1;
-  }
-  else {
-    g_IdleFrames = 0;
-  }
-  if (g_boltMiningActive != 0) {
-    if (g_IdleFrames < (int)((float)(longlong)(int)(animationSpeed * 15.5) * 60.0)) {
-      g_boltMiningTimer = g_boltMiningTimer + 1;
+    if (g_Pad.downButtons == 0 && g_Pad.sticks.z == 0.0f && g_Pad.sticks.w == 0.0f &&
+        g_Pad.sticks.x == 0.0f && g_Pad.sticks.y == 0.0f) {
+        g_IdleFrames++;
     }
-  }
-  g_GameFrameCount = g_GameFrameCount + 1;
-  worldUpdateTime = worldUpdateTime + 1;
-  return;
-}
+    else {
+        g_IdleFrames = 0;
+    }
 
+    /* bolts are only mined while the player has touched the pad in the last 15.5 minutes */
+    if (g_boltMiningActive != 0 && g_IdleFrames < (int)((float)ScaledFrames(15.5f) * 60.0f)) {
+        g_boltMiningTimer++;
+    }
+
+    g_GameFrameCount++;
+    worldUpdateTime++;
+}
 
 // 0x0166fb0 (0xa70 bytes)
-// strings: 00a0feec: 'None' | 00653cb0: 'moby update' | 00653cc0: 'hero update' | 00653cd0: 'part update' | 00653ce0: 'camera update' | 00653cf0: 'sound update'
-
-
 void UpdateGameplay(void)
-
 {
-  bool bVar1;
-  bool bVar2;
-  short sVar3;
-  int iVar4;
-  double dVar5;
-  
-  if (((DebugUpdate & ENABLE_STEPPING) != NONE) && ((g_Pad.buttonsPressedThisFrame & R3) != 0)) {
-    g_Pad.buttonsPressedThisFrame = g_Pad.downButtons & ~DAT_0095c660;
-    DAT_0095c6ac = 6;
-    g_Pad.unk0a8 = DAT_0095c660 & ~g_Pad.downButtons;
-    DebugUpdate = UPDATE_CAMERA|UPDATE_PARTICLES|UPDATE_MOBYS|UPDATE_HERO;
-    DAT_0095c660 = g_Pad.downButtons & ~L3;
-  }
-  if ((DAT_0095c6ac != 0) && (DAT_0095c6ac = DAT_0095c6ac + -1, DAT_0095c6ac == 0)) {
-    DebugUpdate = ENABLE_STEPPING;
-  }
-  if (((DebugUpdate & ENABLE_STEPPING) != NONE) && ((g_Pad.buttonsPressedThisFrame & L3) != 0)) {
-    g_Pad.buttonsPressedThisFrame = g_Pad.downButtons & ~DAT_0095c660;
-    g_Pad.unk0a8 = DAT_0095c660 & ~g_Pad.downButtons;
-    DAT_0095c660 = g_Pad.downButtons & ~L3;
-  }
-  if ((((g_gameMode == GAME_MODE_NORMAL) && ((g_CardStateFlags & 0x401) != 0)) &&
-      (7 < g_FramesSinceStateChange)) && (g_heroState != VISIBOMB_CONTROL)) {
-    DisplayPrompt(3,0,0);
-  }
-  else {
-    bVar1 = g_Pad.connected != 0;
-    if ((resumePage == 0) || (g_gameMode != GAME_MODE_NORMAL)) {
-      if ((((Level != Quartu) || ((g_FramesSinceStateChange < 8 || (g_heroType != '\x02')))) ||
-          (((g_Pad.buttonsPressedThisFrame & START) == 0 && (bVar1)))) ||
-         (g_heroState == MOVEMENT_LOCKED)) {
-        bVar2 = false;
-        if ((((g_heroStateType == 9) && (g_heroState == TURRET_PLANE_UI)) &&
-            (DAT_0096b2d0 != 0)) &&
-           (((*(short *)(DAT_0096b2d0 + 0xa6) == 0x45 || (*(short *)(DAT_0096b2d0 + 0xa6) == 0x563))
-            || (*(short *)(DAT_0096b2d0 + 0xa6) == 0x4da)))) {
-          bVar2 = true;
+    /* debug stepping: R3 runs 6 frames, L3 one */
+    if ((DebugUpdate & ENABLE_STEPPING) && (g_Pad.buttonsPressedThisFrame & R3)) {
+        g_Pad.buttonsPressedThisFrame = (CONTROLLER_INPUT)(g_Pad.downButtons & ~g_StepButtons);
+        g_StepFrames = 6;
+        g_Pad.unk0a8 = g_StepButtons & ~g_Pad.downButtons;
+        DebugUpdate = (DEBUG_OPTION)(UPDATE_CAMERA | UPDATE_PARTICLES | UPDATE_MOBYS | UPDATE_HERO);
+        g_StepButtons = g_Pad.downButtons & ~L3;
+    }
+
+    if (g_StepFrames != 0) {
+        g_StepFrames--;
+        if (g_StepFrames == 0) {
+            DebugUpdate = ENABLE_STEPPING;
         }
-        if (((!bVar2) || (g_FramesSinceStateChange < 8)) ||
-           ((((g_Pad.buttonsPressedThisFrame & START) == 0 && (bVar1)) ||
-            ((g_heroState == MOVEMENT_LOCKED ||
-             (*(short *)((int)GameCamera.pCurrentUpdCam + 0x86) == 0x13)))))) {
-          if ((g_gameMode != GAME_MODE_NORMAL) ||
-             ((((Level != Batalia && (Level != Hoven)) ||
-               (((g_Pad.buttonsPressedThisFrame & START) == 0 && (bVar1)))) ||
-              (g_heroState != TURRET_PLANE_UI)))) {
-            if (((((g_Pad.buttonsPressedThisFrame & START) == 0) && (bVar1)) ||
-                (g_FramesSinceStateChange < 8)) ||
-               ((g_heroState == MOVEMENT_LOCKED || (g_heroStateType != 0x16)))) {
-              if ((((g_Pad.buttonsPressedThisFrame & START) != 0) || (!bVar1)) &&
-                 ((((7 < g_FramesSinceStateChange && (g_heroState != MOVEMENT_LOCKED)) &&
-                   (DAT_0096ad8c != '\x02')) &&
-                  ((((g_heroState != TURRET_PLANE_UI && (g_heroState != VISIBOMB_CONTROL)) &&
-                    (g_HeroIsOutOfBounds == '\0')) &&
-                   ((g_heroHealth != 0 && (g_gameMode == GAME_MODE_NORMAL)))))))) {
-                BeginMenu(0);
-                return;
-              }
-              if ((((((DebugUpdate & ENABLE_STEPPING) == NONE) && (7 < g_FramesSinceStateChange)) &&
-                   (((g_Pad.buttonsPressedThisFrame & (R3|SELECT)) != 0 &&
-                    (((g_heroStateType != 0x16 && (g_heroState != MOVEMENT_LOCKED)) &&
-                     (g_heroState != TURRET_PLANE_UI)))))) &&
-                  ((g_heroState != VISIBOMB_CONTROL && (g_HeroIsOutOfBounds == '\0')))) &&
-                 ((g_heroHealth != 0 &&
-                  ((g_gameMode == GAME_MODE_NORMAL && !bVar2 && (DAT_0095c6ac == 0)))))) {
-                BeginMenu(10);
-                return;
-              }
-              if ((((g_memcardGameSaved != 0) && (g_MiscLevelFlags.field16_0x10 == 0)) &&
-                  (7 < g_FramesSinceStateChange)) &&
-                 (((g_ChallengeMode == 0 && (g_HeroIsOutOfBounds == '\0')) &&
-                  ((g_heroHealth != 0 &&
-                   (((int)(animationSpeed * 30.5) < worldUpdateTime && (Level != Veldin)))))))) {
-                DisplayPrompt(5,0,0);
-                g_MiscLevelFlags.field16_0x10 = 1;
-                return;
-              }
-              if ((g_heroState != VISIBOMB_CONTROL) && (g_heroState != TURRET_PLANE_UI)) {
-                MB_HandleGameplayHud();
-              }
-              if ((((g_Pad.buttonsPressedThisFrame & L3) != 0) && (g_heroState != VISIBOMB_CONTROL)) &&
-                 (g_heroState != TURRET_PLANE_UI)) {
-                iVar4 = RegisterHeroHealthHUDCallbacks();
-                dVar5 = 180.5;
-                Hud_ShowEntryById(iVar4,(int)(animationSpeed * 180.5));
-                iVar4 = RegisterHUDCallback
-                                  (2,0x754e,&PTR_BoltHud_Init_00705810,&PTR_BoltHud_Update_00705818,
-                                   &PTR_Draw_BoltCountUI_00705820,&g_boltCount,9999999);
-                Hud_ShowEntryById(iVar4,(int)((double)animationSpeed * dVar5));
-              }
-              if (g_MapAvailable != 0) {
-                if (CHAR_ARRAY_00a0feec.piece<72,2>() != -1) {
-                  CHAR_ARRAY_00a0feec.piece<72,2>() = CHAR_ARRAY_00a0feec.piece<72,2>() + 1;
-                }
-                if ((int)(uint)(ushort)CHAR_ARRAY_00a0feec.piece<74,2>() <
-                    (int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5)) / 600) {
-                  iVar4 = (int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5));
-                  sVar3 = (short)(iVar4 >> 0x1f);
-                  CHAR_ARRAY_00a0feec.piece<74,2>() =
-                       ((short)(iVar4 / 600) + sVar3) -
-                       ((short)((short)(iVar4 / 0x2580000) + sVar3) >> 0xf);
-                }
-                CHAR_ARRAY_00a0feec.piece<76,4>() =
-                     CHAR_ARRAY_00a0feec.piece<76,4>() | 1 << (Level & 0x3f) | 0x80000000;
-              }
-              if ((g_ShipTakeoffPending == 0) || (g_ShipTakeoffPending = 0, g_heroHealth == 0)) {
-                if (((DebugUpdate & UPDATE_MOBYS) != NONE) ||
-                   (((DebugUpdate & ENABLE_STEPPING) != NONE &&
-                    ((g_Pad.buttonsPressedThisFrame & L3) != 0)))) {
-                  g_MobyFuncListCount = 0;
-                  g_PreDrawCount = 0;
-                  g_NumLameShadows = 0;
-                  g_PostPreDrawCount = 0;
-                  DAT_0095cae0 = 0;
-                  g_PostDrawCount = 0;
-                  DAT_0095ccf0 = 0;
-                  DAT_00a1bfe4 = 0;
-                }
-                if (((DebugUpdate & UPDATE_MOBYS) != NONE) ||
-                   (((DebugUpdate & ENABLE_STEPPING) != NONE &&
-                    ((g_Pad.buttonsPressedThisFrame & L3) != 0)))) {
-                  UpdateNumSpawnableMobys();
-                  UpdateMobys();
-                  sound_UpdateAmbient();
-                  WaterDrift_Update();
-                }
-                STUB_0006562c("moby update",3);
-                if (((DebugUpdate & UPDATE_HERO) != NONE) ||
-                   (((DebugUpdate & ENABLE_STEPPING) != NONE &&
-                    ((g_Pad.buttonsPressedThisFrame & L3) != 0)))) {
-                  HeroUpdate();
-                }
-                STUB_0006562c("hero update",7);
-                if (((DebugUpdate & UPDATE_PARTICLES) != NONE) ||
-                   (((DebugUpdate & ENABLE_STEPPING) != NONE &&
-                    ((g_Pad.buttonsPressedThisFrame & L3) != 0)))) {
-                  UpdateParts();
-                  ImpactSprite_Update();
-                }
-                STUB_0006562c("part update",5);
-                if (((DebugUpdate & UPDATE_CAMERA) == NONE) &&
-                   (((DebugUpdate & ENABLE_STEPPING) == NONE ||
-                    ((g_Pad.buttonsPressedThisFrame & L3) == 0)))) {
-                  if ((ControlMode != 0) && (DebugCamera(), ControlMode == 2)) {
-                    UpdateDebugCamera();
-                  }
-                }
-                else {
-                  UpdateCamera();
-                }
-                STUB_0006562c("camera update",8);
-                sound_Update();
-                STUB_0006562c("sound update",6);
-                UpdatePointLights();
-                UpdateHeroLightAngle();
-                UpdateAllGameplayHUD(1);
-                Help_Update();
-                if (((DebugUpdate & UPDATE_MOBYS) != NONE) ||
-                   (((DebugUpdate & ENABLE_STEPPING) != NONE &&
-                    ((g_Pad.buttonsPressedThisFrame & L3) != 0)))) {
-                  UpdateGameCounters();
-                }
-                if (Profile == 2) {
-                  STUB_00065438();
-                }
-                if (Profile == 3) {
-                  STUB_00065440();
-                }
-                if (Profile == 4) {
-                  STUB_00065448();
-                }
-                if (Profile == 5) {
-                  STUB_00065450();
-                }
-                if (Profile == 6) {
-                  STUB_00065458();
-                }
-              }
-              else {
-                Space_StartTakeoffCutscene();
-              }
-            }
-            else {
-              DisplayPrompt(0,0,0);
-            }
-          }
-          else {
-            DisplayPrompt(1,0,0);
-          }
+    }
+
+    if ((DebugUpdate & ENABLE_STEPPING) && (g_Pad.buttonsPressedThisFrame & L3)) {
+        g_Pad.buttonsPressedThisFrame = (CONTROLLER_INPUT)(g_Pad.downButtons & ~g_StepButtons);
+        g_Pad.unk0a8 = g_StepButtons & ~g_Pad.downButtons;
+        g_StepButtons = g_Pad.downButtons & ~L3;
+    }
+
+    /* the memory card was pulled out */
+    if (g_gameMode == GAME_MODE_NORMAL && (g_CardStateFlags & 0x401) && g_FramesSinceStateChange > 7 &&
+        g_heroState != VISIBOMB_CONTROL) {
+        DisplayPrompt(3, 0, 0);
+        return;
+    }
+
+    /* a pulled-out pad counts as START */
+    bool startPressed = (g_Pad.buttonsPressedThisFrame & START) || g_Pad.connected == 0;
+
+    if (resumePage != 0 && g_gameMode == GAME_MODE_NORMAL) {
+        BeginMenu(0);
+        return;
+    }
+
+    /* the pause prompts of the vehicle sections */
+    if (Level == Quartu && g_FramesSinceStateChange >= 8 && g_heroType == 2 && startPressed &&
+        g_heroState != MOVEMENT_LOCKED) {
+        if (CurrentCameraType() != 0x13) {
+            DisplayPrompt(4, 0, 0);
         }
-        else {
-          DisplayPrompt(1,0,0);
+        return;
+    }
+
+    MobyInstance *turret = (MobyInstance *)DAT_0096b2d0;
+    bool inTurret = g_heroStateType == 9 && g_heroState == TURRET_PLANE_UI && turret != NULL &&
+                    (turret->oClass == 0x45 || turret->oClass == 0x563 || turret->oClass == 0x4da);
+
+    if (inTurret && g_FramesSinceStateChange >= 8 && startPressed && g_heroState != MOVEMENT_LOCKED &&
+        CurrentCameraType() != 0x13) {
+        DisplayPrompt(1, 0, 0);
+        return;
+    }
+
+    if (g_gameMode == GAME_MODE_NORMAL && (Level == Batalia || Level == Hoven) && startPressed &&
+        g_heroState == TURRET_PLANE_UI) {
+        DisplayPrompt(1, 0, 0);
+        return;
+    }
+
+    if (startPressed && g_FramesSinceStateChange >= 8 && g_heroState != MOVEMENT_LOCKED &&
+        g_heroStateType == 0x16) {
+        DisplayPrompt(0, 0, 0);
+        return;
+    }
+
+    /* the pause menu */
+    if (startPressed && g_FramesSinceStateChange > 7 && g_heroState != MOVEMENT_LOCKED && DAT_0096ad8c != 2 &&
+        g_heroState != TURRET_PLANE_UI && g_heroState != VISIBOMB_CONTROL && g_HeroIsOutOfBounds == 0 &&
+        g_heroHealth != 0 && g_gameMode == GAME_MODE_NORMAL) {
+        BeginMenu(0);
+        return;
+    }
+
+    /* the quick select menu (page 10) */
+    if (!(DebugUpdate & ENABLE_STEPPING) && g_FramesSinceStateChange > 7 &&
+        (g_Pad.buttonsPressedThisFrame & (R3 | SELECT)) && g_heroStateType != 0x16 &&
+        g_heroState != MOVEMENT_LOCKED && g_heroState != TURRET_PLANE_UI && g_heroState != VISIBOMB_CONTROL &&
+        g_HeroIsOutOfBounds == 0 && g_heroHealth != 0 && g_gameMode == GAME_MODE_NORMAL && !inTurret &&
+        g_StepFrames == 0) {
+        BeginMenu(10);
+        return;
+    }
+
+    /* the "game saved" prompt, once per level */
+    if (g_memcardGameSaved != 0 && g_MiscLevelFlags.field16_0x10 == 0 && g_FramesSinceStateChange > 7 &&
+        g_ChallengeMode == 0 && g_HeroIsOutOfBounds == 0 && g_heroHealth != 0 &&
+        ScaledFrames(30.5f) < (int)worldUpdateTime && Level != Veldin) {
+        DisplayPrompt(5, 0, 0);
+        g_MiscLevelFlags.field16_0x10 = 1;
+        return;
+    }
+
+    if (g_heroState != VISIBOMB_CONTROL && g_heroState != TURRET_PLANE_UI) {
+        MB_HandleGameplayHud();
+    }
+
+    /* L3 shows the health and bolt counters */
+    if ((g_Pad.buttonsPressedThisFrame & L3) && g_heroState != VISIBOMB_CONTROL &&
+        g_heroState != TURRET_PLANE_UI) {
+        int hudId = RegisterHeroHealthHUDCallbacks();
+        Hud_ShowEntryById(hudId, ScaledFrames(180.5f));
+
+        hudId = RegisterHUDCallback(2, 0x754e, (void *)BoltHud_Init, (void *)BoltHud_Update,
+                                    (void *)Draw_BoltCountUI, (int *)&g_boltCount, 9999999);
+        Hud_ShowEntryById(hudId, ScaledFrames(180.5f));
+    }
+
+    if (g_MapAvailable != 0) {
+        UsageRecord *map = &((UsageRecord *)CHAR_ARRAY_00a0feec)[USAGE_MAP];
+
+        if (map->uses != 0xffff) {
+            map->uses++;
         }
-      }
-      else if (*(short *)((int)GameCamera.pCurrentUpdCam + 0x86) != 0x13) {
-        DisplayPrompt(4,0,0);
-      }
-    }
-    else {
-      BeginMenu(0);
-    }
-  }
-  return;
-}
 
-
-// 0x0167a30 (0x428 bytes)
-// strings: 00653d00: '\nwrote %d frames\n'
-
-
-void mode_sceneUnInit(void)
-
-{
-  u8 uVar1;
-  MobyInstance *pMVar2;
-  ushort *puVar3;
-  undefined4 uVar4;
-  undefined4 *puVar5;
-  int iVar6;
-  double dVar7;
-  double dVar8;
-  undefined8 uVar9;
-  
-  if ((g_SpeechPlaying.status != 6) && (g_SpeechPlaying.status != 7)) {
-    g_SpeechPlaying.status = 5;
-  }
-  g_CutscenePlaying = 1;
-  VU1_setBufSizeByLevel();
-  FadeToBlack(0xc);
-  g_MobyFuncListCount = 0;
-  g_PostDrawCount = 0;
-  g_NumLameShadows = 0;
-  g_PreDrawCount = 0;
-  DAT_0095cae0 = 0;
-  g_PostPreDrawCount = 0;
-  DAT_0095ccf0 = 0;
-  puVar5 = &DAT_0095cd50;
-  DAT_00a1bfe4 = 0;
-  g_gameMode = GAME_MODE_NORMAL;
-  SceneScreenFade = 0.0;
-  GameCamera.camUnderWater = (u32)(byte)g_SceneSavedCamUnderWater;
-  GameCamera.posX = DAT_0095cd50;
-  GameCamera.posY = DAT_0095cd54;
-  GameCamera.posZ = DAT_0095cd58;
-  GameCamera.field8_0x14c[0] = DAT_0095cd5c[0];
-  GameCamera.field8_0x14c[1] = DAT_0095cd5c[1];
-  GameCamera.field8_0x14c[2] = DAT_0095cd5c[2];
-  GameCamera.field8_0x14c[3] = DAT_0095cd5c[3];
-  if (DAT_0095cda0 != 0) {
-    printf("\nwrote %d frames\n",DAT_0095cda2);
-  }
-  g_ViewContext.xratio = 0.63;
-  UpdateViewContext();
-  iVar6 = 0;
-  if (0 < g_SpaceSceneMobyCnt.piece<0,2>()) {
-    do {
-      pMVar2 = (MobyInstance *)puVar5[0x5e];
-      if (pMVar2 != (MobyInstance *)0x0) {
-        pMVar2->pClass->seq_cnt = pMVar2->pClass->seq_cnt + 0xff;
-        *(undefined4 *)(&pMVar2->pClass->type + (uint)pMVar2->pClass->seq_cnt * 4) = 0;
-        DeleteMoby(pMVar2);
-      }
-      iVar6 = iVar6 + 1;
-      puVar5 = puVar5 + 1;
-    } while (iVar6 < g_SpaceSceneMobyCnt.piece<0,2>());
-  }
-  if (Scene == g_SceneId) {
-    uVar1 = g_MobyInstance->state;
-    pMVar2 = g_MobyInstance;
-    while (uVar1 != 0xff) {
-      if ((pMVar2->state & 0x80) == 0) {
-        pMVar2->modeBits =
-             pMVar2->modeBits &
-             (MIRROR|CAN_BE_DAMAGED|HIDE_BACKFACES|CAN_BE_AUTO_TARGETED|DISABLE_Z_WRITE|DRAW_SHADOW|
-              DRAW_TRANSPARENT_WEIRD|LOCK_ROTATION|UNK_40|HAS_SPECIAL_VARS|HAS_GLOW|TRANSPARENT|
-              NO_POST_UPDATE|NO_UPDATE|DISABLED);
-      }
-      uVar1 = pMVar2[1].state;
-      pMVar2 = pMVar2 + 1;
-    }
-  }
-  uVar1 = MobyInstancePermEnd->state;
-  pMVar2 = MobyInstancePermEnd;
-  while (uVar1 != 0xff) {
-    if (((pMVar2->state & 0x80) == 0) &&
-       ((pMVar2->oClass == MINE_004A || (pMVar2->oClass == DECOY)))) {
-      pMVar2->modeBits =
-           pMVar2->modeBits &
-           (MIRROR|CAN_BE_DAMAGED|HIDE_BACKFACES|CAN_BE_AUTO_TARGETED|DISABLE_Z_WRITE|DRAW_SHADOW|
-            DRAW_TRANSPARENT_WEIRD|LOCK_ROTATION|UNK_40|HAS_SPECIAL_VARS|HAS_GLOW|TRANSPARENT|
-            NO_POST_UPDATE|NO_UPDATE|DISABLED);
-    }
-    uVar1 = pMVar2[1].state;
-    pMVar2 = pMVar2 + 1;
-  }
-  TransitionMovement(0,1);
-  uVar9 = 0x3fe0000000000000;
-  dVar7 = (double)GetGroundZ(0x3fe0000000000000,&g_heroPosition,0);
-  dVar8 = 2.0;
-  if ((2.0 < dVar7) && (ABS((float)((double)g_heroPosition.z - dVar7)) < 4.5)) {
-    g_heroPosition.z = (float)dVar7;
-  }
-  g_heroInvisible = 0;
-  Hero_MakeVisible();
-  if (DAT_0095cd9a != '\0') {
-    dVar7 = (double)GetGroundZ(uVar9,&DAT_0095cd60,0);
-    if ((dVar8 < dVar7) && (ABS((double)(float)((double)DAT_0095cd68 - dVar7)) < dVar8)) {
-      DAT_0095cd68 = (float)dVar7;
-    }
-    Hero_Warp((float *)&DAT_0095cd60,(float *)&DAT_0095cd70,0,1);
-  }
-  if (DAT_00a15c0c != 0) {
-    *(ushort *)(DAT_00a15c0c + 0x34) = *(ushort *)(DAT_00a15c0c + 0x34) & 0xfffe;
-  }
-  iVar6 = DAT_00a52c98;
-  if (DAT_00a52c98 != 0) {
-    puVar3 = (ushort *)(DAT_00a52c98 + 0x34);
-    DAT_00a52c98 = 0;
-    *(ushort *)(iVar6 + 0x34) = *puVar3 & 0xfffe;
-  }
-  uVar4 = DAT_00a15c10;
-  iVar6 = DAT_00a15c0c;
-  if (DAT_00a15c0c != 0) {
-    DAT_00a15c0c = 0;
-    DAT_00a15c10 = 0;
-    FUN_004d31b0(iVar6,uVar4,1);
-  }
-  Scene = 0xffffffff;
-  music_UnpauseDelay((int)(animationSpeed * 30.5));
-  return;
-}
-
-
-// 0x0167e60 (0x538 bytes)
-/* WARNING: Removing unreachable block (ram,0x0016835c) */
-
-void mode_sceneInit(int absolute_scene_id)
-
-{
-  u8 uVar1;
-  int *piVar2;
-  MobyInstance *pMVar3;
-  int iVar4;
-  undefined4 *puVar5;
-  int iVar6;
-  undefined4 *puVar7;
-  char acStack_130 [224];
-  longlong local_50;
-  
-  if ((-1 < absolute_scene_id) && (g_gameMode != GAME_MODE_SCENE)) {
-    if (g_heroHealth == 0) {
-      HandleHeroDeath();
-    }
-    else {
-      music_Pause(0);
-      music_Sync(0);
-      puVar7 = &DAT_0095cd50;
-      g_CutscenePlaying = 1;
-      FastMemSet(&DAT_0095cd50,0,0x1c0);
-      FastMemSet(&DAT_00a1bf80,0,0x40);
-      FastMemSet(&DAT_00a1be80,0,0x40);
-      FastMemSet(&DAT_00a1bec0,0,0x40);
-      FastMemSet(&DAT_00a1bf40,0,0x40);
-      FastMemSet(&DAT_00a1bf00,0,0x40);
-      DAT_0071fbd8 = 0x3f800000;
-      DAT_00e5aa64 = DAT_00e5aa64 + -0x3c000;
-      DAT_00a15f30 = 0;
-      g_SpaceSceneFrame = 0;
-      g_SpaceSceneChunk = 0;
-      g_SceneLoadBuffer = g_NpcBuffer + 0x3c000;
-      DAT_0095cda8 = g_NpcBuffer;
-      g_SceneId = absolute_scene_id;
-      Help_Kill();
-      SceneScreenFade = 1.0;
-      g_SceneFlash = 0;
-      g_gameMode = GAME_MODE_SCENE;
-      g_SceneSavedCamUnderWater = (char)GameCamera.camUnderWater;
-      GameCamera.camUnderWater = 0;
-      DAT_0095cd50 = GameCamera.posX;
-      DAT_0095cd54 = GameCamera.posY;
-      DAT_0095cd58 = GameCamera.posZ;
-      DAT_0095cd5c[0] = GameCamera.field8_0x14c[0];
-      DAT_0095cd5c[1] = GameCamera.field8_0x14c[1];
-      DAT_0095cd5c[2] = GameCamera.field8_0x14c[2];
-      DAT_0095cd5c[3] = GameCamera.field8_0x14c[3];
-      iVar4 = TransitionMovement(100,2);
-      g_heroInvisible = 1;
-      Hero_MakeInvisible(iVar4);
-      if (DAT_00a15c0c != 0) {
-        *(ushort *)(DAT_00a15c0c + 0x34) = *(ushort *)(DAT_00a15c0c + 0x34) | 1;
-      }
-      if (DAT_00a52c98 != 0) {
-        *(ushort *)(DAT_00a52c98 + 0x34) = *(ushort *)(DAT_00a52c98 + 0x34) | 1;
-      }
-      if (((g_Pad.buttonsPressedThisFrame & CROSS) == 0) || (Scene == g_SceneId)) {
-        FadeToBlack(6);
-        LoadNpcSubtitles();
-        PreLoadNpcChunk(0);
-        local_50 = (longlong)(int)(animationSpeed * 6.5);
-        FadeToBlack((int)(animationSpeed * 6.5));
-        music_Sync(1);
-        g_SceneLoadBuffer = g_NpcBuffer + 0x80000;
-        ParseNpcChunk();
-        if (Scene == g_SceneId) {
-          FastMemSet(acStack_130,0,0xe0);
-          iVar4 = 0;
-          puVar5 = puVar7;
-          if (0 < g_SpaceSceneMobyCnt.piece<0,2>()) {
-            do {
-              iVar4 = iVar4 + 1;
-              iVar6 = (int)g_SpaceSceneMobyCnt.piece<0,2>();
-              acStack_130[*(byte *)(puVar5[0x5e] + 0x22)] = '\x01';
-              puVar5 = puVar5 + 1;
-            } while (iVar4 < iVar6);
-          }
-          uVar1 = g_MobyInstance->state;
-          pMVar3 = g_MobyInstance;
-          while (uVar1 != 0xff) {
-            if (((pMVar3->state & 0x80) == 0) && (acStack_130[pMVar3->mClass] != '\0')) {
-              pMVar3->modeBits = pMVar3->modeBits | NO_DRAW;
-            }
-            uVar1 = pMVar3[1].state;
-            pMVar3 = pMVar3 + 1;
-          }
-          iVar4 = 0;
-          if (0 < g_SpaceSceneMobyCnt.piece<0,2>()) {
-            do {
-              piVar2 = puVar7 + 0x5e;
-              iVar4 = iVar4 + 1;
-              puVar7 = puVar7 + 1;
-              *(ushort *)(*piVar2 + 0x34) = *(ushort *)(*piVar2 + 0x34) & 0xff7f;
-            } while (iVar4 < g_SpaceSceneMobyCnt.piece<0,2>());
-          }
+        int playTime = (int)(animationSpeed * ((float)g_GameFrameCount + 0.5f)) / 600;
+        if (map->lastUse < playTime) {
+            map->lastUse = (u16)playTime;
         }
-        uVar1 = MobyInstancePermEnd->state;
-        pMVar3 = MobyInstancePermEnd;
-        while (g_PendingSpeech = g_SceneId, uVar1 != 0xff) {
-          if (((pMVar3->state & 0x80) == 0) &&
-             ((pMVar3->oClass == MINE_004A || (pMVar3->oClass == DECOY)))) {
-            pMVar3->modeBits = pMVar3->modeBits | NO_DRAW;
-          }
-          uVar1 = pMVar3[1].state;
-          pMVar3 = pMVar3 + 1;
-        }
-        while (g_SpeechPlaying.status != 3) {
-          sound_Update();
-          STUB_00503078(0);
-        }
-        g_SpaceSceneMobyCnt.piece<2,2>() = -3;
-        music_PlayPreseekedSpeech();
-        PreLoadNpcChunk(1);
-        iVar4 = 0;
-        if (g_SpaceSceneMobyCnt.piece<2,2>() < 0) {
-          do {
-            STUB_00503078(0);
-            iVar4 = iVar4 + -1;
-          } while (g_SpaceSceneMobyCnt.piece<2,2>() < iVar4);
-        }
-      }
-      else {
-        mode_sceneUnInit();
-      }
+
+        map->levels |= 1 << (Level & 0x3f) | 0x80000000;
     }
-  }
-  return;
-}
 
-
-// 0x01683a0 (0x3b0 bytes)
-// strings: 0096c074: 'None'
-
-
-void UpdateSceneCamera(void)
-
-{
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  undefined8 uVar5;
-  float *pfVar6;
-  double extraout_f1;
-  double extraout_f1_00;
-  double extraout_f1_01;
-  double extraout_f1_02;
-  double extraout_f1_03;
-  double dVar7;
-  double dVar8;
-  double dVar9;
-  double dVar10;
-  double dVar11;
-  double dVar12;
-  double dVar13;
-  double dVar14;
-  float local_f0;
-  float local_ec;
-  float local_e8;
-  float local_e0;
-  float local_dc;
-  float local_d8;
-  float local_d0;
-  float local_cc;
-  float local_c8;
-  float local_b0;
-  float local_ac;
-  float local_a8;
-  float local_a0;
-  float local_9c;
-  float local_98;
-  float local_90;
-  float local_8c;
-  float local_88;
-  
-  pfVar6 = (float *)((int)g_SpaceSceneCameraFrames + g_cutsceneCameraFrame * 0x20);
-  g_ViewContext.xratio = pfVar6[7];
-  if (Cheats[0] != '\0') {
-    g_ViewContext.xratio = g_ViewContext.xratio * DAT_0071fbd8;
-  }
-  uVar5 = UpdateViewContext();
-  GameCamera.posX = *pfVar6;
-  GameCamera.posY = pfVar6[1];
-  GameCamera.posZ = pfVar6[2];
-  GameCamera.field8_0x14c = *(char (*) [4])(pfVar6 + 3);
-  uVar5 = _FSin((double)pfVar6[4],uVar5,0);
-  dVar14 = extraout_f1;
-  uVar5 = _FSin((double)pfVar6[4],uVar5,1);
-  dVar13 = extraout_f1_00;
-  uVar5 = _FSin((double)pfVar6[5],uVar5,0);
-  dVar12 = extraout_f1_01;
-  uVar5 = _FSin((double)pfVar6[5],uVar5,1);
-  dVar11 = extraout_f1_02;
-  uVar5 = _FSin((double)pfVar6[6],uVar5,0);
-  dVar10 = extraout_f1_03;
-  dVar7 = (double)_FSin((double)pfVar6[6],uVar5,1);
-  dVar9 = (double)(float)(dVar12 * dVar10);
-  dVar8 = (double)(float)(dVar7 * dVar12);
-  memcpy(&local_b0,&DAT_007387f0,0x40);
-  local_b0 = (float)(dVar11 * dVar7);
-  local_ac = (float)(dVar11 * dVar10);
-  local_a0 = (float)(dVar14 * dVar8) - (float)(dVar13 * dVar10);
-  local_98 = (float)(dVar11 * dVar14);
-  local_9c = (float)(dVar14 * dVar9) + (float)(dVar13 * dVar7);
-  local_88 = (float)(dVar13 * dVar11);
-  local_90 = (float)(dVar13 * dVar8) + (float)(dVar14 * dVar10);
-  local_8c = (float)(dVar13 * dVar9) - (float)(dVar7 * dVar14);
-  local_a8 = (float)-dVar12;
-  memcpy(&local_f0,&local_b0,0x40);
-  GameCamera.orientMtx.forward.x = -local_d0;
-  GameCamera.orientMtx.right.x = -local_f0;
-  GameCamera.orientMtx.forward.y = -local_cc;
-  GameCamera.orientMtx.right.y = -local_ec;
-  GameCamera.orientMtx.forward.z = -local_c8;
-  GameCamera.orientMtx.right.z = -local_e8;
-  GameCamera.orientMtx.up.x = local_e0;
-  GameCamera.orientMtx.up.y = local_dc;
-  GameCamera.orientMtx.up.z = local_d8;
-  if (Cheats[4] != '\0') {
-    GameCamera.orientMtx.right.x =
-         GameCamera.orientMtx.forward.y * local_d8 - GameCamera.orientMtx.forward.z * local_dc;
-    GameCamera.orientMtx.right.y =
-         GameCamera.orientMtx.forward.z * local_e0 - GameCamera.orientMtx.forward.x * local_d8;
-    GameCamera.orientMtx.right.z =
-         GameCamera.orientMtx.forward.x * local_dc - GameCamera.orientMtx.forward.y * local_e0;
-    GameCamera.orientMtx.right.w = 0.0;
-  }
-  if ((Cheats[0] != '\0') && (fVar1 = 0.0, DAT_00a15f30 != 0.0)) {
-    fVar4 = SQRT(GameCamera.orientMtx.forward.x * GameCamera.orientMtx.forward.x +
-                 GameCamera.orientMtx.forward.y * GameCamera.orientMtx.forward.y +
-                 GameCamera.orientMtx.forward.z * GameCamera.orientMtx.forward.z);
-    fVar2 = fVar1;
-    fVar3 = fVar1;
-    if (fVar4 != 0.0) {
-      fVar4 = DAT_00a15f30 / fVar4;
-      fVar1 = GameCamera.orientMtx.forward.z * fVar4;
-      fVar2 = GameCamera.orientMtx.forward.y * fVar4;
-      fVar3 = GameCamera.orientMtx.forward.x * fVar4;
-    }
-    GameCamera.posX = GameCamera.posX - fVar3;
-    GameCamera.posY = GameCamera.posY - fVar2;
-    GameCamera.posZ = GameCamera.posZ - fVar1;
-  }
-  return;
-}
-
-
-// 0x0168768 (0x5cc bytes)
-// strings: 00653cb0: 'moby update' | 00653cc0: 'hero update' | 00653cd0: 'part update' | 00653ce0: 'camera update' | 00653cf0: 'sound update'
-
-
-void UpdateScene(void)
-
-{
-  bool bVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  float fVar7;
-  float fVar8;
-  MOBY_OCLASSES MVar9;
-  MobyInstance *pMVar10;
-  char cVar11;
-  float fVar12;
-  int iVar13;
-  float *pfVar14;
-  float *pfVar15;
-  undefined4 *puVar16;
-  int iVar17;
-  double dVar18;
-  
-  if ((g_Pad.buttonsPressedThisFrame & START) == 0) {
-    if (((DebugUpdate & UPDATE_MOBYS) != NONE) ||
-       (((DebugUpdate & ENABLE_STEPPING) != NONE && ((g_Pad.buttonsPressedThisFrame & L3) != 0)))) {
-      g_MobyFuncListCount = 0;
-      g_PreDrawCount = 0;
-      g_NumLameShadows = 0;
-      g_PostPreDrawCount = 0;
-      g_PostDrawCount = 0;
-      DAT_0095cae0 = 0;
-      DAT_0095ccf0 = 0;
-      DAT_00a1bfe4 = 0;
-    }
-    if (((DebugUpdate & ENABLE_STEPPING) == NONE) ||
-       ((g_Pad.buttonsPressedThisFrame & (L3|CIRCLE)) != 0)) {
-      UpdateSpaceSceneEffects();
-    }
-    if (((DebugUpdate & UPDATE_MOBYS) != NONE) ||
-       (((DebugUpdate & ENABLE_STEPPING) != NONE && ((g_Pad.buttonsPressedThisFrame & L3) != 0)))) {
-      UpdateMobys();
-      sound_UpdateAmbient();
-    }
-    STUB_0006562c("moby update",3);
-    if (((DebugUpdate & UPDATE_HERO) != NONE) ||
-       (((DebugUpdate & ENABLE_STEPPING) != NONE && ((g_Pad.buttonsPressedThisFrame & L3) != 0)))) {
-      HeroUpdate();
-    }
-    STUB_0006562c("hero update",7);
-    if (((DebugUpdate & UPDATE_PARTICLES) != NONE) ||
-       (((DebugUpdate & ENABLE_STEPPING) != NONE && ((g_Pad.buttonsPressedThisFrame & L3) != 0)))) {
-      UpdateParts();
-    }
-    STUB_0006562c("part update",5);
-    if (((DebugUpdate & ENABLE_STEPPING) == NONE) ||
-       ((g_Pad.buttonsPressedThisFrame & (L3|CIRCLE)) != 0)) {
-      puVar16 = &DAT_0095cd50;
-      g_cutsceneCameraFrame = g_cutsceneCameraFrame + 1;
-      g_SpaceSceneFrame = g_SpaceSceneFrame + 1;
-      SceneScreenFade = SceneScreenFade - 0.34;
-      dVar18 = 0.0;
-      if (SceneScreenFade < 0.0) {
-        SceneScreenFade = 0.0;
-      }
-      if (g_SpaceSceneMobyCnt.piece<2,2>() <= g_SpaceSceneFrame) {
-        music_PlayPreseekedSpeech();
-      }
-      iVar17 = 0;
-      bVar1 = g_SpaceSceneNumFrames.piece<0,2>() <= g_SpaceSceneFrame;
-      if (((int)(animationSpeed * 18.5) <= g_SpaceSceneFrame) &&
-         ((double)SceneScreenFade == dVar18)) {
-        if ((((g_ChallengeMode == 0 && g_goodiesMenuActive == 0) && g_MoviePlayState == 0) &&
-            (0 < (int)Level)) || ((g_Pad.buttonsPressedThisFrame & START) == 0)) {
-          if (((g_Pad.downButtons & (R1|L1|R2|L2)) == (R1|L1|R2|L2)) &&
-             ((g_Pad.buttonsPressedThisFrame & START) != 0)) {
-            bVar1 = true;
-          }
+    if (g_ShipTakeoffPending != 0) {
+        g_ShipTakeoffPending = 0;
+        if (g_heroHealth != 0) {
+            Space_StartTakeoffCutscene();
+            return;
         }
-        else {
-          bVar1 = true;
-        }
-      }
-      if (bVar1) {
-        mode_sceneUnInit();
-      }
-      else {
-        iVar13 = 0x60;
-        if (g_IsPal != 0) {
-          iVar13 = 0x50;
-        }
-        if (iVar13 <= (int)g_cutsceneCameraFrame) {
-          music_Sync(1);
-          g_SpaceSceneChunk = g_SpaceSceneChunk + 1;
-          g_SceneLoadBuffer = g_NpcBuffer + 0x80000;
-          ParseNpcChunk();
-          iVar13 = PreLoadNpcChunk(g_SpaceSceneChunk + 1);
-        }
-        UpdateSceneCamera();
-        if (0 < g_SpaceSceneMobyCnt.piece<0,2>()) {
-          do {
-            pMVar10 = (MobyInstance *)puVar16[0x5e];
-            cVar11 = (char)((int)g_cutsceneCameraFrame >> 1);
-            pMVar10->previousAnimationFrame = cVar11;
-            pMVar10->animationFrame = cVar11 + '\x01';
-            UpdateMobyFrameData(pMVar10);
-            dVar18 = (double)FastIntToDouble(g_cutsceneCameraFrame & 1);
-            pMVar10->animationBlend = (float)(dVar18 * 0.5);
-            if ((iVar13 != 0) && ((g_cutsceneCameraFrame & 1) != 0)) {
-              pMVar10->animationBlend = 1.0;
-            }
-            fVar2 = pMVar10->animationBlend;
-            fVar12 = 1.0 - fVar2;
-            pfVar14 = (float *)((int)pMVar10->pVar +
-                               (uint)(byte)pMVar10->previousAnimationFrame * 0x10);
-            pfVar15 = (float *)((int)pMVar10->pVar + (uint)(byte)pMVar10->animationFrame * 0x10);
-            fVar3 = *pfVar14;
-            fVar4 = pfVar14[1];
-            fVar5 = pfVar14[2];
-            fVar6 = *pfVar15;
-            fVar7 = pfVar15[1];
-            fVar8 = pfVar15[2];
-            (pMVar10->pos).w = pfVar14[3];
-            pMVar10->unk71 = -1;
-            (pMVar10->pos).x = fVar3 * fVar12 + fVar6 * fVar2;
-            (pMVar10->pos).y = fVar4 * fVar12 + fVar7 * fVar2;
-            (pMVar10->pos).z = fVar5 * fVar12 + fVar8 * fVar2;
-            UpdateMobyTransform(pMVar10);
-            if (pMVar10->shadow != '\0') {
-              MB_SetZBoundsFromFloorCeil(pMVar10);
-            }
-            if (pMVar10->oClass == RATCHET) {
-              Hero_UpdateInScene(pMVar10);
-            }
-            MVar9 = pMVar10->oClass;
-            if (((MVar9 == CLANK_000A) || (MVar9 == GIANT_CLANK)) || (MVar9 == CLANK_0555)) {
-              ____Hero_AddPulsingMobyGlow(pMVar10);
-            }
-            iVar17 = iVar17 + 1;
-            puVar16 = puVar16 + 1;
-          } while (iVar17 < g_SpaceSceneMobyCnt.piece<0,2>());
-        }
-      }
     }
-    STUB_0006562c("camera update",8);
+
+    if (UpdatesMobys()) {
+        ResetGameCounters();
+    }
+
+    if (UpdatesMobys()) {
+        UpdateNumSpawnableMobys();
+        UpdateMobys();
+        sound_UpdateAmbient();
+        WaterDrift_Update();
+    }
+    STUB_0006562c("moby update", 3);
+
+    if ((DebugUpdate & UPDATE_HERO) || StepRequested()) {
+        HeroUpdate();
+    }
+    STUB_0006562c("hero update", 7);
+
+    if ((DebugUpdate & UPDATE_PARTICLES) || StepRequested()) {
+        UpdateParts();
+        ImpactSprite_Update();
+    }
+    STUB_0006562c("part update", 5);
+
+    if ((DebugUpdate & UPDATE_CAMERA) || StepRequested()) {
+        UpdateCamera();
+    }
+    else if (ControlMode != 0) {
+        DebugCamera();
+        if (ControlMode == 2) {
+            UpdateDebugCamera();
+        }
+    }
+    STUB_0006562c("camera update", 8);
+
     sound_Update();
-    STUB_0006562c("sound update",6);
+    STUB_0006562c("sound update", 6);
+
     UpdatePointLights();
     UpdateHeroLightAngle();
-    if (((DebugUpdate & UPDATE_MOBYS) != NONE) ||
-       (((DebugUpdate & ENABLE_STEPPING) != NONE && ((g_Pad.buttonsPressedThisFrame & L3) != 0)))) {
-      UpdateGameCounters();
+    UpdateAllGameplayHUD(1);
+    Help_Update();
+
+    if (UpdatesMobys()) {
+        UpdateGameCounters();
     }
-  }
-  else {
-    mode_sceneUnInit();
-  }
-  return;
+
+    if (Profile == 2) {
+        STUB_00065438();
+    }
+    if (Profile == 3) {
+        STUB_00065440();
+    }
+    if (Profile == 4) {
+        STUB_00065448();
+    }
+    if (Profile == 5) {
+        STUB_00065450();
+    }
+    if (Profile == 6) {
+        STUB_00065458();
+    }
 }
 
+// 0x0167a30 (0x428 bytes)
+/* ends a scene: deletes its mobys, shows what mode_sceneInit hid and puts the camera and hero back */
+void mode_sceneUnInit(void)
+{
+    if (g_SpeechPlaying.status != 6 && g_SpeechPlaying.status != 7) {
+        g_SpeechPlaying.status = 5;
+    }
+
+    g_CutscenePlaying = 1;
+    VU1_setBufSizeByLevel();
+    FadeToBlack(12);
+    ResetGameCounters();
+
+    g_gameMode = GAME_MODE_NORMAL;
+    SceneScreenFade = 0.0f;
+    GameCamera.camUnderWater = (u8)g_SceneSavedCamUnderWater;
+    GameCamera.posX = g_SceneSavedCamPos[0];
+    GameCamera.posY = g_SceneSavedCamPos[1];
+    GameCamera.posZ = g_SceneSavedCamPos[2];
+    memcpy(GameCamera.field8_0x14c, g_SceneSavedCamFlags, 4);
+
+    if (g_SceneRecording != 0) {
+        printf("\nwrote %d frames\n", g_SceneFramesWritten);
+    }
+
+    g_ViewContext.xratio = 0.63f;
+    UpdateViewContext();
+
+    /* the scene loader appended each moby's sequence to its class */
+    for (int i = 0; i < g_SpaceSceneMobyCnt; i++) {
+        MobyInstance *moby = g_SpaceSceneMobys[i];
+
+        if (moby != NULL) {
+            moby->pClass->seq_cnt--;
+            moby->pClass->seqs[moby->pClass->seq_cnt] = NULL;
+            DeleteMoby(moby);
+        }
+    }
+
+    if (Scene == g_SceneId) {
+        for (MobyInstance *moby = g_MobyInstance; moby->state != 0xff; moby++) {
+            if ((moby->state & 0x80) == 0) {
+                moby->modeBits &= ~NO_DRAW;
+            }
+        }
+    }
+
+    for (MobyInstance *moby = MobyInstancePermEnd; moby->state != 0xff; moby++) {
+        if ((moby->state & 0x80) == 0 && (moby->oClass == MINE_004A || moby->oClass == DECOY)) {
+            moby->modeBits &= ~NO_DRAW;
+        }
+    }
+
+    TransitionMovement(0, 1);
+
+    /* put the hero back on the ground */
+    float groundZ = GetGroundZ(0.5f, &g_heroPosition, 0);
+    if (groundZ > 2.0f && fabsf(g_heroPosition.z - groundZ) < 4.5f) {
+        g_heroPosition.z = groundZ;
+    }
+
+    g_heroInvisible = 0;
+    Hero_MakeVisible();
+
+    if (g_SceneHeroWarpPending != 0) {
+        groundZ = GetGroundZ(0.5f, &g_SceneHeroWarpPos, 0);
+        if (groundZ > 2.0f && fabsf(g_SceneHeroWarpPos.z - groundZ) < 2.0f) {
+            g_SceneHeroWarpPos.z = groundZ;
+        }
+
+        Hero_Warp(&g_SceneHeroWarpPos.x, &g_SceneHeroWarpRot.x, 0, 1);
+    }
+
+    if (g_DialogMoby != 0) {
+        ((MobyInstance *)g_DialogMoby)->modeBits &= ~DISABLED;
+    }
+
+    if (g_SceneHideMoby != 0) {
+        MobyInstance *hidden = (MobyInstance *)g_SceneHideMoby;
+
+        g_SceneHideMoby = 0;
+        hidden->modeBits &= ~DISABLED;
+    }
+
+    /* go on with the dialog that started the scene */
+    if (g_DialogMoby != 0) {
+        undefined4 moby = g_DialogMoby;
+        undefined4 line = g_DialogLine;
+
+        g_DialogMoby = 0;
+        g_DialogLine = 0;
+        Dialog_Advance(moby, line, 1);
+    }
+
+    Scene = -1;
+    music_UnpauseDelay(ScaledFrames(30.5f));
+}
+
+// 0x0167e60 (0x538 bytes)
+/* starts scene absolute_scene_id (a dialog cutscene); CROSS skips a scene that isn't Scene */
+void mode_sceneInit(int absolute_scene_id)
+{
+    if (absolute_scene_id < 0 || g_gameMode == GAME_MODE_SCENE) {
+        return;
+    }
+
+    if (g_heroHealth == 0) {
+        HandleHeroDeath();
+        return;
+    }
+
+    music_Pause(0);
+    music_Sync(0);
+    g_CutscenePlaying = 1;
+
+    FastMemSet(g_SceneSavedCamPos, 0, 0x1c0);
+    FastMemSet(&DAT_00a1bf80, 0, 0x40);
+    FastMemSet(&DAT_00a1be80, 0, 0x40);
+    FastMemSet(&DAT_00a1bec0, 0, 0x40);
+    FastMemSet(&DAT_00a1bf40, 0, 0x40);
+    FastMemSet(&DAT_00a1bf00, 0, 0x40);
+
+    g_SceneCheatZoom = 1.0f;
+    DAT_00e5aa64 -= 0x3c000;
+    g_SceneCheatDolly = 0.0f;
+    g_SpaceSceneFrame = 0;
+    g_SpaceSceneChunk = 0;
+    g_SceneLoadBuffer = g_NpcBuffer + 0x3c000;
+    DAT_0095cda8 = g_NpcBuffer;
+    g_SceneId = absolute_scene_id;
+    Help_Kill();
+
+    SceneScreenFade = 1.0f;
+    g_SceneFlash = 0;
+    g_gameMode = GAME_MODE_SCENE;
+
+    g_SceneSavedCamUnderWater = (char)GameCamera.camUnderWater;
+    GameCamera.camUnderWater = 0;
+    g_SceneSavedCamPos[0] = GameCamera.posX;
+    g_SceneSavedCamPos[1] = GameCamera.posY;
+    g_SceneSavedCamPos[2] = GameCamera.posZ;
+    memcpy(g_SceneSavedCamFlags, GameCamera.field8_0x14c, 4);
+
+    TransitionMovement(100, 2);
+    g_heroInvisible = 1;
+    Hero_MakeInvisible();
+
+    if (g_DialogMoby != 0) {
+        ((MobyInstance *)g_DialogMoby)->modeBits |= DISABLED;
+    }
+
+    if (g_SceneHideMoby != 0) {
+        ((MobyInstance *)g_SceneHideMoby)->modeBits |= DISABLED;
+    }
+
+    if ((g_Pad.buttonsPressedThisFrame & CROSS) && Scene != g_SceneId) {
+        mode_sceneUnInit();
+        return;
+    }
+
+    FadeToBlack(6);
+    LoadNpcSubtitles(Level, absolute_scene_id);
+    PreLoadNpcChunk(0);
+    FadeToBlack(ScaledFrames(6.5f));
+    music_Sync(1);
+    g_SceneLoadBuffer = g_NpcBuffer + 0x80000;
+    ParseNpcChunk();
+
+    /* the level's own copies of the scene's actors (by class) stay hidden while it plays */
+    if (Scene == g_SceneId) {
+        char inScene[224];
+
+        FastMemSet(inScene, 0, sizeof(inScene));
+        for (int i = 0; i < g_SpaceSceneMobyCnt; i++) {
+            inScene[g_SpaceSceneMobys[i]->mClass] = 1;
+        }
+
+        for (MobyInstance *moby = g_MobyInstance; moby->state != 0xff; moby++) {
+            if ((moby->state & 0x80) == 0 && inScene[moby->mClass] != 0) {
+                moby->modeBits |= NO_DRAW;
+            }
+        }
+
+        for (int i = 0; i < g_SpaceSceneMobyCnt; i++) {
+            g_SpaceSceneMobys[i]->modeBits &= ~NO_DRAW;
+        }
+    }
+
+    for (MobyInstance *moby = MobyInstancePermEnd; moby->state != 0xff; moby++) {
+        if ((moby->state & 0x80) == 0 && (moby->oClass == MINE_004A || moby->oClass == DECOY)) {
+            moby->modeBits |= NO_DRAW;
+        }
+    }
+
+    g_PendingSpeech = g_SceneId;
+    while (g_SpeechPlaying.status != 3) {
+        sound_Update();
+        STUB_00503078(0);
+    }
+
+    /* the speech starts 3 frames before the scene: start it now and let those frames pass */
+    g_SceneSpeechFrame = -3;
+
+    bool speechStarted = false;
+    if (g_SceneSpeechFrame <= 0) {
+        music_PlayPreseekedSpeech();
+        PreLoadNpcChunk(1);
+        for (int i = 0; i > g_SceneSpeechFrame; i--) {
+            STUB_00503078(0);
+        }
+        speechStarted = true;
+    }
+
+    if (!speechStarted) {
+        PreLoadNpcChunk(1);
+    }
+}
+
+// 0x01683a0 (0x3b0 bytes)
+/* sets GameCamera from the scene's camera frame; returns the frame's flags[0] (set on a cut) */
+char UpdateSceneCamera(void)
+{
+    SceneCameraFrame *frame = &g_SpaceSceneCameraFrames[g_cutsceneCameraFrame];
+    char cut = frame->flags[0];
+    Mtx4 rot;
+    Mtx4 copy;
+
+    g_ViewContext.xratio = frame->xratio;
+    if (Cheats[0] != 0) {
+        g_ViewContext.xratio *= g_SceneCheatZoom;
+    }
+    UpdateViewContext();
+
+    GameCamera.posX = frame->x;
+    GameCamera.posY = frame->y;
+    GameCamera.posZ = frame->z;
+    memcpy(&GameCamera.field8_0x14c, frame->flags, 4);
+
+    float sinX = std::_FSin(frame->rotX, 0);
+    float cosX = std::_FSin(frame->rotX, 1);
+    float sinY = std::_FSin(frame->rotY, 0);
+    float cosY = std::_FSin(frame->rotY, 1);
+    float sinZ = std::_FSin(frame->rotZ, 0);
+    float cosZ = std::_FSin(frame->rotZ, 1);
+    float sinYsinZ = sinY * sinZ;
+    float cosZsinY = cosZ * sinY;
+
+    /* the X, Y, Z euler rotation, starting from the identity at 0x7387f0 */
+    memcpy(&rot, &DAT_007387f0, sizeof(Mtx4));
+    rot.v0.x = cosY * cosZ;
+    rot.v0.y = cosY * sinZ;
+    rot.v0.z = -sinY;
+    rot.v1.x = sinX * cosZsinY - cosX * sinZ;
+    rot.v1.y = sinX * sinYsinZ + cosX * cosZ;
+    rot.v1.z = cosY * sinX;
+    rot.v2.x = cosX * cosZsinY + sinX * sinZ;
+    rot.v2.y = cosX * sinYsinZ - cosZ * sinX;
+    rot.v2.z = cosX * cosY;
+    memcpy(&copy, &rot, sizeof(Mtx4));
+
+    GameCamera.orientMtx.forward.x = -copy.v2.x;
+    GameCamera.orientMtx.right.x = -copy.v0.x;
+    GameCamera.orientMtx.forward.y = -copy.v2.y;
+    GameCamera.orientMtx.right.y = -copy.v0.y;
+    GameCamera.orientMtx.forward.z = -copy.v2.z;
+    GameCamera.orientMtx.right.z = -copy.v0.z;
+    GameCamera.orientMtx.up.x = copy.v1.x;
+    GameCamera.orientMtx.up.y = copy.v1.y;
+    GameCamera.orientMtx.up.z = copy.v1.z;
+
+    if (Cheats[4] != 0) {
+        /* mirrored: right = forward x up */
+        GameCamera.orientMtx.right.x =
+            GameCamera.orientMtx.forward.y * copy.v1.z - GameCamera.orientMtx.forward.z * copy.v1.y;
+        GameCamera.orientMtx.right.y =
+            GameCamera.orientMtx.forward.z * copy.v1.x - GameCamera.orientMtx.forward.x * copy.v1.z;
+        GameCamera.orientMtx.right.z =
+            GameCamera.orientMtx.forward.x * copy.v1.y - GameCamera.orientMtx.forward.y * copy.v1.x;
+        GameCamera.orientMtx.right.w = 0.0f;
+    }
+
+    /* pull the camera back along its forward axis */
+    if (Cheats[0] != 0 && g_SceneCheatDolly != 0.0f) {
+        float forwardX = GameCamera.orientMtx.forward.x;
+        float forwardY = GameCamera.orientMtx.forward.y;
+        float forwardZ = GameCamera.orientMtx.forward.z;
+        float offsetX = 0.0f;
+        float offsetY = 0.0f;
+        float offsetZ = 0.0f;
+        float length = sqrtf(forwardX * forwardX + forwardY * forwardY + forwardZ * forwardZ);
+
+        if (length != 0.0f) {
+            float scale = g_SceneCheatDolly / length;
+
+            offsetX = forwardX * scale;
+            offsetY = forwardY * scale;
+            offsetZ = forwardZ * scale;
+        }
+
+        GameCamera.posX -= offsetX;
+        GameCamera.posY -= offsetY;
+        GameCamera.posZ -= offsetZ;
+    }
+
+    return cut;
+}
+
+// 0x0168768 (0x5cc bytes)
+/* a frame of a scene: its mobys play their recorded positions (two scene frames per animation
+   frame) while the chunks of the scene stream in */
+void UpdateScene(void)
+{
+    if (g_Pad.buttonsPressedThisFrame & START) {
+        mode_sceneUnInit();
+        return;
+    }
+
+    if (UpdatesMobys()) {
+        ResetGameCounters();
+    }
+
+    bool advance = !(DebugUpdate & ENABLE_STEPPING) || (g_Pad.buttonsPressedThisFrame & (L3 | CIRCLE));
+
+    if (advance) {
+        UpdateSpaceSceneEffects();
+    }
+
+    if (UpdatesMobys()) {
+        UpdateMobys();
+        sound_UpdateAmbient();
+    }
+    STUB_0006562c("moby update", 3);
+
+    if ((DebugUpdate & UPDATE_HERO) || StepRequested()) {
+        HeroUpdate();
+    }
+    STUB_0006562c("hero update", 7);
+
+    if ((DebugUpdate & UPDATE_PARTICLES) || StepRequested()) {
+        UpdateParts();
+    }
+    STUB_0006562c("part update", 5);
+
+    if (advance) {
+        g_cutsceneCameraFrame++;
+        g_SpaceSceneFrame++;
+
+        SceneScreenFade -= 0.34f;
+        if (SceneScreenFade < 0.0f) {
+            SceneScreenFade = 0.0f;
+        }
+
+        if (g_SceneSpeechFrame <= g_SpaceSceneFrame) {
+            music_PlayPreseekedSpeech();
+        }
+
+        bool end = *(short *)&g_SpaceSceneNumFrames <= g_SpaceSceneFrame;
+
+        /* START skips a scene once it has faded in; in the story the shoulder buttons must be held too */
+        if (g_SpaceSceneFrame >= ScaledFrames(18.5f) && SceneScreenFade == 0.0f &&
+            (g_Pad.buttonsPressedThisFrame & START)) {
+            bool skippable = g_ChallengeMode != 0 || g_goodiesMenuActive != 0 || g_MoviePlayState != 0 ||
+                             (int)Level < 1;
+
+            if (skippable || (g_Pad.downButtons & (R1 | L1 | R2 | L2)) == (R1 | L1 | R2 | L2)) {
+                end = true;
+            }
+        }
+
+        if (end) {
+            mode_sceneUnInit();
+        }
+        else {
+            int chunkFrames = g_IsPal != 0 ? SCENE_CHUNK_FRAMES_PAL : SCENE_CHUNK_FRAMES_NTSC;
+
+            if (g_cutsceneCameraFrame >= chunkFrames) {
+                music_Sync(1);
+                g_SpaceSceneChunk++;
+                g_SceneLoadBuffer = g_NpcBuffer + 0x80000;
+                ParseNpcChunk();
+                PreLoadNpcChunk(g_SpaceSceneChunk + 1);
+            }
+
+            char cut = UpdateSceneCamera();
+
+            for (int i = 0; i < g_SpaceSceneMobyCnt; i++) {
+                MobyInstance *moby = g_SpaceSceneMobys[i];
+                char animFrame = (char)(g_cutsceneCameraFrame >> 1);
+
+                moby->previousAnimationFrame = animFrame;
+                moby->animationFrame = animFrame + 1;
+                UpdateMobyFrameData(moby);
+
+                moby->animationBlend = (float)FastIntToDouble(g_cutsceneCameraFrame & 1) * 0.5f;
+                if (cut != 0 && (g_cutsceneCameraFrame & 1)) {
+                    moby->animationBlend = 1.0f;
+                }
+
+                /* the positions are recorded per animation frame */
+                float blend = moby->animationBlend;
+                float keep = 1.0f - blend;
+                Vec4 *positions = (Vec4 *)moby->pVar;
+                Vec4 *from = &positions[(u8)moby->previousAnimationFrame];
+                Vec4 *to = &positions[(u8)moby->animationFrame];
+
+                moby->pos.w = from->w;
+                moby->unk71 = -1;
+                moby->pos.x = from->x * keep + to->x * blend;
+                moby->pos.y = from->y * keep + to->y * blend;
+                moby->pos.z = from->z * keep + to->z * blend;
+                UpdateMobyTransform(moby);
+
+                if (moby->shadow != 0) {
+                    MB_SetZBoundsFromFloorCeil(moby);
+                }
+
+                if (moby->oClass == RATCHET) {
+                    Hero_UpdateInScene(moby);
+                }
+
+                if (moby->oClass == CLANK_000A || moby->oClass == GIANT_CLANK || moby->oClass == CLANK_0555) {
+                    Hero_AddPulsingMobyGlow(moby);
+                }
+            }
+        }
+    }
+    STUB_0006562c("camera update", 8);
+
+    sound_Update();
+    STUB_0006562c("sound update", 6);
+
+    UpdatePointLights();
+    UpdateHeroLightAngle();
+
+    if (UpdatesMobys()) {
+        UpdateGameCounters();
+    }
+}
 
 // 0x0168d34 (0xb8 bytes)
-void StartMovie(int arg0,int arg1,int language)
-
+/* switches to the movie mode; arg0 and arg1 are only stored (nothing on PS3 reads them) */
+void StartMovie(int arg0, int arg1, int language)
 {
-  g_ReverbDirty = g_ReverbDirty | 8;
-  FlushCache(0);
-  sound_StopAllSounds();
-  music_Stop();
-  g_CutscenePlaying = 1;
-  g_MovieParam0 = arg0;
-  DAT_00e5a634 = arg1;
-  g_MovieLanguage = language;
-  FadeToBlack(4);
-  Help_Kill();
-  g_gameMode = GAME_MODE_MOVIE;
-  return;
+    g_ReverbDirty |= 8;
+    FlushCache(0);
+    sound_StopAllSounds();
+    music_Stop();
+    g_CutscenePlaying = 1;
+    g_MovieParam0 = arg0;
+    DAT_00e5a634 = arg1;
+    g_MovieLanguage = language;
+    FadeToBlack(4);
+    Help_Kill();
+    g_gameMode = GAME_MODE_MOVIE;
 }
-
 
 // 0x0168dec (0x190 bytes)
-// strings: 00653d14: '/rc1/ps3data/movies/infobots[%d].bik'
-
-
 void PlayInfobotMovie(int movieIdx)
-
 {
-  void *pvVar1;
-  undefined8 uVar2;
-  int iVar3;
-  char acStack_e0 [64];
-  GPiece<128> auStack_a0;
-  
-  if (movieIdx < 0x13 && 0 < movieIdx) {
-    pvVar1 = g_pBinkPlayer;
-    if (g_pBinkPlayer == (void *)0x0) {
-      uVar2 = Idol_New(0x60);
-      pvVar1 = (void *)0x0;
-      if ((void *)uVar2 != (void *)0x0) {
-        BinkPlayer_Init(uVar2);
-        pvVar1 = (void *)uVar2;
-      }
+    if (movieIdx <= 0 || movieIdx >= 19) {
+        return;
     }
-    g_pBinkPlayer = pvVar1;
-    pvVar1 = g_pBinkPlayer;
-    iVar3 = snprintf(acStack_e0,"/rc1/ps3data/movies/infobots[%d].bik",movieIdx);
-    uVar2 = FileSys_Get(iVar3);
-    FileSys_ResolvePath(uVar2,acStack_e0,auStack_a0);
-    BinkPlayer_Start(pvVar1,auStack_a0,g_Language,0x400);
-    iVar3 = g_Language;
-    if (g_heroHealth == 0) {
-      HandleHeroDeath();
-    }
-    else if (g_HeroIsOutOfBounds == '\0') {
-      g_ReverbDirty = g_ReverbDirty | 8;
-      FlushCache(0);
-      sound_StopAllSounds();
-      music_Stop();
-      g_MovieParam0 = &g_heroMtx;
-      DAT_00e5a634 = &g_heroMtx;
-      g_MovieLanguage = iVar3;
-      g_CutscenePlaying = 1;
-      FadeToBlack(4);
-      Help_Kill();
-      g_gameMode = GAME_MODE_MOVIE;
-    }
-  }
-  return;
-}
 
+    StartBink("/rc1/ps3data/movies/infobots[%d].bik", movieIdx, g_Language);
+
+    int language = g_Language;
+    if (g_heroHealth == 0) {
+        HandleHeroDeath();
+    }
+    else if (g_HeroIsOutOfBounds == 0) {
+        /* the binary passes the hero block (0x969ce0) for both unused arguments */
+        StartMovie((int)(uintptr_t)&g_heroMtx, (int)(uintptr_t)&g_heroMtx, language);
+    }
+}
 
 // 0x0168f7c (0x190 bytes)
-// strings: 00653d3c: '/rc1/ps3data/movies/help[%d].bik'
-
-
 void PlayHelpMovie(int movieIdx)
-
 {
-  void *pvVar1;
-  undefined8 uVar2;
-  int iVar3;
-  char acStack_e0 [64];
-  GPiece<128> auStack_a0;
-  
-  if ((uint)movieIdx < 3) {
-    pvVar1 = g_pBinkPlayer;
-    if (g_pBinkPlayer == (void *)0x0) {
-      uVar2 = Idol_New(0x60);
-      pvVar1 = (void *)0x0;
-      if ((void *)uVar2 != (void *)0x0) {
-        BinkPlayer_Init(uVar2);
-        pvVar1 = (void *)uVar2;
-      }
+    if ((u32)movieIdx >= 3) {
+        return;
     }
-    g_pBinkPlayer = pvVar1;
-    pvVar1 = g_pBinkPlayer;
-    iVar3 = snprintf(acStack_e0,"/rc1/ps3data/movies/help[%d].bik",movieIdx);
-    uVar2 = FileSys_Get(iVar3);
-    FileSys_ResolvePath(uVar2,acStack_e0,auStack_a0);
-    BinkPlayer_Start(pvVar1,auStack_a0,g_Language,0x400);
-    iVar3 = g_Language;
-    if (g_heroHealth == 0) {
-      HandleHeroDeath();
-    }
-    else if (g_HeroIsOutOfBounds == '\0') {
-      g_ReverbDirty = g_ReverbDirty | 8;
-      FlushCache(0);
-      sound_StopAllSounds();
-      music_Stop();
-      g_MovieParam0 = &g_heroMtx;
-      DAT_00e5a634 = &g_heroMtx;
-      g_MovieLanguage = iVar3;
-      g_CutscenePlaying = 1;
-      FadeToBlack(4);
-      Help_Kill();
-      g_gameMode = GAME_MODE_MOVIE;
-    }
-  }
-  return;
-}
 
+    StartBink("/rc1/ps3data/movies/help[%d].bik", movieIdx, g_Language);
+
+    int language = g_Language;
+    if (g_heroHealth == 0) {
+        HandleHeroDeath();
+    }
+    else if (g_HeroIsOutOfBounds == 0) {
+        StartMovie((int)(uintptr_t)&g_heroMtx, (int)(uintptr_t)&g_heroMtx, language);
+    }
+}
 
 // 0x016910c (0x15c bytes)
-// strings: 00653d60: '/rc1/ps3data/movies/special[%d].bik'
-
-
 void PlaySpecialMovie(int movieIdx)
-
 {
-  void *pvVar1;
-  int iVar3;
-  undefined8 uVar2;
-  undefined8 unaff_r29;
-  char acStack_e0 [64];
-  GPiece<128> auStack_a0;
-  
-  if ((uint)movieIdx < 4) {
-    pvVar1 = g_pBinkPlayer;
-    if (g_pBinkPlayer == (void *)0x0) {
-      unaff_r29 = Idol_New(0x60);
-      pvVar1 = (void *)0x0;
-      if ((void *)unaff_r29 != (void *)0x0) {
-        BinkPlayer_Init(unaff_r29);
-        pvVar1 = (void *)unaff_r29;
-      }
+    if ((u32)movieIdx >= 4) {
+        return;
     }
-    g_pBinkPlayer = pvVar1;
-    pvVar1 = g_pBinkPlayer;
-    iVar3 = snprintf(acStack_e0,"/rc1/ps3data/movies/special[%d].bik",movieIdx);
-    uVar2 = FileSys_Get(iVar3);
-    FileSys_ResolvePath(uVar2,acStack_e0,auStack_a0);
-    BinkPlayer_Start(pvVar1,auStack_a0,0,0x400);
-    g_ReverbDirty = g_ReverbDirty | 8;
-    FlushCache(0);
-    sound_StopAllSounds();
-    music_Stop();
-    g_MovieParam0 = (undefined4)unaff_r29;
-    g_MovieLanguage = 0;
-    g_CutscenePlaying = 1;
-    DAT_00e5a634 = g_MovieParam0;
-    FadeToBlack(4);
-    Help_Kill();
-    g_gameMode = GAME_MODE_MOVIE;
-  }
-  return;
-}
 
+    BinkPlayer *player = StartBink("/rc1/ps3data/movies/special[%d].bik", movieIdx, 0);
+
+    /* the binary passes the register Idol_New's result was in, which is stale when the player
+       already existed; nothing reads these */
+    StartMovie((int)(uintptr_t)player, (int)(uintptr_t)player, 0);
+}
 
 // 0x0169268 (0x160 bytes)
-// strings: 00653d84: '/rc1/ps3data/movies/story[%d].bik'
-
-
 void PlayStoryMovie(int movieIdx)
-
 {
-  void *pvVar1;
-  int iVar3;
-  undefined8 uVar2;
-  undefined8 unaff_r29;
-  char acStack_e0 [64];
-  GPiece<128> auStack_a0;
-  
-  if ((uint)movieIdx < 0xc) {
-    pvVar1 = g_pBinkPlayer;
-    if (g_pBinkPlayer == (void *)0x0) {
-      unaff_r29 = Idol_New(0x60);
-      pvVar1 = (void *)0x0;
-      if ((void *)unaff_r29 != (void *)0x0) {
-        BinkPlayer_Init(unaff_r29);
-        pvVar1 = (void *)unaff_r29;
-      }
+    if ((u32)movieIdx >= 12) {
+        return;
     }
-    g_pBinkPlayer = pvVar1;
-    pvVar1 = g_pBinkPlayer;
-    iVar3 = snprintf(acStack_e0,"/rc1/ps3data/movies/story[%d].bik",movieIdx);
-    uVar2 = FileSys_Get(iVar3);
-    FileSys_ResolvePath(uVar2,acStack_e0,auStack_a0);
-    BinkPlayer_Start(pvVar1,auStack_a0,g_Language,0x400);
-    iVar3 = g_Language;
-    g_ReverbDirty = g_ReverbDirty | 8;
-    FlushCache(0);
-    sound_StopAllSounds();
-    music_Stop();
-    g_MovieParam0 = (undefined4)unaff_r29;
-    g_MovieLanguage = iVar3;
-    g_CutscenePlaying = 1;
-    DAT_00e5a634 = g_MovieParam0;
-    FadeToBlack(4);
-    Help_Kill();
-    g_gameMode = GAME_MODE_MOVIE;
-  }
-  return;
-}
 
+    BinkPlayer *player = StartBink("/rc1/ps3data/movies/story[%d].bik", movieIdx, g_Language);
+
+    StartMovie((int)(uintptr_t)player, (int)(uintptr_t)player, g_Language);
+}
 
 // 0x01693c8 (0x274 bytes)
+/* ends a movie: stores GS memory (the z buffer pages, then the GS ram) to g_MovieVramSave (PS2
+   leftovers; the GS calls are stubs) and goes back to gameplay */
 void mode_movieUnInit(void)
-
 {
-  undefined4 uVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  ulonglong uVar5;
-  int iVar6;
-  undefined1 uStack_50;
-  GPiece<15> auStack_4f;
-  
-  g_CutscenePlaying = 1;
-  STUB_00503078(0);
-  sceGsSyncPath(0,0);
-  STUB_00503208(&PTR_____Unused_Respawn_IncCounter_a53504_00707950);
-  iVar2 = 0xd;
-  uVar5 = (ulonglong)DAT_00e5a640;
-  if (Cutscene != 0) {
-    iVar2 = 0xe;
-  }
-  iVar6 = 0x11;
-  if (Cutscene != 0) {
-    iVar6 = 0xe;
-  }
-  iVar3 = 0;
-  iVar4 = GSmem.zbuf;
-  if (iVar2 != 0) {
-    do {
-      FUN_00502dfc(&uStack_50,iVar4 >> 8,2,0x2a,0,0,0x80,0x80);
-      FlushCache(0);
-      FUN_00502df8(&uStack_50,uVar5);
-      sceGsSyncPath(0,0);
-      iVar3 = iVar3 + 1;
-      iVar4 = iVar4 + 0x10000;
-      uVar5 = uVar5 + 0xc000;
-    } while (iVar3 < iVar2);
-  }
-  iVar4 = 0;
-  iVar2 = g_GsRamBase;
-  if (iVar6 != 0) {
-    do {
-      FUN_00502dfc(auStack_4f,iVar2 >> 8,1,0x12,0,0,0x40,0x40);
-      FlushCache(0);
-      FUN_00502df8(auStack_4f,uVar5 & 0xffffffff);
-      sceGsSyncPath(0,0);
-      iVar4 = iVar4 + 1;
-      iVar2 = iVar2 + 0x4000;
-      uVar5 = uVar5 + 0x4000;
-    } while (iVar4 < iVar6);
-  }
-  if (g_MoviePlayState == 2) {
-    g_MoviePlayState = 0;
-  }
-  FadeToBlack(4);
-  music_StartTrack((int)g_MusicPlaying.track,1,0x400);
-  uVar1 = DAT_00a15c10;
-  iVar2 = DAT_00a15c0c;
-  g_gameMode = GAME_MODE_NORMAL;
-  if (DAT_00a15c0c != 0) {
-    DAT_00a15c0c = 0;
-    DAT_00a15c10 = 0;
-    FUN_004d31b0(iVar2,uVar1,1);
-  }
-  g_ReverbDirty = g_ReverbDirty | 0x10;
-  return;
-}
+    /* empty structs on PS3, so one byte each */
+    struct GsStoreImage {};
+    GsStoreImage zbufImage;
+    GsStoreImage ramImage;
 
+    g_CutscenePlaying = 1;
+    STUB_00503078(0);
+    sceGsSyncPath(0, 0);
+    STUB_00503208(Respawn_IncCounter);
+
+    int zbufPages = Cutscene != 0 ? 14 : 13;
+    int ramPages = Cutscene != 0 ? 14 : 17;
+    u32 dest = g_MovieVramSave;
+
+    int gsAddr = GSmem.zbuf;
+    for (int i = 0; i < zbufPages; i++) {
+        sceGsSetDefStoreImage(&zbufImage, gsAddr >> 8, 2, 0x2a, 0, 0, 0x80, 0x80);
+        FlushCache(0);
+        sceGsExecStoreImage(&zbufImage, dest);
+        sceGsSyncPath(0, 0);
+        gsAddr += 0x10000;
+        dest += 0xc000;
+    }
+
+    gsAddr = g_GsRamBase;
+    for (int i = 0; i < ramPages; i++) {
+        sceGsSetDefStoreImage(&ramImage, gsAddr >> 8, 1, 0x12, 0, 0, 0x40, 0x40);
+        FlushCache(0);
+        sceGsExecStoreImage(&ramImage, dest);
+        sceGsSyncPath(0, 0);
+        gsAddr += 0x4000;
+        dest += 0x4000;
+    }
+
+    if (g_MoviePlayState == 2) {
+        g_MoviePlayState = 0;
+    }
+
+    FadeToBlack(4);
+    music_StartTrack(g_MusicPlaying.track, 1, 0x400);
+    g_gameMode = GAME_MODE_NORMAL;
+
+    if (g_DialogMoby != 0) {
+        undefined4 moby = g_DialogMoby;
+        undefined4 line = g_DialogLine;
+
+        g_DialogMoby = 0;
+        g_DialogLine = 0;
+        Dialog_Advance(moby, line, 1);
+    }
+
+    g_ReverbDirty |= 0x10;
+}
 
 // 0x016963c (0x110 bytes)
 void PlayMovieBlocking(void)
-
 {
-  bool bVar1;
-  void *pvVar2;
-  undefined8 uVar3;
-  int iVar4;
-  int iVar5;
-  
-  pvVar2 = g_pBinkPlayer;
-  if (g_pBinkPlayer == (void *)0x0) {
-    uVar3 = Idol_New(0x60);
-    pvVar2 = (void *)0x0;
-    if ((void *)uVar3 != (void *)0x0) {
-      BinkPlayer_Init(uVar3);
-      pvVar2 = (void *)uVar3;
-    }
-  }
-  g_pBinkPlayer = pvVar2;
-  pvVar2 = g_pBinkPlayer;
-  bVar1 = false;
-  iVar5 = 0;
-  do {
-    UpdatePad();
-    if ((g_Pad.downButtons & START) != 0) {
-      bVar1 = true;
-      break;
-    }
-    UpdateOcclusion(0);
-    iVar4 = BinkPlayer_GetState(pvVar2);
-    cellSysutilCheckCallback();
-    if (1 < iVar4) {
-      iVar5 = BinkPlayer_DrawFrame(pvVar2);
-    }
-    Render_DispatchJob();
-  } while (iVar5 == 0);
-  if (bVar1) {
-    FUN_004d4c88(pvVar2);
-  }
-  return;
+    RunBink(GetBinkPlayer());
 }
-
 
 // 0x016974c (0x154 bytes)
 void UpdateCinematic(void)
-
 {
-  bool bVar1;
-  void *pvVar2;
-  undefined8 uVar3;
-  int iVar4;
-  int iVar5;
-  
-  FlushCache(0);
-  sound_StopAllSounds();
-  music_Stop();
-  STUB_005066bc_RET_0(0);
-  pvVar2 = g_pBinkPlayer;
-  if (g_pBinkPlayer == (void *)0x0) {
-    uVar3 = Idol_New(0x60);
-    pvVar2 = (void *)0x0;
-    if ((void *)uVar3 != (void *)0x0) {
-      BinkPlayer_Init(uVar3);
-      pvVar2 = (void *)uVar3;
-    }
-  }
-  g_pBinkPlayer = pvVar2;
-  pvVar2 = g_pBinkPlayer;
-  bVar1 = false;
-  iVar5 = 0;
-  do {
-    UpdatePad();
-    if ((g_Pad.downButtons & START) != 0) {
-      bVar1 = true;
-      break;
-    }
-    UpdateOcclusion(0);
-    iVar4 = BinkPlayer_GetState(pvVar2);
-    cellSysutilCheckCallback();
-    if (1 < iVar4) {
-      iVar5 = BinkPlayer_DrawFrame(pvVar2);
-    }
-    Render_DispatchJob();
-  } while (iVar5 == 0);
-  if (bVar1) {
-    FUN_004d4c88(pvVar2);
-  }
-  FUN_00503128_RET_0(0);
-  mode_movieUnInit();
-  return;
-}
+    FlushCache(0);
+    sound_StopAllSounds();
+    music_Stop();
+    STUB_005066bc_RET_0(0);
 
+    RunBink(GetBinkPlayer());
+
+    FUN_00503128_RET_0(0);
+    mode_movieUnInit();
+}
 
 // 0x01698a0 (0x274 bytes)
-// strings: 00653da8: 'rc1/ps3data/global/credits/credits[0].ps3' | 00653dd8: 'rc1/ps3data/global/credits/credits[1].ps3' | 00653e08: 'rc1/ps3data/global/credits/credits[0].vram' | 00653e38: 'credits_images_ntsc' | 00653e50: '/rc1/ps3data/global/credits/credits[1].vram'
-
-
+/* starts the credits: loads the first two images */
 void mode_creditsInit(void)
-
 {
-  int iVar1;
-  int *piVar2;
-  
-  iVar1 = DAT_00902e9c;
-  music_Sync(0);
-  FadeToBlack(8);
-  SceneScreenFade = 1.0;
-  g_CutscenePlaying = 1;
-  g_gameMode = GAME_MODE_PUZZLE;
-  FastMemSet(&DAT_00a15c1c,0,0x58);
-  piVar2 = g_NpcBuffer;
-  DAT_00a15c24 = DAT_00a10924;
-  DAT_00a15c28 = DAT_00a10924 + 0xd0000;
-  LoadAssetFromFile("rc1/ps3data/global/credits/credits[0].ps3",g_NpcBuffer,0x24);
-  DAT_00a15c2c = *piVar2;
-  DAT_00a15c30 = piVar2[1];
-  DAT_00a15c34 = piVar2[2];
-  DAT_00a15c38 = piVar2[3];
-  DAT_00a15c3c = piVar2[4];
-  DAT_00a15c40 = piVar2[5];
-  DAT_00a15c44 = piVar2[6];
-  DAT_00a15c48 = piVar2[7];
-  DAT_00a15c4c = piVar2[8];
-  LoadAssetFromFile("rc1/ps3data/global/credits/credits[1].ps3",piVar2,0x24);
-  DAT_00a15c50 = *piVar2;
-  DAT_00a15c54 = piVar2[1];
-  DAT_00a15c58 = piVar2[2];
-  DAT_00a15c5c = piVar2[3];
-  DAT_00a15c60 = piVar2[4];
-  DAT_00a15c64 = piVar2[5];
-  DAT_00a15c68 = piVar2[6];
-  DAT_00a15c6c = piVar2[7];
-  DAT_00a15c70 = piVar2[8];
-  LoadAssetFromFile("rc1/ps3data/global/credits/credits[0].vram",DAT_00a15c24,0xd0000);
-  DAT_00a15c2c = DAT_00a15c2c + (DAT_00a15c24 - *(int *)(iVar1 + 0x4ac));
-  music_Sync(1);
-  idol::PRINT_m_LoadGameFile(DAT_00a15c28,"credits_images_ntsc");
-  LoadAssetFromFile("/rc1/ps3data/global/credits/credits[1].vram",DAT_00a15c28,0xd0000);
-  DAT_00a15c50 = DAT_00a15c50 + (DAT_00a15c28 - *(int *)(iVar1 + 0x4ac));
-  return;
-}
+    u32 vramBase = *(u32 *)(DAT_00902e9c + 0x4ac);
 
+    music_Sync(0);
+    FadeToBlack(8);
+    SceneScreenFade = 1.0f;
+    g_CutscenePlaying = 1;
+    g_gameMode = GAME_MODE_PUZZLE;
+
+    FastMemSet(&g_Credits, 0, sizeof(g_Credits));
+    g_Credits.vram[0] = DAT_00a10924;
+    g_Credits.vram[1] = DAT_00a10924 + CREDITS_IMAGE_SIZE;
+
+    CreditsImage *header = (CreditsImage *)(uintptr_t)g_NpcBuffer;
+    LoadAssetFromFile("rc1/ps3data/global/credits/credits[0].ps3", header, sizeof(CreditsImage));
+    g_Credits.images[0] = *header;
+    LoadAssetFromFile("rc1/ps3data/global/credits/credits[1].ps3", header, sizeof(CreditsImage));
+    g_Credits.images[1] = *header;
+
+    LoadAssetFromFile("rc1/ps3data/global/credits/credits[0].vram", (void *)(uintptr_t)g_Credits.vram[0],
+                      CREDITS_IMAGE_SIZE);
+    g_Credits.images[0].texData += g_Credits.vram[0] - vramBase;
+
+    music_Sync(1);
+    idol::PRINT_m_LoadGameFile(g_Credits.vram[1], (char *)"credits_images_ntsc");
+    LoadAssetFromFile("/rc1/ps3data/global/credits/credits[1].vram", (void *)(uintptr_t)g_Credits.vram[1],
+                      CREDITS_IMAGE_SIZE);
+    g_Credits.images[1].texData += g_Credits.vram[1] - vramBase;
+}
 
 // 0x0169b14 (0x6c bytes)
 void mode_creditsUnInit(void)
-
 {
-  STUB_00174cf4(1);
-  FadeToBlack(0xc);
-  music_StopLoad();
-  g_CutscenePlaying = 1;
-  g_gameMode = GAME_MODE_NORMAL;
-  SceneScreenFade = 0.0;
-  VU1_setBufSizeByLevel();
-  return;
-}
-
-
-// 0x0169b88 (0x550 bytes)
-// strings: 00653e7c: 'g_wad.game.credits_images_ntsc[image_id]' | 00653eac: 'rc1/ps3data/global/credits/credits[%d].ps3' | 00653edc: 'rc1/ps3data/global/credits/credits[%d].vram'
-
-
-void UpdateCredits(void)
-
-{
-  int iVar1;
-  int *piVar2;
-  bool bVar3;
-  int iVar4;
-  double dVar5;
-  char acStack_110 [128];
-  
-  music_Sync(0);
-  bVar3 = g_JapaneseMode;
-  SceneScreenFade = SceneScreenFade - 0.05;
-  dVar5 = 0.0;
-  if (SceneScreenFade < 0.0) {
-    SceneScreenFade = 0.0;
-  }
-  if (DAT_00a15c1c == 0) {
-    if (*(int *)(&DAT_0072075c + (int)((longlong)DAT_00a15c1e << 2)) + -0x24 <= (int)DAT_00a15c22) {
-      if (g_MusicLoading != 0) {
-        music_Sync(1);
-      }
-      if (g_JapaneseMode == false) {
-        if ((bVar3 != false) && (DAT_00a15c1e == 0x29)) {
-          STUB_00174cf4(1);
-          FadeToBlack(0xc);
-          music_StopLoad();
-          SceneScreenFade = (float)dVar5;
-          g_CutscenePlaying = 1;
-          g_gameMode = GAME_MODE_NORMAL;
-          VU1_setBufSizeByLevel();
-          return;
-        }
-        if (0x2c < DAT_00a15c1e) {
-          STUB_00174cf4(1);
-          FadeToBlack(0xc);
-          music_StopLoad();
-          SceneScreenFade = (float)dVar5;
-          g_CutscenePlaying = 1;
-          g_gameMode = GAME_MODE_NORMAL;
-          VU1_setBufSizeByLevel();
-          return;
-        }
-        DAT_00a15c20 = -1;
-        DAT_00a15c1c = 1;
-      }
-      else {
-        if (0x24 < DAT_00a15c1e) {
-          STUB_00174cf4(1);
-          FadeToBlack(0xc);
-          music_StopLoad();
-          SceneScreenFade = (float)dVar5;
-          g_CutscenePlaying = 1;
-          g_gameMode = GAME_MODE_NORMAL;
-          VU1_setBufSizeByLevel();
-          return;
-        }
-        DAT_00a15c20 = -1;
-        DAT_00a15c1c = 1;
-      }
-    }
-  }
-  else if ((DAT_00a15c1c == 1) &&
-          (STUB_00174cf4(1), iVar1 = DAT_00902e9c, 0x23 < DAT_00a15c20)) {
-    if (g_JapaneseMode == false) {
-      if ((bVar3 == false) && (DAT_00a15c1e == 0x11)) {
-        DAT_00a15c1e = 0x1b;
-        DAT_00a15c22 = 0x2238;
-      }
-      if ((bVar3 != false) && (DAT_00a15c1e == 8)) {
-        DAT_00a15c1e = 0x11;
-        DAT_00a15c22 = 0x1590;
-      }
-      if ((bVar3 == false) && (DAT_00a15c1e == 0x27)) {
-        DAT_00a15c1e = 0x29;
-        DAT_00a15c22 = 0x350c;
-      }
-    }
-    DAT_00a15c1c = 0;
-    DAT_00a15c20 = -1;
-    iVar4 = (int)DAT_00a15c1e + ((int)DAT_00a15c1e / 0x14) * -0x14;
-    DAT_00a15c1e = DAT_00a15c1e + 1;
-    idol::PRINT_m_LoadGameFile(DAT_00a15c28,"g_wad.game.credits_images_ntsc[image_id]");
-    piVar2 = DAT_00a10920;
-    DAT_00a15c2c = DAT_00a15c50;
-    DAT_00a15c30 = DAT_00a15c54;
-    DAT_00a15c34 = DAT_00a15c58;
-    DAT_00a15c38 = DAT_00a15c5c;
-    DAT_00a15c3c = DAT_00a15c60;
-    DAT_00a15c40 = DAT_00a15c64;
-    DAT_00a15c44 = DAT_00a15c68;
-    DAT_00a15c48 = DAT_00a15c6c;
-    DAT_00a15c4c = DAT_00a15c70;
-    snprintf(acStack_110,"rc1/ps3data/global/credits/credits[%d].ps3",iVar4);
-    LoadAssetFromFile(acStack_110,piVar2,0x24);
-    DAT_00a15c50 = *piVar2;
-    DAT_00a15c54 = piVar2[1];
-    DAT_00a15c58 = piVar2[2];
-    DAT_00a15c5c = piVar2[3];
-    DAT_00a15c60 = piVar2[4];
-    DAT_00a15c64 = piVar2[5];
-    DAT_00a15c68 = piVar2[6];
-    DAT_00a15c6c = piVar2[7];
-    DAT_00a15c70 = piVar2[8];
-    snprintf(acStack_110,"rc1/ps3data/global/credits/credits[%d].vram",iVar4);
-    LoadAssetFromFile(acStack_110,DAT_00a15c28,0xd0000);
-    DAT_00a15c50 = DAT_00a15c50 + (DAT_00a15c28 - *(int *)(iVar1 + 0x4ac));
-  }
-  DAT_00a15c20 = DAT_00a15c20 + 1;
-  DAT_00a15c22 = DAT_00a15c22 + 1;
-  if ((g_Pad.buttonsPressedThisFrame & START) != 0) {
     STUB_00174cf4(1);
-    FadeToBlack(0xc);
+    FadeToBlack(12);
     music_StopLoad();
-    SceneScreenFade = (float)dVar5;
     g_CutscenePlaying = 1;
     g_gameMode = GAME_MODE_NORMAL;
+    SceneScreenFade = 0.0f;
     VU1_setBufSizeByLevel();
-  }
-  sound_Update();
-  return;
 }
 
+// 0x0169b88 (0x550 bytes)
+/* scrolls the credits images; each one, once scrolled, loads the next into the second half */
+void UpdateCredits(void)
+{
+    char path[128];
 
+    music_Sync(0);
+
+    /* the binary reads g_JapaneseMode here and again below */
+    bool japanese = g_JapaneseMode;
+
+    SceneScreenFade -= 0.05f;
+    if (SceneScreenFade < 0.0f) {
+        SceneScreenFade = 0.0f;
+    }
+
+    if (g_Credits.state == 0) {
+        if (g_Credits.frame >= g_CreditsImageLength[g_Credits.image] - 36) {
+            if (g_MusicLoading != 0) {
+                music_Sync(1);
+            }
+
+            bool finished;
+            if (g_JapaneseMode) {
+                finished = g_Credits.image > 36;
+            }
+            else {
+                finished = (japanese && g_Credits.image == 41) || g_Credits.image > 44;
+            }
+
+            if (finished) {
+                mode_creditsUnInit();
+                return;
+            }
+
+            g_Credits.loadTimer = -1;
+            g_Credits.state = 1;
+        }
+    }
+    else if (g_Credits.state == 1) {
+        STUB_00174cf4(1);
+
+        if (g_Credits.loadTimer >= 36) {
+            u32 vramBase = *(u32 *)(DAT_00902e9c + 0x4ac);
+
+            /* the images only in one language's credits */
+            if (!g_JapaneseMode) {
+                if (!japanese && g_Credits.image == 17) {
+                    g_Credits.image = 27;
+                    g_Credits.frame = 0x2238;
+                }
+
+                if (japanese && g_Credits.image == 8) {
+                    g_Credits.image = 17;
+                    g_Credits.frame = 0x1590;
+                }
+
+                if (!japanese && g_Credits.image == 39) {
+                    g_Credits.image = 41;
+                    g_Credits.frame = 0x350c;
+                }
+            }
+
+            g_Credits.state = 0;
+            g_Credits.loadTimer = -1;
+
+            int file = g_Credits.image % 20;
+            g_Credits.image++;
+
+            idol::PRINT_m_LoadGameFile(g_Credits.vram[1], (char *)"g_wad.game.credits_images_ntsc[image_id]");
+
+            CreditsImage *header = (CreditsImage *)(uintptr_t)DAT_00a10920;
+            g_Credits.images[0] = g_Credits.images[1];
+
+            sprintf(path, "rc1/ps3data/global/credits/credits[%d].ps3", file);
+            LoadAssetFromFile(path, header, sizeof(CreditsImage));
+            g_Credits.images[1] = *header;
+
+            sprintf(path, "rc1/ps3data/global/credits/credits[%d].vram", file);
+            LoadAssetFromFile(path, (void *)(uintptr_t)g_Credits.vram[1], CREDITS_IMAGE_SIZE);
+            g_Credits.images[1].texData += g_Credits.vram[1] - vramBase;
+        }
+    }
+
+    g_Credits.loadTimer++;
+    g_Credits.frame++;
+
+    if (g_Pad.buttonsPressedThisFrame & START) {
+        mode_creditsUnInit();
+    }
+
+    sound_Update();
+}

@@ -144,7 +144,7 @@ void AdvanceLoadingStage(void);
 int LoadLevelFiles(void);
 int LoadAllMobys(int reload, int restoreCheckpoint);
 int LoadNpcMobys(int level_id, int scene_id);
-int LoadNpcSubtitles(void);
+int LoadNpcSubtitles(int level, int scene);
 int PreLoadNpcChunk(int chunk_id);
 void ParseNpcChunk(void);
 void LoadWeaponCutscene(int weapon);

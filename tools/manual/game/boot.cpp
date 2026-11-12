@@ -716,7 +716,7 @@ void Load_Front_End(void)
     }
 
     /* the space scene */
-    FastMemSet(&DAT_0095cd50, 0, 0x1c0);
+    FastMemSet(g_SceneSavedCamPos, 0, 0x1c0);
     FastMemSet(&DAT_00a1be80, 0, 0x40);
     g_SceneLoadBuffer = g_NpcBuffer + 0x200000;
     DAT_0095cda8 = g_NpcBuffer;

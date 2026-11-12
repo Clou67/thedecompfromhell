@@ -16,6 +16,7 @@
 #include "game/space.h"
 #include "game/update.h"
 #include "game/update/moby1130.h"
+#include "game/vendor.h"
 #include "idol/fastfunc.h"
 #include "idol/mUnk.h"
 
@@ -42,11 +43,11 @@ void M890_004a2b90(int param_1)
     puVar3 = &DAT_0095cd50;
     if ((g_SceneId == 2 && 0x1e9 < g_SpaceSceneFrame) &&
        (g_SpaceSceneFrame < 0x266)) {
-      DAT_00a15f30 = 0xbe4ccccd;
+      g_SceneCheatDolly = 0xbe4ccccd;
     }
     if (((g_SceneId == 2) && (0x2ed < g_SpaceSceneFrame)) &&
        (g_SpaceSceneFrame < 0x321)) {
-      DAT_00a15f30 = 0x3e4ccccd;
+      g_SceneCheatDolly = 0x3e4ccccd;
     }
     iVar2 = 0;
     sVar1 = g_SpaceSceneMobyCnt.piece<0,2>();
@@ -156,11 +157,11 @@ void UpdateMoby_890(MobyInstance *moby)
     puVar27 = &DAT_0095cd50;
     if ((g_SceneId == 2 && 0x1e9 < g_SpaceSceneFrame) &&
        (g_SpaceSceneFrame < 0x266)) {
-      DAT_00a15f30 = 0xbe4ccccd;
+      g_SceneCheatDolly = 0xbe4ccccd;
     }
     if (((g_SceneId == 2) && (0x2ed < g_SpaceSceneFrame)) &&
        (g_SpaceSceneFrame < 0x321)) {
-      DAT_00a15f30 = 0x3e4ccccd;
+      g_SceneCheatDolly = 0x3e4ccccd;
     }
     iVar20 = 0;
     sVar24 = g_SpaceSceneMobyCnt.piece<0,2>();

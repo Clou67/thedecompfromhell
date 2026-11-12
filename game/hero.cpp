@@ -12713,7 +12713,7 @@ void HeroUpdate(void)
 // 0x0095aa8 (0x464 bytes)
 // strings: 0096c074: 'None'
 
-void ____Hero_AddPulsingMobyGlow(MobyInstance *param_1)
+void Hero_AddPulsingMobyGlow(MobyInstance *param_1)
 
 {
   bool bVar1;

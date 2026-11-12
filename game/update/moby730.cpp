@@ -19,6 +19,7 @@
 #include "game/update.h"
 #include "game/update/moby1118.h"
 #include "game/update/moby1130.h"
+#include "game/vendor.h"
 #include "idol/fastfunc.h"
 
 // 0x04362d8 (0x14 bytes)

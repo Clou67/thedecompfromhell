@@ -140,6 +140,7 @@ extern undefined4 DAT_00e5aa70; /* 0xe5aa70 */
 extern DebugCameraSpeeds DebugCameraSpeed; /* 0x95c630 */
 extern int DebugSelectedCol; /* 0x95c5cc */ /* type set in global_types.tsv */
 extern int DebugSelectedRow; /* 0x95c5d0 */ /* type set in global_types.tsv */
+extern DEBUG_OPTION DebugUpdate; /* 0x95c5c8 */
 extern int DrawDistMode; /* 0x95c5e8 */ /* type set in global_types.tsv */
 extern DebugDrawMode DrawMode; /* 0x95c5c4 */
 extern int Invincibility; /* 0x95c5e4 */ /* type set in global_types.tsv */

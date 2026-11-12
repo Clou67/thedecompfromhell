@@ -234,7 +234,7 @@ void startLevel(void)
                         if (g_gameMode == GAME_MODE_NORMAL) {
                             UpdatePad();
                             UpdateGameplay();
-                        } else if (g_gameMode == GAME_MODE_SCENE && !DAT_0095cda0) {
+                        } else if (g_gameMode == GAME_MODE_SCENE && !g_SceneRecording) {
                             UpdatePad();
                             UpdateScene();
                         }

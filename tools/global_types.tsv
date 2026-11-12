@@ -397,3 +397,21 @@ g_ShipLiftPitch	float NAME /* 0x964624 */
 g_ShipLiftYaw	float NAME /* 0x964628 */
 g_ShipTrailOffsets	Vec4 NAME[3][2] /* 0x731ec0: the two engine trails' origins per variant (ship space) */
 g_ShipRiderOffsets	Vec4 NAME[2][3] /* 0x7321c0: Ratchet's then Clank's seat per variant (ship space) */
+g_Credits	CreditsState NAME /* 0xa15c1c */
+g_CreditsImageLength	int NAME[] /* 0x72075c: frames each credits image scrolls for */
+g_SceneSavedCamPos	float NAME[3] /* 0x95cd50: GameCamera's position while a scene plays */
+g_SceneSavedCamFlags	u8 NAME[4] /* 0x95cd5c: GameCamera's bytes at 0x14c while a scene plays */
+g_SceneHeroWarpPos	Vec4 NAME /* 0x95cd60: where the hero is put when the scene ends */
+g_SceneHeroWarpRot	Vec4 NAME /* 0x95cd70 */
+g_SceneHeroWarpPending	u8 NAME /* 0x95cd9a: g_SceneHeroWarpPos is set */
+g_SceneSpeechFrame	short NAME /* 0x95cd96: the scene frame its speech starts on */
+g_SceneRecording	u16 NAME /* 0x95cda0: the scene is being written out (debug) */
+g_SceneFramesWritten	u16 NAME /* 0x95cda2 */
+g_SceneCheatZoom	float NAME /* 0x71fbd8: xratio scale with Cheats[0] */
+g_SceneCheatDolly	float NAME /* 0x00a15f30: camera pull back along forward with Cheats[0] */
+g_StepButtons	u32 NAME /* 0x95c660: the buttons held at the last debug step */
+g_StepFrames	int NAME /* 0x95c6ac: frames left of a 6-frame debug step */
+g_MovieVramSave	u32 NAME /* 0xe5a640: where mode_movieUnInit stores GS memory */
+g_DialogMoby	u32 NAME /* 0xa15c0c: the moby whose dialog started the scene or movie playing */
+g_DialogLine	u32 NAME /* 0xa15c10: that dialog's state, Dialog_Advance's second argument */
+g_SceneHideMoby	u32 NAME /* 0xa52c98: a moby disabled while a scene plays (set by the pause menu) */

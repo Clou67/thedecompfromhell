@@ -12,6 +12,7 @@
 #include "game/space.h"
 #include "game/update.h"
 #include "game/update/moby1130.h"
+#include "game/vendor.h"
 #include "idol/fastfunc.h"
 #include "idol/mUnk.h"
 
@@ -166,15 +167,15 @@ void UpdateMoby_1190(MobyInstance *moby)
       dVar14 = (double)(fVar3 + (moby->pos).y);
       dVar13 = (double)(fVar6 + (moby->pos).z);
       dVar12 = (double)FastWrapRot((moby->rotation).z,3.14159);
-      DAT_0095cd60 = (float)dVar15;
-      DAT_0095cd64 = (float)dVar14;
-      DAT_0095cd68 = (float)dVar13;
-      DAT_0095cd6c = (float)dVar16;
-      DAT_0095cd70 = (float)dVar17;
-      DAT_0095cd74 = (float)dVar18;
-      DAT_0095cd78 = (float)dVar12;
-      DAT_0095cd7c = (float)dVar19;
-      DAT_0095cd9a = 1;
+      g_SceneHeroWarpPos.x = (float)dVar15;
+      g_SceneHeroWarpPos.y = (float)dVar14;
+      g_SceneHeroWarpPos.z = (float)dVar13;
+      g_SceneHeroWarpPos.w = (float)dVar16;
+      g_SceneHeroWarpRot.x = (float)dVar17;
+      g_SceneHeroWarpRot.y = (float)dVar18;
+      g_SceneHeroWarpRot.z = (float)dVar12;
+      g_SceneHeroWarpRot.w = (float)dVar19;
+      g_SceneHeroWarpPending = 1;
       memcard_Save(0,-1);
       moby->collision = (ushort *)0x0;
       moby->modeBits = moby->modeBits | (UNK_40|DISABLED);

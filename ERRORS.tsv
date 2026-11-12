@@ -40,7 +40,7 @@ errors	file
 0	game/sound.cpp
 0	game/space.cpp
 0	game/tieproc.cpp
-124	game/update.cpp
+0	game/update.cpp
 568	game/update/camera0.cpp
 13	game/update/camera1.cpp
 26	game/update/camera10.cpp
@@ -389,7 +389,7 @@ errors	file
 0	game/update/moby1560.cpp
 0	game/update/moby1561.cpp
 0	game/update/moby1562.cpp
-37	game/update/moby1563.cpp
+38	game/update/moby1563.cpp
 21	game/update/moby1564.cpp
 7	game/update/moby1565.cpp
 0	game/update/moby1566.cpp

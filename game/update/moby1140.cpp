@@ -22,6 +22,7 @@
 #include "game/update/moby1158.h"
 #include "game/update/moby1248.h"
 #include "game/update/moby650.h"
+#include "game/vendor.h"
 #include "idol/fastfunc.h"
 #include "idol/mUnk.h"
 
@@ -1211,15 +1212,15 @@ void M1140_001dd210(MobyInstance *moby,undefined8 param_2,undefined8 param_3)
         dVar25 = (double)(fVar3 + (moby->pos).y);
         dVar24 = (double)(fVar6 + (moby->pos).z);
         dVar23 = (double)FastWrapRot((moby->rotation).z,3.14159);
-        DAT_0095cd60 = (float)dVar26;
-        DAT_0095cd64 = (float)dVar25;
-        DAT_0095cd68 = (float)dVar24;
-        DAT_0095cd6c = (float)dVar27;
-        DAT_0095cd70 = (float)dVar22;
-        DAT_0095cd74 = (float)dVar28;
-        DAT_0095cd78 = (float)dVar23;
-        DAT_0095cd7c = (float)dVar29;
-        DAT_0095cd9a = 1;
+        g_SceneHeroWarpPos.x = (float)dVar26;
+        g_SceneHeroWarpPos.y = (float)dVar25;
+        g_SceneHeroWarpPos.z = (float)dVar24;
+        g_SceneHeroWarpPos.w = (float)dVar27;
+        g_SceneHeroWarpRot.x = (float)dVar22;
+        g_SceneHeroWarpRot.y = (float)dVar28;
+        g_SceneHeroWarpRot.z = (float)dVar23;
+        g_SceneHeroWarpRot.w = (float)dVar29;
+        g_SceneHeroWarpPending = 1;
         MB_SetPointAheadOfMoby(0x4004000000000000,moby);
         M1140_TransitionAnim(moby,0xd);
       }

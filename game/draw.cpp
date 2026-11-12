@@ -4373,7 +4373,7 @@ void DrawSomeOverlay(void)
     if (-1 < DAT_0071fbdc) {
       iVar3 = 0;
       do {
-        DrawTimedHelpMsg(puVar4,DAT_00a15c22);
+        DrawTimedHelpMsg(puVar4,g_Credits.frame);
         puVar4 = puVar4 + 4;
         piVar1 = (int *)(&DAT_0071fbec + iVar3);
         iVar3 = iVar3 + 0x10;

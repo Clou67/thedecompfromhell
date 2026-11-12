@@ -18752,24 +18752,24 @@ void MB_SetPointAheadOfMoby(double param_1,int param_2)
   fVar8 = fVar2 * fVar2 * fVar4;
   fVar6 = fVar5 * fVar5 * fVar3;
   fVar9 = fVar2 * fVar8;
-  DAT_0095cd68 = *(undefined4 *)(param_2 + 0x18);
-  DAT_0095cd6c = *(undefined4 *)(param_2 + 0x1c);
+  g_SceneHeroWarpPos.z = *(undefined4 *)(param_2 + 0x18);
+  g_SceneHeroWarpPos.w = *(undefined4 *)(param_2 + 0x1c);
   fVar7 = fVar5 * fVar6;
-  DAT_0095cd7c = 0;
-  DAT_0095cd78 = 0.0;
-  DAT_0095cd74 = 0;
-  DAT_0095cd70 = 0;
-  DAT_0095cd64 = (float)((double)(fVar2 * fVar9 * 2.601887e-06 +
+  g_SceneHeroWarpRot.w = 0;
+  g_SceneHeroWarpRot.z = 0.0;
+  g_SceneHeroWarpRot.y = 0;
+  g_SceneHeroWarpRot.x = 0;
+  g_SceneHeroWarpPos.y = (float)((double)(fVar2 * fVar9 * 2.601887e-06 +
                                  fVar9 * -0.0001980741 +
                                  fVar8 * 0.0083330255 + fVar2 * fVar4 * -0.16666657 + fVar4) *
                          param_1 + (double)*(float *)(param_2 + 0x14));
-  DAT_0095cd60 = (float)((double)(fVar5 * fVar7 * 2.601887e-06 +
+  g_SceneHeroWarpPos.x = (float)((double)(fVar5 * fVar7 * 2.601887e-06 +
                                  fVar7 * -0.0001980741 +
                                  fVar6 * 0.0083330255 + fVar5 * fVar3 * -0.16666657 + fVar3) *
                          param_1 + (double)*(float *)(param_2 + 0x10));
-  DAT_0095cd9a = 1;
+  g_SceneHeroWarpPending = 1;
   dVar10 = (double)FastWrapRot(fVar1,3.1415927);
-  DAT_0095cd78 = (float)dVar10;
+  g_SceneHeroWarpRot.z = (float)dVar10;
   return;
 }
 

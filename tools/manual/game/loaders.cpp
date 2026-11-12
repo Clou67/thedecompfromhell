@@ -2051,8 +2051,8 @@ int LoadAllMobys(int reload, int restoreCheckpoint)
     }
 
     DAT_00a15c14 = 0;
-    DAT_00a15c0c = 0;
-    DAT_00a15c10 = 0;
+    g_DialogMoby = 0;
+    g_DialogLine = 0;
     UpdateMobysInitial();
     worldUpdateTime++;
     return 0;
@@ -2082,7 +2082,7 @@ int LoadNpcMobys(int level_id, int scene_id)
 }
 
 // 0x00e0110 (0x8 bytes)
-int LoadNpcSubtitles(void)
+int LoadNpcSubtitles(int level, int scene)
 {
     return 1;
 }
@@ -2128,7 +2128,7 @@ void ParseNpcChunk(void)
     g_cutsceneCameraFrame = 0;
     *(short *)&g_SpaceSceneNumFrames = (short)chunk->numFrames;
     g_SpaceSceneCameraFrames = (SceneCameraFrame *)(base + chunk->cameraFrames);
-    ((short *)&g_SpaceSceneMobyCnt)[1] = (short)chunk->unk08;
+    g_SceneSpeechFrame = (short)chunk->unk08;
     g_SpaceSceneMobyCnt = (short)chunk->mobyCnt;
     g_SubtitleTable = chunk->subtitles >= SUBTITLE_MIN_OFFSET ? (u32)(base + chunk->subtitles) : 0;
 
