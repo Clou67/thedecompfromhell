@@ -1388,7 +1388,7 @@ void UpdateMoby_177(MobyInstance *moby)
   bVar15 = false;
   DAT_0072240c = 0x3f666666;
   iVar21 = Hero_GetWeaponAmmo(-1);
-  if ((((g_HelpFlags.piece<1032,2>() == 0) && (CHAR_ARRAY_00a0feec.piece<208,2>() == 0)) &&
+  if ((((HelpData.piece<1032,2>() == 0) && (CHAR_ARRAY_00a0feec.piece<208,2>() == 0)) &&
       (2 < DAT_0096bd95)) && ((g_heroStateType < 2 || (g_heroStateType == 9)))) {
     Help_QueueMessage(STR_TO_USE_THE_TESLA_0x4E30,0x81);
   }

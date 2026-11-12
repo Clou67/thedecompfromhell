@@ -2228,7 +2228,7 @@ void UpdateMoby_253(MobyInstance *moby)
            (fVar2 = (moby->pos).y - *(float *)(iVar15 + 0x14),
            fVar5 = (moby->pos).x - *(float *)(iVar15 + 0x10),
            SQRT(fVar5 * fVar5 + fVar2 * fVar2) < 20.0)) {
-          if ((g_HelpFlags.piece<720,2>() == 0) && (UnlockableItems.devastator == '\0')) {
+          if ((HelpData.piece<720,2>() == 0) && (UnlockableItems.devastator == '\0')) {
             Help_QueueMessage(STR_THE_DEVASTATOR_IS_A_0x1F44,0x5a);
           }
           moby->state = '\x03';

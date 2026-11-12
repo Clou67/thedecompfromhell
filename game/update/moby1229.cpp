@@ -288,8 +288,8 @@ void UpdateMoby_1229(MobyInstance *moby)
                 DRAW_SHADOW|DRAW_TRANSPARENT_WEIRD|LOCK_ROTATION|NO_DRAW|HAS_SPECIAL_VARS|HAS_GLOW|
                 TRANSPARENT|NO_POST_UPDATE|NO_UPDATE);
           moby->collision = moby->pClass->collision;
-          if ((((iVar15 == 0) && (g_Help.curId == -1)) && (g_heroType == '\0')) &&
-             ((g_HelpFlags.piece<736,2>() == 0 && (UnlockableItems.devastator == '\0')))) {
+          if ((((iVar15 == 0) && (g_Help.message_id == -1)) && (g_heroType == '\0')) &&
+             ((HelpData.piece<736,2>() == 0 && (UnlockableItems.devastator == '\0')))) {
             Help_QueueMessage(STR_THE_DEVASTATOR_MANUFACTURED_EXCLUSIVELY_0x2715,0x5c);
           }
         }

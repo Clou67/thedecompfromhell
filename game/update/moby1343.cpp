@@ -55,7 +55,7 @@ ulonglong UpdateMoby_1343(MobyInstance *moby)
   else if (moby->state < 2) {
     iVar11 = MB_IsPntInCuboid(&g_heroPosition,(longlong)*piVar2);
     LVar8 = Level;
-    if ((((iVar11 != 0) && (g_Help.state == 0)) && (g_Help.curId == -1)) &&
+    if ((((iVar11 != 0) && (g_Help.state == 0)) && (g_Help.message_id == -1)) &&
        (g_LevelFlags[Level][(byte)moby->levelFlagIdx] != -1)) {
       if (piVar2[5] == -1) {
         piVar2[5] = g_deathCount;
@@ -73,12 +73,12 @@ ulonglong UpdateMoby_1343(MobyInstance *moby)
         ;
       }
       else if (2 < (ushort)CHAR_ARRAY_00a0feec.piece<192,2>()) {
-        if ((UnlockableItems.gloveOfDoom != '\0') || (g_HelpFlags.piece<232,2>() != 0)) {
+        if ((UnlockableItems.gloveOfDoom != '\0') || (HelpData.piece<232,2>() != 0)) {
           if ((UnlockableItems.gloveOfDoom != '\0') &&
              (((int)(animationSpeed * 18000.5) <
                (int)((int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5)) +
                     (uint)(ushort)CHAR_ARRAY_00a0fdc4.piece<162,2>() * -600) &&
-              (g_HelpFlags.piece<224,2>() == 0)))) {
+              (HelpData.piece<224,2>() == 0)))) {
             Help_QueueMessage(STR_MAY_I_SUGGEST_YOU_0x0FA0,0x1c);
           }
         }
@@ -87,7 +87,7 @@ ulonglong UpdateMoby_1343(MobyInstance *moby)
         }
       }
     }
-    if ((((ushort)g_HelpFlags.piece<528,2>() < 4) &&
+    if ((((ushort)HelpData.piece<528,2>() < 4) &&
         (((iVar11 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar2[0xd]), iVar11 != 0
           || (iVar11 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar2[0xe]),
              iVar11 != 0)) && (DAT_0096bd70 == 0x3b)))) &&
@@ -110,13 +110,13 @@ ulonglong UpdateMoby_1343(MobyInstance *moby)
         iVar11 = *(int *)(iVar11 + 0x28);
       } while (iVar11 != 0);
     }
-    if ((((CHAR_ARRAY_0096c165[9] != '\0') && (g_Help.state == 0)) && (g_Help.curId == -1)
-        ) && (g_HelpFlags.piece<240,2>() == 0)) {
+    if ((((CHAR_ARRAY_0096c165[9] != '\0') && (g_Help.state == 0)) && (g_Help.message_id == -1)
+        ) && (HelpData.piece<240,2>() == 0)) {
       Help_QueueMessage(STR_THE_SUCK_CANNON_CAN_0x0FA2,0x1e);
     }
     iVar11 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar2[0xf]);
     if (((iVar11 != 0) && (CHAR_ARRAY_00a0feec.piece<248,2>() == 0)) &&
-       ((g_Help.state == 0 && ((g_Help.curId == -1 && (g_HelpFlags.piece<952,2>() == 0)))
+       ((g_Help.state == 0 && ((g_Help.message_id == -1 && (HelpData.piece<952,2>() == 0)))
         ))) {
       Help_QueueMessage(STR_BY_DOUBLE_TAPPING__YOU_0x4E2D,0x77);
     }
@@ -141,9 +141,9 @@ ulonglong UpdateMoby_1343(MobyInstance *moby)
       g_MiscLevelFlags.field31_0x1f = 1;
     }
     iVar11 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar2[1]);
-    uVar9 = g_HelpFlags.piece<258,2>();
+    uVar9 = HelpData.piece<258,2>();
     if (((iVar11 == 0) || ((1 < g_heroStateType && (g_heroStateType != 9)))) ||
-       ((g_Help.state != 0 || (g_Help.curId != -1)))) {
+       ((g_Help.state != 0 || (g_Help.message_id != -1)))) {
       if ((piVar2[3] != 0) &&
          (iVar11 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar2[1]), iVar11 == 0)) {
         piVar2[3] = 0;
@@ -152,13 +152,13 @@ ulonglong UpdateMoby_1343(MobyInstance *moby)
     else if (UnlockableItems.trespasser == '\0') {
       iVar11 = (int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5));
       if (((int)((float)(longlong)(animationSpeed * 18.5) * 60.0) <
-           (int)(iVar11 + (uint)(ushort)g_HelpFlags.piece<250,2>() * -600)) ||
-         ((uint)(ushort)g_HelpFlags.piece<250,2>() * 600 == 0)) {
+           (int)(iVar11 + (uint)(ushort)HelpData.piece<250,2>() * -600)) ||
+         ((uint)(ushort)HelpData.piece<250,2>() * 600 == 0)) {
         Help_QueueMessage(STR_YOULL_NEED_A_GADGETRON_0x0FA3,0x1f);
       }
-      else if ((int)(uint)(ushort)g_HelpFlags.piece<250,2>() < iVar11 / 600) {
+      else if ((int)(uint)(ushort)HelpData.piece<250,2>() < iVar11 / 600) {
         sVar7 = (short)(iVar11 >> 0x1f);
-        g_HelpFlags.piece<250,2>() =
+        HelpData.piece<250,2>() =
              ((short)(iVar11 / 600) + sVar7) - ((short)((short)(iVar11 / 0x2580000) + sVar7) >> 0xf)
         ;
       }
@@ -168,20 +168,20 @@ ulonglong UpdateMoby_1343(MobyInstance *moby)
       if (((iVar11 == -1) || (g_MobyInstance[iVar11].oClass != TRESSPASSER_PAD)) ||
          (g_MobyInstance[iVar11].state != '\x04')) {
         if ((piVar2[3] == 0) && (CHAR_ARRAY_00a0feec.piece<136,2>() == 0)) {
-          bVar1 = g_HelpFlags.piece<256,2>() == 0;
+          bVar1 = HelpData.piece<256,2>() == 0;
           piVar2[2] = piVar2[2] + 1;
           if (bVar1) {
-            g_HelpFlags[0x100] = '\0';
-            g_HelpFlags[0x101] = '\x01';
+            HelpData[0x100] = '\0';
+            HelpData[0x101] = '\x01';
             iVar11 = (int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5));
             if ((int)(uint)(ushort)uVar9 < iVar11 / 600) {
               sVar7 = (short)(iVar11 >> 0x1f);
-              g_HelpFlags.piece<258,2>() =
+              HelpData.piece<258,2>() =
                    ((short)(iVar11 / 600) + sVar7) -
                    ((short)((short)(iVar11 / 0x2580000) + sVar7) >> 0xf);
             }
-            g_HelpFlags.piece<260,4>() =
-                 g_HelpFlags.piece<260,4>() | 1 << (Level & 0x3f) | 0x80000000;
+            HelpData.piece<260,4>() =
+                 HelpData.piece<260,4>() | 1 << (Level & 0x3f) | 0x80000000;
           }
           else {
             iVar11 = (int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5));
@@ -191,7 +191,7 @@ ulonglong UpdateMoby_1343(MobyInstance *moby)
             }
             else if ((int)(uint)(ushort)uVar9 < iVar11 / 600) {
               sVar7 = (short)(iVar11 >> 0x1f);
-              g_HelpFlags.piece<258,2>() =
+              HelpData.piece<258,2>() =
                    ((short)(iVar11 / 600) + sVar7) -
                    ((short)((short)(iVar11 / 0x2580000) + sVar7) >> 0xf);
             }
@@ -216,22 +216,22 @@ ulonglong UpdateMoby_1343(MobyInstance *moby)
     iVar11 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar2[0x14]);
     if (((iVar11 != 0) &&
         ((((g_heroStateType < 2 || (g_heroStateType == 9)) && (g_Help.state == 0))
-         && ((g_Help.curId == -1 &&
+         && ((g_Help.message_id == -1 &&
              ((int)(animationSpeed * 216000.5) <
               (int)((int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5)) +
                    (uint)(ushort)CHAR_ARRAY_00a0feec.piece<74,2>() * -600))))))) &&
-       ((g_HelpFlags.piece<540,4>() & 1 << (Level & 0x3f)) == 0)) {
+       ((HelpData.piece<540,4>() & 1 << (Level & 0x3f)) == 0)) {
       Help_QueueMessage(STR_YOU_CAN_VIEW_A_0x03EF,0x43);
     }
-    if ((g_HelpFlags.piece<560,2>() == 0) || (g_HelpFlags.piece<568,2>() == 0)) {
+    if ((HelpData.piece<560,2>() == 0) || (HelpData.piece<568,2>() == 0)) {
       if ((g_heroState == MOVEMENT_LOCKED) &&
          (((g_standingOnMoby != 0 && (*(short *)(g_standingOnMoby + 0xa6) == 0x267)) &&
           (iVar11 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar2[1]), iVar11 != 0))))
       {
-        if (g_HelpFlags.piece<560,2>() == 0) {
+        if (HelpData.piece<560,2>() == 0) {
           Help_QueueMessage(STR_LASERS_ARE_MOUNTED_ON_0x07DB,0x46);
         }
-        else if ((g_HelpFlags.piece<568,2>() == 0) &&
+        else if ((HelpData.piece<568,2>() == 0) &&
                 (iVar11 = piVar2[7], piVar2[7] = iVar11 + 1,
                 (int)(animationSpeed * 1800.5) < iVar11 + 1)) {
           Help_QueueMessage(STR_USE__TO_CONTROL_0x07DC,0x47);
@@ -287,8 +287,8 @@ ulonglong UpdateMoby_1343(MobyInstance *moby)
          ) && ((g_heroStateType < 2 || (g_heroStateType == 9)))) &&
        ((((uVar10 = (ulonglong)(uint)piVar2[9], 2 < piVar2[9] &&
           (uVar10 = (ulonglong)(uint)g_Help.state, g_Help.state == 0)) &&
-         (uVar10 = (ulonglong)(uint)g_Help.curId, g_Help.curId == -1)) &&
-        (g_HelpFlags.piece<584,2>() == 0)))) {
+         (uVar10 = (ulonglong)(uint)g_Help.message_id, g_Help.message_id == -1)) &&
+        (HelpData.piece<584,2>() == 0)))) {
       iVar11 = Help_QueueMessage(STR_YOU_CAN_KICK_OFF_0x0FA5,0x49);
       uVar10 = (ulonglong)iVar11;
     }

@@ -236,7 +236,7 @@ void UpdateMoby_1035(MobyInstance *moby)
         uVar22 = 0x4014000000000000;
         SetCollDamIn(0x4014000000000000,local_180,lVar14,0x10001);
         CollLine(local_1d0,local_1c0,0,lVar14,local_180);
-        if (((g_HelpFlags.piece<344,2>() == 0) && (*(short *)((int)pvVar7 + 0x16) == 0)) &&
+        if (((HelpData.piece<344,2>() == 0) && (*(short *)((int)pvVar7 + 0x16) == 0)) &&
            (g_CollOutput.pMoby == g_heroMobyPtr)) {
           auVar27 = ZEXT416(0xffffffff);
           auVar27 = auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60;
@@ -260,7 +260,7 @@ void UpdateMoby_1035(MobyInstance *moby)
         FastWrapRot((moby->rotation).z,(float)dVar23);
         SetCollDamIn(uVar22,local_180,lVar14,0x10001);
         dVar23 = (double)CollLine(local_1d0,local_1c0,0,lVar14,local_180);
-        if (((g_HelpFlags.piece<344,2>() == 0) && (*(short *)((int)pvVar7 + 0x16) == 0)) &&
+        if (((HelpData.piece<344,2>() == 0) && (*(short *)((int)pvVar7 + 0x16) == 0)) &&
            (g_CollOutput.pMoby == g_heroMobyPtr)) {
           auVar27 = ZEXT416(0xffffffff);
           auVar27 = auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60;
@@ -325,7 +325,7 @@ void UpdateMoby_1035(MobyInstance *moby)
                                       CONCAT44(uStack_168,uStack_164),
                                       CONCAT44(uStack_160,uStack_15c),
                                       CONCAT44(uStack_158,uStack_154));
-          if ((g_HelpFlags.piece<344,2>() == 0) && (*(short *)((int)pvVar7 + 0x16) == 0)) {
+          if ((HelpData.piece<344,2>() == 0) && (*(short *)((int)pvVar7 + 0x16) == 0)) {
             auVar27 = ZEXT416(0xffffffff);
             auVar27 = auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60;
             auVar28 = vectorShiftLeftIntegerWord(auVar27,auVar27);
@@ -346,7 +346,7 @@ void UpdateMoby_1035(MobyInstance *moby)
       if (*(int *)((int)pvVar7 + 0x18) != 0) {
         dVar23 = (double)RegisterFuncForMoby(&PTR_M1038_001942f4_00708528,moby);
       }
-      if (g_HelpFlags.piece<344,2>() == 0) {
+      if (HelpData.piece<344,2>() == 0) {
         if ((*(short *)((int)pvVar7 + 0x16) == 0) &&
            (iVar15 = MB_damage(dVar23,lVar14,0x330000,0), iVar15 != 0)) {
           auVar27 = ZEXT416(0xffffffff);
@@ -400,17 +400,17 @@ void UpdateMoby_1035(MobyInstance *moby)
         }
         *(undefined4 *)((int)pvVar7 + 0x10) = 0xffffffff;
         PlayMobySound(1,0,moby);
-        if ((bVar10) && (g_HelpFlags.piece<344,2>() != -1)) {
-          g_HelpFlags.piece<344,2>() = g_HelpFlags.piece<344,2>() + 1;
+        if ((bVar10) && (HelpData.piece<344,2>() != -1)) {
+          HelpData.piece<344,2>() = HelpData.piece<344,2>() + 1;
         }
         iVar15 = (int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5));
-        if ((int)(uint)(ushort)g_HelpFlags.piece<346,2>() < iVar15 / 600) {
+        if ((int)(uint)(ushort)HelpData.piece<346,2>() < iVar15 / 600) {
           sVar11 = (short)(iVar15 >> 0x1f);
-          g_HelpFlags.piece<346,2>() =
+          HelpData.piece<346,2>() =
                ((short)(iVar15 / 600) + sVar11) -
                ((short)((short)(iVar15 / 0x2580000) + sVar11) >> 0xf);
         }
-        g_HelpFlags.piece<348,4>() = g_HelpFlags.piece<348,4>() | 1 << (Level & 0x3f) | 0x80000000
+        HelpData.piece<348,4>() = HelpData.piece<348,4>() | 1 << (Level & 0x3f) | 0x80000000
         ;
       }
     }

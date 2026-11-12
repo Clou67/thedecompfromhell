@@ -4596,11 +4596,11 @@ void SkillPoints_OnEnter(void)
   int iVar4;
   
   iVar4 = 0;
-  if (0 < g_HelpLogCount) {
+  if (0 < HelpLogPos) {
     iVar3 = 0;
     do {
-      iVar2 = g_HelpLogCount;
-      bVar1 = g_HelpFlags[(g_HelpLogCount - iVar4) + 0x49f];
+      iVar2 = HelpLogPos;
+      bVar1 = HelpData[(HelpLogPos - iVar4) + 0x49f];
       iVar4 = iVar4 + 1;
       *(undefined2 *)((int)&PTR_Elf64_Ehdr_0072b332 + iVar3) = 1;
       *(undefined2 *)((int)&DAT_0072b330 + iVar3) = *(undefined2 *)(&DAT_007208ce + (uint)bVar1 * 4)
@@ -4608,7 +4608,7 @@ void SkillPoints_OnEnter(void)
       iVar3 = iVar3 + 0xc;
     } while (iVar4 < iVar2);
   }
-  (&DAT_0072b330)[g_HelpLogCount * 6] = 0;
+  (&DAT_0072b330)[HelpLogPos * 6] = 0;
   return;
 }
 

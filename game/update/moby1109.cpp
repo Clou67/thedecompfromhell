@@ -1328,7 +1328,7 @@ void M1109_001cccb8(int param_1)
   else if (iVar2 < 3) {
     *(undefined4 *)(iVar1 + 0x9c) = 4;
   }
-  if (((g_HelpFlags.piece<664,2>() == 0) && (*(int *)(iVar1 + 0x9c) == 0)) &&
+  if (((HelpData.piece<664,2>() == 0) && (*(int *)(iVar1 + 0x9c) == 0)) &&
      ((g_HelpTextOn != '\0' || (g_HelpVoiceOn != '\0')))) {
     Help_QueueMessage(STR_THIS_SHUTTLE_HAS_AN_0x177A,0x53);
     *(undefined4 *)(iVar1 + 0x9c) = 0xffffffff;
@@ -1524,7 +1524,7 @@ void UpdateMoby_1109(MobyInstance *moby)
       }
       else {
         if (((((g_HelpTextOn == '\0') && (g_HelpVoiceOn == '\0')) ||
-             ((g_Help.state == 0 && (g_Help.curId == -1)))) &&
+             ((g_Help.state == 0 && (g_Help.message_id == -1)))) &&
             ((g_standingOnMoby == moby && (g_framesNotGrounded == 0)))) || (DAT_00ef1a68 != 0)) {
           M1109_001cccb8(lVar30);
           fVar5 = DAT_0076427c;

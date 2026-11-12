@@ -59,19 +59,19 @@ char * UpdateMoby_1000(MobyInstance *moby)
     }
     DAT_00f08e20 = 0;
   }
-  pcVar4 = g_HelpFlags;
-  if (g_HelpFlags.piece<728,2>() == 0) {
+  pcVar4 = HelpData;
+  if (HelpData.piece<728,2>() == 0) {
     if (UnlockableItems.devastator != '\0') {
-      g_HelpFlags[0x2d8] = '\0';
-      g_HelpFlags[0x2d9] = '\x01';
+      HelpData[0x2d8] = '\0';
+      HelpData[0x2d9] = '\x01';
     }
     iVar1 = (int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5));
-    if ((int)(uint)(ushort)g_HelpFlags.piece<730,2>() < iVar1 / 600) {
+    if ((int)(uint)(ushort)HelpData.piece<730,2>() < iVar1 / 600) {
       sVar3 = (short)(iVar1 >> 0x1f);
-      g_HelpFlags.piece<730,2>() =
+      HelpData.piece<730,2>() =
            ((short)(iVar1 / 600) + sVar3) - ((short)((short)(iVar1 / 0x2580000) + sVar3) >> 0xf);
     }
-    g_HelpFlags.piece<732,4>() = g_HelpFlags.piece<732,4>() | 1 << (Level & 0x3f) | 0x80000000;
+    HelpData.piece<732,4>() = HelpData.piece<732,4>() | 1 << (Level & 0x3f) | 0x80000000;
     pcVar4 = (char *)MB_IsPntInCuboid(&g_heroPosition,(longlong)*piVar2);
     if (pcVar4 != (char *)0x0) {
       pcVar4 = (char *)Help_QueueMessage(STR_THE_GADGETRON_DEVASTATOR_IS_0x2329,0x5b);

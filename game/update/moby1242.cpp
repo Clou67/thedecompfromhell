@@ -1006,28 +1006,28 @@ void M1242_Hud_Draw(int param_1)
   }
   if (DAT_0096b2e0 * 0.25 <= DAT_0096b2dc) {
     if (*(int *)(uVar2 + 0x11c) != 0) {
-      if (g_HelpFlags.piece<704,2>() != -1) {
-        g_HelpFlags.piece<704,2>() = g_HelpFlags.piece<704,2>() + 1;
+      if (HelpData.piece<704,2>() != -1) {
+        HelpData.piece<704,2>() = HelpData.piece<704,2>() + 1;
       }
       puVar4[0x1d] = (longlong)g_GameFrameCount;
-      uVar7 = g_HelpFlags.piece<706,2>();
+      uVar7 = HelpData.piece<706,2>();
       puVar4[0x1d] = (longlong)
                      (int)(animationSpeed * (float)((double)(longlong)puVar4[0x1d] + dVar25));
       iVar13 = *(int *)((int)puVar4 + 0xec);
       if ((int)(uint)(ushort)uVar7 < iVar13 / 600) {
         sVar5 = (short)(iVar13 >> 0x1f);
-        g_HelpFlags.piece<706,2>() =
+        HelpData.piece<706,2>() =
              ((short)(iVar13 / 600) + sVar5) - ((short)((short)(iVar13 / 0x2580000) + sVar5) >> 0xf)
         ;
       }
-      g_HelpFlags.piece<708,4>() = g_HelpFlags.piece<708,4>() | 1 << (Level & 0x3f) | 0x80000000;
+      HelpData.piece<708,4>() = HelpData.piece<708,4>() | 1 << (Level & 0x3f) | 0x80000000;
       *(undefined4 *)(uVar2 + 0x11c) = 0;
     }
   }
-  else if (g_HelpFlags.piece<704,2>() == 0) {
+  else if (HelpData.piece<704,2>() == 0) {
     Help_QueueMessage(STR_SHOOT_DOWN_THOSE_SMALL_0x2AFF,0x58);
   }
-  else if ((ushort)g_HelpFlags.piece<704,2>() < 2) {
+  else if ((ushort)HelpData.piece<704,2>() < 2) {
     iVar13 = *(int *)(uVar2 + 0x11c) + 1;
     *(int *)(uVar2 + 0x11c) = iVar13;
     puVar4[0x1d] = (longlong)(int)(animationSpeed * 1800.5);
@@ -1036,9 +1036,9 @@ void M1242_Hud_Draw(int param_1)
     }
   }
   FastDecTimerS32(uVar20 + 0x120);
-  if (((DAT_0096b2d6 < 5) && (g_HelpFlags.piece<696,2>() == 0)) ||
+  if (((DAT_0096b2d6 < 5) && (HelpData.piece<696,2>() == 0)) ||
      ((DAT_0096b2d6 == 0 &&
-      (((ushort)g_HelpFlags.piece<696,2>() < 2 && (*(int *)(uVar2 + 0x120) == 0)))))) {
+      (((ushort)HelpData.piece<696,2>() < 2 && (*(int *)(uVar2 + 0x120) == 0)))))) {
     Help_QueueMessage(STR_SHOOT_DOWN_THOSE_SMALL_0x2AFE,0x57);
     auVar29 = ZEXT416(0xffffffff);
     auVar29 = auVar29 | auVar29 << 0x20 | auVar29 << 0x40 | auVar29 << 0x60;
@@ -1055,7 +1055,7 @@ void M1242_Hud_Draw(int param_1)
                       (auVar29 | auVar29 << 0x20 | auVar29 << 0x40 | auVar29 << 0x60,0x120,uVar20);
     *(undefined4 *)(uVar2 + 0x120 & 0xfffffffc) = uVar3;
   }
-  if (g_HelpFlags.piece<688,2>() == 0) {
+  if (HelpData.piece<688,2>() == 0) {
     iVar13 = *(int *)(uVar2 + 0x128);
     *(int *)(uVar2 + 0x128) = iVar13 + 1;
     puVar4[0x1d] = (longlong)(int)(animationSpeed * 3600.5);
@@ -2231,7 +2231,7 @@ void M1242_0021ff90(MobyInstance *param_1,longlong param_2)
       }
     }
   }
-  if (g_HelpFlags.piece<680,2>() == 0) {
+  if (HelpData.piece<680,2>() == 0) {
     Help_QueueMessage(STR_PRESS__TO_FIRE_0x2AFC,0x55);
   }
   RegisterFuncForMoby(&PTR_M1242_Hud_Draw_00709798,param_1);
@@ -2688,10 +2688,10 @@ void UpdateMoby_1242_JetFighterPoki(MobyInstance *moby)
               fVar4 = animationSpeed;
               puVar14[0x2b] =
                    (longlong)(int)(animationSpeed * ((float)(longlong)puVar14[0x2b] + 0.5));
-              uVar17 = g_HelpFlags.piece<482,2>();
+              uVar17 = HelpData.piece<482,2>();
               iVar21 = *(int *)((int)puVar14 + 0x15c);
-              uVar12 = (uint)(ushort)g_HelpFlags.piece<482,2>();
-              uVar16 = (uint)(ushort)g_HelpFlags.piece<482,2>();
+              uVar12 = (uint)(ushort)HelpData.piece<482,2>();
+              uVar16 = (uint)(ushort)HelpData.piece<482,2>();
               puVar14[0x2b] = (longlong)(int)((float)(longlong)(fVar4 * 18.5) * 60.0);
               if ((*(int *)((int)puVar14 + 0x15c) < (int)(iVar21 + uVar16 * -600)) ||
                  (uVar12 * 600 == 0)) {
@@ -2699,7 +2699,7 @@ void UpdateMoby_1242_JetFighterPoki(MobyInstance *moby)
               }
               else if ((int)(uint)(ushort)uVar17 < iVar21 / 600) {
                 sVar8 = (short)(iVar21 >> 0x1f);
-                g_HelpFlags.piece<482,2>() =
+                HelpData.piece<482,2>() =
                      ((short)(iVar21 / 600) + sVar8) -
                      ((short)((short)(iVar21 / 0x2580000) + sVar8) >> 0xf);
               }
@@ -2748,7 +2748,7 @@ void UpdateMoby_1242_JetFighterPoki(MobyInstance *moby)
                              (auVar39 | auVar39 << 0x20 | auVar39 << 0x40 | auVar39 << 0x60,0x114,
                               uVar27);
           *(undefined4 *)((int)pvVar9 + 0x114U & 0xfffffffc) = uVar13;
-          if (g_HelpFlags.piece<680,2>() == 0) {
+          if (HelpData.piece<680,2>() == 0) {
             Help_QueueMessage(STR_PRESS__TO_FIRE_0x2AFC,0x55);
           }
           moby->state = '\x04';

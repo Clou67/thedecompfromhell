@@ -4,7 +4,7 @@
 //
 // Help_QueueMessage asks for a message; Help_Update runs the box through its states (grow from the
 // icon, show the text, shrink away) and Help_Draw draws it. Each request carries a "flag" (an index
-// into g_HelpFlags) that counts how often that hint was shown and on which levels. The help log
+// into HelpData) that counts how often that hint was shown and on which levels. The help log
 // (pause menu) lists recently shown messages by their index in g_HelpIdPairs.
 #include "game/help.h"
 #include "game/boot.h"
@@ -33,7 +33,7 @@ enum HelpBoxState {
 };
 
 #define HELP_PAIRS      150
-#define HELP_FLAG_DONE  0xffff          /* HelpFlag.count: never show again */
+#define HELP_FLAG_DONE  0xffff          /* HelpDatum.timesUsed: never show again */
 #define SPEECH_BASE     30000
 #define HELP_TEXT_COLOR 0x80ffa888
 #define ICON_COLOR      0x808080
@@ -52,7 +52,7 @@ static inline bool TrianglePressed(void)
 /* stop the current message's voice line if it is the one playing */
 static inline void StopHelpSpeech(void)
 {
-    int speech = g_HelpMsgs[g_Help.curIndex].speech;
+    int speech = HelpMsgs[g_Help.message_index].vag;
     if (speech != -1 && speech == g_SpeechPlaying.track - SPEECH_BASE &&
         g_SpeechPlaying.status != 7 && g_SpeechPlaying.status != 6)
         g_SpeechPlaying.status = 5;
@@ -63,13 +63,13 @@ static inline void LogPair(int pair)
 {
     int i;
 
-    for (i = 0; g_HelpLog[i] != pair && i < g_HelpLogCount; i++) {}
-    if (i < g_HelpLogCount) {
-        g_HelpLogCount--;
-        for (; i < g_HelpLogCount; i++) g_HelpLog[i] = g_HelpLog[i + 1];
-        g_HelpLog[i] = 0;
+    for (i = 0; HelpLog[i] != pair && i < HelpLogPos; i++) {}
+    if (i < HelpLogPos) {
+        HelpLogPos--;
+        for (; i < HelpLogPos; i++) HelpLog[i] = HelpLog[i + 1];
+        HelpLog[i] = 0;
     }
-    g_HelpLog[g_HelpLogCount++] = pair;
+    HelpLog[HelpLogPos++] = pair;
 }
 
 static inline void LogMessage(short id)
@@ -83,23 +83,23 @@ static inline void LogMessage(short id)
 }
 
 /* the current message has been shown: update its flag */
-static inline void MarkShownTime(HelpFlag *f)
+static inline void MarkShownTime(HelpDatum *f)
 {
     int t = (int)(animationSpeed * ((float)g_GameFrameCount + 0.5f)) / 600;
-    if (f->lastShown < t) f->lastShown = t;
+    if (f->lastTime < t) f->lastTime = t;
 }
 static inline void MarkShown(void)
 {
-    HelpFlag *f = &g_HelpFlags[g_Help.curFlag];
-    if (f->count < HELP_FLAG_DONE) f->count++;
+    HelpDatum *f = &HelpData[g_Help.message_flg];
+    if (f->timesUsed < HELP_FLAG_DONE) f->timesUsed++;
     MarkShownTime(f);
-    f->levels |= 1u << Level | 0x80000000u;
+    f->level_die |= 1u << Level | 0x80000000u;
 }
 
 static inline void SetState(int state)
 {
     g_Help.state = state;
-    g_Help.timer = 0;
+    g_Help.counter = 0;
 }
 
 // 0x007b0f4 (0x3c bytes)
@@ -115,7 +115,7 @@ void Help_Skip(void)
 {
     switch (g_Help.state) {
     case HELP_IDLE:
-        g_Help.curId = -1;
+        g_Help.message_id = -1;
         break;
     case HELP_OPEN:
     case HELP_ICON:
@@ -123,7 +123,7 @@ void Help_Skip(void)
         SetState(HELP_CLOSE);
         break;
     case HELP_FADE_IN:
-        g_Help.timer = 4 - g_Help.timer;        /* fade out from the same brightness */
+        g_Help.counter = 4 - g_Help.counter;        /* fade out from the same brightness */
         g_Help.state = HELP_FADE_OUT;
         break;
     case HELP_SHOW:
@@ -155,11 +155,11 @@ void Help_AddToLog(short id)
 /* queue a message if nothing else is showing or speaking; 1 if queued */
 int Help_QueueMessage(StringId id, int flag)
 {
-    if (g_Help.state != HELP_IDLE || g_Help.curId != -1 || g_SpeechPlaying.handle != 0 ||
-        g_PendingSpeech != -1 || g_HelpFlags[flag].count == HELP_FLAG_DONE)
+    if (g_Help.state != HELP_IDLE || g_Help.message_id != -1 || g_SpeechPlaying.handle != 0 ||
+        g_PendingSpeech != -1 || HelpData[flag].timesUsed == HELP_FLAG_DONE)
         return 0;
-    g_Help.curId = id;
-    g_Help.curFlag = flag;
+    g_Help.message_id = id;
+    g_Help.message_flg = flag;
     LogMessage(id);
     return 1;
 }
@@ -170,9 +170,9 @@ void Help_Kill(void)
     if (g_Help.state != HELP_IDLE) {
         StopHelpSpeech();
         g_Help.state = HELP_IDLE;
-        g_Help.curId = -1;
-        g_Help.curIndex = -1;
-        g_Help.timer = 0;
+        g_Help.message_id = -1;
+        g_Help.message_index = -1;
+        g_Help.counter = 0;
     }
 }
 
@@ -181,11 +181,11 @@ void Help_Kill(void)
 int Help_QueueMessageForce(StringId id, int flag)
 {
     Help_Kill();
-    if (g_Help.curId != -1 || g_SpeechPlaying.handle != 0 || g_PendingSpeech != -1 ||
-        g_HelpFlags[flag].count == HELP_FLAG_DONE)
+    if (g_Help.message_id != -1 || g_SpeechPlaying.handle != 0 || g_PendingSpeech != -1 ||
+        HelpData[flag].timesUsed == HELP_FLAG_DONE)
         return 0;
-    g_Help.curId = id;
-    g_Help.curFlag = flag;
+    g_Help.message_id = id;
+    g_Help.message_flg = flag;
     LogMessage(id);
     return 1;
 }
@@ -193,14 +193,14 @@ int Help_QueueMessageForce(StringId id, int flag)
 // 0x007b6b0 (0x34 bytes)
 void Help_ClearUsedSinceDeath(void)
 {
-    for (int i = 0; i < 148; i++) g_HelpFlags[i].levels &= 0x7fffffff;
+    for (int i = 0; i < 148; i++) HelpData[i].level_die &= 0x7fffffff;
 }
 
 // 0x007b6e4 (0x5c bytes)
 int Help_FindIndex(int id)
 {
-    for (int i = 0; i < g_Help.msgCount; i++)
-        if (g_HelpMsgs[i].id == id) return i;
+    for (int i = 0; i < g_Help.num_message; i++)
+        if (HelpMsgs[i].id == id) return i;
     return -1;
 }
 
@@ -210,7 +210,7 @@ char *help_msg_string_by_index(StringId helpmsg)
     if (g_Language == 3 && helpmsg == STR_JUMP_THEN_PRESS_AND_0x1773)
         helpmsg = STR_TRY_USING_THE_GLIDE_0x0BB8;
     int i = Help_FindIndex(helpmsg);
-    if (i >= 0) return g_HelpMsgs[i].text;
+    if (i >= 0) return HelpMsgs[i].text;
     return (char *)"MESSAGE DOES NOT EXIST";
 }
 
@@ -218,9 +218,9 @@ char *help_msg_string_by_index(StringId helpmsg)
 /* close the box for a while (cutscene, menu); the message comes back after Help_Resume */
 void Help_Suspend(void)
 {
-    if (g_Help.suspended) return;
-    g_Help.suspended = 1;
-    g_Help.resumeDelay = ScaledFrames(60.5f);
+    if (g_Help.suspend) return;
+    g_Help.suspend = 1;
+    g_Help.suspend_timer = ScaledFrames(60.5f);
     Help_Skip();
     if (g_Help.state == HELP_IDLE) g_Help.state = HELP_SUSPENDED;
 }
@@ -228,18 +228,18 @@ void Help_Suspend(void)
 // 0x007b868 (0x14 bytes)
 void Help_Resume(void)
 {
-    g_Help.suspended = 0;
+    g_Help.suspend = 0;
 }
 
 // 0x007b880 (0x168 bytes)
-/* open the box for g_Help.curIndex: measure the text to size it */
+/* open the box for g_Help.message_index: measure the text to size it */
 void Help_StartMessageBox(void)
 {
     FontWindow win;
 
     SetState(HELP_OPEN);
     if (g_HelpTextOn || g_HelpVoiceOn) sound_CorePlay(0, 1, 0);
-    char *text = g_HelpMsgs[g_Help.curIndex].text;
+    char *text = HelpMsgs[g_Help.message_index].text;
     SetFontWindow(&win, 240, 480, 44, 468, 256, 360, 16, 7);
     FontPrintOpt(1.0f, &win, HELP_TEXT_COLOR, text, -1);
     g_Help.boxX = 256;
@@ -256,37 +256,37 @@ void Help_StartMessageBox(void)
 void Help_Update(void)
 {
     /* help stays off until the d-pad has been held for two seconds */
-    if (!g_Help.armed && (g_Help.armTimer != 0 || (g_Pad.downButtons & (LEFT | DOWN | RIGHT | UP)))) {
-        if (g_Help.armTimer == 0) g_Help.armTimer = 1;
-        g_Help.armTimer++;
-        if (g_Help.armTimer >= ScaledFrames(120.5f)) g_Help.armed = 1;
+    if (!g_Help.ready && (g_Help.ready_timer != 0 || (g_Pad.downButtons & (LEFT | DOWN | RIGHT | UP)))) {
+        if (g_Help.ready_timer == 0) g_Help.ready_timer = 1;
+        g_Help.ready_timer++;
+        if (g_Help.ready_timer >= ScaledFrames(120.5f)) g_Help.ready = 1;
     }
-    if (g_gameMode != GAME_MODE_NORMAL || !g_Help.armed) {
-        g_Help.curId = -1;
+    if (g_gameMode != GAME_MODE_NORMAL || !g_Help.ready) {
+        g_Help.message_id = -1;
         g_Help.state = HELP_IDLE;
-        g_Help.timer = 0;
+        g_Help.counter = 0;
         return;
     }
 
-    g_Help.timer++;
+    g_Help.counter++;
     switch (g_Help.state) {
     case HELP_IDLE:
-        if (g_Help.curId < 0) break;
-        g_Help.curIndex = Help_FindIndex(g_Help.curId);
-        g_Help.curId = -1;
-        if (g_Help.curIndex >= 0) Help_StartMessageBox();
+        if (g_Help.message_id < 0) break;
+        g_Help.message_index = Help_FindIndex(g_Help.message_id);
+        g_Help.message_id = -1;
+        if (g_Help.message_index >= 0) Help_StartMessageBox();
         break;
 
     case HELP_OPEN: {
         MB_RequestHelpMessage(HELP_OWNER, (StringId)0);
-        int speech = g_HelpMsgs[g_Help.curIndex].speech;
+        int speech = HelpMsgs[g_Help.message_index].vag;
         if (speech >= 0 && g_SpeechPlaying.handle == 0 && g_PendingSpeech == -1)
             g_PendingSpeech = speech + SPEECH_BASE;
         if (TrianglePressed()) {
             MarkShown();
-            g_Help.timer = 8 - g_Help.timer;    /* shrink from the current size */
+            g_Help.counter = 8 - g_Help.counter;    /* shrink from the current size */
             g_Help.state = HELP_CLOSE;
-        } else if (g_Help.timer > 5) {
+        } else if (g_Help.counter > 5) {
             SetState(HELP_ICON);
         }
         break;
@@ -297,9 +297,9 @@ void Help_Update(void)
         if (TrianglePressed()) {
             MarkShown();
             SetState(HELP_CLOSE);
-        } else if (g_Help.timer >= ScaledFrames(60.5f) ||
-                   (g_Help.timer >= ScaledFrames(24.5f) &&
-                    (g_SpeechPlaying.status == 3 || g_HelpMsgs[g_Help.curIndex].speech == -1))) {
+        } else if (g_Help.counter >= ScaledFrames(60.5f) ||
+                   (g_Help.counter >= ScaledFrames(24.5f) &&
+                    (g_SpeechPlaying.status == 3 || HelpMsgs[g_Help.message_index].vag == -1))) {
             SetState(HELP_EXPAND);
         }
         break;
@@ -309,7 +309,7 @@ void Help_Update(void)
         if (TrianglePressed()) {
             MarkShown();
             SetState(HELP_CLOSE);
-        } else if (g_Help.timer > 7) {
+        } else if (g_Help.counter > 7) {
             SetState(HELP_FADE_IN);
         }
         break;
@@ -318,11 +318,11 @@ void Help_Update(void)
         MB_RequestHelpMessage(HELP_OWNER, (StringId)0);
         if (TrianglePressed()) {
             MarkShown();
-            g_Help.timer = 4 - g_Help.timer;
+            g_Help.counter = 4 - g_Help.counter;
             g_Help.state = HELP_FADE_OUT;
-        } else if (g_Help.timer > 3) {
+        } else if (g_Help.counter > 3) {
             /* the voice line was preseeked while the box opened */
-            int speech = g_HelpMsgs[g_Help.curIndex].speech;
+            int speech = HelpMsgs[g_Help.message_index].vag;
             if (speech != -1 && speech == g_SpeechPlaying.track - SPEECH_BASE && g_SpeechPlaying.status == 3)
                 music_PlayPreseekedSpeech();
             SetState(HELP_SHOW);
@@ -331,9 +331,9 @@ void Help_Update(void)
 
     case HELP_SHOW: {
         MB_RequestHelpMessage(HELP_OWNER, (StringId)0);
-        int speech = g_HelpMsgs[g_Help.curIndex].speech;
+        int speech = HelpMsgs[g_Help.message_index].vag;
         /* at least 7 s, and until its voice line has finished */
-        if ((g_Help.timer >= ScaledFrames(420.5f) &&
+        if ((g_Help.counter >= ScaledFrames(420.5f) &&
              (speech == -1 || speech != g_SpeechPlaying.track - SPEECH_BASE ||
               (g_SpeechPlaying.handle == 0 && g_PendingSpeech == -1))) ||
             TrianglePressed()) {
@@ -344,41 +344,41 @@ void Help_Update(void)
     }
 
     case HELP_FADE_OUT:
-        if (!g_HelpTextOn || g_Help.timer > 3 || TrianglePressed()) SetState(HELP_CLOSE);
+        if (!g_HelpTextOn || g_Help.counter > 3 || TrianglePressed()) SetState(HELP_CLOSE);
         break;
 
     case HELP_CLOSE:
         MB_RequestHelpMessage(HELP_OWNER, (StringId)0);
         StopHelpSpeech();
-        if (g_Help.timer > 7) {
+        if (g_Help.counter > 7) {
             g_Help.state = HELP_SUSPENDED;
-            if (!g_Help.suspended) {
+            if (!g_Help.suspend) {
                 g_Help.state = HELP_IDLE;
-                g_Help.curIndex = -1;
+                g_Help.message_index = -1;
             }
-            g_Help.timer = 0;
+            g_Help.counter = 0;
         }
         break;
 
     case HELP_SUSPENDED:
-        if (g_Help.suspended) break;
-        if (g_Help.curIndex >= 0) {
+        if (g_Help.suspend) break;
+        if (g_Help.message_index >= 0) {
             if (g_Help.resumed == 0) {
                 /* reopen the interrupted message once, after a delay */
-                if (FastDecTimerS32(&g_Help.resumeDelay) == 0) return;
+                if (FastDecTimerS32(&g_Help.suspend_timer) == 0) return;
                 Help_StartMessageBox();
                 g_Help.resumed++;
                 return;
             }
-            if (g_HelpFlags[g_Help.curFlag].count < HELP_FLAG_DONE) g_HelpFlags[g_Help.curFlag].count++;
+            if (HelpData[g_Help.message_flg].timesUsed < HELP_FLAG_DONE) HelpData[g_Help.message_flg].timesUsed++;
         }
         {
-            HelpFlag *f = &g_HelpFlags[g_Help.curFlag];
+            HelpDatum *f = &HelpData[g_Help.message_flg];
             MarkShownTime(f);
             g_Help.resumed = 0;
-            g_Help.curIndex = -1;
+            g_Help.message_index = -1;
             g_Help.state = HELP_IDLE;
-            f->levels |= 1u << Level | 0x80000000u;
+            f->level_die |= 1u << Level | 0x80000000u;
         }
         break;
     }
@@ -394,7 +394,7 @@ void Help_DrawIconBox(void)
     g_Help.curHalfH = 32;
     DrawRoundedRect(y - 32, y + 32, x - 32, x + 32, 96);
     int alpha = 126;
-    if (g_Help.state == HELP_OPEN || g_Help.state == HELP_CLOSE) alpha = g_Help.timer * 21;
+    if (g_Help.state == HELP_OPEN || g_Help.state == HELP_CLOSE) alpha = g_Help.counter * 21;
     if (alpha > 128) alpha = 128;
     Sprite_DrawShapeWrapper(x - 32, y - 32, 64, 64, 0, 0, 64, 64, alpha << 24 | ICON_COLOR, GetEffectTex(4));
 }
@@ -402,11 +402,11 @@ void Help_DrawIconBox(void)
 // 0x007c978 (0x52c bytes)
 void Help_Draw(void)
 {
-    if (g_Help.state == HELP_IDLE || !g_Help.armed) return;
+    if (g_Help.state == HELP_IDLE || !g_Help.ready) return;
     if (!g_HelpTextOn && !g_HelpVoiceOn) return;
     if (!g_HelpTextOn) return;                  /* every state below draws only with help text on */
 
-    int x = g_Help.boxX, y = g_Help.boxY, t = g_Help.timer;
+    int x = g_Help.boxX, y = g_Help.boxY, t = g_Help.counter;
     int hw, hh;
     switch (g_Help.state) {
     case HELP_OPEN:
@@ -442,7 +442,7 @@ void Help_Draw(void)
         u32 color = HELP_TEXT_COLOR;
         if (g_Help.state == HELP_FADE_IN) color = (u32)t << 29 | 0xffa888;
         else if (g_Help.state == HELP_FADE_OUT) color = (u32)(4 - t) << 29 | 0xffa888;
-        char *text = g_HelpMsgs[g_Help.curIndex].text;
+        char *text = HelpMsgs[g_Help.message_index].text;
         int indent = g_Language > 1 && g_Language <= 5 ? 10 : 0;
         SetFontWindow(&win, 300, 380, indent + 40, 472, 250, 340, 18, 3);
         FontPrintOpt(g_Language == 3 ? 0.85f : 1.0f, &win, color, text, -1);

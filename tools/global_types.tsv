@@ -51,10 +51,11 @@ g_RespawnCount	int NAME /* 0xa53504 */
 g_RespawnTicks	int NAME /* 0xa53508 */
 g_LevelObjBits	u32 NAME[][64] /* 0xa0cd1c: per level, objects whose state was ever committed at a checkpoint (one bit each); part of the save */
 g_ScratchBuf	u8 *NAME /* 0x902ec8: scratch memory shared by the drawing code (water uses it as a WaterStage) */
-g_Help	HelpState NAME /* 0x720884 */
-g_HelpMsgs	HelpMsg *NAME /* 0xa1a800 */
-g_HelpFlags	HelpFlag NAME[148] /* 0xa1000c */
-g_HelpLog	u8 NAME[150] /* 0xa104ac: indices into g_HelpIdPairs, oldest first */
+g_Help	HelpDef NAME /* 0x720884 */
+HelpMsgs	HelpMsg *NAME /* 0xa1a800 */
+HelpData	HelpDatum NAME[148] /* 0xa1000c (DL splits this into HelpDataMessages/Gadgets/Misc) */
+HelpLog	u8 NAME[150] /* 0xa104ac: indices into g_HelpIdPairs, oldest first (DL name) */
 g_HelpIdPairs	short NAME[150][2] /* 0x7208cc */
 g_HelpTextOn	bool NAME /* 0x71fb59: options, help text */
 g_HelpVoiceOn	bool NAME /* 0x71fb58: options, help voice (guess) */
+HelpLogPos	int NAME /* 0x71fb5c: entries in HelpLog (DL name) */

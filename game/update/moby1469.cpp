@@ -71,57 +71,57 @@ void UpdateMoby_1469(MobyInstance *moby)
           ((uVar1 = pMVar6->state, uVar1 != 0xfd && uVar1 != 0xfe && (uVar1 != '\x03')))) &&
          ((iVar7 = MB_IsPntInCuboid(&g_heroPosition,(longlong)*(int *)((int)pvVar3 + 0xc))
           , iVar7 != 0 && ((g_heroStateType < 2 || (g_heroStateType == 9)))))) &&
-        (g_Help.state == 0)) && (g_Help.curId == -1)) {
+        (g_Help.state == 0)) && (g_Help.message_id == -1)) {
       if (UnlockableItems.hologuise == '\0') {
         iVar7 = (int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5));
         if (((int)((float)(longlong)(animationSpeed * 18.5) * 60.0) <
-             (int)(iVar7 + (uint)(ushort)g_HelpFlags.piece<986,2>() * -600)) ||
-           ((uint)(ushort)g_HelpFlags.piece<986,2>() * 600 == 0)) {
+             (int)(iVar7 + (uint)(ushort)HelpData.piece<986,2>() * -600)) ||
+           ((uint)(ushort)HelpData.piece<986,2>() * 600 == 0)) {
           Help_QueueMessage(STR_YOULL_NEED_THE_GADGETRON_0x3A98,0x7b);
         }
-        else if ((int)(uint)(ushort)g_HelpFlags.piece<986,2>() < iVar7 / 600) {
+        else if ((int)(uint)(ushort)HelpData.piece<986,2>() < iVar7 / 600) {
           sVar5 = (short)(iVar7 >> 0x1f);
-          g_HelpFlags.piece<986,2>() =
+          HelpData.piece<986,2>() =
                ((short)(iVar7 / 600) + sVar5) - ((short)((short)(iVar7 / 0x2580000) + sVar5) >> 0xf)
           ;
         }
       }
-      else if (g_HelpFlags.piece<992,2>() == 0) {
-        g_HelpFlags[0x3e0] = '\0';
-        g_HelpFlags[0x3e1] = '\x01';
+      else if (HelpData.piece<992,2>() == 0) {
+        HelpData[0x3e0] = '\0';
+        HelpData[0x3e1] = '\x01';
         iVar7 = (int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5));
-        if ((int)(uint)(ushort)g_HelpFlags.piece<994,2>() < iVar7 / 600) {
+        if ((int)(uint)(ushort)HelpData.piece<994,2>() < iVar7 / 600) {
           sVar5 = (short)(iVar7 >> 0x1f);
-          g_HelpFlags.piece<994,2>() =
+          HelpData.piece<994,2>() =
                ((short)(iVar7 / 600) + sVar5) - ((short)((short)(iVar7 / 0x2580000) + sVar5) >> 0xf)
           ;
         }
-        g_HelpFlags.piece<996,4>() = g_HelpFlags.piece<996,4>() | 1 << (Level & 0x3f) | 0x80000000
+        HelpData.piece<996,4>() = HelpData.piece<996,4>() | 1 << (Level & 0x3f) | 0x80000000
         ;
       }
       else {
         iVar7 = (int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5));
         if (((int)((float)(longlong)(animationSpeed * 18.5) * 60.0) <
-             (int)(iVar7 + (uint)(ushort)g_HelpFlags.piece<994,2>() * -600)) ||
-           ((uint)(ushort)g_HelpFlags.piece<994,2>() * 600 == 0)) {
+             (int)(iVar7 + (uint)(ushort)HelpData.piece<994,2>() * -600)) ||
+           ((uint)(ushort)HelpData.piece<994,2>() * 600 == 0)) {
           Help_QueueMessage(STR_TIME_TO_USE_THE_0x3A99,0x7c);
         }
-        else if ((int)(uint)(ushort)g_HelpFlags.piece<994,2>() < iVar7 / 600) {
+        else if ((int)(uint)(ushort)HelpData.piece<994,2>() < iVar7 / 600) {
           sVar5 = (short)(iVar7 >> 0x1f);
-          g_HelpFlags.piece<994,2>() =
+          HelpData.piece<994,2>() =
                ((short)(iVar7 / 600) + sVar5) - ((short)((short)(iVar7 / 0x2580000) + sVar5) >> 0xf)
           ;
         }
       }
     }
-    if ((((DAT_00a15f34 != 0) && (g_Help.state == 0)) && (g_Help.curId == -1)) &&
-       (g_HelpFlags.piece<1096,2>() == 0)) {
+    if ((((DAT_00a15f34 != 0) && (g_Help.state == 0)) && (g_Help.message_id == -1)) &&
+       (HelpData.piece<1096,2>() == 0)) {
       Help_QueueMessage(STR_IF_A_SENTRY_BOT_PRESSES_0x3A9F,0x89);
       DAT_00a15f34 = 0;
     }
     iVar7 = MB_IsPntInCuboid(&g_heroPosition,(longlong)*(int *)((int)pvVar3 + 0x54));
     if (((iVar7 != 0) && (g_heroType == '\x03')) &&
-       ((DAT_0096bfc0 == 0 && ((DAT_010c512c == 0 && (g_HelpFlags.piece<1088,2>() == 0)))))) {
+       ((DAT_0096bfc0 == 0 && ((DAT_010c512c == 0 && (HelpData.piece<1088,2>() == 0)))))) {
       Help_QueueMessage(STR_YOU_WILL_HAVE_TO_0x3A9E,0x88);
     }
     uVar11 = 0xffffffffffffffff;
@@ -150,7 +150,7 @@ LAB_00286698:
          (((*(int *)((int)pvVar3 + 0x34) < iVar8 && iVar7 != -1 &&
            (iVar7 != *(int *)((int)pvVar3 + 0x40))) &&
           (((g_heroStateType < 2 || (g_heroStateType == 9)) && (g_Help.state == 0))
-          )))))) && ((g_Help.curId == -1 && (UnlockableItems.hologuise != '\0')))) {
+          )))))) && ((g_Help.message_id == -1 && (UnlockableItems.hologuise != '\0')))) {
       auVar13 = ZEXT416(0xffffffff);
       auVar13 = auVar13 | auVar13 << 0x20 | auVar13 << 0x40 | auVar13 << 0x60;
       auVar14 = vectorShiftLeftIntegerWord(auVar13,auVar13);
@@ -165,7 +165,7 @@ LAB_00286698:
       uVar4 = storeVectorElementWordIndexed
                         (auVar13 | auVar13 << 0x20 | auVar13 << 0x40 | auVar13 << 0x60,0x34,uVar12);
       *(undefined4 *)((int)pvVar3 + 0x34U & 0xfffffffc) = uVar4;
-      if ((g_HelpFlags.piece<1004,4>() & 0x80000000) == 0) {
+      if ((HelpData.piece<1004,4>() & 0x80000000) == 0) {
         Help_QueueMessage(STR_WHILE_WEARING_THE_HOLOGUISE_0x3A9A,0x7d);
       }
       *(undefined4 *)((int)pvVar3 + 0x3c) = 0;
@@ -176,15 +176,15 @@ LAB_00286698:
     }
     iVar7 = MB_IsPntInCuboid(&g_heroPosition,(longlong)*(int *)((int)pvVar3 + 0x1c));
     if (((((iVar7 != 0) && (g_heroType == '\x02')) && (g_MiscLevelFlags.field111_0x6f == 0)) &&
-        ((g_Help.state == 0 && (g_Help.curId == -1)))) &&
-       ((g_HelpFlags.piece<1028,4>() & 0x80000000) == 0)) {
+        ((g_Help.state == 0 && (g_Help.message_id == -1)))) &&
+       ((HelpData.piece<1028,4>() & 0x80000000) == 0)) {
       Help_QueueMessage(STR_WHEN_YOUR_ENERGY_BAR_0x3A9C,0x80);
     }
     iVar7 = MB_IsPntInCuboid(&g_heroPosition,(longlong)*(int *)((int)pvVar3 + 0x20));
     if (((iVar7 != 0) && (g_Help.state == 0)) &&
-       ((g_Help.curId == -1 &&
+       ((g_Help.message_id == -1 &&
         ((UnlockableItems.hydroPack == '\0' &&
-         ((g_HelpFlags.piece<1044,4>() & 1 << (Level & 0x3f)) == 0)))))) {
+         ((HelpData.piece<1044,4>() & 1 << (Level & 0x3f)) == 0)))))) {
       Help_QueueMessage(STR_YOU_WILL_NEED_A_0x3A9D,0x82);
     }
     iVar9 = 0;
@@ -209,7 +209,7 @@ LAB_00286698:
 LAB_002869a0:
     if (((((int)(animationSpeed * 3600.5) < iVar8 && iVar7 != -1) &&
          (iVar9 = Hero_IsSwimming(), iVar9 != 0)) && (g_Help.state == 0)) &&
-       ((g_Help.curId == -1 && (UnlockableItems.hydroPack != '\0')))) {
+       ((g_Help.message_id == -1 && (UnlockableItems.hydroPack != '\0')))) {
       Help_QueueMessage(STR_NOW_THAT_YOU_HAVE_0x4E2E,0x78);
       *(int *)((int)pvVar3 + 0x40) = iVar7;
       *(undefined4 *)((int)pvVar3 + 0x38) = 0;

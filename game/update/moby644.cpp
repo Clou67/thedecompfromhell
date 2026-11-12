@@ -101,7 +101,7 @@ void UpdateMoby_644(MobyInstance *moby)
     uVar4 = (int)pfVar3[0x18] >> 0x1f;
     iVar5 = (uVar4 >> 1 ^ (uint)pfVar3[0x18]) - uVar4;
     if ((iVar5 < 0x3f800000) &&
-       (((iVar5 < 0x3e4cccce || (g_Help.state != 0)) || (g_Help.curId != -1)))) {
+       (((iVar5 < 0x3e4cccce || (g_Help.state != 0)) || (g_Help.message_id != -1)))) {
       if (g_heroState == MOVEMENT_LOCKED) {
         Delt((float)dVar7,g_FrameTime * 4.0,pfVar3 + 0x1b);
         SceneScreenFade = pfVar3[0x1b];

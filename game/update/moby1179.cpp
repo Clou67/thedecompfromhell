@@ -39,10 +39,10 @@ char * UpdateMoby_1179(MobyInstance *moby)
   
   pcVar7 = (char *)moby->pVar;
   if (moby->state == 0) {
-    g_HelpFlags[0x360] = '\0';
-    g_HelpFlags[0x361] = '\0';
-    g_HelpFlags[0x362] = '\0';
-    g_HelpFlags[0x363] = '\0';
+    HelpData[0x360] = '\0';
+    HelpData[0x361] = '\0';
+    HelpData[0x362] = '\0';
+    HelpData[0x363] = '\0';
     fVar3 = (moby->pos).z;
     *(ushort *)(pcVar7 + 0x3e) = *(ushort *)(pcVar7 + 0x3e) | 8;
     if (((Level == Pokitaru) && (moby->levelFlagIdx != -1)) &&
@@ -85,44 +85,44 @@ char * UpdateMoby_1179(MobyInstance *moby)
         (pcVar7 = g_heroStateType, g_heroStateType == (char *)0x1)))) {
       if (UnlockableItems.thrusterPack == '\0') {
         iVar1 = (int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5));
-        pcVar7 = g_HelpFlags;
+        pcVar7 = HelpData;
         if (((int)((float)(longlong)(animationSpeed * 18.5) * 60.0) <
-             (int)(iVar1 + (uint)(ushort)g_HelpFlags.piece<906,2>() * -600)) ||
-           ((uint)(ushort)g_HelpFlags.piece<906,2>() * 600 == 0)) {
+             (int)(iVar1 + (uint)(ushort)HelpData.piece<906,2>() * -600)) ||
+           ((uint)(ushort)HelpData.piece<906,2>() * 600 == 0)) {
           pcVar7 = (char *)Help_QueueMessage(STR_WITH_THE_THRUSTER_PACK_YOU_0x2B01,0x71);
         }
-        else if ((int)(uint)(ushort)g_HelpFlags.piece<906,2>() < iVar1 / 600) {
+        else if ((int)(uint)(ushort)HelpData.piece<906,2>() < iVar1 / 600) {
           sVar6 = (short)(iVar1 >> 0x1f);
-          g_HelpFlags.piece<906,2>() =
+          HelpData.piece<906,2>() =
                ((short)(iVar1 / 600) + sVar6) - ((short)((short)(iVar1 / 0x2580000) + sVar6) >> 0xf)
           ;
         }
       }
       else {
-        pcVar7 = g_HelpFlags;
-        if (g_HelpFlags.piece<864,2>() == 0) {
-          g_HelpFlags[0x360] = '\0';
-          g_HelpFlags[0x361] = '\x01';
+        pcVar7 = HelpData;
+        if (HelpData.piece<864,2>() == 0) {
+          HelpData[0x360] = '\0';
+          HelpData[0x361] = '\x01';
           iVar1 = (int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5));
-          if ((int)(uint)(ushort)g_HelpFlags.piece<866,2>() < iVar1 / 600) {
+          if ((int)(uint)(ushort)HelpData.piece<866,2>() < iVar1 / 600) {
             sVar6 = (short)(iVar1 >> 0x1f);
-            g_HelpFlags.piece<866,2>() =
+            HelpData.piece<866,2>() =
                  ((short)(iVar1 / 600) + sVar6) -
                  ((short)((short)(iVar1 / 0x2580000) + sVar6) >> 0xf);
           }
-          g_HelpFlags.piece<868,4>() =
-               g_HelpFlags.piece<868,4>() | 1 << (Level & 0x3f) | 0x80000000;
+          HelpData.piece<868,4>() =
+               HelpData.piece<868,4>() | 1 << (Level & 0x3f) | 0x80000000;
         }
         else {
           iVar1 = (int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5));
           if (((int)((float)(longlong)(animationSpeed * 18.5) * 60.0) <
-               (int)(iVar1 + (uint)(ushort)g_HelpFlags.piece<866,2>() * -600)) ||
-             ((uint)(ushort)g_HelpFlags.piece<866,2>() * 600 == 0)) {
+               (int)(iVar1 + (uint)(ushort)HelpData.piece<866,2>() * -600)) ||
+             ((uint)(ushort)HelpData.piece<866,2>() * 600 == 0)) {
             pcVar7 = (char *)Help_QueueMessage(STR_YOULL_NEED_TO_USE_0x2B02,0x6c);
           }
-          else if ((int)(uint)(ushort)g_HelpFlags.piece<866,2>() < iVar1 / 600) {
+          else if ((int)(uint)(ushort)HelpData.piece<866,2>() < iVar1 / 600) {
             sVar6 = (short)(iVar1 >> 0x1f);
-            g_HelpFlags.piece<866,2>() =
+            HelpData.piece<866,2>() =
                  ((short)(iVar1 / 600) + sVar6) -
                  ((short)((short)(iVar1 / 0x2580000) + sVar6) >> 0xf);
           }

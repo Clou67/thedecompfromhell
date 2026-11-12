@@ -208,7 +208,7 @@ void UpdateMoby_1105(MobyInstance *moby)
     uVar9 = (int)*(uint *)((int)pvVar8 + 0x178) >> 0x1f;
     iVar25 = (uVar9 >> 1 ^ *(uint *)((int)pvVar8 + 0x178)) - uVar9;
     if ((iVar25 < 0x3f800000) &&
-       (((g_Help.state != 0 || (g_Help.curId != -1)) || (iVar25 < 0x3e4cccce)))) {
+       (((g_Help.state != 0 || (g_Help.message_id != -1)) || (iVar25 < 0x3e4cccce)))) {
       Delt((float)dVar34,g_FrameTime * 4.0,&SceneScreenFade);
     }
     else {

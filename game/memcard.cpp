@@ -294,7 +294,7 @@ void memcard_SetupNewGameGlobals(void)
   memset(&g_SeenPlanets,0,0x14);
   memset(GalacticMap,0,0x50);
   memset(g_KeyLevelFlags,0,0x790);
-  memset(g_HelpFlags,0,0x4a0);
+  memset(HelpData,0,0x4a0);
   memset(CHAR_ARRAY_00a0feec,0,0x120);
   memset(CHAR_ARRAY_00a0fdc4,0,0x128);
   DAT_0071fb24 = 1;
@@ -322,8 +322,8 @@ void memcard_SetupNewGameGlobals(void)
   g_deathCount = 0;
   g_boltMiningTimer = 0;
   g_boltsMined = 0;
-  g_HelpLogCount = 1;
-  memset(&g_HelpLog,0,0x96);
+  HelpLogPos = 1;
+  memset(&HelpLog,0,0x96);
   puVar1 = &DAT_0072b330;
   memset(&DAT_0072b330,0,0x714);
   DAT_0072b330 = 0x5277;

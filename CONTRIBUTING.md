@@ -39,6 +39,12 @@ data, not hand edits to generated files. See `STYLE.md` for how cleaned code sho
    - **the structs.** Repeated `base + i*stride + off` accesses are an array of structs; fixed
      offsets from one global are fields. Write the struct in `type_defs/` with offset comments and
      size checks (see `type_defs/PadState.h`).
+   - **the names.** Check Deadlocked's debug symbols (DWARF struct dump and ELF symbol table, kept
+     outside this repo) for the same struct, global or function: names like `HelpDef`, `HelpDatum`,
+     `HelpLog`, `HelpLogPos` come from there. Layouts often differ from RaC1, so use a DL name only
+     for a field or object with the same role, and say so in the comment.
+   - **vector code.** `tools/vecsym.py` runs a stretch of a `.s` symbolically and prints what each
+     store computes; that is how `ShadeVerts` was read.
    - **the inlines.** `// inlined: FastAtan2 @0x...` marks known inline helpers; repeated blocks
      inside one function are usually an inline or a macro in the source (see `lights.cpp`).
 3. Write `tools/manual/<path>.cpp` (start it with `#include "rc1.h"`; the generator replaces that

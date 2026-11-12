@@ -31,6 +31,6 @@ WaterSheetSrcVert	game/water
 WaterStage	game/water
 FontWindow	game/draw
 HelpMsg	game/help
-HelpFlag	game/help
-HelpState	game/help
+HelpDatum	game/help
+HelpDef	game/help
 g_Help	game/help

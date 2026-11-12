@@ -290,22 +290,22 @@ void UpdateMoby_1368(MobyInstance *moby)
     if ((g_CollOutput.pMoby != (MobyInstance *)0x0) &&
        (g_CollOutput.pMoby != (MobyInstance *)pfVar9[0xf])) {
       if (((g_onMagnerail != 0) && (g_CollOutput.pMoby == g_heroMobyPtr)) &&
-         (g_HelpFlags.piece<1112,2>() == 0)) {
-        g_HelpFlags[0x458] = '\0';
-        g_HelpFlags[0x459] = '\x01';
+         (HelpData.piece<1112,2>() == 0)) {
+        HelpData[0x458] = '\0';
+        HelpData[0x459] = '\x01';
         puVar12[0x24] = (longlong)g_GameFrameCount;
-        uVar16 = g_HelpFlags.piece<1114,2>();
+        uVar16 = HelpData.piece<1114,2>();
         puVar12[0x24] =
              (longlong)(int)(animationSpeed * (float)((double)(longlong)puVar12[0x24] + dVar35));
         iVar20 = *(int *)((int)puVar12 + 0x124);
         if ((int)(uint)(ushort)uVar16 < iVar20 / 600) {
           sVar14 = (short)(iVar20 >> 0x1f);
-          g_HelpFlags.piece<1114,2>() =
+          HelpData.piece<1114,2>() =
                ((short)(iVar20 / 600) + sVar14) -
                ((short)((short)(iVar20 / 0x2580000) + sVar14) >> 0xf);
         }
-        g_HelpFlags.piece<1116,4>() =
-             g_HelpFlags.piece<1116,4>() | 1 << (Level & 0x3f) | 0x80000000;
+        HelpData.piece<1116,4>() =
+             HelpData.piece<1116,4>() | 1 << (Level & 0x3f) | 0x80000000;
       }
       (moby->pos).x = g_CollOutput.ip.x;
       (moby->pos).y = g_CollOutput.ip.y;
@@ -314,22 +314,22 @@ void UpdateMoby_1368(MobyInstance *moby)
       puVar12[0xe] = 0;
       DamageSphereAtPos(0x3fe8000000000000,uVar37,0,lVar18,lVar18 + 0x10,&DAT_0025bcb0,1);
       if (((g_onMagnerail != 0) && (g_CollOutput.pMoby == g_heroMobyPtr)) &&
-         (g_HelpFlags.piece<1112,2>() == 0)) {
-        g_HelpFlags[0x458] = '\0';
-        g_HelpFlags[0x459] = '\x01';
+         (HelpData.piece<1112,2>() == 0)) {
+        HelpData[0x458] = '\0';
+        HelpData[0x459] = '\x01';
         puVar12[0x24] = (longlong)g_GameFrameCount;
-        uVar16 = g_HelpFlags.piece<1114,2>();
+        uVar16 = HelpData.piece<1114,2>();
         puVar12[0x24] =
              (longlong)(int)(animationSpeed * (float)((double)(longlong)puVar12[0x24] + dVar35));
         iVar20 = *(int *)((int)puVar12 + 0x124);
         if ((int)(uint)(ushort)uVar16 < iVar20 / 600) {
           sVar14 = (short)(iVar20 >> 0x1f);
-          g_HelpFlags.piece<1114,2>() =
+          HelpData.piece<1114,2>() =
                ((short)(iVar20 / 600) + sVar14) -
                ((short)((short)(iVar20 / 0x2580000) + sVar14) >> 0xf);
         }
-        g_HelpFlags.piece<1116,4>() =
-             g_HelpFlags.piece<1116,4>() | 1 << (Level & 0x3f) | 0x80000000;
+        HelpData.piece<1116,4>() =
+             HelpData.piece<1116,4>() | 1 << (Level & 0x3f) | 0x80000000;
       }
       auVar38 = ZEXT416(0xffffffff);
       auVar38 = auVar38 | auVar38 << 0x20 | auVar38 << 0x40 | auVar38 << 0x60;

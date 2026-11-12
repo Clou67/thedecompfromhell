@@ -519,7 +519,7 @@ void UpdateMoby_615(MobyInstance *moby)
       if (iVar13 == 0xc) goto LAB_003dead8;
     }
     if (((((g_Pad.buttonsPressedThisFrame & TRIANGLE) != 0) && (g_Help.state == 0)) &&
-        (g_Help.curId == -1)) ||
+        (g_Help.message_id == -1)) ||
        ((g_heroState != MOVEMENT_LOCKED || (g_CurrentWeapon != 0x1a)))) {
       moby->state = '\x01';
       Camera_DeactivateMobyDrivenCam(1);

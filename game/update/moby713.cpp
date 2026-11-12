@@ -837,7 +837,7 @@ void UpdateMoby_713(MobyInstance *moby)
         local_60 = (longlong)iVar21;
         if ((iVar21 < (int)((int)(animationSpeed * ((float)(longlong)g_GameFrameCount + 0.5)
                                  ) + (uint)(ushort)CHAR_ARRAY_00a0feec.piece<74,2>() * -600)) &&
-           ((g_HelpFlags.piece<580,4>() & 1 << (Level & 0x3f)) == 0)) {
+           ((HelpData.piece<580,4>() & 1 << (Level & 0x3f)) == 0)) {
           Help_QueueMessage(STR_PRESS_THE_SELECT_BUTTON_0x07DD,0x48);
         }
         moby->state = '\r';

@@ -1186,18 +1186,18 @@ void LoadHelp(void)
     snprintf(acStack_90,"rc1/ps3data/global/locale/%s",uVar1);
   }
   LoadAssetFromFile(acStack_90,g_pLocaleBuffer,0x40000);
-  g_Help.msgCount = *g_pLocaleBuffer;
-  g_HelpMsgs = g_pLocaleBuffer;
+  g_Help.num_message = *g_pLocaleBuffer;
+  HelpMsgs = g_pLocaleBuffer;
   FastMemCopy32
             (g_pLocaleBuffer,g_pLocaleBuffer + 2,
              (g_pLocaleBuffer[1] + 3U & 0xfffffffc) - 8);
-  if (0 < g_Help.msgCount) {
+  if (0 < g_Help.num_message) {
     iVar2 = 0;
-    iVar3 = g_Help.msgCount;
+    iVar3 = g_Help.num_message;
     do {
       iVar3 = iVar3 + -1;
-      *(int *)((int)g_HelpMsgs + iVar2) =
-           (int)g_HelpMsgs + *(int *)((int)g_HelpMsgs + iVar2) + -8;
+      *(int *)((int)HelpMsgs + iVar2) =
+           (int)HelpMsgs + *(int *)((int)HelpMsgs + iVar2) + -8;
       iVar2 = iVar2 + 0x10;
     } while (0 < iVar3);
   }
@@ -1414,17 +1414,17 @@ LAB_000dd3fc:
   }
   if (puVar32[4] != 0) {
     levelVarBlock = (int *)(uVar31 + puVar32[g_Language + 4]);
-    g_Help.msgCount = *levelVarBlock;
-    g_HelpMsgs = (int *)uVar5;
+    g_Help.num_message = *levelVarBlock;
+    HelpMsgs = (int *)uVar5;
     lVar37 = (longlong)(int)((levelVarBlock[1] + 3U & 0xfffffffc) - 8);
     FastMemCopy32(uVar28,(uVar31 + puVar32[g_Language + 4] & 0xffffffff) + 8,lVar37);
-    if (0 < g_Help.msgCount) {
+    if (0 < g_Help.num_message) {
       iVar35 = 0;
-      iVar16 = g_Help.msgCount;
+      iVar16 = g_Help.num_message;
       do {
         iVar16 = iVar16 + -1;
-        *(uint *)((int)g_HelpMsgs + iVar35) =
-             *(int *)((int)g_HelpMsgs + iVar35) + ((int)g_HelpMsgs - 8U);
+        *(uint *)((int)HelpMsgs + iVar35) =
+             *(int *)((int)HelpMsgs + iVar35) + ((int)HelpMsgs - 8U);
         iVar35 = iVar35 + 0x10;
       } while (0 < iVar16);
     }
@@ -2243,17 +2243,17 @@ LAB_000dede0:
   }
   iVar16 = (int)local_c0;
   LoadAssetFromFile(acStack_1d0,*(undefined4 *)(iVar16 + 0x54),0x40000);
-  g_HelpMsgs = *(int **)(iVar16 + 0x54);
-  g_Help.msgCount = *g_HelpMsgs;
+  HelpMsgs = *(int **)(iVar16 + 0x54);
+  g_Help.num_message = *HelpMsgs;
   FastMemCopy32
-            (g_HelpMsgs,g_HelpMsgs + 2,(g_HelpMsgs[1] + 3U & 0xfffffffc) - 8);
-  if (0 < g_Help.msgCount) {
+            (HelpMsgs,HelpMsgs + 2,(HelpMsgs[1] + 3U & 0xfffffffc) - 8);
+  if (0 < g_Help.num_message) {
     iVar35 = 0;
-    iVar16 = g_Help.msgCount;
+    iVar16 = g_Help.num_message;
     do {
       iVar16 = iVar16 + -1;
-      *(int *)((int)g_HelpMsgs + iVar35) =
-           (int)g_HelpMsgs + *(int *)((int)g_HelpMsgs + iVar35) + -8;
+      *(int *)((int)HelpMsgs + iVar35) =
+           (int)HelpMsgs + *(int *)((int)HelpMsgs + iVar35) + -8;
       iVar35 = iVar35 + 0x10;
     } while (0 < iVar16);
   }

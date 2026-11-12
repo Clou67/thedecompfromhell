@@ -127,8 +127,8 @@ void M1264_00230bb8(MobyInstance *param_1)
                auVar18 | auVar18 << 0x20 | auVar18 << 0x40 | auVar18 << 0x60);
     if ((bool)(in_cr6 >> 1 & 1)) {
       iVar12 = *(int *)((int)pvVar1 + 100) + -1;
-      g_HelpFlags[0x2b0] = -1;
-      g_HelpFlags[0x2b1] = -1;
+      HelpData[0x2b0] = -1;
+      HelpData[0x2b1] = -1;
       *(int *)((int)pvVar1 + 100) = iVar12;
       M1266_00232fa0((double)fVar24,*(undefined4 *)((int)pvVar1 + iVar12 * 4 + 0x70));
       uVar10 = uVar15 + lVar11 * 4;

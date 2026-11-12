@@ -36,29 +36,29 @@ ulonglong UpdateMoby_1413(MobyInstance *moby)
     moby->state = '\x01';
     moby->updateDistance = -1;
   }
-  if (g_HelpFlags.piece<24,2>() == 0) {
+  if (HelpData.piece<24,2>() == 0) {
     Help_QueueMessage(STR_WELCOME_TO_THE_GADGETRON_0x0003,3);
   }
-  if ((g_HelpFlags.piece<928,2>() == 0) &&
+  if ((HelpData.piece<928,2>() == 0) &&
      (iVar4 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar6[4]), iVar4 != 0)) {
     Help_QueueMessage(STR_YOU_CAN_INTERRUPT_HELPDESK_0x4E2A,0x74);
   }
-  if (((g_HelpFlags.piece<72,2>() == 0) &&
+  if (((HelpData.piece<72,2>() == 0) &&
       (iVar4 = MB_IsPntInCuboid(&g_heroPosition,(longlong)*piVar6), iVar4 != 0)) &&
      (CHAR_ARRAY_00a0feec.piece<8,2>() == 0)) {
     Help_QueueMessage(STR_GADGETRONS_OMNIWRENCH_8000_INCLUDES_0x0005,9);
   }
-  if (((g_HelpFlags.piece<64,2>() == 0) && (CHAR_ARRAY_00a0feec.piece<0,2>() == 0)) &&
+  if (((HelpData.piece<64,2>() == 0) && (CHAR_ARRAY_00a0feec.piece<0,2>() == 0)) &&
      (iVar4 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar6[1]), iVar4 != 0)) {
     Help_QueueMessage(STR_TO_PERFORM_A_POWERFUL_0x0004,8);
   }
-  if ((g_HelpFlags.piece<0,2>() == 0) &&
+  if ((HelpData.piece<0,2>() == 0) &&
      (iVar4 = MB_IsPntInCuboid(&g_heroPosition,(longlong)piVar6[2]), iVar4 != 0)) {
     Help_QueueMessage(STR_TO_USE_YOUR_BOMB_0x0000,0);
   }
-  uVar3 = (ulonglong)(ushort)g_HelpFlags.piece<8,2>();
-  if ((g_HelpFlags.piece<8,2>() == 0) &&
-     (uVar3 = (ulonglong)(ushort)g_HelpFlags.piece<16,2>(), g_HelpFlags.piece<16,2>() == 0)) {
+  uVar3 = (ulonglong)(ushort)HelpData.piece<8,2>();
+  if ((HelpData.piece<8,2>() == 0) &&
+     (uVar3 = (ulonglong)(ushort)HelpData.piece<16,2>(), HelpData.piece<16,2>() == 0)) {
     iVar4 = 0;
     do {
       uVar2 = piVar6[5];

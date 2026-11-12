@@ -1115,8 +1115,8 @@ void UpdateMoby_1319(MobyInstance *moby)
           M1215_0020ab50(lVar36,&DAT_00a15d30,0x4c4);
         }
         PlayMobySound(1,0,moby);
-        g_HelpFlags[0x2b0] = -1;
-        g_HelpFlags[0x2b1] = -1;
+        HelpData[0x2b0] = -1;
+        HelpData[0x2b1] = -1;
         moby->state = '\x03';
         moby->collision = (ushort *)0x0;
         moby->modeBits = moby->modeBits | DISABLED;
@@ -1830,8 +1830,8 @@ void UpdateMoby_1319(MobyInstance *moby)
     *(float *)((int)pvVar19 + 0xb8) = g_heroPosition.z;
     *(float *)((int)pvVar19 + 0xbc) = g_heroPosition.w;
     lVar36 = lVar30 + 0x10;
-    g_HelpFlags[0x2b0] = -1;
-    g_HelpFlags[0x2b1] = -1;
+    HelpData[0x2b0] = -1;
+    HelpData[0x2b1] = -1;
     (moby->pos).x = (moby->pos).x + fVar6;
     (moby->pos).y = (moby->pos).y + fVar2;
     (moby->pos).z = (moby->pos).z + (fVar7 - fVar5);

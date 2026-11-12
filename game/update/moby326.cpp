@@ -1156,7 +1156,7 @@ void UpdateMoby_326(MobyInstance *moby)
   }
   else if (uVar2 == '\x03') {
     if (((Level == Hoven) && (UnlockableItems.devastator == '\0')) &&
-       (g_HelpFlags.piece<744,2>() == 0)) {
+       (HelpData.piece<744,2>() == 0)) {
       Help_QueueMessage(STR_YOU_NEED_A_DEVASTATOR_0x2EE2,0x5d);
       iVar24 = *(int *)((int)pvVar10 + 0xc0);
     }

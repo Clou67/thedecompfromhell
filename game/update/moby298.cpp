@@ -151,17 +151,17 @@ void UpdateMoby_298(MobyInstance *moby)
       puVar9[0x1f] = (longlong)g_GameFrameCount;
       fVar2 = animationSpeed;
       puVar9[0x1f] = (longlong)(int)(animationSpeed * ((float)(longlong)puVar9[0x1f] + 0.5));
-      uVar14 = g_HelpFlags.piece<1074,2>();
+      uVar14 = HelpData.piece<1074,2>();
       iVar20 = *(int *)((int)puVar9 + 0xfc);
-      uVar10 = (uint)(ushort)g_HelpFlags.piece<1074,2>();
-      uVar11 = (uint)(ushort)g_HelpFlags.piece<1074,2>();
+      uVar10 = (uint)(ushort)HelpData.piece<1074,2>();
+      uVar11 = (uint)(ushort)HelpData.piece<1074,2>();
       puVar9[0x1f] = (longlong)(int)((float)(longlong)(fVar2 * 18.5) * 60.0);
       if ((*(int *)((int)puVar9 + 0xfc) < (int)(iVar20 + uVar11 * -600)) || (uVar10 * 600 == 0)) {
         Help_QueueMessage(STR_OUR_LONG_RANGE_SENSORS_DO_0x2B03,0x86);
       }
       else if ((int)(uint)(ushort)uVar14 < iVar20 / 600) {
         sVar24 = (short)(iVar20 >> 0x1f);
-        g_HelpFlags.piece<1074,2>() =
+        HelpData.piece<1074,2>() =
              ((short)(iVar20 / 600) + sVar24) -
              ((short)((short)(iVar20 / 0x2580000) + sVar24) >> 0xf);
       }
