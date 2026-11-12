@@ -9,7 +9,6 @@
 #include "game/bloaders.h"
 #include "game/boot.h"
 #include "game/collproc.h"
-#include "game/debug.h"
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/hud.h"

@@ -207,6 +207,7 @@ extern undefined4 OcclInvalidGridGp; /* 0xa108cc */
 extern undefined4 OcclMode; /* 0xa108c8 */
 extern void * OcclOct; /* 0xa108c4 */
 extern undefined4 OcclPreviousGrid; /* 0xa108d0 */
+extern int OcclUpdate; /* 0x95c5dc */ /* type set in global_types.tsv */
 extern undefined OcclVisibility[128]; /* 0xa107c0 */
 extern undefined OcclVisibilityMerged[128]; /* 0xa10840 */
 extern undefined4 PartClipDist; /* 0xa51fd0 */

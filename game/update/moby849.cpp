@@ -15,6 +15,7 @@
 #include "game/pad.h"
 #include "game/partproc.h"
 #include "game/partupd.h"
+#include "game/pause.h"
 #include "game/sound.h"
 #include "game/update/moby121.h"
 #include "game/update/moby122.h"

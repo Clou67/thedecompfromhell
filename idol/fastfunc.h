@@ -126,7 +126,7 @@ int HostOpen(const char *param_1,int param_2);
 int HostRead(int param_1,void *param_2,int param_3);
 void HostClose(int param_1);
 int HostSeek(int param_1,int param_2,int param_3);
-void STUB_00502de8(...);
+int HostWrite(int param_1,const void *param_2,int param_3);
 void FUN_00502dec(void);
 void FUN_00502df0(void);
 void FUN_00502df4(void);

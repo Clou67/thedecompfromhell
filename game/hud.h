@@ -1,7 +1,6 @@
 #pragma once
 // game/hud.h
 #include "types.h"
-#include "game/pause.h"
 
 // ---- types
 typedef enum UiTexCategory {

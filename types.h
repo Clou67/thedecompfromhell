@@ -140,6 +140,8 @@ typedef unsigned char   undefined;
 
 typedef unsigned char    byte;
 
+typedef unsigned int    dword;
+
 typedef int    int3;
 
 typedef long long    int5;
@@ -2564,6 +2566,7 @@ extern undefined4 DAT_006517ac; /* no defined data */
 extern undefined4 DAT_006517dc; /* no defined data */
 extern undefined4 DAT_0065180c; /* no defined data */
 extern undefined4 DAT_0065183c; /* no defined data */
+extern undefined4 DAT_00651c88; /* no defined data */
 extern undefined4 DAT_00652bf8; /* no defined data */
 extern undefined4 DAT_00652c00; /* no defined data */
 extern undefined4 DAT_0071a32c; /* 0x71a32c */

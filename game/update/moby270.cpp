@@ -4,7 +4,6 @@
 #include <math.h>
 #include "game/update/moby270.h"
 #include "game/collproc.h"
-#include "game/debug.h"
 #include "game/hero.h"
 #include "game/lights.h"
 #include "game/main.h"
@@ -12,6 +11,7 @@
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
 #include "game/partupd.h"
+#include "game/pause.h"
 #include "game/sound.h"
 #include "game/update/moby121.h"
 #include "game/update/moby428.h"

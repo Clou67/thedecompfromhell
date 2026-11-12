@@ -556,10 +556,10 @@ u8 *LoadGameplay(int *gameplay, int size)
     levelFog.r = (u8)header[3];
     levelFog.g = (u8)header[4];
     levelFog.b = (u8)header[5];
-    LevelFogNearDist = header[6];
-    LevelFogFarDist = (float)header[7];
-    LevelFogNearIntensity = (float)header[8];
-    LevelFogFarIntensity = (float)header[9];
+    LevelFogNearDist = ((float *)header)[6];
+    LevelFogFarDist = ((float *)header)[7];
+    LevelFogNearIntensity = ((float *)header)[8];
+    LevelFogFarIntensity = ((float *)header)[9];
     UpdateFog();
 
     TfragDrawDist = 512000.0f;

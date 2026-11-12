@@ -3007,7 +3007,7 @@ int HostSeek(int param_1,int param_2,int param_3)
 
 
 // 0x0502de8 (0x4 bytes)
-void STUB_00502de8(...)
+int HostWrite(int param_1,const void *param_2,int param_3)
 
 {
   return;

@@ -4,7 +4,7 @@ errors	file
 372	game/camera.cpp
 165	game/collproc.cpp
 0	game/crt0.cpp
-97	game/debug.cpp
+0	game/debug.cpp
 778	game/draw.cpp
 12	game/fUnk.cpp
 0	game/freeze.cpp
@@ -1025,7 +1025,7 @@ errors	file
 0	game/water.cpp
 23	idol/9Unk.cpp
 3	idol/fUnk.cpp
-130	idol/fastfunc.cpp
+131	idol/fastfunc.cpp
 145	idol/idol.cpp
 437	idol/idol_draw.cpp
 1773	idol/mUnk.cpp

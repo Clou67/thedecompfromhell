@@ -22,7 +22,6 @@
 #include "game/loaders.h"
 #include "game/mesh.h"
 #include "game/mobyutil.h"
-#include "game/pause.h"
 #include "game/rUnk.h"
 #include "game/skyproc.h"
 #include "game/space.h"

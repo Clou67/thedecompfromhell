@@ -3,12 +3,12 @@
 // 6 functions, 0x4c84b4-0x4caa88
 #include "game/update/moby983.h"
 #include "game/camera.h"
-#include "game/debug.h"
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/partupd.h"
+#include "game/pause.h"
 #include "game/sound.h"
 #include "game/update/moby112.h"
 #include "game/update/moby177.h"

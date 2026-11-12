@@ -1,7 +1,7 @@
 #pragma once
 // game/vendor.h
 #include "types.h"
-#include "game/pause.h"
+#include "game/debug.h"
 
 // ---- globals
 extern undefined4 DAT_00101010; /* 0x101010 */

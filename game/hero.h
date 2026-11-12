@@ -1040,7 +1040,7 @@ extern undefined4 DAT_00d2d2d2; /* no defined data */
 extern undefined4 DAT_00dcdcdc; /* no defined data */
 extern float FLOAT_0071fb50; /* 0x71fb50 */
 extern float FLOAT_0071fb54; /* 0x71fb54 */
-extern undefined4 HeroDeathHeight; /* 0xa10934 */
+extern float HeroDeathHeight; /* 0xa10934 */ /* type set in global_types.tsv */
 extern LevelId Level; /* 0x969c70 */
 extern pointer32 PTR_BoltHud_Init_00705810; /* 0x705810 */
 extern pointer32 PTR_ClankCommandHud_Init_007057d8; /* 0x7057d8 */

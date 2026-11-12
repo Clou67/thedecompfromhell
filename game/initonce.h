@@ -6,6 +6,7 @@
 extern undefined4 DAT_00724610; /* 0x724610 */
 extern u32 *DAT_00927204; /* 0x927204: set to 130 at start-up, next to g_pFrameTicks */ /* type set in global_types.tsv */
 extern undefined4 DAT_00a10690; /* no defined data */
+extern undefined4 DAT_00a1090c; /* 0xa1090c */
 extern undefined4 DAT_00a10910; /* 0xa10910 */
 extern undefined4 DAT_00a10914; /* 0xa10914 */
 extern undefined4 DAT_00a2080c; /* 0xa2080c */

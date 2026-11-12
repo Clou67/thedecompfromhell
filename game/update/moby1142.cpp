@@ -4,10 +4,10 @@
 #include <stdio.h>
 #include "game/update/moby1142.h"
 #include "game/camera.h"
+#include "game/debug.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
-#include "game/pause.h"
 #include "game/update/moby58.h"
 #include "game/vendor.h"
 #include "idol/fastfunc.h"

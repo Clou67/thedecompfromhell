@@ -10,6 +10,7 @@
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/partupd.h"
+#include "game/pause.h"
 #include "game/sound.h"
 #include "game/update.h"
 #include "idol/fastfunc.h"

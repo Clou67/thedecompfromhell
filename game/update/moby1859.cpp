@@ -3,10 +3,10 @@
 // 9 functions, 0x2c9754-0x2caea0
 #include "game/update/moby1859.h"
 #include "game/collproc.h"
-#include "game/debug.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
+#include "game/pause.h"
 #include "game/sound.h"
 #include "game/update/moby186.h"
 #include "idol/fastfunc.h"

@@ -83,85 +83,117 @@ struct DebugFontString { /* queued debug text entry (debug font) */
 #define nullptr 0
 #define PSARC_OFFSET_TABLE_DIV 32
 
+struct Items32 {
+    uint field0_0x0;
+    uint field1_0x1;
+    dword heliPack;
+    dword thrusterPack;
+    dword hydroPack;
+    dword sonicSummoner;
+    dword o2Mask;
+    dword pilotsHelmet;
+    dword missingNo1;
+    dword suckCannon;
+    dword bombGlove;
+    dword devastator;
+    dword swingshot;
+    dword visibombGun;
+    dword taunter;
+    dword blaster;
+    dword pyrocitor;
+    dword mineGlove;
+    dword walloper;
+    dword teslaClaw;
+    dword gloveOfDoom;
+    dword morphORay;
+    dword hydrodisplacer;
+    dword ryno;
+    dword droneDevice;
+    dword decoyGlove;
+    dword trespasser;
+    dword metalDetector;
+    dword magneboots;
+    dword grindboots;
+    dword hoverboard;
+    dword hologuise;
+    dword pda;
+    dword mapOMatic;
+    dword boltGrabber;
+    dword persuader;
+    dword field36_0x24;
+};
+
 // ---- globals
-extern undefined4 Actuator; /* 0x95c6b4 */
-extern undefined1 AddSample; /* 0x95c6b9 */
-extern undefined1 AddStart; /* 0x95c6b8 */
-extern undefined4 BattleCam; /* 0x95c6b0 */
-extern undefined4 Bookmark; /* 0x95c5e0 */
-extern undefined4 CollMode; /* 0x95c5ec */
-extern undefined4 ControlMode; /* 0x95c5d4 */
-extern undefined4 DAT_00651c88; /* no defined data */
+extern int Actuator; /* 0x95c6b4 */ /* type set in global_types.tsv */
+extern char AddSample; /* 0x95c6b9 */ /* type set in global_types.tsv */
+extern char AddStart; /* 0x95c6b8: 'y' once a start point was written */ /* type set in global_types.tsv */
+extern int BattleCam; /* 0x95c6b0 */ /* type set in global_types.tsv */
+extern int Bookmark; /* 0x95c5e0 */ /* type set in global_types.tsv */
+extern int CollMode; /* 0x95c5ec */ /* type set in global_types.tsv */
 extern undefined4 DAT_0071eb14; /* 0x71eb14 */
-extern undefined4 DAT_0071ee3c; /* no defined data */
 extern undefined4 DAT_0072103e; /* no defined data */
 extern undefined4 DAT_0095a3b0; /* 0x95a3b0 */
 extern undefined4 DAT_0095a564; /* 0x95a564 */
 extern undefined4 DAT_0095a568; /* 0x95a568 */
-extern undefined4 DAT_0095c644; /* 0x95c644 */
-extern undefined4 DAT_0095c648; /* 0x95c648 */
-extern undefined4 DAT_0095c64c; /* 0x95c64c */
-extern undefined4 DAT_0095c650; /* 0x95c650 */
-extern undefined4 DAT_0095c654; /* 0x95c654 */
-extern undefined4 DAT_0095c658; /* 0x95c658 */
-extern undefined4 DAT_0095c65c; /* 0x95c65c */
-extern undefined4 DAT_00a108d4; /* 0xa108d4 */
-extern undefined4 DAT_00a1090c; /* 0xa1090c */
 extern undefined4 DAT_00a390b8; /* 0xa390b8 */
 extern undefined4 DAT_00e5aa70; /* 0xe5aa70 */
 extern DebugCameraSpeeds DebugCameraSpeed; /* 0x95c630 */
-extern undefined4 DebugSelectedCol; /* 0x95c5cc */
-extern undefined4 DebugSelectedRow; /* 0x95c5d0 */
-extern undefined4 DrawDistMode; /* 0x95c5e8 */
+extern int DebugSelectedCol; /* 0x95c5cc */ /* type set in global_types.tsv */
+extern int DebugSelectedRow; /* 0x95c5d0 */ /* type set in global_types.tsv */
+extern int DrawDistMode; /* 0x95c5e8 */ /* type set in global_types.tsv */
 extern DebugDrawMode DrawMode; /* 0x95c5c4 */
-extern undefined4 Invincibility; /* 0x95c5e4 */
+extern int Invincibility; /* 0x95c5e4 */ /* type set in global_types.tsv */
 extern float LevelFogFarDist; /* 0x95ea04 */
 extern float LevelFogFarIntensity; /* 0x95ea0c */
-extern undefined4 LevelFogNearDist; /* 0x95ea00 */
+extern float LevelFogNearDist; /* 0x95ea00 */ /* type set in global_types.tsv */
 extern float LevelFogNearIntensity; /* 0x95ea08 */
-extern undefined4 OcclUpdate; /* 0x95c5dc */
-extern pointer PTR_DAT_00737b60; /* 0x737b60 */
-extern pointer PTR_s_hotspt_00737b54; /* 0x737b54 */
-extern undefined * PTR_s_normal_00737b10; /* 0x737b10 */
-extern pointer PTR_s_normal_00737b4c; /* 0x737b4c */
-extern pointer PTR_s_normal_00737b68; /* 0x737b68 */
-extern pointer PTR_s_off_00737b08; /* 0x737b08 */
-extern undefined * PTR_s_off_00737b20; /* 0x737b20 */
-extern undefined * PTR_s_off_00737b70; /* 0x737b70 */
-extern undefined4 Profile; /* 0x95c5d8 */
-extern undefined4 Scene; /* 0x95c5f8 */
-extern undefined4 ScreenMode; /* 0x95c5f4 */
-extern undefined4 Segment; /* 0x95c5fc */
+extern int Scene; /* 0x95c5f8 */ /* type set in global_types.tsv */
+extern int ScreenMode; /* 0x95c5f4 */ /* type set in global_types.tsv */
+extern int Segment; /* 0x95c5fc */ /* type set in global_types.tsv */
 extern float ShrubDrawDist; /* 0xa54f1c */
 extern float TfragDrawDist; /* 0x92d470 */
 extern float TieDrawDist; /* 0xe5a620 */
-extern undefined4 TvMode; /* 0x95c5f0 */
+extern int TvMode; /* 0x95c5f0 */ /* type set in global_types.tsv */
+extern u8 g_DebugAmmoItems[14]; /* 0x71ee3c: item of each AMMO row */ /* type set in global_types.tsv */
+extern const char *g_DebugCollNames[3]; /* 0x737b54 */ /* type set in global_types.tsv */
+extern const char *g_DebugControlNames[4]; /* 0x737b10 */ /* type set in global_types.tsv */
+extern const char *g_DebugDrawDistNames[2]; /* 0x737b4c */ /* type set in global_types.tsv */
 extern int g_DebugEnables[20]; /* 0x95a56c */
+extern int g_DebugExitCamPos[3]; /* 0x95c654: camera position / 4 when debug mode was left */ /* type set in global_types.tsv */
 extern int g_DebugFontCharWidths[96]; /* 0x71ecbc */
 extern int g_DebugFontNumStrings; /* 0x95c5bc */
 extern char g_DebugFontStringBuf[2048]; /* 0x95a5bc */
 extern DebugFontString g_DebugFontStrings[384]; /* 0x95adbc */
+extern float g_DebugHeroDir; /* 0x95c648: direction from the camera to the hero, relative to its yaw */ /* type set in global_types.tsv */
+extern float g_DebugHeroDist; /* 0x95c64c */ /* type set in global_types.tsv */
+extern float g_DebugHeroHeight; /* 0x95c650 */ /* type set in global_types.tsv */
+extern float g_DebugHeroYaw; /* 0x95c644: CONTROL_HERO: the hero's yaw relative to the camera's */ /* type set in global_types.tsv */
+extern const char *g_DebugOcclNames[3]; /* 0x737b70 */ /* type set in global_types.tsv */
+extern const char *g_DebugOnOff[2]; /* 0x737b08: "off", "on" */ /* type set in global_types.tsv */
+extern const char *g_DebugProfileNames[8]; /* 0x737b20 */ /* type set in global_types.tsv */
+extern const char *g_DebugScreenNames[2]; /* 0x737b68 */ /* type set in global_types.tsv */
+extern const char *g_DebugTvNames[2]; /* 0x737b60 */ /* type set in global_types.tsv */
 extern char g_LevelFlags[20][16]; /* 0xa0ca84 */
-extern undefined4 g_debugLastGameMode; /* 0x95c664 */
-extern Items g_goldWeaponsArray; /* 0x969ca8 */
+extern int g_OcclSampleCnt; /* 0xa108d4 */ /* type set in global_types.tsv */
+extern int g_debugLastGameMode; /* 0x95c664 */ /* type set in global_types.tsv */
 extern pointer g_pDebugFontBufPos; /* 0x71eb38 */
+extern u32 g_pOcclSamples; /* 0xa1090c: occlusion sample positions (MemSlots buffer) */ /* type set in global_types.tsv */
 extern RGBA levelFog; /* 0x95e9fc */
-extern undefined1 stack0x00000050[16]; /* stack slot, not a real global */
 
 // ---- functions
 void SECTION_HEADER_DEBUG(void);
 void ResetDebugEnables(void);
-void DebugFontPrintLeft(int x,int y,uint color,char *str);
-void DebugFontPrintfLeft(int x,int y,int color,char *fmt,...);
+void DebugFontPrintLeft(int x, int y, uint color, char *str);
+void DebugFontPrintfLeft(int x, int y, int color, char *fmt, ...);
 void STUB_00060c40(...);
 void ResetDebugFontStrings(void);
-int DebugFontPrintCenter(int x,int y,int color,char *str);
-int DebugFontPrintfCenter(int x,int y,int color,char *fmt,...);
-void DebugFontPrintRight(int x,int y,int color,char *str);
-void DebugFontPrintfRight(int x,int y,int color,char *fmt,...);
+int DebugFontPrintCenter(int x, int y, int color, char *str);
+int DebugFontPrintfCenter(int x, int y, int color, char *fmt, ...);
+void DebugFontPrintRight(int x, int y, int color, char *str);
+void DebugFontPrintfRight(int x, int y, int color, char *fmt, ...);
 int DebugFontStringWidth(char *str);
-void DebugFontPrintN(int x,int y,int color,char *str,int len);
-void AssertFailed(char *file,int line,char *expr);
+void DebugFontPrintN(int x, int y, int color, char *str, int len);
+void AssertFailed(char *file, int line, char *expr);
 void STUB_000612d0(...);
 void STUB_000612d4(...);
 void STUB_000612d8(...);
@@ -218,7 +250,7 @@ void STUB_00065468(...);
 void STUB_0006546c(...);
 void STUB_00065470(...);
 void STUB_00065474(...);
-void ScreenPosFromWorldSpace(float *param_1,float *param_2);
+void ScreenPosFromWorldSpace(float *screen, float *world);
 void Debug_ResetLevelCounters(void);
 void STUB_00065628(...);
 void STUB_0006562c(...);

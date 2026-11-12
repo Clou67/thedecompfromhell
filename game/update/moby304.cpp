@@ -3,7 +3,6 @@
 // 3 functions, 0x339b58-0x339dc8
 // shared update function UpdateMoby_a_lot_15; registered for oClasses 304, 1456, 1457, 1458, 1459, 1460, 1461, 1462, 1463, 1464, 1465
 #include "game/update/moby304.h"
-#include "game/debug.h"
 #include "game/freeze.h"
 #include "game/memcard.h"
 #include "game/mobyfunc.h"

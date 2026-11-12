@@ -3,8 +3,6 @@
 #include "types.h"
 
 // ---- types
-typedef unsigned int    dword;
-
 struct GameSettings {
     dword CameraUpDown;
     dword CameraLeftRight;
@@ -12,46 +10,6 @@ struct GameSettings {
     dword Stereo;
     dword MusicVolume;
     dword SfxVolume;
-};
-
-struct Items32 {
-    uint field0_0x0;
-    uint field1_0x1;
-    dword heliPack;
-    dword thrusterPack;
-    dword hydroPack;
-    dword sonicSummoner;
-    dword o2Mask;
-    dword pilotsHelmet;
-    dword missingNo1;
-    dword suckCannon;
-    dword bombGlove;
-    dword devastator;
-    dword swingshot;
-    dword visibombGun;
-    dword taunter;
-    dword blaster;
-    dword pyrocitor;
-    dword mineGlove;
-    dword walloper;
-    dword teslaClaw;
-    dword gloveOfDoom;
-    dword morphORay;
-    dword hydrodisplacer;
-    dword ryno;
-    dword droneDevice;
-    dword decoyGlove;
-    dword trespasser;
-    dword metalDetector;
-    dword magneboots;
-    dword grindboots;
-    dword hoverboard;
-    dword hologuise;
-    dword pda;
-    dword mapOMatic;
-    dword boltGrabber;
-    dword persuader;
-    dword field36_0x24;
 };
 
 struct Planets32 {
@@ -484,6 +442,7 @@ extern int g_SaveCurFile; /* 0x71fa38: the save list entry selected */ /* type s
 extern undefined4 g_SelectedLevel; /* 0xa206e4 */
 extern char g_SkillPoints[32]; /* 0x96c08c */
 extern undefined4 g_currentMenuPage; /* 0xa52bb4 */
+extern Items g_goldWeaponsArray; /* 0x969ca8 */
 extern undefined4 g_menuClosing; /* 0xa52bbc */
 extern Moby * g_menuMobys[14]; /* 0xa52d60 */
 extern undefined4 g_nextMenuPage; /* 0xa52bb8 */

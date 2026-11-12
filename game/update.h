@@ -55,6 +55,7 @@ extern undefined4 DAT_00e5a634; /* 0xe5a634 */
 extern undefined4 DAT_00e5a640; /* 0xe5a640 */
 extern DEBUG_OPTION DebugUpdate; /* 0x95c5c8 */
 extern pointer32 PTR_BoltHud_Update_00705818; /* 0x705818 */
+extern int Profile; /* 0x95c5d8 */ /* type set in global_types.tsv */
 extern undefined4 g_CutscenePlaying; /* 0xa1071c */
 extern undefined4 g_FramesSinceStateChange; /* 0xa1070c */
 extern int g_IdleFrames; /* 0x738830 */

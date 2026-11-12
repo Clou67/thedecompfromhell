@@ -1,7 +1,6 @@
 #pragma once
 // game/skyfunc.h
 #include "types.h"
-#include "game/pause.h"
 
 // ---- types
 /* the level's sky as the game draws it (Sky, set up by Idol); Ghidra's SKY with the sprite list

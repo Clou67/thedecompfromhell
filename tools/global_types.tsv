@@ -250,3 +250,39 @@ g_SkyVuBufferAddrs	int NAME[2] /* 0x731a90 */
 g_CometColors	u32 NAME[4] /* 0x731aec: Levels 6 and 17 */
 g_SkyLightColors	u32 NAME[3] /* 0x731ae0: Level 6's blinking lights */
 g_SkyLightPositions	Vec4 NAME[3] /* 0x731ab0: their positions (w: scale) */
+LevelFogNearDist	float NAME /* 0x95ea00 */
+HeroDeathHeight	float NAME /* 0xa10934 */
+g_DebugHeroYaw	float NAME /* 0x95c644: CONTROL_HERO: the hero's yaw relative to the camera's */
+g_DebugHeroDir	float NAME /* 0x95c648: direction from the camera to the hero, relative to its yaw */
+g_DebugHeroDist	float NAME /* 0x95c64c */
+g_DebugHeroHeight	float NAME /* 0x95c650 */
+g_DebugExitCamPos	int NAME[3] /* 0x95c654: camera position / 4 when debug mode was left */
+g_pOcclSamples	u32 NAME /* 0xa1090c: occlusion sample positions (MemSlots buffer) */
+g_OcclSampleCnt	int NAME /* 0xa108d4 */
+g_DebugAmmoItems	u8 NAME[14] /* 0x71ee3c: item of each AMMO row */
+g_DebugOnOff	const char *NAME[2] /* 0x737b08: "off", "on" */
+g_DebugControlNames	const char *NAME[4] /* 0x737b10 */
+g_DebugProfileNames	const char *NAME[8] /* 0x737b20 */
+g_DebugOcclNames	const char *NAME[3] /* 0x737b70 */
+g_DebugDrawDistNames	const char *NAME[2] /* 0x737b4c */
+g_DebugCollNames	const char *NAME[3] /* 0x737b54 */
+g_DebugTvNames	const char *NAME[2] /* 0x737b60 */
+g_DebugScreenNames	const char *NAME[2] /* 0x737b68 */
+ControlMode	int NAME /* 0x95c5d4 */
+Profile	int NAME /* 0x95c5d8 */
+OcclUpdate	int NAME /* 0x95c5dc */
+Bookmark	int NAME /* 0x95c5e0 */
+Invincibility	int NAME /* 0x95c5e4 */
+DrawDistMode	int NAME /* 0x95c5e8 */
+CollMode	int NAME /* 0x95c5ec */
+TvMode	int NAME /* 0x95c5f0 */
+ScreenMode	int NAME /* 0x95c5f4 */
+Scene	int NAME /* 0x95c5f8 */
+Segment	int NAME /* 0x95c5fc */
+DebugSelectedCol	int NAME /* 0x95c5cc */
+DebugSelectedRow	int NAME /* 0x95c5d0 */
+BattleCam	int NAME /* 0x95c6b0 */
+Actuator	int NAME /* 0x95c6b4 */
+AddStart	char NAME /* 0x95c6b8: 'y' once a start point was written */
+AddSample	char NAME /* 0x95c6b9 */
+g_debugLastGameMode	int NAME /* 0x95c664 */

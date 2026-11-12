@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "sdk/lUnk.h"
-#include "game/debug.h"
 #include "game/hero.h"
 #include "sdk/CMediusManager.h"
 #include "sdk/libc/malloc.h"

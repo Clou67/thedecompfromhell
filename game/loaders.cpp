@@ -1024,11 +1024,11 @@ u8 *LoadGameplayFile(int reload)
     levelFog.r = (u8)settings[3];
     levelFog.g = (u8)settings[4];
     levelFog.b = (u8)settings[5];
-    LevelFogNearDist = settings[6];
-    LevelFogFarDist = (float)settings[7];
-    LevelFogNearIntensity = (float)settings[8];
-    LevelFogFarIntensity = (float)settings[9];
-    HeroDeathHeight = settings[10];
+    LevelFogNearDist = ((float *)settings)[6];
+    LevelFogFarDist = ((float *)settings)[7];
+    LevelFogNearIntensity = ((float *)settings)[8];
+    LevelFogFarIntensity = ((float *)settings)[9];
+    HeroDeathHeight = ((float *)settings)[10];
     g_shipSplinePath = settings[15];
     g_shipCameraStartCuboid = settings[16];
     g_shipCameraEndCuboid = settings[17];

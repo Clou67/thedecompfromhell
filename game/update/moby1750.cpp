@@ -3,7 +3,6 @@
 // 4 functions, 0x2b1950-0x2b2274
 #include "game/update/moby1750.h"
 #include "game/collproc.h"
-#include "game/debug.h"
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/hud.h"

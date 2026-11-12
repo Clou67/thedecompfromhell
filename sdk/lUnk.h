@@ -308,6 +308,7 @@ extern pointer PTR_s_WANPPPConnection_0071b41c; /* 0x71b41c */
 extern undefined1 stack0x00000030[16]; /* stack slot, not a real global */
 extern undefined1 stack0x00000038[16]; /* stack slot, not a real global */
 extern undefined1 stack0x00000040[16]; /* stack slot, not a real global */
+extern undefined1 stack0x00000050[16]; /* stack slot, not a real global */
 extern undefined1 stack0x00000058[16]; /* stack slot, not a real global */
 
 // ---- functions

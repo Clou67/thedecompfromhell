@@ -4,11 +4,11 @@
 #include <math.h>
 #include <stdlib.h>
 #include "game/update/moby428.h"
-#include "game/debug.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
+#include "game/pause.h"
 #include "idol/fastfunc.h"
 
 // 0x0370f9c (0x14 bytes)
