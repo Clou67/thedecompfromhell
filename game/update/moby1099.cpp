@@ -205,9 +205,9 @@ void M1099_001bc8c8(undefined8 param_1)
   if (1.0 < dVar46) {
     DAT_00763d8c = (float)(dVar46 - (double)puVar31[0x2b]);
   }
-  uVar39 = FUN_00502f08(0,0,0,0,0,0);
+  uVar39 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar31[0x26] = uVar39;
-  uVar39 = STUB_00502fd4_RET_0(1,0,0,0,0,0,0);
+  uVar39 = SCE_GS_SET_TEX1(1,0,0,0,0,0,0);
   puVar31[0x28] = uVar39;
   uVar39 = idol_draw::PackCmd(0,1,0,1,0x40);
   puVar31[0x29] = uVar39;

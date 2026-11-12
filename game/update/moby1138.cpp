@@ -79,9 +79,9 @@ void M1138_001db948(int param_1)
   *(undefined4 *)((int)puVar7 + 0xac) = uVar3;
   uVar17 = GetEffectTex(uVar4);
   puVar7[0x25] = uVar17;
-  uVar17 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar17 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar7[0x26] = uVar17;
-  uVar17 = FUN_00502f08(0,0,0,0,0,0);
+  uVar17 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar7[0x24] = uVar17;
   uVar17 = idol_draw::PackCmd(DAT_00ef26e8,DAT_007649fc,DAT_00ef26ec,DAT_00764a00,0x80);
   puVar7[0x27] = uVar17;

@@ -82,9 +82,9 @@ void M945_004c6b80(int param_1)
   FastMtx4Identity((float *)(puVar14 + 0x10));
   uVar17 = GetEffectTex(0xe);
   puVar14[0x27] = uVar17;
-  uVar17 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar17 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar14[0x28] = uVar17;
-  uVar17 = FUN_00502f08(0,0,0,0,0,0);
+  uVar17 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar14[0x26] = uVar17;
   uVar17 = idol_draw::PackCmd(DAT_010e47d0,DAT_008f4d90,DAT_010e47d4,DAT_008f4d94,0x80);
   uVar19 = *(undefined4 *)(iVar12 + 0x198);

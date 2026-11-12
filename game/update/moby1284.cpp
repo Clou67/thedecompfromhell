@@ -1634,8 +1634,8 @@ void M1284_0023b238(int param_1)
   
   iVar1 = *(int *)(param_1 + 0x78);
   GetEffectTex(DAT_0078dd10);
-  STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  FUN_00502f08(0,1,0,0,0,0);
+  SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  SCE_GS_SET_CLAMP(0,1,0,0,0,0);
   idol_draw::PackCmd(DAT_00f15590,DAT_0078dd00,DAT_00f15594,DAT_0078dd04,DAT_0078dd08);
   dVar8 = 0.0;
   fVar2 = *(float *)(iVar1 + 0xd4) - *(float *)(param_1 + 0x14);

@@ -546,8 +546,8 @@ void M1449_002eb6d8(int param_1)
   
   if ((param_1 != 0) && (iVar2 = *(int *)(param_1 + 0x78), iVar2 != 0)) {
     GetEffectTex(0xf);
-    STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-    FUN_00502f08(1,1,0,0,0,0);
+    SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+    SCE_GS_SET_CLAMP(1,1,0,0,0,0);
     idol_draw::PackCmd(0,1,0,1,0xff);
     dVar12 = 0.0;
     GetBonePosition(param_1,0,&local_1c0);

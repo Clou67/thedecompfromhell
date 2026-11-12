@@ -95,9 +95,9 @@ void M1327_0024ac08(void)
   puVar3[0x21] = unaff_r25;
   uVar7 = GetEffectTex(iVar8);
   puVar3[0x1d] = uVar7;
-  uVar7 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar7 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar3[0x1e] = uVar7;
-  uVar7 = FUN_00502f08(0,0,0,0,0,0);
+  uVar7 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar3[0x1c] = uVar7;
   uVar7 = idol_draw::PackCmd(DAT_00fa2f04,DAT_0079b3f0,DAT_00fa2f08,DAT_0079b3f4,DAT_0079b3f8);
   puVar3[0x1f] = uVar7;
@@ -194,9 +194,9 @@ void M1327_0024ae24(int param_1)
   puVar4[0x21] = unaff_r23;
   uVar9 = GetEffectTex(iVar11);
   puVar4[0x1d] = uVar9;
-  uVar9 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar9 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar4[0x1e] = uVar9;
-  uVar9 = FUN_00502f08(0,0,0,0,0,0);
+  uVar9 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar4[0x1c] = uVar9;
   uVar9 = idol_draw::PackCmd(DAT_00fa2f0c,DAT_0079b408,DAT_00fa2f10,DAT_0079b40c,DAT_0079b410);
   puVar4[0x1f] = uVar9;

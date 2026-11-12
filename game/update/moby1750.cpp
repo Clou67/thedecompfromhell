@@ -53,8 +53,8 @@ void M1750_002b1950(int param_1)
   
   GetEffectTex(8);
   idol_draw::PackCmd(0,2,0,1,0x80);
-  STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  FUN_00502f08(0,0,0,0,0,0);
+  SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   dVar20 = 0.0;
   dVar19 = 1.0;
   fVar2 = *(float *)(param_1 + 0xd4);

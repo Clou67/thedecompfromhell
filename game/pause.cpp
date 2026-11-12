@@ -981,7 +981,7 @@ void DrawTVTextures(int param_1)
         iVar8 = 0x1c0;
       }
       if ((iVar2 <= iVar8) && (-1 < iVar4 + iVar2)) {
-        uVar5 = FUN_00502f08(0,0,0,0,0,0);
+        uVar5 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
         SetGSReg(6,uVar5);
         uVar5 = idol_draw::PackCmd(0,1,0,1,0x80);
         SetGSReg(3,uVar5);
@@ -999,7 +999,7 @@ void DrawTVTextures(int param_1)
           uVar5 = MB_randInt(200);
           uVar6 = MB_randInt(200);
           iVar8 = FUN_005c4988(*(int *)(iVar10 + 0x4c) + -0x80);
-          uVar7 = FUN_00502f08(0,0,0,0,0,0);
+          uVar7 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
           SetGSReg(6,uVar7);
           iVar8 = (0x80 - iVar8) * 2;
           iVar9 = 0x80;
@@ -1014,7 +1014,7 @@ void DrawTVTextures(int param_1)
             *(undefined4 *)(iVar10 + 0x48) = 0;
           }
         }
-        uVar5 = FUN_00502f08(0,0,0,0,0,0);
+        uVar5 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
         SetGSReg(6,uVar5);
         uVar5 = idol_draw::PackCmd(0,1,0,1,0x80);
         SetGSReg(3,uVar5);
@@ -7174,7 +7174,7 @@ undefined8 MapPage_DrawOverlay(void)
     {
       uVar2 = idol_draw::Blend(0,0,0,0,0,0,0,0);
       SetGSReg(0x16,uVar2);
-      uVar2 = FUN_00502f08(1,1,0,0,0,0);
+      uVar2 = SCE_GS_SET_CLAMP(1,1,0,0,0,0);
       SetGSReg(6,uVar2);
       uVar6 = 0;
       dVar8 = (double)(longlong)(int)DAT_00966b8c;

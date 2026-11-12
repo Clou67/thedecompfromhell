@@ -281,9 +281,9 @@ void M230_002fdab8(int param_1)
       *(undefined4 *)((int)puVar10 + 0x15c) = 0x80808080;
       uVar15 = GetEffectTex((ZERO_MASK((uVar20 & 1))) + 0x12);
       puVar10[0x31] = uVar15;
-      uVar15 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+      uVar15 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
       puVar10[0x32] = uVar15;
-      uVar15 = FUN_00502f08(0,0,0,0,0,0);
+      uVar15 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
       puVar10[0x30] = uVar15;
       uVar15 = idol_draw::PackCmd(0,2,0,1,0x80);
       puVar10[0x33] = uVar15;

@@ -21,7 +21,7 @@ extern pointer32 PTR_FUN_00711e30; /* 0x711e30 */
 // ---- functions
 namespace idol { undefined8 m_LoadGameFileS(uint arg1,char *str); } 
 namespace idol { undefined8 PRINT_m_LoadGameFile(uint arg2,char *arg1); } 
-namespace idol { undefined8 m_LoadGameFileB(void); } 
+namespace idol { void *m_LoadGameFileB(void *param_1,const char *param_2); } 
 undefined8 FUN_00503524(void);
 uint FUN_00503554(byte *param_1);
 uint FUN_005035e8(byte *param_1,int param_2);

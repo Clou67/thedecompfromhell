@@ -206,8 +206,8 @@ void M169_002a1370(void)
   if (g_gameMode != GAME_MODE_SCENE) {
     FastEulerToMtx1(auStack_f0,local_100);
     GetEffectTex(0xd);
-    STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-    FUN_00502f08(0,0,0,0,0,0);
+    SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+    SCE_GS_SET_CLAMP(0,0,0,0,0,0);
     idol_draw::PackCmd(0,2,0,1,0x80);
     FastDrawQuad(local_b0,auStack_f0,1,EffectTexHeaders,9);
   }

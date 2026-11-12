@@ -60,9 +60,9 @@ void M1403_0026d8d8(int param_1)
   puVar2[0x29] = unaff_r25;
   uVar8 = GetEffectTex(uVar6);
   puVar2[0x25] = uVar8;
-  uVar8 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar8 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar2[0x26] = uVar8;
-  uVar8 = FUN_00502f08(0,0,0,0,0,0);
+  uVar8 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar2[0x24] = uVar8;
   uVar8 = idol_draw::PackCmd(DAT_00fa8a4c,DAT_0079de18,DAT_00fa8a50,DAT_0079de1c,DAT_0079de20);
   puVar2[0x27] = uVar8;
@@ -155,9 +155,9 @@ void M1403_0026db00(int param_1)
   puVar2[0x29] = unaff_r25;
   uVar8 = GetEffectTex(uVar6);
   puVar2[0x25] = uVar8;
-  uVar8 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar8 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar2[0x26] = uVar8;
-  uVar8 = FUN_00502f08(0,0,0,0,0,0);
+  uVar8 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar2[0x24] = uVar8;
   uVar8 = idol_draw::PackCmd(DAT_00fa8a4c,DAT_0079de18,DAT_00fa8a50,DAT_0079de1c,DAT_0079de20);
   puVar2[0x27] = uVar8;
@@ -250,9 +250,9 @@ void M1403_0026dd28(int param_1)
   puVar2[0x29] = unaff_r25;
   uVar8 = GetEffectTex(uVar6);
   puVar2[0x25] = uVar8;
-  uVar8 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar8 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar2[0x26] = uVar8;
-  uVar8 = FUN_00502f08(0,0,0,0,0,0);
+  uVar8 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar2[0x24] = uVar8;
   uVar8 = idol_draw::PackCmd(DAT_00fa8a4c,DAT_0079de18,DAT_00fa8a50,DAT_0079de1c,DAT_0079de20);
   puVar2[0x27] = uVar8;

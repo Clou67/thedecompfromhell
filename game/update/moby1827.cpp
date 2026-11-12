@@ -159,9 +159,9 @@ ulonglong M1827_002c11e8(int param_1)
   *(undefined4 *)((int)puVar6 + 0xac) = 0x3f800000;
   uVar11 = GetEffectTex(0xe);
   puVar6[0x25] = uVar11;
-  uVar11 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar11 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar6[0x26] = uVar11;
-  uVar11 = FUN_00502f08(0,0,0,0,0,0);
+  uVar11 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar6[0x24] = uVar11;
   uVar11 = idol_draw::PackCmd(DAT_010a0bd0,DAT_007b7f1c,DAT_010a0bd4,DAT_007b7f20,0x80);
   puVar6[0x27] = uVar11;

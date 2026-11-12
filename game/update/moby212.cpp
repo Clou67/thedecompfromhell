@@ -392,8 +392,8 @@ void M1412_002effe0(int param_1)
   dVar30 = (double)(float)(dVar23 * dVar17 - (double)(float)(dVar25 * dVar19));
   GetEffectTex(0xb);
   idol_draw::PackCmd(0,2,0,1,0x80);
-  STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  FUN_00502f08(1,1,0,0,0,0);
+  SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  SCE_GS_SET_CLAMP(1,1,0,0,0,0);
   pfVar14 = (float *)&DAT_007fec40;
   lVar16 = 4;
   pfVar15 = local_150;

@@ -289,9 +289,9 @@ ulonglong M625_003e82b0(int param_1)
     uVar7 = GetEffectTex(0xe);
     iVar9 = (int)lVar18;
     *(undefined8 *)(iVar9 + 0x168) = uVar7;
-    uVar7 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+    uVar7 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
     *(undefined8 *)(iVar9 + 0x170) = uVar7;
-    uVar7 = FUN_00502f08(0,0,0,0,0,0);
+    uVar7 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
     *(undefined8 *)(iVar9 + 0x160) = uVar7;
     uVar7 = idol_draw::PackCmd(DAT_010cbbb0,DAT_00853ed8,DAT_010cbbb4,DAT_00853edc,0x80);
     *(undefined8 *)(iVar9 + 0x178) = uVar7;

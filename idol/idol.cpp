@@ -43,7 +43,7 @@ undefined8 idol::PRINT_m_LoadGameFile(uint arg2,char *arg1)
 // 0x05034f4 (0x30 bytes)
 // strings: 0065f708: 'm_LoadGameFileB %s\n'
 
-undefined8 idol::m_LoadGameFileB(void)
+void *idol::m_LoadGameFileB(void *param_1,const char *param_2)
 
 {
   printf("m_LoadGameFileB %s\n");

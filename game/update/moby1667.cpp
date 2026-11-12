@@ -369,9 +369,9 @@ void M1671_002a94c8(int param_1)
   puVar18[0x3f] = unaff_r22;
   puVar18[0x3e] = unaff_r21;
   if ((iVar25 != 0) && (*(short *)(iVar25 + 0xa6) == 0x260)) {
-    uVar22 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+    uVar22 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
     puVar18[0x3a] = uVar22;
-    uVar22 = FUN_00502f08(0,0,0,0,0,0);
+    uVar22 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
     puVar18[0x38] = uVar22;
     uVar22 = idol_draw::PackCmd(0,2,0,1,0x80);
     iVar17 = *(int *)(iVar16 + 4);
@@ -623,9 +623,9 @@ void M1671_002a94c8(int param_1)
     uVar23 = GetEffectTex(10);
     SetGSReg(0x18,uVar23);
     SetGSReg(3,puVar18[0x3b]);
-    uVar23 = FUN_00502f08(0,0,0,0,0,0);
+    uVar23 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
     SetGSReg(6,uVar23);
-    uVar23 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+    uVar23 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
     SetGSReg(0x1a,uVar23);
     uVar23 = FUN_00502e50(0);
     SetGSReg(8,uVar23);

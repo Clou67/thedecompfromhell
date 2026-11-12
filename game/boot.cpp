@@ -1409,7 +1409,7 @@ void GameStart(void)
   DAT_00a23098 = 0;
   DAT_00a23099 = 0;
   ZeroFillKeyGlobals();
-  ____ReturnTrue_GameStart();
+  ReturnTrue_GameStart();
   if (g_HasInited != 0) {
     InitOnce();
   }

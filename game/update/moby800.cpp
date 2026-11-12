@@ -98,9 +98,9 @@ void M800_00463ef8(int param_1)
   *(float *)(puVar19 + 0x17) = fVar5 * fVar7 + fVar3;
   uVar26 = GetEffectTex(0xb);
   puVar19[0x27] = uVar26;
-  uVar26 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar26 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar19[0x28] = uVar26;
-  uVar26 = FUN_00502f08(0,0,0,0,0,0);
+  uVar26 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar19[0x26] = uVar26;
   uVar26 = idol_draw::PackCmd(0,2,0,1,0x80);
   puVar19[0x29] = uVar26;
@@ -431,9 +431,9 @@ void M800_00464590(int param_1)
   SetGSReg(0x18,uVar10);
   uVar10 = idol_draw::PackCmd(0,2,0,1,0x80);
   SetGSReg(3,uVar10);
-  uVar10 = FUN_00502f08(1,1,0,0,0,0);
+  uVar10 = SCE_GS_SET_CLAMP(1,1,0,0,0,0);
   SetGSReg(6,uVar10);
-  uVar10 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar10 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   SetGSReg(0x1a,uVar10);
   uVar10 = FUN_00502f98(0,0,0,0,0,0,1,2);
   SetGSReg(0x16,uVar10);
@@ -669,9 +669,9 @@ void M800_00464a70(int param_1)
   *(float *)(iVar22 + 0x160) = (float)dVar29;
   uVar14 = GetEffectTex(0xb);
   puVar7[0x25] = uVar14;
-  uVar14 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar14 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar7[0x26] = uVar14;
-  uVar14 = FUN_00502f08(0,0,0,0,0,0);
+  uVar14 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar7[0x24] = uVar14;
   uVar14 = idol_draw::PackCmd(0,2,0,1,0x80);
   fVar2 = (float)((double)GameCamera.posX - dVar50);
@@ -962,8 +962,8 @@ void M800_00465380(int param_1)
   dVar16 = (double)*(float *)(iVar6 + 0x94);
   dVar17 = (double)(*(float *)(iVar6 + 0x98) + 0.01);
   GetEffectTex(0xb);
-  STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  FUN_00502f08(0,0,0,0,0,0);
+  SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   idol_draw::PackCmd(0,2,0,1,0x80);
   uVar7 = FUN_00502e50(0);
   SetGSReg(8,uVar7);

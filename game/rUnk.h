@@ -39,7 +39,7 @@ extern undefined4 DAT_00a54ef0; /* 0xa54ef0 */
 extern undefined4 DAT_00a54ef4; /* 0xa54ef4 */
 extern undefined4 DAT_00a54ef8; /* 0xa54ef8 */
 extern undefined4 DAT_00a54f00; /* 0xa54f00 */
-extern undefined4 DAT_00e5aa58; /* 0xe5aa58 */
+extern u8 *g_pPacket; /* 0xe5aa58: write position in the GIF/VIF packet being built */ /* type set in global_types.tsv */
 
 // ---- functions
 void SECTION_HEADER_S_UNKNOWN_STUBBED(void);

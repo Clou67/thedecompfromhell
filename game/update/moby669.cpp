@@ -240,9 +240,9 @@ void M669_0040b310(int param_1)
   *(undefined4 *)((int)puVar6 + 0xac) = 0x3f800000;
   uVar8 = GetEffectTex(0x28);
   puVar6[0x25] = uVar8;
-  uVar8 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar8 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar6[0x26] = uVar8;
-  uVar8 = FUN_00502f08(0,0,0,0,0,0);
+  uVar8 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar6[0x24] = uVar8;
   uVar8 = idol_draw::PackCmd(DAT_010cc1f0,DAT_00854f60,DAT_010cc1f4,DAT_00854f64,0x80);
   iVar15 = 0;

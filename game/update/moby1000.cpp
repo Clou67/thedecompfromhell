@@ -21,8 +21,8 @@ void M1000_0018150c(int param_1)
   
   iVar1 = *(int *)(param_1 + 0x78);
   GetEffectTex(0x15);
-  STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  FUN_00502f08(0,0,0,0,0,0);
+  SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   idol_draw::PackCmd(DAT_00e5af08,DAT_0073b698,DAT_00e5af0c,DAT_0073b69c,0x80);
   iVar3 = 0;
   if (0 < *(int *)(iVar1 + 0x24)) {

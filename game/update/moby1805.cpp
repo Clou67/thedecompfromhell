@@ -51,8 +51,8 @@ void M1805_002bab98(int param_1)
   dVar16 = (double)(*(float *)(param_1 + 0xd8) * DAT_007b7c4c + *(float *)(param_1 + 0x18));
   GetEffectTex(DAT_007b7c58);
   idol_draw::PackCmd(0,2,0,1,0x80);
-  STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  FUN_00502f08(0,0,0,0,0,0);
+  SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   dVar21 = 0.0;
   dVar19 = 1.0;
   iVar5 = MB_randInt(4);
@@ -150,8 +150,8 @@ void M1805_002baf48(void)
   
   GetEffectTex(DAT_007b7c40);
   idol_draw::PackCmd(0,2,0,1,0x80);
-  STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  FUN_00502f08(0,0,0,0,0,0);
+  SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   GetEffectTex(DAT_007b7c44);
   in_r9 = in_r9 + -1;
   iVar2 = 1;

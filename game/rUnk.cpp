@@ -134,12 +134,12 @@ void ____DrawScreenEffect_WriteGifTag(undefined8 param_1,longlong param_2,longlo
 {
   undefined1 uVar1;
   
-  *DAT_00e5aa58 = 3;
-  DAT_00e5aa58[1] = (char)(param_3 << 4) * '\x03' + '\x10';
-  DAT_00e5aa58[2] = 0;
-  uVar1 = FUN_0050300c(3,0);
-  DAT_00e5aa58[3] = uVar1;
-  DAT_00e5aa58 = DAT_00e5aa58 + 0x10;
+  *g_pPacket = 3;
+  g_pPacket[1] = (char)(param_3 << 4) * '\x03' + '\x10';
+  g_pPacket[2] = 0;
+  uVar1 = Gs_DmaTagByte(3,0);
+  g_pPacket[3] = uVar1;
+  g_pPacket = g_pPacket + 0x10;
   STUB_001534e8(param_1,*(undefined4 *)((int)&DAT_00731800 + (int)(param_2 << 2)));
   return;
 }
@@ -169,27 +169,27 @@ void ____DrawScreenEffect_BuildPacketB(void)
   lVar5 = (longlong)iVar6;
   uVar3 = idol_draw::PackCmd(0,1,2,1,0);
   SetGSReg(3,uVar3);
-  *DAT_00e5aa58 = (char)(lVar5 + 5);
-  DAT_00e5aa58[1] = 0;
-  DAT_00e5aa58[2] = 0;
-  uVar4 = FUN_0050300c((int)(lVar5 + 5),0);
-  DAT_00e5aa58[3] = uVar4;
-  puVar2 = DAT_00e5aa58;
-  DAT_00e5aa58 = DAT_00e5aa58 + 0x10;
-  uVar3 = FUN_00502ea0(1,0,0,0,0,1);
+  *g_pPacket = (char)(lVar5 + 5);
+  g_pPacket[1] = 0;
+  g_pPacket[2] = 0;
+  uVar4 = Gs_DmaTagByte((int)(lVar5 + 5),0);
+  g_pPacket[3] = uVar4;
+  puVar2 = g_pPacket;
+  g_pPacket = g_pPacket + 0x10;
+  uVar3 = SCE_GIF_SET_TAG(1,0,0,0,0,1);
   *(undefined8 *)(puVar2 + 0x10) = uVar3;
   *(undefined8 *)(puVar2 + 0x18) = 0xe;
   uVar3 = FUN_00502f98(1,0,0,1,0,0,1,1);
   *(undefined8 *)(puVar2 + 0x20) = uVar3;
   *(undefined8 *)(puVar2 + 0x28) = 0x16;
-  uVar3 = FUN_00502ea0(1,1,0,0,1,2);
+  uVar3 = SCE_GIF_SET_TAG(1,1,0,0,1,2);
   *(undefined8 *)(puVar2 + 0x30) = uVar3;
   *(undefined8 *)(puVar2 + 0x38) = 0x10;
-  uVar3 = FUN_00502e70(0xf,0,0,0,1,0,1,0);
+  uVar3 = SCE_GS_SET_PRIM(0xf,0,0,0,1,0,1,0);
   *(undefined8 *)(puVar2 + 0x40) = uVar3;
   uVar3 = FUN_00502f74_RET_0(0x80,0x80,0x80,0x7f,0);
   *(undefined8 *)(puVar2 + 0x48) = uVar3;
-  uVar3 = FUN_00502ea0(lVar5,1,0,0,1,2);
+  uVar3 = SCE_GIF_SET_TAG(lVar5,1,0,0,1,2);
   *(undefined8 *)(puVar2 + 0x50) = uVar3;
   *(undefined8 *)(puVar2 + 0x58) = 0x44;
   if (0 < iVar6) {
@@ -199,9 +199,9 @@ void ____DrawScreenEffect_BuildPacketB(void)
     iVar12 = (uVar11 & 0x1fffffff) * -8;
     iVar8 = 0x50;
     do {
-      uVar3 = FUN_00502fec(iVar12 + 0x8000,0x8000 - iVar1,0);
+      uVar3 = SCE_GS_SET_XYZ(iVar12 + 0x8000,0x8000 - iVar1,0);
       *puVar10 = uVar3;
-      uVar3 = FUN_00502fec(iVar12 + 0x8200,iVar1 + 0x7ff0,0);
+      uVar3 = SCE_GS_SET_XYZ(iVar12 + 0x8200,iVar1 + 0x7ff0,0);
       iVar7 = iVar7 + 1;
       puVar10 = puVar10 + 2;
       iVar12 = iVar12 + 0x200;
@@ -209,7 +209,7 @@ void ____DrawScreenEffect_BuildPacketB(void)
       iVar8 = iVar8 + 0x10;
     } while (iVar7 < iVar6);
   }
-  DAT_00e5aa58 = DAT_00e5aa58 + (int)(lVar5 << 4) + 0x50;
+  g_pPacket = g_pPacket + (int)(lVar5 << 4) + 0x50;
   return;
 }
 
@@ -236,26 +236,26 @@ void ____DrawScreenEffect_BuildBlendPacket(undefined8 param_1)
   iVar6 = ((int)g_FrameBufWidth >> 5) +
           (uint)(g_FrameBufWidth < 0 && (g_FrameBufWidth & 0x1fU) != 0);
   lVar5 = (longlong)iVar6;
-  *DAT_00e5aa58 = (char)(lVar5 + 5);
-  DAT_00e5aa58[1] = 0;
-  DAT_00e5aa58[2] = 0;
-  uVar4 = FUN_0050300c((int)(lVar5 + 5),0);
-  DAT_00e5aa58[3] = uVar4;
-  puVar2 = DAT_00e5aa58;
-  DAT_00e5aa58 = DAT_00e5aa58 + 0x10;
-  uVar3 = FUN_00502ea0(1,0,0,0,0,1);
+  *g_pPacket = (char)(lVar5 + 5);
+  g_pPacket[1] = 0;
+  g_pPacket[2] = 0;
+  uVar4 = Gs_DmaTagByte((int)(lVar5 + 5),0);
+  g_pPacket[3] = uVar4;
+  puVar2 = g_pPacket;
+  g_pPacket = g_pPacket + 0x10;
+  uVar3 = SCE_GIF_SET_TAG(1,0,0,0,0,1);
   *(undefined8 *)(puVar2 + 0x10) = uVar3;
   *(undefined8 *)(puVar2 + 0x18) = 0xe;
   uVar3 = idol_draw::Blend(1,0,0x80,1,1,1,1,1);
   *(undefined8 *)(puVar2 + 0x20) = uVar3;
   *(undefined8 *)(puVar2 + 0x28) = 0x16;
-  uVar3 = FUN_00502ea0(1,0,0,0,1,2);
+  uVar3 = SCE_GIF_SET_TAG(1,0,0,0,1,2);
   *(undefined8 *)(puVar2 + 0x30) = uVar3;
   *(undefined8 *)(puVar2 + 0x38) = 0x10;
-  uVar3 = FUN_00502e70(0xf,0,0,0,1,0,1,0);
+  uVar3 = SCE_GS_SET_PRIM(0xf,0,0,0,1,0,1,0);
   *(undefined8 *)(puVar2 + 0x40) = uVar3;
   *(undefined8 *)(puVar2 + 0x48) = param_1;
-  uVar3 = FUN_00502ea0(lVar5,1,0,0,1,2);
+  uVar3 = SCE_GIF_SET_TAG(lVar5,1,0,0,1,2);
   *(undefined8 *)(puVar2 + 0x50) = uVar3;
   *(undefined8 *)(puVar2 + 0x58) = 0x44;
   if (0 < iVar6) {
@@ -265,9 +265,9 @@ void ____DrawScreenEffect_BuildBlendPacket(undefined8 param_1)
     iVar12 = (uVar11 & 0x1fffffff) * -8;
     iVar8 = 0x50;
     do {
-      uVar3 = FUN_00502fec(iVar12 + 0x8000,0x8000 - iVar1,0);
+      uVar3 = SCE_GS_SET_XYZ(iVar12 + 0x8000,0x8000 - iVar1,0);
       *puVar10 = uVar3;
-      uVar3 = FUN_00502fec(iVar12 + 0x8200,iVar1 + 0x7ff0,0);
+      uVar3 = SCE_GS_SET_XYZ(iVar12 + 0x8200,iVar1 + 0x7ff0,0);
       iVar7 = iVar7 + 1;
       puVar10 = puVar10 + 2;
       iVar12 = iVar12 + 0x200;
@@ -275,12 +275,12 @@ void ____DrawScreenEffect_BuildBlendPacket(undefined8 param_1)
       iVar8 = iVar8 + 0x10;
     } while (iVar7 < iVar6);
   }
-  DAT_00e5aa58 = DAT_00e5aa58 + (int)(lVar5 << 4) + 0x50;
-  *DAT_00e5aa58 = 0;
-  DAT_00e5aa58[1] = 0;
-  DAT_00e5aa58[2] = 0;
-  DAT_00e5aa58[3] = 0;
-  DAT_00e5aa58 = DAT_00e5aa58 + 0x10;
+  g_pPacket = g_pPacket + (int)(lVar5 << 4) + 0x50;
+  *g_pPacket = 0;
+  g_pPacket[1] = 0;
+  g_pPacket[2] = 0;
+  g_pPacket[3] = 0;
+  g_pPacket = g_pPacket + 0x10;
   return;
 }
 
@@ -298,12 +298,12 @@ void DrawScreenEffect_152df8(int *param_1)
   GPiece<24> local_60;
   
   ____DrawScreenEffect_BuildPacketB();
-  *DAT_00e5aa58 = 7;
-  DAT_00e5aa58[1] = ((byte)(ZERO_MASK(Cutscene)) & 0x90) + 0x40;
-  DAT_00e5aa58[2] = 0;
-  uVar2 = FUN_0050300c(7,0);
-  DAT_00e5aa58[3] = uVar2;
-  DAT_00e5aa58 = DAT_00e5aa58 + 0x10;
+  *g_pPacket = 7;
+  g_pPacket[1] = ((byte)(ZERO_MASK(Cutscene)) & 0x90) + 0x40;
+  g_pPacket[2] = 0;
+  uVar2 = Gs_DmaTagByte(7,0);
+  g_pPacket[3] = uVar2;
+  g_pPacket = g_pPacket + 0x10;
   iVar3 = *param_1;
   while (iVar3 != 0) {
     piVar4 = param_1 + 8;
@@ -325,19 +325,19 @@ void DrawScreenEffect_152df8(int *param_1)
         }
         STUB_001534f4(local_70,local_60);
         STUB_001534f8(0x70000000,DAT_00a54f00,param_1[1]);
-        *DAT_00e5aa58 = 3;
-        DAT_00e5aa58[1] = 0x70;
-        DAT_00e5aa58[2] = 0;
-        uVar2 = FUN_0050300c(3,0);
-        DAT_00e5aa58[3] = uVar2;
-        DAT_00e5aa58 = DAT_00e5aa58 + 0x10;
+        *g_pPacket = 3;
+        g_pPacket[1] = 0x70;
+        g_pPacket[2] = 0;
+        uVar2 = Gs_DmaTagByte(3,0);
+        g_pPacket[3] = uVar2;
+        g_pPacket = g_pPacket + 0x10;
         STUB_001534e8(2,DAT_00731804);
-        *DAT_00e5aa58 = 3;
-        DAT_00e5aa58[1] = 0x70;
-        DAT_00e5aa58[2] = 0;
-        uVar2 = FUN_0050300c(3,0);
-        DAT_00e5aa58[3] = uVar2;
-        DAT_00e5aa58 = DAT_00e5aa58 + 0x10;
+        *g_pPacket = 3;
+        g_pPacket[1] = 0x70;
+        g_pPacket[2] = 0;
+        uVar2 = Gs_DmaTagByte(3,0);
+        g_pPacket[3] = uVar2;
+        g_pPacket = g_pPacket + 0x10;
         STUB_001534e8(1,DAT_00731800);
         iVar3 = iVar3 + 1;
       } while (iVar3 < *param_1);
@@ -367,25 +367,25 @@ void InitGsRegPresets_153194(void)
 
 {
   DAT_007319fc = 0x10000;
-  DAT_00731810 = FUN_00502ea0(2,1,0,0,0,1);
+  DAT_00731810 = SCE_GIF_SET_TAG(2,1,0,0,0,1);
   DAT_00731820 = FUN_00502f98(1,0,0,1,0,0,1,0);
-  DAT_00731840 = FUN_00502ea0(2,1,0,0,0,1);
+  DAT_00731840 = SCE_GIF_SET_TAG(2,1,0,0,0,1);
   DAT_00731850 = FUN_00502f98(1,0,0,1,0,0,1,1);
-  DAT_00731870 = FUN_00502ea0(2,1,0,0,0,1);
+  DAT_00731870 = SCE_GIF_SET_TAG(2,1,0,0,0,1);
   DAT_00731880 = FUN_00502f98(1,0,0,1,0,0,1,2);
-  DAT_007318a0 = FUN_00502ea0(2,1,0,0,0,1);
+  DAT_007318a0 = SCE_GIF_SET_TAG(2,1,0,0,0,1);
   DAT_007318b0 = FUN_00502f98(1,0,0,1,0,0,1,3);
-  DAT_007318d0 = FUN_00502ea0(6,1,0,0,0,1);
+  DAT_007318d0 = SCE_GIF_SET_TAG(6,1,0,0,0,1);
   DAT_007318f0 = FUN_00502e50(0);
-  DAT_00731900 = FUN_00502f08(0,0,0,0,0,0);
-  DAT_00731910 = STUB_00502fd4_RET_0(1,0,0,0,0,0,0);
-  DAT_00731920 = STUB_00502fbc_RET_0(0xe00,8,0x12,9,9,1,0,0);
+  DAT_00731900 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
+  DAT_00731910 = SCE_GS_SET_TEX1(1,0,0,0,0,0,0);
+  DAT_00731920 = SCE_GS_SET_TEX0(0xe00,8,0x12,9,9,1,0,0);
   DAT_00731930 = idol_draw::PackCmd(0,1,0,1,0x80);
-  DAT_00731940 = FUN_00502ea0(6,1,0,0,0,1);
+  DAT_00731940 = SCE_GIF_SET_TAG(6,1,0,0,0,1);
   DAT_00731960 = FUN_00502e50(0);
-  DAT_00731970 = FUN_00502f08(0,0,0,0,0,0);
-  DAT_00731980 = STUB_00502fd4_RET_0(1,0,0,0,0,0,0);
-  DAT_00731990 = STUB_00502fbc_RET_0(0x1000,8,0x12,9,9,1,0,0);
+  DAT_00731970 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
+  DAT_00731980 = SCE_GS_SET_TEX1(1,0,0,0,0,0,0);
+  DAT_00731990 = SCE_GS_SET_TEX0(0x1000,8,0x12,9,9,1,0,0);
   DAT_007319a0 = idol_draw::PackCmd(0,1,0,1,0x80);
   return;
 }

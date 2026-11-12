@@ -154,9 +154,9 @@ void M994_004ceb50(int param_1)
   *(float *)(puVar5 + 0x11) = fVar17;
   uVar19 = GetEffectTex(0xe);
   puVar5[0x29] = uVar19;
-  uVar19 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar19 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar5[0x2a] = uVar19;
-  uVar19 = FUN_00502f08(0,0,0,0,0,0);
+  uVar19 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar5[0x28] = uVar19;
   uVar19 = idol_draw::PackCmd(0,2,0,1,0x80);
   puVar5[0x2b] = uVar19;

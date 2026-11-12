@@ -175,9 +175,9 @@ void M1302_0018cd58(int param_1)
   if (1.0 < dVar44) {
     *(float *)(uVar28 + 0x1c) = (float)(dVar44 - (double)puVar31[0x29]);
   }
-  uVar38 = FUN_00502f08(0,0,0,0,0,0);
+  uVar38 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar31[0x24] = uVar38;
-  uVar38 = STUB_00502fd4_RET_0(1,0,0,0,0,0,0);
+  uVar38 = SCE_GS_SET_TEX1(1,0,0,0,0,0,0);
   puVar31[0x26] = uVar38;
   uVar38 = idol_draw::PackCmd(0,1,0,1,0x40);
   puVar31[0x27] = uVar38;

@@ -105,9 +105,9 @@ void M1407_0026eed0(int param_1)
   SetGSReg(0x18,uVar10);
   uVar10 = idol_draw::PackCmd(0,1,0,1,DAT_0079fa24);
   SetGSReg(3,uVar10);
-  uVar10 = FUN_00502f08(0,0,0,0,0,0);
+  uVar10 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   SetGSReg(6,uVar10);
-  uVar10 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar10 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   SetGSReg(0x1a,uVar10);
   *pfVar16 = pfVar16[1];
   dVar22 = (double)FastWrapRot

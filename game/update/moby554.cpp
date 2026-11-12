@@ -80,9 +80,9 @@ void M554_003b1fd0(int param_1,int param_2)
   *(float *)(puVar7 + 0x15) = fVar4 + fVar3;
   uVar12 = GetEffectTex(uVar5);
   puVar7[0x25] = uVar12;
-  uVar12 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar12 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar7[0x26] = uVar12;
-  uVar12 = FUN_00502f08(0,0,0,0,0,0);
+  uVar12 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar7[0x24] = uVar12;
   uVar12 = idol_draw::PackCmd(DAT_010c9f44,DAT_00845740,DAT_010c9f48,DAT_00845744,0x80);
   puVar7[0x27] = uVar12;

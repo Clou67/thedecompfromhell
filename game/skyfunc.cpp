@@ -4283,13 +4283,13 @@ void SkyDrawShellTextured(int *param_1)
   *(ulonglong *)((int)puVar4 + (int)lVar10) = *puVar4;
   if (iVar3 != 0) {
     STUB_0015b564(param_1 + 4,(longlong)iVar3,lVar13);
-    *DAT_00e5aa58 = 7;
-    DAT_00e5aa58[1] = 0;
-    DAT_00e5aa58[2] = 0;
-    uVar8 = FUN_0050300c(7,0);
-    DAT_00e5aa58[3] = uVar8;
+    *g_pPacket = 7;
+    g_pPacket[1] = 0;
+    g_pPacket[2] = 0;
+    uVar8 = Gs_DmaTagByte(7,0);
+    g_pPacket[3] = uVar8;
     uVar9 = (ulonglong)DAT_00a56170;
-    DAT_00e5aa58 = DAT_00e5aa58 + 0x10;
+    g_pPacket = g_pPacket + 0x10;
     DAT_00a56170 = (uint)(1 - uVar9);
     iVar3 = (int)uVar11;
     if (*(char *)(iVar3 + 0x70) == '\x01') {
@@ -4363,13 +4363,13 @@ void SkyDrawShellGouraud(int *param_1)
   *(ulonglong *)((int)puVar4 + (int)lVar11) = *puVar4;
   if (iVar3 != 0) {
     STUB_0015b564(param_1 + 4,(longlong)iVar3,lVar14);
-    *DAT_00e5aa58 = 7;
-    DAT_00e5aa58[1] = 0x90;
-    DAT_00e5aa58[2] = 0;
-    uVar9 = FUN_0050300c(7,0);
-    DAT_00e5aa58[3] = uVar9;
+    *g_pPacket = 7;
+    g_pPacket[1] = 0x90;
+    g_pPacket[2] = 0;
+    uVar9 = Gs_DmaTagByte(7,0);
+    g_pPacket[3] = uVar9;
     uVar10 = (ulonglong)DAT_00a56170;
-    DAT_00e5aa58 = DAT_00e5aa58 + 0x10;
+    g_pPacket = g_pPacket + 0x10;
     DAT_00a56170 = (uint)(1 - uVar10);
     iVar3 = (int)uVar12;
     if (*(char *)(iVar3 + 0x70) == '\x01') {

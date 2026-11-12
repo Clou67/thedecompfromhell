@@ -64,8 +64,8 @@ void M388_0035aac0
   
   GetEffectTex(0x2d);
   idol_draw::PackCmd(0,2,0,1,0x80);
-  STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  FUN_00502f08(0,0,0,0,0,0);
+  SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   GetEffectTex(0x2c);
   uVar9 = 0x3ff0000000000000;
   uVar8 = 0;
@@ -2343,8 +2343,8 @@ void M388_0035f100(int param_1)
   
   iVar1 = *(int *)(param_1 + 0x78);
   GetEffectTex(0x34);
-  STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  FUN_00502f08(0,1,0,0,0,0);
+  SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  SCE_GS_SET_CLAMP(0,1,0,0,0,0);
   idol_draw::PackCmd(0,2,0,1,0x80);
   dVar9 = 0.0;
   dVar7 = 1.0;

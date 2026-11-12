@@ -51,8 +51,8 @@ void M685_004122c8(void)
   
   GetEffectTex(0x2d);
   idol_draw::PackCmd(0,2,0,1,0x80);
-  STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  FUN_00502f08(0,0,0,0,0,0);
+  SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   dVar7 = (double)FastIntToDouble(DAT_010cc4f0);
   dVar12 = 0.5;
   dVar8 = (double)FastIntToDouble

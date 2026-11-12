@@ -239,9 +239,9 @@ void M761_0044fea8(ulonglong param_1)
   *(float *)(puVar26 + 0x1b) = -(float)(dVar58 * dVar54) - -(float)(dVar56 * dVar53);
   uVar37 = GetEffectTex(iVar50 + 0x28);
   puVar26[0x2d] = uVar37;
-  uVar37 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar37 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar26[0x2e] = uVar37;
-  uVar37 = FUN_00502f08(0,0,0,0,0,0);
+  uVar37 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar26[0x2c] = uVar37;
   uVar37 = idol_draw::PackCmd(0,2,0,1,0x80);
   puVar26[0x2f] = uVar37;

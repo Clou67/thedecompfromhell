@@ -99,9 +99,9 @@ void M386_00359ad0(int param_1)
   *(undefined4 *)((int)puVar4 + 0xac) = 0x3f800000;
   uVar10 = GetEffectTex(0x3ff0000000000000,0x10);
   puVar4[0x25] = uVar10;
-  uVar10 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar10 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar4[0x26] = uVar10;
-  uVar10 = FUN_00502f08(0,0,0,0,0,0);
+  uVar10 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar4[0x24] = uVar10;
   uVar10 = idol_draw::PackCmd(DAT_010c5114,DAT_00840810,DAT_010c5118,DAT_00840814,0x80);
   puVar4[0x27] = uVar10;

@@ -384,8 +384,8 @@ void M1106_001c00b8(int param_1)
   }
   *(float *)(iVar1 + 0x15c) = (float)dVar8;
   GetEffectTex(0x3b);
-  STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  FUN_00502f08(0,1,0,0,0,0);
+  SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  SCE_GS_SET_CLAMP(0,1,0,0,0,0);
   idol_draw::PackCmd(0,2,0,1,0x80);
   FastDrawQuad(local_160,0,1,EffectTexHeaders,9);
   return;
@@ -401,8 +401,8 @@ void M1106_001c0a10(undefined4 param_1)
   
   GetBonePosition(param_1,4,local_100);
   GetEffectTex(0x3c);
-  STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  FUN_00502f08(0,1,0,0,0,0);
+  SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  SCE_GS_SET_CLAMP(0,1,0,0,0,0);
   idol_draw::PackCmd(0,2,0,1,0x80);
   FastDrawQuad(local_f0,0,1,EffectTexHeaders,9);
   return;
@@ -488,8 +488,8 @@ void M1106_001c0d58
   uVar3 = VU1_addGSregister(GSmem.zbuf >> 0xd,1,1);
   SetGSReg(0x21,uVar3);
   uVar3 = GetEffectTex(0x3c);
-  uVar4 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  uVar5 = FUN_00502f08(0,0,0,0,0,0);
+  uVar4 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  uVar5 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   uVar6 = idol_draw::PackCmd(1,2,2,0,0xa0);
   dVar10 = (double)FastIntToDouble(0);
   uVar7 = FastDoubleToInt((double)(float)(dVar10 * param_4));
@@ -744,8 +744,8 @@ void M1106_001c14d0
     return;
   }
   uVar11 = GetEffectTex(0x3d);
-  uVar12 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  uVar13 = FUN_00502f08(0,1,0,0,0,0);
+  uVar12 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  uVar13 = SCE_GS_SET_CLAMP(0,1,0,0,0,0);
   uVar14 = idol_draw::PackCmd(0,2,0,1,0x80);
   puVar9[0x1d] = uVar11;
   *(undefined4 *)(puVar9 + 0x18) = 0;

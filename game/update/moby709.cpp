@@ -444,9 +444,9 @@ void M711_0042ab78(int param_1)
         if (bVar2) {
           uVar18 = GetEffectTex(uVar17);
           puVar14[0x1d] = uVar18;
-          uVar18 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+          uVar18 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
           puVar14[0x1e] = uVar18;
-          uVar18 = FUN_00502f08(1,1,0,0,0,0);
+          uVar18 = SCE_GS_SET_CLAMP(1,1,0,0,0,0);
           puVar14[0x1c] = uVar18;
           uVar18 = idol_draw::PackCmd(0,uVar30,0,1,0x80);
           pMVar15 = g_heroMobyPtr;

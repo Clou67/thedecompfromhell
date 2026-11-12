@@ -122,8 +122,8 @@ void M280_00329e48(int param_1)
   dVar27 = (double)(float)(dVar21 * dVar34 - (double)(float)(dVar23 * dVar36));
   GetEffectTex(0xb);
   idol_draw::PackCmd(0,2,0,1,0x80);
-  STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  FUN_00502f08(1,1,0,0,0,0);
+  SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  SCE_GS_SET_CLAMP(1,1,0,0,0,0);
   pfVar15 = local_150;
   pfVar14 = (float *)&DAT_00800290;
   lVar16 = 4;
@@ -514,8 +514,8 @@ void M280_0032aa00(int param_1)
   dVar14 = (double)*(float *)(param_1 + 0x14);
   dVar15 = (double)(*(float *)(param_1 + 0x18) + 0.01);
   GetEffectTex(0xb);
-  STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  FUN_00502f08(0,0,0,0,0,0);
+  SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   idol_draw::PackCmd(0,2,0,1,0x80);
   uVar5 = FUN_00502e50(0);
   SetGSReg(8,uVar5);

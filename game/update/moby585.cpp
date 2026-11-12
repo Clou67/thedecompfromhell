@@ -35,8 +35,8 @@ void M585_003d24a8(int param_1)
   
   iVar3 = *(int *)(param_1 + 0x78);
   GetEffectTex(DAT_008465c0);
-  STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  FUN_00502f08(0,1,0,0,0,0);
+  SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  SCE_GS_SET_CLAMP(0,1,0,0,0,0);
   idol_draw::PackCmd(DAT_010c9f90,DAT_008465b0,DAT_010c9f94,DAT_008465b4,DAT_008465b8);
   dVar11 = 0.0;
   dVar7 = 1.0;

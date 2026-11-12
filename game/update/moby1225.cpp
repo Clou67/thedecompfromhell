@@ -147,11 +147,11 @@ void M1225_0020e108(int param_1)
   puVar5[0x51] = uVar12;
   puVar5[0x3f] = uVar12;
   puVar5[0x2d] = uVar12;
-  uVar12 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar12 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar5[0x52] = uVar12;
   puVar5[0x40] = uVar12;
   puVar5[0x2e] = uVar12;
-  uVar12 = FUN_00502f08(0,0,0,0,0,0);
+  uVar12 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar5[0x50] = uVar12;
   puVar5[0x3e] = uVar12;
   puVar5[0x2c] = uVar12;

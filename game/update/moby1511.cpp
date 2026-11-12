@@ -129,8 +129,8 @@ void M1511_0028e730(int param_1)
   
   GetEffectTex(0xb);
   idol_draw::PackCmd(0,2,0,1,0x80);
-  STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  FUN_00502f08(1,1,0,0,0,0);
+  SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  SCE_GS_SET_CLAMP(1,1,0,0,0,0);
   fVar5 = *(float *)(param_1 + 0xc4) * DAT_007ab1e8 + *(float *)(param_1 + 0xe4) * DAT_007ab1ec +
           *(float *)(param_1 + 0x14);
   fVar6 = *(float *)(param_1 + 0xc0) * DAT_007ab1e8 + *(float *)(param_1 + 0xe0) * DAT_007ab1ec +

@@ -18617,8 +18617,8 @@ void MB_DrawGlowFX(double param_1,double param_2,float *param_3)
   
   GetEffectTex(0xb);
   idol_draw::PackCmd(0,2,0,1,0x80);
-  STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  FUN_00502f08(1,1,0,0,0,0);
+  SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  SCE_GS_SET_CLAMP(1,1,0,0,0,0);
   dVar14 = 0.0;
   fVar4 = param_3[1];
   fVar5 = *param_3;

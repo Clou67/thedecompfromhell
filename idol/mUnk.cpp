@@ -85,13 +85,13 @@ void idol_draw::DrawGalacticMapFrame(int param_1,int param_2,int param_3,int par
                     /* Galactic map texture = 0xe */
   uVar5 = GetIconFrameTex(0xe99a,0xe);
   Hud_DrawEffectTexQuadUV(uVar5,0,0,param_2 - param_1,param_4 - param_3,0,0,0x80);
-  uVar5 = FUN_00502f08(0,0,0,0,0,0);
+  uVar5 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   SetGSReg(6,uVar5);
                     /* Some kind of overlay texture */
   uVar5 = GetIconFrameTex(0xe99a,0xf);
   Hud_DrawEffectTexQuadUV
             (uVar5,0,0,param_2 - param_1,param_4 - param_3,g_MainLoopFrames & 0xfff,0,0x80);
-  uVar5 = FUN_00502f08(1,1,0,0,0,0);
+  uVar5 = SCE_GS_SET_CLAMP(1,1,0,0,0,0);
   SetGSReg(6,uVar5);
   dVar16 = 22.5;
   dVar15 = 8.5;

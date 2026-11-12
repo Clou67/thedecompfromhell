@@ -104,9 +104,9 @@ void M1918_002d94c8(void)
   SetGSReg(0x18,uVar1);
   uVar1 = idol_draw::PackCmd(0,1,2,1,0x20);
   SetGSReg(3,uVar1);
-  uVar1 = FUN_00502f08(0,0,0,0,0,0);
+  uVar1 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   SetGSReg(6,uVar1);
-  uVar1 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar1 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   SetGSReg(0x1a,uVar1);
   STUB_00071170();
   M1918_002d92a0(DAT_007dc410,PTR_DAT_007dcd88,PTR_DAT_007dcd80,PTR_DAT_007dcd84,&DAT_010b8780);

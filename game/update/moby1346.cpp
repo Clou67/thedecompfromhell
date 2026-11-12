@@ -90,10 +90,10 @@ void M1346_00252318(int param_1)
   uVar10 = GetEffectTex(0xe);
   puVar7[0x37] = uVar10;
   puVar7[0x25] = uVar10;
-  uVar10 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar10 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar7[0x38] = uVar10;
   puVar7[0x26] = uVar10;
-  uVar10 = FUN_00502f08(0,0,0,0,0,0);
+  uVar10 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar7[0x36] = uVar10;
   puVar7[0x24] = uVar10;
   uVar10 = idol_draw::PackCmd(DAT_00fa3848,DAT_0079b738,DAT_00fa384c,DAT_0079b73c,0x80);

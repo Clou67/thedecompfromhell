@@ -80,3 +80,8 @@ g_MapAlt	int NAME /* 0xa20820: set: the map uses level + 100 (guess: alternate m
 g_MapHeroU	int NAME[20] /* 0xa205c4: Ratchet's map position per level, 16.16; 0x08000000 = none */
 g_MapHeroV	int NAME[20] /* 0xa20614 */
 g_MissionState	int NAME[24] /* 0xa245a8: cleared by ResetMissionState */
+g_GsTex	GsTex NAME[1024] /* 0x9313a0 */
+g_GsTexCount	int NAME /* 0x9513a0 */
+g_GsRamAlloc	int NAME /* 0x966ad0: next free GS memory, bytes */
+g_pPacket	u8 *NAME /* 0xe5aa58: write position in the GIF/VIF packet being built */
+g_SpriteGifTag	u64 NAME[2] /* 0x71e960: GIF tag for GsTex_Bind's sprite (built by GsTex_StaticInit) */

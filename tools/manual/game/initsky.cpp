@@ -74,8 +74,8 @@ void DrawSceneShipEffect(MobyInstance *moby)
     Mtx4 m;
 
     q.tex0 = (u64)GetEffectTex(14);
-    q.tex1 = STUB_00502fd4_RET_0(0, 0, 1, 1, 1, 0, 0xff90);
-    q.clamp = FUN_00502f08(1, 1, 0, 0, 0, 0);
+    q.tex1 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
+    q.clamp = SCE_GS_SET_CLAMP(1, 1, 0, 0, 0, 0);
     q.alpha = idol_draw::PackCmd(0, 2, 0, 1, 128);
     q.rgba[0] = 0x3ff08080;
     q.rgba[1] = 0x3ff08080;

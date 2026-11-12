@@ -298,9 +298,9 @@ void M566_003bb988(int param_1)
                                       ) + 1.0) * 0.5),DAT_00845c48,DAT_00845c4c);
   uVar7 = GetEffectTex(0xd);
   puVar4[0x1d] = uVar7;
-  uVar7 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar7 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar4[0x1e] = uVar7;
-  uVar7 = FUN_00502f08(0,0,0,0,0,0);
+  uVar7 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar4[0x1c] = uVar7;
   uVar7 = idol_draw::PackCmd(DAT_010c9f4c,DAT_00845c40,DAT_010c9f50,DAT_00845c44,0x80);
   puVar4[0x1f] = uVar7;

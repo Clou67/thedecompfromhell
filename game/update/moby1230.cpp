@@ -198,9 +198,9 @@ void M1230_00213920(int param_1)
   *(float *)(puVar8 + 0x13) = (float)dVar27;
   uVar19 = GetEffectTex(0xe);
   puVar8[0x31] = uVar19;
-  uVar19 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar19 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar8[0x32] = uVar19;
-  uVar19 = FUN_00502f08(0,0,0,0,0,0);
+  uVar19 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar8[0x30] = uVar19;
   uVar19 = idol_draw::PackCmd(0,2,0,1,0x80);
   puVar8[0x33] = uVar19;

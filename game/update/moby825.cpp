@@ -176,10 +176,10 @@ void M825_00478e68(int param_1)
   uVar12 = GetEffectTex(DAT_00877a60);
   puVar6[0x3b] = uVar12;
   puVar6[0x29] = uVar12;
-  uVar12 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar12 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar6[0x3c] = uVar12;
   puVar6[0x2a] = uVar12;
-  uVar12 = FUN_00502f08(0,0,0,0,0,0);
+  uVar12 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar6[0x3a] = uVar12;
   puVar6[0x28] = uVar12;
   uVar12 = idol_draw::PackCmd(DAT_010d99dc,DAT_00877a30,DAT_010d99e0,DAT_00877a34,0x80);

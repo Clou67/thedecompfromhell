@@ -1374,7 +1374,7 @@ void DrawMobyShadows(void)
   undefined1 *puVar1;
   undefined1 *puVar2;
   
-  puVar1 = DAT_00e5aa58;
+  puVar1 = g_pPacket;
   if (DAT_00a49f50 == 0) {
     *DAT_00a49f54 = 0;
     DAT_00a49f54[1] = 0;
@@ -1382,20 +1382,20 @@ void DrawMobyShadows(void)
     DAT_00a49f54[3] = 0;
   }
   else {
-    DAT_00e5aa58 = DAT_00e5aa58 + 0x10;
+    g_pPacket = g_pPacket + 0x10;
     *DAT_00a49f54 = 0;
-    DAT_00a49f54[1] = (char)DAT_00e5aa58;
+    DAT_00a49f54[1] = (char)g_pPacket;
     DAT_00a49f54[2] = 0;
     DAT_00a49f54[3] = 0;
     STUB_001534fc();
     DrawScreenEffect_152df8(&____oClassInstanceList);
-    *DAT_00e5aa58 = 0;
-    DAT_00e5aa58[1] = (char)DAT_00a49f54 + '\x10';
-    DAT_00e5aa58[2] = 0;
-    DAT_00e5aa58[3] = 0;
-    DAT_00e5aa58 = DAT_00e5aa58 + 0x10;
+    *g_pPacket = 0;
+    g_pPacket[1] = (char)DAT_00a49f54 + '\x10';
+    g_pPacket[2] = 0;
+    g_pPacket[3] = 0;
+    g_pPacket = g_pPacket + 0x10;
     *puVar1 = 0;
-    puVar2 = DAT_00e5aa58;
+    puVar2 = g_pPacket;
     puVar1[2] = 0;
     puVar1[1] = (char)puVar2;
     puVar1[3] = 0;

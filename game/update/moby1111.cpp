@@ -178,7 +178,7 @@ void M1111_Pokitaru_Ocean(int param_1)
   idol_draw::DrawDepth(pRVar13,uVar16);
   uVar16 = idol_draw::Blend(1,0,0x3f,1,0,0,1,2);
   FUN_004d6634(pRVar13,uVar16);
-  uVar16 = FUN_00502f08(0,0,0,0,0,0);
+  uVar16 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   FUN_004d6704(uVar16,uVar28 - 0x140,uVar28 - 0x13c);
   iVar27 = EffectTexHeaders;
   iVar19 = GetEffectTex(0x16);
@@ -390,9 +390,9 @@ void M1111_Pokitaru_Ocean(int param_1)
   DrawMeshSet(0xc,&DAT_00ef1a98,&DAT_00ef1d98,&DAT_00ef22a0,9);
   uVar25 = GetEffectTex(0x16);
   puVar8[0x25] = uVar25;
-  uVar25 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar25 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar8[0x26] = uVar25;
-  uVar25 = FUN_00502f08(0,0,0,0,0,0);
+  uVar25 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar8[0x24] = uVar25;
   uVar25 = idol_draw::PackCmd(0,1,0,1,0x80);
   fVar3 = GameCamera.posZ;
@@ -440,7 +440,7 @@ void M1111_Pokitaru_Ocean(int param_1)
   idol_draw::DrawDepth(pRVar13,uVar16);
   uVar16 = idol_draw::Blend(1,0,0x3f,1,0,0,1,2);
   FUN_004d6634(pRVar13,uVar16);
-  uVar16 = FUN_00502f08(0,0,0,0,0,0);
+  uVar16 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   FUN_004d6704(uVar16,uVar28 - 0x140,uVar28 - 0x13c);
   uVar20 = puVar6[4];
   dVar34 = (double)(float)(dVar48 - (double)((GameCamera.posZ - DAT_00ef1a90) / (float)puVar6[0xb]))

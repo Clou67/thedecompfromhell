@@ -180,8 +180,8 @@ void M1338_0024d620(undefined8 param_1,undefined8 param_2,longlong param_3)
   
   GetEffectTex();
   idol_draw::PackCmd(0,2,0,1,0x80);
-  STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  FUN_00502f08(0,0,0,0,0,0);
+  SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   GetEffectTex(param_2);
   uVar8 = 0x3ff0000000000000;
   uVar7 = 0;
@@ -316,8 +316,8 @@ void M1338_0024e228(undefined8 param_1,longlong param_2)
   dVar34 = (double)(float)(dVar30 * dVar29 - (double)(float)(dVar32 * dVar20));
   GetEffectTex(0xb);
   idol_draw::PackCmd(0,1,0,1,0xff);
-  STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  FUN_00502f08(1,1,0,0,0,0);
+  SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  SCE_GS_SET_CLAMP(1,1,0,0,0,0);
   dVar13 = (double)MB_randRangeFloat(0.3,0.325);
   uVar24 = 0x3fa99999a0000000;
   dVar14 = (double)MB_randRangeSigned(dVar23,0x3fa99999a0000000);

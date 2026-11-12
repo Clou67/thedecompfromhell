@@ -83,9 +83,9 @@ void M1124_001d64b0(int param_1)
   FastVecMtx4Mul(lVar17,lVar17,uVar7 - 0x230);
   uVar8 = GetEffectTex(0xe);
   SetGSReg(0x18,uVar8);
-  uVar8 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar8 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   SetGSReg(0x1a,uVar8);
-  uVar8 = FUN_00502f08(0,0,0,0,0,0);
+  uVar8 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   SetGSReg(6,uVar8);
   uVar8 = idol_draw::PackCmd(DAT_00ef26c8,DAT_00764660,DAT_00ef26cc,DAT_00764664,0x80);
   SetGSReg(3,uVar8);

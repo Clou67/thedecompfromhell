@@ -118,9 +118,9 @@ void M1772_002b77e8(int param_1)
   puVar10[0x1d] = uVar15;
   uVar15 = idol_draw::PackCmd(0,2,0,1,0x80);
   puVar10[0x1f] = uVar15;
-  uVar15 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar15 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar10[0x1e] = uVar15;
-  uVar15 = FUN_00502f08(0,0,0,0,0,0);
+  uVar15 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   fVar4 = pfVar26[1];
   fVar5 = *pfVar26;
   dVar30 = (double)GameCamera.posY;
@@ -327,8 +327,8 @@ void M1772_002b7d30(void)
   
   GetEffectTex(DAT_007b7864);
   idol_draw::PackCmd(0,2,0,1,0x80);
-  STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  FUN_00502f08(0,0,0,0,0,0);
+  SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   GetEffectTex(DAT_007b7868);
   in_r9 = in_r9 + -1;
   iVar2 = 1;
@@ -592,9 +592,9 @@ void M1772_002b8748(int param_1)
     *(float *)(puVar7 + 0x10) = fVar5;
     *(float *)((int)puVar7 + 0x84) = fVar11;
     *(float *)(puVar7 + 0x11) = fVar17;
-    uVar20 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+    uVar20 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
     puVar7[0x2a] = uVar20;
-    uVar20 = FUN_00502f08(0,0,0,0,0,0);
+    uVar20 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
     puVar7[0x28] = uVar20;
     uVar20 = idol_draw::PackCmd(0,2,0,1,0x80);
     puVar7[0x2b] = uVar20;

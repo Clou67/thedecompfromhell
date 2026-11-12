@@ -93,7 +93,7 @@ void VU1_initChain(void)
   DAT_00e5aa54 = DAT_00a108e0;
   DAT_00a10738 = (DAT_00a108dc + DAT_00e5aa64) - DAT_0071fbd4;
   DAT_00e5aa68 = 0;
-  DAT_00e5aa58 = DAT_00a108dc;
+  g_pPacket = DAT_00a108dc;
   DAT_00a10740 = DAT_00a10738 + -0x2000;
   return;
 }
@@ -109,8 +109,8 @@ void VU1_swapChain(void)
   uVar2 = (ulonglong)DAT_00e5aa68;
   DAT_00e5aa68 = (int)(1 - uVar2);
   iVar1 = *(int *)((int)&DAT_00e5aa50 + (int)((1 - uVar2 & 0xffffffff) << 2));
-  DAT_00e5aa5c = DAT_00e5aa58;
-  DAT_00e5aa58 = iVar1;
+  DAT_00e5aa5c = g_pPacket;
+  g_pPacket = iVar1;
   DAT_00a10738 = (iVar1 + DAT_00e5aa64) - DAT_0071fbd4;
   DAT_00a10740 = DAT_00a10738 + -0x2000;
   return;
@@ -137,11 +137,11 @@ void STUB_00174cf4(...)
 void VU1_addDataRef(undefined1 param_1,undefined1 param_2)
 
 {
-  *DAT_00e5aa58 = param_2;
-  DAT_00e5aa58[1] = param_1;
-  DAT_00e5aa58[2] = 0;
-  DAT_00e5aa58[3] = 0;
-  DAT_00e5aa58 = DAT_00e5aa58 + 0x10;
+  *g_pPacket = param_2;
+  g_pPacket[1] = param_1;
+  g_pPacket[2] = 0;
+  g_pPacket[3] = 0;
+  g_pPacket = g_pPacket + 0x10;
   return;
 }
 
@@ -152,13 +152,13 @@ void VU1_addDataRefToLoc(undefined8 param_1,undefined1 param_2,undefined8 param_
 {
   undefined1 uVar1;
   
-  *DAT_00e5aa58 = (char)param_3;
-  DAT_00e5aa58[1] = param_2;
+  *g_pPacket = (char)param_3;
+  g_pPacket[1] = param_2;
   uVar1 = FUN_00502e98(4,4,0);
-  DAT_00e5aa58[2] = uVar1;
+  g_pPacket[2] = uVar1;
   uVar1 = FUN_00503104(param_1,param_3,0xc,0);
-  DAT_00e5aa58[3] = uVar1;
-  DAT_00e5aa58 = DAT_00e5aa58 + 0x10;
+  g_pPacket[3] = uVar1;
+  g_pPacket = g_pPacket + 0x10;
   return;
 }
 
@@ -169,15 +169,15 @@ void VU1_addDataDirect(undefined8 param_1,undefined8 param_2,ulonglong param_3)
 {
   undefined1 uVar1;
   
-  *DAT_00e5aa58 = (char)param_3;
-  DAT_00e5aa58[1] = 0;
+  *g_pPacket = (char)param_3;
+  g_pPacket[1] = 0;
   uVar1 = FUN_00502e98(4,4,0);
-  DAT_00e5aa58[2] = uVar1;
+  g_pPacket[2] = uVar1;
   uVar1 = FUN_00503104(param_1,param_3,0xc,0);
-  DAT_00e5aa58[3] = uVar1;
-  DAT_00e5aa58 = DAT_00e5aa58 + 0x10;
-  FastMemCopy(DAT_00e5aa58,param_2,(int)((param_3 & 0xffffffff) << 4));
-  DAT_00e5aa58 = DAT_00e5aa58 + (int)(param_3 << 4);
+  g_pPacket[3] = uVar1;
+  g_pPacket = g_pPacket + 0x10;
+  FastMemCopy(g_pPacket,param_2,(int)((param_3 & 0xffffffff) << 4));
+  g_pPacket = g_pPacket + (int)(param_3 << 4);
   return;
 }
 
@@ -188,13 +188,13 @@ void VU1_skipData(undefined8 param_1,longlong param_2)
 {
   undefined1 uVar1;
   
-  *DAT_00e5aa58 = (char)param_2;
-  DAT_00e5aa58[1] = 0;
+  *g_pPacket = (char)param_2;
+  g_pPacket[1] = 0;
   uVar1 = FUN_00502e98(4,4,0);
-  DAT_00e5aa58[2] = uVar1;
+  g_pPacket[2] = uVar1;
   uVar1 = FUN_00503104(param_1,param_2,0xc,0);
-  DAT_00e5aa58[3] = uVar1;
-  DAT_00e5aa58 = DAT_00e5aa58 + (int)(param_2 << 4) + 0x10;
+  g_pPacket[3] = uVar1;
+  g_pPacket = g_pPacket + (int)(param_2 << 4) + 0x10;
   return;
 }
 
@@ -203,11 +203,11 @@ void VU1_skipData(undefined8 param_1,longlong param_2)
 void VU1_addVIFcode(undefined1 param_1)
 
 {
-  *DAT_00e5aa58 = 0;
-  DAT_00e5aa58[1] = 0;
-  DAT_00e5aa58[2] = 0;
-  DAT_00e5aa58[3] = param_1;
-  DAT_00e5aa58 = DAT_00e5aa58 + 0x10;
+  *g_pPacket = 0;
+  g_pPacket[1] = 0;
+  g_pPacket[2] = 0;
+  g_pPacket[3] = param_1;
+  g_pPacket = g_pPacket + 0x10;
   return;
 }
 
@@ -278,11 +278,11 @@ void SetGSReg(int param_1,longlong param_2)
 void VU1_addDataInLine(longlong param_1)
 
 {
-  *DAT_00e5aa58 = 0;
-  DAT_00e5aa58[1] = (char)DAT_00e5aa58 + (char)(param_1 << 4) + '\x10';
-  DAT_00e5aa58[2] = 0;
-  DAT_00e5aa58[3] = 0;
-  DAT_00e5aa58 = DAT_00e5aa58 + (int)(param_1 << 4) + 0x10;
+  *g_pPacket = 0;
+  g_pPacket[1] = (char)g_pPacket + (char)(param_1 << 4) + '\x10';
+  g_pPacket[2] = 0;
+  g_pPacket[3] = 0;
+  g_pPacket = g_pPacket + (int)(param_1 << 4) + 0x10;
   return;
 }
 
@@ -496,7 +496,7 @@ void VU1_dumpChain(void)
   byte local_20;
   
   uVar5 = (&DAT_00e5aa50)[DAT_00e5aa68];
-  if (uVar5 != DAT_00e5aa58) {
+  if (uVar5 != g_pPacket) {
     do {
       auVar6 = *(undefined1 (*) [16])(uVar5 & 0xfffffff0);
       auVar1 = auVar6 >> 0x70 & (GPiece<16>)0xff;
@@ -514,7 +514,7 @@ void VU1_dumpChain(void)
                  auVar6[3];
       printf("%x %x %x %x\n",uVar4,(ulonglong)bVar2,(ulonglong)bVar3,(ulonglong)local_20);
       uVar5 = uVar5 + 0x10;
-    } while (uVar5 != DAT_00e5aa58);
+    } while (uVar5 != g_pPacket);
   }
   return;
 }

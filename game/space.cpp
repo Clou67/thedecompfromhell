@@ -693,9 +693,9 @@ void Space_DrawShipEngineGlow(float *pos)
   }
   uVar30 = GetEffectTex(5);
   puVar24[0x1d] = uVar30;
-  uVar30 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar30 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar24[0x1e] = uVar30;
-  uVar30 = FUN_00502f08(0,0,0,0,0,0);
+  uVar30 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar24[0x1c] = uVar30;
   uVar30 = idol_draw::PackCmd(0,2,0,1,0x80);
   puVar24[0x1f] = uVar30;
@@ -922,9 +922,9 @@ void Space_DrawTransitionOverlay(void)
     uVar27 = GetEffectTex(0x13);
     puVar8[0x2d] = uVar27;
   }
-  uVar27 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar27 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar8[0x2e] = uVar27;
-  uVar27 = FUN_00502f08(0,0,0,0,0,0);
+  uVar27 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar8[0x2c] = uVar27;
   uVar27 = idol_draw::PackCmd(0,2,0,1,0x80);
   puVar8[0x2f] = uVar27;
@@ -1166,9 +1166,9 @@ void ____Space_TransitionDrawPass(void)
   uVar16 = idol_draw::Blend(1,0,0x80,1,0,0,1,1);
   SetGSReg(0x16,uVar16);
   puVar10[0x25] = DAT_00a561c8;
-  uVar17 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar17 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar10[0x26] = uVar17;
-  uVar17 = FUN_00502f08(0,0,0,0,0,0);
+  uVar17 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar10[0x24] = uVar17;
   uVar17 = idol_draw::PackCmd(0,1,0,1,0x80);
   puVar10[0x27] = uVar17;
@@ -1884,9 +1884,9 @@ void Space_DrawShipEffects(int param_1)
     uVar26 = GetEffectTex(0x15);
     puVar21[0x25] = uVar26;
   }
-  uVar26 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar26 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar21[0x26] = uVar26;
-  uVar26 = FUN_00502f08(0,0,0,0,0,0);
+  uVar26 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar21[0x24] = uVar26;
   uVar26 = idol_draw::PackCmd(0,1,0,1,0x80);
   puVar21[0x27] = uVar26;
@@ -3907,7 +3907,7 @@ void PlaySpacePlate(undefined8 param_1,int param_2,int param_3,longlong param_4,
       UpdateOcclusion(0);
       uVar1 = FUN_00502f74_RET_0(0,0,0,0x80,0);
       SetGSReg(0x15,uVar1);
-      uVar1 = FUN_00502f08(0,0,0,0,0,0);
+      uVar1 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
       SetGSReg(6,uVar1);
       dVar4 = (double)FastIntToDouble((int)lVar3 % 600);
       dVar4 = dVar4 * dVar5;

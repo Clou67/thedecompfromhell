@@ -218,9 +218,9 @@ void M671_0040c3f0(int param_1)
       }
       puVar26[0x6f] = 0;
       puVar26[0x57] = uVar48;
-      uVar48 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+      uVar48 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
       puVar26[0x58] = uVar48;
-      uVar48 = FUN_00502f08(0,0,0,0,0,0);
+      uVar48 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
       puVar26[0x56] = uVar48;
       uVar48 = idol_draw::PackCmd(*(undefined1 *)(pfVar24 + 0xf),
                                   *(undefined1 *)((int)pfVar24 + 0x3d),

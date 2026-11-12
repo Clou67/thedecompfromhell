@@ -25,8 +25,8 @@ void M1441_0027ecd0(void)
   
   GetEffectTex(0xb);
   idol_draw::PackCmd(0,2,0,1,0x80);
-  STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  FUN_00502f08(1,1,0,0,0,0);
+  SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  SCE_GS_SET_CLAMP(1,1,0,0,0,0);
   pfVar3 = local_a0;
   lVar4 = 4;
   pfVar2 = (float *)&DAT_007aa7e0;

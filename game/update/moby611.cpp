@@ -50,8 +50,8 @@ void M611_003da478(int param_1)
   
   iVar9 = *(int *)(param_1 + 0x78);
   GetEffectTex(0x30);
-  STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  FUN_00502f08(0,0,0,0,0,0);
+  SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   idol_draw::PackCmd(0,2,0,1,0x80);
   uVar10 = FUN_00502e50(0);
   SetGSReg(8,uVar10);

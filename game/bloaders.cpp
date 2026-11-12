@@ -1,6 +1,10 @@
-// game/bloaders.cpp -- reconstructed from NPEA00385 EBOOT
-// STATUS: NOT STARTED (raw Ghidra output)
+// game/bloaders.cpp -- textures from .pif files: registering them and uploading to GS memory
+// STATUS: CLEAN (checked against the asm; local names are mine)
 // 13 functions, 0x4efe4-0x4fee8
+//
+// The PS2 path: GsTex_Upload builds GIF packets (at g_pPacket) that copy the clut and the mips
+// into GS memory allocated from g_GsRamAlloc. On PS3 the SCE_GS_SET_* packers are stubs that
+// return 0, so the packets are built but carry no real register values.
 #include <stdio.h>
 #include "game/bloaders.h"
 #include "game/boot.h"
@@ -15,460 +19,326 @@
 #include "idol/sound.h"
 #include "sdk/mUnk4.h"
 
-// 0x004efe4 (0x14 bytes)
-void SECTION_HEADER_CAMERA_UNK(void)
+enum {                      /* PifHeader.texFormat / clutFormat */
+    PIF_FMT_32 = 0x12,      /* 32 bits per pixel (clut entries: 32-bit) */
+    PIF_FMT_8 = 0x13,       /* 8-bit indexed */
+    PIF_FMT_16 = 0x26,
+    PIF_FMT_4 = 0x27,       /* 4-bit indexed */
+};
+#define GS_PSMT4      20      /* GS pixel format the debug font is loaded as */
+#define GS_BLOCK      256     /* GS memory is allocated in blocks of 256 bytes */
+#define GS_PAGE_ALIGN 0x800
 
+/* the qword header in front of each packet part: count, kind, 0, check byte */
+static inline void PacketHeader(int qwc, u8 kind)
 {
-  DAT_0071e938 = 0x10000;
-  return;
+    g_pPacket[0] = (u8)qwc;
+    g_pPacket[1] = kind;
+    g_pPacket[2] = 0;
+    g_pPacket[3] = Gs_DmaTagByte(qwc, 0);
 }
 
+static inline u64 *PacketWords(void)
+{
+    return (u64 *)g_pPacket;
+}
+
+// 0x004efe4 (0x14 bytes)
+void SECTION_HEADER_CAMERA_UNK(void)
+{
+    DAT_0071e938 = 0x10000;
+}
 
 // 0x004eff8 (0x24 bytes)
 void GsTex_Init(void)
-
 {
-  DAT_009513a0 = 0;
-  g_GsRamAlloc = GSmem.base;
-  return;
+    g_GsTexCount = 0;
+    g_GsRamAlloc = GSmem.base;
 }
-
 
 // 0x004f01c (0x48 bytes)
+/* free GS memory: every texture uploads again when next used */
 void GsTex_ResetAll(void)
-
 {
-  int iVar1;
-  undefined8 *puVar2;
-  
-  g_GsRamAlloc = GSmem.base;
-  if (0 < DAT_009513a0) {
-    puVar2 = &DAT_00931408;
-    iVar1 = DAT_009513a0;
-    do {
-      iVar1 = iVar1 + -1;
-      *puVar2 = 0;
-      puVar2 = puVar2 + 0x10;
-    } while (0 < iVar1);
-  }
-  return;
-}
+    g_GsRamAlloc = GSmem.base;
 
+    for (int i = 0; i < g_GsTexCount; i++)
+        g_GsTex[i].tex0 = 0;
+}
 
 // 0x004f064 (0x290 bytes)
-int GsTex_Register(int param_1)
-
+/* add a pif to g_GsTex: where its clut and mips are and how big they are; returns its id */
+int GsTex_Register(PifHeader *pif)
 {
-  int iVar1;
-  int iVar2;
-  undefined4 uVar3;
-  int *piVar4;
-  int iVar5;
-  int iVar6;
-  int *piVar7;
-  int iVar8;
-  int *piVar9;
-  int *piVar10;
-  
-  FastMemSet(&DAT_009313a0 + DAT_009513a0 * 0x80,0,0x80);
-  iVar5 = *(int *)(param_1 + 0x10);
-  iVar6 = DAT_009513a0 * 0x80;
-  *(int *)(&DAT_009313fc + iVar6) = iVar5;
-  iVar1 = *(int *)(param_1 + 0x14);
-  *(int *)(&DAT_00931400 + iVar6) = iVar1;
-  *(undefined4 *)(&DAT_00931404 + iVar6) = *(undefined4 *)(param_1 + 0x1c);
-  if (iVar5 == 0x27) {
-LAB_0004f104:
-    *(int *)(&DAT_009313a0 + iVar6) = param_1 + 0x20;
-    iVar8 = ((uint)(ZERO_MASK((0x12 - iVar1))) & 0x200) + 0x200;
-    *(uint *)(&DAT_009313b4 + iVar6) =
-         iVar8 + ((uint)(ZERO_MASK((0x27 - iVar5))) &
-                 (((uint)(ZERO_MASK((0x12 - iVar1))) & 0x20) + 0x20) - iVar8);
-  }
-  else {
-    if (iVar5 != 0x26) {
-      if (iVar5 == 0x13) goto LAB_0004f104;
-      if (iVar5 != 0x12) goto LAB_0004f180;
-    }
-    *(undefined4 *)(&DAT_009313a0 + iVar6) = 0;
-    *(undefined4 *)(&DAT_009313b4 + iVar6) = 0;
-  }
-LAB_0004f180:
-  uVar3 = FastLog2(*(undefined4 *)(param_1 + 8));
-  *(undefined4 *)(&DAT_009313ec + DAT_009513a0 * 0x80) = uVar3;
-  uVar3 = FastLog2(*(undefined4 *)(param_1 + 0xc));
-  iVar1 = DAT_009513a0 * 0x80;
-  *(undefined4 *)(&DAT_009313f0 + iVar1) = uVar3;
-  iVar5 = *(int *)(param_1 + 0x10);
-  *(int *)(&DAT_009313a4 + iVar1) = param_1 + *(int *)(&DAT_009313b4 + iVar1) + 0x20;
-  if (iVar5 == 0x27) {
-    iVar6 = *(int *)(param_1 + 8);
-    iVar8 = *(int *)(param_1 + 0xc);
-    *(int *)(&DAT_009313b8 + iVar1) = iVar6 * iVar8 >> 1;
-  }
-  else if (iVar5 == 0x26) {
-    iVar6 = *(int *)(param_1 + 8);
-    iVar8 = *(int *)(param_1 + 0xc);
-    *(int *)(&DAT_009313b8 + iVar1) = iVar6 * iVar8 * 2;
-  }
-  else if (iVar5 == 0x13) {
-    iVar6 = *(int *)(param_1 + 8);
-    iVar8 = *(int *)(param_1 + 0xc);
-    *(int *)(&DAT_009313b8 + iVar1) = iVar6 * iVar8;
-  }
-  else {
-    iVar6 = *(int *)(param_1 + 8);
-    iVar8 = *(int *)(param_1 + 0xc);
-    if (iVar5 == 0x12) {
-      *(int *)(&DAT_009313b8 + iVar1) = iVar6 * iVar8 * 4;
-    }
-  }
-  *(int *)(&DAT_009313f4 + iVar1) = iVar6;
-  iVar5 = 1;
-  *(int *)(&DAT_009313f8 + iVar1) = iVar8;
-  if (1 < *(int *)(&DAT_00931404 + iVar1)) {
-    piVar9 = (int *)(&DAT_009313a0 + iVar1);
-    piVar7 = (int *)(&DAT_009313bc + iVar1);
-    piVar4 = (int *)(&DAT_009313b8 + iVar1);
-    piVar10 = (int *)(&DAT_009313a8 + iVar1);
-    do {
-      piVar9 = piVar9 + 1;
-      iVar6 = *piVar9;
-      iVar5 = iVar5 + 1;
-      iVar8 = *(int *)(&DAT_00931404 + iVar1);
-      *piVar7 = *piVar4 >> 2;
-      iVar2 = *piVar4;
-      piVar4 = piVar4 + 1;
-      piVar7 = piVar7 + 1;
-      *piVar10 = iVar6 + iVar2;
-      piVar10 = piVar10 + 1;
-    } while (iVar5 < iVar8);
-  }
-  iVar5 = DAT_009513a0;
-  DAT_009513a0 = DAT_009513a0 + 1;
-  return iVar5;
-}
+    FastMemSet(&g_GsTex[g_GsTexCount], 0, sizeof(GsTex));
 
+    GsTex *tex = &g_GsTex[g_GsTexCount];
+    tex->texFormat = pif->texFormat;
+    tex->clutFormat = pif->clutFormat;
+    tex->mipLevels = pif->mipLevels;
+
+    switch (pif->texFormat) {
+    case PIF_FMT_4:
+    case PIF_FMT_8: {
+        bool clut32 = pif->clutFormat == PIF_FMT_32;
+
+        tex->pp.pClut = pif + 1;
+        if (pif->texFormat == PIF_FMT_4)
+            tex->pp.cSize = clut32 ? 16 * 4 : 16 * 2;
+        else
+            tex->pp.cSize = clut32 ? 256 * 4 : 256 * 2;
+        break;
+    }
+    case PIF_FMT_16:
+    case PIF_FMT_32:
+        tex->pp.pClut = 0;
+        tex->pp.cSize = 0;
+        break;
+    }
+
+    tex->pp.uLog = FastLog2(pif->uSize);
+    tex->pp.vLog = FastLog2(pif->vSize);
+    tex->pp.pTex[0] = (u8 *)(pif + 1) + tex->pp.cSize;
+
+    int width = pif->uSize;
+    int height = pif->vSize;
+    switch (pif->texFormat) {
+    case PIF_FMT_4:
+        tex->pp.tSize[0] = width * height >> 1;
+        break;
+    case PIF_FMT_16:
+        tex->pp.tSize[0] = width * height * 2;
+        break;
+    case PIF_FMT_8:
+        tex->pp.tSize[0] = width * height;
+        break;
+    case PIF_FMT_32:
+        tex->pp.tSize[0] = width * height * 4;
+        break;
+    }
+    tex->uSize = width;
+    tex->vSize = height;
+
+    /* each mip is a quarter of the one before and follows it */
+    for (int i = 1; i < tex->mipLevels; i++) {
+        tex->pp.tSize[i] = tex->pp.tSize[i - 1] >> 2;
+        tex->pp.pTex[i] = (u8 *)tex->pp.pTex[i - 1] + tex->pp.tSize[i - 1];
+    }
+
+    return g_GsTexCount++;
+}
 
 // 0x004f2f4 (0x250 bytes)
-void GsTex_BuildUploadPacket
-               (undefined1 param_1,undefined4 param_2,undefined8 param_3,undefined8 param_4,
-               ulonglong param_5,longlong param_6,uint param_7)
-
+/* append a packet that copies size bytes at data to GS block dbp */
+void GsTex_BuildUploadPacket(void *data, int dbp, int dbw, int dpsm, int width, int height, int size)
 {
-  undefined1 *puVar1;
-  undefined1 uVar3;
-  undefined8 uVar2;
-  int iVar4;
-  
-  *DAT_00e5aa58 = 6;
-  DAT_00e5aa58[1] = 0;
-  DAT_00e5aa58[2] = 0;
-  uVar3 = FUN_0050300c(6,0);
-  iVar4 = ((int)param_7 >> 4) + (uint)((int)param_7 < 0 && (param_7 & 0xf) != 0);
-  DAT_00e5aa58[3] = uVar3;
-  puVar1 = DAT_00e5aa58;
-  DAT_00e5aa58 = DAT_00e5aa58 + 0x10;
-  uVar2 = FUN_00502ea0(1,1,0,0,0,4);
-  *(undefined8 *)(puVar1 + 0x10) = uVar2;
-  *(undefined8 *)(puVar1 + 0x18) = 0xeeeeeee;
-  uVar2 = FUN_00503044(0,0,0,param_2,param_3,param_4);
-  *(undefined8 *)(puVar1 + 0x20) = uVar2;
-  *(undefined8 *)(puVar1 + 0x28) = 5;
-  *(undefined8 *)(puVar1 + 0x30) = 0;
-  *(undefined8 *)(puVar1 + 0x50) = 0;
-  *(undefined8 *)(puVar1 + 0x48) = 0x20;
-  *(undefined8 *)(puVar1 + 0x38) = 0x1f;
-  *(ulonglong *)(puVar1 + 0x40) = param_5 | param_6 << 0x20;
-  *(undefined8 *)(puVar1 + 0x58) = 0x1e;
-  uVar2 = FUN_00502ea0(iVar4,0,0,0,2,0);
-  DAT_00e5aa58 = puVar1 + 0x70;
-  *(undefined8 *)(puVar1 + 0x60) = uVar2;
-  *(undefined8 *)(puVar1 + 0x68) = 0;
-  puVar1[0x70] = (char)iVar4;
-  DAT_00e5aa58[1] = param_1;
-  DAT_00e5aa58[2] = 0;
-  uVar3 = FUN_0050300c(iVar4,0);
-  DAT_00e5aa58[3] = uVar3;
-  puVar1 = DAT_00e5aa58 + 0x10;
-  DAT_00e5aa58 = DAT_00e5aa58 + 0x10;
-  *puVar1 = 2;
-  DAT_00e5aa58[1] = 0;
-  DAT_00e5aa58[2] = 0;
-  uVar3 = FUN_0050300c(2,0);
-  DAT_00e5aa58[3] = uVar3;
-  puVar1 = DAT_00e5aa58;
-  DAT_00e5aa58 = DAT_00e5aa58 + 0x10;
-  uVar2 = FUN_00502ea0(1,1,0,0,0,1);
-  *(undefined8 *)(puVar1 + 0x10) = uVar2;
-  *(undefined8 *)(puVar1 + 0x20) = 0;
-  *(undefined8 *)(puVar1 + 0x18) = 0xe;
-  *(undefined8 *)(puVar1 + 0x28) = 0x1d;
-  DAT_00e5aa58 = puVar1 + 0x30;
-  return;
-}
+    int qwc = size / 16;
 
+    PacketHeader(6, 0);
+    g_pPacket += 16;
+
+    u64 *regs = PacketWords();
+    regs[2] = SCE_GIF_SET_TAG(1, 1, 0, 0, 0, 4);
+    regs[3] = 0xeeeeeee;
+    regs[4] = SCE_GS_SET_BITBLTBUF(0, 0, 0, dbp, dbw, dpsm);
+    regs[5] = 5;
+    regs[6] = 0;
+    regs[7] = 31;
+    regs[8] = (u64)height << 32 | (u32)width;
+    regs[9] = 32;
+    regs[10] = 0;
+    regs[11] = 30;
+    regs[12] = SCE_GIF_SET_TAG(qwc, 0, 0, 0, 2, 0);
+    regs[13] = 0;
+    g_pPacket += 112;
+
+    /* the image data itself (by reference) */
+    PacketHeader(qwc, (u8)(uintptr_t)data);
+    g_pPacket += 16;
+
+    PacketHeader(2, 0);
+    regs = PacketWords();
+    g_pPacket += 16;
+    regs[2] = SCE_GIF_SET_TAG(1, 1, 0, 0, 0, 1);
+    regs[4] = 0;
+    regs[3] = 14;
+    regs[5] = 29;
+    g_pPacket = (u8 *)regs + 48;
+}
 
 // 0x004f544 (0x2fc bytes)
-void GsTex_Upload(longlong param_1)
-
+/* copy a texture into GS memory and build its TEX0/TEX1/MIPTBP1, unless that is done already */
+void GsTex_Upload(int id)
 {
-  int iVar1;
-  undefined4 uVar2;
-  int iVar3;
-  int iVar4;
-  int iVar5;
-  undefined8 uVar6;
-  uint uVar7;
-  uint uVar8;
-  int *piVar9;
-  undefined4 *puVar10;
-  undefined4 *puVar11;
-  int *piVar12;
-  
-  iVar5 = (int)(param_1 << 7);
-  if (*(longlong *)((int)&DAT_00931408 + iVar5) == 0) {
-    iVar1 = *(int *)(&DAT_009313fc + iVar5);
-    if ((iVar1 == 0x27) || (iVar1 == 0x13)) {
-      iVar3 = g_GsRamAlloc >> 8;
-      *(int *)(&DAT_009313c8 + iVar5) = iVar3;
-      if (iVar1 == 0x27) {
-        g_GsRamAlloc = g_GsRamAlloc + 0x100;
-        GsTex_BuildUploadPacket
-                  (*(undefined4 *)(&DAT_009313a0 + iVar5),iVar3,1,
-                   *(undefined4 *)(&DAT_00931400 + iVar5),8,2,*(undefined4 *)(&DAT_009313b4 + iVar5)
-                  );
-      }
-      else {
-        g_GsRamAlloc = g_GsRamAlloc + *(int *)(&DAT_009313b4 + iVar5);
-        GsTex_BuildUploadPacket
-                  (*(undefined4 *)(&DAT_009313a0 + iVar5),iVar3,1,
-                   *(undefined4 *)(&DAT_00931400 + iVar5),0x10,0x10,*(int *)(&DAT_009313b4 + iVar5))
-        ;
-      }
-    }
-    uVar7 = 0;
-    if (0 < *(int *)(&DAT_00931404 + iVar5)) {
-      puVar10 = (undefined4 *)(&DAT_009313a0 + iVar5);
-      uVar8 = 0;
-      piVar9 = (int *)(&DAT_009313cc + iVar5);
-      piVar12 = (int *)(&DAT_009313dc + iVar5);
-      puVar11 = (undefined4 *)(&DAT_009313b8 + iVar5);
-      do {
-        puVar10 = puVar10 + 1;
-        iVar1 = *(int *)(&DAT_009313f4 + iVar5);
-        iVar3 = iVar1 >> (uVar7 + 6 & 0x3f);
-        *piVar12 = iVar3 + ((uint)((longlong)iVar3 + -1 >> 0x3f) & 1U - iVar3);
-        uVar2 = *puVar10;
-        iVar4 = g_GsRamAlloc >> 8;
-        iVar3 = *(int *)(&DAT_009313f8 + iVar5);
-        *piVar9 = iVar4;
-        GsTex_BuildUploadPacket
-                  (uVar2,iVar4,*piVar12,*(undefined4 *)(&DAT_009313fc + iVar5),
-                   iVar1 >> (uVar7 & 0x3f),iVar3 >> (uVar7 & 0x3f),*puVar11);
-        iVar1 = *(int *)(&DAT_009313b8 + iVar5) >> (uVar8 & 0x3f);
-        uVar7 = uVar7 + 1;
-        piVar12 = piVar12 + 1;
-        piVar9 = piVar9 + 1;
-        g_GsRamAlloc = g_GsRamAlloc +
-                       iVar1 + ((uint)((longlong)iVar1 + -0x100 >> 0x3f) & 0x100U - iVar1);
-        puVar11 = puVar11 + 1;
-        uVar8 = uVar8 + 2;
-      } while ((int)uVar7 < *(int *)(&DAT_00931404 + iVar5));
-    }
-    g_GsRamAlloc = g_GsRamAlloc + 0x800;
-    uVar6 = STUB_00502fbc_RET_0
-                      (*(undefined4 *)(&DAT_009313cc + iVar5),*(undefined4 *)(&DAT_009313dc + iVar5)
-                       ,*(undefined4 *)(&DAT_009313fc + iVar5),
-                       *(undefined4 *)(&DAT_009313ec + iVar5),*(undefined4 *)(&DAT_009313f0 + iVar5)
-                       ,1,0,*(undefined4 *)(&DAT_009313c8 + iVar5));
-    *(undefined8 *)((int)&DAT_00931408 + iVar5) = uVar6;
-    uVar6 = STUB_00502fd4_RET_0(0,*(int *)(&DAT_00931404 + iVar5) + -1,1,3,0,0,0xffa0);
-    *(undefined8 *)(&DAT_00931410 + iVar5) = uVar6;
-    uVar6 = STUB_00502f6c(*(undefined4 *)(&DAT_009313d0 + iVar5),
-                                *(undefined4 *)(&DAT_009313e0 + iVar5),
-                                *(undefined4 *)(&DAT_009313d4 + iVar5),
-                                *(undefined4 *)(&DAT_009313e4 + iVar5),
-                                *(undefined4 *)(&DAT_009313d8 + iVar5),
-                                *(undefined4 *)(&DAT_009313e8 + iVar5));
-    *(undefined8 *)(&DAT_00931418 + iVar5) = uVar6;
-  }
-  return;
-}
+    GsTex *tex = &g_GsTex[id];
 
+    if (tex->tex0 != 0)
+        return;
+
+    if (tex->texFormat == PIF_FMT_4 || tex->texFormat == PIF_FMT_8) {
+        int clutBlock = g_GsRamAlloc >> 8;
+
+        tex->pp.cPos = clutBlock;
+        if (tex->texFormat == PIF_FMT_4) {
+            g_GsRamAlloc += GS_BLOCK;
+            GsTex_BuildUploadPacket(tex->pp.pClut, clutBlock, 1, tex->clutFormat, 8, 2, tex->pp.cSize);
+        } else {
+            g_GsRamAlloc += tex->pp.cSize;
+            GsTex_BuildUploadPacket(tex->pp.pClut, clutBlock, 1, tex->clutFormat, 16, 16, tex->pp.cSize);
+        }
+    }
+
+    for (int i = 0; i < tex->mipLevels; i++) {
+        int tbw = tex->uSize >> (i + 6);
+        if (tbw < 1)
+            tbw = 1;
+        tex->pp.tbw[i] = tbw;
+        tex->pp.tPos[i] = g_GsRamAlloc >> 8;
+
+        GsTex_BuildUploadPacket(tex->pp.pTex[i], tex->pp.tPos[i], tex->pp.tbw[i], tex->texFormat,
+                                tex->uSize >> i, tex->vSize >> i, tex->pp.tSize[i]);
+
+        int used = tex->pp.tSize[0] >> (2 * i);
+        if (used < GS_BLOCK)
+            used = GS_BLOCK;
+        g_GsRamAlloc += used;
+    }
+    g_GsRamAlloc += GS_PAGE_ALIGN;
+
+    tex->tex0 = SCE_GS_SET_TEX0(tex->pp.tPos[0], tex->pp.tbw[0], tex->texFormat, tex->pp.uLog, tex->pp.vLog,
+                                1, 0, tex->pp.cPos, tex->clutFormat, 0, 0, 4);
+    tex->tex1 = SCE_GS_SET_TEX1(0, tex->mipLevels - 1, 1, 3, 0, 0, 0xffa0);
+    tex->miptbp1 = SCE_GS_SET_MIPTBP1(tex->pp.tPos[1], tex->pp.tbw[1], tex->pp.tPos[2], tex->pp.tbw[2],
+                                      tex->pp.tPos[3], tex->pp.tbw[3]);
+}
 
 // 0x004f840 (0x268 bytes)
-void GsTex_Bind(longlong param_1,ulonglong param_2,ulonglong param_3,longlong param_4,
-                        int param_5,undefined8 param_6)
-
+/* draw a texture as a screen sprite covering cells (x, y) to (x + w, y + h), 16 pixels each */
+void GsTex_Bind(int id, int x, int y, int w, int h, u64 regs)
 {
-  int iVar1;
-  int iVar2;
-  int iVar3;
-  undefined4 *puVar4;
-  undefined1 *puVar5;
-  undefined4 uVar6;
-  undefined4 uVar7;
-  undefined4 uVar8;
-  undefined1 uVar10;
-  undefined8 uVar9;
-  int iVar11;
-  int iVar12;
-  int iVar13;
-  int iVar14;
-  
-  iVar3 = (int)(param_1 << 7);
-  iVar11 = (int)(param_4 + param_2) * 0x10 + SCREEN_PROJECTION_MAP_X + -8;
-  iVar12 = (int)((param_3 & 0xffffffff) << 4) + SCREEN_PROJECTION_MAP_Y + -8;
-  iVar1 = *(int *)(&DAT_009313f4 + iVar3);
-  iVar14 = (int)((param_2 & 0xffffffff) << 4) + SCREEN_PROJECTION_MAP_X + -8;
-  iVar2 = *(int *)(&DAT_009313f8 + iVar3);
-  iVar13 = (param_5 + (int)param_3) * 0x10 + SCREEN_PROJECTION_MAP_Y + -8;
-  GsTex_Upload();
-  *DAT_00e5aa58 = 7;
-  DAT_00e5aa58[1] = 0;
-  DAT_00e5aa58[2] = 0;
-  uVar10 = FUN_0050300c(7,0);
-  DAT_00e5aa58[3] = uVar10;
-  uVar8 = uRam0071e968;
-  uVar7 = DAT_0071e960.piece<4,4>();
-  uVar6 = DAT_0071e960.piece<0,4>();
-  puVar4 = (undefined4 *)((uint)(DAT_00e5aa58 + 0x10) & 0xfffffff0);
-  DAT_00e5aa58 = DAT_00e5aa58 + 0x10;
-  puVar4[3] = uRam0071e96c;
-  puVar4[2] = uVar8;
-  puVar4[1] = uVar7;
-  *puVar4 = uVar6;
-  puVar5 = DAT_00e5aa58;
-  *(undefined8 *)(DAT_00e5aa58 + 0x10) = *(undefined8 *)((int)&DAT_00931408 + iVar3);
-  DAT_00e5aa58 = DAT_00e5aa58 + 0x10;
-  uVar9 = FUN_00502e70(0x11,0,1,0,1,0,1,0);
-  *(undefined8 *)(puVar5 + 0x18) = uVar9;
-  *(undefined8 *)(puVar5 + 0x20) = param_6;
-  *(undefined8 *)(puVar5 + 0x28) = 0;
-  uVar9 = FUN_00502fec(iVar14,iVar12,0xfffff0);
-  *(undefined8 *)(puVar5 + 0x30) = uVar9;
-  *(longlong *)(puVar5 + 0x38) = (longlong)(iVar1 * 0x10);
-  uVar9 = FUN_00502fec(iVar11,iVar12,0xfffff0);
-  *(undefined8 *)(puVar5 + 0x40) = uVar9;
-  *(longlong *)(puVar5 + 0x48) = (longlong)(iVar2 * 0x100000);
-  uVar9 = FUN_00502fec(iVar14,iVar13,0xfffff0);
-  *(undefined8 *)(puVar5 + 0x50) = uVar9;
-  *(longlong *)(puVar5 + 0x58) = (longlong)(iVar2 * 0x100000 + iVar1 * 0x10);
-  uVar9 = FUN_00502fec(iVar11,iVar13,0xfffff0);
-  *(undefined8 *)(puVar5 + 0x60) = uVar9;
-  *(undefined8 *)(puVar5 + 0x68) = 0;
-  puVar5 = DAT_00e5aa58 + 0x60;
-  DAT_00e5aa58 = DAT_00e5aa58 + 0x60;
-  *puVar5 = 0;
-  DAT_00e5aa58[1] = 0;
-  DAT_00e5aa58[2] = 0;
-  DAT_00e5aa58[3] = 0;
-  DAT_00e5aa58 = DAT_00e5aa58 + 0x10;
-  return;
-}
+    GsTex *tex = &g_GsTex[id];
+    int left = x * 16 + SCREEN_PROJECTION_MAP_X - 8;
+    int right = (x + w) * 16 + SCREEN_PROJECTION_MAP_X - 8;
+    int top = y * 16 + SCREEN_PROJECTION_MAP_Y - 8;
+    int bottom = (y + h) * 16 + SCREEN_PROJECTION_MAP_Y - 8;
+    int texU = tex->uSize * 16;
+    int texV = tex->vSize << 20;
 
+    GsTex_Upload(id);
+
+    PacketHeader(7, 0);
+    g_pPacket += 16;
+    ((u64 *)g_pPacket)[0] = g_SpriteGifTag[0];
+    ((u64 *)g_pPacket)[1] = g_SpriteGifTag[1];
+
+    u64 *words = PacketWords();
+    g_pPacket += 16;
+    words[2] = tex->tex0;
+    words[3] = SCE_GS_SET_PRIM(17, 0, 1, 0, 1, 0, 1, 0);
+    words[4] = regs;
+    words[5] = 0;
+    words[6] = SCE_GS_SET_XYZ(left, top, 0xfffff0);
+    words[7] = texU;
+    words[8] = SCE_GS_SET_XYZ(right, top, 0xfffff0);
+    words[9] = texV;
+    words[10] = SCE_GS_SET_XYZ(left, bottom, 0xfffff0);
+    words[11] = texV + texU;
+    words[12] = SCE_GS_SET_XYZ(right, bottom, 0xfffff0);
+    words[13] = 0;
+    g_pPacket += 96;
+
+    g_pPacket[0] = 0;
+    g_pPacket[1] = 0;
+    g_pPacket[2] = 0;
+    g_pPacket[3] = 0;
+    g_pPacket += 16;
+}
 
 // 0x004faa8 (0x4c bytes)
-void GsTex_BindWrapper(void)
-
+/* GsTex_Bind at the texture's own size */
+void GsTex_BindWrapper(int id, int x, int y, u64 regs)
 {
-  GsTex_Bind();
-  return;
+    GsTex_Bind(id, x, y, g_GsTex[id].uSize, g_GsTex[id].vSize, regs);
 }
-
 
 // 0x004faf4 (0x54 bytes)
 void GsTex_StaticInit(void)
-
 {
-  DAT_0071e9bc = 0x10000;
-  DAT_0071e960 = FUN_00502ea0(1,1,0,0,1,0xb);
-  return;
+    DAT_0071e9bc = 0x10000;
+    g_SpriteGifTag[0] = SCE_GIF_SET_TAG(1, 1, 0, 0, 1, 11);
 }
-
 
 // 0x004fb48 (0x8 bytes)
-undefined8 ____ReturnTrue_GameStart(void)
-
+int ReturnTrue_GameStart(void)
 {
-  return 1;
+    return 1;
 }
-
 
 // 0x004fb50 (0x270 bytes)
-void LoadPifAsPSMT8H(int pPif,undefined8 *gsRegs,int tex_loc,int pal_loc)
-
+/* load a pif straight into GS memory (clut at pal_loc, the 8-bit image as 4-bit pairs at tex_loc)
+   and return its TEX0/TEX1/MIPTBP1 in gsRegs */
+void LoadPifAsPSMT8H(PifHeader *pPif, u64 *gsRegs, int tex_loc, int pal_loc)
 {
-  int iVar1;
-  undefined4 uVar3;
-  undefined4 uVar4;
-  undefined8 uVar2;
-  longlong lVar5;
-  GPiece<4> auStack_80;
-  GPiece<84> local_7c;
-  
-  FastMemSet(local_7c,0,0x54);
-  iVar1 = *(int *)(pPif + 0x14);
-  uVar3 = FastLog2(*(undefined4 *)(pPif + 8));
-  uVar4 = FastLog2(*(undefined4 *)(pPif + 0xc));
-  sceGsSetDefLoadImage(auStack_80,pal_loc >> 8,1,*(undefined4 *)(pPif + 0x14),0,0,0x10,0x10);
-  FlushCache(0);
-  sceGsExecLoadImage(auStack_80,pPif + 0x20);
-  sceGsSyncPath(0,0);
-  lVar5 = (longlong)(*(int *)(pPif + 8) >> 6);
-  lVar5 = lVar5 + (lVar5 + -1 >> 0x3f & 1U - lVar5);
-  sceGsSetDefLoadImage
-            (auStack_80,tex_loc >> 8,lVar5,0x14,0,0,*(int *)(pPif + 8),*(undefined4 *)(pPif + 0xc));
-  FlushCache(0);
-  sceGsExecLoadImage
-            (auStack_80,pPif + ((uint)(ZERO_MASK((0x12 - iVar1))) & 0x200) + 0x220);
-  sceGsSyncPath(0,0);
-  uVar2 = STUB_00502fbc_RET_0(tex_loc >> 8,(int)lVar5,0x14,uVar3,uVar4,1,0,pal_loc >> 8);
-  *gsRegs = uVar2;
-  uVar2 = STUB_00502fd4_RET_0(1,0,0,0,0,0,0);
-  gsRegs[1] = uVar2;
-  uVar2 = STUB_00502f6c(0,0,0,0,0,0);
-  gsRegs[2] = uVar2;
-  return;
-}
+    PifParser parser;
+    u32 image;
 
+    FastMemSet(&parser, 0, sizeof(parser));
+    parser.pClut = pPif + 1;
+    parser.cSize = pPif->clutFormat == PIF_FMT_32 ? 1024 : 512;
+    parser.uLog = FastLog2(pPif->uSize);
+    parser.vLog = FastLog2(pPif->vSize);
+    parser.tSize[0] = pPif->uSize * pPif->vSize;
+    parser.pTex[0] = (u8 *)(pPif + 1) + parser.cSize;
+
+    sceGsSetDefLoadImage(&image, pal_loc >> 8, 1, pPif->clutFormat, 0, 0, 16, 16);
+    FlushCache(0);
+    sceGsExecLoadImage(&image, parser.pClut);
+    sceGsSyncPath(0, 0);
+
+    int tbw = pPif->uSize >> 6;
+    if (tbw < 1)
+        tbw = 1;
+    parser.tbw[0] = tbw;
+    parser.tPos[0] = tex_loc >> 8;
+
+    sceGsSetDefLoadImage(&image, tex_loc >> 8, tbw, GS_PSMT4, 0, 0, pPif->uSize, pPif->vSize);
+    FlushCache(0);
+    sceGsExecLoadImage(&image, parser.pTex[0]);
+    sceGsSyncPath(0, 0);
+
+    gsRegs[0] = SCE_GS_SET_TEX0(parser.tPos[0], parser.tbw[0], GS_PSMT4, parser.uLog, parser.vLog, 1, 0,
+                                pal_loc >> 8, pPif->clutFormat, 0, 0, 4);
+    gsRegs[1] = SCE_GS_SET_TEX1(1, 0, 0, 0, 0, 0, 0);
+    gsRegs[2] = SCE_GS_SET_MIPTBP1(0, 0, 0, 0, 0, 0);
+}
 
 // 0x004fdc0 (0x78 bytes)
-// strings: 00651a84: 'debugfont'
-
 void LoadDebugFont(void)
-
 {
-  undefined8 regs [3];
-  
-  idol::m_LoadGameFileB(&DAT_00a2c5c0,"debugfont");
-  LoadPifAsPSMT8H(&DAT_00a2c5c0,regs,GSmem.zbuf + 0xc0000,0x3ffc00);
-  DebugFontTex0 = regs[0];
-  return;
-}
+    u64 regs[3];
 
+    idol::m_LoadGameFileB(&DAT_00a2c5c0, "debugfont");
+    LoadPifAsPSMT8H((PifHeader *)&DAT_00a2c5c0, regs, GSmem.zbuf + 0xc0000, 0x3ffc00);
+
+    DebugFontTex0 = regs[0];
+}
 
 // 0x004fe38 (0xb0 bytes)
-// strings: 00651a90: 'unloaded sound bank %#010x\n'
-
 void UnloadSoundBanks(void)
-
 {
-  FlushCache(0);
-  STUB_00505f4c();
-  STUB_00505d20();
-  sound_StopAllSounds();
-  music_Stop();
-  FUN_00506664(0);
-  STUB_001754e0();
-  if (g_pSoundDefs != 0) {
-    snd_UnloadBank(*(undefined4 *)(g_pSoundDefs + 0x1c),1);
-    STUB_00505f48();
-    printf("unloaded sound bank %#010x\n",*(undefined4 *)(g_pSoundDefs + 0x1c));
-  }
-  STUB_00503078(0);
-  return;
+    FlushCache(0);
+    STUB_00505f4c();
+    STUB_00505d20();
+    sound_StopAllSounds();
+    music_Stop();
+    FUN_00506664(0);
+    STUB_001754e0();
+
+    if (g_pSoundDefs != 0) {
+        snd_UnloadBank(*(int **)(g_pSoundDefs + 0x1c), 1);
+        STUB_00505f48();
+        printf("unloaded sound bank %#010x\n", *(u32 *)(g_pSoundDefs + 0x1c));
+    }
+
+    STUB_00503078(0);
 }
-
-

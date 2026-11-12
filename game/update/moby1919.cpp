@@ -122,9 +122,9 @@ void M1919_002d9948(int param_1)
   iVar15 = 0;
   uVar4 = idol_draw::PackCmd(0,1,0,1,0x80);
   SetGSReg(3,uVar4);
-  uVar4 = FUN_00502f08(0,0,0,0,0,0);
+  uVar4 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   SetGSReg(6,uVar4);
-  uVar4 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar4 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   SetGSReg(0x1a,uVar4);
   uVar4 = idol_draw::Blend(1,0,0x3f,1,0,0,1,2);
   SetGSReg(0x16,uVar4);

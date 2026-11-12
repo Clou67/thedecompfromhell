@@ -41,3 +41,6 @@ MissionDef	game/mission
 MapIcon	game/map
 MissionTarget	game/mission
 g_MapIconTables	game/map
+PifHeader	game/bloaders
+PifParser	game/bloaders
+GsTex	game/bloaders

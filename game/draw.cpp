@@ -78,7 +78,7 @@ void ResetFrameBufferForCutscene(void)
   STUB_00503080();
   VU1_initChain();
   uVar1 = DAT_00966ad4;
-  DAT_00e5aa58 = 0;
+  g_pPacket = 0;
   FlushCache(0);
   SetFrameBufferInfo(0x200,0x1a0,0x200,0x1c0,0,0);
   DAT_00966ad4 = uVar1;
@@ -4531,9 +4531,9 @@ void DrawLameShadows(void)
   puVar7[0x22] = unaff_r28;
   puVar7[0x21] = unaff_r27;
   puVar7[0x1d] = (ulonglong)*puVar13;
-  uVar15 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar15 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar7[0x1e] = uVar15;
-  uVar15 = FUN_00502f08(1,1,0,0,0,0);
+  uVar15 = SCE_GS_SET_CLAMP(1,1,0,0,0,0);
   puVar7[0x1c] = uVar15;
   uVar15 = idol_draw::PackCmd(0,1,0,1,0x80);
   puVar7[0x1f] = uVar15;
@@ -6727,9 +6727,9 @@ void ____Draw_FogBlendPass(void)
   undefined8 uVar1;
   
   if (DAT_0095e9f0 != 0) {
-    uVar1 = FUN_00502f08(1,1,0,0,0,0);
+    uVar1 = SCE_GS_SET_CLAMP(1,1,0,0,0,0);
     SetGSReg(6,uVar1);
-    uVar1 = STUB_00502fd4_RET_0(1,0,1,1,0,0,0);
+    uVar1 = SCE_GS_SET_TEX1(1,0,1,1,0,0,0);
     SetGSReg(0x1a,uVar1);
     uVar1 = idol_draw::Blend(1,0,0x3f,1,0,0,1,2);
     SetGSReg(0x16,uVar1);
@@ -9472,12 +9472,12 @@ void DrawWater(void)
   g_ViewContext.fogFarIntensity = 0.0;
   UpdateViewContext();
   ComposeCameraMatrix();
-  *DAT_00e5aa58 = 5;
-  DAT_00e5aa58[1] = 0x80;
-  DAT_00e5aa58[2] = 0;
-  uVar6 = FUN_0050300c(5,0);
-  DAT_00e5aa58[3] = uVar6;
-  DAT_00e5aa58 = DAT_00e5aa58 + 0x10;
+  *g_pPacket = 5;
+  g_pPacket[1] = 0x80;
+  g_pPacket[2] = 0;
+  uVar6 = Gs_DmaTagByte(5,0);
+  g_pPacket[3] = uVar6;
+  g_pPacket = g_pPacket + 0x10;
   if (DAT_00961656 == 0) {
     DrawWaterPatch_A();
   }
@@ -9497,12 +9497,12 @@ void DrawWater(void)
   pRVar2 = DepthPass;
   iVar8 = GetEffectTex(iVar8);
   FUN_004d676c(pRVar2,0,iVar3 + iVar8 * 0x24,1,1);
-  *DAT_00e5aa58 = 5;
-  DAT_00e5aa58[1] = 0xd0;
-  DAT_00e5aa58[2] = 0;
-  uVar6 = FUN_0050300c(5,0);
-  DAT_00e5aa58[3] = uVar6;
-  DAT_00e5aa58 = DAT_00e5aa58 + 0x10;
+  *g_pPacket = 5;
+  g_pPacket[1] = 0xd0;
+  g_pPacket[2] = 0;
+  uVar6 = Gs_DmaTagByte(5,0);
+  g_pPacket[3] = uVar6;
+  g_pPacket = g_pPacket + 0x10;
   if (DAT_0096366e == 0) {
     DrawWaterPatch_A(&DAT_00963668);
   }
@@ -9549,21 +9549,21 @@ void ____Draw_EffectStrip_M401(undefined8 param_1,undefined8 param_2)
   dVar14 = (double)(GameCamera.mtx0.v2.z + GameCamera.mtx0.v3.z);
   uVar5 = GetEffectTex(param_2);
   SetGSReg(0x18,uVar5);
-  uVar5 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar5 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   SetGSReg(0x1a,uVar5);
-  uVar5 = FUN_00502f08(0,1,0,0,0,0);
+  uVar5 = SCE_GS_SET_CLAMP(0,1,0,0,0,0);
   SetGSReg(6,uVar5);
   uVar5 = idol_draw::PackCmd(0,1,0,1,0x80);
   SetGSReg(3,uVar5);
   iVar10 = 0;
-  *DAT_00e5aa58 = 0x7d;
-  DAT_00e5aa58[1] = 0;
-  DAT_00e5aa58[2] = 0;
-  uVar6 = FUN_0050300c(0x7d,0);
-  DAT_00e5aa58[3] = uVar6;
-  puVar4 = DAT_00e5aa58;
-  DAT_00e5aa58 = DAT_00e5aa58 + 0x10;
-  uVar5 = FUN_00502ea0(1,0,0,0,0,3);
+  *g_pPacket = 0x7d;
+  g_pPacket[1] = 0;
+  g_pPacket[2] = 0;
+  uVar6 = Gs_DmaTagByte(0x7d,0);
+  g_pPacket[3] = uVar6;
+  puVar4 = g_pPacket;
+  g_pPacket = g_pPacket + 0x10;
+  uVar5 = SCE_GIF_SET_TAG(1,0,0,0,0,3);
   *(undefined8 *)(puVar4 + 0x10) = uVar5;
   *(undefined8 *)(puVar4 + 0x18) = 0xeeee;
   uVar5 = idol_draw::Blend(0,5,1,0,0,0,1,2);
@@ -9572,10 +9572,10 @@ void ____Draw_EffectStrip_M401(undefined8 param_1,undefined8 param_2)
   uVar5 = VU1_addGSregister(GSmem.zbuf >> 0xd,1,1);
   *(undefined8 *)(puVar4 + 0x30) = uVar5;
   *(undefined8 *)(puVar4 + 0x38) = 0x21;
-  uVar5 = FUN_00502e70(0xf,0,1,0,1,0,0,0);
+  uVar5 = SCE_GS_SET_PRIM(0xf,0,1,0,1,0,0,0);
   *(undefined8 *)(puVar4 + 0x40) = uVar5;
   *(undefined8 *)(puVar4 + 0x48) = 0xe;
-  uVar5 = FUN_00502ea0(0x30,1,0,0,1,5);
+  uVar5 = SCE_GIF_SET_TAG(0x30,1,0,0,1,5);
   *(undefined8 *)(puVar4 + 0x50) = uVar5;
   dVar19 = (double)(float)(dVar16 - dVar14);
   uVar3 = worldUpdateTime >> 3;
@@ -9596,11 +9596,11 @@ void ____Draw_EffectStrip_M401(undefined8 param_1,undefined8 param_2)
     uVar5 = FUN_00503034((float)((double)(longlong)iVar7 * dVar18 + dVar13) * 0.001,
                          -(float)(dVar14 * 0.0010000000474974513));
     *(undefined8 *)(puVar4 + iVar8 + 0x18) = uVar5;
-    uVar5 = FUN_00502fec(iVar10 + 0x7000,0x7200,0);
+    uVar5 = SCE_GS_SET_XYZ(iVar10 + 0x7000,0x7200,0);
     *(undefined8 *)(puVar4 + iVar8 + 0x20) = uVar5;
     uVar5 = FUN_00503034((float)dVar1 * 0.001,(float)dVar2);
     *(undefined8 *)(puVar4 + iVar8 + 0x28) = uVar5;
-    uVar5 = FUN_00502fec(iVar10 + 0x7200,0x8df0,16000);
+    uVar5 = SCE_GS_SET_XYZ(iVar10 + 0x7200,0x8df0,16000);
     iVar7 = iVar7 + 1;
     uVar12 = uVar12 + 5;
     puVar11 = puVar11 + 5;
@@ -9623,11 +9623,11 @@ void ____Draw_EffectStrip_M401(undefined8 param_1,undefined8 param_2)
     uVar5 = FUN_00503034((float)((double)(longlong)iVar8 * dVar18 + dVar13) * 0.0016666667,
                          -(float)(dVar14 * 0.0016666667070239782));
     *(undefined8 *)(puVar4 + iVar10 + 0x18) = uVar5;
-    uVar5 = FUN_00502fec(iVar7 + 0x7000,0x7200,0);
+    uVar5 = SCE_GS_SET_XYZ(iVar7 + 0x7000,0x7200,0);
     *(undefined8 *)(puVar4 + iVar10 + 0x20) = uVar5;
     uVar5 = FUN_00503034((float)dVar1 * 0.0016666667,(float)dVar2);
     *(undefined8 *)(puVar4 + iVar10 + 0x28) = uVar5;
-    uVar5 = FUN_00502fec(iVar7 + 0x7200,0x8df0,0x2580);
+    uVar5 = SCE_GS_SET_XYZ(iVar7 + 0x7200,0x8df0,0x2580);
     iVar8 = iVar8 + 1;
     uVar12 = uVar12 + 5;
     lVar9 = lVar9 + 0x28;
@@ -9649,17 +9649,17 @@ void ____Draw_EffectStrip_M401(undefined8 param_1,undefined8 param_2)
     uVar5 = FUN_00503034((float)((double)(longlong)iVar8 * dVar18 + dVar13) * 0.0033333334,
                          -(float)(dVar14 * 0.0033333334140479565));
     *(undefined8 *)(puVar4 + iVar10 + 0x18) = uVar5;
-    uVar5 = FUN_00502fec(iVar7 + 0x7000,0x7200,0);
+    uVar5 = SCE_GS_SET_XYZ(iVar7 + 0x7000,0x7200,0);
     *(undefined8 *)(puVar4 + iVar10 + 0x20) = uVar5;
     uVar5 = FUN_00503034((float)dVar15 * 0.0033333334,(float)dVar17);
     *(undefined8 *)(puVar4 + iVar10 + 0x28) = uVar5;
-    uVar5 = FUN_00502fec(iVar7 + 0x7200,0x8df0,0x12c0);
+    uVar5 = SCE_GS_SET_XYZ(iVar7 + 0x7200,0x8df0,0x12c0);
     iVar8 = iVar8 + 1;
     lVar9 = lVar9 + 0x28;
     iVar7 = iVar7 + 0x200;
     *(undefined8 *)(puVar4 + iVar10 + 0x30) = uVar5;
   } while (iVar8 < 0x10);
-  DAT_00e5aa58 = DAT_00e5aa58 + 2000;
+  g_pPacket = g_pPacket + 2000;
   return;
 }
 
@@ -9867,33 +9867,33 @@ void ____Draw_InitGsRegPresets_777d0(void)
 
 {
   DAT_0071f28c = 0x10000;
-  DAT_0071f080 = FUN_00502ea0(1,1,0,0,0,4);
-  DAT_0071f090 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  DAT_0071f0a0 = FUN_00502f08(1,1,0,0,0,0);
+  DAT_0071f080 = SCE_GIF_SET_TAG(1,1,0,0,0,4);
+  DAT_0071f090 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  DAT_0071f0a0 = SCE_GS_SET_CLAMP(1,1,0,0,0,0);
   DAT_0071f0b0 = idol_draw::Blend(1,5,0x60,3,0,0,1,2);
   DAT_0071f0c0 = idol_draw::PackCmd(0,1,2,1,0x50);
-  DAT_0071f0d0 = FUN_00502ea0(1,1,0,0,0,4);
-  DAT_0071f0e0 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  DAT_0071f0f0 = FUN_00502f08(0,0,0,0,0,0);
+  DAT_0071f0d0 = SCE_GIF_SET_TAG(1,1,0,0,0,4);
+  DAT_0071f0e0 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  DAT_0071f0f0 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   DAT_0071f100 = idol_draw::Blend(0,5,1,0,0,0,1,2);
   DAT_0071f110 = idol_draw::PackCmd(0,1,2,1,0x50);
-  DAT_0071f120 = FUN_00502ea0(1,1,0,0,0,8);
+  DAT_0071f120 = SCE_GIF_SET_TAG(1,1,0,0,0,8);
   DAT_0071f130 = FUN_00502f98(0,0,0,0,0,0,1,2);
   DAT_0071f140 = FUN_00502f98(0,0,0,0,0,0,1,2);
-  DAT_0071f150 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  DAT_0071f160 = FUN_00502f08(0,0,0,0,0,0);
+  DAT_0071f150 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  DAT_0071f160 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   DAT_0071f170 = idol_draw::PackCmd(0,1,2,1,0x80);
-  DAT_0071f180 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  DAT_0071f190 = FUN_00502f08(0,0,0,0,0,0);
+  DAT_0071f180 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  DAT_0071f190 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   DAT_0071f1a0 = idol_draw::PackCmd(0,1,2,1,0x60);
-  DAT_0071f1b0 = FUN_00502ea0(1,1,0,0,0,8);
+  DAT_0071f1b0 = SCE_GIF_SET_TAG(1,1,0,0,0,8);
   DAT_0071f1c0 = FUN_00502f98(0,0,0,0,0,0,1,2);
   DAT_0071f1d0 = FUN_00502f98(0,0,0,0,0,0,1,2);
-  DAT_0071f1e0 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  DAT_0071f1f0 = FUN_00502f08(0,0,0,0,0,0);
+  DAT_0071f1e0 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  DAT_0071f1f0 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   DAT_0071f200 = idol_draw::PackCmd(0,1,2,1,0x20);
-  DAT_0071f210 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  DAT_0071f220 = FUN_00502f08(0,0,0,0,0,0);
+  DAT_0071f210 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  DAT_0071f220 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   DAT_0071f230 = idol_draw::PackCmd(0,1,2,1,0x20);
   return;
 }

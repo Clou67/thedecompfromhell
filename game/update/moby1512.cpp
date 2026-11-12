@@ -49,8 +49,8 @@ void M1512_0028f3f0(int param_1)
   iVar4 = *(int *)(param_1 + 0x78);
   GetEffectTex(0xb);
   idol_draw::PackCmd(0,2,0,1,0x80);
-  STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  FUN_00502f08(1,1,0,0,0,0);
+  SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  SCE_GS_SET_CLAMP(1,1,0,0,0,0);
   dVar15 = (double)(*(float *)(param_1 + 0xe4) * DAT_007ab2a0 + *(float *)(param_1 + 0x14));
   dVar16 = (double)(*(float *)(param_1 + 0xe0) * DAT_007ab2a0 + *(float *)(param_1 + 0x10));
   dVar14 = (double)(*(float *)(param_1 + 0xe8) * DAT_007ab2a0 + *(float *)(param_1 + 0x18));

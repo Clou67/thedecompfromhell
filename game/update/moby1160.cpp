@@ -60,42 +60,42 @@ void M1160_DrawShape
   
   uVar9 = param_2 + 1;
   iVar7 = ((int)uVar9 >> 1) + (uint)((int)uVar9 < 0 && (uVar9 & 1) != 0) + 3;
-  *(char *)DAT_00e5aa58 = (char)iVar7;
-  *(undefined1 *)((int)DAT_00e5aa58 + 1) = 0;
-  *(undefined1 *)((int)DAT_00e5aa58 + 2) = 0;
-  uVar8 = FUN_0050300c(iVar7,0);
-  *(undefined1 *)((int)DAT_00e5aa58 + 3) = uVar8;
+  *(char *)g_pPacket = (char)iVar7;
+  *(undefined1 *)((int)g_pPacket + 1) = 0;
+  *(undefined1 *)((int)g_pPacket + 2) = 0;
+  uVar8 = Gs_DmaTagByte(iVar7,0);
+  *(undefined1 *)((int)g_pPacket + 3) = uVar8;
   uVar4 = uRam00736518;
   uVar3 = DAT_00736510.piece<4,4>();
   uVar2 = DAT_00736510.piece<0,4>();
-  puVar1 = (undefined4 *)((uint)((int)DAT_00e5aa58 + 0x10) & 0xfffffff0);
-  DAT_00e5aa58 = (undefined2 *)((int)DAT_00e5aa58 + 0x10);
+  puVar1 = (undefined4 *)((uint)((int)g_pPacket + 0x10) & 0xfffffff0);
+  g_pPacket = (undefined2 *)((int)g_pPacket + 0x10);
   puVar1[3] = uRam0073651c;
   puVar1[2] = uVar4;
   puVar1[1] = uVar3;
   *puVar1 = uVar2;
-  *DAT_00e5aa58 = 0x8001;
-  puVar5 = DAT_00e5aa58;
-  DAT_00e5aa58 = DAT_00e5aa58 + 8;
-  uVar6 = FUN_00502e70(0x11,0,0,0,1,0,1,0);
+  *g_pPacket = 0x8001;
+  puVar5 = g_pPacket;
+  g_pPacket = g_pPacket + 8;
+  uVar6 = SCE_GS_SET_PRIM(0x11,0,0,0,1,0,1,0);
   *(undefined8 *)(puVar5 + 8) = uVar6;
   *(undefined8 *)(puVar5 + 0xc) = param_6;
   uVar4 = uRam00736528;
   uVar3 = DAT_00736520.piece<4,4>();
   uVar2 = DAT_00736520.piece<0,4>();
-  puVar1 = (undefined4 *)((uint)(DAT_00e5aa58 + 8) & 0xfffffff0);
-  DAT_00e5aa58 = DAT_00e5aa58 + 8;
+  puVar1 = (undefined4 *)((uint)(g_pPacket + 8) & 0xfffffff0);
+  g_pPacket = g_pPacket + 8;
   puVar1[3] = uRam0073652c;
   puVar1[2] = uVar4;
   puVar1[1] = uVar3;
   *puVar1 = uVar2;
-  *DAT_00e5aa58 = (short)param_2 + -0x8000;
-  psVar10 = DAT_00e5aa58 + 8;
-  DAT_00e5aa58 = psVar10;
+  *g_pPacket = (short)param_2 + -0x8000;
+  psVar10 = g_pPacket + 8;
+  g_pPacket = psVar10;
   if (0 < param_2) {
     iVar7 = 0;
     do {
-      uVar6 = FUN_00502fec((*param_1 + param_3) * 0x10 + SCREEN_PROJECTION_MAP_X + -8,
+      uVar6 = SCE_GS_SET_XYZ((*param_1 + param_3) * 0x10 + SCREEN_PROJECTION_MAP_X + -8,
                            (param_1[1] + param_4) * 0x10 + SCREEN_PROJECTION_MAP_Y + -8,param_5);
       iVar7 = iVar7 + 1;
       *(undefined8 *)psVar10 = uVar6;
@@ -103,7 +103,7 @@ void M1160_DrawShape
       psVar10 = psVar10 + 4;
     } while (iVar7 < param_2);
   }
-  DAT_00e5aa58 = DAT_00e5aa58 + (((int)uVar9 >> 1) + (uint)((int)uVar9 < 0 && (uVar9 & 1) != 0)) * 8
+  g_pPacket = g_pPacket + (((int)uVar9 >> 1) + (uint)((int)uVar9 < 0 && (uVar9 & 1) != 0)) * 8
   ;
   return;
 }
@@ -132,38 +132,38 @@ void M1160_DrawShapeScaled
   
   uVar11 = param_5 + 1;
   iVar7 = ((int)uVar11 >> 1) + (uint)((int)uVar11 < 0 && (uVar11 & 1) != 0) + 3;
-  *(char *)DAT_00e5aa58 = (char)iVar7;
-  *(undefined1 *)((int)DAT_00e5aa58 + 1) = 0;
-  *(undefined1 *)((int)DAT_00e5aa58 + 2) = 0;
-  uVar10 = FUN_0050300c(iVar7,0);
-  *(undefined1 *)((int)DAT_00e5aa58 + 3) = uVar10;
+  *(char *)g_pPacket = (char)iVar7;
+  *(undefined1 *)((int)g_pPacket + 1) = 0;
+  *(undefined1 *)((int)g_pPacket + 2) = 0;
+  uVar10 = Gs_DmaTagByte(iVar7,0);
+  *(undefined1 *)((int)g_pPacket + 3) = uVar10;
   uVar4 = uRam00736518;
   uVar3 = DAT_00736510.piece<4,4>();
   uVar2 = DAT_00736510.piece<0,4>();
-  puVar1 = (undefined4 *)((uint)((int)DAT_00e5aa58 + 0x10) & 0xfffffff0);
-  DAT_00e5aa58 = (undefined2 *)((int)DAT_00e5aa58 + 0x10);
+  puVar1 = (undefined4 *)((uint)((int)g_pPacket + 0x10) & 0xfffffff0);
+  g_pPacket = (undefined2 *)((int)g_pPacket + 0x10);
   puVar1[3] = uRam0073651c;
   puVar1[2] = uVar4;
   puVar1[1] = uVar3;
   *puVar1 = uVar2;
-  *DAT_00e5aa58 = 0x8001;
-  puVar5 = DAT_00e5aa58;
-  DAT_00e5aa58 = DAT_00e5aa58 + 8;
-  uVar6 = FUN_00502e70(0x11,0,0,0,1,0,1,0);
+  *g_pPacket = 0x8001;
+  puVar5 = g_pPacket;
+  g_pPacket = g_pPacket + 8;
+  uVar6 = SCE_GS_SET_PRIM(0x11,0,0,0,1,0,1,0);
   *(undefined8 *)(puVar5 + 8) = uVar6;
   *(undefined8 *)(puVar5 + 0xc) = param_9;
   uVar4 = uRam00736528;
   uVar3 = DAT_00736520.piece<4,4>();
   uVar2 = DAT_00736520.piece<0,4>();
-  puVar1 = (undefined4 *)((uint)(DAT_00e5aa58 + 8) & 0xfffffff0);
-  DAT_00e5aa58 = DAT_00e5aa58 + 8;
+  puVar1 = (undefined4 *)((uint)(g_pPacket + 8) & 0xfffffff0);
+  g_pPacket = g_pPacket + 8;
   puVar1[3] = uRam0073652c;
   puVar1[2] = uVar4;
   puVar1[1] = uVar3;
   *puVar1 = uVar2;
-  *DAT_00e5aa58 = (short)param_5 + -0x8000;
-  psVar12 = DAT_00e5aa58 + 8;
-  DAT_00e5aa58 = psVar12;
+  *g_pPacket = (short)param_5 + -0x8000;
+  psVar12 = g_pPacket + 8;
+  g_pPacket = psVar12;
   if (0 < param_5) {
     iVar7 = 0;
     dVar14 = 16.0;
@@ -175,14 +175,14 @@ void M1160_DrawShapeScaled
       dVar13 = (double)FastIntToDouble(param_4[1]);
       iVar9 = FastDoubleToInt
                         ((double)(float)((double)(float)(dVar13 * param_3 + param_2) * dVar14));
-      uVar6 = FUN_00502fec(iVar8 + -8,iVar9 + SCREEN_PROJECTION_MAP_Y + -8,param_8);
+      uVar6 = SCE_GS_SET_XYZ(iVar8 + -8,iVar9 + SCREEN_PROJECTION_MAP_Y + -8,param_8);
       iVar7 = iVar7 + 1;
       *(undefined8 *)psVar12 = uVar6;
       param_4 = param_4 + 2;
       psVar12 = psVar12 + 4;
     } while (iVar7 < param_5);
   }
-  DAT_00e5aa58 = DAT_00e5aa58 +
+  g_pPacket = g_pPacket +
                  (((int)uVar11 >> 1) + (uint)((int)uVar11 < 0 && (uVar11 & 1) != 0)) * 8;
   return;
 }
@@ -218,38 +218,38 @@ void M1160_DrawShapeRotated
   
   uVar11 = param_5 + 1;
   iVar7 = ((int)uVar11 >> 1) + (uint)((int)uVar11 < 0 && (uVar11 & 1) != 0) + 3;
-  *(char *)DAT_00e5aa58 = (char)iVar7;
-  *(undefined1 *)((int)DAT_00e5aa58 + 1) = 0;
-  *(undefined1 *)((int)DAT_00e5aa58 + 2) = 0;
-  uVar10 = FUN_0050300c(iVar7,0);
-  *(undefined1 *)((int)DAT_00e5aa58 + 3) = uVar10;
+  *(char *)g_pPacket = (char)iVar7;
+  *(undefined1 *)((int)g_pPacket + 1) = 0;
+  *(undefined1 *)((int)g_pPacket + 2) = 0;
+  uVar10 = Gs_DmaTagByte(iVar7,0);
+  *(undefined1 *)((int)g_pPacket + 3) = uVar10;
   uVar4 = uRam00736518;
   uVar3 = DAT_00736510.piece<4,4>();
   uVar2 = DAT_00736510.piece<0,4>();
-  puVar1 = (undefined4 *)((uint)((int)DAT_00e5aa58 + 0x10) & 0xfffffff0);
-  DAT_00e5aa58 = (undefined2 *)((int)DAT_00e5aa58 + 0x10);
+  puVar1 = (undefined4 *)((uint)((int)g_pPacket + 0x10) & 0xfffffff0);
+  g_pPacket = (undefined2 *)((int)g_pPacket + 0x10);
   puVar1[3] = uRam0073651c;
   puVar1[2] = uVar4;
   puVar1[1] = uVar3;
   *puVar1 = uVar2;
-  *DAT_00e5aa58 = 0x8001;
-  puVar5 = DAT_00e5aa58;
-  DAT_00e5aa58 = DAT_00e5aa58 + 8;
-  uVar6 = FUN_00502e70(0x11,0,0,0,1,0,1,0);
+  *g_pPacket = 0x8001;
+  puVar5 = g_pPacket;
+  g_pPacket = g_pPacket + 8;
+  uVar6 = SCE_GS_SET_PRIM(0x11,0,0,0,1,0,1,0);
   *(undefined8 *)(puVar5 + 8) = uVar6;
   *(undefined8 *)(puVar5 + 0xc) = param_9;
   uVar4 = uRam00736528;
   uVar3 = DAT_00736520.piece<4,4>();
   uVar2 = DAT_00736520.piece<0,4>();
-  puVar1 = (undefined4 *)((uint)(DAT_00e5aa58 + 8) & 0xfffffff0);
-  DAT_00e5aa58 = DAT_00e5aa58 + 8;
+  puVar1 = (undefined4 *)((uint)(g_pPacket + 8) & 0xfffffff0);
+  g_pPacket = g_pPacket + 8;
   puVar1[3] = uRam0073652c;
   puVar1[2] = uVar4;
   puVar1[1] = uVar3;
   *puVar1 = uVar2;
-  *DAT_00e5aa58 = (short)param_5 + -0x8000;
-  psVar12 = DAT_00e5aa58 + 8;
-  DAT_00e5aa58 = psVar12;
+  *g_pPacket = (short)param_5 + -0x8000;
+  psVar12 = g_pPacket + 8;
+  g_pPacket = psVar12;
   FastEulerToMtx1(&local_b0,local_c0);
   if (0 < param_5) {
     iVar7 = 0;
@@ -267,14 +267,14 @@ void M1160_DrawShapeRotated
       iVar8 = iVar8 + SCREEN_PROJECTION_MAP_X;
       iVar9 = FastDoubleToInt
                         ((double)(float)((double)(float)(dVar13 * param_3 + param_2) * dVar16));
-      uVar6 = FUN_00502fec(iVar8 + -8,iVar9 + SCREEN_PROJECTION_MAP_Y + -8,param_8);
+      uVar6 = SCE_GS_SET_XYZ(iVar8 + -8,iVar9 + SCREEN_PROJECTION_MAP_Y + -8,param_8);
       iVar7 = iVar7 + 1;
       *(undefined8 *)psVar12 = uVar6;
       param_4 = param_4 + 2;
       psVar12 = psVar12 + 4;
     } while (iVar7 < param_5);
   }
-  DAT_00e5aa58 = DAT_00e5aa58 +
+  g_pPacket = g_pPacket +
                  (((int)uVar11 >> 1) + (uint)((int)uVar11 < 0 && (uVar11 & 1) != 0)) * 8;
   return;
 }

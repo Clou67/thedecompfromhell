@@ -112,9 +112,9 @@ void M841_00481ca8(int param_1)
       uVar18 = uVar22 & 0xffffffff;
       iVar13 = (int)uVar22;
       *(undefined8 *)(iVar13 + 0x128) = uVar10;
-      uVar10 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+      uVar10 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
       *(undefined8 *)(iVar13 + 0x130) = uVar10;
-      uVar10 = FUN_00502f08(0,0,0,0,0,0);
+      uVar10 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
       *(undefined8 *)(iVar13 + 0x120) = uVar10;
       uVar10 = idol_draw::PackCmd(DAT_010d9d48,DAT_008ace50,DAT_010d9d4c,DAT_008ace54,0x80);
       *(undefined8 *)(iVar13 + 0x138) = uVar10;

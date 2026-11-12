@@ -64,9 +64,9 @@ void M1107_001c90b0(void)
   puVar3[0x21] = unaff_r27;
   uVar8 = GetEffectTex(0x15);
   puVar3[0x1d] = uVar8;
-  uVar8 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar8 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar3[0x1e] = uVar8;
-  uVar8 = FUN_00502f08(0,0,0,0,0,0);
+  uVar8 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar3[0x1c] = uVar8;
   uVar8 = idol_draw::PackCmd(0,2,0,1,0x80);
   puVar3[0x1f] = uVar8;

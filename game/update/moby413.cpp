@@ -77,9 +77,9 @@ void M413_00366968(int param_1)
   puVar3[0x2c] = unaff_r24;
   puVar3[0x2b] = unaff_r23;
   puVar3[0x2a] = unaff_r22;
-  uVar6 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar6 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar3[0x28] = uVar6;
-  uVar6 = FUN_00502f08(0,0,0,0,0,0);
+  uVar6 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar3[0x26] = uVar6;
   uVar6 = idol_draw::PackCmd(0,1,0,1,0x80);
   puVar3[0x29] = uVar6;

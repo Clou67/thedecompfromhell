@@ -95,9 +95,9 @@ void M1169_001ea390(int param_1)
   puVar6[0x2d] = unaff_r28;
   puVar6[0x2c] = unaff_r27;
   puVar6[0x2b] = unaff_r26;
-  uVar12 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar12 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar6[0x26] = uVar12;
-  uVar12 = FUN_00502f08(0,0,0,0,0,0);
+  uVar12 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar6[0x24] = uVar12;
   uVar12 = idol_draw::PackCmd(DAT_00f08e10,DAT_00765b90,DAT_00f08e14,DAT_00765b94,DAT_00765b98);
   puVar6[0x27] = uVar12;

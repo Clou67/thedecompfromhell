@@ -92,8 +92,8 @@ void M253_00318b50(int param_1)
   puVar7[0x38] = unaff_r24;
   iVar23 = *(int *)(param_1 + 0x78);
   uVar13 = GetEffectTex(0xe);
-  uVar14 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  uVar15 = FUN_00502f08(1,1,0,0,0,0);
+  uVar14 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  uVar15 = SCE_GS_SET_CLAMP(1,1,0,0,0,0);
   uVar16 = idol_draw::PackCmd(0,2,0,1,0x80);
   uVar11 = DAT_007ffc0c;
   uVar9 = DAT_007ffc04;
@@ -582,8 +582,8 @@ void M253_003196c0(int param_1)
   iVar6 = *(int *)(param_1 + 0x78);
   GetEffectTex(0xb);
   idol_draw::PackCmd(0,2,0,1,0x80);
-  STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  FUN_00502f08(1,1,0,0,0,0);
+  SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  SCE_GS_SET_CLAMP(1,1,0,0,0,0);
   acVar18 = GameCamera.field8_0x14c;
   fVar7 = 0.0;
   fVar1 = *(float *)(iVar6 + 0x224);

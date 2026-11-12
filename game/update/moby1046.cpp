@@ -68,9 +68,9 @@ void M1046_0019d958(void)
   puVar3[0x21] = unaff_r27;
   uVar8 = GetEffectTex(0x15);
   puVar3[0x1d] = uVar8;
-  uVar8 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar8 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar3[0x1e] = uVar8;
-  uVar8 = FUN_00502f08(0,0,0,0,0,0);
+  uVar8 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar3[0x1c] = uVar8;
   uVar8 = idol_draw::PackCmd(0,2,0,1,0x80);
   puVar3[0x1f] = uVar8;
@@ -340,8 +340,8 @@ void M1046_0019e010(undefined8 param_1)
   puVar10[0x55] = unaff_r25;
   puVar10[0x54] = unaff_r24;
   uVar14 = GetEffectTex(uVar7);
-  uVar15 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  uVar16 = FUN_00502f08(0,1,0,0,0,0);
+  uVar15 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  uVar16 = SCE_GS_SET_CLAMP(0,1,0,0,0,0);
   uVar17 = idol_draw::PackCmd(0,2,0,1,0x80);
   puVar10[0x1d] = uVar14;
   puVar10[0x1e] = uVar15;

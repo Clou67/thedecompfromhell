@@ -35,7 +35,8 @@ written in `.cpp` files, Idol's PS3 layer may use C++ features. Examples: `game/
     `DetachPointLight`).
   - globals: `g_Name`; pointers to objects `g_pName`.
   - struct fields: `camelCase`; unknown fields `unkNNN` with the hex offset; padding `_padNNN`.
-  - locals: short real names (`light`, `pl`, `tie`, `frame`), never `iVar3`/`param_1`.
+  - locals: descriptive names (`light`, `tie`, `frame`, `entry`), never `iVar3`/`param_1`. No one- or
+    two-letter names (`m`, `e`, `pl`) except loop counters (`i`, `j`).
   - constants: `UPPER_CASE` `#define`s or enums instead of magic numbers.
 - If a name is a guess, say so in a comment where it is declared ("guess", "inferred").
 
@@ -59,3 +60,8 @@ written in `.cpp` files, Idol's PS3 layer may use C++ features. Examples: `game/
 - Comments explain what the code is for and anything surprising from the asm, not what each line
   does. Keep them short.
 - 4-space indent, braces on the same line for control flow, function braces on their own line.
+- The body of an `if`/`for`/`while`, and each `case` body, goes on its own line, never after the
+  condition (`if (!m)\n    return 0;`, not `if (!m) return 0;`).
+- Separate the steps of a function with blank lines: after the locals, around each `if`/loop
+  block, before and after a call that does the main work, and after a local declared inside a
+  block before the code that uses it.

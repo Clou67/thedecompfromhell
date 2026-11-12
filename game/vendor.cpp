@@ -2834,7 +2834,7 @@ void Vendor_DrawFlickerText(undefined8 param_1,double param_2,longlong param_3)
     MB_randInt(200);
     MB_randInt(200);
     iVar4 = FUN_005c4988(iVar4 + -0x80);
-    uVar2 = FUN_00502f08(0,0,0,0,0,0);
+    uVar2 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
     SetGSReg(6,uVar2);
     iVar4 = (0x80 - iVar4) * 2;
     iVar5 = 0xff;
@@ -2853,7 +2853,7 @@ void Vendor_DrawFlickerText(undefined8 param_1,double param_2,longlong param_3)
   if ((*(int *)(&DAT_00e5a9dc + iVar1) == 0) && (iVar4 = MB_randInt(700), iVar4 == 0)) {
     *(undefined4 *)(&DAT_00e5a9dc + iVar1) = 2;
   }
-  uVar2 = FUN_00502f08(0,0,0,0,0,0);
+  uVar2 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   SetGSReg(6,uVar2);
   uVar2 = idol_draw::PackCmd(0,1,0,1,0x80);
   SetGSReg(3,uVar2);
@@ -3651,7 +3651,7 @@ void Vendor_HudUpdate(MobyInstance *moby)
     ResetHUDPass();
     uVar25 = idol_draw::PackCmd(0,1,2,1,0xff);
     SetGSReg(3,uVar25);
-    uVar25 = FUN_00502f08(1,1,0,0,0,0);
+    uVar25 = SCE_GS_SET_CLAMP(1,1,0,0,0,0);
     SetGSReg(6,uVar25);
     STUB_001754c0();
     if (Cutscene == 0) {
@@ -3774,8 +3774,8 @@ void Vendor_DrawMobyHighlight(undefined8 param_1)
                        CONCAT44(local_1a0 + fVar9 + fVar5,local_19c + fVar11 + fVar3),
                        CONCAT44(local_198 + fVar10 + fVar8,local_184),auStack_d0,auStack_cc,
                        auStack_c8,auStack_c4);
-    FUN_00502f08(1,1,0,0,0,0);
-    STUB_00502fd4_RET_0(1,0,0,0,0,0,0);
+    SCE_GS_SET_CLAMP(1,1,0,0,0,0);
+    SCE_GS_SET_TEX1(1,0,0,0,0,0,0);
     idol_draw::PackCmd(0,1,0,1,0x80);
     GetEffectTex(0x19);
     uVar15 = idol_draw::Blend(1,1,0,2,0,0,1,1);
@@ -3914,8 +3914,8 @@ void Vendor_DrawScrollingOverlay(void)
     DAT_0073a7dc = DAT_0073a7dc - 1.0;
   }
   iVar1 = 0;
-  FUN_00502f08(0,0,0,0,0,0);
-  STUB_00502fd4_RET_0(1,0,0,0,0,0,0);
+  SCE_GS_SET_CLAMP(0,0,0,0,0,0);
+  SCE_GS_SET_TEX1(1,0,0,0,0,0,0);
   idol_draw::PackCmd(0,1,0,1,0x40);
   GetEffectTex(0x18);
   do {

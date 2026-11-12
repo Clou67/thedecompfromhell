@@ -51,8 +51,8 @@ void M1850_002c7fb8(int param_1)
   
   GetEffectTex(0xb);
   idol_draw::PackCmd(0,2,0,1,0x80);
-  STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  FUN_00502f08(0,0,0,0,0,0);
+  SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   dVar26 = 0.0;
   fVar1 = *(float *)(param_1 + 0xd4);
   fVar2 = *(float *)(param_1 + 0xd0);
@@ -222,8 +222,8 @@ void M1850_002c8468(void)
   
   GetEffectTex(8);
   idol_draw::PackCmd(0,2,0,1,0x80);
-  STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  FUN_00502f08(0,0,0,0,0,0);
+  SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   dVar25 = 0.0;
   dVar24 = 1.0;
   uVar14 = 0;
@@ -305,8 +305,8 @@ void M1850_002c8808(void)
   
   GetEffectTex(DAT_007bd3ec);
   idol_draw::PackCmd(0,2,0,1,0x80);
-  STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  FUN_00502f08(0,0,0,0,0,0);
+  SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   GetEffectTex(DAT_007bd3f0);
   in_r9 = in_r9 + -1;
   iVar2 = 1;
@@ -360,8 +360,8 @@ void M1850_002c8ff8(undefined8 param_1)
   M1850_002c8468(param_1);
   M1850_002c7fb8(param_1);
   GetEffectTex(DAT_007bd3e8);
-  STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  FUN_00502f08(0,0,0,0,0,0);
+  SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   idol_draw::PackCmd(0,2,0,1,0x80);
   dVar10 = -(double)(DAT_0071f408 * DAT_007bd374 - DAT_010a2210);
   if (dVar10 <= dVar11) {

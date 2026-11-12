@@ -256,16 +256,16 @@ LAB_000db3d8:
   puVar2[0xe] = (longlong)iVar6;
   puVar2[0x10] = 0;
   puVar2[0x11] = 4;
-  lVar13 = STUB_00502fbc_RET_0
+  lVar13 = SCE_GS_SET_TEX0
                      (*(undefined4 *)((int)puVar2 + 0xc4),*(undefined4 *)((int)puVar2 + 0xd4),uVar8,
                       *(undefined4 *)((int)puVar2 + 0xe4),*(undefined4 *)(puVar2 + 0x1d),1,0,
                       *(undefined4 *)(puVar2 + 0x18));
   iVar6 = *(int *)((int)pPif + 0x1c);
   *tex_regs = lVar13;
-  lVar13 = STUB_00502fd4_RET_0(0,iVar6 + -1,1,3,0,0,0xffa0);
+  lVar13 = SCE_GS_SET_TEX1(0,iVar6 + -1,1,3,0,0,0xffa0);
   uVar8 = *(undefined4 *)(puVar2 + 0x19);
   tex_regs[1] = lVar13;
-  lVar13 = STUB_00502f6c(uVar8,*(undefined4 *)(puVar2 + 0x1b),
+  lVar13 = SCE_GS_SET_MIPTBP1(uVar8,*(undefined4 *)(puVar2 + 0x1b),
                                *(undefined4 *)((int)puVar2 + 0xcc),
                                *(undefined4 *)((int)puVar2 + 0xdc),*(undefined4 *)(puVar2 + 0x1a),
                                *(undefined4 *)(puVar2 + 0x1c));
@@ -887,34 +887,34 @@ void SetUpVisGif
   if (index < 0) {
     if (index < -1) {
       uVar5 = (uint)(ZERO_MASK((-3 - index))) & 0x18;
-      lVar9 = STUB_00502fd4_RET_0(0,0,1,filter,0,0,mip_dist);
+      lVar9 = SCE_GS_SET_TEX1(0,0,1,filter,0,0,mip_dist);
       *pGif = lVar9;
-      lVar9 = FUN_00502f08(1,1,0,0,0,0);
+      lVar9 = SCE_GS_SET_CLAMP(1,1,0,0,0,0);
       pGif[2] = lVar9;
       pGif[4] = *(longlong *)(&DAT_00a20450 + uVar5);
       pGif[6] = *(longlong *)(&DAT_00a20460 + uVar5);
     }
     else {
-      lVar9 = STUB_00502fd4_RET_0(0,0,1,filter,0,0,mip_dist);
+      lVar9 = SCE_GS_SET_TEX1(0,0,1,filter,0,0,mip_dist);
       *pGif = lVar9;
-      lVar9 = FUN_00502f08(1,1,0,0,0,0);
+      lVar9 = SCE_GS_SET_CLAMP(1,1,0,0,0,0);
       pGif[2] = lVar9;
-      lVar9 = STUB_00502fbc_RET_0(0x3ffb,1,0x12,3,3,1,0,0);
+      lVar9 = SCE_GS_SET_TEX0(0x3ffb,1,0x12,3,3,1,0,0);
       pGif[4] = lVar9;
-      lVar9 = STUB_00502f6c(0,0,0,0,0,0);
+      lVar9 = SCE_GS_SET_MIPTBP1(0,0,0,0,0,0);
       pGif[6] = lVar9;
     }
   }
   else {
-    lVar8 = STUB_00502fd4_RET_0(0,(longlong)tex_def[4] + -1,1,filter,0,0,mip_dist);
+    lVar8 = SCE_GS_SET_TEX1(0,(longlong)tex_def[4] + -1,1,filter,0,0,mip_dist);
     *pGif = lVar8;
-    lVar8 = FUN_00502f08(u_clamp,v_clamp,0,0,index,0);
+    lVar8 = SCE_GS_SET_CLAMP(u_clamp,v_clamp,0,0,index,0);
     pGif[2] = lVar8;
-    lVar9 = STUB_00502fbc_RET_0
+    lVar9 = SCE_GS_SET_TEX0
                       (0,lVar9 + (lVar9 + -1 >> 0x3f & 1U - lVar9),0x13,uVar6,uVar7,1,0,
                        sVar1 + iVar4);
     pGif[4] = lVar9;
-    lVar9 = STUB_00502f6c(0,lVar10 + (lVar10 + -1 >> 0x3f & 1U - lVar10),sVar2 + iVar4,1,
+    lVar9 = SCE_GS_SET_MIPTBP1(0,lVar10 + (lVar10 + -1 >> 0x3f & 1U - lVar10),sVar2 + iVar4,1,
                                 sVar3 + iVar4,1);
     pGif[6] = lVar9;
   }
@@ -3155,7 +3155,7 @@ longlong QueuePifLoad(void *pPif)
   iVar7 = g_GsRamAlloc + 0x400;
   iVar1 = g_GsRamAlloc >> 8;
   g_GsRamAlloc = iVar7 + (1 << ((int)uVar3 + (int)uVar4 & 0x3fU));
-  lVar5 = STUB_00502fbc_RET_0
+  lVar5 = SCE_GS_SET_TEX0
                     (iVar7 >> 8,1 << (iVar6 + (iVar6 >> 0x1f & -iVar6) & 0x3fU),0x13,uVar3,uVar4,1,0
                      ,iVar1);
   if (g_PifLoadQueueCnt < 0x40) {
@@ -3188,7 +3188,7 @@ longlong QueuePifLoad(int log_w,int log_h,char *tex,char *pal)
   iVar5 = g_GsRamAlloc + 0x400;
   iVar1 = g_GsRamAlloc >> 8;
   g_GsRamAlloc = iVar5 + (1 << (log_w + log_h & 0x3fU));
-  lVar3 = STUB_00502fbc_RET_0
+  lVar3 = SCE_GS_SET_TEX0
                     (iVar5 >> 8,1 << (iVar4 + (iVar4 >> 0x1f & -iVar4) & 0x3fU),0x13,log_w,log_h,1,0
                      ,iVar1);
   if (g_PifLoadQueueCnt < 0x40) {
@@ -3214,7 +3214,7 @@ longlong QueuePifLoad(int log_w,int log_h,char *tex,char *pal,int tex_addr,int p
   longlong lVar1;
   
   iVar2 = log_w + -6;
-  lVar1 = STUB_00502fbc_RET_0
+  lVar1 = SCE_GS_SET_TEX0
                     (pal_addr >> 8,1 << (iVar2 + (iVar2 >> 0x1f & -iVar2) & 0x3fU),0x13,log_w,log_h,
                      1,0,tex_addr >> 8);
   if (g_PifLoadQueueCnt < 0x40) {

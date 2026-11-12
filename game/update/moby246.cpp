@@ -51,9 +51,9 @@ void M246_00312b68(int param_1)
   puVar4[0x2c] = in_LR;
   puVar4[0x29] = unaff_r31;
   iVar3 = *(int *)(param_1 + 0x78);
-  uVar7 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar7 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar4[0x26] = uVar7;
-  uVar7 = FUN_00502f08(0,0,0,0,0,0);
+  uVar7 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar4[0x24] = uVar7;
   uVar7 = idol_draw::PackCmd(0,2,0,1,0x80);
   puVar4[0x27] = uVar7;
@@ -165,8 +165,8 @@ void M246_00312d38(int param_1)
   longlong local_80;
   
   iVar1 = *(int *)(param_1 + 0x78);
-  local_90 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
-  local_a0 = FUN_00502f08(0,0,0,0,0,0);
+  local_90 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
+  local_a0 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   local_88 = idol_draw::PackCmd(0,2,0,1,0x80);
   local_98 = GetEffectTex(10);
   FastMtx4Identity(afStack_150);

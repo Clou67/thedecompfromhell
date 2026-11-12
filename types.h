@@ -148,8 +148,6 @@ typedef long long    int6;
 
 typedef long long    longlong;
 
-typedef unsigned long long    qword;
-
 typedef unsigned char    uchar;
 
 typedef unsigned int    uint;
@@ -2604,6 +2602,30 @@ struct UpdateCam { /* DL struct UpdateCam (RC1 size 0xa0); 48 of them at UpdateC
     undefined field29_0x9f;
 };
 
+extern undefined4 DAT_009313a4; /* no defined data */
+extern undefined4 DAT_009313a8; /* no defined data */
+extern undefined4 DAT_009313b4; /* no defined data */
+extern undefined4 DAT_009313b8; /* no defined data */
+extern undefined4 DAT_009313bc; /* no defined data */
+extern undefined4 DAT_009313c8; /* no defined data */
+extern undefined4 DAT_009313cc; /* no defined data */
+extern undefined4 DAT_009313d0; /* no defined data */
+extern undefined4 DAT_009313d4; /* no defined data */
+extern undefined4 DAT_009313d8; /* no defined data */
+extern undefined4 DAT_009313dc; /* no defined data */
+extern undefined4 DAT_009313e0; /* no defined data */
+extern undefined4 DAT_009313e4; /* no defined data */
+extern undefined4 DAT_009313e8; /* no defined data */
+extern undefined4 DAT_009313ec; /* no defined data */
+extern undefined4 DAT_009313f0; /* no defined data */
+extern undefined4 DAT_009313f4; /* no defined data */
+extern undefined4 DAT_009313f8; /* no defined data */
+extern undefined4 DAT_009313fc; /* no defined data */
+extern undefined4 DAT_00931400; /* no defined data */
+extern undefined4 DAT_00931404; /* no defined data */
+extern undefined8 DAT_00931408; /* 0x931408 */
+extern undefined4 DAT_00931410; /* no defined data */
+extern undefined4 DAT_00931418; /* no defined data */
 extern undefined4 DAT_00a0fd24; /* no defined data */
 extern undefined4 DAT_00a0fd26; /* no defined data */
 extern undefined4 DAT_00a0fd28; /* no defined data */

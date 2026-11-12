@@ -3167,7 +3167,7 @@ undefined8 FUN_00502e68(void)
 
 
 // 0x0502e70 (0x8 bytes)
-undefined8 FUN_00502e70(void)
+u64 SCE_GS_SET_PRIM(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6,int param_7,int param_8)
 
 {
   return 0;
@@ -3215,7 +3215,7 @@ undefined8 FUN_00502e98(void)
 
 
 // 0x0502ea0 (0x8 bytes)
-undefined8 FUN_00502ea0(void)
+u64 SCE_GIF_SET_TAG(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6)
 
 {
   return 0;
@@ -3243,8 +3243,7 @@ ulonglong FUN_00502ed8(ulonglong param_1,ulonglong param_2,ulonglong param_3,ulo
 
 
 // 0x0502f08 (0x54 bytes)
-ulonglong FUN_00502f08(ulonglong param_1,ulonglong param_2,ulonglong param_3,ulonglong param_4,
-                      ulonglong param_5,ulonglong param_6)
+u64 SCE_GS_SET_CLAMP(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6)
 
 {
   return param_1 & 3 | (param_2 & 3) << 2 | (param_3 & 0x3ff) << 4 | (param_4 & 0x3ff) << 0xe |
@@ -3269,7 +3268,7 @@ undefined8 FUN_00502f64(void)
 
 
 // 0x0502f6c (0x8 bytes)
-undefined8 STUB_00502f6c(...)
+u64 SCE_GS_SET_MIPTBP1(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6)
 
 {
   return 0;
@@ -3309,7 +3308,7 @@ undefined8 FUN_00502fb4(void)
 
 
 // 0x0502fbc (0x8 bytes)
-undefined8 STUB_00502fbc_RET_0(...)
+u64 SCE_GS_SET_TEX0(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6,int param_7,int param_8,int param_9,int param_10,int param_11,int param_12)
 
 {
   return 0;
@@ -3333,7 +3332,7 @@ undefined8 FUN_00502fcc(void)
 
 
 // 0x0502fd4 (0x8 bytes)
-undefined8 STUB_00502fd4_RET_0(...)
+u64 SCE_GS_SET_TEX1(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6,int param_7)
 
 {
   return 0;
@@ -3357,7 +3356,7 @@ undefined8 FUN_00502fe4(void)
 
 
 // 0x0502fec (0x8 bytes)
-undefined8 FUN_00502fec(void)
+u64 SCE_GS_SET_XYZ(int param_1,int param_2,int param_3)
 
 {
   return 0;
@@ -3389,7 +3388,7 @@ undefined8 FUN_00503004(void)
 
 
 // 0x050300c (0x8 bytes)
-undefined8 FUN_0050300c(void)
+u8 Gs_DmaTagByte(int param_1,int param_2)
 
 {
   return 0;
@@ -3445,7 +3444,7 @@ undefined8 FUN_0050303c(void)
 
 
 // 0x0503044 (0x8 bytes)
-undefined8 FUN_00503044(void)
+u64 SCE_GS_SET_BITBLTBUF(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6)
 
 {
   return 0;

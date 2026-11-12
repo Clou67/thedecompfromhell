@@ -3586,9 +3586,9 @@ void M849_0048d430(void)
   puVar10[0x20] = unaff_r28;
   uVar17 = GetEffectTex(0x15);
   puVar10[0x1d] = uVar17;
-  uVar17 = STUB_00502fd4_RET_0(0,0,1,1,1,0,0xff90);
+  uVar17 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   puVar10[0x1e] = uVar17;
-  uVar17 = FUN_00502f08(0,0,0,0,0,0);
+  uVar17 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
   puVar10[0x1c] = uVar17;
   uVar17 = idol_draw::PackCmd(0,2,0,1,0x80);
   puVar10[0x1f] = uVar17;
