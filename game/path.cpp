@@ -1,5 +1,6 @@
 #include <math.h>
 #include <stdio.h>
+#include <string.h>
 #include "game/path.h"
 #include "game/camera.h"
 #include "game/collproc.h"
@@ -11,7 +12,6 @@
 #include "game/walk.h"
 #include "idol/fastfunc.h"
 #include "idol/fastinline.h"
-// MERGE (16 of 39 functions cleaned; the rest are generated)
 
 /* PathFollower.state */
 enum {
@@ -69,7 +69,6 @@ void SECTION_HEADER_PATH(void)
 {
     DAT_007297a8 = 0x10000;
 }
-
 
 // 0x0136390 (0x394 bytes)
 /* draws a marker (or the node number) at each `step`th node, lifted along the camera's up */
@@ -130,7 +129,6 @@ int DrawPathDebug(float size, void *cam, int splineIdx, ABGR color, undefined8 u
     return spline->cnt;
 }
 
-
 // 0x0136724 (0xa4 bytes)
 /* binds the follower to Splines[splineIdx]; each node's w becomes the length to the next */
 void InitFollower(PathFollower *follower)
@@ -147,7 +145,6 @@ void InitFollower(PathFollower *follower)
         spline->points[i].w = PathDist(&spline->points[i], &spline->points[next]);
     }
 }
-
 
 // 0x01367d0 (0x9c bytes)
 /* the node whose distance from `position` is closest to `distance` (the best is kept as
@@ -168,7 +165,6 @@ int PathFindClosestPnt(float distance, Vec4 *position, Spline *spline)
 
     return bestIdx;
 }
-
 
 // 0x0136890 (0x998 bytes)
 // inlined: FastAtan2 @0x136b28, FastAtan2 @0x136d44, FastAtan2 @0x136ef0
@@ -328,7 +324,6 @@ static inline float PathRadiusError(Vec4 *p, Vec4 *pos, float radius)
     return err;
 }
 
-
 // 0x0137238 (0x374 bytes)
 /* the point of segment start-end at `radius` from pos (the one nearer prevPnt on a tie);
    returns how far off radius it is */
@@ -380,7 +375,6 @@ float ClosestPntOnSegmentAtDist(float radius, Vec4 *outPnt, Vec4 *prevPnt, Vec4 
     return err1;
 }
 
-
 // 0x01375b8 (0x320 bytes)
 /* ClosestPntOnSegmentAtDist giving the segment parameter instead; *out_t is left alone
    when the projection is already inside the segment and outside the radius */
@@ -426,7 +420,6 @@ float ClosestTOnSegment(float r, float *out_t, Vec4 *prev, Vec4 *pos, Vec4 *a, V
     return err1;
 }
 
-
 // 0x01378e0 (0x1b0 bytes)
 /* ClosestPntOnSegmentAtDist over every segment; near ties (within 0.1) go to the point
    nearer prevPnt */
@@ -451,7 +444,6 @@ float NearestPntOnPathAtDist(float radius, Vec4 *outPnt, Vec4 *prevPnt, Vec4 *po
     return best;
 }
 
-
 // 0x0137a98 (0xf8 bytes)
 float NearestPntOnPath(float radius, int *outSeg, float *out, Vec4 *prevPnt, Vec4 *pos, Spline *spline)
 {
@@ -471,7 +463,6 @@ float NearestPntOnPath(float radius, int *outSeg, float *out, Vec4 *prevPnt, Vec
     return best;
 }
 
-
 // 0x0137b90 (0x38 bytes)
 /* starts a recorded path at the moby */
 void Path_InitFromMobyInstance(MobyInstance *moby, Spline *spline)
@@ -484,7 +475,6 @@ void Path_InitFromMobyInstance(MobyInstance *moby, Spline *spline)
     spline->points[0].w = 0.0f;
     spline->points[0].z = moby->pos.z;
 }
-
 
 // 0x0137bc8 (0x8c bytes)
 void Path_RaiseCollLine(float zOff, MobyInstance *moby, Vec4 *a, Vec4 *b)
@@ -512,7 +502,6 @@ static inline int PathCanSee(MobyInstance *moby, Spline *spline, Vec4 *point)
     return hit == 0;
 }
 
-
 // 0x0137c54 (0x190 bytes)
 /* moves the cursor on and returns a recorded node the moby can still see (cutting the
    path there), or -1 */
@@ -534,7 +523,6 @@ int PathTryStep(MobyInstance *moby, Spline *spline)
 
     return -1;
 }
-
 
 // 0x0137de4 (0xb8 bytes)
 /* adds the moby's position to the recorded path; 0 once it is full */
@@ -594,7 +582,6 @@ static inline int PathTryNudge(MobyInstance *moby, Spline *spline, Vec4 *dir, fl
 
     return 1;
 }
-
 
 // 0x0137ea0 (0x38c bytes)
 /* PathTryStep that, at the end of the path, also tries nudging the last node */
@@ -685,7 +672,6 @@ static inline float PathDirTo(Vec4 *dir, Vec4 *a, Vec4 *b)
     return len;
 }
 
-
 // 0x0138238 (0x394 bytes)
 // inlined: FastRSqrt @0x138378, FastRSqrt @0x1384c0
 /* the point `distance` ahead of the moby's projection on segment `segment` (going `step`),
@@ -728,7 +714,6 @@ int GetPathPnt(float distance, MobyInstance *moby, Spline *spline, Vec4 *outPos,
 
     return base;
 }
-
 
 // 0x01385d0 (0x1d0 bytes)
 /* the node to head for to get from the moby toward `ref`: the neighbour of the moby's
@@ -775,1402 +760,798 @@ int Path_PickNextNode(MobyInstance *moby, Spline *spline, Vec4 *ref, Vec4 *out)
     return nearMoby + 1;
 }
 
+#define POSRING_NONE 0xff
+
+static inline Vec4 PosRingPointAt(PosRing *ring, int idx)
+{
+    Vec4 pnt;
+
+    pnt.x = ring->pts[idx].x;
+    pnt.y = ring->pts[idx].y;
+    pnt.z = ring->pts[idx].z;
+    pnt.w = 0.0f;
+
+    return pnt;
+}
+
+static inline void PosRingSetPoint(PosRing *ring, int idx, Vec4 *pos)
+{
+    ring->pts[idx].x = pos->x;
+    ring->pts[idx].y = pos->y;
+    ring->pts[idx].z = pos->z;
+}
+
+static inline void PosRingGetPoint(Vec4 *out, PosRing *ring, int idx)
+{
+    out->x = ring->pts[idx].x;
+    out->y = ring->pts[idx].y;
+    out->z = ring->pts[idx].z;
+}
+
+/* idx in head-relative order: indices up to the head count past the end when the ring wraps */
+static inline int PosRingUnwrap(PosRing *ring, int idx)
+{
+    if (ring->head < ring->tail && idx <= ring->head) {
+        return (u8)(idx + ring->cap);
+    }
+
+    return idx;
+}
+
+static inline int PosRingNext(PosRing *ring, int idx)
+{
+    return (idx + 1) % ring->cap;
+}
 
 // 0x01387a0 (0x5c bytes)
-void PosRing_Init(double param_1,double param_2,double param_3,undefined4 *param_4,
-                       undefined1 *param_5,undefined1 param_6,undefined8 param_7,undefined4 param_8,
-                       undefined4 param_9)
-
+void PosRing_Init(float zOff, float maxDistXY, float maxDistZ, Vec4 *pos, PosRing *ring, int cap, int unused,
+                  MobyInstance *ignore0, MobyInstance *ignore1)
 {
-  undefined4 uVar1;
-  undefined4 uVar2;
-  float fVar3;
-  
-  *param_5 = 1;
-  param_5[1] = 0;
-  param_5[2] = 0;
-  param_5[4] = 0;
-  param_5[3] = param_6;
-  *(float *)(param_5 + 0x10) = (float)param_1;
-  uVar1 = *param_4;
-  *(undefined4 *)(param_5 + 0x24) = uVar1;
-  uVar2 = param_4[1];
-  *(undefined4 *)(param_5 + 0x28) = uVar2;
-  fVar3 = (float)param_4[2];
-  *(undefined4 *)(param_5 + 8) = param_8;
-  *(undefined4 *)(param_5 + 0xc) = param_9;
-  *(undefined4 *)(param_5 + 0x30) = uVar1;
-  *(undefined4 *)(param_5 + 0x34) = uVar2;
-  *(float *)(param_5 + 0x14) = (float)param_2;
-  *(float *)(param_5 + 0x18) = (float)param_3;
-  *(float *)(param_5 + 0x2c) = (float)((double)fVar3 + param_1);
-  *(float *)(param_5 + 0x38) = (float)((double)fVar3 + param_1);
-  return;
-}
+    ring->head = 1;
+    ring->mark = 0;
+    ring->tail = 0;
+    ring->probe = 0;
+    ring->cap = (u8)cap;
+    ring->zOff = zOff;
+    ring->ignore[0] = ignore0;
+    ring->ignore[1] = ignore1;
+    ring->maxDistXY = maxDistXY;
+    ring->maxDistZ = maxDistZ;
 
+    for (int i = 0; i < 2; i++) {
+        ring->pts[i].x = pos->x;
+        ring->pts[i].y = pos->y;
+        ring->pts[i].z = pos->z + zOff;
+    }
+}
 
 // 0x0138810 (0x358 bytes)
-undefined8 PosRing_CollLineSampled(int param_1,float *param_2,float *param_3)
-
+/* CollLine from a to b, in steps of at most 10 units (each starting a tenth of a step
+   back) once they are 10 or more apart flat; the ring's mobys are not hit */
+int PosRing_CollLineSampled(PosRing *ring, Vec4 *a, Vec4 *b)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  float fVar7;
-  int iVar8;
-  undefined4 uVar9;
-  ulonglong *puVar10;
-  ulonglong uVar11;
-  longlong lVar12;
-  int iVar13;
-  int iVar14;
-  ulonglong unaff_r26;
-  ulonglong unaff_r27;
-  ulonglong unaff_r28;
-  ulonglong unaff_r29;
-  int iVar15;
-  ulonglong unaff_r30;
-  longlong lVar16;
-  ulonglong unaff_r31;
-  undefined8 uVar17;
-  ulonglong in_LR;
-  double dVar18;
-  double dVar19;
-  double dVar20;
-  double dVar21;
-  double dVar22;
-  double dVar23;
-  double dVar24;
-  ulonglong in_f24;
-  ulonglong in_f25;
-  double dVar25;
-  ulonglong in_f26;
-  double dVar26;
-  ulonglong in_f27;
-  ulonglong in_f28;
-  ulonglong in_f29;
-  ulonglong in_f30;
-  ulonglong in_f31;
-  
-  uVar11 = ZEXT48(&stack0x00000000);
-  lVar16 = uVar11 - 0x110;
-  puVar10 = (ulonglong *)lVar16;
-  *puVar10 = uVar11;
-  puVar10[0x24] = in_LR;
-  puVar10[0x1a] = in_f24;
-  puVar10[0x1b] = in_f25;
-  puVar10[0x1c] = in_f26;
-  puVar10[0x1d] = in_f27;
-  puVar10[0x1e] = in_f28;
-  puVar10[0x1f] = in_f29;
-  puVar10[0x20] = in_f30;
-  puVar10[0x21] = in_f31;
-  puVar10[0x15] = unaff_r27;
-  puVar10[0x16] = unaff_r28;
-  puVar10[0x19] = unaff_r31;
-  uVar17 = 0;
-  fVar1 = param_3[1];
-  puVar10[0x17] = unaff_r29;
-  fVar2 = param_2[1];
-  iVar15 = 0;
-  fVar3 = *param_2;
-  fVar4 = *param_3;
-  iVar14 = 0;
-  puVar10[0x18] = unaff_r30;
-  puVar10[0x14] = unaff_r26;
-  dVar26 = (double)SQRT((fVar3 - fVar4) * (fVar3 - fVar4) + (fVar2 - fVar1) * (fVar2 - fVar1));
-  lVar12 = lVar16;
-  iVar13 = param_1;
-  do {
-    iVar8 = *(int *)(iVar13 + 8);
-    if (iVar8 != 0) {
-      uVar9 = *(undefined4 *)(iVar8 + 0x94);
-      *(undefined4 *)(iVar8 + 0x94) = 0;
-      *(undefined4 *)((int)lVar12 + 0x94) = uVar9;
-    }
-    iVar14 = iVar14 + 1;
-    iVar13 = iVar13 + 4;
-    lVar12 = lVar12 + 4;
-  } while (iVar14 < 2);
-  if (10.0 <= dVar26) {
-    dVar18 = (double)FastFrac((double)(float)(dVar26 * 0.10000000149011612),0x140000,
-                                        uVar11 - 0x80);
-    dVar25 = 0.0;
-    dVar19 = (double)*(float *)(puVar10 + 0x12);
-    fVar1 = *param_2;
-    dVar22 = (double)fVar1;
-    fVar2 = param_2[1];
-    dVar21 = (double)fVar2;
-    fVar3 = param_2[2];
-    dVar20 = (double)fVar3;
-    fVar4 = param_2[3];
-    fVar5 = *param_3;
-    fVar6 = param_3[1];
-    fVar7 = param_3[2];
-    if (0.0 < dVar18) {
-      dVar18 = dVar19 + 1.0;
-      dVar19 = (double)(float)dVar18;
-      *(float *)(puVar10 + 0x12) = (float)dVar18;
-    }
-    fVar6 = (float)((double)fVar6 - dVar21);
-    fVar5 = (float)((double)fVar5 - dVar22);
-    fVar7 = (float)((double)fVar7 - dVar20);
-    *(float *)(puVar10 + 0xe) = fVar1;
-    *(float *)((int)puVar10 + 0x74) = fVar2;
-    *(float *)(puVar10 + 0xf) = fVar3;
-    *(float *)((int)puVar10 + 0x7c) = fVar4;
-    *(float *)((int)puVar10 + 0x8c) = fVar4;
-    fVar1 = SQRT(fVar7 * fVar7 + fVar5 * fVar5 + fVar6 * fVar6);
-    fVar2 = (float)(dVar26 / dVar19) / fVar1;
-    dVar18 = dVar25;
-    if (0.0 - fVar1 < 0.0) {
-      dVar18 = (double)(fVar6 * fVar2);
-    }
-    dVar23 = dVar25;
-    if (0.0 - fVar1 < 0.0) {
-      dVar23 = (double)(fVar5 * fVar2);
-    }
-    dVar24 = dVar25;
-    if (0.0 - fVar1 < 0.0) {
-      dVar24 = (double)(fVar7 * fVar2);
-    }
-    if (fVar1 - 0.0 < 0.0) {
-      dVar18 = (double)(fVar6 * fVar2);
-    }
-    if (fVar1 - 0.0 < 0.0) {
-      dVar23 = (double)(fVar5 * fVar2);
-    }
-    if (fVar1 - 0.0 < 0.0) {
-      dVar24 = (double)(fVar7 * fVar2);
-    }
-    *(float *)(puVar10 + 0x10) = (float)(dVar22 + dVar23);
-    *(float *)((int)puVar10 + 0x84) = (float)(dVar21 + dVar18);
-    *(float *)(puVar10 + 0x11) = (float)(dVar20 + dVar24);
-    fVar1 = SQRT((float)(dVar24 * dVar24 +
-                        (double)(float)(dVar23 * dVar23 + (double)(float)(dVar18 * dVar18))));
-    dVar20 = (double)(((float)(dVar26 / dVar19) * -0.1) / fVar1);
-    dVar26 = dVar25;
-    if (0.0 - fVar1 < 0.0) {
-      dVar26 = (double)(float)(dVar24 * dVar20);
-    }
-    dVar21 = dVar25;
-    if (0.0 - fVar1 < 0.0) {
-      dVar21 = (double)(float)(dVar18 * dVar20);
-    }
-    dVar22 = dVar25;
-    if (0.0 - fVar1 < 0.0) {
-      dVar22 = (double)(float)(dVar23 * dVar20);
-    }
-    if (fVar1 - 0.0 < 0.0) {
-      dVar26 = (double)(float)(dVar24 * dVar20);
-    }
-    if (fVar1 - 0.0 < 0.0) {
-      dVar21 = (double)(float)(dVar18 * dVar20);
-    }
-    if (fVar1 - 0.0 < 0.0) {
-      dVar22 = (double)(float)(dVar23 * dVar20);
-    }
-    if (0.0 < dVar19) {
-      dVar19 = 1.0;
-      do {
-        uVar17 = CollLine(uVar11 - 0xa0,uVar11 - 0x90,0,*(undefined4 *)(param_1 + 8),0);
-        if ((int)uVar17 != 0) break;
-        fVar1 = *(float *)(puVar10 + 0x12);
-        fVar2 = *(float *)(puVar10 + 0x10);
-        fVar3 = *(float *)((int)puVar10 + 0x84);
-        fVar4 = *(float *)(puVar10 + 0x11);
-        *(undefined4 *)((int)puVar10 + 0x7c) = *(undefined4 *)((int)puVar10 + 0x8c);
-        *(float *)(puVar10 + 0x10) = (float)((double)fVar2 + dVar23);
-        *(float *)(puVar10 + 0xe) = (float)((double)fVar2 + dVar22);
-        *(float *)((int)puVar10 + 0x84) = (float)((double)fVar3 + dVar18);
-        *(float *)(puVar10 + 0x11) = (float)((double)fVar4 + dVar24);
-        *(float *)((int)puVar10 + 0x74) = (float)((double)fVar3 + dVar21);
-        *(float *)(puVar10 + 0xf) = (float)((double)fVar4 + dVar26);
-        *(float *)(puVar10 + 0x12) = (float)((double)fVar1 - dVar19);
-      } while (dVar25 < (double)(float)((double)fVar1 - dVar19));
-    }
-  }
-  else {
-    uVar17 = CollLine(param_2,param_3,0,*(undefined4 *)(param_1 + 8),0);
-  }
-  do {
-    if (*(int *)(param_1 + 8) != 0) {
-      *(undefined4 *)(*(int *)(param_1 + 8) + 0x94) = *(undefined4 *)((int)lVar16 + 0x94);
-    }
-    iVar15 = iVar15 + 1;
-    param_1 = param_1 + 4;
-    lVar16 = lVar16 + 4;
-  } while (iVar15 < 2);
-  return uVar17;
-}
+    u32 savedColl[2];
+    int hit = 0;
+    float dx = a->x - b->x;
+    float dy = a->y - b->y;
+    float dist = sqrtf(dx * dx + dy * dy);
 
+    for (int i = 0; i < 2; i++) {
+        if (ring->ignore[i] != NULL) {
+            savedColl[i] = (u32)(uintptr_t)ring->ignore[i]->collision;
+            ring->ignore[i]->collision = NULL;
+        }
+    }
+
+    if (dist < 10.0f) {
+        hit = PathCollLine(a, b, 0, ring->ignore[0]);
+    }
+    else {
+        float steps;
+        float frac = (float)FastFrac(dist * 0.1f, 0, (undefined8)(uintptr_t)&steps);
+        if (frac > 0.0f) {
+            steps += 1.0f;
+        }
+
+        float stepLen = dist / steps;
+        Vec4 dir;
+        dir.x = b->x - a->x;
+        dir.y = b->y - a->y;
+        dir.z = b->z - a->z;
+
+        float dirLen = sqrtf(dir.z * dir.z + (dir.x * dir.x + dir.y * dir.y));
+        Vec4 step = { 0.0f, 0.0f, 0.0f, 0.0f };
+        if (dirLen != 0.0f) {
+            step.x = dir.x * (stepLen / dirLen);
+            step.y = dir.y * (stepLen / dirLen);
+            step.z = dir.z * (stepLen / dirLen);
+        }
+
+        float stepSize = sqrtf(step.z * step.z + (step.x * step.x + step.y * step.y));
+        Vec4 back = { 0.0f, 0.0f, 0.0f, 0.0f };
+        if (stepSize != 0.0f) {
+            back.x = step.x * ((stepLen * -0.1f) / stepSize);
+            back.y = step.y * ((stepLen * -0.1f) / stepSize);
+            back.z = step.z * ((stepLen * -0.1f) / stepSize);
+        }
+
+        Vec4 from = *a;
+        Vec4 to;
+        to.x = a->x + step.x;
+        to.y = a->y + step.y;
+        to.z = a->z + step.z;
+        to.w = a->w;
+
+        while (steps > 0.0f) {
+            hit = PathCollLine(&from, &to, 0, ring->ignore[0]);
+            if (hit != 0) {
+                break;
+            }
+
+            steps -= 1.0f;
+            from.x = to.x + back.x;
+            from.y = to.y + back.y;
+            from.z = to.z + back.z;
+            to.x += step.x;
+            to.y += step.y;
+            to.z += step.z;
+        }
+    }
+
+    for (int i = 0; i < 2; i++) {
+        if (ring->ignore[i] != NULL) {
+            ring->ignore[i]->collision = (ushort *)(uintptr_t)savedColl[i];
+        }
+    }
+
+    return hit;
+}
 
 // 0x0138b68 (0x7c bytes)
-ulonglong PosRing_IsIndexBefore(byte *param_1,ulonglong param_2,ulonglong param_3)
-
+/* is b before a, in the ring's order */
+int PosRing_IsIndexBefore(PosRing *ring, u8 a, u8 b)
 {
-  byte bVar1;
-  ulonglong uVar2;
-  
-  param_2 = param_2 & 0xff;
-  param_3 = param_3 & 0xff;
-  if ((uint)param_2 == 0xff) {
-    uVar2 = 0;
-  }
-  else if ((uint)param_3 == 0xff) {
-    uVar2 = 1;
-  }
-  else {
-    bVar1 = *param_1;
-    if ((uint)bVar1 < (uint)param_1[2]) {
-      if ((uint)param_3 <= (uint)bVar1) {
-        param_3 = param_3 + param_1[3] & 0xff;
-      }
-      if ((uint)param_2 <= (uint)bVar1) {
-        param_2 = param_2 + param_1[3] & 0xff;
-      }
-      uVar2 = param_3 - param_2 >> 0x3f;
+    if (a == POSRING_NONE) {
+        return 0;
     }
-    else {
-      uVar2 = param_3 - param_2 >> 0x3f;
-    }
-  }
-  return uVar2;
-}
 
+    if (b == POSRING_NONE) {
+        return 1;
+    }
+
+    return PosRingUnwrap(ring, b) < PosRingUnwrap(ring, a);
+}
 
 // 0x0138be4 (0x7c bytes)
-ulonglong PosRing_IsIndexBeforeWrapped(byte *param_1,ulonglong param_2,ulonglong param_3)
-
+/* is a before b, in the ring's order */
+int PosRing_IsIndexBeforeWrapped(PosRing *ring, u8 a, u8 b)
 {
-  byte bVar1;
-  ulonglong uVar2;
-  
-  param_2 = param_2 & 0xff;
-  param_3 = param_3 & 0xff;
-  if ((uint)param_2 == 0xff) {
-    uVar2 = 0;
-  }
-  else if ((uint)param_3 == 0xff) {
-    uVar2 = 1;
-  }
-  else {
-    bVar1 = *param_1;
-    if ((uint)bVar1 < (uint)param_1[2]) {
-      if ((uint)param_3 <= (uint)bVar1) {
-        param_3 = param_3 + param_1[3] & 0xff;
-      }
-      if ((uint)param_2 <= (uint)bVar1) {
-        param_2 = param_2 + param_1[3] & 0xff;
-      }
-      uVar2 = param_2 - param_3 >> 0x3f;
+    if (a == POSRING_NONE) {
+        return 0;
     }
-    else {
-      uVar2 = param_2 - param_3 >> 0x3f;
-    }
-  }
-  return uVar2;
-}
 
+    if (b == POSRING_NONE) {
+        return 1;
+    }
+
+    return PosRingUnwrap(ring, a) < PosRingUnwrap(ring, b);
+}
 
 // 0x0138c60 (0x54 bytes)
-undefined8 PosRing_IsIndexOutsideRange(byte *param_1,byte param_2)
-
+int PosRing_IsIndexOutsideRange(PosRing *ring, u8 idx)
 {
-  byte bVar1;
-  byte bVar2;
-  undefined8 uVar3;
-  
-  if (param_2 == 0xff) {
-    uVar3 = 0;
-  }
-  else {
-    bVar1 = *param_1;
-    bVar2 = param_1[2];
-    if (bVar1 < bVar2) {
-      uVar3 = 0;
-      if ((param_2 <= bVar2) || (bVar1 < param_2)) {
-        uVar3 = 1;
-      }
+    if (idx == POSRING_NONE) {
+        return 0;
     }
-    else {
-      uVar3 = 0;
-      if ((bVar2 <= param_2) && (param_2 < bVar1)) {
-        uVar3 = 1;
-      }
-    }
-  }
-  return uVar3;
-}
 
+    if (ring->head < ring->tail) {
+        return idx <= ring->tail || ring->head < idx;
+    }
+
+    return ring->tail <= idx && idx < ring->head;
+}
 
 // 0x0138cb4 (0x5c bytes)
-uint PosRing_NextIndexClamped(byte *param_1,uint param_2)
-
+/* idx + 1, kept between the tail and the head */
+int PosRing_NextIndexClamped(PosRing *ring, u8 idx)
 {
-  byte bVar1;
-  uint uVar2;
-  uint uVar3;
-  uint uVar4;
-  uint uVar5;
-  
-  uVar4 = (param_2 & 0xff) + 1;
-  bVar1 = param_1[2];
-  uVar2 = (uint)bVar1;
-  uVar4 = uVar4 - (uVar4 / param_1[3]) * (uint)param_1[3] & 0xff;
-  uVar5 = (uint)*param_1;
-  uVar3 = uVar2;
-  if (uVar5 < bVar1) {
-    uVar3 = uVar4;
-    if ((bVar1 < uVar4) && (uVar4 <= uVar5)) {
-      uVar3 = uVar2;
-    }
-  }
-  else if ((bVar1 <= uVar4) && (uVar4 < uVar5)) {
-    uVar3 = uVar4;
-  }
-  return uVar3;
-}
+    int next = (u8)PosRingNext(ring, idx);
 
+    if (ring->head < ring->tail) {
+        if (ring->tail < next && next <= ring->head) {
+            return ring->tail;
+        }
+
+        return next;
+    }
+
+    if (ring->tail <= next && next < ring->head) {
+        return next;
+    }
+
+    return ring->tail;
+}
 
 // 0x0138d10 (0x140 bytes)
-longlong PosRing_StepClearBack(undefined8 param_1,byte *param_2,byte *param_3)
-
+/* tests the point at *cursor (restarting at the head if it is out of range) for a clear
+   line to target, then steps the cursor back; returns that point if clear, else 0xff */
+int PosRing_StepClearBack(Vec4 *target, PosRing *ring, u8 *cursor)
 {
-  byte bVar1;
-  byte bVar2;
-  byte bVar3;
-  bool bVar4;
-  int iVar5;
-  ulonglong uVar6;
-  GPiece<16> local_20;
-  
-  bVar1 = *param_3;
-  if (bVar1 == 0xff) {
-    bVar2 = *param_2;
-  }
-  else {
-    bVar2 = *param_2;
-    bVar3 = param_2[2];
-    if (bVar2 < bVar3) {
-      bVar4 = false;
-      if ((bVar1 <= bVar3) || (bVar2 < bVar1)) {
-        bVar4 = true;
-      }
+    if (!PosRing_IsIndexOutsideRange(ring, *cursor)) {
+        *cursor = ring->head;
     }
-    else {
-      bVar4 = bVar1 < bVar2 && bVar3 <= bVar1;
+
+    Vec4 pnt = PosRingPointAt(ring, *cursor);
+    int hit = PosRing_CollLineSampled(ring, &pnt, target);
+    int tested = *cursor;
+
+    int idx = tested;
+    if (idx == ring->tail) {
+        *cursor = ring->head;
+        idx = ring->head;
     }
-    if (bVar4) goto LAB_00138d94;
-  }
-  *param_3 = bVar2;
-LAB_00138d94:
-  iVar5 = PosRing_CollLineSampled(param_2,local_20,param_1);
-  bVar1 = *param_3;
-  bVar3 = *param_2;
-  uVar6 = (ulonglong)bVar1;
-  if (bVar1 == param_2[2]) {
-    *param_3 = bVar3;
-    uVar6 = (ulonglong)bVar3;
-  }
-  bVar3 = (byte)uVar6;
-  if ((int)uVar6 == 0) {
-    bVar3 = param_2[3];
-  }
-  *param_3 = bVar3 - 1;
-  return (ZERO_MASK(iVar5) & (ulonglong)bVar1 - 0xff) + 0xff;
+
+    *cursor = (idx == 0 ? ring->cap : idx) - 1;
+
+    return hit ? POSRING_NONE : tested;
 }
 
+/* close enough to look, and nothing in the way */
+static inline int PosRingCanReach(PosRing *ring, Vec4 *from, Vec4 *to)
+{
+    float dx = from->x - to->x;
+    float dy = from->y - to->y;
+
+    return sqrtf(dx * dx + dy * dy) < ring->maxDistXY && fabsf(from->z - to->z) < ring->maxDistZ &&
+           PathCollLine(from, to, 2, NULL) == 0;
+}
+
+static inline Vec4 PosRingRaised(PosRing *ring, Vec4 *from, float zOff)
+{
+    Vec4 target = *from;
+
+    if (zOff == 0.0f) {
+        zOff = ring->zOff;
+    }
+
+    target.z = from->z + zOff;
+
+    return target;
+}
 
 // 0x0138e58 (0x3a4 bytes)
-void PosRing_FindClearPointFwd
-               (byte *param_1,float *param_2,float *param_3,float *param_4,byte *param_5,
-               undefined8 param_6)
-
+/* moves *cursor toward the head through points clear of `from`, putting the point to head
+   for in out (fallback once caught up); the scan goes back one point a call */
+void PosRing_FindClearPointFwd(float zOff, PosRing *ring, Vec4 *from, Vec4 *out, Vec4 *fallback, u8 *cursor, u8 *scan)
 {
-  byte bVar1;
-  byte bVar2;
-  byte bVar3;
-  float fVar4;
-  float fVar5;
-  bool bVar6;
-  uint uVar7;
-  int iVar8;
-  uint uVar9;
-  uint uVar10;
-  GPiece<24> local_40;
-  
-  uVar7 = PosRing_StepClearBack(local_40,param_1,param_6);
-  if (uVar7 != 0xff) {
-    bVar1 = *param_5;
-    uVar9 = (uint)bVar1;
-    if (uVar7 != 0xff) {
-      if (bVar1 != 0xff) {
-        bVar2 = *param_1;
-        uVar10 = uVar7;
-        if (bVar2 < param_1[2]) {
-          uVar9 = (uint)bVar1;
-          if (bVar1 <= bVar2) {
-            uVar9 = (uint)bVar1 + (uint)param_1[3] & 0xff;
-          }
-          if ((int)uVar7 <= (int)(uint)bVar2) {
-            uVar10 = uVar7 + param_1[3] & 0xff;
-          }
+    Vec4 target = PosRingRaised(ring, from, zOff);
+    int clear = PosRing_StepClearBack(&target, ring, scan);
+
+    if (clear != POSRING_NONE) {
+        u8 cur = *cursor;
+
+        if (cur == POSRING_NONE || PosRingUnwrap(ring, cur) < PosRingUnwrap(ring, clear)) {
+            PosRingGetPoint(out, ring, clear);
+
+            if (PosRing_IsIndexOutsideRange(ring, *cursor)) {
+                ring->tail = *cursor;
+            }
+
+            *cursor = (u8)clear;
         }
-        if ((int)uVar10 <= (int)uVar9) goto LAB_00138fc8;
-      }
-      *param_3 = *(float *)(param_1 + uVar7 * 0xc + 0x24);
-      param_3[1] = *(float *)(param_1 + uVar7 * 0xc + 0x28);
-      param_3[2] = *(float *)(param_1 + uVar7 * 0xc + 0x2c);
-      bVar1 = *param_5;
-      if (bVar1 != 0xff) {
-        bVar2 = *param_1;
-        bVar3 = param_1[2];
-        if (bVar2 < bVar3) {
-          bVar6 = false;
-          if ((bVar1 <= bVar3) || (bVar2 < bVar1)) {
-            bVar6 = true;
-          }
+    }
+
+    if (PosRingCanReach(ring, from, out)) {
+        u8 cur = *cursor;
+
+        if (cur == POSRING_NONE || cur == ring->head) {
+            if (cur != POSRING_NONE) {
+                ring->tail = cur;
+            }
+
+            *cursor = POSRING_NONE;
         }
         else {
-          bVar6 = false;
-          if ((bVar3 <= bVar1) && (bVar1 < bVar2)) {
-            bVar6 = true;
-          }
+            ring->tail = cur;
+            *cursor = (u8)PosRingNext(ring, cur);
+            PosRingGetPoint(out, ring, *cursor);
         }
-        if (bVar6) {
-          param_1[2] = bVar1;
-        }
-      }
-      *param_5 = (byte)uVar7;
     }
-  }
-LAB_00138fc8:
-  if (((SQRT((*param_2 - *param_3) * (*param_2 - *param_3) +
-             (param_2[1] - param_3[1]) * (param_2[1] - param_3[1])) < *(float *)(param_1 + 0x14)) &&
-      (ABS(param_2[2] - param_3[2]) < *(float *)(param_1 + 0x18))) &&
-     (iVar8 = CollLine(param_2,param_3,2,0,0), iVar8 == 0)) {
-    bVar1 = *param_5;
-    if ((bVar1 == 0xff) || (bVar1 == *param_1)) {
-      if (bVar1 != 0xff) {
-        param_1[2] = bVar1;
-      }
-      *param_5 = 0xff;
-    }
-    else {
-      param_1[2] = bVar1;
-      uVar7 = (*param_5 + 1) - ((*param_5 + 1) / (uint)param_1[3]) * (uint)param_1[3];
-      *param_5 = (byte)uVar7;
-      *param_3 = *(float *)(param_1 + (uVar7 & 0xff) * 0xc + 0x24);
-      param_3[1] = *(float *)(param_1 + (uint)*param_5 * 0xc + 0x28);
-      param_3[2] = *(float *)(param_1 + (uint)*param_5 * 0xc + 0x2c);
-    }
-  }
-  bVar1 = *param_5;
-  if (bVar1 == 0xff) {
-    fVar4 = param_4[1];
-    *param_3 = *param_4;
-    fVar5 = param_4[2];
-    param_3[1] = fVar4;
-    param_3[2] = fVar5;
-    bVar1 = *param_5;
-  }
-  if (bVar1 == *param_1) {
-    bVar1 = param_1[1];
-    *(float *)(param_1 + (uint)bVar1 * 0xc + 0x24) = *param_2;
-    *(float *)(param_1 + (uint)bVar1 * 0xc + 0x28) = param_2[1];
-    *(float *)(param_1 + (uint)bVar1 * 0xc + 0x2c) = param_2[2];
-    *param_3 = *(float *)(param_1 + (uint)*param_5 * 0xc + 0x24);
-    param_3[1] = *(float *)(param_1 + (uint)*param_5 * 0xc + 0x28);
-    param_3[2] = *(float *)(param_1 + (uint)*param_5 * 0xc + 0x2c);
-  }
-  return;
-}
 
+    if (*cursor == POSRING_NONE) {
+        out->x = fallback->x;
+        out->y = fallback->y;
+        out->z = fallback->z;
+    }
+
+    if (*cursor == ring->head) {
+        PosRingSetPoint(ring, ring->mark, from);
+        PosRingGetPoint(out, ring, *cursor);
+    }
+}
 
 // 0x01391fc (0x13c bytes)
-longlong PosRing_StepClearFwd(undefined8 param_1,byte *param_2,byte *param_3)
-
+/* PosRing_StepClearBack stepping toward the head */
+int PosRing_StepClearFwd(Vec4 *target, PosRing *ring, u8 *cursor)
 {
-  byte bVar1;
-  byte bVar2;
-  byte bVar3;
-  bool bVar4;
-  int iVar5;
-  ulonglong uVar6;
-  GPiece<16> local_20;
-  
-  bVar1 = *param_3;
-  if (bVar1 == 0xff) {
-    bVar2 = *param_2;
-  }
-  else {
-    bVar2 = *param_2;
-    bVar3 = param_2[2];
-    if (bVar2 < bVar3) {
-      bVar4 = false;
-      if ((bVar1 <= bVar3) || (bVar2 < bVar1)) {
-        bVar4 = true;
-      }
+    if (!PosRing_IsIndexOutsideRange(ring, *cursor)) {
+        *cursor = ring->head;
     }
-    else {
-      bVar4 = bVar1 < bVar2 && bVar3 <= bVar1;
-    }
-    if (bVar4) goto LAB_00139280;
-  }
-  *param_3 = bVar2;
-LAB_00139280:
-  iVar5 = PosRing_CollLineSampled(param_2,local_20,param_1);
-  bVar1 = *param_3;
-  bVar3 = *param_2;
-  uVar6 = (ulonglong)bVar1;
-  if (bVar1 == param_2[2]) {
-    *param_3 = bVar3;
-    uVar6 = (ulonglong)bVar3;
-  }
-  *param_3 = (char)(uVar6 + 1) - (char)((uint)(uVar6 + 1) / (uint)param_2[3]) * param_2[3];
-  return (ZERO_MASK(iVar5) & (ulonglong)bVar1 - 0xff) + 0xff;
-}
 
+    Vec4 pnt = PosRingPointAt(ring, *cursor);
+    int hit = PosRing_CollLineSampled(ring, &pnt, target);
+    int tested = *cursor;
+
+    int idx = tested;
+    if (idx == ring->tail) {
+        *cursor = ring->head;
+        idx = ring->head;
+    }
+
+    *cursor = (u8)PosRingNext(ring, idx);
+
+    return hit ? POSRING_NONE : tested;
+}
 
 // 0x0139340 (0x2d8 bytes)
-void PosRing_FindClearPointBack
-               (byte *param_1,float *param_2,float *param_3,float *param_4,byte *param_5,
-               undefined8 param_6)
-
+/* PosRing_FindClearPointFwd moving *cursor toward the tail (the head follows it) */
+void PosRing_FindClearPointBack(float zOff, PosRing *ring, Vec4 *from, Vec4 *out, Vec4 *fallback, u8 *cursor, u8 *scan)
 {
-  byte bVar1;
-  byte bVar2;
-  float fVar3;
-  float fVar4;
-  bool bVar5;
-  uint uVar6;
-  int iVar7;
-  byte bVar8;
-  uint uVar9;
-  uint uVar10;
-  GPiece<24> local_40;
-  
-  uVar6 = PosRing_StepClearFwd(local_40,param_1,param_6);
-  if (uVar6 != 0xff) {
-    bVar8 = *param_5;
-    uVar9 = (uint)bVar8;
-    if (uVar6 != 0xff) {
-      if (bVar8 != 0xff) {
-        bVar1 = *param_1;
-        uVar10 = uVar6;
-        if (bVar1 < param_1[2]) {
-          uVar9 = (uint)bVar8;
-          if (bVar8 <= bVar1) {
-            uVar9 = (uint)bVar8 + (uint)param_1[3] & 0xff;
-          }
-          if ((int)uVar6 <= (int)(uint)bVar1) {
-            uVar10 = uVar6 + param_1[3] & 0xff;
-          }
+    Vec4 target = PosRingRaised(ring, from, zOff);
+    int clear = PosRing_StepClearFwd(&target, ring, scan);
+
+    if (clear != POSRING_NONE) {
+        u8 cur = *cursor;
+
+        if (cur == POSRING_NONE || PosRingUnwrap(ring, clear) < PosRingUnwrap(ring, cur)) {
+            PosRingGetPoint(out, ring, clear);
+
+            if (PosRing_IsIndexOutsideRange(ring, *cursor)) {
+                ring->head = *cursor;
+            }
+
+            *cursor = (u8)clear;
         }
-        if ((int)uVar9 <= (int)uVar10) goto LAB_001394b0;
-      }
-      *param_3 = *(float *)(param_1 + uVar6 * 0xc + 0x24);
-      param_3[1] = *(float *)(param_1 + uVar6 * 0xc + 0x28);
-      param_3[2] = *(float *)(param_1 + uVar6 * 0xc + 0x2c);
-      bVar8 = *param_5;
-      if (bVar8 != 0xff) {
-        bVar1 = *param_1;
-        bVar2 = param_1[2];
-        if (bVar1 < bVar2) {
-          bVar5 = false;
-          if ((bVar8 <= bVar2) || (bVar1 < bVar8)) {
-            bVar5 = true;
-          }
+    }
+
+    if (PosRingCanReach(ring, from, out)) {
+        u8 cur = *cursor;
+
+        if (cur == POSRING_NONE || cur == ring->tail) {
+            if (cur != POSRING_NONE) {
+                ring->head = cur;
+            }
+
+            *cursor = POSRING_NONE;
         }
         else {
-          bVar5 = false;
-          if ((bVar2 <= bVar8) && (bVar8 < bVar1)) {
-            bVar5 = true;
-          }
+            /* steps from 0 to cap, not cap - 1, as the game does */
+            ring->head = cur;
+            *cursor = (cur == 0) ? ring->cap : cur - 1;
+            PosRingGetPoint(out, ring, *cursor);
         }
-        if (bVar5) {
-          *param_1 = bVar8;
-        }
-      }
-      *param_5 = (byte)uVar6;
     }
-  }
-LAB_001394b0:
-  if (((SQRT((*param_2 - *param_3) * (*param_2 - *param_3) +
-             (param_2[1] - param_3[1]) * (param_2[1] - param_3[1])) < *(float *)(param_1 + 0x14)) &&
-      (ABS(param_2[2] - param_3[2]) < *(float *)(param_1 + 0x18))) &&
-     (iVar7 = CollLine(param_2,param_3,2,0,0), iVar7 == 0)) {
-    bVar8 = *param_5;
-    if ((bVar8 == 0xff) || (bVar8 == param_1[2])) {
-      if (bVar8 != 0xff) {
-        *param_1 = bVar8;
-      }
-      *param_5 = 0xff;
-    }
-    else {
-      *param_1 = bVar8;
-      bVar8 = *param_5 - 1;
-      if (*param_5 == 0) {
-        bVar8 = param_1[3];
-      }
-      *param_5 = bVar8;
-      *param_3 = *(float *)(param_1 + (uint)bVar8 * 0xc + 0x24);
-      param_3[1] = *(float *)(param_1 + (uint)*param_5 * 0xc + 0x28);
-      param_3[2] = *(float *)(param_1 + (uint)*param_5 * 0xc + 0x2c);
-    }
-  }
-  if (*param_5 == 0xff) {
-    fVar3 = param_4[1];
-    *param_3 = *param_4;
-    fVar4 = param_4[2];
-    param_3[1] = fVar3;
-    param_3[2] = fVar4;
-  }
-  return;
-}
 
+    if (*cursor == POSRING_NONE) {
+        out->x = fallback->x;
+        out->y = fallback->y;
+        out->z = fallback->z;
+    }
+}
 
 // 0x0139620 (0x3f4 bytes)
-undefined8 PosRing_AddPoint(double param_1,undefined4 *param_2,byte *param_3)
-
+/* adds pos (raised by zOff, or the ring's zOff) as the new head, dropping points it can
+   see past; returns 0 if the new point had no clear line back */
+int PosRing_AddPoint(float zOff, Vec4 *pos, PosRing *ring)
 {
-  float fVar1;
-  byte bVar2;
-  byte bVar3;
-  undefined4 uVar4;
-  undefined4 uVar5;
-  bool bVar6;
-  uint uVar7;
-  int iVar8;
-  int iVar9;
-  byte bVar10;
-  uint uVar11;
-  uint uVar12;
-  undefined8 uVar13;
-  uint uVar14;
-  GPiece<16> local_30;
-  GPiece<16> local_20;
-  
-  uVar4 = *param_2;
-  uVar5 = param_2[1];
-  bVar10 = param_3[1];
-  bVar2 = *param_3;
-  bVar3 = param_3[2];
-  if (param_1 == 0.0) {
-    param_1 = (double)*(float *)(param_3 + 0x10);
-  }
-  fVar1 = (float)((double)(float)param_2[2] + param_1);
-  if (bVar10 != 0xff) {
-    if (bVar2 < bVar3) {
-      bVar6 = false;
-      if ((bVar10 <= bVar3) || (bVar2 < bVar10)) {
-        bVar6 = true;
-      }
-    }
-    else {
-      bVar6 = bVar10 < bVar2 && bVar3 <= bVar10;
-    }
-    if (bVar6) goto LAB_001396d8;
-  }
-  param_3[1] = bVar3;
-LAB_001396d8:
-  if (bVar3 == bVar2) {
-    param_3[1] = bVar2;
-    uVar7 = (bVar2 + 1) - ((bVar2 + 1) / (uint)param_3[3]) * (uint)param_3[3];
-    uVar13 = 1;
-    uVar14 = uVar7 & 0xff;
-    *param_3 = (byte)uVar7;
-    *(undefined4 *)(param_3 + uVar14 * 0xc + 0x24) = uVar4;
-    *(undefined4 *)(param_3 + uVar14 * 0xc + 0x28) = uVar5;
-    *(float *)(param_3 + uVar14 * 0xc + 0x2c) = fVar1;
-  }
-  else {
-    iVar8 = PosRing_CollLineSampled(param_3,local_30,local_20);
-    if (iVar8 == 0) {
-      if (param_3[1] != param_3[2]) {
-        iVar8 = param_3[1] - 1;
-        if (iVar8 < 0) {
-          iVar8 = param_3[3] - 1;
-        }
-        iVar9 = PosRing_CollLineSampled(param_3,local_30,local_20);
-        if (iVar9 == 0) {
-          bVar10 = param_3[1];
-          param_3[1] = (byte)iVar8;
-          *param_3 = bVar10;
-        }
-      }
-      bVar10 = *param_3;
-      uVar13 = 1;
-      *(undefined4 *)(param_3 + (uint)bVar10 * 0xc + 0x24) = uVar4;
-      *(undefined4 *)(param_3 + (uint)bVar10 * 0xc + 0x28) = uVar5;
-      *(float *)(param_3 + (uint)bVar10 * 0xc + 0x2c) = fVar1;
-    }
-    else {
-      bVar10 = param_3[3];
-      uVar7 = *param_3 + 1;
-      uVar7 = uVar7 - (uVar7 / bVar10) * (uint)bVar10;
-      uVar14 = (uint)*param_3;
-      if (uVar7 != param_3[2]) {
-        *param_3 = (byte)uVar7;
-        param_3[1] = (char)(param_3[1] + 1) - (char)((param_3[1] + 1) / (uint)bVar10) * bVar10;
-        uVar14 = uVar7;
-      }
-      uVar14 = uVar14 & 0xff;
-      uVar13 = 0;
-      *(undefined4 *)(param_3 + uVar14 * 0xc + 0x24) = uVar4;
-      *(undefined4 *)(param_3 + uVar14 * 0xc + 0x28) = uVar5;
-      *(float *)(param_3 + uVar14 * 0xc + 0x2c) = fVar1;
-    }
-    bVar10 = param_3[2];
-    uVar12 = (uint)bVar10;
-    uVar14 = (param_3[4] + 1) - ((param_3[4] + 1) / (uint)param_3[3]) * (uint)param_3[3] & 0xff;
-    uVar11 = (uint)*param_3;
-    uVar7 = uVar12;
-    if (uVar11 < bVar10) {
-      uVar7 = uVar14;
-      if ((bVar10 < uVar14) && (uVar14 <= uVar11)) {
-        uVar7 = uVar12;
-      }
-    }
-    else if ((bVar10 <= uVar14) && (uVar14 < uVar11)) {
-      uVar7 = uVar14;
-    }
-    param_3[4] = (byte)uVar7;
-    if ((((uVar7 != *param_3) && (uVar7 != bVar10)) && (uVar7 != param_3[1])) &&
-       (iVar8 = PosRing_CollLineSampled(param_3,local_30,local_20), iVar8 == 0)) {
-      bVar10 = param_3[3];
-      uVar14 = (param_3[4] + 1) - ((param_3[4] + 1) / (uint)bVar10) * (uint)bVar10;
-      *param_3 = (byte)uVar14;
-      if (param_3[1] != param_3[2]) {
-        bVar10 = bVar10 - 1;
-        if ((uVar14 & 0xff) != 0) {
-          bVar10 = *param_3;
-          *param_3 = bVar10 - 1;
-          uVar14 = (uint)*param_3;
-        }
-        param_3[1] = bVar10;
-      }
-      uVar14 = uVar14 & 0xff;
-      uVar13 = 1;
-      *(undefined4 *)(param_3 + uVar14 * 0xc + 0x24) = uVar4;
-      *(undefined4 *)(param_3 + uVar14 * 0xc + 0x28) = uVar5;
-      *(float *)(param_3 + uVar14 * 0xc + 0x2c) = fVar1;
-    }
-  }
-  return uVar13;
-}
+    Vec4 pnt = PosRingRaised(ring, pos, zOff);
+    int result;
 
+    if (!PosRing_IsIndexOutsideRange(ring, ring->mark)) {
+        ring->mark = ring->tail;
+    }
+
+    if (ring->tail == ring->head) {
+        ring->mark = ring->head;
+        ring->head = (u8)PosRingNext(ring, ring->head);
+        PosRingSetPoint(ring, ring->head, &pnt);
+        return 1;
+    }
+
+    Vec4 markPnt = PosRingPointAt(ring, ring->mark);
+    if (PosRing_CollLineSampled(ring, &markPnt, &pnt) == 0) {
+        /* the mark sees it: replace the head, and pull the mark back if it sees further */
+        if (ring->mark != ring->tail) {
+            int before = ring->mark - 1;
+            if (before < 0) {
+                before = ring->cap - 1;
+            }
+
+            Vec4 beforePnt = PosRingPointAt(ring, before);
+            if (PosRing_CollLineSampled(ring, &beforePnt, &pnt) == 0) {
+                ring->head = ring->mark;
+                ring->mark = (u8)before;
+            }
+        }
+
+        PosRingSetPoint(ring, ring->head, &pnt);
+        result = 1;
+    }
+    else {
+        int next = PosRingNext(ring, ring->head);
+
+        if (next != ring->tail) {
+            ring->head = (u8)next;
+            ring->mark = (u8)PosRingNext(ring, ring->mark);
+        }
+
+        PosRingSetPoint(ring, ring->head, &pnt);
+        result = 0;
+    }
+
+    /* one probe a call for a shortcut from further back */
+    int probe = PosRing_NextIndexClamped(ring, ring->probe);
+    ring->probe = (u8)probe;
+
+    if (probe == ring->head || probe == ring->tail || probe == ring->mark) {
+        return result;
+    }
+
+    Vec4 probePnt = PosRingPointAt(ring, probe);
+    if (PosRing_CollLineSampled(ring, &probePnt, &pnt) != 0) {
+        return result;
+    }
+
+    ring->head = (u8)PosRingNext(ring, ring->probe);
+    if (ring->mark != ring->tail) {
+        if (ring->head == 0) {
+            ring->mark = ring->cap - 1;
+        }
+        else {
+            ring->mark = ring->head;
+            ring->head--;
+        }
+    }
+
+    PosRingSetPoint(ring, ring->head, &pnt);
+
+    return 1;
+}
 
 // 0x0139a18 (0x11c bytes)
-uint PosRing_FindNearestClearPoint(float *param_1,byte *param_2)
-
+/* the nearest point (within 1000000) with a clear line to pos, or 0xff */
+int PosRing_FindNearestClearPoint(Vec4 *pos, PosRing *ring)
 {
-  int iVar1;
-  uint uVar2;
-  uint uVar3;
-  double dVar4;
-  double dVar5;
-  GPiece<16> local_40;
-  
-  uVar2 = (uint)*param_2;
-  uVar3 = 0xff;
-  dVar4 = 1000000.0;
-  while( true ) {
-    dVar5 = (double)SQRT((param_1[2] - *(float *)(param_2 + uVar2 * 0xc + 0x2c)) *
-                         (param_1[2] - *(float *)(param_2 + uVar2 * 0xc + 0x2c)) +
-                         (*param_1 - *(float *)(param_2 + uVar2 * 0xc + 0x24)) *
-                         (*param_1 - *(float *)(param_2 + uVar2 * 0xc + 0x24)) +
-                         (param_1[1] - *(float *)(param_2 + uVar2 * 0xc + 0x28)) *
-                         (param_1[1] - *(float *)(param_2 + uVar2 * 0xc + 0x28)));
-    if (dVar5 < dVar4) {
-      iVar1 = PosRing_CollLineSampled(param_2,local_40,param_1);
-      if (iVar1 == 0) {
-        dVar4 = dVar5;
-        uVar3 = uVar2;
-      }
-    }
-    if (uVar2 == param_2[2]) break;
-    uVar2 = (uVar2 + 1) - ((uVar2 + 1) / (uint)param_2[3]) * (uint)param_2[3] & 0xff;
-  }
-  return uVar3;
-}
+    float best = 1000000.0f;
+    int bestIdx = POSRING_NONE;
+    int idx = ring->head;
 
+    while (true) {
+        Vec4 pnt = PosRingPointAt(ring, idx);
+        float dx = pos->x - pnt.x;
+        float dy = pos->y - pnt.y;
+        float dz = pos->z - pnt.z;
+        float dist = sqrtf(dz * dz + dx * dx + dy * dy);
+
+        if (dist < best && PosRing_CollLineSampled(ring, &pnt, pos) == 0) {
+            best = dist;
+            bestIdx = idx;
+        }
+
+        if (idx == ring->tail) {
+            break;
+        }
+
+        idx = (u8)PosRingNext(ring, idx);
+    }
+
+    return bestIdx;
+}
 
 // 0x0139b34 (0xdc bytes)
-longlong PosRing_FindLastClearFromTail(undefined8 param_1,byte *param_2)
-
+/* walking tail to head: the last point with a clear line to target, or 0xff */
+int PosRing_FindLastClearFromTail(Vec4 *target, PosRing *ring)
 {
-  int iVar1;
-  ulonglong uVar2;
-  longlong lVar3;
-  GPiece<16> local_30;
-  
-  lVar3 = 0xff;
-  uVar2 = (ulonglong)param_2[2];
-  while( true ) {
-    iVar1 = PosRing_CollLineSampled(param_2,local_30,param_1);
-    lVar3 = lVar3 + (ZERO_MASK(iVar1) & uVar2 - lVar3);
-    if ((uint)uVar2 == (uint)*param_2) break;
-    uVar2 = (uVar2 + 1) -
-            (longlong)(int)((uint)(uVar2 + 1) / (uint)param_2[3]) * (longlong)(int)(uint)param_2[3]
-            & 0xff;
-  }
-  return lVar3;
-}
+    int found = POSRING_NONE;
+    int idx = ring->tail;
 
+    while (true) {
+        Vec4 pnt = PosRingPointAt(ring, idx);
+
+        if (PosRing_CollLineSampled(ring, &pnt, target) == 0) {
+            found = idx;
+        }
+
+        if (idx == ring->head) {
+            break;
+        }
+
+        idx = (u8)PosRingNext(ring, idx);
+    }
+
+    return found;
+}
 
 // 0x0139c10 (0xdc bytes)
-longlong PosRing_FindLastClearFromHead(undefined8 param_1,byte *param_2)
-
+/* walking head to tail: the last point with a clear line to target, or 0xff */
+int PosRing_FindLastClearFromHead(Vec4 *target, PosRing *ring)
 {
-  int iVar1;
-  ulonglong uVar2;
-  longlong lVar3;
-  GPiece<16> local_30;
-  
-  lVar3 = 0xff;
-  uVar2 = (ulonglong)*param_2;
-  while( true ) {
-    iVar1 = PosRing_CollLineSampled(param_2,local_30,param_1);
-    lVar3 = lVar3 + (ZERO_MASK(iVar1) & uVar2 - lVar3);
-    if ((uint)uVar2 == (uint)param_2[2]) break;
-    if ((uint)uVar2 == 0) {
-      uVar2 = (ulonglong)param_2[3];
-    }
-    uVar2 = uVar2 - 1 & 0xff;
-  }
-  return lVar3;
-}
+    int found = POSRING_NONE;
+    int idx = ring->head;
 
+    while (true) {
+        Vec4 pnt = PosRingPointAt(ring, idx);
+
+        if (PosRing_CollLineSampled(ring, &pnt, target) == 0) {
+            found = idx;
+        }
+
+        if (idx == ring->tail) {
+            break;
+        }
+
+        if (idx == 0) {
+            idx = ring->cap;
+        }
+
+        idx = (u8)(idx - 1);
+    }
+
+    return found;
+}
 
 // 0x0139cf8 (0x170 bytes)
-void PosRing_DebugDraw(byte *param_1,undefined1 param_2,undefined1 param_3,undefined1 param_4)
-
+/* a marker on every point, tail to head, joined by lines */
+void PosRing_DebugDraw(PosRing *ring, u8 r, u8 g, u8 b)
 {
-  uint uVar1;
-  uint uVar2;
-  undefined8 uVar3;
-  undefined8 uVar4;
-  GPiece<16> local_80;
-  GPiece<40> local_70;
-  
-  uVar3 = 0;
-  uVar4 = 0x40f86a0000000000;
-  uVar1 = 0xffffffff;
-  uVar2 = (uint)param_1[2];
-  while( true ) {
-    SpawnPart_5(uVar4,uVar3,local_70,param_2,param_3,param_4);
-    if (-1 < (int)uVar1) {
-      STUB_00065468(local_80,local_70);
+    int prev = -1;
+    int idx = ring->tail;
+
+    while (true) {
+        Vec4 prevPnt = PosRingPointAt(ring, prev);
+        Vec4 pnt = PosRingPointAt(ring, idx);
+
+        SpawnPart_5(100000.0f, 0.0f, &pnt.x, r, g, b, 0, (int)(animationSpeed * 25.5f));
+        if (prev >= 0) {
+            STUB_00065468(&prevPnt, &pnt);
+        }
+
+        if (idx == ring->head) {
+            break;
+        }
+
+        prev = idx;
+        idx = (idx + 1) % ring->cap;
     }
-    if (uVar2 == *param_1) break;
-    uVar1 = uVar2;
-    uVar2 = (uVar2 + 1) - ((int)(uVar2 + 1) / (int)(uint)param_1[3]) * (uint)param_1[3];
-  }
-  return;
 }
 
+/* the last index the follower's spline wraps at: cnt - 1 going forward, 0 going back */
+static inline int PathFollowerLast(PathFollower *follower)
+{
+    if ((s8)follower->direction >= 0) {
+        return follower->pSpline->cnt - 1;
+    }
+
+    return 0;
+}
+
+static inline Vec4 *PathFollowerPnt(PathFollower *follower, int idx)
+{
+    int last = PathFollowerLast(follower);
+
+    if (idx < 0) {
+        return &follower->pSpline->points[idx + last + 1];
+    }
+
+    if (idx > last) {
+        return &follower->pSpline->points[idx % (last + 1)];
+    }
+
+    return &follower->pSpline->points[idx];
+}
+
+static inline int PathFollowerWrap(PathFollower *follower, int idx)
+{
+    int last = PathFollowerLast(follower);
+
+    if (idx < 0) {
+        return idx + last;
+    }
+
+    if (idx > last) {
+        return idx % (last + 1);
+    }
+
+    return idx;
+}
 
 // 0x0139e68 (0x90 bytes)
-Vec4 * PathFollower_GetPntPtr(PathFollower *follower,int idx)
-
+Vec4 *PathFollower_GetPntPtr(PathFollower *follower, int idx)
 {
-  Vec4 *pVVar1;
-  int iVar2;
-  int iVar3;
-  
-  iVar2 = 0;
-  iVar3 = 0;
-  if (-1 < (char)follower->direction) {
-    iVar3 = follower->pSpline->cnt;
-    iVar2 = iVar3 + -1;
-    iVar3 = iVar3 + -1;
-  }
-  if (idx < 0) {
-    pVVar1 = follower->pSpline->points + idx + iVar3 + 1;
-  }
-  else if (iVar2 < idx) {
-    iVar3 = idx / (iVar2 + 1);
-    pVVar1 = (Vec4 *)((int)follower->pSpline + (idx - (iVar3 * iVar2 + iVar3)) * 0x10 + 0x10);
-  }
-  else {
-    pVVar1 = follower->pSpline->points + idx;
-  }
-  return pVVar1;
+    return PathFollowerPnt(follower, idx);
 }
-
 
 // 0x0139ef8 (0x60 bytes)
-int PathFollower_WrapIdx(PathFollower *follower,int idx)
-
+/* note: below 0 this adds last, not last + 1 like PathFollower_GetPntPtr */
+int PathFollower_WrapIdx(PathFollower *follower, int idx)
 {
-  int iVar1;
-  int iVar2;
-  
-  iVar2 = 0;
-  if (-1 < (char)follower->direction) {
-    iVar2 = follower->pSpline->cnt + -1;
-  }
-  if (idx < 0) {
-    idx = idx + iVar2;
-  }
-  else if (iVar2 < idx) {
-    iVar1 = idx / (iVar2 + 1);
-    idx = idx - (iVar1 * iVar2 + iVar1);
-  }
-  return idx;
+    return PathFollowerWrap(follower, idx);
 }
-
 
 // 0x0139f58 (0x58 bytes)
 s32 PathFollower_Advance(PathFollower *follower)
-
 {
-  int iVar1;
-  s32 sVar2;
-  int iVar3;
-  
-  iVar3 = 0;
-  if (-1 < (char)follower->direction) {
-    iVar3 = follower->pSpline->cnt + -1;
-  }
-  sVar2 = follower->idx + 1;
-  if (iVar3 < sVar2) {
-    iVar1 = sVar2 / (iVar3 + 1);
-    sVar2 = sVar2 - (iVar1 * iVar3 + iVar1);
-  }
-  follower->idx = sVar2;
-  return sVar2;
-}
+    int last = PathFollowerLast(follower);
+    int idx = follower->idx + 1;
 
+    if (idx > last) {
+        idx %= last + 1;
+    }
+
+    follower->idx = idx;
+
+    return idx;
+}
 
 // 0x0139fc0 (0x2c4 bytes)
-void Spline_CalcTan
-               (float tension,float bias,Vec4 *out,PathFollower *follower,undefined8 param_5,
-               float param_6,int offs)
-
+/* the Kochanek-Bartels tangent at node idx + offs, no longer than 1.1x its shorter
+   neighbouring segment */
+void Spline_CalcTan(float tension, float bias, Vec4 *out, PathFollower *follower, int unused1, int unused2, int offs)
 {
-  bool bVar1;
-  int iVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  Spline *pSVar6;
-  float fVar7;
-  float fVar8;
-  float fVar9;
-  float fVar10;
-  float fVar11;
-  float fVar12;
-  float fVar13;
-  float fVar14;
-  float fVar15;
-  float fVar16;
-  Vec4 *pVVar17;
-  int iVar18;
-  int iVar19;
-  Vec4 *pVVar20;
-  int iVar21;
-  Vec4 *pVVar22;
-  int iVar23;
-  
-  iVar23 = 0;
-  iVar19 = follower->idx + offs;
-  iVar21 = iVar19 + -1;
-  bVar1 = -1 < (char)follower->direction;
-  iVar18 = 0;
-  if (bVar1) {
-    iVar23 = follower->pSpline->cnt + -1;
-  }
-  if (iVar21 < 0) {
-    pSVar6 = follower->pSpline;
-    pVVar17 = pSVar6->points + iVar23 + iVar19;
-  }
-  else {
-    if (iVar23 < iVar21) {
-      iVar2 = iVar21 / (iVar23 + 1);
-      pSVar6 = follower->pSpline;
-      iVar21 = iVar21 - (iVar2 * iVar23 + iVar2);
-    }
-    else {
-      pSVar6 = follower->pSpline;
-    }
-    pVVar17 = pSVar6->points + iVar21;
-  }
-  iVar23 = 0;
-  if (bVar1) {
-    iVar23 = pSVar6->cnt + -1;
-  }
-  if (iVar19 < 0) {
-    pVVar22 = pSVar6->points + iVar19 + iVar23 + 1;
-  }
-  else {
-    iVar21 = iVar19;
-    if (iVar23 < iVar19) {
-      iVar21 = iVar19 / (iVar23 + 1);
-      iVar21 = iVar19 - (iVar21 * iVar23 + iVar21);
-    }
-    pVVar22 = pSVar6->points + iVar21;
-  }
-  iVar23 = iVar19 + 1;
-  if (bVar1) {
-    iVar18 = pSVar6->cnt + -1;
-  }
-  if (iVar23 < 0) {
-    pVVar20 = pSVar6->points + iVar18 + iVar19 + 2;
-  }
-  else {
-    if (iVar18 < iVar23) {
-      iVar19 = iVar23 / (iVar18 + 1);
-      iVar23 = iVar23 - (iVar19 * iVar18 + iVar19);
-    }
-    pVVar20 = pSVar6->points + iVar23;
-  }
-  fVar3 = pVVar22->y;
-  fVar10 = pVVar17->y - fVar3;
-  fVar9 = fVar3 - pVVar20->y;
-  fVar4 = pVVar22->x;
-  fVar11 = pVVar17->x - fVar4;
-  fVar12 = fVar4 - pVVar20->x;
-  fVar5 = pVVar22->z;
-  fVar13 = pVVar17->z - fVar5;
-  fVar14 = fVar5 - pVVar20->z;
-  fVar7 = (1.0 - tension) * (1.0 - bias) * 0.5;
-  fVar8 = (1.0 - tension) * (bias + 1.0) * 0.5;
-  fVar15 = (fVar3 - pVVar17->y) * fVar8 + (pVVar20->y - fVar3) * fVar7;
-  fVar16 = (fVar4 - pVVar17->x) * fVar8 + (pVVar20->x - fVar4) * fVar7;
-  fVar4 = (fVar5 - pVVar17->z) * fVar8 + (pVVar20->z - fVar5) * fVar7;
-  fVar5 = SQRT(fVar13 * fVar13 + fVar11 * fVar11 + fVar10 * fVar10);
-  fVar3 = pVVar22->w;
-  fVar7 = SQRT(fVar14 * fVar14 + fVar12 * fVar12 + fVar9 * fVar9);
-  fVar8 = SQRT(fVar4 * fVar4 + fVar16 * fVar16 + fVar15 * fVar15);
-  if (fVar5 - fVar7 < 0.0) {
-    fVar7 = fVar5;
-  }
-  if (fVar8 <= fVar7 * 1.1) {
-    out->x = fVar16;
-    out->y = fVar15;
-    out->z = fVar4;
-    out->w = fVar3;
-  }
-  else {
-    fVar5 = 0.0;
-    if (fVar8 == 0.0) {
-      out->y = fVar15;
-      out->z = fVar4;
-      out->x = fVar16;
-      out->w = fVar3;
-      fVar15 = fVar5;
-      fVar16 = fVar5;
-    }
-    else {
-      fVar5 = (fVar7 * 1.1) / fVar8;
-      out->w = fVar3;
-      fVar15 = fVar5 * fVar15;
-      fVar16 = fVar5 * fVar16;
-      fVar5 = fVar5 * fVar4;
-    }
-    out->x = fVar16;
-    out->y = fVar15;
-    out->z = fVar5;
-  }
-  return;
-}
+    int node = follower->idx + offs;
+    Vec4 *prev = PathFollowerPnt(follower, node - 1);
+    Vec4 *cur = PathFollowerPnt(follower, node);
+    Vec4 *next = PathFollowerPnt(follower, node + 1);
+    float toNext = (1.0f - tension) * (1.0f - bias) * 0.5f;
+    float fromPrev = (1.0f - tension) * (bias + 1.0f) * 0.5f;
+    Vec4 tan;
 
+    tan.x = (cur->x - prev->x) * fromPrev + (next->x - cur->x) * toNext;
+    tan.y = (cur->y - prev->y) * fromPrev + (next->y - cur->y) * toNext;
+    tan.z = (cur->z - prev->z) * fromPrev + (next->z - cur->z) * toNext;
+
+    float prevLen = PathDist(prev, cur);
+    float nextLen = PathDist(cur, next);
+    float limit = (prevLen < nextLen) ? prevLen : nextLen;
+    float tanLen = sqrtf(tan.z * tan.z + tan.x * tan.x + tan.y * tan.y);
+
+    out->w = cur->w;
+
+    if (tanLen <= limit * 1.1f) {
+        out->x = tan.x;
+        out->y = tan.y;
+        out->z = tan.z;
+        return;
+    }
+
+    float scale = (tanLen == 0.0f) ? 0.0f : (limit * 1.1f) / tanLen;
+    out->x = scale * tan.x;
+    out->y = scale * tan.y;
+    out->z = scale * tan.z;
+}
 
 // 0x013a290 (0xd4 bytes)
-void Spline_Hermite(float t,Vec4 *out,Vec4 *p0,Vec4 *p1,Vec4 *m0,Vec4 *m1)
-
+void Spline_Hermite(float t, Vec4 *out, Vec4 *p0, Vec4 *p1, Vec4 *m0, Vec4 *m1)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  float fVar7;
-  
-  fVar1 = t * t;
-  fVar2 = t * fVar1;
-  fVar7 = -(fVar2 * 2.0 - fVar1 * 3.0);
-  fVar3 = fVar2 - fVar1;
-  fVar4 = (fVar2 * 2.0 - fVar1 * 3.0) + 1.0;
-  fVar1 = -(fVar1 * 2.0 - fVar2) + t;
-  fVar5 = p0->x * fVar4;
-  out->x = fVar5;
-  fVar6 = p0->y * fVar4;
-  out->y = fVar6;
-  fVar4 = p0->z * fVar4;
-  out->z = fVar4;
-  out->w = p0->w;
-  fVar5 = m0->x * fVar1 + fVar5;
-  fVar6 = m0->y * fVar1 + fVar6;
-  fVar4 = m0->z * fVar1 + fVar4;
-  out->x = fVar5;
-  out->y = fVar6;
-  out->z = fVar4;
-  fVar5 = m1->x * fVar3 + fVar5;
-  fVar6 = m1->y * fVar3 + fVar6;
-  fVar4 = m1->z * fVar3 + fVar4;
-  out->x = fVar5;
-  out->y = fVar6;
-  out->z = fVar4;
-  fVar1 = p1->y;
-  fVar2 = p1->z;
-  out->x = p1->x * fVar7 + fVar5;
-  out->y = fVar1 * fVar7 + fVar6;
-  out->z = fVar2 * fVar7 + fVar4;
-  return;
-}
+    float t2 = t * t;
+    float t3 = t * t2;
+    float h00 = (t3 * 2.0f - t2 * 3.0f) + 1.0f;
+    float h10 = -(t2 * 2.0f - t3) + t;
+    float h01 = -(t3 * 2.0f - t2 * 3.0f);
+    float h11 = t3 - t2;
 
+    out->x = p0->x * h00 + m0->x * h10 + m1->x * h11 + p1->x * h01;
+    out->y = p0->y * h00 + m0->y * h10 + m1->y * h11 + p1->y * h01;
+    out->z = p0->z * h00 + m0->z * h10 + m1->z * h11 + p1->z * h01;
+    out->w = p0->w;
+}
 
 // 0x013a378 (0xb0 bytes)
-void Angle_ApproachWrapped(float from,float to,float rate)
-
+/* `from` turned rate of the way to `to`, the short way round */
+float Angle_ApproachWrapped(float from, float to, float rate)
 {
-  float fVar1;
-  
-  fVar1 = to - from;
-  if (fVar1 <= 3.1415927) {
-    if (fVar1 < -3.1415927) {
-      fVar1 = fVar1 + 6.2831855;
-    }
-  }
-  else {
-    fVar1 = fVar1 - 6.2831855;
-  }
-  if (fVar1 <= 6.2831855) {
-    if (fVar1 < -6.2831855) {
-      fVar1 = fVar1 + 6.2831855;
-    }
-  }
-  else {
-    fVar1 = fVar1 - 6.2831855;
-  }
-  FastWrapRot(from,rate * fVar1);
-  return;
-}
+    float diff = to - from;
 
+    if (diff > 3.1415927f) {
+        diff -= 6.2831855f;
+    }
+    else if (diff < -3.1415927f) {
+        diff += 6.2831855f;
+    }
+
+    if (diff > 6.2831855f) {
+        diff -= 6.2831855f;
+    }
+    else if (diff < -6.2831855f) {
+        diff += 6.2831855f;
+    }
+
+    return FastWrapRot(from, rate * diff);
+}
 
 // 0x013a440 (0x3cc bytes)
-double Spline_CalcLen
-                 (double tension,double bias,PathFollower *follower,undefined8 param_4,
-                 undefined8 param_5,double param_6,undefined8 param_7)
-
+/* walks the Hermite curve through the follower's spline in steps of 0.05, storing each
+   segment's length in its node's w; returns the total. With draw, shows the samples */
+float Spline_CalcLen(float tension, float bias, PathFollower *follower, int unused1, int unused2, int draw, int cam)
 {
-  float fVar1;
-  int iVar2;
-  Vec4 *out;
-  Vec4 *pVVar3;
-  undefined4 uVar4;
-  int iVar5;
-  int iVar6;
-  int iVar8;
-  double dVar7;
-  longlong lVar9;
-  int iVar10;
-  int iVar11;
-  longlong lVar12;
-  int iVar13;
-  double dVar14;
-  double dVar15;
-  double dVar16;
-  double dVar17;
-  double dVar18;
-  double dVar19;
-  double dVar20;
-  Vec4 local_e0;
-  Vec4 pnt;
-  Vec4 local_c0;
-  float local_b0;
-  float local_ac;
-  float local_a8;
-  float local_a4;
-  s32 idx;
-  Spline *pSpline;
-  
-  pSpline = follower->pSpline;
-  idx = follower->idx;
-  iVar8 = SUB84(param_6,0);
-  iVar2 = pSpline->cnt;
-  pnt.x = pSpline->points[0].x;
-  pnt.y = pSpline->points[0].y;
-  follower->idx = 0;
-  pnt.z = pSpline->points[0].z;
-  pnt.w = pSpline->points[0].w;
-  uVar4 = (undefined4)param_7;
-  if (iVar8 != 0) {
-    param_5 = 0;
-    param_6 = 1.06151804779458e-314;
-    SpawnPart_41(0.666,&pnt,uVar4,0,0x80101080,param_7,0x7f,0xffff,0xff);
-  }
-  lVar12 = ZEXT48(&stack0x00000000) - 0xf0;
-  lVar9 = 0;
-  dVar7 = (double)(float)param_6;
-  out = (Vec4 *)lVar12;
-  Spline_CalcTan((float)tension,(float)bias,out,follower,param_5,(float)param_6,0);
-  dVar14 = 0.0;
-  if (0 < iVar2) {
-    dVar19 = dVar14;
-    iVar13 = 0;
-    iVar10 = 0;
-    do {
-      local_e0.x = pnt.x;
-      local_e0.y = pnt.y;
-      local_e0.z = pnt.z;
-      local_e0.w = pnt.w;
-      dVar15 = dVar19;
-      if (iVar8 != 0) {
-        dVar7 = 1.06153215830942e-314;
-        SpawnPart_41
-                  (1.0,&local_e0,uVar4,iVar10 % 0xf + 2,0x80108010,lVar9,0x7f,0xffff,0xff);
-        dVar15 = dVar19;
-      }
-      iVar11 = iVar10 + 1;
-      iVar6 = 0;
-      if (-1 < (char)follower->direction) {
-        iVar6 = follower->pSpline->cnt + -1;
-      }
-      if (iVar11 < 0) {
-        iVar5 = iVar11 + iVar6;
-      }
-      else {
-        iVar5 = iVar11;
-        if (iVar6 < iVar11) {
-          iVar5 = iVar11 / (iVar6 + 1);
-          iVar5 = iVar11 - (iVar5 * iVar6 + iVar5);
-        }
-      }
-      lVar9 = 1;
-      pVVar3 = follower->pSpline->points + iVar5 + -1;
-      pnt.x = pVVar3[1].x;
-      pnt.y = pVVar3[1].y;
-      pnt.z = pVVar3[1].z;
-      pnt.w = pVVar3[1].w;
-      follower->idx = iVar10;
-      Spline_CalcTan((float)tension,(float)bias,out,follower,ZEXT48(pVVar3),(float)dVar7,1);
-      local_b0 = local_e0.x;
-      local_ac = local_e0.y;
-      local_a8 = local_e0.z;
-      local_a4 = local_e0.w;
-      dVar16 = 0.05000000074505806;
-      dVar17 = 1.0;
-      dVar20 = 0.20000000298023224;
-      dVar18 = dVar16;
-      dVar19 = dVar15;
-      do {
-        if (iVar8 != 0) {
-          SpawnPart_41((float)dVar20,&local_b0,uVar4,0,0x80404080,lVar9,0x7f,0xffff,0xff);
-        }
-        dVar7 = (double)(ZEXT48(&stack0x00000000) - 0x100);
-        lVar9 = lVar12;
-        Spline_Hermite((float)dVar16,&local_c0,&local_e0,&pnt,SUB84(dVar7,0),out);
-        dVar16 = (double)(float)(dVar16 + dVar18);
-        local_a4 = local_c0.w;
-        fVar1 = (float)(dVar15 + (double)SQRT((local_a8 - local_c0.z) * (local_a8 - local_c0.z) +
-                                              (local_b0 - local_c0.x) * (local_b0 - local_c0.x) +
-                                              (local_ac - local_c0.y) * (local_ac - local_c0.y)));
-        dVar15 = (double)fVar1;
-        local_b0 = local_c0.x;
-        local_ac = local_c0.y;
-        local_a8 = local_c0.z;
-      } while (dVar16 <= dVar17);
-      dVar14 = (double)(float)(dVar15 + dVar14);
-      *(float *)((int)&follower->pSpline->points[0].w + iVar13) = fVar1;
-      iVar13 = iVar13 + 0x10;
-      iVar10 = iVar11;
-    } while (iVar11 < iVar2);
-  }
-  follower->idx = idx;
-  return dVar14;
-}
+    int cnt = follower->pSpline->cnt;
+    s32 savedIdx = follower->idx;
+    Vec4 pnt = follower->pSpline->points[0];
+    Vec4 tan;
+    float total = 0.0f;
 
+    follower->idx = 0;
+    if (draw) {
+        SpawnPart_41(0.666f, &pnt.x, cam, 0, 0x80101080, 0, 0x7f, -1, 0xff);
+    }
+
+    Spline_CalcTan(tension, bias, &tan, follower, 0, 0, 0);
+
+    for (int i = 0; i < cnt; i++) {
+        Vec4 start = pnt;
+        Vec4 startTan = tan;
+
+        if (draw) {
+            SpawnPart_41(1.0f, &start.x, cam, i % 15 + 2, 0x80108010, 0, 0x7f, -1, 0xff);
+        }
+
+        pnt = follower->pSpline->points[PathFollowerWrap(follower, i + 1)];
+        follower->idx = i;
+        Spline_CalcTan(tension, bias, &tan, follower, 0, 0, 1);
+
+        Vec4 sample = start;
+        float segLen = 0.0f;
+        for (float t = 0.05f; t <= 1.0f; t += 0.05f) {
+            Vec4 next;
+
+            if (draw) {
+                SpawnPart_41(0.2f, &sample.x, cam, 0, 0x80404080, 0, 0x7f, -1, 0xff);
+            }
+
+            Spline_Hermite(t, &next, &start, &pnt, &startTan, &tan);
+            segLen += PathDist(&sample, &next);
+            sample = next;
+        }
+
+        total += segLen;
+        follower->pSpline->points[i].w = segLen;
+    }
+
+    follower->idx = savedIdx;
+
+    return total;
+}
 
 // 0x013a80c (0x1b8 bytes)
-void PathFollower_DebugDrawTangents
-               (double param_1,double param_2,PathFollower *param_3,undefined8 param_4,
-               undefined8 param_5,double param_6)
-
+/* a line through each node along its tangent */
+void PathFollower_DebugDrawTangents(float tension, float bias, PathFollower *follower)
 {
-  Spline *pSVar1;
-  s32 sVar2;
-  int iVar3;
-  Vec4 *pVVar4;
-  int iVar5;
-  int iVar6;
-  double dVar7;
-  int iVar8;
-  int iVar9;
-  double dVar10;
-  double dVar11;
-  double dVar12;
-  double dVar13;
-  float fVar14;
-  Vec4 local_90;
-  float local_80;
-  float local_7c;
-  float local_78;
-  float local_74;
-  float local_70;
-  float local_6c;
-  float local_68;
-  float local_64;
-  
-  pSVar1 = param_3->pSpline;
-  sVar2 = param_3->idx;
-  iVar3 = pSVar1->cnt;
-  dVar10 = (double)pSVar1->points[0].x;
-  param_3->idx = 0;
-  dVar11 = (double)pSVar1->points[0].y;
-  dVar12 = (double)pSVar1->points[0].z;
-  dVar13 = (double)pSVar1->points[0].w;
-  dVar7 = (double)(float)param_6;
-  Spline_CalcTan((float)param_1,(float)param_2,&local_90,param_3,ZEXT48(pSVar1),(float)param_6,0);
-  if (0 < iVar3) {
-    iVar8 = 0;
-    do {
-      local_80 = (float)((double)local_90.x + dVar10);
-      local_7c = (float)((double)local_90.y + dVar11);
-      local_74 = (float)dVar13;
-      local_78 = (float)((double)local_90.z + dVar12);
-      local_64 = (float)dVar13;
-      local_70 = (float)(dVar10 - (double)local_90.x);
-      local_6c = (float)(dVar11 - (double)local_90.y);
-      local_68 = (float)(dVar12 - (double)local_90.z);
-      STUB_00065468(&local_80,&local_70);
-      iVar9 = iVar8 + 1;
-      iVar6 = 0;
-      if (-1 < (char)param_3->direction) {
-        iVar6 = param_3->pSpline->cnt + -1;
-      }
-      if (iVar9 < 0) {
-        iVar5 = iVar9 + iVar6;
-      }
-      else {
-        iVar5 = iVar9;
-        if (iVar6 < iVar9) {
-          iVar5 = iVar9 / (iVar6 + 1);
-          iVar5 = iVar9 - (iVar5 * iVar6 + iVar5);
-        }
-      }
-      pVVar4 = param_3->pSpline->points + iVar5 + -1;
-      dVar10 = (double)pVVar4[1].x;
-      dVar11 = (double)pVVar4[1].y;
-      dVar12 = (double)pVVar4[1].z;
-      dVar13 = (double)pVVar4[1].w;
-      param_3->idx = iVar8;
-      fVar14 = (float)dVar7;
-      dVar7 = (double)fVar14;
-      Spline_CalcTan((float)param_1,(float)param_2,&local_90,param_3,ZEXT48(pVVar4),fVar14,1);
-      iVar8 = iVar9;
-    } while (iVar9 < iVar3);
-  }
-  param_3->idx = sVar2;
-  return;
+    int cnt = follower->pSpline->cnt;
+    s32 savedIdx = follower->idx;
+    Vec4 pnt = follower->pSpline->points[0];
+    Vec4 tan;
+
+    follower->idx = 0;
+    Spline_CalcTan(tension, bias, &tan, follower, 0, 0, 0);
+
+    for (int i = 0; i < cnt; i++) {
+        Vec4 ahead;
+        Vec4 behind;
+
+        ahead.x = tan.x + pnt.x;
+        ahead.y = tan.y + pnt.y;
+        ahead.z = tan.z + pnt.z;
+        ahead.w = pnt.w;
+        behind.x = pnt.x - tan.x;
+        behind.y = pnt.y - tan.y;
+        behind.z = pnt.z - tan.z;
+        behind.w = pnt.w;
+        STUB_00065468(&ahead, &behind);
+
+        pnt = follower->pSpline->points[PathFollowerWrap(follower, i + 1)];
+        follower->idx = i;
+        Spline_CalcTan(tension, bias, &tan, follower, 0, 0, 1);
+    }
+
+    follower->idx = savedIdx;
 }
-
-

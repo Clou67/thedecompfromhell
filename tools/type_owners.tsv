@@ -84,3 +84,4 @@ SoundData	game/sound
 SoundInstance	game/sound
 CardStateFunc	game/mcstate
 PathFollower	game/path
+PosRing	game/path

@@ -42,6 +42,29 @@ struct Spawnpoint {
     int field12_0x3c;
 };
 
+/* a ring buffer of positions with a clear line of sight between neighbours (a trail a
+   follower can retrace); indices are u8, 0xff = none */
+typedef struct PosRingPoint {
+    float x;
+    float y;
+    float z;
+} PosRingPoint;
+
+typedef struct PosRing {
+    u8 head;                         /* 0x00  newest point */
+    u8 mark;                         /* 0x01  last point seen clear from the head */
+    u8 tail;                         /* 0x02  oldest point */
+    u8 cap;                          /* 0x03 */
+    u8 probe;                        /* 0x04  next point AddPoint tries to shortcut to */
+    u8 pad05[3];
+    struct MobyInstance *ignore[2];  /* 0x08  mobys the line tests see through */
+    float zOff;                      /* 0x10  height added to the points */
+    float maxDistXY;                 /* 0x14  how far FindClearPoint* may look */
+    float maxDistZ;                  /* 0x18 */
+    u8 pad1c[8];
+    PosRingPoint pts[];              /* 0x24 */
+} PosRing;
+
 // ---- globals
 extern undefined4 DAT_007297a8; /* 0x7297a8 */
 
@@ -62,26 +85,26 @@ int path__Path_RecordPnt(MobyInstance *moby, Spline *spline);
 int32_t Path_TryExtrapolate(MobyInstance *moby, Spline *spline);
 int GetPathPnt(float distance, MobyInstance *moby, Spline *spline, Vec4 *outPos, int segment, int step);
 int Path_PickNextNode(MobyInstance *moby, Spline *spline, Vec4 *ref, Vec4 *out);
-void PosRing_Init(double param_1,double param_2,double param_3,undefined4 *param_4, undefined1 *param_5,undefined1 param_6,undefined8 param_7,undefined4 param_8, undefined4 param_9);
-undefined8 PosRing_CollLineSampled(int param_1,float *param_2,float *param_3);
-ulonglong PosRing_IsIndexBefore(byte *param_1,ulonglong param_2,ulonglong param_3);
-ulonglong PosRing_IsIndexBeforeWrapped(byte *param_1,ulonglong param_2,ulonglong param_3);
-undefined8 PosRing_IsIndexOutsideRange(byte *param_1,byte param_2);
-uint PosRing_NextIndexClamped(byte *param_1,uint param_2);
-longlong PosRing_StepClearBack(undefined8 param_1,byte *param_2,byte *param_3);
-void PosRing_FindClearPointFwd (byte *param_1,float *param_2,float *param_3,float *param_4,byte *param_5, undefined8 param_6);
-longlong PosRing_StepClearFwd(undefined8 param_1,byte *param_2,byte *param_3);
-void PosRing_FindClearPointBack (byte *param_1,float *param_2,float *param_3,float *param_4,byte *param_5, undefined8 param_6);
-undefined8 PosRing_AddPoint(double param_1,undefined4 *param_2,byte *param_3);
-uint PosRing_FindNearestClearPoint(float *param_1,byte *param_2);
-longlong PosRing_FindLastClearFromTail(undefined8 param_1,byte *param_2);
-longlong PosRing_FindLastClearFromHead(undefined8 param_1,byte *param_2);
-void PosRing_DebugDraw(byte *param_1,undefined1 param_2,undefined1 param_3,undefined1 param_4);
-Vec4 * PathFollower_GetPntPtr(PathFollower *follower,int idx);
-int PathFollower_WrapIdx(PathFollower *follower,int idx);
+void PosRing_Init(float zOff, float maxDistXY, float maxDistZ, Vec4 *pos, PosRing *ring, int cap, int unused, MobyInstance *ignore0, MobyInstance *ignore1);
+int PosRing_CollLineSampled(PosRing *ring, Vec4 *a, Vec4 *b);
+int PosRing_IsIndexBefore(PosRing *ring, u8 a, u8 b);
+int PosRing_IsIndexBeforeWrapped(PosRing *ring, u8 a, u8 b);
+int PosRing_IsIndexOutsideRange(PosRing *ring, u8 idx);
+int PosRing_NextIndexClamped(PosRing *ring, u8 idx);
+int PosRing_StepClearBack(Vec4 *target, PosRing *ring, u8 *cursor);
+void PosRing_FindClearPointFwd(float zOff, PosRing *ring, Vec4 *from, Vec4 *out, Vec4 *fallback, u8 *cursor, u8 *scan);
+int PosRing_StepClearFwd(Vec4 *target, PosRing *ring, u8 *cursor);
+void PosRing_FindClearPointBack(float zOff, PosRing *ring, Vec4 *from, Vec4 *out, Vec4 *fallback, u8 *cursor, u8 *scan);
+int PosRing_AddPoint(float zOff, Vec4 *pos, PosRing *ring);
+int PosRing_FindNearestClearPoint(Vec4 *pos, PosRing *ring);
+int PosRing_FindLastClearFromTail(Vec4 *target, PosRing *ring);
+int PosRing_FindLastClearFromHead(Vec4 *target, PosRing *ring);
+void PosRing_DebugDraw(PosRing *ring, u8 r, u8 g, u8 b);
+Vec4 *PathFollower_GetPntPtr(PathFollower *follower, int idx);
+int PathFollower_WrapIdx(PathFollower *follower, int idx);
 s32 PathFollower_Advance(PathFollower *follower);
-void Spline_CalcTan (float tension,float bias,Vec4 *out,PathFollower *follower,undefined8 param_5, float param_6,int offs);
-void Spline_Hermite(float t,Vec4 *out,Vec4 *p0,Vec4 *p1,Vec4 *m0,Vec4 *m1);
-void Angle_ApproachWrapped(float from,float to,float rate);
-double Spline_CalcLen (double tension,double bias,PathFollower *follower,undefined8 param_4, undefined8 param_5,double param_6,undefined8 param_7);
-void PathFollower_DebugDrawTangents (double param_1,double param_2,PathFollower *param_3,undefined8 param_4, undefined8 param_5,double param_6);
+void Spline_CalcTan(float tension, float bias, Vec4 *out, PathFollower *follower, int unused1, int unused2, int offs);
+void Spline_Hermite(float t, Vec4 *out, Vec4 *p0, Vec4 *p1, Vec4 *m0, Vec4 *m1);
+float Angle_ApproachWrapped(float from, float to, float rate);
+float Spline_CalcLen(float tension, float bias, PathFollower *follower, int unused1, int unused2, int draw, int cam);
+void PathFollower_DebugDrawTangents(float tension, float bias, PathFollower *follower);

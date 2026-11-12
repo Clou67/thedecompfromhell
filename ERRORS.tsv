@@ -30,7 +30,7 @@ errors	file
 0	game/pad.cpp
 0	game/partproc.cpp
 445	game/partupd.cpp
-15	game/path.cpp
+0	game/path.cpp
 629	game/pause.cpp
 4	game/rUnk.cpp
 0	game/respawn.cpp
