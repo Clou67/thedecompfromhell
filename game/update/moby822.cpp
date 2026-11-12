@@ -12,7 +12,6 @@
 #include "game/mobyutil.h"
 #include "game/music.h"
 #include "game/sound.h"
-#include "game/space.h"
 #include "game/update/moby42.h"
 #include "game/update/moby574.h"
 #include "idol/fastfunc.h"

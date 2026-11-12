@@ -8,7 +8,6 @@
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/pad.h"
-#include "game/space.h"
 #include "game/update/camera0.h"
 #include "idol/fastfunc.h"
 

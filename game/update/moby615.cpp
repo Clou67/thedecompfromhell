@@ -13,7 +13,6 @@
 #include "game/path.h"
 #include "game/respawn.h"
 #include "game/sound.h"
-#include "game/space.h"
 #include "game/update/camera5.h"
 #include "game/update/moby617.h"
 #include "idol/fastfunc.h"

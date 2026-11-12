@@ -7,7 +7,6 @@
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/sound.h"
-#include "game/space.h"
 
 // 0x048243c (0x14 bytes)
 void M843_0048243c(void)

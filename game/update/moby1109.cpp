@@ -18,7 +18,6 @@
 #include "game/partupd.h"
 #include "game/respawn.h"
 #include "game/sound.h"
-#include "game/space.h"
 #include "game/update.h"
 #include "game/update/camera5.h"
 #include "game/update/moby1091.h"

@@ -3742,12 +3742,12 @@ void DefaultDraw(void)
         DrawFullScreenQuad((int)((uVar3 & 0xffffffff) << 0x18),
                            (void *)(EffectTexHeaders + *(int *)(TexInfo + 0x58) * 0x24));
       }
-      if (0 < (int)DAT_0095cf14) {
+      if (0 < (int)g_SceneFlash) {
         if (0x3f800000 <
-            (int)(FLOAT_ORDER(DAT_0095cf14))) {
-          DAT_0095cf14 = 1.0;
+            (int)(FLOAT_ORDER(g_SceneFlash))) {
+          g_SceneFlash = 1.0;
         }
-        uVar3 = FastDoubleToInt((double)(DAT_0095cf14 * 128.0));
+        uVar3 = FastDoubleToInt((double)(g_SceneFlash * 128.0));
         DrawFullScreenQuad((uint)((uVar3 & 0xffffffff) << 0x18) | 0xffffff,
                            (void *)(EffectTexHeaders + *(int *)(TexInfo + 0x58) * 0x24));
       }

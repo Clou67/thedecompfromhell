@@ -12,7 +12,6 @@
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/respawn.h"
-#include "game/space.h"
 #include "game/update/moby1118.h"
 #include "idol/mUnk.h"
 

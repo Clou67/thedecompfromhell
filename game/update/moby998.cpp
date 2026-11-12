@@ -10,7 +10,6 @@
 #include "game/mobyutil.h"
 #include "game/pad.h"
 #include "game/sound.h"
-#include "game/space.h"
 #include "idol/fastfunc.h"
 #include "idol/mUnk.h"
 

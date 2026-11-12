@@ -273,6 +273,7 @@ extern undefined4 g_PostPreDrawFuncs; /* 0x95e1e0 */
 extern int g_PreDrawCount; /* 0x95e1dc */
 extern RENDER g_RenderFlags; /* 0x95cd44 */
 extern u8 *g_ScratchBuf; /* 0x902ec8: scratch memory shared by the drawing code (water uses it as a WaterStage) */ /* type set in global_types.tsv */
+extern int g_ScreenHalfHeight; /* 0x966b0c */
 extern int g_ScreenHalfWidth; /* 0x966b08 */
 extern int g_ScreenHeight; /* 0x966b04 */
 extern undefined1 g_ScreenInsertEffect; /* 0x95cf30 */

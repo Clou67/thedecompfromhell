@@ -482,7 +482,7 @@ void _cellGcmSetFlipCommand(void)
 
 
 // 0x064f2a4 (0x20 bytes)
-void cellGcmAddressToOffset(void)
+int cellGcmAddressToOffset(void *param_1,u32 *param_2)
 
 {
   ulonglong uStack00000028;

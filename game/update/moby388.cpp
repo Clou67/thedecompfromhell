@@ -20,7 +20,6 @@
 #include "game/partupd.h"
 #include "game/path.h"
 #include "game/sound.h"
-#include "game/space.h"
 #include "game/update.h"
 #include "game/update/camera19.h"
 #include "game/update/moby352.h"

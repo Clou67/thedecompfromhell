@@ -11,7 +11,6 @@
 #include "game/music.h"
 #include "game/path.h"
 #include "game/respawn.h"
-#include "game/space.h"
 
 // 0x02f7690 (0x5d8 bytes)
 // strings: 00a0feec: 'None'

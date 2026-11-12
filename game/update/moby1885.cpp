@@ -11,7 +11,6 @@
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
-#include "game/space.h"
 #include "game/update.h"
 #include "game/update/moby1886.h"
 #include "game/update/moby849.h"

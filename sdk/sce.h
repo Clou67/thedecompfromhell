@@ -47,7 +47,7 @@ void cellFsFstat(void);
 void cellGcmGetTiledPitchSize(void);
 void _cellGcmInitBody(void);
 void _cellGcmSetFlipCommand(void);
-void cellGcmAddressToOffset(void);
+int cellGcmAddressToOffset(void *param_1,u32 *param_2);
 void _cellGcmFunc15(void);
 void cellGcmBindTile(void);
 void cellGcmSetFlipMode(void);

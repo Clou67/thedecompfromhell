@@ -6,7 +6,6 @@
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
-#include "game/space.h"
 
 // 0x02acc60 (0x14 bytes)
 void M1684_002acc60(void)

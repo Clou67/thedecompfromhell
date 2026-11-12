@@ -17,7 +17,6 @@
 #include "game/pause.h"
 #include "game/respawn.h"
 #include "game/sound.h"
-#include "game/space.h"
 #include "game/update/moby1180.h"
 #include "game/update/moby177.h"
 #include "idol/fastfunc.h"

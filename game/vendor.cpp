@@ -402,7 +402,7 @@ void Spawn_Moby11_Vendor(MobyInstance *moby)
   }
   Help_Kill();
   SceneScreenFade = 1.0;
-  DAT_0095cf14 = (float)dVar7;
+  g_SceneFlash = (float)dVar7;
   g_gameMode = GAME_MODE_VENDOR;
   TransitionMovement(100,1);
   DAT_0096bd8c = 1;
@@ -593,7 +593,7 @@ int Vendor_StartWeaponCutscene(void)
   DAT_00e5aa64 = DAT_00e5aa64 + -0x40000;
   DAT_0095cda8 = g_NpcBuffer;
   g_SceneLoadBuffer = g_NpcBuffer + 0x80000;
-  DAT_0095cf14 = (float)dVar4;
+  g_SceneFlash = (float)dVar4;
   SceneScreenFade = (float)dVar4;
   iVar1 = *(int *)(&DAT_0073a240 + DAT_00e5a698 * 4);
   if ((g_CurrentWeapon != 0) && (DAT_00e5a698 != g_CurrentWeapon)) {
@@ -675,7 +675,7 @@ int StartGadgetPickupCutscene(int param_1,longlong param_2)
   DAT_0095cda8 = g_NpcBuffer;
   g_SceneLoadBuffer = g_NpcBuffer + 0x200000;
   SceneScreenFade = 1.0;
-  DAT_0095cf14 = (float)dVar4;
+  g_SceneFlash = (float)dVar4;
   iVar2 = *(int *)(&DAT_0073a240 + (int)(param_2 << 2));
   Hero_KillGadget(0,0);
   DAT_0096bd98 = (int)param_2;

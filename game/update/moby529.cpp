@@ -5,7 +5,7 @@
 #include "game/draw.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
-#include "game/space.h"
+#include "game/update/moby1546.h"
 
 // 0x03aba28 (0x14 bytes)
 void M529_003aba28(void)

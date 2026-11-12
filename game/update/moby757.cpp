@@ -12,7 +12,6 @@
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
 #include "game/partupd.h"
-#include "game/space.h"
 #include "game/update/moby1118.h"
 #include "game/update/moby755.h"
 #include "idol/fastfunc.h"

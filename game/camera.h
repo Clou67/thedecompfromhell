@@ -320,6 +320,7 @@ extern int CamPostUpdRoutineCnt; /* 0x954050 */
 extern void * CamPostUpdRoutines[16]; /* 0x954010 */
 extern CameraVTable g_CameraVTable[24]; /* 0x927208 */
 extern int ControlMode; /* 0x95c5d4 */ /* type set in global_types.tsv */
+extern Cuboid * Cuboids; /* 0xa51bd8 */
 extern Cylinder * Cylinders; /* 0xa51bd0 */
 extern undefined4 DAT_00052b40; /* 0x52b40 */
 extern undefined4 DAT_0071ea2c; /* 0x71ea2c */

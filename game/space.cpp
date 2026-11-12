@@ -6,6 +6,7 @@
 #include "game/boot.h"
 #include "game/camera.h"
 #include "game/collproc.h"
+#include "game/crt0.h"
 #include "game/debug.h"
 #include "game/draw.h"
 #include "game/freeze.h"
@@ -27,6 +28,7 @@
 #include "game/partproc.h"
 #include "game/partupd.h"
 #include "game/pause.h"
+#include "game/respawn.h"
 #include "game/skyfunc.h"
 #include "game/sound.h"
 #include "game/update.h"
@@ -49,7 +51,6 @@
 #include "idol/fastinline.h"
 #include <cell/gcm/gcm_macros.h>
 #include <cell/gcm/gcm_enum.h>
-// MERGE (20 of 28 functions cleaned; the rest are generated)
 
 #define SHIP_STATE_SCENES 42          /* moby->state while the ship's intro scenes play */
 #define SHIP_PROMPT_BOARD 0x53e4      /* "press triangle to board" */
@@ -105,7 +106,6 @@ void SECTION_HEADER_SPACE(void)
 {
     DAT_00731bc4 = 0x10000;
 }
-
 
 // 0x015da58 (0x588 bytes)
 /* the parked ship: plays the intro scenes it owes, pulses its glow, and takes off when the
@@ -204,7 +204,6 @@ void UpdateMoby_Spaceship(MobyInstance *moby)
     }
 }
 
-
 // 0x015dfe0 (0x2e0 bytes)
 /* points GameCamera along the ship cutscene's camera track; returns the frame's first flag */
 char Space_SetCutsceneCamera(void)
@@ -266,12 +265,10 @@ char Space_SetCutsceneCamera(void)
     return flag;
 }
 
-
 // 0x015e2c0 (0x4 bytes)
 void STUB_0015e2c0(...)
 {
 }
-
 
 // 0x015e2c4 (0x28 bytes)
 void Space_DisableShip(void)
@@ -283,7 +280,6 @@ void Space_DisableShip(void)
         ship->modeBits |= NO_UPDATE | DISABLED;
     }
 }
-
 
 // 0x015e2ec (0x114 bytes)
 /* a ship moby spawned: it becomes the level's ship (disabling the previous one) */
@@ -316,7 +312,6 @@ void SetupSpaceShipVars(MobyInstance *moby)
     g_shipCameraEndCuboid = vars->cameraEndCuboid;
 }
 
-
 // 0x015e400 (0x2c bytes)
 void Space_EnableShip(void)
 {
@@ -328,14 +323,13 @@ void Space_EnableShip(void)
     }
 }
 
-
 // 0x015e430 (0x3b8 bytes)
 /* starts a ship cutscene: 0 takes off, anything else lands; loads the scene and its speech */
 void PlaySpaceCutscene(int cutscene)
 {
     g_CutscenePlaying = 1;
-    DAT_00964594 = 0xffff;
-    DAT_00964578 = 0;
+    g_SpaceCutsceneTimer = -1;
+    g_SceneO2Mask = NULL;
     g_SpaceCutscene = cutscene;
     FastMemSet(&DAT_0095cd50, 0, 0x1c0);
     FastMemSet(&DAT_00a1be80, 0, 0x40);
@@ -345,7 +339,7 @@ void PlaySpaceCutscene(int cutscene)
     g_SceneLoadBuffer = g_NpcBuffer + 0x200000;
     DAT_0095cda8 = g_NpcBuffer;
     SceneScreenFade = 1.0f;
-    DAT_0095cf14 = 0;
+    g_SceneFlash = 0.0f;
     g_gameMode = GAME_MODE_SPACE;
     TransitionMovement(100, 2);
     g_heroInvisible = 1;
@@ -405,7 +399,6 @@ void PlaySpaceCutscene(int cutscene)
     music_PlayPreseekedSpeech();
 }
 
-
 // 0x015e7e8 (0xb0 bytes)
 void Space_StartTakeoffCutscene(void)
 {
@@ -425,7 +418,6 @@ void Space_StartTakeoffCutscene(void)
     g_spaceArrivalPending = 0;
 }
 
-
 // 0x015e8a0 (0x1e4 bytes)
 /* to the same level: the arrival cutscene from where the ship leaves; else save and
    queue the level change */
@@ -433,16 +425,16 @@ void StartLeaveLevelCutscene(LevelId level)
 {
     g_CutscenePlaying = 1;
     g_gameMode = GAME_MODE_SPACE;
-    DAT_0095cf14 = 0;
+    g_SceneFlash = 0.0f;
     SceneScreenFade = 1.0f;
     g_SpaceCutscene = 0;
-    DAT_00964594 = 0xffff;
+    g_SpaceCutsceneTimer = -1;
     SpaceSceneBuffers();
 
     if (Level != level) {
         memcard_Save(0, level);
         g_SpaceCutscene = 3;
-        DAT_00964594 = 0xffff;
+        g_SpaceCutsceneTimer = -1;
         g_newlevelnum = level;
         return;
     }
@@ -458,7 +450,6 @@ void StartLeaveLevelCutscene(LevelId level)
     g_cutsceneCameraFrame = g_SpaceSceneFrame % chunkLen;
 }
 
-
 // 0x015ea84 (0x20 bytes)
 void ChangeLevel(LevelId level)
 {
@@ -466,7 +457,6 @@ void ChangeLevel(LevelId level)
     g_newlevelnum = level;
     g_CutscenePlaying = 1;
 }
-
 
 // 0x015eaa4 (0x120 bytes)
 /* a level just loaded from space: play the landing cutscene, except on the levels that
@@ -487,7 +477,7 @@ void Space_StartLevelArrival(void)
     else {
         g_gameMode = GAME_MODE_SPACE;
         g_SpaceCutscene = 0;
-        DAT_00964594 = 0xffff;
+        g_SpaceCutsceneTimer = -1;
         SceneScreenFade = 1.0f;
         VU1_setBufSizeByLevel();
         DAT_00e5aa64 -= 0x60000;
@@ -496,7 +486,6 @@ void Space_StartLevelArrival(void)
         PlaySpaceCutscene(8);
     }
 }
-
 
 // 0x015ebd0 (0x3bc bytes)
 /* the engine glows of the parked ship: a flickering quad per glow (alpha from the ship's
@@ -587,7 +576,6 @@ static inline void Sub(Vec4 *out, Vec4 *a, Vec4 *b)
     out->y = a->y - b->y;
     out->z = a->z - b->z;
 }
-
 
 // 0x015ef98 (0x6e8 bytes)
 /* the ship's two engine trails as ribbons: per segment, one quad spread across the pair of
@@ -685,7 +673,6 @@ static inline u32 SwapBytes(u32 value)
 {
     return value >> 24 | (value >> 8 & 0xff00) | (value & 0xff00) << 8 | value << 24;
 }
-
 
 // 0x015f6d0 (0x5e0 bytes)
 /* unused: draws the level's transition quad (scaled per level, around g_TransitionCenter)
@@ -857,7 +844,6 @@ static inline void SpaceSceneMobyStep(MobyInstance *moby, int sub)
     g_ShipTrails[0][g_ShipTrailHead] = left.v3;
     g_ShipTrails[1][g_ShipTrailHead] = right.v3;
 }
-
 
 // 0x015fe00 (0x9a4 bytes)
 /* one frame of the space loading screens: plays the scene's chunks, and at its end picks the
@@ -1068,7 +1054,6 @@ static inline void ShipEnvUv(float *uv, Vec4 *world, Mtx4 *m, Vec4 *normal)
     uv[1] = r.y / m2 + 0.5f;
 }
 
-
 // 0x01607c0 (0x98c bytes)
 // inlined: FastRSqrt @0x160c1c, FastRSqrt @0x160d20
 /* the ship's environment-mapped shine: near the camera the reflection uvs follow it (easing in
@@ -1161,7 +1146,6 @@ void Space_DrawShipEffects(MobyInstance *moby)
     }
 }
 
-
 // 0x016114c (0x328 bytes)
 /* draws a frame of the space loading screens */
 void TransitionDraw_Space(void)
@@ -1220,7 +1204,6 @@ void TransitionDraw_Space(void)
     STUB_000f1448();
 }
 
-
 // 0x0161480 (0x244 bytes)
 /* six engine sparks off the ship, drifting by zVel */
 void Space_SpawnShipParticles(MobyInstance *ship, float zVel)
@@ -1253,1859 +1236,1213 @@ void Space_SpawnShipParticles(MobyInstance *ship, float zVel)
     }
 }
 
+#define SCENE_SKIP_BUTTONS (CROSS | CIRCLE | TRIANGLE)
+#define SHIP_OCLASS_FIRST 0x213
+#define SHIP_OCLASS_LAST 0x215
 
-// 0x0161788 (0x2220 bytes)
-// strings: 0096c074: 'None'
-
-void UpdateSpace(void)
-
+static inline void SpaceGlowPulse(MobyInstance *moby, int frame)
 {
-  bool bVar1;
-  float fVar2;
-  u8 uVar3;
-  char cVar4;
-  float fVar5;
-  float fVar6;
-  float fVar7;
-  float fVar8;
-  float fVar9;
-  float fVar10;
-  f32 fVar11;
-  MobyInstance *pMVar12;
-  Spline *pSVar13;
-  char cVar14;
-  undefined4 uVar15;
-  uint uVar16;
-  vec4 *pvVar17;
-  longlong lVar18;
-  undefined4 *puVar19;
-  float *pfVar20;
-  MobyInstance *pMVar21;
-  int iVar22;
-  short sVar25;
-  float *pfVar23;
-  Spline *pSVar24;
-  Mtx4 *pMVar26;
-  ulonglong uVar27;
-  int iVar28;
-  MOBY_OCLASSES MVar29;
-  ulonglong uVar30;
-  int iVar31;
-  int iVar32;
-  uint uVar33;
-  byte bVar34;
-  double dVar35;
-  double dVar36;
-  undefined8 uVar37;
-  undefined8 uVar38;
-  double dVar39;
-  double dVar40;
-  double dVar41;
-  double dVar42;
-  double dVar43;
-  double dVar44;
-  double dVar45;
-  double dVar46;
-  double dVar47;
-  double dVar48;
-  double dVar49;
-  double dVar50;
-  double dVar51;
-  double dVar52;
-  double dVar53;
-  double dVar54;
-  double dVar55;
-  double dVar56;
-  GPiece<16> auVar57;
-  GPiece<16> auVar58;
-  GPiece<16> auVar59;
-  GPiece<16> auVar60;
-  GPiece<16> auVar61;
-  GPiece<16> auVar62;
-  GPiece<16> auVar63;
-  GPiece<16> auVar64;
-  GPiece<16> auVar65;
-  GPiece<16> auVar66;
-  GPiece<16> auVar67;
-  GPiece<16> auVar68;
-  GPiece<16> auVar69;
-  GPiece<16> auVar70;
-  GPiece<16> auVar71;
-  GPiece<16> auVar72;
-  GPiece<16> auVar73;
-  GPiece<16> auVar74;
-  undefined4 in_vr31_32_0;
-  undefined4 in_vr31_32_1;
-  undefined4 in_vr31_32_2;
-  undefined4 in_vr31_32_3;
-  GPiece<16> auVar75;
-  float local_270;
-  float local_26c;
-  float local_268;
-  float local_264;
-  float local_260;
-  float local_25c;
-  float local_258;
-  undefined4 local_254;
-  float local_250;
-  float local_24c;
-  float local_248;
-  float local_240;
-  float local_23c;
-  float local_238;
-  float local_230;
-  float local_22c;
-  float local_228;
-  GPiece<16> auStack_210;
-  GPiece<16> auStack_200;
-  float local_1f0;
-  float local_1ec;
-  float local_1e8;
-  float local_1e4;
-  float local_1e0;
-  float local_1dc;
-  float local_1d8;
-  longlong local_1d0;
-  
-  uVar30 = ZEXT48(&stack0x00000000);
-  lVar18 = uVar30 - 0x110;
-  puVar19 = (undefined4 *)lVar18;
-  puVar19[3] = in_vr31_32_3;
-  puVar19[2] = in_vr31_32_2;
-  puVar19[1] = in_vr31_32_1;
-  *puVar19 = in_vr31_32_0;
-  DAT_00964594 = DAT_00964594 + 1;
-  bVar34 = (g_SpaceCutscene == -1) << 1;
-  if (g_SpaceCutscene < 4) {
-    if (0 < g_SpaceCutscene) {
-      if (g_SpaceCutscene < 2) {
-        return;
-      }
-      if (g_SpaceCutscene < 3) {
-        return;
-      }
-      ResetGameCounters();
-      UpdateMobys();
-      sound_UpdateAmbient();
-      HeroUpdate();
-      UpdateParts();
-      if (DAT_00964594 == 0) {
-        music_Pause(0);
-        music_Sync(0);
-        g_PendingSpeech = g_SpaceshipVariant + 0x9c4f;
-        local_1d0 = (longlong)(int)(animationSpeed * 12.5);
-        FadeToBlack((int)(animationSpeed * 12.5));
-        while (g_SpeechPlaying.status != 3) {
-          sound_Update();
-          STUB_00503078(0);
-        }
-        music_PlayPreseekedSpeech();
-        pMVar12 = g_SpaceshipPtr;
-        g_SpaceshipPtr->updateId = '\x01';
-        pMVar12->animationId = '\x02';
-        dVar41 = 0.0;
-        pMVar12->animationBlend = 0.0;
-        UpdateMobyFrameData(pMVar12);
-        pMVar12 = g_SpaceshipPtr;
-        g_SpaceshipPtr->unk72 = -1;
-        iVar31 = g_shipSplinePath;
-        pMVar12->collision = (ushort *)0x0;
-        if (-1 < iVar31) {
-          pMVar21 = CreateMoby(RATCHET);
-          DAT_00964580 = pMVar21;
-          pMVar21->unk72 = -1;
-          pMVar21->collision = (ushort *)0x0;
-          pMVar12 = g_heroMobyPtr;
-          pMVar21->drawDistance = 0x1ff;
-          pMVar21->modeBits = pMVar21->modeBits | (NO_POST_UPDATE|NO_UPDATE);
-          uVar33 = pMVar12->light;
-          pMVar21->color = pMVar12->color;
-          pMVar21->light = uVar33;
-          pMVar21 = CreateMoby(CLANK_000A);
-          DAT_00964584 = pMVar21;
-          pMVar21->unk72 = -1;
-          pMVar21->collision = (ushort *)0x0;
-          pMVar12 = g_heroMobyPtr;
-          pMVar21->drawDistance = 0x1ff;
-          uVar33 = pMVar12->color;
-          uVar16 = pMVar12->light;
-          pMVar21->modeBits = pMVar21->modeBits | (NO_POST_UPDATE|NO_UPDATE);
-          pMVar21->color = uVar33;
-          pMVar21->light = uVar16;
-        }
-        SetCameraPosition(0x951500,0x951510,1,0,0);
-        DAT_009645b8 = 0.0;
-        DAT_009645bc = 0;
-        if (-1 < g_shipSplinePath) {
-          pSVar13 = Splines[g_shipSplinePath];
-          iVar31 = pSVar13->cnt;
-          pSVar13->points[0].w = 0.0;
-          if (1 < iVar31 + -1) {
-            iVar32 = 1;
-            pSVar24 = pSVar13;
-            do {
-              uVar37 = FUN_005e8338((double)(pSVar24->points[1].x - pSVar24->points[0].x),
-                                    (double)(pSVar24->points[1].y - pSVar24->points[0].y));
-              uVar38 = FUN_005e8338((double)(pSVar24->points[2].x - pSVar24->points[1].x),
-                                    (double)(pSVar24->points[2].y - pSVar24->points[1].y));
-              dVar42 = (double)FastDiffRots(uVar38,uVar37);
-              iVar32 = iVar32 + 1;
-              iVar31 = pSVar13->cnt;
-              pSVar24->points[1].w = (float)dVar42;
-              if (dVar41 - ABS(dVar42) < 0.0) {
-                dVar41 = ABS(dVar42);
-              }
-              pSVar24 = (Spline *)pSVar24->points;
-            } while (iVar32 < iVar31 + -1);
-          }
-          uVar37 = FUN_005e8338((double)(pSVar13->points[iVar31 + -1].x -
-                                        pSVar13->points[iVar31 + -2].x),
-                                (double)(pSVar13->points[iVar31 + -1].y -
-                                        pSVar13->points[iVar31 + -2].y));
-          iVar31 = (int)(((ulonglong)(uint)pSVar13->cnt & 0xfffffff) << 4);
-          uVar38 = FUN_005e8338((double)(pSVar13->points[0].x -
-                                        *(float *)((int)&((Spline *)(pSVar13->points + -1))->cnt +
-                                                  iVar31)),
-                                (double)(pSVar13->points[0].y -
-                                        *(float *)((int)pSVar13->points + iVar31 + -0xc)));
-          dVar42 = (double)FastDiffRots(uVar38,uVar37);
-          iVar31 = pSVar13->cnt;
-          pSVar13->points[iVar31 + -1].w = (float)dVar42;
-          if (0 < iVar31) {
-            iVar31 = 0;
-            pSVar24 = pSVar13;
-            do {
-              iVar31 = iVar31 + 1;
-              iVar32 = pSVar13->cnt;
-              pSVar24->points[0].w = pSVar24->points[0].w * (float)(0.3490658402442932 / dVar41);
-              pSVar24 = (Spline *)pSVar24->points;
-            } while (iVar31 < iVar32);
-          }
-          DAT_00964604 = pSVar13->points[0].y;
-          fVar2 = pSVar13->points[1].y;
-          DAT_00964600 = pSVar13->points[0].x;
-          fVar6 = DAT_00964604 - fVar2;
-          fVar5 = pSVar13->points[1].x;
-          DAT_00964608 = pSVar13->points[0].z;
-          fVar7 = DAT_00964600 - fVar5;
-          fVar8 = DAT_00964608 - pSVar13->points[1].z;
-          fVar2 = fVar2 - DAT_00964604;
-          DAT_009645ac = 0.0;
-          DAT_009645b0 = 0.0;
-          fVar5 = fVar5 - DAT_00964600;
-          g_ShipTrailHead = 0;
-          g_ShipTrailLen = 0;
-          DAT_009645b4 = SQRT(fVar8 * fVar8 + fVar7 * fVar7 + fVar6 * fVar6);
-          DAT_009645f0 = (g_SpaceshipPtr->pos).x;
-          DAT_009645f4 = (g_SpaceshipPtr->pos).y;
-          DAT_009645f8 = (g_SpaceshipPtr->pos).z;
-          DAT_009645fc = (g_SpaceshipPtr->pos).w;
-          DAT_0096460c = pSVar13->points[0].w;
-          DAT_00964610 = (g_SpaceshipPtr->rotation).x;
-          DAT_00964614 = (g_SpaceshipPtr->rotation).y;
-          DAT_00964618 = (g_SpaceshipPtr->rotation).z;
-          DAT_0096461c = (g_SpaceshipPtr->rotation).w;
-          dVar41 = (double)FUN_005e8338((double)SQRT(fVar5 * fVar5 + fVar2 * fVar2));
-          DAT_00964624 = (float)dVar41;
-          dVar41 = (double)FUN_005e8338((double)(pSVar13->points[1].x - pSVar13->points[0].x),
-                                        (double)(pSVar13->points[1].y - pSVar13->points[0].y));
-          DAT_00964628 = (float)dVar41;
-        }
-      }
-      if (-1 < (int)(g_shipCameraStartCuboid | g_shipCameraEndCuboid)) {
-        OrganicDelt
-                  (1.0,g_FrameTimeSq * 0.666,g_FrameTimeSq * 0.666,g_FrameTime * 0.5,
-                   &DAT_009645b8,0x720000,(float *)&DAT_009645bc);
-        local_270 = Cuboids[g_shipCameraStartCuboid].pos.x;
-        local_264 = Cuboids[g_shipCameraEndCuboid].pos.w;
-        local_270 = DAT_009645b8 * (Cuboids[g_shipCameraEndCuboid].pos.x - local_270) + local_270;
-        local_26c = DAT_009645b8 *
-                    (Cuboids[g_shipCameraEndCuboid].pos.y - Cuboids[g_shipCameraStartCuboid].pos.y)
-                    + Cuboids[g_shipCameraStartCuboid].pos.y;
-        local_268 = DAT_009645b8 *
-                    (Cuboids[g_shipCameraEndCuboid].pos.z - Cuboids[g_shipCameraStartCuboid].pos.z)
-                    + Cuboids[g_shipCameraStartCuboid].pos.z;
-        local_254 = 0;
-        local_258 = 0.0;
-        local_25c = 0.0;
-        local_260 = 0.0;
-        dVar41 = (double)FastDiffRots
-                                   ((double)Cuboids[g_shipCameraEndCuboid].rot.y,
-                                    (double)Cuboids[g_shipCameraStartCuboid].rot.y);
-        local_25c = (float)(dVar41 * (double)DAT_009645b8);
-        dVar41 = (double)FastWrapRot(Cuboids[g_shipCameraStartCuboid].rot.y,local_25c);
-        local_25c = (float)dVar41;
-        dVar41 = (double)FastDiffRots
-                                   ((double)Cuboids[g_shipCameraEndCuboid].rot.z,
-                                    (double)Cuboids[g_shipCameraStartCuboid].rot.z);
-        local_258 = (float)(dVar41 * (double)DAT_009645b8);
-        dVar41 = (double)FastWrapRot(Cuboids[g_shipCameraStartCuboid].rot.z,local_258);
-        local_258 = (float)dVar41;
-        Camera_SetMobyDrivenTargetPos(&local_270);
-        Camera_SetMobyDrivenTargetRot(&local_260);
-      }
-      pMVar12 = g_SpaceshipPtr;
-      if (g_shipSplinePath < 0) goto LAB_0016388c;
-      local_1d0 = (longlong)(int)(animationSpeed * 150.5);
-      if ((int)DAT_00964594 < (int)(animationSpeed * 150.5)) {
-        dVar41 = (double)FastIntToDouble();
-        dVar52 = 120.5;
-        local_1d0 = (longlong)(int)(animationSpeed * 120.5);
-        dVar42 = (double)FastIntToDouble((int)(animationSpeed * 120.5));
-        fVar6 = DAT_0096460c;
-        pMVar12 = g_SpaceshipPtr;
-        dVar43 = (double)DAT_00964600;
-        dVar51 = 1.0;
-        dVar44 = (double)DAT_009645f0;
-        dVar45 = (double)DAT_00964604;
-        dVar46 = (double)DAT_009645f4;
-        dVar47 = (double)DAT_00964608;
-        dVar48 = (double)DAT_009645f8;
-        local_1d0 = (longlong)(int)((double)animationSpeed * dVar52);
-        dVar49 = (double)DAT_00964624;
-        dVar50 = (double)DAT_00964614;
-        fVar2 = (float)(dVar41 * (double)(float)(3.1415927410125732 / dVar42) + 1.570796251296997);
-        fVar5 = 3.1415925 - fVar2;
-        if (fVar2 - (3.1415925 - fVar2) < 0.0) {
-          fVar5 = fVar2;
-        }
-        fVar7 = -3.1415925 - fVar2;
-        if ((-3.1415925 - fVar2) - fVar5 < 0.0) {
-          fVar7 = fVar5;
-        }
-        fVar2 = fVar7 * fVar7;
-        fVar5 = fVar2 * fVar2 * fVar7;
-        fVar8 = fVar2 * fVar5;
-        dVar41 = (double)((1.0 - (fVar2 * fVar8 * 2.601887e-06 +
-                                 fVar8 * -0.0001980741 +
-                                 fVar5 * 0.0083330255 + fVar2 * fVar7 * -0.16666657 + fVar7)) * 0.5)
-        ;
-        if ((int)((double)animationSpeed * dVar52) <= (int)DAT_00964594) {
-          dVar41 = dVar51;
-        }
-        g_SpaceshipPtr->animationBlend = (float)dVar41;
-        (pMVar12->pos).w = fVar6;
-        (pMVar12->pos).x = (float)(dVar41 * (double)(float)(dVar43 - dVar44) + dVar44);
-        (pMVar12->pos).y = (float)(dVar41 * (double)(float)(dVar45 - dVar46) + dVar46);
-        (pMVar12->pos).z = (float)(dVar41 * (double)(float)(dVar47 - dVar48) + dVar48);
-        dVar44 = 0.0;
-        (pMVar12->rotation).x = 0.0;
-        dVar42 = (double)FastDiffRots(dVar49,dVar50);
-        dVar42 = (double)FastWrapRot((float)dVar50,(float)(dVar42 * dVar41));
-        (g_SpaceshipPtr->rotation).y = (float)dVar42;
-        dVar43 = (double)DAT_00964618;
-        dVar42 = (double)FastDiffRots((double)DAT_00964628,dVar43);
-        dVar42 = (double)FastWrapRot((float)dVar43,(float)(dVar42 * dVar41));
-        (g_SpaceshipPtr->rotation).z = (float)dVar42;
-        if ((0 < (int)SceneScreenFade) &&
-           (SceneScreenFade = SceneScreenFade - 0.125,
-           (double)SceneScreenFade < dVar44)) {
-          SceneScreenFade = 0.0;
-        }
-        if (dVar41 < dVar51) {
-          Space_SpawnShipParticles();
-        }
-      }
-      else {
-        auVar57 = loadVectorLeftIndexed(0xb4,0x1616c4);
-        auVar58 = loadVectorLeftIndexed(0x40,0x964570);
-        auVar57 = auVar57 >> 0x60 & (GPiece<16>)0xffffffff;
-        uVar30 = ZEXT48(Splines[g_shipSplinePath]);
-        auVar58 = vectorAddFloatingPoint
-                            (auVar58,auVar57 | auVar57 << 0x20 | auVar57 << 0x40 | auVar57 << 0x60);
-        fVar2 = DAT_009645b0 + 0.8;
-        auVar57 = auVar58 >> 0x60 & (GPiece<16>)0xffffffff;
-        auVar60 = auVar57 | auVar57 << 0x20 | auVar57 << 0x40 | auVar57 << 0x60;
-        DAT_009645b0 = (float)storeVectorElementWordIndexed(auVar60,0x40,0x964570);
-        auVar57 = loadVectorLeftIndexed(0xb8,0x1616c4);
-        auVar57 = auVar57 >> 0x60 & (GPiece<16>)0xffffffff;
-        auVar57 = auVar57 | auVar57 << 0x20 | auVar57 << 0x40 | auVar57 << 0x60;
-        vectorCompareGreaterThanFloatingPoint(auVar60,auVar57);
-        if (!(bool)(bVar34 >> 1 & 1)) {
-          DAT_009645b0 = 100.0;
-          auVar58 = auVar57;
-          fVar2 = 100.0;
-        }
-        auVar57 = auVar58 >> 0x60 & (GPiece<16>)0xffffffff;
-        auVar57 = auVar57 | auVar57 << 0x20 | auVar57 << 0x40 | auVar57 << 0x60;
-        if (((g_Pad.buttonsPressedThisFrame & (CROSS|CIRCLE|TRIANGLE)) != 0) &&
-           ((int)(FLOAT_ORDER(SceneScreenFade)) < 0x3d800000)) {
-          SceneScreenFade = 0.0625;
-        }
-        auVar58 = ZEXT416(6);
-        auVar60 = loadVectorLeftIndexed(lVar18,uVar30);
-        auVar60 = vectorSubtractUnsignedWordModulo
-                            (auVar60,auVar58 | auVar58 << 0x20 | auVar58 << 0x40 | auVar58 << 0x60);
-        auVar66 = loadVectorLeftIndexed(0x3c,0x964570);
-        auVar58 = auVar66 >> 0x60 & (GPiece<16>)0xffffffff;
-        auVar60 = vectorConvertFromSignedFixedPointWord(auVar60,0);
-        auVar60 = auVar60 >> 0x60 & (GPiece<16>)0xffffffff;
-        vectorCompareGreaterThanFloatingPoint
-                  (auVar58 | auVar58 << 0x20 | auVar58 << 0x40 | auVar58 << 0x60,
-                   auVar60 | auVar60 << 0x20 | auVar60 << 0x40 | auVar60 << 0x60);
-        if ((!(bool)(bVar34 >> 1 & 1)) &&
-           ((int)(FLOAT_ORDER(SceneScreenFade)) < 0x3d800000)) {
-          SceneScreenFade = 0.0625;
-        }
-        if (g_SpaceshipVariant < 2) {
-          g_SpaceshipPtr->setByGroup = '2';
-          pMVar12->uid = 10;
-          RegisterFuncForMoby(&PTR_Space_DrawShipEngineGlow_00707cb0,pMVar12);
-          auVar66 = loadVectorLeftIndexed(0x3c,0x964570);
-          auVar57 = loadVectorLeftIndexed(0x40,0x964570);
-          fVar2 = DAT_009645b0;
-        }
-        auVar58 = ZEXT416(0xffffffff);
-        auVar60 = auVar58 | auVar58 << 0x20 | auVar58 << 0x40 | auVar58 << 0x60;
-        auVar58 = ZEXT416(0xffffffff);
-        auVar71 = auVar58 | auVar58 << 0x20 | auVar58 << 0x40 | auVar58 << 0x60;
-        auVar70 = vectorShiftLeftIntegerWord(auVar60,auVar60);
-        auVar67 = loadVectorLeftIndexed(0x44,0x964570);
-        auVar68 = vectorReciprocalEstimateFloatingPoint(auVar67);
-        auVar58 = loadVectorLeftIndexed(0xbc,0x1616c4);
-        auVar58 = auVar58 >> 0x60 & (GPiece<16>)0xffffffff;
-        auVar69 = auVar58 | auVar58 << 0x20 | auVar58 << 0x40 | auVar58 << 0x60;
-        auVar72 = vectorShiftLeftIntegerWord(auVar71,auVar71);
-        auVar58 = ZEXT416(0xffffffff);
-        auVar60 = auVar58 | auVar58 << 0x20 | auVar58 << 0x40 | auVar58 << 0x60;
-        auVar58 = ZEXT416(0xffffffff);
-        auVar71 = auVar58 | auVar58 << 0x20 | auVar58 << 0x40 | auVar58 << 0x60;
-        auVar58 = auVar57 >> 0x60 & (GPiece<16>)0xffffffff;
-        auVar73 = vectorShiftLeftIntegerWord(auVar60,auVar60);
-        auVar74 = vectorShiftLeftIntegerWord(auVar71,auVar71);
-        auVar71 = vectorNegativeMultiplySubtractFloatingPoint(auVar68,auVar67,auVar69);
-        auVar57 = ZEXT416(1);
-        auVar60 = auVar66 >> 0x60 & (GPiece<16>)0xffffffff;
-        auVar66 = vectorMultiplyAddFloatingPoint(auVar68,auVar71,auVar70);
-        auVar68 = loadVectorLeftIndexed(0xfffffffffffff414,0x720000);
-        auVar58 = vectorMultiplyAddFloatingPoint
-                            (auVar58 | auVar58 << 0x20 | auVar58 << 0x40 | auVar58 << 0x60,auVar68,
-                             auVar73);
-        auVar68 = loadVectorLeftIndexed(lVar18,uVar30);
-        auVar57 = vectorSubtractUnsignedWordModulo
-                            (auVar68,auVar57 | auVar57 << 0x20 | auVar57 << 0x40 | auVar57 << 0x60);
-        auVar57 = vectorConvertFromSignedFixedPointWord(auVar57,0);
-        auVar68 = vectorNegativeMultiplySubtractFloatingPoint(auVar66,auVar67,auVar69);
-        auVar57 = auVar57 >> 0x60 & (GPiece<16>)0xffffffff;
-        auVar68 = vectorMultiplyAddFloatingPoint(auVar66,auVar68,auVar72);
-        auVar66 = vectorNegativeMultiplySubtractFloatingPoint(auVar68,auVar67,auVar69);
-        auVar66 = vectorMultiplyAddFloatingPoint(auVar68,auVar66,auVar74);
-        fVar2 = DAT_009645ac + (fVar2 * g_FrameTime) / DAT_009645b4;
-        auVar58 = vectorMultiplyAddFloatingPoint
-                            (auVar66,auVar58,
-                             auVar60 | auVar60 << 0x20 | auVar60 << 0x40 | auVar60 << 0x60);
-        auVar58 = auVar58 >> 0x60 & (GPiece<16>)0xffffffff;
-        auVar58 = auVar58 | auVar58 << 0x20 | auVar58 << 0x40 | auVar58 << 0x60;
-        vectorCompareGreaterThanFloatingPoint
-                  (auVar58,auVar57 | auVar57 << 0x20 | auVar57 << 0x40 | auVar57 << 0x60);
-        DAT_009645ac = (float)storeVectorElementWordIndexed(auVar58,0x3c,0x964570);
-        if ((bool)(bVar34 >> 1 & 1)) {
-          dVar41 = 1.0;
-          uVar33 = (uint)((int)SceneScreenFade >> 0x1f) >> 1;
-          if ((int)((uVar33 ^ (uint)SceneScreenFade) - ((int)SceneScreenFade >> 0x1f)) <
-              0x3f800000) {
-            MB_PathEvalSpline
-                      ((double)fVar2,uVar30,uVar33,1,&g_SpaceshipPtr->pos,&g_SpaceshipPtr->rotation,
-                       0);
-            iVar31 = g_ShipTrailLen;
-            sVar25 = g_SpaceshipVariant;
-            pMVar12 = g_SpaceshipPtr;
-            uVar33 = g_ShipTrailHead + 1;
-            bVar1 = g_ShipTrailLen < 0x20;
-            g_ShipTrailHead = uVar33 & 0x1f;
-            (g_SpaceshipPtr->rotation).x = (g_SpaceshipPtr->rotation).w;
-            if (bVar1) {
-              g_ShipTrailLen = iVar31 + 1;
+    float angle = (float)FastIntToDouble((frame & 0x3f) - 0x20) * 0.09817477f;
+    int level = (int)(FastCosInline(angle) * 80.0f) + 120;
+    u32 red = (moby->oClass == SHIP_GREEN_0215) ? (u32)(level >> 1) : (u32)level;
+
+    moby->glowRgba = (red | (u32)level << 8) | (u32)level << 16;
+}
+
+/* a ship glow of `level` (not clamped): grey, or for the 0x215 ship green-blue */
+static inline void SpaceGlowLevel(MobyInstance *moby, int level)
+{
+    u32 low = (moby->oClass == SHIP_GREEN_0215) ? (u32)level << 8 : ((u32)level | (u32)level << 8);
+
+    moby->glowRgba = low | (u32)level << 16;
+}
+
+/* the camera of the playing ship cutscene: its track is relative to the ship */
+static inline char SpaceSceneCamera(void)
+{
+    SceneCameraFrame *frame = &g_SpaceSceneCameraFrames[g_cutsceneCameraFrame];
+    char flag = frame->flags[0];
+    Vec4 euler;
+    Mtx4 m;
+
+    g_ViewContext.xratio = frame->xratio;
+    UpdateViewContext();
+    GameCamera.posX = frame->x;
+    GameCamera.posY = frame->y;
+    GameCamera.posZ = frame->z;
+    memcpy(&GameCamera.field8_0x14c, frame->flags, 4);
+    FUN_005e7d64(&GameCamera.posX, &GameCamera.posX, (float *)&g_SpaceshipPtr->transform);
+    GameCamera.posX += g_SpaceshipPtr->pos.x;
+    GameCamera.posY += g_SpaceshipPtr->pos.y;
+    GameCamera.posZ += g_SpaceshipPtr->pos.z;
+
+    euler.z = FastWrapRot(frame->rotZ, g_SpaceshipPtr->rotation.z);
+    euler.x = frame->rotX;
+    euler.y = frame->rotY;
+    memcpy(&m, &DAT_00653758, sizeof(Mtx4));
+    FUN_005e8c64((undefined8)(uintptr_t)&m, &euler.x);
+
+    GameCamera.orientMtx.up.x = m.v1.x;
+    GameCamera.orientMtx.forward.x = -m.v2.x;
+    GameCamera.orientMtx.right.x = -m.v0.x;
+    GameCamera.orientMtx.up.y = m.v1.y;
+    GameCamera.orientMtx.forward.y = -m.v2.y;
+    GameCamera.orientMtx.right.y = -m.v0.y;
+    GameCamera.orientMtx.up.z = m.v1.z;
+    GameCamera.orientMtx.forward.z = -m.v2.z;
+    GameCamera.orientMtx.right.z = -m.v0.z;
+
+    if (Cheats[4] != 0) {
+        GameCamera.orientMtx.right.w = 0.0f;
+        GameCamera.orientMtx.right.x = -(m.v2.y * m.v1.z) - -(m.v2.z * m.v1.y);
+        GameCamera.orientMtx.right.y = -(m.v2.z * m.v1.x) - -(m.v2.x * m.v1.z);
+        GameCamera.orientMtx.right.z = -(m.v2.x * m.v1.y) - -(m.v2.y * m.v1.x);
+    }
+
+    return flag;
+}
+
+/* the hero (and Clank) get a shadow only part of the scene: 24 or 0 */
+static inline int SpaceSceneShadow(MobyInstance *moby, int frame)
+{
+    int noMask = Level == Orxon && UnlockableItems.o2Mask == 0;
+
+    if (moby->oClass == RATCHET) {
+        if (g_SpaceCutscene == 0) {
+            if (noMask) {
+                return 0;
             }
-            FUN_005e7d64((uVar33 & 0x1f) * 0x10 + 0x964630,sVar25 * 0x20 + 0x731ec0,
-                         &pMVar12->transform);
-            pMVar12 = g_SpaceshipPtr;
-            iVar32 = g_ShipTrailHead * 0x10;
-            iVar31 = g_ShipTrailHead * 0x10;
-            iVar22 = g_ShipTrailHead * 0x10;
-            iVar28 = (int)g_SpaceshipVariant;
-            pMVar26 = &g_SpaceshipPtr->transform;
-            *(float *)(iVar32 + 0x964630) = *(float *)(iVar32 + 0x964630) + (g_SpaceshipPtr->pos).x;
-            *(float *)(iVar32 + 0x964634) = *(float *)(iVar32 + 0x964634) + (pMVar12->pos).y;
-            *(float *)(iVar32 + 0x964638) = *(float *)(iVar32 + 0x964638) + (pMVar12->pos).z;
-            *(undefined4 *)(iVar31 + 0x96463c) = 0x3f800000;
-            FUN_005e7d64(&DAT_00964830 + iVar22,&DAT_00731ed0 + iVar28 * 0x20,pMVar26);
-            pMVar12 = g_SpaceshipPtr;
-            iVar32 = g_ShipTrailHead * 0x10;
-            iVar31 = g_ShipTrailHead * 0x10;
-            fVar2 = *(float *)(iVar32 + 0x964834);
-            fVar5 = *(float *)(iVar32 + 0x964838);
-            *(float *)(&DAT_00964830 + iVar32) =
-                 *(float *)(&DAT_00964830 + iVar32) + (g_SpaceshipPtr->pos).x;
-            *(float *)(iVar32 + 0x964834) = fVar2 + (pMVar12->pos).y;
-            *(float *)(iVar32 + 0x964838) = fVar5 + (pMVar12->pos).z;
-            *(undefined4 *)(iVar31 + 0x96483c) = 0x3f800000;
-            RegisterFuncForMoby(&PTR_Space_DrawTransitionOverlay_00707cb8,pMVar12);
-            if ((0 < (int)SceneScreenFade) &&
-               (SceneScreenFade = SceneScreenFade + 0.0625,
-               dVar41 < (double)SceneScreenFade)) {
-              SceneScreenFade = 1.0;
-            }
-            goto LAB_0016375c;
-          }
+
+            return frame > ScaledFrames(62.5f) ? 0 : 24;
         }
-        g_loadingPlanet = 1;
-        g_CutscenePlaying = 1;
-      }
-LAB_0016375c:
-      pMVar21 = DAT_00964580;
-      pMVar12 = g_SpaceshipPtr;
-      pMVar26 = &g_SpaceshipPtr->transform;
-      iVar31 = (int)g_SpaceshipVariant;
-      (DAT_00964580->rotation).x = (g_SpaceshipPtr->rotation).x;
-      (pMVar21->rotation).y = (pMVar12->rotation).y;
-      (pMVar21->rotation).z = (pMVar12->rotation).z;
-      (pMVar21->rotation).w = (pMVar12->rotation).w;
-      FUN_005e7d64(&pMVar21->pos,iVar31 * 0x10 + 0x7321c0,pMVar26);
-      pMVar21 = DAT_00964580;
-      pMVar12 = g_SpaceshipPtr;
-      pvVar17 = &DAT_00964580->pos;
-      fVar2 = (DAT_00964580->pos).z;
-      (DAT_00964580->pos).x = (DAT_00964580->pos).x + (g_SpaceshipPtr->pos).x;
-      (pMVar21->pos).y = pvVar17->y + (pMVar12->pos).y;
-      (pMVar21->pos).z = fVar2 + (pMVar12->pos).z;
-      UpdateMobyTransform(pMVar21);
-      pMVar21 = DAT_00964584;
-      pMVar12 = g_SpaceshipPtr;
-      iVar31 = (int)g_SpaceshipVariant;
-      (DAT_00964584->rotation).x = (g_SpaceshipPtr->rotation).x;
-      (pMVar21->rotation).y = (pMVar12->rotation).y;
-      (pMVar21->rotation).z = (pMVar12->rotation).z;
-      (pMVar21->rotation).w = (pMVar12->rotation).w;
-      FUN_005e7d64(&pMVar21->pos,iVar31 * 0x10 + 0x7321f0,&pMVar12->transform);
-      pMVar21 = DAT_00964584;
-      pMVar12 = g_SpaceshipPtr;
-      pvVar17 = &DAT_00964584->pos;
-      fVar2 = (DAT_00964584->pos).z;
-      (DAT_00964584->pos).x = (DAT_00964584->pos).x + (g_SpaceshipPtr->pos).x;
-      (pMVar21->pos).y = pvVar17->y + (pMVar12->pos).y;
-      (pMVar21->pos).z = fVar2 + (pMVar12->pos).z;
-      UpdateMobyTransform(pMVar21);
-LAB_0016388c:
-      UpdateCamera();
-      sound_Update();
-      UpdatePointLights();
-      UpdateHeroLightAngle();
-      UpdateGameCounters();
-      return;
+
+        if (frame <= ScaledFrames(360.5f) || noMask) {
+            return 0;
+        }
+
+        return 24;
     }
-    if (g_SpaceCutscene < 0) {
-      return;
+
+    if (g_SpaceCutscene == 0) {
+        return frame > ScaledFrames(350.5f) ? 0 : 24;
     }
-  }
-  else {
-    if (g_SpaceCutscene < 7) {
-      if (4 < g_SpaceCutscene) {
+
+    return frame > ScaledFrames(524.5f) ? 24 : 0;
+}
+
+/* the ships' engine glows over a take-off */
+static inline void SpaceTakeoffShip(MobyInstance *moby, int frame)
+{
+    if (frame < ScaledFrames(360.5f)) {
+        SpaceGlowPulse(moby, frame);
         return;
-      }
-      ChooseLoadingScreen();
-      return;
     }
-    if (g_SpaceCutscene < 8) {
-      return;
+
+    if (frame >= ScaledFrames(504.5f)) {
+        moby->glowRgba = 0xa0a0a0;
+        g_SceneFlash -= 0.025f;
+        if (g_SceneFlash < 0.0f) {
+            g_SceneFlash = 0.0f;
+        }
+        return;
     }
-    if (8 < g_SpaceCutscene) {
-      return;
+
+    /* the engines light up, then the flash */
+    int level = (int)((DAT_0071f408 * 1.25f) * ((float)frame - animationSpeed * 360.0f));
+    if (level > 0xff) {
+        level = 0xff;
     }
-  }
-  ResetGameCounters();
-  UpdateMobys();
-  sound_UpdateAmbient();
-  HeroUpdate();
-  UpdateParts();
-  puVar19 = &DAT_0095cd50;
-  g_cutsceneCameraFrame = g_cutsceneCameraFrame + 1;
-  g_SpaceSceneFrame = g_SpaceSceneFrame + 1;
-  SceneScreenFade = SceneScreenFade - 0.125;
-  if (SceneScreenFade < 0.0) {
-    SceneScreenFade = 0.0;
-  }
-  iVar31 = ((uint)(ZERO_MASK(g_IsPal)) & 0x10) + 0x50;
-  sVar25 = DAT_00964598;
-  if ((g_Pad.buttonsPressedThisFrame & (CROSS|CIRCLE|TRIANGLE)) == 0) {
-LAB_00161a78:
-    local_1d8 = 0.0;
-    if (sVar25 == 0) goto LAB_00161ba8;
-  }
-  else {
-    iVar32 = (int)(animationSpeed * 30.5);
-    local_1d0 = (longlong)iVar32;
-    if (SceneScreenFade != 0.0 || g_SpaceSceneFrame <= iVar32) goto LAB_00161a78;
-    if ((g_SpaceCutscene == 0) &&
-       (iVar22 = (int)(animationSpeed *
-                      ((float)(longlong)
-                              (*(int *)(&DAT_00732220 + (int)((longlong)g_SpaceshipVariant << 2)) +
-                              -0x1e) + 0.5)), local_1d0 = (longlong)iVar22,
-       g_SpaceSceneFrame < iVar22)) {
-      sVar25 = 1;
+    SpaceGlowLevel(moby, level);
+
+    if (g_SpaceSceneFrame > ScaledFrames(420.5f)) {
+        g_SpaceshipPtr->setByGroup = (char)(int)((DAT_0071f408 * 1.2f) * ((float)g_SpaceSceneFrame - animationSpeed * 420.0f));
+        g_SpaceshipPtr->uid = 0;
+        RegisterFuncForMoby((void **)Space_DrawShipEngineGlow, g_SpaceshipPtr);
     }
-    if ((g_SpaceCutscene != 8) ||
-       (g_SpaceSceneNumFrames.piece<0,2>() - iVar32 <= g_SpaceSceneFrame)) goto LAB_00161a78;
-  }
-  local_1d8 = 0.0;
-  if (g_SpeechPlaying.status != 7 && g_SpeechPlaying.status != 6) {
-    g_SpeechPlaying.status = 5;
-  }
-  if (g_SpaceCutscene == 0) {
-    auVar57 = loadVectorLeftIndexed((longlong)g_SpaceshipVariant << 2,0x732220);
-    auVar58 = vectorConvertFromSignedFixedPointWord(auVar57,0);
-    auVar57 = loadVectorLeftIndexed(0xc,0x1616c4);
-    auVar57 = auVar57 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar58 = vectorAddFloatingPoint
-                        (auVar58,auVar57 | auVar57 << 0x20 | auVar57 << 0x40 | auVar57 << 0x60);
-    auVar57 = ZEXT416(0xffffffff);
-    auVar57 = auVar57 | auVar57 << 0x20 | auVar57 << 0x40 | auVar57 << 0x60;
-    auVar60 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
-    auVar57 = vectorShiftLeftIntegerWord(auVar57,auVar57);
-    auVar57 = vectorMultiplyAddFloatingPoint(auVar60,auVar58,auVar57);
-    auVar57 = vectorConvertToSignedFixedPointWordSaturate(auVar57,0);
-    iVar32 = (int)(animationSpeed *
-                  ((float)(longlong)
-                          *(int *)(&DAT_00732220 + (int)((longlong)g_SpaceshipVariant << 2)) + 0.5))
-    ;
-    local_1d0 = (longlong)iVar32;
-    auVar57 = auVar57 >> 0x60 & (GPiece<16>)0xffffffff;
-    g_SpaceSceneFrame =
-         storeVectorElementWordIndexed
-                   (auVar57 | auVar57 << 0x20 | auVar57 << 0x40 | auVar57 << 0x60,0x34,0x95cd50);
-    g_SpaceSceneChunk = iVar32 / iVar31;
-    ParseSpaceSceneChunk(g_SpaceSceneChunk);
-    g_cutsceneCameraFrame = g_SpaceSceneFrame - (g_SpaceSceneFrame / iVar31) * iVar31;
-    if (DAT_00964598 == 0) {
-      FadeToBlack(4);
+
+    if (g_SpaceSceneFrame > ScaledFrames(464.5f)) {
+        g_SceneFlash += 0.025f;
+        if (g_SceneFlash > 1.0f) {
+            g_SceneFlash = 1.0f;
+        }
+    }
+}
+
+/* the ships over a landing: sparks and full engines, which die down */
+static inline void SpaceLandingShip(MobyInstance *moby, int frame)
+{
+    if (frame < ScaledFrames(240.5f)) {
+        if (frame < ScaledFrames(200.5f)) {
+            Space_SpawnShipParticles(moby, g_FrameTime * -4.0f);
+            Space_SpawnShipParticles(moby, g_FrameTime * -3.0f);
+        }
+
+        SpaceGlowPulse(moby, frame);
+        moby->setByGroup = 50;
+        moby->uid = 10;
+        RegisterFuncForMoby((void **)Space_DrawShipEngineGlow, moby);
+        return;
+    }
+
+    if (frame > ScaledFrames(360.5f)) {
+        SpaceGlowPulse(moby, frame);
+        return;
+    }
+
+    if (frame < ScaledFrames(300.5f)) {
+        g_SpaceshipPtr->setByGroup = (char)(int)((DAT_0071f408 * 1.5f) * (animationSpeed * 300.0f - (float)frame));
+        g_SpaceshipPtr->uid = 0;
+        RegisterFuncForMoby((void **)Space_DrawShipEngineGlow, g_SpaceshipPtr);
+    }
+
+    frame = g_SpaceSceneFrame;
+    SpaceGlowLevel(moby, (int)((DAT_0071f408 * 1.25f) * (animationSpeed * 360.0f - (float)frame)));
+}
+
+static inline void SpaceSceneMoby(MobyInstance *moby, char holdKey)
+{
+    int key = (int)g_cutsceneCameraFrame >> 1;
+
+    moby->previousAnimationFrame = (char)key;
+    moby->animationFrame = (char)(key + 1);
+    UpdateMobyFrameData(moby);
+
+    float blend = (float)FastIntToDouble(g_cutsceneCameraFrame & 1) * 0.5f;
+    moby->animationBlend = blend;
+    if (holdKey != 0 && (g_cutsceneCameraFrame & 1)) {
+        moby->animationBlend = 1.0f;
+        blend = 1.0f;
+    }
+
+    Vec4 *to = &((Vec4 *)moby->pVar)[(u8)moby->animationFrame];
+    Vec4 *from = &((Vec4 *)moby->pVar)[(u8)moby->previousAnimationFrame];
+    float invBlend = 1.0f - blend;
+
+    moby->pos.w = from->w;
+    moby->pos.x = from->x * invBlend + to->x * blend;
+    moby->pos.y = from->y * invBlend + to->y * blend;
+    moby->pos.z = from->z * invBlend + to->z * blend;
+    FUN_005e7d64(&moby->pos.x, &moby->pos.x, (float *)&g_SpaceshipPtr->transform);
+    moby->pos.x += g_SpaceshipPtr->pos.x;
+    moby->pos.y += g_SpaceshipPtr->pos.y;
+    moby->pos.z += g_SpaceshipPtr->pos.z;
+    moby->unk71 = -1;
+    moby->rotation.z = g_SpaceshipPtr->rotation.z;
+    UpdateMobyTransform(moby);
+
+    int frame = g_SpaceSceneFrame;
+    int shadow = moby->shadow;
+    if (moby->oClass == RATCHET || moby->oClass == CLANK_000A) {
+        shadow = SpaceSceneShadow(moby, frame);
+        moby->shadow = (char)shadow;
+    }
+
+    if ((u8)shadow != 0) {
+        MB_SetZBoundsFromFloorCeil(moby);
+    }
+
+    if (moby->oClass == CLANK_000A) {
+        ____Hero_AddPulsingMobyGlow(moby);
+    }
+
+    if (moby->oClass == RATCHET) {
+        Hero_UpdateInScene(moby);
+
+        if ((Level == Orxon && UnlockableItems.o2Mask != 0) || Level == Gemlik) {
+            if (g_SceneO2Mask == NULL) {
+                g_SceneO2Mask = CreateMoby(O2_MASK);
+                g_SceneO2Mask->drawDistance = 0x40;
+                g_SceneO2Mask->modeBits |= DISABLE_Z_WRITE | NO_POST_UPDATE | NO_UPDATE;
+                g_SceneO2Mask->freeTime = moby->freeTime;    /* color and light */
+            }
+
+            ____Hero_SnapMobyToBonePose((undefined8)(uintptr_t)moby, g_SceneO2Mask);
+        }
+    }
+
+    if ((short)moby->oClass < SHIP_OCLASS_FIRST || (short)moby->oClass > SHIP_OCLASS_LAST) {
+        return;
+    }
+
+    RegisterPostDraw((void *)Space_DrawShipEffects, moby);
+    RegisterFuncForMoby((void **)STUB_0015e2c0, moby);
+
+    if (g_SpaceCutscene == 0) {
+        SpaceTakeoffShip(moby, g_SpaceSceneFrame);
     }
     else {
-      DAT_00964598 = 0;
+        SpaceLandingShip(moby, g_SpaceSceneFrame);
     }
-    SceneScreenFade = 1.0;
-  }
-  else {
-    g_SpaceSceneFrame = (int)g_SpaceSceneNumFrames.piece<0,2>();
-  }
-LAB_00161ba8:
-  if (g_SpaceSceneFrame < g_SpaceSceneNumFrames.piece<0,2>()) {
-    if ((int)(((uint)(ZERO_MASK(g_IsPal)) & 0x10) + 0x50) <=
-        (int)g_cutsceneCameraFrame) {
-      g_SpaceSceneChunk = g_SpaceSceneChunk + 1;
-      ParseSpaceSceneChunk(g_SpaceSceneChunk);
+}
+
+/* the cutscene ended: clean up and go on to the menu (take-off) or the level (landing) */
+static inline void SpaceSceneEnd(void)
+{
+    if (g_SpeechPlaying.status != 7 && g_SpeechPlaying.status != 6) {
+        g_SpeechPlaying.status = 5;
     }
-    pfVar20 = (float *)((int)g_SpaceSceneCameraFrames + g_cutsceneCameraFrame * 0x20);
-    g_ViewContext.xratio = pfVar20[7];
-    cVar4 = *(char *)(pfVar20 + 3);
+
+    VU1_setBufSizeByLevel();
+    g_ViewContext.xratio = 0.63f;
     UpdateViewContext();
-    GameCamera.posX = *pfVar20;
-    GameCamera.posY = pfVar20[1];
-    GameCamera.posZ = pfVar20[2];
-    GameCamera.field8_0x14c = *(char (*) [4])(pfVar20 + 3);
-    FUN_005e7d64(0x951500,0x951500,&g_SpaceshipPtr->transform);
-    GameCamera.posX = GameCamera.posX + (g_SpaceshipPtr->pos).x;
-    GameCamera.posY = GameCamera.posY + (g_SpaceshipPtr->pos).y;
-    GameCamera.posZ = GameCamera.posZ + (g_SpaceshipPtr->pos).z;
-    FastWrapRot(pfVar20[6],(g_SpaceshipPtr->rotation).z);
-    memcpy((void *)(uVar30 - 0x250),&DAT_00653758,0x40);
-    FUN_005e8c64(uVar30 - 0x250,uVar30 - 0x280);
-    GameCamera.orientMtx.forward.x = -local_230;
-    GameCamera.orientMtx.right.x = -local_250;
-    GameCamera.orientMtx.forward.y = -local_22c;
-    GameCamera.orientMtx.right.y = -local_24c;
-    GameCamera.orientMtx.forward.z = -local_228;
-    GameCamera.orientMtx.up.x = local_240;
-    GameCamera.orientMtx.right.z = -local_248;
-    GameCamera.orientMtx.up.y = local_23c;
-    GameCamera.orientMtx.up.z = local_238;
-    if (Cheats[4] != '\0') {
-      GameCamera.orientMtx.right.w = 0.0;
-      GameCamera.orientMtx.right.x = -(local_22c * local_238) - -(local_228 * local_23c);
-      GameCamera.orientMtx.right.y = -(local_228 * local_240) - -(local_230 * local_238);
-      GameCamera.orientMtx.right.z = -(local_230 * local_23c) - -(local_22c * local_240);
-    }
-    iVar31 = 0;
-    if (0 < g_SpaceSceneMobyCnt.piece<0,2>()) {
-      dVar46 = 1.0;
-      auVar57 = loadVectorLeftIndexed(0x1c,0x1616c4);
-      auVar68 = loadVectorLeftIndexed(0x14,0x1616c4);
-      auVar57 = auVar57 >> 0x60 & (GPiece<16>)0xffffffff;
-      auStack_210 = auVar57 | auVar57 << 0x20 | auVar57 << 0x40 | auVar57 << 0x60;
-      dVar47 = 360.5;
-      auVar57 = loadVectorLeftIndexed(0x20,0x1616c4);
-      local_1dc = 0.5;
-      auVar57 = auVar57 >> 0x60 & (GPiece<16>)0xffffffff;
-      auStack_200 = auVar57 | auVar57 << 0x20 | auVar57 << 0x40 | auVar57 << 0x60;
-      local_1e0 = 62.5;
-      local_1e4 = 350.5;
-      dVar48 = 0.09817477315664291;
-      local_1e8 = 524.5;
-      dVar49 = 1.570796251296997;
-      dVar50 = 3.141592502593994;
-      dVar51 = -3.141592502593994;
-      dVar52 = -0.16666656732559204;
-      dVar53 = 0.008333025500178337;
-      dVar54 = -0.0001980741071747616;
-      dVar55 = 2.601886990305502e-06;
-      dVar56 = 80.0;
-      auVar69 = loadVectorLeftIndexed(0x4c,0x1616c4);
-      auVar70 = loadVectorLeftIndexed(0x50,0x1616c4);
-      auVar58 = loadVectorLeftIndexed(0x58,0x1616c4);
-      local_1ec = 504.5;
-      auVar60 = loadVectorLeftIndexed(0x5c,0x1616c4);
-      dVar41 = 464.5;
-      local_1f0 = 420.5;
-      dVar45 = 0.02500000037252903;
-      dVar42 = 240.5;
-      dVar43 = 200.5;
-      dVar44 = 300.5;
-      auVar66 = loadVectorLeftIndexed(0x7c,0x1616c4);
-      auVar67 = loadVectorLeftIndexed(0x80,0x1616c4);
-      auVar75 = loadVectorLeftIndexed(0x84,0x1616c4);
-      auVar71 = loadVectorLeftIndexed(0x88,0x1616c4);
-      auVar72 = loadVectorLeftIndexed(0x8c,0x1616c4);
-      auVar73 = loadVectorLeftIndexed(0x90,0x1616c4);
-      auVar74 = loadVectorLeftIndexed(0x94,0x1616c4);
-      auVar57 = auVar68 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar68 = auVar57 | auVar57 << 0x20 | auVar57 << 0x40 | auVar57 << 0x60;
-      auVar57 = auVar69 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar69 = auVar57 | auVar57 << 0x20 | auVar57 << 0x40 | auVar57 << 0x60;
-      auVar57 = auVar70 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar70 = auVar57 | auVar57 << 0x20 | auVar57 << 0x40 | auVar57 << 0x60;
-      auVar57 = auVar58 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar58 = auVar57 | auVar57 << 0x20 | auVar57 << 0x40 | auVar57 << 0x60;
-      auVar57 = auVar60 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar60 = auVar57 | auVar57 << 0x20 | auVar57 << 0x40 | auVar57 << 0x60;
-      auVar57 = auVar66 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar66 = auVar57 | auVar57 << 0x20 | auVar57 << 0x40 | auVar57 << 0x60;
-      auVar57 = auVar67 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar67 = auVar57 | auVar57 << 0x20 | auVar57 << 0x40 | auVar57 << 0x60;
-      auVar57 = auVar75 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar75 = auVar57 | auVar57 << 0x20 | auVar57 << 0x40 | auVar57 << 0x60;
-      auVar57 = auVar71 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar71 = auVar57 | auVar57 << 0x20 | auVar57 << 0x40 | auVar57 << 0x60;
-      auVar57 = auVar72 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar72 = auVar57 | auVar57 << 0x20 | auVar57 << 0x40 | auVar57 << 0x60;
-      auVar57 = auVar73 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar73 = auVar57 | auVar57 << 0x20 | auVar57 << 0x40 | auVar57 << 0x60;
-      auVar57 = auVar74 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar57 = auVar57 | auVar57 << 0x20 | auVar57 << 0x40 | auVar57 << 0x60;
-      do {
-        pMVar12 = (MobyInstance *)puVar19[0x5e];
-        uVar30 = ZEXT48(pMVar12);
-        cVar14 = (char)((int)g_cutsceneCameraFrame >> 1);
-        pMVar12->previousAnimationFrame = cVar14;
-        pMVar12->animationFrame = cVar14 + '\x01';
-        UpdateMobyFrameData(pMVar12);
-        dVar35 = (double)FastIntToDouble(g_cutsceneCameraFrame & 1);
-        dVar40 = (double)(float)(dVar35 * (double)local_1dc);
-        pMVar12->animationBlend = (float)(dVar35 * (double)local_1dc);
-        if ((cVar4 != '\0') && ((g_cutsceneCameraFrame & 1) != 0)) {
-          pMVar12->animationBlend = 1.0;
-          dVar40 = dVar46;
+
+    for (int i = 0; i < g_SpaceSceneMobyCnt; i++) {
+        MobyInstance *moby = g_SpaceSceneMobys[i];
+
+        if (moby != NULL) {
+            moby->pClass->seq_cnt--;
+            moby->pClass->seqs[moby->pClass->seq_cnt] = NULL;
+            DeleteMoby(moby);
         }
-        pMVar21 = g_SpaceshipPtr;
-        fVar2 = (float)(dVar46 - dVar40);
-        pfVar20 = (float *)((int)pMVar12->pVar + (uint)(byte)pMVar12->animationFrame * 0x10);
-        pfVar23 = (float *)((int)pMVar12->pVar + (uint)(byte)pMVar12->previousAnimationFrame * 0x10)
-        ;
-        fVar5 = *pfVar20;
-        fVar6 = pfVar20[1];
-        fVar7 = pfVar20[2];
-        fVar8 = *pfVar23;
-        fVar9 = pfVar23[1];
-        fVar10 = pfVar23[2];
-        (pMVar12->pos).w = pfVar23[3];
-        (pMVar12->pos).x = fVar8 * fVar2 + (float)((double)fVar5 * dVar40);
-        (pMVar12->pos).y = fVar9 * fVar2 + (float)((double)fVar6 * dVar40);
-        (pMVar12->pos).z = fVar10 * fVar2 + (float)((double)fVar7 * dVar40);
-        FUN_005e7d64(uVar30 + 0x10,uVar30 + 0x10,&pMVar21->transform);
-        pMVar21 = g_SpaceshipPtr;
-        (pMVar12->pos).x = (pMVar12->pos).x + (g_SpaceshipPtr->pos).x;
-        (pMVar12->pos).y = (pMVar12->pos).y + (pMVar21->pos).y;
-        (pMVar12->pos).z = (pMVar12->pos).z + (pMVar21->pos).z;
-        fVar11 = (pMVar21->rotation).z;
-        pMVar12->unk71 = -1;
-        (pMVar12->rotation).z = fVar11;
-        UpdateMobyTransform(pMVar12);
-        MVar29 = pMVar12->oClass;
-        auVar74 = loadVectorLeftIndexed(0x34,0x95cd50);
-        auVar59 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
-        dVar40 = (double)animationSpeed;
-        if (MVar29 == RATCHET) {
-          if (g_SpaceCutscene == 0) {
-            if ((Level == Orxon) && (UnlockableItems.o2Mask == '\0')) {
-              uVar27 = 0;
-              auVar74 = ZEXT416(0);
-              auVar74 = auVar74 | auVar74 << 0x20 | auVar74 << 0x40 | auVar74 << 0x60;
+
+        if (g_SceneO2Mask != NULL) {
+            DeleteMoby(g_SceneO2Mask);
+        }
+    }
+
+    g_SpaceshipPtr->modeBits &= ~DISABLED;
+    for (MobyInstance *moby = MobyInstancePermEnd; moby->state != 0xff; moby++) {
+        if ((moby->state & 0x80) == 0 && (moby->oClass == MINE_004A || moby->oClass == DECOY)) {
+            moby->modeBits &= ~NO_DRAW;
+        }
+    }
+
+    if (g_SpaceCutscene == 0) {
+        BeginMenu(0);
+        g_MenuScreen = 14;
+        g_CutscenePlaying = 1;
+        return;
+    }
+
+    g_gameMode = GAME_MODE_NORMAL;
+    music_Unpause();
+    g_CutscenePlaying = 1;
+    g_heroInvisible = 0;
+    Hero_MakeVisible();
+
+    if (g_spaceArrivalPending != 0) {
+        SetPositionAfterMovie();
+    }
+    else {
+        Hero_Warp(&g_SpaceArrivalPos.x, &g_SpaceArrivalRot.x, 0, 1);
+    }
+}
+
+/* cutscenes 0 (take-off) and 8 (landing): steps the scene, which the skip buttons can cut */
+static inline void SpaceUpdateScene(void)
+{
+    ResetGameCounters();
+    UpdateMobys();
+    sound_UpdateAmbient();
+    HeroUpdate();
+    UpdateParts();
+
+    g_cutsceneCameraFrame++;
+    g_SpaceSceneFrame++;
+    SceneScreenFade -= 0.125f;
+    if (SceneScreenFade < 0.0f) {
+        SceneScreenFade = 0.0f;
+    }
+
+    int chunkLen = g_IsPal ? 0x50 : 0x60;
+    int numFrames = *(short *)&g_SpaceSceneNumFrames;
+    int skip = (short)DAT_00964598;
+    int skipNow = 0;
+
+    if ((g_Pad.buttonsPressedThisFrame & SCENE_SKIP_BUTTONS) && g_SpaceSceneFrame > ScaledFrames(30.5f) && SceneScreenFade == 0.0f) {
+        if (g_SpaceCutscene == 0 &&
+            g_SpaceSceneFrame < ScaledFrames((float)(g_ShipTakeoffSkipFrames[g_SpaceshipVariant] - 30) + 0.5f)) {
+            skip = 1;
+        }
+
+        if (g_SpaceCutscene == 8 && g_SpaceSceneFrame < numFrames - ScaledFrames(30.5f)) {
+            skipNow = 1;
+        }
+    }
+
+    if (skip || skipNow) {
+        if (g_SpeechPlaying.status != 7 && g_SpeechPlaying.status != 6) {
+            g_SpeechPlaying.status = 5;
+        }
+
+        if (g_SpaceCutscene == 0) {
+            int target = ScaledFrames((float)g_ShipTakeoffSkipFrames[g_SpaceshipVariant] + 0.5f);
+
+            g_SpaceSceneFrame = target;
+            g_SpaceSceneChunk = target / chunkLen;
+            ParseSpaceSceneChunk(g_SpaceSceneChunk);
+            g_cutsceneCameraFrame = g_SpaceSceneFrame % chunkLen;
+            if (DAT_00964598 != 0) {
+                DAT_00964598 = 0;
             }
             else {
-              auVar61 = ZEXT416(0xffffffff);
-              auVar61 = auVar61 | auVar61 << 0x20 | auVar61 << 0x40 | auVar61 << 0x60;
-              auVar61 = vectorShiftLeftIntegerWord(auVar61,auVar61);
-              auVar59 = vectorMultiplyAddFloatingPoint(auVar59,auVar68,auVar61);
-              local_1d0 = (longlong)(int)(dVar40 * (double)local_1e0);
-              auVar59 = vectorConvertToSignedFixedPointWordSaturate(auVar59,0);
-              auVar74 = vectorCompareGreaterThanSignedWord(auVar74,auVar59);
-              auVar74 = vectorLogicalAndWithComplement(auVar75,auVar74);
-              uVar27 = ((longlong)(int)(dVar40 * (double)local_1e0) -
-                        (longlong)g_SpaceSceneFrame >> 0x3f & 0xffffffffffffffe8U) + 0x18;
+                FadeToBlack(4);
             }
-            auVar74 = auVar74 >> 0x60 & (GPiece<16>)0xffffffff;
-            auVar74 = auVar74 | auVar74 << 0x20 | auVar74 << 0x40 | auVar74 << 0x60;
-          }
-          else {
-            uVar27 = 0x18;
-            local_1d0 = (longlong)(int)(dVar40 * dVar47);
-            if ((g_SpaceSceneFrame <= (int)(dVar40 * dVar47)) ||
-               ((auVar74 = auVar75, Level == Orxon && (UnlockableItems.o2Mask == '\0')))) {
-              uVar27 = 0;
-              auVar74 = ZEXT416(0);
-              auVar74 = auVar74 | auVar74 << 0x20 | auVar74 << 0x40 | auVar74 << 0x60;
-            }
-          }
-          auVar74 = auVar74 >> 0x60 & (GPiece<16>)0xff;
-          cVar14 = storeVectorElementByteIndexed
-                             (auVar74 | auVar74 << 8 | auVar74 << 0x10 | auVar74 << 0x18 |
-                              auVar74 << 0x20 | auVar74 << 0x28 | auVar74 << 0x30 | auVar74 << 0x38
-                              | auVar74 << 0x40 | auVar74 << 0x48 | auVar74 << 0x50 |
-                              auVar74 << 0x58 | auVar74 << 0x60 | auVar74 << 0x68 | auVar74 << 0x70
-                              | auVar74 << 0x78,0x7f,uVar30);
-          pMVar12->shadow = cVar14;
+            SceneScreenFade = 1.0f;
         }
         else {
-          uVar27 = (ulonglong)(byte)pMVar12->shadow;
-          if (MVar29 == CLANK_000A) {
-            auVar61 = ZEXT416(0xffffffff);
-            auVar63 = auVar61 | auVar61 << 0x20 | auVar61 << 0x40 | auVar61 << 0x60;
-            auVar61 = ZEXT416(0xffffffff);
-            auVar62 = auVar61 | auVar61 << 0x20 | auVar61 << 0x40 | auVar61 << 0x60;
-            lVar18 = (longlong)g_SpaceSceneFrame;
-            auVar61 = vectorShiftLeftIntegerWord(auVar63,auVar63);
-            auVar63 = vectorShiftLeftIntegerWord(auVar62,auVar62);
-            auVar61 = vectorMultiplyAddFloatingPoint(auVar59,auStack_210,auVar61);
-            auVar59 = vectorMultiplyAddFloatingPoint(auVar59,auStack_200,auVar63);
-            auVar62 = loadVectorLeftIndexed(0x20,0x964570);
-            auVar63 = vectorConvertToSignedFixedPointWordSaturate(auVar61,0);
-            local_1d0 = (longlong)(int)(dVar40 * (double)local_1e8);
-            auVar59 = vectorConvertToSignedFixedPointWordSaturate(auVar59,0);
-            auVar61 = vectorCompareGreaterThanSignedWord(auVar74,auVar59);
-            auVar59 = vectorCompareGreaterThanSignedWord(auVar74,auVar63);
-            auVar61 = vectorLogicalAnd(auVar75,auVar61);
-            auVar74 = ZEXT416(0);
-            auVar59 = vectorLogicalAndWithComplement(auVar75,auVar59);
-            auVar74 = vectorCompareEqualToUnsignedWord
-                                (auVar62,auVar74 | auVar74 << 0x20 | auVar74 << 0x40 |
-                                         auVar74 << 0x60);
-            iVar32 = -g_SpaceCutscene;
-            auVar74 = vectorConditionalSelect(auVar61,auVar59,auVar74);
-            uVar27 = (int)(dVar40 * (double)local_1e8) - lVar18 >> 0x3f & 0x18;
-            auVar74 = auVar74 >> 0x60 & (GPiece<16>)0xff;
-            cVar14 = storeVectorElementByteIndexed
-                               (auVar74 | auVar74 << 8 | auVar74 << 0x10 | auVar74 << 0x18 |
-                                auVar74 << 0x20 | auVar74 << 0x28 | auVar74 << 0x30 |
-                                auVar74 << 0x38 | auVar74 << 0x40 | auVar74 << 0x48 |
-                                auVar74 << 0x50 | auVar74 << 0x58 | auVar74 << 0x60 |
-                                auVar74 << 0x68 | auVar74 << 0x70 | auVar74 << 0x78,0x7f,uVar30);
-            pMVar12->shadow = cVar14;
-            uVar27 = uVar27 + (ZERO_MASK(iVar32) &
-                              (((int)(dVar40 * (double)local_1e4) - lVar18 >> 0x3f &
-                               0xffffffffffffffe8U) + 0x18) - uVar27);
-          }
+            g_SpaceSceneFrame = numFrames;
         }
-        if ((uVar27 & 0xff) != 0) {
-          MB_SetZBoundsFromFloorCeil(pMVar12);
-          MVar29 = pMVar12->oClass;
-        }
-        if (MVar29 == CLANK_000A) {
-          ____Hero_AddPulsingMobyGlow(uVar30);
-          MVar29 = pMVar12->oClass;
-        }
-        if ((MVar29 == RATCHET) &&
-           (((Hero_UpdateInScene(uVar30), Level == Orxon && (UnlockableItems.o2Mask != '\0'))
-            || (Level == Gemlik)))) {
-          uVar27 = ZEXT48(DAT_00964578);
-          if (DAT_00964578 == (MobyInstance *)0x0) {
-            pMVar21 = CreateMoby(O2_MASK);
-            uVar27 = (ulonglong)(int)pMVar21;
-            DAT_00964578 = pMVar21;
-            pMVar21->drawDistance = 0x40;
-            uVar33 = pMVar12->color;
-            uVar16 = pMVar12->light;
-            pMVar21->modeBits = pMVar21->modeBits | (DISABLE_Z_WRITE|NO_POST_UPDATE|NO_UPDATE);
-            pMVar21->color = uVar33;
-            pMVar21->light = uVar16;
-          }
-          ____Hero_SnapMobyToBonePose(uVar30,uVar27);
-        }
-        if ((short)pMVar12->oClass < 0x216 && 0x212 < (short)pMVar12->oClass) {
-          RegisterPostDraw(&PTR_Space_DrawShipEffects_00707cd8,pMVar12);
-          RegisterFuncForMoby(&PTR_STUB_0015e2c0_00707c68,pMVar12);
-          pMVar21 = g_SpaceshipPtr;
-          if (g_SpaceCutscene == 0) {
-            dVar40 = (double)animationSpeed;
-            auVar74 = loadVectorLeftIndexed(0x34,0x95cd50);
-            auVar59 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
-            local_1d0 = (longlong)(int)(dVar40 * dVar47);
-            if (g_SpaceSceneFrame < (int)(dVar40 * dVar47)) {
-              dVar40 = (double)FastIntToDouble
-                                         (((ulonglong)(uint)g_SpaceSceneFrame & 0x3f) - 0x20);
-              dVar35 = (double)(float)(dVar40 * dVar48 + dVar49);
-              dVar40 = (double)(float)(dVar50 - dVar35);
-              if (dVar35 - (double)(float)(dVar50 - dVar35) < 0.0) {
-                dVar40 = dVar35;
-              }
-              dVar36 = (double)(float)(dVar51 - dVar35);
-              if ((double)(float)(dVar51 - dVar35) - dVar40 < 0.0) {
-                dVar36 = dVar40;
-              }
-              dVar40 = (double)(float)(dVar36 * dVar36);
-              dVar39 = (double)(float)(dVar40 * (double)(float)(dVar40 * dVar36));
-              dVar35 = (double)(float)(dVar40 * dVar39);
-              uVar33 = (uint)((double)(float)((double)(float)(dVar40 * dVar35) * dVar55 +
-                                             (double)(float)(dVar35 * dVar54 +
-                                                            (double)(float)(dVar39 * dVar53 +
-                                                                           (double)(float)((double)(
-                                                  float)(dVar40 * dVar36) * dVar52 + dVar36)))) *
-                             dVar56);
-              local_1d0 = (longlong)(int)uVar33;
-              uVar30 = (ulonglong)uVar33 + 0x78;
-              uVar16 = (uint)((uVar30 & 0xffffff) << 8);
-              uVar33 = (uint)uVar30 | uVar16;
-              pMVar12->glowRgba =
-                   uVar33 + ((uint)(ZERO_MASK((0x215 - (uint)pMVar12->oClass))) &
-                            ((int)(uint)uVar30 >> 1 | uVar16) - uVar33) |
-                   (uint)((uVar30 & 0xffffffff) << 0x10);
-            }
-            else {
-              local_1d0 = (longlong)(int)(dVar40 * (double)local_1ec);
-              if (g_SpaceSceneFrame < (int)(dVar40 * (double)local_1ec)) {
-                auVar62 = vectorConvertFromSignedFixedPointWord(auVar74,0);
-                auVar74 = ZEXT416(0xffffffff);
-                auVar61 = auVar74 | auVar74 << 0x20 | auVar74 << 0x40 | auVar74 << 0x60;
-                auVar74 = ZEXT416(0xffffffff);
-                auVar63 = auVar74 | auVar74 << 0x20 | auVar74 << 0x40 | auVar74 << 0x60;
-                auVar74 = ZEXT416(0xfffffff0);
-                auVar61 = vectorShiftLeftIntegerWord(auVar61,auVar61);
-                auVar64 = vectorShiftLeftIntegerWord(auVar63,auVar63);
-                auVar63 = loadVectorLeftIndexed(0xfffffffffffff408,0x720000);
-                auVar61 = vectorMultiplyAddFloatingPoint(auVar63,auVar69,auVar61);
-                auVar62 = vectorNegativeMultiplySubtractFloatingPoint(auVar59,auVar70,auVar62);
-                auVar65 = loadVectorLeftIndexed(0xa6,uVar30);
-                auVar62 = vectorMultiplyAddFloatingPoint(auVar61,auVar62,auVar64);
-                auVar64 = loadVectorRightIndexed(0xb6,uVar30);
-                auVar61 = ZEXT416(8);
-                auVar74 = vectorShiftRightWord
-                                    (auVar65 | auVar64,
-                                     auVar74 | auVar74 << 0x20 | auVar74 << 0x40 | auVar74 << 0x60);
-                auVar64 = vectorCompareEqualToUnsignedWord(auVar74,auVar73);
-                auVar74 = vectorConvertToSignedFixedPointWordSaturate(auVar62,0);
-                local_1d0 = (longlong)(int)(dVar40 * (double)local_1f0);
-                auVar62 = vectorCompareGreaterThanSignedWord(auVar74,auVar71);
-                auVar74 = vectorConditionalSelect(auVar74,auVar71,auVar62);
-                auVar61 = vectorShiftLeftIntegerWord
-                                    (auVar74,auVar61 | auVar61 << 0x20 | auVar61 << 0x40 |
-                                             auVar61 << 0x60);
-                auVar62 = vectorShiftLeftIntegerWord(auVar74,auVar72);
-                auVar74 = vectorConditionalSelect(auVar74 | auVar61,auVar61,auVar64);
-                auVar74 = (auVar74 | auVar62) >> 0x60 & (GPiece<16>)0xffffffff;
-                uVar15 = storeVectorElementWordIndexed
-                                   (auVar74 | auVar74 << 0x20 | auVar74 << 0x40 | auVar74 << 0x60,
-                                    0x90,uVar30);
-                *(undefined4 *)((uint)&pMVar12->glowRgba & 0xfffffffc) = uVar15;
-                pMVar12 = g_SpaceshipPtr;
-                auVar74 = loadVectorLeftIndexed(0x34,0x95cd50);
-                if ((int)(dVar40 * (double)local_1f0) < g_SpaceSceneFrame) {
-                  auVar61 = vectorConvertFromSignedFixedPointWord(auVar74,0);
-                  auVar74 = ZEXT416(0xffffffff);
-                  auVar62 = auVar74 | auVar74 << 0x20 | auVar74 << 0x40 | auVar74 << 0x60;
-                  auVar74 = ZEXT416(0xffffffff);
-                  auVar64 = auVar74 | auVar74 << 0x20 | auVar74 << 0x40 | auVar74 << 0x60;
-                  auVar74 = vectorShiftLeftIntegerWord(auVar62,auVar62);
-                  auVar62 = vectorShiftLeftIntegerWord(auVar64,auVar64);
-                  auVar74 = vectorMultiplyAddFloatingPoint(auVar63,auVar58,auVar74);
-                  auVar59 = vectorNegativeMultiplySubtractFloatingPoint(auVar59,auVar60,auVar61);
-                  auVar74 = vectorMultiplyAddFloatingPoint(auVar74,auVar59,auVar62);
-                  auVar74 = vectorConvertToSignedFixedPointWordSaturate(auVar74,0);
-                  auVar74 = auVar74 >> 0x60 & (GPiece<16>)0xff;
-                  cVar14 = storeVectorElementByteIndexed
-                                     (auVar74 | auVar74 << 8 | auVar74 << 0x10 | auVar74 << 0x18 |
-                                      auVar74 << 0x20 | auVar74 << 0x28 | auVar74 << 0x30 |
-                                      auVar74 << 0x38 | auVar74 << 0x40 | auVar74 << 0x48 |
-                                      auVar74 << 0x50 | auVar74 << 0x58 | auVar74 << 0x60 |
-                                      auVar74 << 0x68 | auVar74 << 0x70 | auVar74 << 0x78,0xbc,
-                                      ZEXT48(g_SpaceshipPtr));
-                  g_SpaceshipPtr->setByGroup = cVar14;
-                  pMVar12->uid = 0;
-                  RegisterFuncForMoby(&PTR_Space_DrawShipEngineGlow_00707cb0,pMVar12);
-                  dVar40 = (double)animationSpeed;
-                }
-                local_1d0 = (longlong)(int)(dVar40 * dVar41);
-                if (((int)(dVar40 * dVar41) < g_SpaceSceneFrame) &&
-                   (DAT_0095cf14 = (float)((double)DAT_0095cf14 + dVar45),
-                   dVar46 < (double)DAT_0095cf14)) {
-                  DAT_0095cf14 = 1.0;
-                }
-              }
-              else {
-                DAT_0095cf14 = (float)((double)DAT_0095cf14 - dVar45);
-                pMVar12->glowRgba = (uint)&DAT_00a0a0a0;
-                if (DAT_0095cf14 < local_1d8) {
-                  DAT_0095cf14 = 0.0;
-                }
-              }
-            }
-          }
-          else {
-            dVar40 = (double)animationSpeed;
-            auVar74 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
-            auVar59 = loadVectorLeftIndexed(0x34,0x95cd50);
-            if (g_SpaceSceneFrame < (int)(dVar40 * dVar42)) {
-              local_1d0 = (longlong)(int)(dVar40 * dVar43);
-              if (g_SpaceSceneFrame < (int)(dVar40 * dVar43)) {
-                Space_SpawnShipParticles();
-                Space_SpawnShipParticles();
-              }
-              dVar40 = (double)FastIntToDouble
-                                         (((ulonglong)(uint)g_SpaceSceneFrame & 0x3f) - 0x20);
-              dVar35 = (double)(float)(dVar40 * dVar48 + dVar49);
-              dVar40 = (double)(float)(dVar50 - dVar35);
-              if (dVar35 - (double)(float)(dVar50 - dVar35) < 0.0) {
-                dVar40 = dVar35;
-              }
-              dVar36 = (double)(float)(dVar51 - dVar35);
-              if ((double)(float)(dVar51 - dVar35) - dVar40 < 0.0) {
-                dVar36 = dVar40;
-              }
-              dVar40 = (double)(float)(dVar36 * dVar36);
-              dVar39 = (double)(float)(dVar40 * (double)(float)(dVar40 * dVar36));
-              dVar35 = (double)(float)(dVar40 * dVar39);
-              uVar33 = (uint)((double)(float)((double)(float)(dVar40 * dVar35) * dVar55 +
-                                             (double)(float)(dVar35 * dVar54 +
-                                                            (double)(float)(dVar39 * dVar53 +
-                                                                           (double)(float)((double)(
-                                                  float)(dVar40 * dVar36) * dVar52 + dVar36)))) *
-                             dVar56);
-              local_1d0 = (longlong)(int)uVar33;
-              pMVar12->setByGroup = '2';
-              uVar30 = (ulonglong)uVar33 + 0x78;
-              pMVar12->uid = 10;
-              uVar16 = (uint)((uVar30 & 0xffffff) << 8);
-              uVar33 = (uint)uVar30 | uVar16;
-              pMVar12->glowRgba =
-                   uVar33 + ((uint)(ZERO_MASK((0x215 - (uint)pMVar12->oClass))) &
-                            ((int)(uint)uVar30 >> 1 | uVar16) - uVar33) |
-                   (uint)((uVar30 & 0xffffffff) << 0x10);
-              RegisterFuncForMoby(&PTR_Space_DrawShipEngineGlow_00707cb0,pMVar12);
-            }
-            else {
-              local_1d0 = (longlong)(int)(dVar40 * dVar47);
-              if ((int)(dVar40 * dVar47) < g_SpaceSceneFrame) {
-                dVar40 = (double)FastIntToDouble
-                                           (((ulonglong)(uint)g_SpaceSceneFrame & 0x3f) - 0x20
-                                           );
-                dVar35 = (double)(float)(dVar40 * dVar48 + dVar49);
-                dVar40 = (double)(float)(dVar50 - dVar35);
-                if (dVar35 - (double)(float)(dVar50 - dVar35) < 0.0) {
-                  dVar40 = dVar35;
-                }
-                dVar36 = (double)(float)(dVar51 - dVar35);
-                if ((double)(float)(dVar51 - dVar35) - dVar40 < 0.0) {
-                  dVar36 = dVar40;
-                }
-                dVar40 = (double)(float)(dVar36 * dVar36);
-                dVar39 = (double)(float)(dVar40 * (double)(float)(dVar40 * dVar36));
-                dVar35 = (double)(float)(dVar40 * dVar39);
-                uVar33 = (uint)((double)(float)((double)(float)(dVar40 * dVar35) * dVar55 +
-                                               (double)(float)(dVar35 * dVar54 +
-                                                              (double)(float)(dVar39 * dVar53 +
-                                                                             (double)(float)((double
-                                                  )(float)(dVar40 * dVar36) * dVar52 + dVar36)))) *
-                               dVar56);
-                local_1d0 = (longlong)(int)uVar33;
-                uVar30 = (ulonglong)uVar33 + 0x78;
-                uVar16 = (uint)((uVar30 & 0xffffff) << 8);
-                uVar33 = (uint)uVar30 | uVar16;
-                pMVar12->glowRgba =
-                     uVar33 + ((uint)(ZERO_MASK((0x215 - (uint)pMVar12->oClass))) &
-                              ((int)(uint)uVar30 >> 1 | uVar16) - uVar33) |
-                     (uint)((uVar30 & 0xffffffff) << 0x10);
-              }
-              else {
-                local_1d0 = (longlong)(int)(dVar40 * dVar44);
-                if (g_SpaceSceneFrame < (int)(dVar40 * dVar44)) {
-                  auVar61 = vectorConvertFromSignedFixedPointWord(auVar59,0);
-                  auVar59 = ZEXT416(0xffffffff);
-                  auVar63 = auVar59 | auVar59 << 0x20 | auVar59 << 0x40 | auVar59 << 0x60;
-                  auVar59 = ZEXT416(0xffffffff);
-                  auVar62 = auVar59 | auVar59 << 0x20 | auVar59 << 0x40 | auVar59 << 0x60;
-                  auVar59 = vectorShiftLeftIntegerWord(auVar63,auVar63);
-                  auVar63 = vectorShiftLeftIntegerWord(auVar62,auVar62);
-                  auVar62 = loadVectorLeftIndexed(0xfffffffffffff408,0x720000);
-                  auVar59 = vectorMultiplyAddFloatingPoint(auVar62,auVar66,auVar59);
-                  auVar74 = vectorNegativeMultiplySubtractFloatingPoint(auVar74,auVar67,auVar61);
-                  auVar74 = vectorMultiplyAddFloatingPoint(auVar59,auVar74 ^ auVar57,auVar63);
-                  auVar74 = vectorConvertToSignedFixedPointWordSaturate(auVar74,0);
-                  auVar74 = auVar74 >> 0x60 & (GPiece<16>)0xff;
-                  cVar14 = storeVectorElementByteIndexed
-                                     (auVar74 | auVar74 << 8 | auVar74 << 0x10 | auVar74 << 0x18 |
-                                      auVar74 << 0x20 | auVar74 << 0x28 | auVar74 << 0x30 |
-                                      auVar74 << 0x38 | auVar74 << 0x40 | auVar74 << 0x48 |
-                                      auVar74 << 0x50 | auVar74 << 0x58 | auVar74 << 0x60 |
-                                      auVar74 << 0x68 | auVar74 << 0x70 | auVar74 << 0x78,0xbc,
-                                      ZEXT48(g_SpaceshipPtr));
-                  g_SpaceshipPtr->setByGroup = cVar14;
-                  pMVar21->uid = 0;
-                  RegisterFuncForMoby(&PTR_Space_DrawShipEngineGlow_00707cb0,pMVar21);
-                  auVar74 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
-                  auVar59 = loadVectorLeftIndexed(0x34,0x95cd50);
-                }
-                auVar59 = auVar59 >> 0x60 & (GPiece<16>)0xffffffff;
-                auVar61 = auVar74 >> 0x60 & (GPiece<16>)0xffffffff;
-                auVar74 = ZEXT416(0xffffffff);
-                auVar74 = auVar74 | auVar74 << 0x20 | auVar74 << 0x40 | auVar74 << 0x60;
-                auVar59 = vectorConvertFromSignedFixedPointWord
-                                    (auVar59 | auVar59 << 0x20 | auVar59 << 0x40 | auVar59 << 0x60,0
-                                    );
-                auVar74 = vectorShiftLeftIntegerWord(auVar74,auVar74);
-                auVar63 = loadVectorLeftIndexed(0xfffffffffffff408,0x720000);
-                auVar63 = vectorMultiplyAddFloatingPoint(auVar63,auVar69,auVar74);
-                auVar74 = ZEXT416(0xffffffff);
-                auVar74 = auVar74 | auVar74 << 0x20 | auVar74 << 0x40 | auVar74 << 0x60;
-                auVar62 = loadVectorLeftIndexed(0xa6,uVar30);
-                auVar59 = vectorNegativeMultiplySubtractFloatingPoint
-                                    (auVar61 | auVar61 << 0x20 | auVar61 << 0x40 | auVar61 << 0x60,
-                                     auVar70,auVar59);
-                auVar61 = vectorShiftLeftIntegerWord(auVar74,auVar74);
-                auVar74 = ZEXT416(0xfffffff0);
-                auVar61 = vectorMultiplyAddFloatingPoint(auVar63,auVar59 ^ auVar57,auVar61);
-                auVar63 = loadVectorRightIndexed(0xb6,uVar30);
-                auVar59 = ZEXT416(8);
-                auVar74 = vectorShiftRightWord
-                                    (auVar62 | auVar63,
-                                     auVar74 | auVar74 << 0x20 | auVar74 << 0x40 | auVar74 << 0x60);
-                auVar63 = vectorCompareEqualToUnsignedWord(auVar74,auVar73);
-                auVar74 = vectorConvertToSignedFixedPointWordSaturate(auVar61,0);
-                auVar59 = vectorShiftLeftIntegerWord
-                                    (auVar74,auVar59 | auVar59 << 0x20 | auVar59 << 0x40 |
-                                             auVar59 << 0x60);
-                auVar61 = vectorShiftLeftIntegerWord(auVar74,auVar72);
-                auVar74 = vectorConditionalSelect(auVar74 | auVar59,auVar59,auVar63);
-                auVar74 = (auVar74 | auVar61) >> 0x60 & (GPiece<16>)0xffffffff;
-                uVar15 = storeVectorElementWordIndexed
-                                   (auVar74 | auVar74 << 0x20 | auVar74 << 0x40 | auVar74 << 0x60,
-                                    0x90,uVar30);
-                *(undefined4 *)((uint)&pMVar12->glowRgba & 0xfffffffc) = uVar15;
-              }
-            }
-          }
-        }
-        iVar31 = iVar31 + 1;
-        puVar19 = puVar19 + 1;
-      } while (iVar31 < g_SpaceSceneMobyCnt.piece<0,2>());
     }
+
+    if (g_SpaceSceneFrame >= numFrames) {
+        SpaceSceneEnd();
+        return;
+    }
+
+    if ((int)g_cutsceneCameraFrame >= chunkLen) {
+        g_SpaceSceneChunk++;
+        ParseSpaceSceneChunk(g_SpaceSceneChunk);
+    }
+
+    char holdKey = SpaceSceneCamera();
+    for (int i = 0; i < g_SpaceSceneMobyCnt; i++) {
+        SpaceSceneMoby(g_SpaceSceneMobys[i], holdKey);
+    }
+
     sound_Update();
     UpdatePointLights();
     UpdateHeroLightAngle();
     UpdateGameCounters();
-  }
-  else {
-    if (g_SpeechPlaying.status != 7 && g_SpeechPlaying.status != 6) {
-      g_SpeechPlaying.status = 5;
-    }
-    VU1_setBufSizeByLevel();
-    g_ViewContext.xratio = 0.63;
-    UpdateViewContext();
-    iVar31 = 0;
-    if (0 < g_SpaceSceneMobyCnt.piece<0,2>()) {
-      do {
-        pMVar12 = (MobyInstance *)puVar19[0x5e];
-        if (pMVar12 != (MobyInstance *)0x0) {
-          pMVar12->pClass->seq_cnt = pMVar12->pClass->seq_cnt + 0xff;
-          *(undefined4 *)(&pMVar12->pClass->type + (uint)pMVar12->pClass->seq_cnt * 4) = 0;
-          DeleteMoby(pMVar12);
-        }
-        if (DAT_00964578 != (MobyInstance *)0x0) {
-          DeleteMoby(DAT_00964578);
-        }
-        iVar31 = iVar31 + 1;
-        puVar19 = puVar19 + 1;
-      } while (iVar31 < g_SpaceSceneMobyCnt.piece<0,2>());
-    }
-    pMVar12 = MobyInstancePermEnd;
-    g_SpaceshipPtr->modeBits =
-         g_SpaceshipPtr->modeBits &
-         (MIRROR|CAN_BE_DAMAGED|HIDE_BACKFACES|CAN_BE_AUTO_TARGETED|DISABLE_Z_WRITE|DRAW_SHADOW|
-          DRAW_TRANSPARENT_WEIRD|LOCK_ROTATION|NO_DRAW|UNK_40|HAS_SPECIAL_VARS|HAS_GLOW|TRANSPARENT|
-          NO_POST_UPDATE|NO_UPDATE);
-    uVar3 = pMVar12->state;
-    while (uVar3 != 0xff) {
-      if (((pMVar12->state & 0x80) == 0) &&
-         ((pMVar12->oClass == MINE_004A || (pMVar12->oClass == DECOY)))) {
-        pMVar12->modeBits =
-             pMVar12->modeBits &
-             (MIRROR|CAN_BE_DAMAGED|HIDE_BACKFACES|CAN_BE_AUTO_TARGETED|DISABLE_Z_WRITE|DRAW_SHADOW|
-              DRAW_TRANSPARENT_WEIRD|LOCK_ROTATION|UNK_40|HAS_SPECIAL_VARS|HAS_GLOW|TRANSPARENT|
-              NO_POST_UPDATE|NO_UPDATE|DISABLED);
-      }
-      uVar3 = pMVar12[1].state;
-      pMVar12 = pMVar12 + 1;
-    }
-    if (g_SpaceCutscene == 0) {
-      BeginMenu(0);
-      g_MenuScreen = 0xe;
-      g_CutscenePlaying = 1;
-    }
-    else {
-      g_gameMode = GAME_MODE_NORMAL;
-      music_Unpause();
-      g_CutscenePlaying = 1;
-      g_heroInvisible = 0;
-      Hero_MakeVisible();
-      if (g_spaceArrivalPending.piece<0,2>() == 0) {
-        Hero_Warp(&g_heroSpawnPosition.x,&g_heroSpawnRot.x,0,1);
-      }
-      else {
-        SetPositionAfterMovie();
-      }
-    }
-  }
-  return;
 }
 
+static inline MobyInstance *SpaceCreateRider(int oClass)
+{
+    MobyInstance *rider = CreateMoby(oClass);
+
+    rider->unk72 = -1;
+    rider->collision = NULL;
+    rider->modeBits |= NO_POST_UPDATE | NO_UPDATE;
+    rider->drawDistance = 0x1ff;
+    rider->freeTime = g_heroMobyPtr->freeTime;    /* color and light */
+
+    return rider;
+}
+
+/* the first flight frame: riders, and the spline's turn per node in w, scaled so the
+   sharpest is 20 degrees */
+static inline void SpaceFlightStart(void)
+{
+    music_Pause(0);
+    music_Sync(0);
+    g_PendingSpeech = g_SpaceshipVariant + 40015;
+    FadeToBlack(ScaledFrames(12.5f));
+    while (g_SpeechPlaying.status != 3) {
+        sound_Update();
+        STUB_00503078(0);
+    }
+    music_PlayPreseekedSpeech();
+
+    MobyInstance *ship = g_SpaceshipPtr;
+    ship->updateId = 1;
+    ship->animationId = 2;
+    ship->animationBlend = 0.0f;
+    UpdateMobyFrameData(ship);
+    ship->unk72 = -1;
+    ship->collision = NULL;
+
+    if (g_shipSplinePath >= 0) {
+        g_ShipRiderRatchet = SpaceCreateRider(RATCHET);
+        g_ShipRiderClank = SpaceCreateRider(CLANK_000A);
+    }
+
+    SetCameraPosition(&GameCamera.posX, (float *)&GameCamera.rot, 1, 0, 0);
+    g_ShipCameraBlend = 0.0f;
+    g_ShipCameraBlendSpeed = 0.0f;
+
+    if (g_shipSplinePath < 0) {
+        return;
+    }
+
+    Spline *spline = Splines[g_shipSplinePath];
+    Vec4 *pts = spline->points;
+    int cnt = spline->cnt;
+    float maxTurn = 0.0f;
+
+    pts[0].w = 0.0f;
+    for (int i = 1; i < spline->cnt - 1; i++) {
+        float in = (float)FUN_005e8338(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y);
+        float out = (float)FUN_005e8338(pts[i + 1].x - pts[i].x, pts[i + 1].y - pts[i].y);
+        float turn = FastDiffRots(out, in);
+
+        pts[i].w = turn;
+        if (maxTurn < fabsf(turn)) {
+            maxTurn = fabsf(turn);
+        }
+    }
+
+    cnt = spline->cnt;
+    float in = (float)FUN_005e8338(pts[cnt - 1].x - pts[cnt - 2].x, pts[cnt - 1].y - pts[cnt - 2].y);
+    float out = (float)FUN_005e8338(pts[0].x - pts[cnt - 1].x, pts[0].y - pts[cnt - 1].y);
+    pts[spline->cnt - 1].w = FastDiffRots(out, in);
+
+    float scale = 0.34906584f / maxTurn;
+    for (int i = 0; i < spline->cnt; i++) {
+        pts[i].w *= scale;
+    }
+
+    float dx = pts[0].x - pts[1].x;
+    float dy = pts[0].y - pts[1].y;
+    float dz = pts[0].z - pts[1].z;
+
+    g_ShipFlightParam = 0.0f;
+    g_ShipFlightSpeed = 0.0f;
+    g_ShipTrailHead = 0;
+    g_ShipTrailLen = 0;
+    g_ShipFlightSegLen = sqrtf(dz * dz + dx * dx + dy * dy);
+    g_ShipLiftFrom = ship->pos;
+    g_ShipLiftTo.x = pts[0].x;
+    g_ShipLiftTo.y = pts[0].y;
+    g_ShipLiftTo.z = pts[0].z;
+    g_ShipLiftTo.w = pts[0].w;
+    g_ShipLiftFromRot = ship->rotation;
+    g_ShipLiftPitch = (float)FUN_005e8338(sqrtf((pts[1].y - pts[0].y) * (pts[1].y - pts[0].y) + (pts[1].x - pts[0].x) * (pts[1].x - pts[0].x)),
+                                          pts[0].z - pts[1].z);
+    g_ShipLiftYaw = (float)FUN_005e8338(pts[1].x - pts[0].x, pts[1].y - pts[0].y);
+}
+
+/* the camera drifts from the start cuboid to the end one */
+static inline void SpaceFlightCamera(void)
+{
+    if ((g_shipCameraStartCuboid | g_shipCameraEndCuboid) < 0) {
+        return;
+    }
+
+    OrganicDelt(1.0f, g_FrameTimeSq * 0.666f, g_FrameTimeSq * 0.666f, g_FrameTime * 0.5f, &g_ShipCameraBlend, 0,
+                &g_ShipCameraBlendSpeed);
+
+    Cuboid *from = &Cuboids[g_shipCameraStartCuboid];
+    Cuboid *to = &Cuboids[g_shipCameraEndCuboid];
+    float t = g_ShipCameraBlend;
+    Vec4 pos;
+    Vec4 rot = { 0.0f, 0.0f, 0.0f, 0.0f };
+
+    pos.x = t * (to->pos.x - from->pos.x) + from->pos.x;
+    pos.y = t * (to->pos.y - from->pos.y) + from->pos.y;
+    pos.z = t * (to->pos.z - from->pos.z) + from->pos.z;
+    pos.w = to->pos.w;
+    rot.y = FastWrapRot(from->rot.y, FastDiffRots(to->rot.y, from->rot.y) * t);
+    rot.z = FastWrapRot(from->rot.z, FastDiffRots(to->rot.z, from->rot.z) * t);
+    Camera_SetMobyDrivenTargetPos(&pos.x);
+    Camera_SetMobyDrivenTargetRot(&rot.x);
+}
+
+/* the ship rises from where it stood to the start of the flight spline */
+static inline void SpaceFlightLift(void)
+{
+    MobyInstance *ship = g_SpaceshipPtr;
+    int liftFrames = ScaledFrames(120.5f);
+    float angle = (float)FastIntToDouble(g_SpaceCutsceneTimer) * (3.1415927f / (float)FastIntToDouble(liftFrames));
+    float t = (1.0f - FastCosInline(angle)) * 0.5f;
+
+    if (g_SpaceCutsceneTimer >= liftFrames) {
+        t = 1.0f;
+    }
+
+    ship->animationBlend = t;
+    ship->pos.w = g_ShipLiftTo.w;
+    ship->pos.x = t * (g_ShipLiftTo.x - g_ShipLiftFrom.x) + g_ShipLiftFrom.x;
+    ship->pos.y = t * (g_ShipLiftTo.y - g_ShipLiftFrom.y) + g_ShipLiftFrom.y;
+    ship->pos.z = t * (g_ShipLiftTo.z - g_ShipLiftFrom.z) + g_ShipLiftFrom.z;
+    ship->rotation.x = 0.0f;
+    ship->rotation.y = FastWrapRot(g_ShipLiftFromRot.y, FastDiffRots(g_ShipLiftPitch, g_ShipLiftFromRot.y) * t);
+    ship->rotation.z = FastWrapRot(g_ShipLiftFromRot.z, FastDiffRots(g_ShipLiftYaw, g_ShipLiftFromRot.z) * t);
+
+    if (SceneScreenFade > 0.0f) {
+        SceneScreenFade -= 0.125f;
+        if (SceneScreenFade < 0.0f) {
+            SceneScreenFade = 0.0f;
+        }
+    }
+
+    if (t < 1.0f) {
+        Space_SpawnShipParticles(ship, g_FrameTime * -3.75f);
+    }
+}
+
+/* a trail point: the variant's engine offset in the ship's frame */
+static inline void SpaceTrailPoint(Vec4 *out, Vec4 *ofs)
+{
+    FUN_005e7d64(&out->x, &ofs->x, (float *)&g_SpaceshipPtr->transform);
+    out->x += g_SpaceshipPtr->pos.x;
+    out->y += g_SpaceshipPtr->pos.y;
+    out->z += g_SpaceshipPtr->pos.z;
+    out->w = 1.0f;
+}
+
+/* along the flight spline, speeding up to 100; fades out near the end (or on a skip) and
+   then loads the next planet */
+static inline void SpaceFlightCruise(void)
+{
+    MobyInstance *ship = g_SpaceshipPtr;
+    Spline *spline = Splines[g_shipSplinePath];
+
+    g_ShipFlightSpeed += 0.8f;
+    if (g_ShipFlightSpeed > 100.0f) {
+        g_ShipFlightSpeed = 100.0f;
+    }
+
+    if ((g_Pad.buttonsPressedThisFrame & SCENE_SKIP_BUTTONS) && SceneScreenFade < 0.0625f) {
+        SceneScreenFade = 0.0625f;
+    }
+
+    if (g_ShipFlightParam > (float)(spline->cnt - 6) && SceneScreenFade < 0.0625f) {
+        SceneScreenFade = 0.0625f;
+    }
+
+    if (g_SpaceshipVariant < 2) {
+        ship->setByGroup = 50;
+        ship->uid = 10;
+        RegisterFuncForMoby((void **)Space_DrawShipEngineGlow, ship);
+    }
+
+    float param = (1.0f / g_ShipFlightSegLen) * (g_ShipFlightSpeed * g_FrameTime) + g_ShipFlightParam;
+    g_ShipFlightParam = param;
+
+    if (param > (float)(spline->cnt - 1) || !(SceneScreenFade < 1.0f)) {
+        g_loadingPlanet = 1;
+        g_CutscenePlaying = 1;
+        return;
+    }
+
+    MB_PathEvalSpline(param, (uint *)spline, 0, 1, &ship->pos.x, (undefined4 *)&ship->rotation, 0);
+    ship->rotation.x = ship->rotation.w;
+
+    g_ShipTrailHead = (g_ShipTrailHead + 1) & 31;
+    if (g_ShipTrailLen < 32) {
+        g_ShipTrailLen++;
+    }
+
+    SpaceTrailPoint(&g_ShipTrails[0][g_ShipTrailHead], &g_ShipTrailOffsets[g_SpaceshipVariant][0]);
+    SpaceTrailPoint(&g_ShipTrails[1][g_ShipTrailHead], &g_ShipTrailOffsets[g_SpaceshipVariant][1]);
+    RegisterFuncForMoby((void **)Space_DrawTransitionOverlay, ship);
+
+    if (SceneScreenFade > 0.0f) {
+        SceneScreenFade += 0.0625f;
+        if (SceneScreenFade > 1.0f) {
+            SceneScreenFade = 1.0f;
+        }
+    }
+}
+
+static inline void SpacePlaceRider(MobyInstance *rider, Vec4 *seat)
+{
+    rider->rotation = g_SpaceshipPtr->rotation;
+    FUN_005e7d64(&rider->pos.x, &seat->x, (float *)&g_SpaceshipPtr->transform);
+    rider->pos.x += g_SpaceshipPtr->pos.x;
+    rider->pos.y += g_SpaceshipPtr->pos.y;
+    rider->pos.z += g_SpaceshipPtr->pos.z;
+    UpdateMobyTransform(rider);
+}
+
+/* cutscene 3: the ship flies off along its spline with Ratchet and Clank aboard */
+static inline void SpaceUpdateFlight(void)
+{
+    ResetGameCounters();
+    UpdateMobys();
+    sound_UpdateAmbient();
+    HeroUpdate();
+    UpdateParts();
+
+    if (g_SpaceCutsceneTimer == 0) {
+        SpaceFlightStart();
+    }
+
+    SpaceFlightCamera();
+
+    if (g_shipSplinePath >= 0) {
+        if (g_SpaceCutsceneTimer < ScaledFrames(150.5f)) {
+            SpaceFlightLift();
+        }
+        else {
+            SpaceFlightCruise();
+        }
+
+        SpacePlaceRider(g_ShipRiderRatchet, &g_ShipRiderOffsets[0][g_SpaceshipVariant]);
+        SpacePlaceRider(g_ShipRiderClank, &g_ShipRiderOffsets[1][g_SpaceshipVariant]);
+    }
+
+    UpdateCamera();
+    sound_Update();
+    UpdatePointLights();
+    UpdateHeroLightAngle();
+    UpdateGameCounters();
+}
+
+// 0x0161788 (0x2220 bytes)
+/* the space cutscenes: 0 take-off and 8 landing play their scene, 3 is the flight off the
+   planet, 4 the loading screens */
+void UpdateSpace(void)
+{
+    g_SpaceCutsceneTimer++;
+
+    switch (g_SpaceCutscene) {
+    case 0:
+    case 8:
+        SpaceUpdateScene();
+        break;
+    case 3:
+        SpaceUpdateFlight();
+        break;
+    case 4:
+        ChooseLoadingScreen();
+        break;
+    default:
+        break;
+    }
+}
 
 // 0x01639a8 (0xf0 bytes)
+/* the draw half of UpdateSpace */
 void DisplayLoadingScreen(void)
-
 {
-  if (g_CutscenePlaying != 0) {
-    return;
-  }
-  if (g_SpaceCutscene < 4) {
-    if (0 < g_SpaceCutscene) {
-      if (g_SpaceCutscene < 2) {
+    if (g_CutscenePlaying != 0) {
         return;
-      }
-      if (g_SpaceCutscene < 3) {
-        return;
-      }
-LAB_00163a44:
-      g_RenderFlags = 0x7f;
-      UpdateOcclusion(1);
-      DefaultDraw();
-      Render_DispatchJob();
-      return;
     }
-    if (g_SpaceCutscene < 0) {
-      return;
+
+    switch (g_SpaceCutscene) {
+    case 0:
+    case 8:
+        UpdateOcclusion(1);
+        SetupDefaultDrawMovie();
+        Render_DispatchJob();
+        break;
+    case 3:
+    case 7:
+        g_RenderFlags = (RENDER)0x7f;
+        UpdateOcclusion(1);
+        DefaultDraw();
+        Render_DispatchJob();
+        break;
+    case 4:
+        UpdateOcclusion(0);
+        TransitionDraw_Space();
+        Render_DispatchJob();
+        break;
+    default:
+        break;
     }
-  }
-  else {
-    if (g_SpaceCutscene < 7) {
-      if (4 < g_SpaceCutscene) {
-        return;
-      }
-      UpdateOcclusion(0);
-      TransitionDraw_Space();
-      Render_DispatchJob();
-      return;
-    }
-    if (g_SpaceCutscene < 8) goto LAB_00163a44;
-    if (8 < g_SpaceCutscene) {
-      return;
-    }
-  }
-  UpdateOcclusion(1);
-  SetupDefaultDrawMovie();
-  Render_DispatchJob();
-  return;
 }
 
+/* the space wad's header (at DAT_00a10920; offsets become pointers as it loads) */
+typedef struct SpaceWad {
+    u32 mobyClasses;          /* 0x00  (class, oClass) entries, 0x20 apart */
+    u32 mobyClassCnt;         /* 0x04 */
+    u32 sky;                  /* 0x08 */
+    u32 texHeaders;           /* 0x0c  0x24 each */
+    u32 texCnt;               /* 0x10 */
+    u32 planetVram;           /* 0x14  where the planet's texture goes in VRAM */
+    u32 languageVram;         /* 0x18  and the planet name's */
+    u32 effectTexs;           /* 0x1c */
+    u32 partTexs;             /* 0x20  for Loaders_RelocSpaceWadPtrs */
+    u32 pad24;
+    u32 sceneChunks[5];       /* 0x28  per loading screen: (offset, size) pairs */
+} SpaceWad;
+
+#define TEX_HEADER_SIZE 0x24
+
+/* the planet's (or its name's) texture: header from `path`, pixels at `vram` */
+static inline void SpaceLoadTex(char *path, u8 *headers, int index, u32 vram, int texBase)
+{
+    LoadAssetFromFile(path, headers + index * TEX_HEADER_SIZE, TEX_HEADER_SIZE);
+    *(u32 *)(headers + index * TEX_HEADER_SIZE) = (vram - DAT_00a10924) + texBase;
+}
+
+/* a moby class's packets point at EffectTexHeaders: repoint them at the wad's */
+static inline void SpaceRelocClassTexs(int *list, int cnt, u32 headers)
+{
+    for (; cnt > 0; cnt--, list += 4) {
+        *list = ((*list - (int)EffectTexHeaders) / TEX_HEADER_SIZE) * TEX_HEADER_SIZE + (int)headers;
+    }
+}
 
 // 0x0163aa0 (0x940 bytes)
-// strings: 006537a0: 'space_wad' | 006537b0: 'rc1/ps3data/global/space_wad.ps3' | 006537d8: 'rc1/ps3data/global/space_wad.vram' | 00653800: 'rc1/ps3data/global/space_wad/planet%d.ps3' | 00653830: 'rc1/ps3data/global/space_wad/language%d_%d.ps3' | 00653860: 'rc1/ps3data/global/space_wad/planet%d.vram' | 00653890: 'rc1/ps3data/global/space_wad/language%d_%d.vram' | 006538c0: 'rc1/ps3data/global/space_wad.bnk'
-
+/* leaving a planet: loads the space wad (scenes, sky, ship classes, the target planet's
+   picture and name, sounds), lays out a small moby / particle heap after it and starts the
+   loading screens */
 void SpaceTransition_LoadWad(void)
-
 {
-  uint uVar1;
-  uint *puVar2;
-  MobyInstance *pMVar3;
-  uint *puVar4;
-  int iVar6;
-  longlong lVar5;
-  MobyClass *pClass;
-  int *piVar7;
-  int random;
-  ulonglong uVar8;
-  ulonglong uVar9;
-  uint uVar10;
-  int iVar11;
-  uint uVar12;
-  int *piVar13;
-  ulonglong uVar14;
-  int iVar15;
-  uint uVar17;
-  ulonglong uVar16;
-  int iVar18;
-  char acStack_170 [272];
-  
-  g_SpaceCutscene = 4;
-  DAT_00964594 = 0xffff;
-  iVar15 = 0;
-  SceneScreenFade = 1.0;
-  g_heroMobyPtr = (MobyInstance *)0x0;
-  DAT_0095cf14 = 0;
-  g_CutscenePlaying = 0;
-  DAT_00e5aa64 = 0x100000;
-  InitMemSlots();
-  g_GsRamAlloc = GSmem.base;
-  g_GsRamBase = GSmem.base;
-  FastMemSet(&MobyClassRef,0xffffffff87654321,0x10);
-  FastMemSet(&MobyClassLookup,0xffffffffffffffff,0x800);
-  FastMemSet(&MobyTexLookup,0xffffffffffffffff,0xe00);
-  FastMemSet(&MobyMipDists,0,0xe0);
-  InitViewContext();
-  UpdateViewContext();
-  VU1_initChain();
-  idol::m_LoadGameFileS(g_GameplayBuffer,"space_wad");
-  iVar6 = LoadAssetFromFile
-                    ("rc1/ps3data/global/space_wad.ps3",DAT_00a10920,0xffffffffffffffff);
-  random = LoadAssetFromFile
-                     ("rc1/ps3data/global/space_wad.vram",DAT_00a10924,0xffffffffffffffff);
-  puVar2 = DAT_00a10920;
-  uVar17 = DAT_00a10924 + random + 0x3fU & 0xffffffc0;
-  uVar10 = (int)DAT_00a10920 + DAT_00a10920[7];
-  DAT_00a10920[5] = uVar17;
-  puVar2[7] = uVar10;
-  puVar2[6] = uVar17 + 0x20000;
-  FadeToBlack((int)(animationSpeed * 12.5));
-  FUN_00503128_RET_0(0);
-  puVar4 = DAT_00a10920;
-  uVar14 = ZEXT48(DAT_00a10920);
-  lVar5 = (longlong)g_Language;
-  puVar2 = DAT_00a10920 + 4;
-  iVar11 = g_Language + -1;
-  random = -g_Language;
-  uVar16 = uVar14 + DAT_00a10920[3] & 0xffffffff;
-  iVar18 = DAT_00a10924 - *(int *)(g_pIdolDraw + 0x4ac);
-  uVar17 = (uint)(uVar14 + DAT_00a10920[3]);
-  DAT_00a10920[3] = uVar17;
-  DAT_00a561c8 = (ulonglong)*puVar2 + 1 & 0xffffffff;
-  DAT_00a561d0 = (ulonglong)*puVar2 + 2 & 0xffffffff;
-  lVar5 = (longlong)iVar11 + (ZERO_MASK(random) & lVar5 - iVar11);
-  snprintf(acStack_170,"rc1/ps3data/global/space_wad/planet%d.ps3",Level);
-  LoadAssetFromFile(acStack_170,uVar16 + DAT_00a561c8 * 0x24 & 0xffffffff,0x24);
-  *(uint *)(uVar17 + (int)(DAT_00a561c8 << 5) + (int)(DAT_00a561c8 << 2)) =
-       (puVar4[5] - DAT_00a10924) + iVar18;
-  snprintf(acStack_170,"rc1/ps3data/global/space_wad/language%d_%d.ps3",lVar5,Level);
-  LoadAssetFromFile(acStack_170,uVar16 + DAT_00a561d0 * 0x24 & 0xffffffff,0x24);
-  *(uint *)(uVar17 + (int)(DAT_00a561d0 << 5) + (int)(DAT_00a561d0 << 2)) =
-       (puVar4[6] - DAT_00a10924) + iVar18;
-  snprintf(acStack_170,"rc1/ps3data/global/space_wad/planet%d.vram",Level);
-  LoadAssetFromFile(acStack_170,puVar4[5],0x20000);
-  snprintf(acStack_170,"rc1/ps3data/global/space_wad/language%d_%d.vram",lVar5,Level);
-  LoadAssetFromFile(acStack_170,puVar4[6],0xffffffffffffffff);
-  if (puVar4[4] != 0) {
-    uVar17 = 0;
+    char path[272];
+
+    g_SpaceCutscene = 4;
+    g_SpaceCutsceneTimer = -1;
+    SceneScreenFade = 1.0f;
+    g_heroMobyPtr = NULL;
+    g_SceneFlash = 0.0f;
+    g_CutscenePlaying = 0;
+    DAT_00e5aa64 = 0x100000;
+    InitMemSlots();
+    g_GsRamAlloc = GSmem.base;
+    g_GsRamBase = GSmem.base;
+    FastMemSet(&MobyClassRef, 0x87654321, 0x10);
+    FastMemSet(&MobyClassLookup, -1, 0x800);
+    FastMemSet(&MobyTexLookup, -1, 0xe00);
+    FastMemSet(&MobyMipDists, 0, 0xe0);
+    InitViewContext();
+    UpdateViewContext();
+    VU1_initChain();
+
+    idol::m_LoadGameFileS((uint)(uintptr_t)g_GameplayBuffer, "space_wad");
+    int wadSize = LoadAssetFromFile("rc1/ps3data/global/space_wad.ps3", (void *)(uintptr_t)DAT_00a10920, -1);
+    int vramSize = LoadAssetFromFile("rc1/ps3data/global/space_wad.vram", (void *)(uintptr_t)DAT_00a10924, -1);
+
+    SpaceWad *wad = (SpaceWad *)(uintptr_t)DAT_00a10920;
+    u32 base = DAT_00a10920;
+    wad->planetVram = (DAT_00a10924 + vramSize + 0x3f) & ~0x3f;
+    wad->effectTexs += base;
+    wad->languageVram = (wad->planetVram + 0x2003f) & ~0x3f;
+
+    FadeToBlack(ScaledFrames(12.5f));
+    FUN_00503128_RET_0(0);
+
+    /* the planet's picture and name go in two spare texture headers after the wad's */
+    int texBase = (int)(DAT_00a10924 - *(u32 *)(g_pIdolDraw + 0x4ac));
+    int language = (g_Language == 0) ? 0 : (int)g_Language - 1;
+
+    wad->texHeaders += base;
+    u8 *headers = (u8 *)(uintptr_t)wad->texHeaders;
+    DAT_00a561c8 = (u64)(wad->texCnt + 1);
+    DAT_00a561d0 = (u64)(wad->texCnt + 2);
+
+    sprintf(path, "rc1/ps3data/global/space_wad/planet%d.ps3", Level);
+    SpaceLoadTex(path, headers, (int)DAT_00a561c8, wad->planetVram, texBase);
+    sprintf(path, "rc1/ps3data/global/space_wad/language%d_%d.ps3", language, Level);
+    SpaceLoadTex(path, headers, (int)DAT_00a561d0, wad->languageVram, texBase);
+    sprintf(path, "rc1/ps3data/global/space_wad/planet%d.vram", Level);
+    LoadAssetFromFile(path, (void *)(uintptr_t)wad->planetVram, 0x20000);
+    sprintf(path, "rc1/ps3data/global/space_wad/language%d_%d.vram", language, Level);
+    LoadAssetFromFile(path, (void *)(uintptr_t)wad->languageVram, -1);
+
+    for (u32 i = 0; i < wad->texCnt; i++) {
+        *(u32 *)(headers + i * TEX_HEADER_SIZE) += texBase;
+    }
+
+    /* the sky: its vertex / index buffers become RSX offsets, its shells' textures indices */
+    wad->sky += base;
+    SKY *sky = (SKY *)(uintptr_t)wad->sky;
+    cellGcmAddressToOffset((u8 *)sky->vtx_data + base, (u32 *)&sky->vtx_data);
+    cellGcmAddressToOffset((u8 *)sky->idx_data + base, (u32 *)&sky->idx_data);
+    for (u32 i = 0; i < sky->shell_cnt; i++) {
+        sky->shells[i] = (u8 *)sky->shells[i] + base;
+
+        u8 *shell = (u8 *)sky->shells[i];
+        u32 *tex = (u32 *)(shell + 0x10);
+        for (u32 j = 0; j < *(u16 *)(shell + 2); j++, tex += 4) {
+            *tex = *tex * TEX_HEADER_SIZE + wad->texHeaders;
+        }
+    }
+
+    oClass_to_mClass_lookup = 0;
+    int *entry = (int *)(uintptr_t)(base + wad->mobyClasses);
+    for (u32 i = 0; i < wad->mobyClassCnt; i++, entry += 8) {
+        MobyClass *cls = entry[0] != 0 ? (MobyClass *)(uintptr_t)(base + entry[0]) : NULL;
+
+        LoadMobyPClasses(cls, NULL, NULL, entry[1]);
+
+        int *packets = (int *)cls->packets;
+        SpaceRelocClassTexs((int *)(uintptr_t)packets[2], packets[0], wad->texHeaders);
+        SpaceRelocClassTexs((int *)(uintptr_t)packets[3], packets[1], wad->texHeaders);
+    }
+
+    Loaders_RelocSpaceWadPtrs((int *)(uintptr_t)(base + wad->partTexs));
+
+    /* the mobys (63), their vars and the particles after the wad */
+    u8 *heap = (u8 *)(uintptr_t)((base + wadSize + 0x3f) & ~0x3f);
+    Gameplay = (u32)(uintptr_t)heap;
+    FastMemSetZero(PointLights, 0x100);
+    FastMemSetZero(PointLightData, 0x180);
+    FastMemSetZero(DirectionalLights, 0x400);
+    FastMemCopy(DirectionalLights, &DAT_00731c00, 0x40);
+
+    g_MobyInstance = (MobyInstance *)heap;
+    FastMemSet(heap, 0, 0x4000);
+    MobyInstancePermEnd = g_MobyInstance;
+    g_MobyInstance->state = 0xff;
+    g_pMobyVars = (u8 *)(((uintptr_t)heap + 0x403f) & ~(uintptr_t)0x3f);
+    PartInstances = (PartInstance *)(((uintptr_t)g_pMobyVars + 0x203f) & ~(uintptr_t)0x3f);
+    MobyInstanceEnd = g_MobyInstance + 0x3f;
+    PartIndexNext = 0;
+    PartIndexTop = -1;
+    PartActiveCnt = 0;
+    u8 *bank = (u8 *)(((uintptr_t)PartInstances + 0x4003f) & ~(uintptr_t)0x3f);
+    FastMemSetZero(g_PartUsed, 0x200);
+    ResetDrawGlobals();
+    DAT_00a390b8 = 500;
+    PartClipDist = 0x1f4000;
+
+    /* the first loading screen: random, or the intro's */
+    g_currentLoadingScreen = (rand() >> 16) & 3;
+    g_loadingCount = 0;
+    g_ShipTrailHead = 0;
+    g_ShipTrailLen = 0;
+    g_TransitionCenter = g_TransitionCenterStart;
+    if (SpaceIsIntro()) {
+        g_currentLoadingScreen = LOADSCREEN_ARRIVAL;
+        g_loadingCount = 2;
+    }
+
+    FastMemSet(&DAT_0095cd50, 0, 0x1c0);
+    FastMemSet(&DAT_00a1be80, 0, 0x40);
+    FastMemSet(&DAT_00a1bec0, 0, 0x40);
+    DAT_0095cda8 = g_NpcBuffer;
+    g_SceneLoadBuffer = g_NpcBuffer + 0x60000;
+
+    int *chunks = (int *)(uintptr_t)(base + wad->sceneChunks[g_currentLoadingScreen]);
+    for (int i = 0; i < 0x46 && chunks[1] != 0; i++, chunks += 2) {
+        (&g_SceneChunkPtrs)[i] = base + chunks[0];
+    }
+    ParseSpaceSceneChunk(0);
+
+    g_BootSoundBank = (u32)-1;
+    LoadAssetFromFile("rc1/ps3data/global/space_wad.bnk", bank, -1);
+    Sound_LoadBank(bank, (u8 *)sound_BasicCB, &g_BootSoundBank);
     do {
-      uVar17 = uVar17 + 1;
-      *(int *)uVar16 = *(int *)uVar16 + iVar18;
-      uVar16 = uVar16 + 0x24;
-    } while (uVar17 < puVar4[4]);
-  }
-  uVar16 = uVar14 + puVar4[2] & 0xffffffff;
-  uVar17 = (uint)(uVar14 + puVar4[2]);
-  puVar4[2] = uVar17;
-  cellGcmAddressToOffset(*(uint *)(uVar17 + 0x14) + uVar14 & 0xffffffff,uVar16 + 0x14);
-  cellGcmAddressToOffset(*(uint *)(uVar17 + 0x18) + uVar14 & 0xffffffff,uVar16 + 0x18);
-  if (*(short *)(uVar17 + 6) != 0) {
-    uVar10 = 0;
-    lVar5 = uVar16 + 0x1c;
-    do {
-      uVar8 = *(uint *)((int)uVar16 + 0x1c) + uVar14;
-      uVar9 = uVar8 & 0xffffffff;
-      random = (int)uVar8;
-      *(int *)((int)uVar16 + 0x1c) = random;
-      if (*(short *)(random + 2) != 0) {
-        uVar1 = puVar4[3];
-        uVar12 = 0;
-        random = *(int *)lVar5;
-        do {
-          uVar9 = uVar9 + 0x10;
-          uVar12 = uVar12 + 1;
-          *(int *)uVar9 = *(int *)uVar9 * 0x24 + uVar1;
-        } while (uVar12 < *(ushort *)(random + 2));
-      }
-      uVar10 = uVar10 + 1;
-      lVar5 = lVar5 + 4;
-      uVar16 = uVar16 + 4;
-    } while (uVar10 < *(ushort *)(uVar17 + 6));
-  }
-  oClass_to_mClass_lookup = 0;
-  uVar16 = uVar14 + *puVar4 & 0xffffffff;
-  if (puVar4[1] != 0) {
-    uVar17 = 0;
-    do {
-      random = *(int *)uVar16;
-      iVar11 = random + (int)puVar4;
-      pClass = (MobyClass *)(iVar11 + ((uint)(ZERO_MASK(random)) & -iVar11));
-      LoadMobyPClasses(pClass,(void *)0x0,(char *)0x0,((int *)uVar16)[1]);
-      iVar11 = EffectTexHeaders;
-      piVar7 = (int *)pClass->packets;
-      piVar13 = (int *)piVar7[2];
-      random = *piVar7;
-      if (random != 0) {
-        uVar10 = puVar4[3];
-        do {
-          random = random + -1;
-          *piVar13 = ((*piVar13 - iVar11) / 0x24) * 0x24 + uVar10;
-          piVar13 = piVar13 + 4;
-        } while (0 < random);
-      }
-      random = piVar7[1];
-      piVar7 = (int *)piVar7[3];
-      if (random != 0) {
-        do {
-          random = random + -1;
-          *piVar7 = puVar4[3] + ((*piVar7 - iVar11) / 0x24) * 0x24;
-          piVar7 = piVar7 + 4;
-        } while (0 < random);
-      }
-      uVar17 = uVar17 + 1;
-      uVar16 = uVar16 + 0x20;
-    } while (uVar17 < puVar4[1]);
-  }
-  Loaders_RelocSpaceWadPtrs(uVar14 + puVar4[8] & 0xffffffff,0,0,0);
-  pMVar3 = (MobyInstance *)((int)DAT_00a10920 + iVar6 + 0x3f & 0xffffffc0);
-  Gameplay = pMVar3;
-  FastMemSetZero(PointLights,0x100);
-  FastMemSetZero(&PointLightData,0x180);
-  FastMemSetZero(DirectionalLights,0x400);
-  FastMemCopy(DirectionalLights,&DAT_00731c00,0x40);
-  g_MobyInstance = pMVar3;
-  FastMemSet(pMVar3,0,0x4000);
-  g_pMobyVars = pMVar3 + 0x40;
-  MobyInstancePermEnd = g_MobyInstance;
-  g_MobyInstance->state = 0xff;
-  PartInstances = pMVar3 + 0x60;
-  MobyInstanceEnd = g_MobyInstance + 0x3f;
-  PartIndexNext = 0;
-  PartIndexTop = 0xffffffff;
-  PartActiveCnt = 0;
-  FastMemSetZero(&g_PartUsed,0x200);
-  ResetDrawGlobals();
-  DAT_00a390b8 = 500;
-  PartClipDist = 0x1f4000;
-  random = rand();
-  g_currentLoadingScreen = random >> 0x10 & 3;
-  g_loadingCount = 0;
-  g_ShipTrailHead = 0;
-  g_ShipTrailLen = 0;
-  g_TransitionCenter = g_TransitionCenterStart;
-  DAT_00a561e4 = DAT_00731f74;
-  DAT_00a561e8 = DAT_00731f78;
-  DAT_00a561ec = DAT_00731f7c;
-  if ((Level == Veldin) || ((Level == Novalis && (g_SeenPlanets.Kerwan == '\0')))) {
-    g_currentLoadingScreen = 4;
-    g_loadingCount = 2;
-  }
-  FastMemSet(&DAT_0095cd50,0,0x1c0);
-  FastMemSet(&DAT_00a1be80,0,0x40);
-  FastMemSet(&DAT_00a1bec0,0,0x40);
-  g_SceneLoadBuffer = g_NpcBuffer + 0x60000;
-  DAT_0095cda8 = g_NpcBuffer;
-  piVar7 = &g_SceneChunkPtrs;
-  uVar16 = uVar14 + puVar4[g_currentLoadingScreen + 10] & 0xffffffff;
-  do {
-    piVar13 = (int *)uVar16;
-    if (piVar13[1] == 0) break;
-    iVar15 = iVar15 + 1;
-    uVar16 = uVar16 + 8;
-    *piVar7 = (int)puVar4 + *piVar13;
-    piVar7 = piVar7 + 1;
-  } while (iVar15 < 0x46);
-  ParseSpaceSceneChunk(0);
-  g_BootSoundBank = -1;
-  LoadAssetFromFile("rc1/ps3data/global/space_wad.bnk",pMVar3 + 0x460,0xffffffffffffffff);
-  Sound_LoadBank(pMVar3 + 0x460,&PTR_sound_BasicCB_00707c38,&g_BootSoundBank);
-  do {
-    FlushCache(0);
-    STUB_00503078(0);
-    STUB_00505d20();
-  } while (g_BootSoundBank == -1);
-  STUB_00505f48();
-  return;
+        FlushCache(0);
+        STUB_00503078(0);
+        STUB_00505d20();
+    } while (g_BootSoundBank == (u32)-1);
+
+    STUB_00505f48();
 }
 
+static inline BinkPlayer *SpaceBinkPlayer(void)
+{
+    if (g_pBinkPlayer == NULL) {
+        BinkPlayer *player = (BinkPlayer *)Idol_New(0x60);
+
+        if (player != NULL) {
+            BinkPlayer_Init(player);
+        }
+
+        g_pBinkPlayer = player;
+    }
+
+    return g_pBinkPlayer;
+}
 
 // 0x01643e0 (0x1e8 bytes)
-// strings: 006538e4: '/rc1/ps3data/movies/story[%d].bik'
-
-void PlaySpaceMovie(undefined8 param_1)
-
+/* plays story[movie].bik (START skips), with the reverb off */
+void PlaySpaceMovie(int movie)
 {
-  ulonglong uVar1;
-  int iVar3;
-  undefined8 uVar2;
-  int iVar4;
-  longlong lVar5;
-  ulonglong uVar6;
-  char acStack_f0 [64];
-  GPiece<128> auStack_b0;
-  
-  uVar6 = ZEXT48(g_pBinkPlayer);
-  g_ReverbDirty = g_ReverbDirty | 8;
-  if (g_pBinkPlayer == (void *)0x0) {
-    uVar1 = Idol_New(0x60);
-    uVar6 = 0;
-    if ((int)uVar1 != 0) {
-      BinkPlayer_Init(uVar1);
-      uVar6 = uVar1;
-    }
-    g_pBinkPlayer = (void *)uVar6;
-  }
-  iVar3 = snprintf(acStack_f0,"/rc1/ps3data/movies/story[%d].bik",param_1);
-  uVar2 = FileSys_Get(iVar3);
-  FileSys_ResolvePath(uVar2,acStack_f0,auStack_b0);
-  BinkPlayer_Start(uVar6,auStack_b0,g_Language,0x400);
-  iVar3 = 0;
-  lVar5 = 0;
-  while( true ) {
-    UpdatePad();
-    lVar5 = (ZERO_MASK((g_Pad.buttonsPressedThisFrame & START)) & lVar5 - 1U) + 1;
-    UpdateOcclusion(0);
-    iVar4 = BinkPlayer_GetState(uVar6);
-    cellSysutilCheckCallback();
-    if (1 < iVar4) {
-      iVar3 = BinkPlayer_DrawFrame(uVar6);
-    }
-    Render_DispatchJob();
-    if ((int)lVar5 != 0) break;
-    if (iVar3 != 0) {
-LAB_0016455c:
-      STUB_00503078(0);
-      sceGsSyncPath(0,0);
-      STUB_00503208(&PTR_____Unused_Respawn_IncCounter_a53504_00707950);
-      FadeToBlack(4);
-      g_ReverbDirty = g_ReverbDirty | 0x10;
-      return;
-    }
-  }
-  FUN_004d4c88(uVar6);
-  goto LAB_0016455c;
-}
+    char path[64];
+    char fullPath[136];
 
+    g_ReverbDirty |= 8;
+
+    BinkPlayer *player = SpaceBinkPlayer();
+    sprintf(path, "/rc1/ps3data/movies/story[%d].bik", movie);
+    FileSys_ResolvePath(FileSys_Get(), path, fullPath);
+    BinkPlayer_Start(player, fullPath, g_Language, 0x400);
+
+    int done = 0;
+    int skip = 0;
+    while (true) {
+        UpdatePad();
+        if (g_Pad.buttonsPressedThisFrame & START) {
+            skip = 1;
+        }
+
+        UpdateOcclusion(0);
+        int state = BinkPlayer_GetState(player);
+        cellSysutilCheckCallback();
+        if (state > 1) {
+            done = BinkPlayer_DrawFrame(player);
+        }
+        Render_DispatchJob();
+
+        if (skip) {
+            FUN_004d4c88((undefined4 *)player);
+            break;
+        }
+
+        if (done) {
+            break;
+        }
+    }
+
+    STUB_00503078(0);
+    sceGsSyncPath(0, 0);
+    STUB_00503208(Respawn_IncCounter);
+    FadeToBlack(4);
+    g_ReverbDirty |= 0x10;
+}
 
 // 0x01645c8 (0x4 bytes)
 void STUB_001645c8(...)
-
 {
-  return;
 }
-
 
 // 0x01645cc (0x18c bytes)
-// strings: 00653908: 'space_plates' | 00653918: '/rc1/ps3data/global/space_plates/plate%d.ps3' | 00653948: '/rc1/ps3data/global/space_plates/plate%d.vram'
-
-void LoadSpacePlate
-               (undefined8 param_1,longlong param_2,longlong param_3,undefined4 *param_4,
-               int *param_5,int *param_6)
-
+/* loads plate[plate] (a set of title cards) into the space wad buffers; returns its texture
+   headers, and those of cards texA and texB */
+void LoadSpacePlate(int plate, int texA, int texB, u32 *outHeaders, u32 *outTexA, u32 *outTexB)
 {
-  int iVar1;
-  int *piVar2;
-  longlong lVar3;
-  int *piVar4;
-  char acStack_c0 [128];
-  
-  idol::m_LoadGameFileS(g_GameplayBuffer + 0x100000,"space_plates");
-  snprintf(acStack_c0,"/rc1/ps3data/global/space_plates/plate%d.ps3",param_1);
-  lVar3 = LoadAssetFromFile(acStack_c0,DAT_00a10920,0xffffffffffffffff);
-  snprintf(acStack_c0,"/rc1/ps3data/global/space_plates/plate%d.vram",param_1);
-  LoadAssetFromFile(acStack_c0,DAT_00a10924,0xffffffffffffffff);
-  piVar2 = DAT_00a10920;
-  lVar3 = lVar3 / 0x24;
-  if (0 < (int)lVar3) {
-    iVar1 = DAT_00a10924 - *(int *)(DAT_00902e9c + 0x4ac);
-    piVar4 = DAT_00a10920;
-    do {
-      lVar3 = lVar3 + -1;
-      *piVar4 = *piVar4 + iVar1;
-      piVar4 = piVar4 + 9;
-    } while (0 < (int)lVar3);
-  }
-  *param_4 = piVar2;
-  *param_5 = (int)piVar2 + (int)(param_2 << 5) + (int)(param_2 << 2);
-  *param_6 = (int)piVar2 + (int)(param_3 << 5) + (int)(param_3 << 2);
-  FUN_00503128_RET_0(0);
-  return;
+    char path[128];
+
+    idol::m_LoadGameFileS((uint)(uintptr_t)(g_GameplayBuffer + 0x100000), "space_plates");
+    sprintf(path, "/rc1/ps3data/global/space_plates/plate%d.ps3", plate);
+    int size = LoadAssetFromFile(path, (void *)(uintptr_t)DAT_00a10920, -1);
+    sprintf(path, "/rc1/ps3data/global/space_plates/plate%d.vram", plate);
+    LoadAssetFromFile(path, (void *)(uintptr_t)DAT_00a10924, -1);
+
+    u32 headers = DAT_00a10920;
+    int texBase = (int)(DAT_00a10924 - *(u32 *)(DAT_00902e9c + 0x4ac));
+    u32 *header = (u32 *)(uintptr_t)headers;
+    for (int cnt = size / TEX_HEADER_SIZE; cnt > 0; cnt--, header += TEX_HEADER_SIZE / 4) {
+        *header += texBase;
+    }
+
+    *outHeaders = headers;
+    *outTexA = headers + texA * TEX_HEADER_SIZE;
+    *outTexB = headers + texB * TEX_HEADER_SIZE;
+    FUN_00503128_RET_0(0);
 }
 
+static inline void PlateCard(int y, u32 color, int u0, int u1, u32 headers, u32 tex)
+{
+    Sprite_DrawShape(0, y, 0x200, 0x40, 0, 4, u0, u1, color, (void *)(uintptr_t)headers);
+    Sprite_DrawShape(0, y, 0x200, 0x40, 0, 0, 0x200, 0x40, 0x80808080, (void *)(uintptr_t)tex);
+}
 
 // 0x0164760 (0x4e8 bytes)
-void PlaySpacePlate(undefined8 param_1,int param_2,int param_3,longlong param_4,int param_5)
-
+/* shows title cards texA (and texB below it, from frame 64) of `plate` for `frames` frames,
+   fading in and out; with loadLevel the level loads meanwhile (the cards stay up until it
+   has) */
+void PlaySpacePlate(int plate, int texA, int texB, int frames, int loadLevel)
 {
-  undefined8 uVar1;
-  int iVar2;
-  longlong lVar3;
-  double dVar4;
-  double dVar5;
-  double dVar6;
-  GPiece<4> local_90;
-  GPiece<4> local_8c;
-  GPiece<24> local_88;
-  
-  LoadSpacePlate(param_1,param_2 + 1,param_3 + 1,local_90,local_8c,local_88);
-  if (param_5 != 0) {
-    STUB_004d04d0(Level);
-    g_LoadingStage = 0;
-    DAT_00964562 = 0;
-  }
-  STUB_00503078(0);
-  VU1_initChain();
-  lVar3 = 0;
-  if (0 < (int)param_4) {
-    dVar5 = 0.0016666667070239782;
-    dVar6 = 0.4000000059604645;
-    do {
-      UpdateOcclusion(0);
-      uVar1 = FUN_00502f74_RET_0(0,0,0,0x80,0);
-      SetGSReg(0x15,uVar1);
-      uVar1 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
-      SetGSReg(6,uVar1);
-      dVar4 = (double)FastIntToDouble((int)lVar3 % 600);
-      dVar4 = dVar4 * dVar5;
-      if (param_2 + 1 == param_3 + 1) {
-        Sprite_DrawShape
-                  (0,(g_ScreenHalfHeight >> 1) +
-                     (uint)(g_ScreenHalfHeight < 0 && (g_ScreenHalfHeight & 1U) != 0) +
-                     -0x20,0x200,0x40,0,4,(int)dVar4,(int)((double)(float)dVar4 + dVar6));
-        Sprite_DrawShape
-                  (0,(g_ScreenHalfHeight >> 1) +
-                     (uint)(g_ScreenHalfHeight < 0 && (g_ScreenHalfHeight & 1U) != 0) +
-                     -0x20,0x200,0x40,0,0,0x200,0x40);
-      }
-      else {
-        iVar2 = (int)((double)(float)dVar4 + dVar6);
-        Sprite_DrawShape
-                  (0,(g_ScreenHalfHeight >> 1) +
-                     (uint)(g_ScreenHalfHeight < 0 && (g_ScreenHalfHeight & 1U) != 0) +
-                     -0x2e,0x200,0x40,0,4,(int)dVar4,iVar2);
-        Sprite_DrawShape
-                  (0,(g_ScreenHalfHeight >> 1) +
-                     (uint)(g_ScreenHalfHeight < 0 && (g_ScreenHalfHeight & 1U) != 0) +
-                     -0x2e,0x200,0x40,0,0,0x200,0x40);
-        if (0x40 < (int)lVar3) {
-          Sprite_DrawShape
-                    (0,(g_ScreenHalfHeight >> 1) +
-                       (uint)(g_ScreenHalfHeight < 0 && (g_ScreenHalfHeight & 1U) != 0),
-                     0x200,0x40,0,4,(int)dVar4,iVar2);
-          Sprite_DrawShape
-                    (0,(g_ScreenHalfHeight >> 1) +
-                       (uint)(g_ScreenHalfHeight < 0 && (g_ScreenHalfHeight & 1U) != 0),
-                     0x200,0x40,0,0,0x200,0x40);
+    u32 headers;
+    u32 cardA;
+    u32 cardB;
+
+    LoadSpacePlate(plate, texA + 1, texB + 1, &headers, &cardA, &cardB);
+    if (loadLevel) {
+        STUB_004d04d0(Level);
+        g_LoadingStage = 0;
+        DAT_00964562 = 0;
+    }
+
+    STUB_00503078(0);
+    VU1_initChain();
+
+    for (int i = 0; i < frames; i++) {
+        UpdateOcclusion(0);
+        SetGSReg(0x15, FUN_00502f74_RET_0(0, 0, 0, 0x80, 0));
+        SetGSReg(6, SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0));
+
+        /* in over 32 frames, out over the last 16 */
+        int alpha = (i < 32) ? i * 4 : 0x80;
+        if (i > frames - 16) {
+            alpha = (frames - i) * 8;
         }
-      }
-      memcard_Update();
-      MCSTATE_Update();
-      STUB_00174cf4(1);
-      STUB_00503078(0);
-      STUB_000684a0();
-      STUB_00174cf0();
-      VU1_swapChain();
-      if (param_5 != 0) {
-        iVar2 = LoadLevelFiles();
-        if (iVar2 == 0) {
-          param_4 = param_4 + ((longlong)(int)param_4 - (longlong)(int)(lVar3 + 0x14) >> 0x3f &
-                              (lVar3 + 0x14) - param_4);
+
+        float scroll = (float)FastIntToDouble(i % 600) * 0.0016666667f;
+        int u0 = (int)scroll;
+        int u1 = (int)(scroll + 0.4f);
+        u32 color = ((u32)alpha << 24 & 0xfc000000) | 0x808080;
+        int middle = g_ScreenHalfHeight / 2;
+
+        if (texA + 1 == texB + 1) {
+            PlateCard(middle - 0x20, color, u0, u1, headers, cardA);
         }
         else {
-          param_5 = 0;
+            PlateCard(middle - 0x2e, color, u0, u1, headers, cardA);
+
+            if (i > 64) {
+                int alphaB = (i < 96) ? i * 4 - 0x100 : alpha;
+
+                PlateCard(middle, ((u32)alphaB << 24 & 0xfc000000) | 0x808080, u0, u1, headers, cardB);
+            }
         }
-      }
-      Render_DispatchJob();
-      lVar3 = lVar3 + 1;
-    } while ((int)lVar3 < (int)param_4);
-  }
-  FadeToBlack(2);
-  return;
-}
 
-
-// 0x0164c58 (0x930 bytes)
-// strings: 0065397f: '9unloaded sound bank %#010x\n'
-
-void DoSpaceTransition(void)
-
-{
-  bool bVar1;
-  LevelId LVar2;
-  int iVar3;
-  longlong lVar4;
-  double dVar5;
-  double dVar6;
-  double dVar7;
-  
-  lVar4 = 5;
-  if (!g_JapaneseMode) {
-    lVar4 = (longlong)(g_Language + -1);
-    lVar4 = lVar4 + (lVar4 >> 0x3f & -lVar4);
-  }
-  g_gameMode = GAME_MODE_SPACE;
-  g_CollOutput.collCount = g_CollOutput.collCount | 0x80000000;
-  g_SpaceshipVariant = 0;
-  if ((g_SeenPlanets.Batalia != 0) || (7 < (int)g_newlevelnum)) {
-    g_SpaceshipVariant = 1;
-  }
-  if ((g_SeenPlanets.Oltanis != 0) || (0xd < (int)g_newlevelnum)) {
-    g_SpaceshipVariant = 2;
-  }
-  FlushCache(0);
-  snd_SetReverbEx(0,5,0,0,0);
-  STUB_00505f4c();
-  STUB_00505d20();
-  sound_StopAllSounds();
-  music_Stop();
-  g_FinishedLoading = 1;
-  if (g_pSoundDefs != 0) {
-    snd_UnloadBank(*(undefined4 *)(g_pSoundDefs + 0x1c),1);
-    STUB_00505f48();
-    printf("unloaded sound bank %#010x\n",*(undefined4 *)(g_pSoundDefs + 0x1c));
-  }
-  g_BootSoundBank = 0;
-  snd_StreamSafeCdCallback(0);
-  STUB_005066bc_RET_0(0);
-  g_ViewContext.fogR = 0;
-  g_ViewContext.fogG = 0;
-  g_ViewContext.fogB = 0x10;
-  g_ViewContext.fogNearDist = 0.0;
-  g_ViewContext.fogFarDist = 524288.0;
-  g_ViewContext.fogNearIntensity = 255.0;
-  g_ViewContext.fogFarIntensity = 128.0;
-  STUB_000780f4(0,0,0);
-  dVar5 = (double)animationSpeed;
-  if ((int)g_newlevelnum < 0) {
-    while (iVar3 = memcard_IsSaveSystemIdle(), iVar3 == 0) {
-      memcard_Update();
-      MCSTATE_Update();
-    }
-    FadeToBlack((int)(animationSpeed * 6.5));
-    Level = g_newlevelnum;
-    STUB_000def38_RET_1();
-    FUN_00503128_RET_0(0);
-    g_FinishedLoading = 0;
-    STUB_001754e0();
-    return;
-  }
-  dVar7 = 240.5;
-  if ((g_newlevelnum == Veldin) && (VisitedPlanets.Veldin == '\0')) {
-    FadeToBlack((int)(dVar5 * 6.5));
-    PlaySpacePlate(lVar4,0,1,(int)((double)animationSpeed * dVar7),0);
-    PlaySpaceMovie(0);
-    PlaySpacePlate(lVar4,2,2,(int)(animationSpeed * 180.5),0);
-    PlaySpaceMovie(1);
-    Level = g_newlevelnum;
-    PlaySpacePlate(lVar4,3,4,(int)((double)animationSpeed * dVar7),1);
-    PlaySpaceMovie(2);
-  }
-  else if ((Level == Veldin) && ((g_newlevelnum == Novalis && (VisitedPlanets.Novalis == '\0')))) {
-    FadeToBlack((int)(dVar5 * 6.5));
-    PlaySpacePlate(lVar4,5,6,(int)((double)animationSpeed * dVar7),0);
-    PlaySpaceMovie(3);
-    PlaySpaceMovie(4);
-    PlaySpacePlate(lVar4,7,7,(int)(animationSpeed * 180.5),0);
-    PlaySpaceMovie(5);
-    LVar2 = Level;
-    dVar5 = (double)animationSpeed;
-    Level = g_newlevelnum;
-    (&VisitedPlanets.Veldin)[LVar2] = '\x02';
-    PlaySpacePlate(lVar4,8,8,(int)(dVar5 * dVar7),1);
-  }
-  else {
-    dVar6 = 12.5;
-    if ((g_newlevelnum == Eudora) && (VisitedPlanets.Eudora == '\0')) {
-      FadeToBlack((int)(dVar5 * 12.5));
-      PlaySpacePlate(lVar4,9,10,(int)((double)animationSpeed * dVar7),0);
-      PlaySpaceMovie(6);
-      dVar5 = (double)animationSpeed;
-    }
-    if (((Level == Umbris) && (VisitedPlanets.Umbris != 2)) && (g_SeenPlanets.Batalia != 0)) {
-      FadeToBlack((int)(dVar5 * dVar6));
-      PlaySpacePlate(lVar4,0xb,0xb,(int)((double)animationSpeed * dVar7),0);
-      PlaySpaceMovie(7);
-      dVar5 = (double)animationSpeed;
-    }
-    if ((g_newlevelnum == Gemlik) && (VisitedPlanets.Gemlik == 0)) {
-      FadeToBlack((int)(dVar5 * dVar6));
-      PlaySpacePlate(lVar4,0xc,0xd,(int)((double)animationSpeed * dVar7),0);
-      PlaySpaceMovie(8);
-      dVar5 = (double)animationSpeed;
-    }
-    if (((Level == Oltanis) && (VisitedPlanets.Oltanis != 2)) && (g_SeenPlanets.Quartu != 0)) {
-      FadeToBlack((int)(dVar5 * dVar6));
-      PlaySpacePlate(lVar4,0xe,0xe,(int)((double)animationSpeed * dVar7),0);
-      PlaySpaceMovie(9);
-      dVar5 = (double)animationSpeed;
-    }
-    if ((g_newlevelnum == Kalebo) && (VisitedPlanets.Kalebo == 0)) {
-      FadeToBlack((int)(dVar5 * dVar6));
-      PlaySpacePlate(lVar4,0xf,0x10,(int)((double)animationSpeed * dVar7),0);
-      PlaySpaceMovie(10);
-    }
-    LVar2 = g_newlevelnum;
-    if (Level < (Veldin2|Novalis)) {
-      bVar1 = true;
-      if ((Level == Umbris) && (bVar1 = true, g_SeenPlanets.Batalia == 0)) {
-        bVar1 = false;
-      }
-      if (((Level != Oltanis) || (g_SeenPlanets.Quartu != 0)) && (bVar1)) {
-        (&VisitedPlanets.Veldin)[Level] = '\x02';
-      }
-    }
-    g_LoadingStage = 0;
-    DAT_00964562 = 1;
-    Level = LVar2;
-    SpaceTransition_LoadWad();
-    STUB_004d04d0(Level);
-    if (g_CutscenePlaying == 0) {
-      iVar3 = 0;
-      do {
-        STUB_00174cf0();
-        VU1_swapChain();
-        STUB_00078104();
-        STUB_00078134();
-        STUB_000780fc();
-        UpdatePad();
-        UpdateSpace();
-        DisplayLoadingScreen();
         memcard_Update();
         MCSTATE_Update();
         STUB_00174cf4(1);
         STUB_00503078(0);
-        g_MainLoopFrames = g_MainLoopFrames + 1;
-        SetFrameCount();
-        if (iVar3 == 0) {
-          iVar3 = LoadLevelFiles();
+        STUB_000684a0();
+        STUB_00174cf0();
+        VU1_swapChain();
+
+        if (loadLevel) {
+            if (LoadLevelFiles() == 0) {
+                if (frames < i + 20) {
+                    frames = i + 20;
+                }
+            }
+            else {
+                loadLevel = 0;
+            }
         }
-      } while (g_CutscenePlaying == 0);
-      if (iVar3 != 0) goto LAB_00165540;
+
+        Render_DispatchJob();
     }
-    do {
-      FlushCache(0);
-      STUB_00503078(0);
-      memcard_Update();
-      MCSTATE_Update();
-      SetFrameCount();
-      iVar3 = LoadLevelFiles();
-    } while (iVar3 == 0);
-  }
-LAB_00165540:
-  FUN_00503128_RET_0(0);
-  g_FinishedLoading = 0;
-  STUB_001754e0();
-  return;
+
+    FadeToBlack(2);
 }
 
+/* a planet's arrival movie, with its title cards first */
+static inline void SpaceStoryMovie(int language, int texA, int texB, int movie)
+{
+    FadeToBlack(ScaledFrames(12.5f));
+    PlaySpacePlate(language, texA, texB, ScaledFrames(240.5f), 0);
+    PlaySpaceMovie(movie);
+}
 
+// 0x0164c58 (0x930 bytes)
+/* travelling to g_newlevelnum: the story movies owed on the way, the loading screens while
+   the level loads, then on into it */
+void DoSpaceTransition(void)
+{
+    int language = 5;
+    if (!g_JapaneseMode) {
+        language = (int)g_Language - 1;
+        if (language < 0) {
+            language = 0;
+        }
+    }
+
+    g_gameMode = GAME_MODE_SPACE;
+    g_CollOutput.collCount |= 0x80000000;
+
+    g_SpaceshipVariant = 0;
+    if (g_SeenPlanets.Batalia != 0 || (int)g_newlevelnum >= Batalia) {
+        g_SpaceshipVariant = 1;
+    }
+    if (g_SeenPlanets.Oltanis != 0 || (int)g_newlevelnum >= Oltanis) {
+        g_SpaceshipVariant = 2;
+    }
+
+    FlushCache(0);
+    snd_SetReverbEx(0, 5, 0, 0, 0);
+    STUB_00505f4c();
+    STUB_00505d20();
+    sound_StopAllSounds();
+    music_Stop();
+    g_FinishedLoading = 1;
+    if (g_pSoundDefs != NULL) {
+        snd_UnloadBank((int *)(uintptr_t)g_pSoundDefs->bank_index, 1);
+        STUB_00505f48();
+        printf("unloaded sound bank %#010x\n", g_pSoundDefs->bank_index);
+    }
+
+    g_BootSoundBank = 0;
+    snd_StreamSafeCdCallback(NULL);
+    STUB_005066bc_RET_0(0);
+    g_ViewContext.fogR = 0;
+    g_ViewContext.fogG = 0;
+    g_ViewContext.fogB = 0x10;
+    g_ViewContext.fogNearDist = 0.0f;
+    g_ViewContext.fogFarDist = 524288.0f;
+    g_ViewContext.fogNearIntensity = 255.0f;
+    g_ViewContext.fogFarIntensity = 128.0f;
+    STUB_000780f4(0, 0, 0);
+
+    /* no level (a reload): just switch */
+    if ((int)g_newlevelnum < 0) {
+        while (memcard_IsSaveSystemIdle() == 0) {
+            memcard_Update();
+            MCSTATE_Update();
+        }
+
+        FadeToBlack(ScaledFrames(6.5f));
+        Level = (LevelId)g_newlevelnum;
+        STUB_000def38_RET_1();
+        FUN_00503128_RET_0(0);
+        g_FinishedLoading = 0;
+        STUB_001754e0();
+        return;
+    }
+
+    if (g_newlevelnum == Veldin && VisitedPlanets.Veldin == 0) {
+        /* the opening */
+        FadeToBlack(ScaledFrames(6.5f));
+        PlaySpacePlate(language, 0, 1, ScaledFrames(240.5f), 0);
+        PlaySpaceMovie(0);
+        PlaySpacePlate(language, 2, 2, ScaledFrames(180.5f), 0);
+        PlaySpaceMovie(1);
+        Level = (LevelId)g_newlevelnum;
+        PlaySpacePlate(language, 3, 4, ScaledFrames(240.5f), 1);
+        PlaySpaceMovie(2);
+    }
+    else if (Level == Veldin && g_newlevelnum == Novalis && VisitedPlanets.Novalis == 0) {
+        /* leaving Veldin */
+        FadeToBlack(ScaledFrames(6.5f));
+        PlaySpacePlate(language, 5, 6, ScaledFrames(240.5f), 0);
+        PlaySpaceMovie(3);
+        PlaySpaceMovie(4);
+        PlaySpacePlate(language, 7, 7, ScaledFrames(180.5f), 0);
+        PlaySpaceMovie(5);
+
+        LevelId from = Level;
+        Level = (LevelId)g_newlevelnum;
+        (&VisitedPlanets.Veldin)[from] = 2;
+        PlaySpacePlate(language, 8, 8, ScaledFrames(240.5f), 1);
+    }
+    else {
+        if (g_newlevelnum == Eudora && VisitedPlanets.Eudora == 0) {
+            SpaceStoryMovie(language, 9, 10, 6);
+        }
+        if (Level == Umbris && VisitedPlanets.Umbris != 2 && g_SeenPlanets.Batalia != 0) {
+            SpaceStoryMovie(language, 0xb, 0xb, 7);
+        }
+        if (g_newlevelnum == Gemlik && VisitedPlanets.Gemlik == 0) {
+            SpaceStoryMovie(language, 0xc, 0xd, 8);
+        }
+        if (Level == Oltanis && VisitedPlanets.Oltanis != 2 && g_SeenPlanets.Quartu != 0) {
+            SpaceStoryMovie(language, 0xe, 0xe, 9);
+        }
+        if (g_newlevelnum == Kalebo && VisitedPlanets.Kalebo == 0) {
+            SpaceStoryMovie(language, 0xf, 0x10, 10);
+        }
+
+        /* the planet left is done, unless its story continues */
+        if ((int)Level >= 0 && (int)Level <= Veldin2) {
+            int done = !(Level == Umbris && g_SeenPlanets.Batalia == 0);
+
+            if ((Level != Oltanis || g_SeenPlanets.Quartu != 0) && done) {
+                (&VisitedPlanets.Veldin)[Level] = 2;
+            }
+        }
+
+        Level = (LevelId)g_newlevelnum;
+        g_LoadingStage = 0;
+        DAT_00964562 = 1;
+        SpaceTransition_LoadWad();
+        STUB_004d04d0(Level);
+
+        int loaded = 0;
+        if (g_CutscenePlaying == 0) {
+            while (g_CutscenePlaying == 0) {
+                STUB_00174cf0();
+                VU1_swapChain();
+                STUB_00078104();
+                STUB_00078134();
+                STUB_000780fc();
+                UpdatePad();
+                UpdateSpace();
+                DisplayLoadingScreen();
+                memcard_Update();
+                MCSTATE_Update();
+                STUB_00174cf4(1);
+                STUB_00503078(0);
+                g_MainLoopFrames++;
+                SetFrameCount();
+                if (loaded == 0) {
+                    loaded = LoadLevelFiles();
+                }
+            }
+        }
+
+        while (loaded == 0) {
+            FlushCache(0);
+            STUB_00503078(0);
+            memcard_Update();
+            MCSTATE_Update();
+            SetFrameCount();
+            loaded = LoadLevelFiles();
+        }
+    }
+
+    FUN_00503128_RET_0(0);
+    g_FinishedLoading = 0;
+    STUB_001754e0();
+}

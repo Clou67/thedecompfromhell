@@ -10,7 +10,6 @@
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/partupd.h"
-#include "game/space.h"
 #include "idol/fastfunc.h"
 
 // 0x04cdcd0 (0xe78 bytes)

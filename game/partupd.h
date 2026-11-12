@@ -26,7 +26,7 @@ typedef void (*PartUpdateFn)(struct PartInstance *);   /* a particle class updat
 extern undefined4 DAT_00120ef4; /* 0x120ef4 */
 extern undefined4 DAT_0012b0f0; /* 0x12b0f0 */
 extern undefined4 DAT_00132d58; /* 0x132d58 */
-extern undefined4 DAT_0071f408; /* 0x71f408 */
+extern float DAT_0071f408; /* 0x71f408 */ /* type set in global_types.tsv */
 extern undefined4 DAT_00729698; /* 0x729698 */
 extern undefined4 DAT_007296bc; /* 0x7296bc */
 extern undefined4 DAT_007296c0; /* 0x7296c0 */

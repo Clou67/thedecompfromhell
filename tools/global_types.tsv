@@ -376,3 +376,24 @@ g_ShipEnvTimer	int NAME /* 0xa561c4 */
 g_ShipEnvForce	int NAME /* 0x731c90: 1 = update the uvs once even when off (then 2) */
 g_ShipEnvActive	int NAME /* 0x731c94 */
 g_ShipParticleOffsets	Vec4 NAME[3][6] /* 0x7320a0: engine particle emitters per ship variant (ship space) */
+g_SceneFlash	float NAME /* 0x95cf14: white flash over a space cutscene, 0..1 */
+g_ShipTakeoffSkipFrames	int NAME[3] /* 0x732220: frame the take-off cutscene skips to, per variant */
+g_SceneO2Mask	MobyInstance *NAME /* 0x964578: the O2 mask moby on the hero in a ship cutscene */
+DAT_0071f408	float NAME /* 0x71f408 */
+g_SpaceArrivalPos	Vec4 NAME /* 0x9645d0: where the hero is put after a landing cutscene */
+g_SpaceArrivalRot	Vec4 NAME /* 0x9645e0 */
+g_SpaceCutsceneTimer	short NAME /* 0x964594: frames into the current space cutscene (starts at -1) */
+g_ShipRiderRatchet	MobyInstance *NAME /* 0x964580: Ratchet riding the flying ship */
+g_ShipRiderClank	MobyInstance *NAME /* 0x964584 */
+g_ShipFlightParam	float NAME /* 0x9645ac: position along the flight spline */
+g_ShipFlightSpeed	float NAME /* 0x9645b0 */
+g_ShipFlightSegLen	float NAME /* 0x9645b4 */
+g_ShipCameraBlend	float NAME /* 0x9645b8: 0..1 between the start and end camera cuboids */
+g_ShipCameraBlendSpeed	float NAME /* 0x9645bc */
+g_ShipLiftFrom	Vec4 NAME /* 0x9645f0: the ship as it starts to lift off */
+g_ShipLiftTo	Vec4 NAME /* 0x964600: the flight spline's first point */
+g_ShipLiftFromRot	Vec4 NAME /* 0x964610 */
+g_ShipLiftPitch	float NAME /* 0x964624 */
+g_ShipLiftYaw	float NAME /* 0x964628 */
+g_ShipTrailOffsets	Vec4 NAME[3][2] /* 0x731ec0: the two engine trails' origins per variant (ship space) */
+g_ShipRiderOffsets	Vec4 NAME[2][3] /* 0x7321c0: Ratchet's then Clank's seat per variant (ship space) */

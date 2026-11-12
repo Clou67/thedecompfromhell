@@ -8,7 +8,6 @@
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
-#include "game/space.h"
 #include "game/update/moby580.h"
 #include "game/update/moby806.h"
 #include "game/update/moby849.h"

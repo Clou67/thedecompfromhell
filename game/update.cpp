@@ -495,7 +495,7 @@ void mode_sceneInit(int absolute_scene_id)
       g_SceneId = absolute_scene_id;
       Help_Kill();
       SceneScreenFade = 1.0;
-      DAT_0095cf14 = 0;
+      g_SceneFlash = 0;
       g_gameMode = GAME_MODE_SCENE;
       g_SceneSavedCamUnderWater = (char)GameCamera.camUnderWater;
       GameCamera.camUnderWater = 0;

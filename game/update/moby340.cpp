@@ -10,7 +10,6 @@
 #include "game/mobyutil.h"
 #include "game/partupd.h"
 #include "game/sound.h"
-#include "game/space.h"
 #include "game/update/moby426.h"
 #include "game/update/moby849.h"
 #include "idol/fastfunc.h"

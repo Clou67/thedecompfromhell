@@ -8,7 +8,6 @@
 #include "game/mobyutil.h"
 #include "game/partupd.h"
 #include "game/sound.h"
-#include "game/space.h"
 #include "idol/fastfunc.h"
 
 // 0x04b56cc (0x14 bytes)

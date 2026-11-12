@@ -19,7 +19,6 @@
 #include "game/partupd.h"
 #include "game/path.h"
 #include "game/respawn.h"
-#include "game/space.h"
 #include "game/update.h"
 #include "game/update/moby1046.h"
 #include "game/update/moby1049.h"

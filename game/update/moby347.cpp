@@ -10,7 +10,6 @@
 #include "game/mobyutil.h"
 #include "game/partupd.h"
 #include "game/sound.h"
-#include "game/space.h"
 #include "game/update.h"
 #include "game/update/moby1371.h"
 #include "game/update/moby1844.h"

@@ -9,7 +9,6 @@
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/sound.h"
-#include "game/space.h"
 #include "idol/fastfunc.h"
 #include "idol/mathfunc.h"
 #include "idol/xUnk.h"

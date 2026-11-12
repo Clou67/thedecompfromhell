@@ -144,13 +144,13 @@ void UpdateMoby_1108(MobyInstance *moby)
     dVar29 = 1.0;
     if (puVar13[0x2e] == 0x3f800000) {
       HandleHeroDeath();
-      DAT_0095cf14 = 0;
+      g_SceneFlash = 0;
     }
     else {
       iVar22 = FastDecTimerS32(uVar27 + 0xbc);
       if (iVar22 != 0) {
         Delt((float)dVar29,g_FrameTime * 6.0,(float *)(puVar13 + 0x2e));
-        DAT_0095cf14 = puVar13[0x2e];
+        g_SceneFlash = puVar13[0x2e];
       }
     }
   }

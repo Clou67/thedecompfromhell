@@ -12,7 +12,6 @@
 #include "game/partupd.h"
 #include "game/pause.h"
 #include "game/sound.h"
-#include "game/space.h"
 #include "game/update/camera5.h"
 #include "idol/fastfunc.h"
 

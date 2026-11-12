@@ -6,7 +6,6 @@
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
-#include "game/space.h"
 #include "game/update/moby127.h"
 #include "game/update/moby200.h"
 #include "idol/fastfunc.h"

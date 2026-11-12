@@ -11,7 +11,6 @@
 #include "game/mobyutil.h"
 #include "game/partupd.h"
 #include "game/sound.h"
-#include "game/space.h"
 #include "game/update/moby1212.h"
 #include "game/update/moby31.h"
 #include "game/update/moby42.h"

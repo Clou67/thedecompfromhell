@@ -7,7 +7,6 @@
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
-#include "game/space.h"
 #include "idol/fastfunc.h"
 
 // 0x04c8098 (0x238 bytes)

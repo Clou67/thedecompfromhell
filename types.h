@@ -2659,7 +2659,11 @@ extern undefined2 DAT_0072b348; /* 0x72b348 */
 extern undefined2 DAT_0072b354; /* 0x72b354 */
 extern undefined4 DAT_00731d90; /* 0x731d90 */
 extern undefined4 DAT_00731e40; /* 0x731e40 */
+extern undefined4 DAT_00731ed0; /* no defined data */
 extern undefined4 DAT_00731f24; /* 0x731f24 */
+extern undefined4 DAT_00731f74; /* 0x731f74 */
+extern undefined4 DAT_00731f78; /* 0x731f78 */
+extern undefined4 DAT_00731f7c; /* 0x731f7c */
 extern undefined8 DAT_007359f0; /* 0x7359f0 */
 extern undefined8 DAT_007359f8; /* 0x7359f8 */
 extern undefined8 DAT_00735a00; /* 0x735a00 */
@@ -2838,6 +2842,17 @@ extern undefined4 DAT_0095d6de; /* no defined data */
 extern undefined1 DAT_00963764; /* 0x963764 */
 extern undefined1 DAT_00963768; /* 0x963768 */
 extern undefined1 DAT_0096376c; /* 0x96376c */
+extern undefined4 DAT_009645f4; /* 0x9645f4 */
+extern undefined4 DAT_009645f8; /* 0x9645f8 */
+extern undefined4 DAT_009645fc; /* 0x9645fc */
+extern undefined4 DAT_00964604; /* 0x964604 */
+extern undefined4 DAT_00964608; /* 0x964608 */
+extern undefined4 DAT_0096460c; /* 0x96460c */
+extern undefined4 DAT_00964614; /* 0x964614 */
+extern undefined4 DAT_00964618; /* 0x964618 */
+extern undefined4 DAT_0096461c; /* 0x96461c */
+extern undefined4 DAT_00964830; /* no defined data */
+extern undefined4 DAT_00a0a0a0; /* no defined data */
 extern undefined4 DAT_00a0fd24; /* no defined data */
 extern undefined4 DAT_00a0fd26; /* no defined data */
 extern undefined4 DAT_00a0fd28; /* no defined data */
@@ -2870,6 +2885,9 @@ extern undefined4 DAT_00a561b0; /* 0xa561b0 */
 extern undefined4 DAT_00a561b4; /* 0xa561b4 */
 extern undefined4 DAT_00a561b8; /* 0xa561b8 */
 extern undefined4 DAT_00a561bc; /* 0xa561bc */
+extern undefined4 DAT_00a561e4; /* 0xa561e4 */
+extern undefined4 DAT_00a561e8; /* 0xa561e8 */
+extern undefined4 DAT_00a561ec; /* 0xa561ec */
 extern undefined4 DAT_00a561f4; /* 0xa561f4 */
 extern undefined4 DAT_00a561f8; /* 0xa561f8 */
 extern undefined4 DAT_00a561fc; /* 0xa561fc */
@@ -2896,6 +2914,9 @@ extern pointer PTR_PTR_0071a35c; /* 0x71a35c */
 extern pointer PTR_PTR_0071a360; /* 0x71a360 */
 extern pointer PTR_PTR_0071a368; /* 0x71a368 */
 extern pointer PTR_PTR_00905664; /* 0x905664 */
+extern pointer32 PTR_STUB_0015e2c0_00707c68; /* 0x707c68 */
+extern pointer32 PTR_Space_DrawShipEngineGlow_00707cb0; /* 0x707cb0 */
+extern pointer32 PTR_Space_DrawTransitionOverlay_00707cb8; /* 0x707cb8 */
 extern pointer32 PTR_memcard_RestoreSaveGame_00705f80; /* 0x705f80 */
 extern pointer32 PTR_memcard_ReturnLang_00705f10; /* 0x705f10 */
 extern pointer32 PTR_memcard_printGameSaved_00705f88; /* 0x705f88 */
@@ -2906,6 +2927,7 @@ extern pointer32 PTR_music_CdCB_00706db0; /* 0x706db0 */
 extern pointer32 PTR_music_FreshenCB_00706db8; /* 0x706db8 */
 extern pointer32 PTR_music_StopCB_00706de8; /* 0x706de8 */
 extern pointer32 PTR_music_TimeRemainingCB_00706df8; /* 0x706df8 */
+extern pointer32 PTR_sound_BasicCB_00707c38; /* 0x707c38 */
 extern pointer32 PTR_sound_FreshenCB_00707c48; /* 0x707c48 */
 extern pointer32 PTR_sound_PlayCB_00707c40; /* 0x707c40 */
 extern pointer32 PTR_sysutil_gameexit_callback_00703618; /* 0x703618 */

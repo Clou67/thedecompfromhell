@@ -11,7 +11,6 @@
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/partupd.h"
-#include "game/space.h"
 #include "game/update/camera5.h"
 #include "game/update/moby722.h"
 #include "idol/fastfunc.h"

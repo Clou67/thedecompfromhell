@@ -12,7 +12,6 @@
 #include "game/music.h"
 #include "game/pad.h"
 #include "game/sound.h"
-#include "game/space.h"
 #include "game/update.h"
 #include "game/update/moby1022.h"
 #include "game/update/moby1118.h"

@@ -38,7 +38,7 @@ errors	file
 0	game/skyfunc.cpp
 0	game/skyproc.cpp
 0	game/sound.cpp
-120	game/space.cpp
+0	game/space.cpp
 0	game/tieproc.cpp
 124	game/update.cpp
 568	game/update/camera0.cpp
@@ -1180,7 +1180,7 @@ errors	file
 0	sdk/rUnk.cpp
 2	sdk/sUnk.cpp
 12	sdk/sUnk2.cpp
-175	sdk/sce.cpp
+176	sdk/sce.cpp
 109	sdk/sys.cpp
 101	sdk/tUnk.cpp
 0	sdk/vUnk.cpp

@@ -10,7 +10,6 @@
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/sound.h"
-#include "game/space.h"
 #include "game/update.h"
 #include "game/update/camera5.h"
 #include "game/update/moby1118.h"

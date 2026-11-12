@@ -7,7 +7,6 @@
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/sound.h"
-#include "game/space.h"
 #include "idol/fastfunc.h"
 
 // 0x0371ef4 (0x14 bytes)

@@ -9,7 +9,6 @@
 #include "game/mesh.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
-#include "game/space.h"
 #include "game/update.h"
 #include "game/water.h"
 #include "idol/fastfunc.h"
