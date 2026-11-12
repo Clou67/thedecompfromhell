@@ -80,6 +80,7 @@ extern undefined4 DAT_0071eaa4; /* 0x71eaa4 */
 extern undefined MobyClassRef; /* 0xa109c0 */
 extern undefined g_CollMobyJointCache; /* 0xa10a00 */
 extern CollMobyVertCacheEntry g_CollMobyVertCache[8]; /* 0x9540c0 */
+extern HeroCollHeader * g_HeroCollision; /* 0xa15c00 */
 extern MobyGridCell g_MobyGrid[4096]; /* 0xa39120 */
 
 // ---- functions

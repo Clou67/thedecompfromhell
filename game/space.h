@@ -94,6 +94,7 @@ extern pointer32 PTR_Space_DrawShipEffects_00707cd8; /* 0x707cd8 */
 extern pointer32 PTR_Space_DrawShipEngineGlow_00707cb0; /* 0x707cb0 */
 extern pointer32 PTR_Space_DrawTransitionOverlay_00707cb8; /* 0x707cb8 */
 extern pointer32 PTR_UpdateMoby_Spaceship_00707c58; /* 0x707c58 */
+extern pointer32 PTR_sound_BasicCB_00707c38; /* 0x707c38 */
 extern float SceneScreenFade; /* 0x95cf10 */
 extern Planets VisitedPlanets; /* 0x96ca20 */
 extern undefined1 g_FinishedLoading; /* 0x9636d3 */

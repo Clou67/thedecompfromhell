@@ -3732,7 +3732,7 @@ undefined8 FUN_00503120(void)
 
 
 // 0x0503128 (0x8 bytes)
-undefined8 FUN_00503128_RET_0(void)
+int FUN_00503128_RET_0(int param_1)
 
 {
   return 0;
@@ -4517,7 +4517,7 @@ undefined8 FUN_005033fc(void)
 // 0x0503404 (0x30 bytes)
 // strings: 0065f69c: 'm_LoadLevelFileS %s\n'
 
-undefined8 FUN_00503404(void)
+void FUN_00503404(u32 param_1,const char *param_2)
 
 {
   printf("m_LoadLevelFileS %s\n");

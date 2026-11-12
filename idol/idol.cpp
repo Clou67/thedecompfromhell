@@ -508,7 +508,7 @@ int LoadAssetFromFile(const char *param_1,void *param_2,int param_3)
 
 
 // 0x0503f8c (0x168 bytes)
-void FUN_00503f8c(undefined8 param_1,undefined8 param_2,longlong param_3)
+int FUN_00503f8c(const char *param_1,u32 param_2,int param_3)
 
 {
   undefined8 uVar1;

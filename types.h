@@ -2627,6 +2627,12 @@ extern undefined4 DAT_00931404; /* no defined data */
 extern undefined8 DAT_00931408; /* 0x931408 */
 extern undefined4 DAT_00931410; /* no defined data */
 extern undefined4 DAT_00931418; /* no defined data */
+extern undefined4 DAT_0095d2d0; /* no defined data */
+extern undefined4 DAT_0095d2d2; /* no defined data */
+extern undefined4 DAT_0095d2d4; /* no defined data */
+extern undefined4 DAT_0095d2d8; /* no defined data */
+extern undefined4 DAT_0095d2d9; /* no defined data */
+extern undefined4 DAT_0095d2da; /* no defined data */
 extern undefined4 DAT_0095d6d8; /* no defined data */
 extern undefined4 DAT_0095d6da; /* no defined data */
 extern undefined4 DAT_0095d6dc; /* no defined data */
@@ -2651,6 +2657,10 @@ extern undefined1 DAT_00a2c444; /* 0xa2c444 */
 extern undefined4 DAT_00e5aad0; /* 0xe5aad0 */
 extern undefined4 DAT_00e5aad4; /* 0xe5aad4 */
 extern undefined4 DAT_00ec4080; /* no defined data */
+extern undefined4 DAT_010ea10c; /* no defined data */
+extern undefined4 DAT_010ea634; /* 0x10ea634 */
+extern undefined4 DAT_010ea63c; /* 0x10ea63c */
+extern undefined4 DAT_010ea644; /* 0x10ea644 */
 extern undefined4 g_Manipulator; /* 0x96c07b */
 extern pointer PTR_DAT_0071a328; /* 0x71a328 */
 extern pointer PTR_DAT_0071a358; /* 0x71a358 */

@@ -227,3 +227,12 @@ g_MobyTexAddrs	int NAME[] /* 0xa37390: per slot, texture address + a tag */
 g_MobyTexDefs	short NAME[][8] /* 0xa4c540: tex_def per moby texture slot */
 g_pGameplayFile	u32 NAME /* 0xa108f4: the gameplay file buffer (a MemSlots pointer) */
 g_CheckpointLevelFlags	s8 NAME /* 0xa202c0: per level flag, -1 = clear at this checkpoint (indexed as an array) */
+g_LevelLoadPending	int NAME /* 0xa204b0: 1 while LoadAssetAsync runs, 2 when it is done */
+g_IopGameplay	u32 NAME /* 0x964568: where the gameplay file goes in IOP memory */
+g_IopSpaceships	u32 NAME /* 0x96456c: where the spaceships file goes */
+g_GadgetOClasses	int NAME[24] /* 0xa4d540 */
+g_GadgetModels	int NAME[24] /* 0xa4d5a0: the gadget classes in the engine file */
+g_GadgetModelSizes	int NAME[24] /* 0xa4d600 */
+g_GadgetSoundIds	short NAME[][16] /* 0xa4d7e0: sound ids of gadgets whose class is loaded later */
+g_GadgetBufferSlot	int NAME /* 0xa4daec: the gadget class buffer used last */
+g_LevelSoundBank	u32 NAME /* 0xa4dae0 */

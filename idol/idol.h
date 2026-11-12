@@ -62,7 +62,7 @@ char *Locale_Convert(Localizer *param_1,char *param_2,int param_3,char *param_4,
 void FUN_00503df8(void);
 void FUN_00503dfc(void);
 int LoadAssetFromFile(const char *param_1,void *param_2,int param_3);
-void FUN_00503f8c(undefined8 param_1,undefined8 param_2,longlong param_3);
+int FUN_00503f8c(const char *param_1,u32 param_2,int param_3);
 void FUN_005040f4(int param_1);
 int GetFileSize(const char *param_1);
 void FUN_00504218(undefined8 param_1,undefined8 param_2,int param_3,int param_4);

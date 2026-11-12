@@ -1,6 +1,5 @@
 // game/loaders.cpp -- level data loading: textures, moby classes, scenes, the level file itself
 // STATUS: CLEAN (checked against the asm; local names are mine)
-// MERGE (23 of 41 functions cleaned; the rest are generated)
 // 41 functions, 0xdb1e0-0xe0e14
 //
 // Most of the data comes in with offsets relative to its own start that are turned into
@@ -143,7 +142,6 @@ void SECTION_HEADER_LOADERS(void)
     DAT_0072479c = 0x10000;
 }
 
-
 // 0x00db200 (0x40 bytes)
 // A byte map of values between min and max (MB_SampleByteGrid reads it).
 void LoadByteGrid(ByteGridHeader *grid)
@@ -154,7 +152,6 @@ void LoadByteGrid(ByteGridHeader *grid)
     g_byteGridData = (u8 *)(grid + 1);
     g_byteGridMax = grid->max;
 }
-
 
 // 0x00db240 (0xac bytes)
 // Not called. A count, `count` 32-byte entries, then an offset per entry to the entry, whose
@@ -177,7 +174,6 @@ void Loaders_RelocEffectTable(int *table)
         entry[1] += (int)g_EffectTableOffsets;
     }
 }
-
 
 // 0x00db2ec (0x4b8 bytes)
 // Uploads a pif's clut and mips to GS memory and builds its TEX0/TEX1/MIPTBP1 registers.
@@ -269,7 +265,6 @@ int ParsePif(struct PifHeader *pPif, u64 *tex_regs)
     return -1;
 }
 
-
 // 0x00db7a4 (0x134 bytes)
 // A host file of pifs: a count, then an offset per pif from the start of the file.
 int LoadPifFile(char *filename)
@@ -300,7 +295,6 @@ int LoadPifFile(char *filename)
     return count;
 }
 
-
 // 0x00db8d8 (0x54 bytes)
 // The particle texture frames in the space wad: a count, the first texture index, the base of
 // the frame data, then an offset per frame.
@@ -316,7 +310,6 @@ void Loaders_RelocSpaceWadPtrs(int *data)
     }
 }
 
-
 // 0x00db92c (0x10c bytes)
 void ParseEffectTexs(int *tex_defs, int tex_cnt)
 {
@@ -328,7 +321,6 @@ void ParseEffectTexs(int *tex_defs, int tex_cnt)
         g_EffectTexCnt++;
     }
 }
-
 
 // 0x00dba38 (0x1fc bytes)
 void ParseSky(char *data)
@@ -391,7 +383,6 @@ static inline void ResolveGifRefs(MobyGifRef *ref, u32 count)
         }
     }
 }
-
 
 // 0x00dbc38 (0x4b4 bytes)
 // DL's ParseMobyClass: relocates a moby class and scales its joints. Everything in the class is
@@ -498,7 +489,6 @@ void LoadMobyModel(MobyClass *pClass, void *tex_regs, char *tex_refs, int oClass
     }
 }
 
-
 // 0x00dc0ec (0xf4 bytes)
 // DL's ParseMoby: gives the class the next mClass slot.
 void LoadMobyPClasses(MobyClass *pClass, void *tex_regs, char *tex_refs, int oClass)
@@ -572,7 +562,6 @@ static inline void UploadImage(u32 *image, int gsAddr, int format, int size, voi
     sceGsSyncPath(0, 0);
 }
 
-
 // 0x00dc210 (0x5ec bytes)
 // Copies the chosen spaceship out of the spaceship file to `data`, uploads its textures and loads
 // the ship and cockpit classes. Returns the memory after the textures.
@@ -582,7 +571,7 @@ u8 *LoadSpaceshipModel(int *data, int *gs_addrs)
     u8 *base = (u8 *)data;
     u32 image;
 
-    FastMemCopy(data, (void *)DAT_0096456c, *(int *)(&DAT_010ea114 + g_SpaceshipVariant * 8) << 11);
+    FastMemCopy(data, (void *)g_IopSpaceships, *(int *)(&DAT_010ea114 + g_SpaceshipVariant * 8) << 11);
 
     u8 *shipTex = base + ship->shipTex;
     u8 *cockpitTex = base + ship->cockpitTex;
@@ -638,7 +627,6 @@ u8 *LoadSpaceshipModel(int *data, int *gs_addrs)
     return dest + COCKPIT_TEX_SIZE;
 }
 
-
 // 0x00dc7fc (0x360 bytes)
 // Fills the TEX1 / CLAMP / TEX0 / MIPTBP1 values of a GIF packet from a texture definition
 // (shorts: [2] width, [3] height, [4] mips, [5] clut, [6] / [7] mips 2 and 3 as GS blocks).
@@ -680,18 +668,15 @@ void SetUpVisGif(u64 *pGif, short *tex_def, int mip_dist, int filter, int u_clam
     }
 }
 
-
 // 0x00dcb5c (0x4 bytes)
 void STUB_000dcb5c(...)
 {
 }
 
-
 // 0x00dcb60 (0x4 bytes)
 void STUB_000dcb60(...)
 {
 }
-
 
 // 0x00dcb64 (0x5c bytes)
 // A sequence loaded on its own: its pointers are relative to the sequence.
@@ -709,24 +694,20 @@ void ParseMobySeq(MobyClass *pClass, int seq)
     }
 }
 
-
 // 0x00dcbc0 (0x4 bytes)
 void STUB_000dcbc0(...)
 {
 }
-
 
 // 0x00dcbc4 (0x4 bytes)
 void STUB_000dcbc4(...)
 {
 }
 
-
 // 0x00dcbc8 (0x4 bytes)
 void STUB_000dcbc8(...)
 {
 }
-
 
 // 0x00dcbcc (0x7c bytes)
 // The collision file: offsets of the collision grid and of the hero-only collision.
@@ -747,7 +728,6 @@ void ParseColl(char *data)
         }
     }
 }
-
 
 // 0x00dcc50 (0x1ec bytes)
 // Debug: prints the moby classes by size, biggest first. A class's size runs to the next class
@@ -800,12 +780,10 @@ void PrintMobyMemory(int *classes, int cnt)
     }
 }
 
-
 // 0x00dce3c (0x4 bytes)
 void STUB_000dce3c(...)
 {
 }
-
 
 // 0x00dce40 (0x10c bytes)
 // Same as boot's LoadLanguageHelpMsgs.
@@ -974,7 +952,6 @@ static inline u8 *LoadPrims(int *section, void **prims, int *count, u8 *mem)
     return AlignUp64(mem + size);
 }
 
-
 // 0x00dcf58 (0x1fe0 bytes)
 // DL's LoadGameplayCore (the DL helpers it inlines are marked): reads the level's gameplay file
 // and builds the level's objects from it in the memory at Gameplay. `reload` forces a new buffer
@@ -1022,7 +999,7 @@ u8 *LoadGameplayFile(int reload)
     }
 
     FlushCache(0);
-    STUB_000e9150(DAT_00964568, file);
+    STUB_000e9150(g_IopGameplay, file);
     FlushCache(0);
 
     FastMemSet(&g_heroMtx, 0, 0x2310);
@@ -1712,983 +1689,712 @@ u8 *LoadGameplayFile(int reload)
     return mem + LOCALE_BUFFER_SIZE;
 }
 
+/* the level wad's table of contents: {sector, sector count} per file */
+#define WAD_SPACESHIPS        2       /* + ship variant */
+#define WAD_ENTRY_166         166
+#define WAD_GAMEPLAY_NTSC     167
+#define WAD_GAMEPLAY_PAL      168
+#define IOP_TOP               0x10000000
+
+#define LOAD_STAGE_ENGINE     0
+#define LOAD_STAGE_GLOBALS    1
+#define LOAD_STAGE_GAMEPLAY   2
+#define LOAD_STAGE_SOUND_WAIT 3
+#define LOAD_STAGE_UNLOAD     4
+#define LOAD_STAGE_FLUSH      5
+#define LOAD_STAGE_SOUND_BANK 6
+#define LOAD_STAGE_DONE       7
+
+#define MAX_GADGET_SOUNDS     15
+#define GADGET_SOUNDS         16
+#define GADGET_CLASS_SIZE     0x30000
+
+#define NPC_BUFFER_SIZE       0x80000
+#define SCENE_CHUNK_MAX       70
+#define SUBTITLE_MIN_OFFSET   0x400
+#define OCLASS_NPC_SHIP       0x215   /* the first actor of a space scene is the player's ship */
+#define NPC_COLOR             0x00383838
+
+#define PIF_QUEUE_MAX         64
+#define PIF_CLUT_SIZE         0x400
+
+static inline int WadSectors(int entry)
+{
+    return ((int *)&DAT_010ea100)[entry * 2 + 1];
+}
+
+static inline u32 RoundUp4K(int sectors)
+{
+    return (sectors * 0x800 + 0xfff) & ~0xfff;
+}
+
+/* the moby class table of the engine file: {oClass, offset} pairs */
+struct EngineMobyClass {
+    int oClass;
+    int offset;              /* 0: a class without a model */
+};
+
+/* the gadgets of the engine file (16 bytes each) */
+struct EngineGadget {
+    int oClass;
+    int model;               /* offset of its class */
+    int size;
+    int unk0c;
+};
+
+/* the sounds of the engine file */
+struct EngineSounds {
+    short defs;              /* offset of the SoundDefs */
+    short defCnt;
+    short remap;             /* offset of the int table mapping SoundDef.index */
+    short remapCnt;
+    short classSounds[][2];  /* per mClass: {offset of its sound ids, count} */
+};
+
+/* an actor of an npc scene chunk */
+struct NpcActor {
+    int oClass;
+    int unk04;
+    int unk08;
+    int pVar;                /* offset in the chunk */
+    MobySeq seq;             /* 0x10  its one animation, frames relative to it */
+};
+
+/* the npc / space scene chunk header */
+struct NpcChunk {
+    int numFrames;
+    int subtitles;           /* offset, below 0x400: none */
+    int unk08;
+    int mobyCnt;
+    int cameraFrames;        /* offset */
+    int actors[];            /* offsets */
+};
+
+/* a queued clut + texture upload (16 bytes, g_PifLoadQueue) */
+struct PifLoad {
+    void *clut;
+    short clutFormat;
+    short clutBlock;
+    void *tex;
+    u8 uLog;
+    u8 vLog;
+    short texBlock;
+};
 
 // 0x00def38 (0x8 bytes)
 undefined8 STUB_000def38_RET_1(...)
-
 {
-  return 1;
+    return 1;
 }
-
 
 // 0x00def40 (0x14 bytes)
-void ____Unused_IncCounter_a204ac(void)
-
+void Unused_IncCounter_a204ac(void)
 {
-  DAT_00a204ac = DAT_00a204ac + 1;
-  return;
+    DAT_00a204ac++;
 }
-
 
 // 0x00def54 (0x24 bytes)
+// LoadAssetAsync's completion callback.
 void AdvanceLoadingStage(void)
-
 {
-  g_LoadingStage = g_LoadingStage + 1;
-  DAT_00a204b0 = DAT_00a204b0 + 1;
-  return;
+    g_LoadingStage++;
+    g_LevelLoadPending++;
 }
-
 
 // 0x00def78 (0x488 bytes)
-// strings: 000df3ac: 'HBiu`' (raw) | 000df2f8: 'HBj)`' (raw) | 000df2cc: 'HBjU`' (raw) | 00652404: 'rc1/ps3data/level%d/engine.ps3' | 00652424: 'rc1/ps3data/level%d/vram.ps3' | 00652444: 'space_ships' | 00652454: 'rc1/ps3data/japan_font.ps3' | 00652474: 'rc1/ps3data/japan_font.vram' | 00652494: 'gameplay_pal' | 006524a4: 'gameplay_ntsc' | 006524b4: 'rc1/ps3data/level%d/sound.bnk'
-
-undefined8 LoadLevelFiles(void)
-
+// One step of loading a level, called until it returns 1: the engine and VRAM files, the
+// spaceships, the gameplay file, then the level's sound bank.
+int LoadLevelFiles(void)
 {
-  short sVar1;
-  int iVar3;
-  undefined8 uVar2;
-  undefined4 uVar4;
-  int iVar5;
-  char acStack_160 [64];
-  char acStack_120 [128];
-  char acStack_a0 [128];
-  
-  iVar5 = (int)g_SpaceshipVariant;
-  iVar3 = FUN_00503128_RET_0(1);
-  sVar1 = g_LoadingStage;
-  if (iVar3 == 0) {
-    if (g_LoadingStage == 7) {
-      iVar3 = STUB_00505d20();
-      sVar1 = g_LoadingStage;
-      if ((iVar3 == 0) && (g_BootSoundBank != -1)) {
-        STUB_00505f48();
-        return 1;
-      }
+    char bankPath[64];
+    char enginePath[128];
+    char vramPath[128];
+    int variant = g_SpaceshipVariant;
+    short stage = g_LoadingStage;
+
+    if (FUN_00503128_RET_0(1) != 0) {
+        DAT_009636c0++;
+        g_LoadingStage = stage;
+        return 0;
     }
-    else if (g_LoadingStage == 6) {
-      iVar3 = STUB_00505d20();
-      sVar1 = g_LoadingStage;
-      if (iVar3 == 0) {
-        g_BootSoundBank = -1;
-        snprintf(acStack_160,"rc1/ps3data/level%d/sound.bnk",Level);
-        FUN_004fe5c8(TEX_BASE,0x10);
-        uVar2 = FUN_004fe5ec(TEX_BASE);
-        uVar4 = LoadAssetFromFile(acStack_160,uVar2,0xffffffffffffffff);
-        FUN_004fe6ec(TEX_BASE,uVar4);
-        Sound_LoadBank(uVar2,&PTR_sound_BasicCB_00707c38,&g_BootSoundBank);
-        sVar1 = g_LoadingStage + 1;
-      }
-    }
-    else if (g_LoadingStage == 5) {
-      iVar3 = STUB_00505d20();
-      sVar1 = g_LoadingStage;
-      if (iVar3 == 0) {
-        STUB_00505f48();
-        sVar1 = g_LoadingStage + 1;
-      }
-    }
-    else if (g_LoadingStage == 4) {
-      iVar3 = STUB_00505d20();
-      sVar1 = g_LoadingStage;
-      if (iVar3 == 0) {
-        snd_UnloadBank(g_BootSoundBank,1);
-        g_BootSoundBank = 0;
-        sVar1 = g_LoadingStage + 1;
-      }
-    }
-    else if (g_LoadingStage == 3) {
-      if (DAT_00964562 == 0) {
-        FUN_0060c0d0();
-        sVar1 = 6;
-        if (g_BootSoundBank != 0) {
-          sVar1 = g_LoadingStage + 1;
+
+    switch (g_LoadingStage) {
+    case LOAD_STAGE_DONE:
+        if (STUB_00505d20() == 0 && g_BootSoundBank != (u32)-1) {
+            STUB_00505f48();
+            return 1;
         }
-      }
+        break;
+
+    case LOAD_STAGE_SOUND_BANK:
+        if (STUB_00505d20() == 0) {
+            g_BootSoundBank = -1;
+            sprintf(bankPath, "rc1/ps3data/level%d/sound.bnk", Level);
+            FUN_004fe5c8(TEX_BASE, 0x10);
+            void *bank = FUN_004fe5ec((IMSeqMem *)TEX_BASE);
+            int size = LoadAssetFromFile(bankPath, bank, -1);
+            FUN_004fe6ec(TEX_BASE, size);
+            Sound_LoadBank((u8 *)bank, (u8 *)sound_BasicCB, &g_BootSoundBank);
+            stage = g_LoadingStage + 1;
+        }
+        break;
+
+    case LOAD_STAGE_FLUSH:
+        if (STUB_00505d20() == 0) {
+            STUB_00505f48();
+            stage = g_LoadingStage + 1;
+        }
+        break;
+
+    case LOAD_STAGE_UNLOAD:
+        if (STUB_00505d20() == 0) {
+            snd_UnloadBank((int *)g_BootSoundBank, 1);
+            g_BootSoundBank = 0;
+            stage = g_LoadingStage + 1;
+        }
+        break;
+
+    case LOAD_STAGE_SOUND_WAIT:
+        if (DAT_00964562 == 0) {
+            FUN_0060c0d0();
+            stage = g_BootSoundBank != 0 ? g_LoadingStage + 1 : LOAD_STAGE_SOUND_BANK;
+        }
+        break;
+
+    case LOAD_STAGE_GAMEPLAY:
+        if (Cutscene == 0) {
+            FUN_00503404(g_IopGameplay, "gameplay_ntsc");
+        }
+        else {
+            FUN_00503404(g_IopGameplay, "gameplay_pal");
+        }
+        stage = g_LoadingStage + 1;
+        break;
+
+    case LOAD_STAGE_GLOBALS:
+        if (g_LevelLoadPending == 2) {
+            g_LevelLoadPending = 0;
+        }
+        idol::m_LoadGameFileS(g_IopSpaceships, "space_ships");
+        LoadAssetFromFile("rc1/ps3data/japan_font.ps3", &g_JapanFontTex, 0x24);
+        LoadAssetFromFile("rc1/ps3data/japan_font.vram", (void *)g_FontVram, 0x80000);
+        g_JapanFontTex += (u32)g_FontVram - *(u32 *)((u8 *)g_pIdolDraw + 0x4ac);
+        stage = g_LoadingStage + 1;
+        break;
+
+    case LOAD_STAGE_ENGINE:
+        if (g_LevelLoadPending == 0) {
+            /* where the files would go in IOP memory, down from its top */
+            int gameplay = Cutscene == 0 ? WadSectors(WAD_GAMEPLAY_NTSC) : WadSectors(WAD_GAMEPLAY_PAL);
+
+            g_IopGameplay = IOP_TOP - RoundUp4K(gameplay);
+            g_IopSpaceships = g_IopGameplay - RoundUp4K(WadSectors(WAD_SPACESHIPS + variant));
+            DAT_00964564 = (u32 *)(g_IopSpaceships - RoundUp4K(WadSectors(WAD_ENTRY_166)));
+
+            sprintf(enginePath, "rc1/ps3data/level%d/engine.ps3", Level);
+            sprintf(vramPath, "rc1/ps3data/level%d/vram.ps3", Level);
+            g_LevelLoadPending = 1;
+            LoadAssetAsync(&TEX_BASE, enginePath, vramPath, (undefined4)&PTR_AdvanceLoadingStage_00705ad0);
+        }
+        break;
     }
-    else if (g_LoadingStage == 2) {
-      if (Cutscene == 0) {
-        FUN_00503404(DAT_00964568,"gameplay_ntsc");
-      }
-      else {
-        FUN_00503404(DAT_00964568,"gameplay_pal");
-      }
-      sVar1 = g_LoadingStage + 1;
-    }
-    else if (g_LoadingStage == 1) {
-      if (DAT_00a204b0 == 2) {
-        DAT_00a204b0 = 0;
-      }
-      idol::m_LoadGameFileS(DAT_0096456c,"space_ships");
-      LoadAssetFromFile("rc1/ps3data/japan_font.ps3",&g_JapanFontTex,0x24);
-      LoadAssetFromFile("rc1/ps3data/japan_font.vram",g_FontVram,0x80000);
-      g_JapanFontTex = g_JapanFontTex + (g_FontVram - *(int *)(g_pIdolDraw + 0x4ac));
-      sVar1 = g_LoadingStage + 1;
-    }
-    else if ((g_LoadingStage == 0) && (DAT_00a204b0 == 0)) {
-      iVar3 = DAT_010ea644 * 0x800 + 0xfff;
-      DAT_00964568 = 0x10000000 -
-                     (iVar3 + ((uint)(ZERO_MASK(Cutscene)) &
-                              (DAT_010ea63c * 0x800 + 0xfff) - iVar3) & 0xfffff000);
-      DAT_0096456c = DAT_00964568 -
-                     (*(int *)(&DAT_010ea10c + (iVar5 + 1) * 8) * 0x800 + 0xfffU & 0xfffff000);
-      DAT_00964564 = DAT_0096456c - (DAT_010ea634 * 0x800 + 0xfffU & 0xfffff000);
-      snprintf(acStack_120,"rc1/ps3data/level%d/engine.ps3",Level);
-      snprintf(acStack_a0,"rc1/ps3data/level%d/vram.ps3",Level);
-      DAT_00a204b0 = 1;
-      LoadAssetAsync(&TEX_BASE,acStack_120,acStack_a0,&PTR_AdvanceLoadingStage_00705ad0);
-      sVar1 = g_LoadingStage;
-    }
-  }
-  else {
-    DAT_009636c0 = DAT_009636c0 + 1;
-  }
-  g_LoadingStage = sVar1;
-  return 0;
+
+    g_LoadingStage = stage;
+    return 0;
 }
 
+/* Gives a gadget's sound ids to its class, or (class absent) stores them for LoadGadgetModel. */
+static inline void SetClassSounds(int mClass, int *ids, int count)
+{
+    MobyClass *pClass = MobyClasses[mClass];
+
+    if (pClass == NULL) {
+        int gadget;
+
+        for (gadget = 0; gadget < maximumNumWeapons; gadget++) {
+            if (g_GadgetOClasses[gadget] == (short)(&mClass_to_oClass)[mClass]) {
+                break;
+            }
+        }
+        if (gadget < maximumNumWeapons) {
+            FastMemSet(g_GadgetSoundIds[gadget], -1, sizeof(g_GadgetSoundIds[gadget]));
+            for (int i = 0; i < count && i < MAX_GADGET_SOUNDS; i++) {
+                g_GadgetSoundIds[gadget][i] = (short)ids[i];
+            }
+        }
+        return;
+    }
+
+    if (count != pClass->sound_cnt) {
+        printf("internal moby sound mismatch on moby %d\n", (&mClass_to_oClass)[mClass]);
+    }
+    for (int i = 0; i < MobyClasses[mClass]->sound_cnt; i++) {
+        SoundDef *def = (SoundDef *)MobyClasses[mClass]->SoundDefs + i;
+
+        def->bank_index = g_BootSoundBank;
+        def->index = (short)ids[i];
+    }
+}
+
+/* Points a class's first GIF list at one texture header. */
+static inline void SetGifTexture(MobyClass *pClass, int header)
+{
+    MobyPacketHeader *packets = (MobyPacketHeader *)pClass->packets;
+    MobyGifRef *ref = packets->gifs0;
+
+    for (u32 i = 0; i < packets->cnt0; i++, ref++) {
+        ref->tex = header;
+        if (ref->wrap == 0) {
+            u32 format = *(u32 *)(header + 8);
+
+            ref->wrap = (u8)(((format >> 6) & 0xc) | (format & 3));
+        }
+    }
+}
 
 // 0x00df408 (0xc30 bytes)
-// strings: 006524d4: 'internal level sound mismatch\n' | 006524f4: 'internal moby sound mismatch on moby %d\n' | 00652524: 'rc1/ps3data/global/spaceship%d.ps3' | 0065254c: 'rc1/ps3data/global/spaceship%d.vram'
-
-int LoadAllMobys(int param_1,int param_2)
-
+// Sets the level up from its engine file (on a full load), loads the ship models, then the
+// gameplay file; then either clears or restores the checkpoint.
+int LoadAllMobys(int reload, int restoreCheckpoint)
 {
-  bool bVar1;
-  short sVar2;
-  short sVar3;
-  int iVar4;
-  uint uVar5;
-  int iVar6;
-  int *piVar8;
-  int iVar9;
-  undefined8 uVar7;
-  undefined4 uVar10;
-  int iVar11;
-  undefined4 *puVar12;
-  undefined2 *puVar13;
-  undefined4 *puVar14;
-  int *piVar15;
-  int *piVar16;
-  int *piVar17;
-  byte bVar18;
-  int iVar19;
-  undefined4 *puVar20;
-  ulonglong uVar21;
-  MOBY_OCLASSES MVar23;
-  uint uVar22;
-  uint uVar24;
-  MobyClass *pMVar25;
-  short *psVar26;
-  undefined2 *puVar27;
-  int iVar28;
-  short *psVar29;
-  longlong lVar30;
-  ulonglong uVar31;
-  longlong lVar32;
-  int iVar33;
-  char acStack_130 [64];
-  char acStack_f0 [64];
-  undefined8 local_b0;
-  undefined8 local_a8;
-  ulonglong local_a0;
-  
-  piVar17 = g_EngineData;
-  uVar5 = g_GameplayBuffer;
-  uVar21 = (ulonglong)g_GameplayBuffer;
-  local_b0 = param_1;
-  local_a8 = param_2;
-  if ((int)param_1 != 0) {
-    FastMemCopy32(&g_CheckpointLevelFlags,g_LevelFlags + Level,0x10);
-    DAT_00a1bfd8 = piVar17[0x1d] + (int)piVar17;
-    iVar11 = (int)piVar17 + piVar17[1];
-    IconTableEntry = (IconTableEntries *)((int)piVar17 + *(int *)(DAT_00a1bfd8 + 4));
-    DAT_00a4dae0 = g_BootSoundBank;
-    TexturePointerArray = (int)piVar17 + *(int *)(DAT_00a1bfd8 + 8);
-    TfragsCnt = (uint)*(ushort *)((int)DAT_00a15f74 + 6);
-    OcclGrid = (void *)(iVar11 + ((uint)(ZERO_MASK(piVar17[1])) & -iVar11));
-    piVar15 = (int *)((int)piVar17 + piVar17[5]);
-    iVar11 = *piVar17;
-    Tfrags = (Tfrag *)*DAT_00a15f74;
-    if (*piVar15 != 0) {
-      g_CollOutput.grid = (void *)((int)piVar15 + *piVar15);
-    }
-    if (piVar15[1] != 0) {
-      g_HeroCollision = (HeroCollHeader *)((int)piVar15 + piVar15[1]);
-      iVar28 = 0;
-      if (0 < g_HeroCollision->cellCount) {
-        iVar33 = 0;
-        do {
-          iVar28 = iVar28 + 1;
-          *(int *)((int)&g_HeroCollision->cells[0].data + iVar33) =
-               (int)g_HeroCollision->pad +
-               *(int *)((int)&g_HeroCollision->cells[0].data + iVar33) + -4;
-          iVar33 = iVar33 + 0x10;
-        } while (iVar28 < g_HeroCollision->cellCount);
-      }
-    }
-    iVar28 = 0;
-    uVar24 = 0;
-    piVar15 = (int *)((int)piVar17 + iVar11) + 1;
-    iVar11 = *(int *)((int)piVar17 + iVar11);
-    if (0 < iVar11) {
-      do {
-        iVar19 = oClass_to_mClass_lookup;
-        iVar33 = *piVar15;
-        iVar9 = piVar15[1] + (int)piVar17;
-        pMVar25 = (MobyClass *)(iVar9 + ((uint)(ZERO_MASK(piVar15[1])) & -iVar9));
-        iVar9 = oClass_to_mClass_lookup * 4;
-        (&MobyClassLookup)[iVar33] = (char)oClass_to_mClass_lookup;
-        MVar23 = (MOBY_OCLASSES)iVar33;
-        (&mClass_to_oClass)[iVar19] = MVar23;
-        MobyClasses[iVar19] = pMVar25;
-        if (pMVar25 == (MobyClass *)0x0) {
-          GetMobyFunction(MVar23);
-          oClass_to_mClass_lookup = oClass_to_mClass_lookup + 1;
+    char shipPath[64];
+    char vramPath[64];
+    int *engine = (int *)g_EngineData;
+    u8 *buffer = (u8 *)g_GameplayBuffer;
+    u8 *base = (u8 *)engine;
+
+    if (reload != 0) {
+        FastMemCopy32(&g_CheckpointLevelFlags, g_LevelFlags + Level, 0x10);
+
+        DAT_00a1bfd8 = engine[0x1d] + (int)engine;
+        IconTableEntry = (IconTableEntries *)(base + *(int *)(DAT_00a1bfd8 + 4));
+        g_LevelSoundBank = g_BootSoundBank;
+        TexturePointerArray = (int)engine + *(int *)(DAT_00a1bfd8 + 8);
+        TfragsCnt = *(u16 *)(DAT_00a15f74 + 6);
+        OcclGrid = engine[1] != 0 ? base + engine[1] : NULL;
+        Tfrags = (Tfrag *)*(int *)DAT_00a15f74;
+        ParseColl((char *)(base + engine[5]));
+
+        /* the moby classes */
+        int *classTable = (int *)(base + engine[0]);
+        EngineMobyClass *entry = (EngineMobyClass *)(classTable + 1);
+        for (int i = 0; i < classTable[0]; i++, entry++) {
+            MobyClass *pClass = entry->offset != 0 ? (MobyClass *)(base + entry->offset) : NULL;
+
+            LoadMobyPClasses(pClass, NULL, (char *)((int *)entry + 4), entry->oClass);
+        }
+
+        /* Ratchet's sequences are separate */
+        int *seqOffsets = (int *)(base + engine[6]);
+        for (int i = 0; i < MobyClasses[0]->seq_cnt; i++) {
+            if (seqOffsets[i] != 0) {
+                MobyClasses[0]->seqs[i] = (MobySeq *)(base + seqOffsets[i]);
+                ParseMobySeq(MobyClasses[0], i);
+            }
+        }
+
+        /* the gadgets */
+        g_gadgetIdx = -1;
+        g_GadgetBufferSlot = 0;
+        maximumNumWeapons = engine[0x14];
+        EngineGadget *gadget = (EngineGadget *)(base + engine[0x13]);
+        for (int i = 0; i < maximumNumWeapons; i++, gadget++) {
+            g_GadgetOClasses[i] = gadget->oClass;
+            g_GadgetModelSizes[i] = gadget->size;
+            g_GadgetModels[i] = (int)engine + gadget->model;
+        }
+
+        if (engine[0x10] == 0) {
+            g_byteGridStride = 0;
+            g_byteGridData = NULL;
+            g_byteGridRows = 0;
+            g_byteGridMin = 0;
+            g_byteGridMax = g_byteGridMin;
         }
         else {
-          *(undefined4 *)(&MobyMipDists + iVar9) = *(undefined4 *)&pMVar25->bangles;
-          GetMobyFunction(MVar23);
-          oClass_to_mClass_lookup = oClass_to_mClass_lookup + 1;
-          LoadMobyModel(pMVar25,(void *)0x0,(char *)(piVar15 + 4),iVar33);
+            LoadByteGrid((ByteGridHeader *)(base + engine[0x10]));
         }
-        iVar28 = iVar28 + 1;
-        piVar15 = piVar15 + 2;
-      } while (iVar28 < iVar11);
-    }
-    iVar11 = 0;
-    piVar15 = (int *)((int)piVar17 + piVar17[6]);
-    if (MobyClasses[0]->seq_cnt != '\0') {
-      iVar28 = 0;
-      do {
-        if (*piVar15 != 0) {
-          *(int *)(&MobyClasses[0]->type + iVar28) = *piVar15 + (int)piVar17;
-          iVar33 = *(int *)(&MobyClasses[0]->type + iVar28);
-          if (*(int *)(iVar33 + 0x14) != 0) {
-            *(int *)(iVar33 + 0x14) = iVar33 + *(int *)(iVar33 + 0x14);
-          }
-          iVar19 = 0;
-          iVar9 = iVar33;
-          if (*(char *)(iVar33 + 0x10) != '\0') {
-            do {
-              iVar19 = iVar19 + 1;
-              *(int *)(iVar9 + 0x1c) = *(int *)(iVar9 + 0x1c) + iVar33;
-              iVar9 = iVar9 + 4;
-            } while (iVar19 < (int)(uint)*(byte *)(iVar33 + 0x10));
-          }
+
+        OcclOct = engine[2] != 0 ? base + engine[2] : NULL;
+        Loaders_RelocSpaceWadPtrs((int *)(base + engine[0x1c]));
+
+        /* the sounds: the level's SoundDefs go to the gameplay buffer */
+        EngineSounds *sounds = (EngineSounds *)(base + engine[0x12]);
+        int *remap = (int *)((u8 *)sounds + sounds->remap);
+        int defsSize = sounds->defCnt * (int)sizeof(SoundDef);
+
+        g_pSoundDefs = (SoundDef *)buffer;
+        g_TotalSoundDefCnt = sounds->defCnt;
+        FastMemCopy32(buffer, (u8 *)sounds + sounds->defs, defsSize);
+        for (int i = 0; i < g_TotalSoundDefCnt; i++) {
+            SoundDef *def = g_pSoundDefs + i;
+
+            if (def->index < sounds->remapCnt) {
+                def->index = (short)remap[def->index];
+            }
+            else {
+                printf("internal level sound mismatch\n");
+                def->index = -1;
+            }
+            def->bank_index = g_BootSoundBank;
         }
-        iVar11 = iVar11 + 1;
-        piVar15 = piVar15 + 1;
-        iVar28 = iVar28 + 4;
-      } while (iVar11 < (int)(uint)MobyClasses[0]->seq_cnt);
+
+        for (int i = 0; i < oClass_to_mClass_lookup; i++) {
+            short *classSounds = sounds->classSounds[i];
+
+            SetClassSounds(i, (int *)((u8 *)sounds + classSounds[0]), classSounds[1]);
+        }
+        buffer = AlignUp64(buffer + defsSize);
+
+        /* the ship and cockpit: classes, then their two texture headers */
+        int shipOClass = OCLASSES_SPACESHIP[g_SpaceshipVariant];
+        int cockpitOClass = OCLASSES_COCKPIT[g_SpaceshipVariant];
+        sprintf(shipPath, "rc1/ps3data/global/spaceship%d.ps3", g_SpaceshipVariant + 1);
+        sprintf(vramPath, "rc1/ps3data/global/spaceship%d.vram", g_SpaceshipVariant + 1);
+        int shipSize = LoadAssetFromFile(shipPath, buffer, -1);
+        int *ship = (int *)buffer;
+        int texOffset = ship[2];
+
+        if ((&MobyClassLookup)[shipOClass] == 0xff) {
+            LoadMobyPClasses((MobyClass *)(buffer + ship[0]), NULL, NULL, shipOClass);
+        }
+        if ((&MobyClassLookup)[cockpitOClass] == 0xff) {
+            LoadMobyPClasses((MobyClass *)(buffer + ship[1]), NULL, NULL, cockpitOClass);
+        }
+
+        u8 *texHeaders = buffer + texOffset;
+        int texCnt = (shipSize - texOffset) / RSX_TEX_SIZE;
+        FUN_004fe5c8(DAT_00a15f50, 0x80);
+        u8 *vram = (u8 *)FUN_004fe5f4(DAT_00a15f50, 0x80);
+        int vramSize = LoadAssetFromFile(vramPath, vram, -1);
+        FUN_004fe6ec(DAT_00a15f50, vramSize);
+
+        int vramBase = *(int *)(DAT_00902e9c + 0x4ac);
+        for (int i = 0; i < texCnt; i++) {
+            *(int *)(texHeaders + i * RSX_TEX_SIZE) += (int)vram - vramBase;
+        }
+
+        SetGifTexture(MobyClasses[(&MobyClassLookup)[shipOClass]], (int)texHeaders);
+        SetGifTexture(MobyClasses[(&MobyClassLookup)[cockpitOClass]], (int)texHeaders + RSX_TEX_SIZE);
+
+        Gameplay = (u32)AlignUp64(buffer + shipSize);
     }
-    g_gadgetIdx = 0xffffffff;
-    DAT_00a4daec = 0;
-    iVar11 = piVar17[0x14];
-    puVar14 = (undefined4 *)((int)piVar17 + piVar17[0x13]);
-    maximumNumWeapons = iVar11;
-    if (0 < iVar11) {
-      puVar12 = &DAT_00a4d540;
-      piVar15 = &DAT_00a4d5a0;
-      puVar20 = &DAT_00a4d600;
-      do {
-        iVar11 = iVar11 + -1;
-        *puVar12 = *puVar14;
-        iVar28 = puVar14[1];
-        puVar12 = puVar12 + 1;
-        *puVar20 = puVar14[2];
-        puVar20 = puVar20 + 1;
-        puVar14 = puVar14 + 4;
-        *piVar15 = iVar28 + (int)piVar17;
-        piVar15 = piVar15 + 1;
-      } while (0 < iVar11);
-    }
-    if (piVar17[0x10] == 0) {
-      g_byteGridStride = 0;
-      g_byteGridData = (undefined4 *)0x0;
-      g_byteGridRows = 0;
-      g_byteGridMin = 0;
-      g_byteGridMax = g_byteGridMin;
+
+    LoadGameplayFile(reload);
+
+    if (restoreCheckpoint == 0) {
+        ClearCheckpointData();
+        for (int i = 0; i < 16; i++) {
+            ((u32 *)&DAT_00a0fcd4)[i] = 0;
+        }
     }
     else {
-      puVar14 = (undefined4 *)((int)piVar17 + piVar17[0x10]);
-      g_byteGridData = puVar14 + 4;
-      g_byteGridStride = *puVar14;
-      g_byteGridMin = puVar14[2];
-      g_byteGridRows = puVar14[1];
-      g_byteGridMax = puVar14[3];
+        RestoreCheckpoint();
     }
-    iVar11 = (int)piVar17 + piVar17[2];
-    piVar15 = (int *)((int)piVar17 + piVar17[0x1c]);
-    OcclOct = (void *)(iVar11 + ((uint)(ZERO_MASK(piVar17[2])) & -iVar11));
-    g_PartTexBaseIndex = piVar15[1];
-    iVar11 = *piVar15;
-    piVar16 = piVar15 + 4;
-    iVar28 = piVar15[2];
-    if (0 < iVar11) {
-      piVar8 = &g_PartTexFrames;
-      do {
-        iVar33 = *piVar16;
-        iVar11 = iVar11 + -1;
-        piVar16 = piVar16 + 1;
-        *piVar8 = (int)piVar15 + iVar33 + iVar28;
-        piVar8 = piVar8 + 1;
-      } while (0 < iVar11);
-    }
-    psVar26 = (short *)((int)piVar17 + piVar17[0x12]);
-    g_pSoundDefs = uVar5;
-    lVar30 = (longlong)(int)(((longlong)psVar26[1] & 0xffffffffU) << 5);
-    g_TotalSoundDefCnt = (int)psVar26[1];
-    FastMemCopy32(uVar21,(int)psVar26 + (int)*psVar26,lVar30);
-    sVar2 = psVar26[2];
-    iVar11 = 0;
-    if (0 < g_TotalSoundDefCnt) {
-      iVar28 = 0;
-      do {
-        sVar3 = *(short *)(g_pSoundDefs + iVar28 + 0x1a);
-        if (sVar3 < psVar26[3]) {
-          *(short *)(g_pSoundDefs + iVar28 + 0x1a) =
-               (short)*(undefined4 *)((int)psVar26 + (int)((longlong)sVar3 << 2) + (int)sVar2);
-        }
-        else {
-          printf("internal level sound mismatch\n");
-          *(undefined2 *)(g_pSoundDefs + iVar28 + 0x1a) = 0xffff;
-        }
-        iVar11 = iVar11 + 1;
-        iVar33 = g_pSoundDefs + iVar28;
-        iVar28 = iVar28 + 0x20;
-        bVar1 = iVar11 < g_TotalSoundDefCnt;
-        *(undefined4 *)(iVar33 + 0x1c) = g_BootSoundBank;
-      } while (bVar1);
-    }
-    psVar29 = psVar26 + 4;
-    iVar11 = 0;
-    if (0 < oClass_to_mClass_lookup) {
-      iVar28 = 0;
-      uVar31 = ZEXT48(MobyClasses);
-      puVar27 = &mClass_to_oClass;
-      iVar33 = 0;
-      do {
-        iVar9 = *(int *)uVar31;
-        if (iVar9 == 0) {
-          iVar9 = 0;
-          for (piVar17 = &DAT_00a4d540;
-              (iVar9 < maximumNumWeapons &&
-              (*piVar17 != (int)*(short *)((int)&mClass_to_oClass + iVar28))); piVar17 = piVar17 + 1
-              ) {
-            iVar9 = iVar9 + 1;
-          }
-          if (iVar9 < maximumNumWeapons) {
-            local_a0 = uVar31;
-            FastMemSet(&DAT_00a4d7e0 + iVar9 * 0x20,0xffffffffffffffff,0x20);
-            puVar13 = (undefined2 *)(&DAT_00a4d7e0 + iVar9 * 0x20);
-            puVar14 = (undefined4 *)((int)*psVar29 + (int)psVar26);
-            for (iVar9 = 0; uVar31 = local_a0, iVar9 < psVar29[1] && iVar9 < 0xf; iVar9 = iVar9 + 1)
-            {
-              uVar10 = *puVar14;
-              puVar14 = puVar14 + 1;
-              *puVar13 = (short)uVar10;
-              puVar13 = puVar13 + 1;
-            }
-          }
-        }
-        else {
-          if (psVar29[1] != (ushort)*(byte *)(iVar9 + 0xd)) {
-            printf("internal moby sound mismatch on moby %d\n",*puVar27);
-            iVar9 = *(int *)uVar31;
-          }
-          iVar19 = 0;
-          puVar14 = (undefined4 *)((int)*psVar29 + (int)psVar26);
-          if (*(char *)(iVar9 + 0xd) != '\0') {
-            iVar9 = 0;
-            do {
-              iVar19 = iVar19 + 1;
-              uVar10 = *puVar14;
-              puVar14 = puVar14 + 1;
-              iVar4 = *(int *)(*(int *)((int)MobyClasses + iVar33) + 0x28);
-              iVar6 = iVar4 + iVar9;
-              iVar4 = iVar4 + iVar9;
-              iVar9 = iVar9 + 0x20;
-              *(undefined4 *)(iVar6 + 0x1c) = g_BootSoundBank;
-              *(short *)(iVar4 + 0x1a) = (short)uVar10;
-            } while (iVar19 < (int)(uint)*(byte *)(*(int *)((int)MobyClasses + iVar33) + 0xd));
-          }
-        }
-        iVar11 = iVar11 + 1;
-        psVar29 = psVar29 + 2;
-        puVar27 = puVar27 + 1;
-        iVar28 = iVar28 + 2;
-        uVar31 = uVar31 + 4;
-        iVar33 = iVar33 + 4;
-      } while (iVar11 < oClass_to_mClass_lookup);
-    }
-    uVar21 = uVar21 + lVar30 + 0x3f & 0xffffffc0;
-    iVar11 = (int)((longlong)g_SpaceshipVariant << 2);
-    iVar33 = *(int *)((int)OCLASSES_SPACESHIP + iVar11);
-    iVar9 = *(int *)((int)OCLASSES_COCKPIT + iVar11);
-    snprintf(acStack_130,"rc1/ps3data/global/spaceship%d.ps3",(longlong)g_SpaceshipVariant + 1
-                  );
-    snprintf(acStack_f0,"rc1/ps3data/global/spaceship%d.vram",(longlong)g_SpaceshipVariant + 1
-                  );
-    lVar30 = LoadAssetFromFile(acStack_130,uVar21,0xffffffffffffffff);
-    iVar19 = oClass_to_mClass_lookup;
-    piVar17 = (int *)uVar21;
-    iVar11 = piVar17[2];
-    iVar28 = piVar17[1];
-    if ((&MobyClassLookup)[iVar33] == -1) {
-      pMVar25 = (MobyClass *)((int)piVar17 + *piVar17);
-      (&MobyClassLookup)[iVar33] = (char)oClass_to_mClass_lookup;
-      MVar23 = (MOBY_OCLASSES)iVar33;
-      (&mClass_to_oClass)[iVar19] = MVar23;
-      MobyClasses[iVar19] = pMVar25;
-      if (pMVar25 == (MobyClass *)0x0) {
-        GetMobyFunction(MVar23);
-        oClass_to_mClass_lookup = oClass_to_mClass_lookup + 1;
-      }
-      else {
-        *(undefined4 *)(&MobyMipDists + iVar19 * 4) = *(undefined4 *)&pMVar25->bangles;
-        GetMobyFunction(MVar23);
-        oClass_to_mClass_lookup = oClass_to_mClass_lookup + 1;
-        LoadMobyModel(pMVar25,(void *)0x0,(char *)0x0,iVar33);
-      }
-    }
-    iVar19 = oClass_to_mClass_lookup;
-    if ((&MobyClassLookup)[iVar9] == -1) {
-      pMVar25 = (MobyClass *)((int)piVar17 + iVar28);
-      iVar28 = oClass_to_mClass_lookup * 4;
-      (&MobyClassLookup)[iVar9] = (char)oClass_to_mClass_lookup;
-      MVar23 = (MOBY_OCLASSES)iVar9;
-      (&mClass_to_oClass)[iVar19] = MVar23;
-      MobyClasses[iVar19] = pMVar25;
-      if (pMVar25 == (MobyClass *)0x0) {
-        GetMobyFunction(MVar23);
-        oClass_to_mClass_lookup = oClass_to_mClass_lookup + 1;
-      }
-      else {
-        *(undefined4 *)(&MobyMipDists + iVar28) = *(undefined4 *)&pMVar25->bangles;
-        GetMobyFunction(MVar23);
-        oClass_to_mClass_lookup = oClass_to_mClass_lookup + 1;
-        LoadMobyModel(pMVar25,(void *)0x0,(char *)0x0,iVar9);
-      }
-    }
-    uVar21 = uVar21 + (longlong)iVar11;
-    uVar31 = uVar21 & 0xffffffff;
-    lVar32 = (lVar30 - iVar11) / 0x24;
-    FUN_004fe5c8(DAT_00a15f50,0x80);
-    uVar7 = FUN_004fe5f4(DAT_00a15f50,0x80);
-    uVar10 = LoadAssetFromFile(acStack_f0,uVar7,0xffffffffffffffff);
-    FUN_004fe6ec(DAT_00a15f50,uVar10);
-    iVar11 = *(int *)(DAT_00902e9c + 0x4ac);
-    if ((int)lVar32 != 0) {
-      do {
-        lVar32 = lVar32 + -1;
-        *(int *)uVar31 = *(int *)uVar31 + ((int)uVar7 - iVar11);
-        uVar31 = uVar31 + 0x24;
-      } while (0 < (int)lVar32);
-    }
-    uVar22 = 0;
-    piVar15 = *(int **)((int)MobyClasses[(byte)(&MobyClassLookup)[iVar33]]->packets + 8);
-                    /* WARNING: Load size is inaccurate */
-    uVar5 = *MobyClasses[(byte)(&MobyClassLookup)[iVar33]]->packets;
-    iVar11 = (int)uVar21;
-    if (uVar5 != 0) {
-      do {
-        *piVar15 = iVar11;
-        if (*(char *)(piVar15 + 3) == '\0') {
-          bVar18 = (byte)*(undefined4 *)(iVar11 + 8) & 3;
-          *(byte *)(piVar15 + 3) = bVar18;
-          *(byte *)(piVar15 + 3) = (byte)(*(uint *)(iVar11 + 8) >> 6) & 0xc | bVar18;
-        }
-        uVar22 = uVar22 + 1;
-        piVar15 = piVar15 + 4;
-      } while (uVar22 < uVar5);
-    }
-    piVar15 = *(int **)((int)MobyClasses[(byte)(&MobyClassLookup)[iVar9]]->packets + 8);
-                    /* WARNING: Load size is inaccurate */
-    uVar5 = *MobyClasses[(byte)(&MobyClassLookup)[iVar9]]->packets;
-    if (uVar5 != 0) {
-      do {
-        *piVar15 = iVar11 + 0x24;
-        if (*(char *)(piVar15 + 3) == '\0') {
-          bVar18 = (byte)*(undefined4 *)(iVar11 + 0x2c) & 3;
-          *(byte *)(piVar15 + 3) = bVar18;
-          *(byte *)(piVar15 + 3) = (byte)(*(uint *)(iVar11 + 0x2c) >> 6) & 0xc | bVar18;
-        }
-        uVar24 = uVar24 + 1;
-        piVar15 = piVar15 + 4;
-      } while (uVar24 < uVar5);
-    }
-    Gameplay = (int)piVar17 + (int)lVar30 + 0x3f & 0xffffffc0;
-  }
-  uVar7 = local_a8;
-  LoadGameplayFile(local_b0);
-  if ((int)uVar7 == 0) {
-    ClearCheckpointData();
-    puVar14 = &DAT_00a0fcd4;
-    lVar30 = 2;
-    do {
-      *puVar14 = 0;
-      puVar14[1] = 0;
-      puVar14[2] = 0;
-      puVar14[3] = 0;
-      puVar14[4] = 0;
-      puVar14[5] = 0;
-      puVar14[6] = 0;
-      puVar14[7] = 0;
-      puVar14 = puVar14 + 8;
-      lVar30 = lVar30 + -1;
-    } while (lVar30 != 0);
-  }
-  else {
-    RestoreCheckpoint();
-  }
-  DAT_00a15c14 = 0;
-  DAT_00a15c0c = 0;
-  DAT_00a15c10 = 0;
-  UpdateMobysInitial();
-  worldUpdateTime = worldUpdateTime + 1;
-  return 0;
-}
 
+    DAT_00a15c14 = 0;
+    DAT_00a15c0c = 0;
+    DAT_00a15c10 = 0;
+    UpdateMobysInitial();
+    worldUpdateTime++;
+    return 0;
+}
 
 // 0x00e0038 (0xd8 bytes)
-// strings: 00652577: '9host0:z:/i5/levels/level%d/npcs/scene_%d/scene.dat' | 006525b0: 'host0:z:/i5/levels/level%d/npcs/scene_%d/scenep.dat'
-
-
-int LoadNpcMobys(int level_id,int scene_id)
-
+// Debug: whether the scene's npc file is on the host.
+int LoadNpcMobys(int level_id, int scene_id)
 {
-  bool bVar1;
-  undefined8 uVar2;
-  char acStack_70 [88];
-  
-  STUB_00174cf4(1);
-  STUB_00503078(0);
-  if (Cutscene == 0) {
-    snprintf(acStack_70,"host0:z:/i5/levels/level%d/npcs/scene_%d/scene.dat",level_id,scene_id
-                  );
-  }
-  else {
-    snprintf(acStack_70,"host0:z:/i5/levels/level%d/npcs/scene_%d/scenep.dat",level_id,
-                   scene_id);
-  }
-  uVar2 = HostOpen(acStack_70,0);
-  bVar1 = -1 < (int)uVar2;
-  if (bVar1) {
-    HostClose(uVar2);
-  }
-  return (int)bVar1;
-}
+    char path[88];
 
+    STUB_00174cf4(1);
+    STUB_00503078(0);
+    if (Cutscene == 0) {
+        sprintf(path, "host0:z:/i5/levels/level%d/npcs/scene_%d/scene.dat", level_id, scene_id);
+    }
+    else {
+        sprintf(path, "host0:z:/i5/levels/level%d/npcs/scene_%d/scenep.dat", level_id, scene_id);
+    }
+
+    int file = HostOpen(path, 0);
+    if (file < 0) {
+        return 0;
+    }
+    HostClose(file);
+    return 1;
+}
 
 // 0x00e0110 (0x8 bytes)
 int LoadNpcSubtitles(void)
-
 {
-  return 1;
+    return 1;
 }
-
 
 // 0x00e0118 (0x10c bytes)
-// strings: 006525e4: 'rc1/ps3data/level%d/scene[%d]_pal/chunk%d.ps3' | 00652614: 'rc1/ps3data/level%d/scene[%d]/chunk%d.ps3'
-
-
+// Starts loading a scene chunk into the second half of the npc buffer.
 int PreLoadNpcChunk(int chunk_id)
-
 {
-  longlong lVar1;
-  int iVar2;
-  char acStack_50 [64];
-  
-  iVar2 = g_NpcBuffer + 0x80000;
-  g_SceneLoadBuffer = iVar2;
-  if (g_IsPal == 0) {
-    snprintf(acStack_50,"rc1/ps3data/level%d/scene[%d]/chunk%d.ps3",Level,g_SceneId,
-                   chunk_id);
-  }
-  else {
-    snprintf(acStack_50,"rc1/ps3data/level%d/scene[%d]_pal/chunk%d.ps3",Level,
-                   g_SceneId,chunk_id);
-  }
-  lVar1 = GetFileSize(acStack_50);
-  if (lVar1 != 0) {
-    if (g_NpcChunkLoadHandle != 0) {
-      FUN_005040f4();
-    }
-    g_NpcChunkLoadHandle = FUN_00503f8c(acStack_50,iVar2,0x80000);
-  }
-  return 1;
-}
+    char path[64];
+    u32 dest = g_NpcBuffer + NPC_BUFFER_SIZE;
 
-
-// 0x00e0230 (0x2f8 bytes)
-// strings: 00652640: '\nnpc error: moby class %d is not on the level\n' | 00652670: '\nnpc error: moby class %d is a null moby or a hand gadget\n'
-
-
-void ParseNpcChunk(void)
-
-{
-  u8 uVar1;
-  int iVar2;
-  MobyClass *pMVar3;
-  undefined4 *puVar4;
-  MobyInstance *pMVar5;
-  int iVar6;
-  undefined8 uVar7;
-  int *piVar8;
-  undefined4 *puVar9;
-  int *piVar10;
-  int iVar11;
-  int *piVar12;
-  
-  if (g_NpcChunkLoadHandle != 0) {
-    FUN_005040f4();
-    g_NpcChunkLoadHandle = 0;
-  }
-  puVar9 = &DAT_0095cd50;
-  FastMemCopy(g_NpcBuffer,g_SceneLoadBuffer,0x80000);
-  puVar4 = g_NpcBuffer;
-  piVar12 = g_NpcBuffer + 5;
-  g_cutsceneCameraFrame = 0;
-  iVar11 = (int)g_NpcBuffer + g_NpcBuffer[1];
-  g_SpaceSceneNumFrames.piece<0,2>() = (undefined2)*g_NpcBuffer;
-  g_SpaceSceneCameraFrames = (void *)((int)g_NpcBuffer + g_NpcBuffer[4]);
-  g_SpaceSceneMobyCnt.piece<2,2>() = (undefined2)g_NpcBuffer[2];
-  g_SpaceSceneMobyCnt.piece<0,2>() = (short)g_NpcBuffer[3];
-  g_SubtitleTable =
-       iVar11 + ((uint)((longlong)(int)g_NpcBuffer[1] + -0x400 >> 0x3f) & -iVar11);
-  if (0 < g_SpaceSceneMobyCnt.piece<0,2>()) {
-    iVar11 = 0;
-    do {
-      iVar6 = *piVar12;
-      piVar12 = piVar12 + 1;
-      piVar10 = (int *)(iVar6 + (int)puVar4);
-      iVar6 = *piVar10;
-      iVar2 = piVar10[3];
-      if ((g_gameMode == GAME_MODE_SPACE) && (iVar11 == 0 && iVar6 == 0x215)) {
-        iVar6 = *(int *)((int)OCLASSES_SPACESHIP + (int)((longlong)g_SpaceshipVariant << 2));
-      }
-      if ((&MobyClassLookup)[iVar6] == -1) {
-        printf("\nnpc error: moby class %d is not on the level\n",iVar6);
-      }
-      else {
-        pMVar5 = (MobyInstance *)puVar9[0x5e];
-        if (pMVar5 == (MobyInstance *)0x0) {
-          pMVar5 = CreateMoby((MOBY_OCLASSES)iVar6);
-          pMVar3 = pMVar5->pClass;
-          if (pMVar3 == (MobyClass *)0x0) {
-            printf("\nnpc error: moby class %d is a null moby or a hand gadget\n",iVar6);
-            goto LAB_000e04c0;
-          }
-          uVar1 = pMVar3->seq_cnt;
-          pMVar3->seq_cnt = uVar1 + '\x01';
-          pMVar5->updateId = uVar1;
-          pMVar5->animationId = uVar1;
-          pMVar5->drawDistance = 0x1ff;
-          pMVar5->unk72 = -1;
-          pMVar5->collision = (ushort *)0x0;
-          pMVar5->modeBits = pMVar5->modeBits | (NO_POST_UPDATE|NO_UPDATE);
-          uVar7 = 0x38383800000000;
-          if (g_heroMobyPtr != (MobyInstance *)0x0) {
-            uVar7.piece<0,4>() = g_heroMobyPtr->color;
-            uVar7.piece<4,4>() = g_heroMobyPtr->light;
-          }
-          pMVar5->color = (int)((ulonglong)uVar7 >> 0x20);
-          pMVar5->light = (int)uVar7;
-          puVar9[0x5e] = pMVar5;
-        }
-        pMVar5->pVar = (void *)(iVar2 + (int)puVar4);
-        *(int **)(&pMVar5->pClass->type + (uint)pMVar5->updateId * 4) = piVar10 + 4;
-        if (*(char *)(piVar10 + 8) != '\0') {
-          iVar6 = 0;
-          piVar8 = piVar10;
-          do {
-            iVar6 = iVar6 + 1;
-            piVar8[0xb] = piVar8[0xb] + (int)(piVar10 + 4);
-            piVar8 = piVar8 + 1;
-          } while (iVar6 < (int)(uint)*(byte *)(piVar10 + 8));
-        }
-      }
-LAB_000e04c0:
-      iVar11 = iVar11 + 1;
-      puVar9 = puVar9 + 1;
-    } while (iVar11 < g_SpaceSceneMobyCnt.piece<0,2>());
-  }
-  return;
-}
-
-
-// 0x00e0528 (0x12c bytes)
-// strings: 006526ac: 'rc1/ps3data/global/weapon%d_pal.ps3' | 006526d4: 'rc1/ps3data/global/weapon%d.ps3' | 006526f4: 'weapon_scenes_pal'
-
-
-void LoadWeaponCutscene(int weapon)
-
-{
-  int iVar1;
-  int *piVar2;
-  int iVar3;
-  int *piVar4;
-  char acStack_50 [64];
-  
-  FadeToBlack(4);
-  if (Cutscene == 0) {
+    g_SceneLoadBuffer = dest;
     if (g_IsPal == 0) {
-      snprintf(acStack_50,"rc1/ps3data/global/weapon%d.ps3",weapon);
+        sprintf(path, "rc1/ps3data/level%d/scene[%d]/chunk%d.ps3", Level, g_SceneId, chunk_id);
     }
     else {
-      snprintf(acStack_50,"rc1/ps3data/global/weapon%d_pal.ps3",weapon);
+        sprintf(path, "rc1/ps3data/level%d/scene[%d]_pal/chunk%d.ps3", Level, g_SceneId, chunk_id);
     }
-    LoadAssetFromFile(acStack_50,g_SceneLoadBuffer,0xffffffffffffffff);
-  }
-  else {
-    idol::PRINT_m_LoadGameFile((uint)g_SceneLoadBuffer,"weapon_scenes_pal");
-  }
-  music_Sync(0);
-  music_Sync(1);
-  iVar3 = 0;
-  piVar2 = &g_SceneChunkPtrs;
-  piVar4 = g_SceneLoadBuffer;
-  do {
-    if (piVar4[1] == 0) {
-      return;
+
+    if (GetFileSize(path) != 0) {
+        if (g_NpcChunkLoadHandle != 0) {
+            FUN_005040f4(g_NpcChunkLoadHandle);
+        }
+        g_NpcChunkLoadHandle = FUN_00503f8c(path, dest, NPC_BUFFER_SIZE);
     }
-    iVar3 = iVar3 + 1;
-    iVar1 = *piVar4;
-    piVar4 = piVar4 + 2;
-    *piVar2 = (int)g_SceneLoadBuffer + iVar1;
-    piVar2 = piVar2 + 1;
-  } while (iVar3 < 0x46);
-  return;
+    return 1;
 }
 
+// 0x00e0230 (0x2f8 bytes)
+// Takes the loaded chunk: each actor gets a moby (made on the first chunk) playing the chunk's
+// sequence for it, held in an extra sequence slot of its class.
+void ParseNpcChunk(void)
+{
+    if (g_NpcChunkLoadHandle != 0) {
+        FUN_005040f4(g_NpcChunkLoadHandle);
+        g_NpcChunkLoadHandle = 0;
+    }
+
+    FastMemCopy((void *)g_NpcBuffer, (void *)g_SceneLoadBuffer, NPC_BUFFER_SIZE);
+    NpcChunk *chunk = (NpcChunk *)g_NpcBuffer;
+    u8 *base = (u8 *)chunk;
+
+    g_cutsceneCameraFrame = 0;
+    *(short *)&g_SpaceSceneNumFrames = (short)chunk->numFrames;
+    g_SpaceSceneCameraFrames = base + chunk->cameraFrames;
+    ((short *)&g_SpaceSceneMobyCnt)[1] = (short)chunk->unk08;
+    g_SpaceSceneMobyCnt = (short)chunk->mobyCnt;
+    g_SubtitleTable = chunk->subtitles >= SUBTITLE_MIN_OFFSET ? (u32)(base + chunk->subtitles) : 0;
+
+    for (int i = 0; i < g_SpaceSceneMobyCnt; i++) {
+        NpcActor *actor = (NpcActor *)(base + chunk->actors[i]);
+        int oClass = actor->oClass;
+
+        if (g_gameMode == GAME_MODE_SPACE && i == 0 && oClass == OCLASS_NPC_SHIP) {
+            oClass = OCLASSES_SPACESHIP[g_SpaceshipVariant];
+        }
+
+        if ((&MobyClassLookup)[oClass] == 0xff) {
+            printf("\nnpc error: moby class %d is not on the level\n", oClass);
+            continue;
+        }
+
+        MobyInstance *moby = g_SpaceSceneMobys[i];
+        if (moby == NULL) {
+            moby = CreateMoby(oClass);
+            if (moby->pClass == NULL) {
+                printf("\nnpc error: moby class %d is a null moby or a hand gadget\n", oClass);
+                continue;
+            }
+
+            u8 seq = moby->pClass->seq_cnt;
+            moby->pClass->seq_cnt = seq + 1;
+            moby->updateId = seq;
+            moby->animationId = seq;
+            moby->drawDistance = 0x1ff;
+            moby->unk72 = -1;
+            moby->collision = NULL;
+            moby->modeBits |= NO_POST_UPDATE | NO_UPDATE;
+            if (g_heroMobyPtr != NULL) {
+                moby->color = g_heroMobyPtr->color;
+                moby->light = g_heroMobyPtr->light;
+            }
+            else {
+                moby->color = NPC_COLOR;
+                moby->light = 0;
+            }
+            g_SpaceSceneMobys[i] = moby;
+        }
+
+        moby->pVar = base + actor->pVar;
+        moby->pClass->seqs[moby->updateId] = &actor->seq;
+        for (int j = 0; j < actor->seq.frameCnt; j++) {
+            actor->seq.frames[j] = (MobyFrame *)((u8 *)&actor->seq + (int)actor->seq.frames[j]);
+        }
+    }
+}
+
+/* A scene file: {offset, size} per chunk, until a size of 0. */
+static inline void SetSceneChunks(void)
+{
+    int *table = (int *)g_SceneLoadBuffer;
+
+    for (int i = 0; i < SCENE_CHUNK_MAX; i++, table += 2) {
+        if (table[1] == 0) {
+            return;
+        }
+        (&g_SceneChunkPtrs)[i] = g_SceneLoadBuffer + table[0];
+    }
+}
+
+// 0x00e0528 (0x12c bytes)
+void LoadWeaponCutscene(int weapon)
+{
+    char path[64];
+
+    FadeToBlack(4);
+    if (Cutscene == 0) {
+        if (g_IsPal == 0) {
+            sprintf(path, "rc1/ps3data/global/weapon%d.ps3", weapon);
+        }
+        else {
+            sprintf(path, "rc1/ps3data/global/weapon%d_pal.ps3", weapon);
+        }
+        LoadAssetFromFile(path, (void *)g_SceneLoadBuffer, -1);
+    }
+    else {
+        idol::PRINT_m_LoadGameFile(g_SceneLoadBuffer, "weapon_scenes_pal");
+    }
+
+    music_Sync(0);
+    music_Sync(1);
+    SetSceneChunks();
+}
 
 // 0x00e0654 (0x5c bytes)
 void ParseWeaponSceneChunk(int chunk_id)
-
 {
-  g_SceneLoadBuffer = *(undefined4 *)((int)&g_SceneChunkPtrs + (int)((longlong)chunk_id << 2));
-  ParseNpcChunk();
-  g_SceneLoadBuffer = g_NpcBuffer + 0x40000;
-  return;
+    g_SceneLoadBuffer = (&g_SceneChunkPtrs)[chunk_id];
+    ParseNpcChunk();
+    g_SceneLoadBuffer = g_NpcBuffer + NPC_BUFFER_SIZE / 2;
 }
-
 
 // 0x00e06b0 (0x148 bytes)
-// strings: 00652708: 'rc1/ps3data/global/space%d_pal.ps3' | 00652730: 'rc1/ps3data/global/space%d.ps3' | 00652750: 'space_scenes_pal'
-
-
-void LoadSpaceScene(int scene,int fade)
-
+void LoadSpaceScene(int scene, int fade)
 {
-  int iVar1;
-  int *piVar2;
-  int iVar3;
-  int *piVar4;
-  char acStack_60 [72];
-  
-  if (fade != 0) {
-    FadeToBlack(fade);
-  }
-  if (Cutscene == 0) {
-    if (g_IsPal == 0) {
-      snprintf(acStack_60,"rc1/ps3data/global/space%d.ps3",scene);
+    char path[72];
+
+    if (fade != 0) {
+        FadeToBlack(fade);
+    }
+
+    if (Cutscene == 0) {
+        if (g_IsPal == 0) {
+            sprintf(path, "rc1/ps3data/global/space%d.ps3", scene);
+        }
+        else {
+            sprintf(path, "rc1/ps3data/global/space%d_pal.ps3", scene);
+        }
+        LoadAssetFromFile(path, (void *)g_SceneLoadBuffer, -1);
     }
     else {
-      snprintf(acStack_60,"rc1/ps3data/global/space%d_pal.ps3",scene);
+        idol::PRINT_m_LoadGameFile(g_SceneLoadBuffer, "space_scenes_pal");
     }
-    LoadAssetFromFile(acStack_60,g_SceneLoadBuffer,0xffffffffffffffff);
-  }
-  else {
-    idol::PRINT_m_LoadGameFile((uint)g_SceneLoadBuffer,"space_scenes_pal");
-  }
-  if (fade != 0) {
-    music_Sync(0);
-  }
-  music_Sync(1);
-  iVar3 = 0;
-  piVar2 = &g_SceneChunkPtrs;
-  piVar4 = g_SceneLoadBuffer;
-  do {
-    if (piVar4[1] == 0) {
-      return;
-    }
-    iVar1 = *piVar4;
-    iVar3 = iVar3 + 1;
-    piVar4 = piVar4 + 2;
-    *piVar2 = (int)g_SceneLoadBuffer + iVar1;
-    piVar2 = piVar2 + 1;
-  } while (iVar3 < 0x46);
-  return;
-}
 
+    if (fade != 0) {
+        music_Sync(0);
+    }
+    music_Sync(1);
+    SetSceneChunks();
+}
 
 // 0x00e07f8 (0x5c bytes)
 void ParseSpaceSceneChunk(int chunk_id)
-
 {
-  g_SceneLoadBuffer = *(undefined4 *)((int)&g_SceneChunkPtrs + (int)((longlong)chunk_id << 2));
-  ParseNpcChunk();
-  g_SceneLoadBuffer = g_NpcBuffer + 0x40000;
-  return;
+    g_SceneLoadBuffer = (&g_SceneChunkPtrs)[chunk_id];
+    ParseNpcChunk();
+    g_SceneLoadBuffer = g_NpcBuffer + NPC_BUFFER_SIZE / 2;
 }
-
 
 // 0x00e0854 (0x1d8 bytes)
-void LoadGadgetModel(int oClass,int t_target)
-
+// Copies a gadget's class into one of the two gadget class buffers (`slot` 1 / 0, -1 the one
+// not used last) and gives it its sounds.
+void LoadGadgetModel(int oClass, int slot)
 {
-  byte bVar1;
-  void *pvVar2;
-  ulonglong uVar3;
-  MobyClass *pClass;
-  undefined4 uVar4;
-  int *piVar5;
-  undefined *puVar6;
-  int iVar7;
-  int iVar8;
-  
-  if ((g_gadgetIdx < 0) || ((&DAT_00a4d540)[g_gadgetIdx] != oClass)) {
-    g_gadgetIdx = 0;
-    if (0 < maximumNumWeapons) {
-      piVar5 = &DAT_00a4d540;
-      do {
-        if (*piVar5 == oClass) break;
-        g_gadgetIdx = g_gadgetIdx + 1;
-        piVar5 = piVar5 + 1;
-      } while (g_gadgetIdx < maximumNumWeapons);
+    if (g_gadgetIdx >= 0 && g_GadgetOClasses[g_gadgetIdx] == oClass) {
+        return;
     }
-    if (t_target == -1) {
-      t_target = (DAT_00a4daec == 0);
+
+    for (g_gadgetIdx = 0; g_gadgetIdx < maximumNumWeapons; g_gadgetIdx++) {
+        if (g_GadgetOClasses[g_gadgetIdx] == oClass) {
+            break;
+        }
     }
-    uVar3 = (ulonglong)(LZCOUNT(t_target) << 0x20) >> 0x25;
-    DAT_00a4daec = (t_target == 0);
-    pClass = (MobyClass *)(g_MobyClassBuffer + ((int)(uVar3 << 0x12) - (int)(uVar3 << 0x10)));
-    bVar1 = (&MobyClassLookup)[oClass];
-    memcpy(pClass,(void *)(&DAT_00a4d5a0)[g_gadgetIdx],(&DAT_00a4d600)[g_gadgetIdx]);
-    MobyClasses[bVar1] = pClass;
-    LoadMobyModel(pClass,(void *)0x0,(char *)0x0,oClass);
-    iVar7 = 0;
-    iVar8 = 0;
-    puVar6 = &DAT_00a4d7e0;
-    do {
-      uVar4 = DAT_00a4dae0;
-      if (-1 < *(short *)(puVar6 + g_gadgetIdx * 0x20)) {
-        pvVar2 = MobyClasses[bVar1]->SoundDefs;
-        *(short *)((int)pvVar2 + iVar7 + 0x1a) = *(short *)(puVar6 + g_gadgetIdx * 0x20);
-        *(undefined4 *)((int)pvVar2 + iVar7 + 0x1c) = uVar4;
-      }
-      iVar8 = iVar8 + 1;
-      puVar6 = puVar6 + 2;
-      iVar7 = iVar7 + 0x20;
-    } while (iVar8 < 0x10);
-  }
-  return;
+
+    if (slot == -1) {
+        slot = g_GadgetBufferSlot == 0;
+    }
+    int buffer = slot == 0 ? 1 : 0;
+    g_GadgetBufferSlot = slot == 0;
+
+    MobyClass *pClass = (MobyClass *)(g_MobyClassBuffer + buffer * GADGET_CLASS_SIZE);
+    u8 mClass = (&MobyClassLookup)[oClass];
+    memcpy(pClass, (void *)g_GadgetModels[g_gadgetIdx], g_GadgetModelSizes[g_gadgetIdx]);
+    MobyClasses[mClass] = pClass;
+    LoadMobyModel(pClass, NULL, NULL, oClass);
+
+    for (int i = 0; i < GADGET_SOUNDS; i++) {
+        short id = g_GadgetSoundIds[g_gadgetIdx][i];
+
+        if (id >= 0) {
+            SoundDef *def = (SoundDef *)MobyClasses[mClass]->SoundDefs + i;
+
+            def->index = id;
+            def->bank_index = g_LevelSoundBank;
+        }
+    }
 }
 
+/* Queues a clut + texture upload and returns its TEX0 register. */
+static inline u64 QueueUpload(int uLog, int vLog, void *clut, void *tex, int clutAddr, int texAddr)
+{
+    int tbw = uLog - 6;
+    u64 tex0 = SCE_GS_SET_TEX0(texAddr >> 8, 1 << (tbw < 0 ? 0 : tbw), PIF_FMT_8, uLog, vLog, 1, 0, clutAddr >> 8,
+                               PIF_FMT_32, 0, 0, 4);
+
+    if (g_PifLoadQueueCnt < PIF_QUEUE_MAX) {
+        PifLoad *load = &((PifLoad *)&g_PifLoadQueue)[g_PifLoadQueueCnt];
+
+        g_PifLoadQueueCnt++;
+        load->clut = clut;
+        load->clutFormat = PIF_FMT_32;
+        load->clutBlock = (short)((u32)clutAddr >> 8);
+        load->tex = tex;
+        load->uLog = (u8)uLog;
+        load->vLog = (u8)vLog;
+        load->texBlock = (short)((u32)texAddr >> 8);
+    }
+    return tex0;
+}
 
 // 0x00e0a2c (0x170 bytes)
-longlong QueuePifLoad(void *pPif)
-
+// An 8-bit pif with a 32-bit clut, given GS memory from g_GsRamAlloc.
+u64 QueuePifLoad(PifHeader *pPif)
 {
-  int iVar1;
-  int iVar2;
-  undefined8 uVar3;
-  undefined8 uVar4;
-  int iVar6;
-  longlong lVar5;
-  int iVar7;
-  
-  uVar3 = FastLog2(*(undefined4 *)((int)pPif + 8));
-  uVar4 = FastLog2(*(undefined4 *)((int)pPif + 0xc));
-  iVar2 = g_GsRamAlloc;
-  iVar6 = (int)uVar3 + -6;
-  iVar7 = g_GsRamAlloc + 0x400;
-  iVar1 = g_GsRamAlloc >> 8;
-  g_GsRamAlloc = iVar7 + (1 << ((int)uVar3 + (int)uVar4 & 0x3fU));
-  lVar5 = SCE_GS_SET_TEX0
-                    (iVar7 >> 8,1 << (iVar6 + (iVar6 >> 0x1f & -iVar6) & 0x3fU),0x13,uVar3,uVar4,1,0
-                     ,iVar1);
-  if (g_PifLoadQueueCnt < 0x40) {
-    iVar1 = g_PifLoadQueueCnt * 0x10;
-    *(int *)(&g_PifLoadQueue + iVar1) = (int)pPif + 0x20;
-    *(undefined2 *)(&DAT_0095d2d0 + iVar1) = 0x12;
-    *(short *)(&DAT_0095d2d2 + iVar1) = (short)((uint)iVar2 >> 8);
-    g_PifLoadQueueCnt = g_PifLoadQueueCnt + 1;
-    *(int *)(&DAT_0095d2d4 + iVar1) = (int)pPif + 0x420;
-    (&DAT_0095d2d8)[iVar1] = (char)uVar3;
-    (&DAT_0095d2d9)[iVar1] = (char)uVar4;
-    *(short *)(&DAT_0095d2da + iVar1) = (short)((uint)iVar7 >> 8);
-  }
-  return lVar5;
-}
+    int uLog = FastLog2(pPif->uSize);
+    int vLog = FastLog2(pPif->vSize);
+    int clutAddr = g_GsRamAlloc;
+    int texAddr = g_GsRamAlloc + PIF_CLUT_SIZE;
 
+    g_GsRamAlloc = texAddr + (1 << (uLog + vLog));
+    return QueueUpload(uLog, vLog, pPif + 1, (u8 *)(pPif + 1) + PIF_CLUT_SIZE, clutAddr, texAddr);
+}
 
 // 0x00e0b9c (0x148 bytes)
-longlong QueuePifLoad(int log_w,int log_h,char *tex,char *pal)
-
+u64 QueuePifLoad(int log_w, int log_h, char *clut, char *tex)
 {
-  int iVar1;
-  int iVar2;
-  longlong lVar3;
-  int iVar4;
-  int iVar5;
-  
-  iVar2 = g_GsRamAlloc;
-  iVar4 = log_w + -6;
-  iVar5 = g_GsRamAlloc + 0x400;
-  iVar1 = g_GsRamAlloc >> 8;
-  g_GsRamAlloc = iVar5 + (1 << (log_w + log_h & 0x3fU));
-  lVar3 = SCE_GS_SET_TEX0
-                    (iVar5 >> 8,1 << (iVar4 + (iVar4 >> 0x1f & -iVar4) & 0x3fU),0x13,log_w,log_h,1,0
-                     ,iVar1);
-  if (g_PifLoadQueueCnt < 0x40) {
-    iVar1 = g_PifLoadQueueCnt * 0x10;
-    g_PifLoadQueueCnt = g_PifLoadQueueCnt + 1;
-    *(char **)(&g_PifLoadQueue + iVar1) = tex;
-    *(undefined2 *)(&DAT_0095d2d0 + iVar1) = 0x12;
-    *(short *)(&DAT_0095d2d2 + iVar1) = (short)((uint)iVar2 >> 8);
-    *(char **)(&DAT_0095d2d4 + iVar1) = pal;
-    (&DAT_0095d2d8)[iVar1] = (char)log_w;
-    (&DAT_0095d2d9)[iVar1] = (char)log_h;
-    *(short *)(&DAT_0095d2da + iVar1) = (short)((uint)iVar5 >> 8);
-  }
-  return lVar3;
-}
+    int clutAddr = g_GsRamAlloc;
+    int texAddr = g_GsRamAlloc + PIF_CLUT_SIZE;
 
+    g_GsRamAlloc = texAddr + (1 << (log_w + log_h));
+    return QueueUpload(log_w, log_h, clut, tex, clutAddr, texAddr);
+}
 
 // 0x00e0ce4 (0x12c bytes)
-longlong QueuePifLoad(int log_w,int log_h,char *tex,char *pal,int tex_addr,int pal_addr)
-
+u64 QueuePifLoad(int log_w, int log_h, char *clut, char *tex, int clut_addr, int tex_addr)
 {
-  int iVar2;
-  longlong lVar1;
-  
-  iVar2 = log_w + -6;
-  lVar1 = SCE_GS_SET_TEX0
-                    (pal_addr >> 8,1 << (iVar2 + (iVar2 >> 0x1f & -iVar2) & 0x3fU),0x13,log_w,log_h,
-                     1,0,tex_addr >> 8);
-  if (g_PifLoadQueueCnt < 0x40) {
-    iVar2 = g_PifLoadQueueCnt * 0x10;
-    g_PifLoadQueueCnt = g_PifLoadQueueCnt + 1;
-    *(char **)(&g_PifLoadQueue + iVar2) = tex;
-    *(undefined2 *)(&DAT_0095d2d0 + iVar2) = 0x12;
-    *(short *)(&DAT_0095d2d2 + iVar2) = (short)((uint)tex_addr >> 8);
-    *(char **)(&DAT_0095d2d4 + iVar2) = pal;
-    (&DAT_0095d2d8)[iVar2] = (char)log_w;
-    (&DAT_0095d2d9)[iVar2] = (char)log_h;
-    *(short *)(&DAT_0095d2da + iVar2) = (short)((uint)pal_addr >> 8);
-  }
-  return lVar1;
+    return QueueUpload(log_w, log_h, clut, tex, clut_addr, tex_addr);
 }
-
 
 // 0x00e0e10 (0x4 bytes)
 void STUB_000e0e10(...)
-
 {
-  return;
 }
-
-

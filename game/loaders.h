@@ -41,15 +41,7 @@ extern int CylinderCnt; /* 0xa51bd4 */
 extern undefined4 DAT_0071ef00; /* no defined data */
 extern undefined4 DAT_0072479c; /* 0x72479c */
 extern undefined4 DAT_007ff23c; /* 0x7ff23c */
-extern undefined4 DAT_0095d2d0; /* no defined data */
-extern undefined4 DAT_0095d2d2; /* no defined data */
-extern undefined4 DAT_0095d2d4; /* no defined data */
-extern undefined4 DAT_0095d2d8; /* no defined data */
-extern undefined4 DAT_0095d2d9; /* no defined data */
-extern undefined4 DAT_0095d2da; /* no defined data */
 extern int DAT_009636c0; /* 0x9636c0 */ /* type set in global_types.tsv */
-extern undefined4 DAT_00964568; /* 0x964568 */
-extern undefined4 DAT_0096456c; /* 0x96456c */
 extern undefined4 DAT_00a15c14; /* 0xa15c14 */
 extern undefined4 DAT_00a15c7c; /* 0xa15c7c */
 extern undefined4 DAT_00a15f50; /* 0xa15f50 */
@@ -60,26 +52,13 @@ extern undefined4 DAT_00a1c840; /* 0xa1c840 */
 extern undefined4 DAT_00a1c880; /* 0xa1c880 */
 extern undefined4 DAT_00a1c900; /* 0xa1c900 */
 extern undefined4 DAT_00a204ac; /* 0xa204ac */
-extern undefined4 DAT_00a204b0; /* 0xa204b0 */
-extern undefined4 DAT_00a4d540; /* 0xa4d540 */
-extern undefined4 DAT_00a4d5a0; /* 0xa4d5a0 */
-extern undefined4 DAT_00a4d600; /* 0xa4d600 */
-extern undefined4 DAT_00a4d7e0; /* no defined data */
-extern undefined4 DAT_00a4dae0; /* 0xa4dae0 */
 extern undefined4 DAT_00a51bc0; /* 0xa51bc0 */
 extern undefined4 DAT_00a51bc4; /* 0xa51bc4 */
 extern undefined4 DAT_010bb478; /* 0x10bb478 */
-extern undefined4 DAT_010ea10c; /* no defined data */
 extern undefined4 DAT_010ea114; /* no defined data */
-extern undefined4 DAT_010ea634; /* 0x10ea634 */
-extern undefined4 DAT_010ea63c; /* 0x10ea63c */
-extern undefined4 DAT_010ea644; /* 0x10ea644 */
-extern MobyClass * MobyClasses[240]; /* 0xa34c00 */
-extern undefined MobyMipDists; /* 0xa37b90 */
 extern int OCLASSES_COCKPIT[3]; /* 0x731c4c */
 extern int OCLASSES_SPACESHIP[3]; /* 0x731c40 */
 extern pointer32 PTR_AdvanceLoadingStage_00705ad0; /* 0x705ad0 */
-extern pointer32 PTR_sound_BasicCB_00707c38; /* 0x707c38 */
 extern undefined4 ScreenColorEffectLevel; /* 0x95cf1c */
 extern int SphereCnt; /* 0xa51bcc */
 extern undefined4 SplineCnt; /* 0xa51ea0 */
@@ -95,10 +74,16 @@ extern int g_EffectTexCnt; /* 0x95ddd0 */ /* type set in global_types.tsv */
 extern sky_tex g_EffectTexs[112]; /* 0x95d6d0: EffectTex, the same layout */ /* type set in global_types.tsv */
 extern undefined4 g_EngineData; /* 0xa15f60 */
 extern int g_EnvSampleCount; /* 0xa4daf4 */ /* type set in global_types.tsv */
+extern int g_GadgetModelSizes[24]; /* 0xa4d600 */ /* type set in global_types.tsv */
+extern int g_GadgetModels[24]; /* 0xa4d5a0: the gadget classes in the engine file */ /* type set in global_types.tsv */
+extern int g_GadgetOClasses[24]; /* 0xa4d540 */ /* type set in global_types.tsv */
+extern short g_GadgetSoundIds[][16]; /* 0xa4d7e0: sound ids of gadgets whose class is loaded later */ /* type set in global_types.tsv */
 extern int g_GsRamAlloc; /* 0x966ad0: next free GS memory, bytes */ /* type set in global_types.tsv */
-extern HeroCollHeader * g_HeroCollision; /* 0xa15c00 */
+extern u32 g_IopGameplay; /* 0x964568: where the gameplay file goes in IOP memory */ /* type set in global_types.tsv */
+extern u32 g_IopSpaceships; /* 0x96456c: where the spaceships file goes */ /* type set in global_types.tsv */
 extern undefined4 g_IsPal; /* 0x966ae8 */
-extern undefined4 g_JapanFontTex; /* 0x90d724 */
+extern int g_LevelLoadPending; /* 0xa204b0: 1 while LoadAssetAsync runs, 2 when it is done */ /* type set in global_types.tsv */
+extern u32 g_LevelSoundBank; /* 0xa4dae0 */ /* type set in global_types.tsv */
 extern undefined2 g_LoadingStage; /* 0x964560 */
 extern int g_MobyShadowList[]; /* 0xa4a0e0: the shadow list DrawScreenEffect_152df8 draws (Ghidra label "____oClassInstanceList") */ /* type set in global_types.tsv */
 extern int g_MobyTexAddrs[]; /* 0xa37390: per slot, texture address + a tag */ /* type set in global_types.tsv */
@@ -106,7 +91,6 @@ extern int g_MobyTexDefCnt; /* 0xa37388 */ /* type set in global_types.tsv */
 extern short g_MobyTexDefs[][8]; /* 0xa4c540: tex_def per moby texture slot */ /* type set in global_types.tsv */
 extern u8 g_MobyTexRef; /* 0x7247e0: the one-entry tex_refs passed with a ship class */ /* type set in global_types.tsv */
 extern undefined4 g_NpcChunkLoadHandle; /* 0x7247f0 */
-extern int g_PartTexBaseIndex; /* 0xa52b38 */
 extern u64 g_PifFileTexRegs[][3]; /* 0xa202d0 */ /* type set in global_types.tsv */
 extern undefined g_PifLoadQueue; /* 0x95d2cc */
 extern undefined4 g_PifLoadQueueCnt; /* 0x95d6cc */
@@ -152,20 +136,20 @@ void STUB_000dce3c(...);
 void LoadHelp(void);
 u8 *LoadGameplayFile(int reload);
 undefined8 STUB_000def38_RET_1(...);
-void ____Unused_IncCounter_a204ac(void);
+void Unused_IncCounter_a204ac(void);
 void AdvanceLoadingStage(void);
-undefined8 LoadLevelFiles(void);
-int LoadAllMobys(int param_1,int param_2);
-int LoadNpcMobys(int level_id,int scene_id);
+int LoadLevelFiles(void);
+int LoadAllMobys(int reload, int restoreCheckpoint);
+int LoadNpcMobys(int level_id, int scene_id);
 int LoadNpcSubtitles(void);
 int PreLoadNpcChunk(int chunk_id);
 void ParseNpcChunk(void);
 void LoadWeaponCutscene(int weapon);
 void ParseWeaponSceneChunk(int chunk_id);
-void LoadSpaceScene(int scene,int fade);
+void LoadSpaceScene(int scene, int fade);
 void ParseSpaceSceneChunk(int chunk_id);
-void LoadGadgetModel(int oClass,int t_target);
-longlong QueuePifLoad(void *pPif);
-longlong QueuePifLoad(int log_w,int log_h,char *tex,char *pal);
-longlong QueuePifLoad(int log_w,int log_h,char *tex,char *pal,int tex_addr,int pal_addr);
+void LoadGadgetModel(int oClass, int slot);
+u64 QueuePifLoad(PifHeader *pPif);
+u64 QueuePifLoad(int log_w, int log_h, char *clut, char *tex);
+u64 QueuePifLoad(int log_w, int log_h, char *clut, char *tex, int clut_addr, int tex_addr);
 void STUB_000e0e10(...);

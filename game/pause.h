@@ -294,7 +294,6 @@ extern undefined4 DAT_00a35719; /* no defined data */
 extern undefined4 DAT_00a3592e; /* no defined data */
 extern undefined4 DAT_00a35932; /* no defined data */
 extern undefined1 DAT_00a35c65; /* 0xa35c65 */
-extern undefined4 DAT_00a4daec; /* 0xa4daec */
 extern undefined4 DAT_00a52bc0; /* 0xa52bc0 */
 extern undefined4 DAT_00a52bc4; /* 0xa52bc4 */
 extern undefined4 DAT_00a52bc8; /* 0xa52bc8 */
@@ -443,6 +442,7 @@ extern undefined1 DAT_00a534f8; /* 0xa534f8 */
 extern undefined4 DAT_010ea454; /* 0x10ea454 */
 extern uint GalacticMap[20]; /* 0x96c18c */
 extern undefined MobyClassLookup; /* 0xa354c0 */
+extern MobyClass * MobyClasses[240]; /* 0xa34c00 */
 extern undefined * PTR_DAT_0072ff98; /* 0x72ff98 */
 extern pointer PTR_Elf64_Ehdr_0072b332; /* 0x72b332 */
 extern pointer32 PTR_GoldBolt_SpinMobyUpdate_00707740; /* 0x707740 */
@@ -473,6 +473,7 @@ extern undefined4 g_BackpackMobyClass; /* 0x72105c */
 extern undefined4 g_ChallengeMode; /* 0x96c9fc */
 extern char g_CollectedGoldBolts[72]; /* 0xa0ca34 */
 extern undefined4 g_FrameCount; /* 0x96ca00 */
+extern int g_GadgetBufferSlot; /* 0xa4daec: the gadget class buffer used last */ /* type set in global_types.tsv */
 extern GameSettings g_GameSettings; /* 0x71fb38 */
 extern undefined4 g_Language; /* 0x969c74 */
 extern Planets32 g_MaxBoltsPerLevel; /* 0x738608 */

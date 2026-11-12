@@ -5,7 +5,6 @@
 #include <string.h>
 #include "game/collproc.h"
 #include "game/hero.h"
-#include "game/loaders.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"

@@ -5411,7 +5411,7 @@ undefined8 WeaponView_Update(int param_1)
         if ((oClass != DAT_00a52cc8) ||
            (MobyClasses[(byte)(&MobyClassLookup)[oClass]] == (MobyClass *)0x0)) {
           LoadGadgetModel(oClass,(DAT_00a52cc4 == 0));
-          DAT_00a52cf0 = DAT_00a4daec;
+          DAT_00a52cf0 = g_GadgetBufferSlot;
           DAT_00a52ccc = oClass;
           DAT_00a52cec = oClass;
           MobyClasses[(byte)(&MobyClassLookup)[oClass]]->sound_cnt = '\0';
@@ -9463,10 +9463,10 @@ undefined8 MenuHero_Update(int param_1)
     if ((g_CurrentWeapon != 0) && (iVar10 != g_CurrentWeapon)) {
       Hero_KillGadget(0,0);
     }
-    DAT_00a4daec = (DAT_00a52cc4 == 0);
+    g_GadgetBufferSlot = (DAT_00a52cc4 == 0);
     LoadGadgetModel(iVar5,-1);
-    DAT_00a52cc4 = DAT_00a4daec;
-    DAT_00a52cf0 = DAT_00a4daec;
+    DAT_00a52cc4 = g_GadgetBufferSlot;
+    DAT_00a52cf0 = g_GadgetBufferSlot;
     DAT_00a52cc8 = iVar5;
     DAT_00a52cec = iVar5;
     MobyClasses[(byte)(&MobyClassLookup)[iVar5]]->sound_cnt = '\0';

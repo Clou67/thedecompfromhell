@@ -15,7 +15,7 @@ errors	file
 0	game/initsky.cpp
 0	game/initspace.cpp
 0	game/lights.cpp
-80	game/loaders.cpp
+0	game/loaders.cpp
 2196	game/mUnk.cpp
 0	game/main.cpp
 95	game/map.cpp
@@ -38,9 +38,9 @@ errors	file
 124	game/skyfunc.cpp
 0	game/skyproc.cpp
 27	game/sound.cpp
-207	game/space.cpp
+203	game/space.cpp
 73	game/tieproc.cpp
-125	game/update.cpp
+124	game/update.cpp
 568	game/update/camera0.cpp
 13	game/update/camera1.cpp
 26	game/update/camera10.cpp
@@ -1025,8 +1025,8 @@ errors	file
 0	game/water.cpp
 23	idol/9Unk.cpp
 3	idol/fUnk.cpp
-129	idol/fastfunc.cpp
-144	idol/idol.cpp
+130	idol/fastfunc.cpp
+145	idol/idol.cpp
 437	idol/idol_draw.cpp
 1773	idol/mUnk.cpp
 41	idol/mUnk2.cpp

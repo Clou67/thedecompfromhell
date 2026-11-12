@@ -132,6 +132,7 @@ extern undefined4 DAT_00e577f0; /* no defined data */
 extern undefined4 DAT_0159b388; /* 0x159b388 */
 extern GSMEM_UNUSED GSmem; /* 0x966ad8 */
 extern undefined4 Gameplay; /* 0xa108f0 */
+extern undefined MobyMipDists; /* 0xa37b90 */
 extern undefined MobyTexLookup; /* 0xa38290 */
 extern pointer PTR_DAT_008fa62c; /* 0x8fa62c */
 extern pointer PTR_DAT_00902e98; /* 0x902e98 */
@@ -157,6 +158,7 @@ extern u8 *g_FontVram; /* 0xa10930: 0x100000 bytes, the Japanese font texture */
 extern int g_FrontEndLogoAlpha; /* 0x90d708 */
 extern int g_FrontEndPressStartAlpha; /* 0x90d70c */
 extern int g_FrontEndTimer; /* 0x90d710 */
+extern undefined4 g_JapanFontTex; /* 0x90d724 */
 extern undefined4 g_JapanLogoTex; /* 0x90d748 */
 extern int g_LogoMovieDone; /* 0x969cd8 */
 extern void *g_MobyClassUpdates[240]; /* 0xa34f80: update function per mClass (follows MobyClasses) */ /* type set in global_types.tsv */

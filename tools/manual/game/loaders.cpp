@@ -1,6 +1,5 @@
 // game/loaders.cpp -- level data loading: textures, moby classes, scenes, the level file itself
 // STATUS: CLEAN (checked against the asm; local names are mine)
-// MERGE
 // 41 functions, 0xdb1e0-0xe0e14
 //
 // Most of the data comes in with offsets relative to its own start that are turned into
@@ -527,7 +526,7 @@ u8 *LoadSpaceshipModel(int *data, int *gs_addrs)
     u8 *base = (u8 *)data;
     u32 image;
 
-    FastMemCopy(data, (void *)DAT_0096456c, *(int *)(&DAT_010ea114 + g_SpaceshipVariant * 8) << 11);
+    FastMemCopy(data, (void *)g_IopSpaceships, *(int *)(&DAT_010ea114 + g_SpaceshipVariant * 8) << 11);
 
     u8 *shipTex = base + ship->shipTex;
     u8 *cockpitTex = base + ship->cockpitTex;
@@ -955,7 +954,7 @@ u8 *LoadGameplayFile(int reload)
     }
 
     FlushCache(0);
-    STUB_000e9150(DAT_00964568, file);
+    STUB_000e9150(g_IopGameplay, file);
     FlushCache(0);
 
     FastMemSet(&g_heroMtx, 0, 0x2310);
@@ -1643,4 +1642,714 @@ u8 *LoadGameplayFile(int reload)
 
     LoadHelp();
     return mem + LOCALE_BUFFER_SIZE;
+}
+
+/* the level wad's table of contents: {sector, sector count} per file */
+#define WAD_SPACESHIPS        2       /* + ship variant */
+#define WAD_ENTRY_166         166
+#define WAD_GAMEPLAY_NTSC     167
+#define WAD_GAMEPLAY_PAL      168
+#define IOP_TOP               0x10000000
+
+#define LOAD_STAGE_ENGINE     0
+#define LOAD_STAGE_GLOBALS    1
+#define LOAD_STAGE_GAMEPLAY   2
+#define LOAD_STAGE_SOUND_WAIT 3
+#define LOAD_STAGE_UNLOAD     4
+#define LOAD_STAGE_FLUSH      5
+#define LOAD_STAGE_SOUND_BANK 6
+#define LOAD_STAGE_DONE       7
+
+#define MAX_GADGET_SOUNDS     15
+#define GADGET_SOUNDS         16
+#define GADGET_CLASS_SIZE     0x30000
+
+#define NPC_BUFFER_SIZE       0x80000
+#define SCENE_CHUNK_MAX       70
+#define SUBTITLE_MIN_OFFSET   0x400
+#define OCLASS_NPC_SHIP       0x215   /* the first actor of a space scene is the player's ship */
+#define NPC_COLOR             0x00383838
+
+#define PIF_QUEUE_MAX         64
+#define PIF_CLUT_SIZE         0x400
+
+static inline int WadSectors(int entry)
+{
+    return ((int *)&DAT_010ea100)[entry * 2 + 1];
+}
+
+static inline u32 RoundUp4K(int sectors)
+{
+    return (sectors * 0x800 + 0xfff) & ~0xfff;
+}
+
+/* the moby class table of the engine file: {oClass, offset} pairs */
+struct EngineMobyClass {
+    int oClass;
+    int offset;              /* 0: a class without a model */
+};
+
+/* the gadgets of the engine file (16 bytes each) */
+struct EngineGadget {
+    int oClass;
+    int model;               /* offset of its class */
+    int size;
+    int unk0c;
+};
+
+/* the sounds of the engine file */
+struct EngineSounds {
+    short defs;              /* offset of the SoundDefs */
+    short defCnt;
+    short remap;             /* offset of the int table mapping SoundDef.index */
+    short remapCnt;
+    short classSounds[][2];  /* per mClass: {offset of its sound ids, count} */
+};
+
+/* an actor of an npc scene chunk */
+struct NpcActor {
+    int oClass;
+    int unk04;
+    int unk08;
+    int pVar;                /* offset in the chunk */
+    MobySeq seq;             /* 0x10  its one animation, frames relative to it */
+};
+
+/* the npc / space scene chunk header */
+struct NpcChunk {
+    int numFrames;
+    int subtitles;           /* offset, below 0x400: none */
+    int unk08;
+    int mobyCnt;
+    int cameraFrames;        /* offset */
+    int actors[];            /* offsets */
+};
+
+/* a queued clut + texture upload (16 bytes, g_PifLoadQueue) */
+struct PifLoad {
+    void *clut;
+    short clutFormat;
+    short clutBlock;
+    void *tex;
+    u8 uLog;
+    u8 vLog;
+    short texBlock;
+};
+
+// 0x00def38 (0x8 bytes)
+undefined8 STUB_000def38_RET_1(...)
+{
+    return 1;
+}
+
+// 0x00def40 (0x14 bytes)
+void Unused_IncCounter_a204ac(void)
+{
+    DAT_00a204ac++;
+}
+
+// 0x00def54 (0x24 bytes)
+// LoadAssetAsync's completion callback.
+void AdvanceLoadingStage(void)
+{
+    g_LoadingStage++;
+    g_LevelLoadPending++;
+}
+
+// 0x00def78 (0x488 bytes)
+// One step of loading a level, called until it returns 1: the engine and VRAM files, the
+// spaceships, the gameplay file, then the level's sound bank.
+int LoadLevelFiles(void)
+{
+    char bankPath[64];
+    char enginePath[128];
+    char vramPath[128];
+    int variant = g_SpaceshipVariant;
+    short stage = g_LoadingStage;
+
+    if (FUN_00503128_RET_0(1) != 0) {
+        DAT_009636c0++;
+        g_LoadingStage = stage;
+        return 0;
+    }
+
+    switch (g_LoadingStage) {
+    case LOAD_STAGE_DONE:
+        if (STUB_00505d20() == 0 && g_BootSoundBank != (u32)-1) {
+            STUB_00505f48();
+            return 1;
+        }
+        break;
+
+    case LOAD_STAGE_SOUND_BANK:
+        if (STUB_00505d20() == 0) {
+            g_BootSoundBank = -1;
+            sprintf(bankPath, "rc1/ps3data/level%d/sound.bnk", Level);
+            FUN_004fe5c8(TEX_BASE, 0x10);
+            void *bank = FUN_004fe5ec((IMSeqMem *)TEX_BASE);
+            int size = LoadAssetFromFile(bankPath, bank, -1);
+            FUN_004fe6ec(TEX_BASE, size);
+            Sound_LoadBank((u8 *)bank, (u8 *)sound_BasicCB, &g_BootSoundBank);
+            stage = g_LoadingStage + 1;
+        }
+        break;
+
+    case LOAD_STAGE_FLUSH:
+        if (STUB_00505d20() == 0) {
+            STUB_00505f48();
+            stage = g_LoadingStage + 1;
+        }
+        break;
+
+    case LOAD_STAGE_UNLOAD:
+        if (STUB_00505d20() == 0) {
+            snd_UnloadBank((int *)g_BootSoundBank, 1);
+            g_BootSoundBank = 0;
+            stage = g_LoadingStage + 1;
+        }
+        break;
+
+    case LOAD_STAGE_SOUND_WAIT:
+        if (DAT_00964562 == 0) {
+            FUN_0060c0d0();
+            stage = g_BootSoundBank != 0 ? g_LoadingStage + 1 : LOAD_STAGE_SOUND_BANK;
+        }
+        break;
+
+    case LOAD_STAGE_GAMEPLAY:
+        if (Cutscene == 0) {
+            FUN_00503404(g_IopGameplay, "gameplay_ntsc");
+        }
+        else {
+            FUN_00503404(g_IopGameplay, "gameplay_pal");
+        }
+        stage = g_LoadingStage + 1;
+        break;
+
+    case LOAD_STAGE_GLOBALS:
+        if (g_LevelLoadPending == 2) {
+            g_LevelLoadPending = 0;
+        }
+        idol::m_LoadGameFileS(g_IopSpaceships, "space_ships");
+        LoadAssetFromFile("rc1/ps3data/japan_font.ps3", &g_JapanFontTex, 0x24);
+        LoadAssetFromFile("rc1/ps3data/japan_font.vram", (void *)g_FontVram, 0x80000);
+        g_JapanFontTex += (u32)g_FontVram - *(u32 *)((u8 *)g_pIdolDraw + 0x4ac);
+        stage = g_LoadingStage + 1;
+        break;
+
+    case LOAD_STAGE_ENGINE:
+        if (g_LevelLoadPending == 0) {
+            /* where the files would go in IOP memory, down from its top */
+            int gameplay = Cutscene == 0 ? WadSectors(WAD_GAMEPLAY_NTSC) : WadSectors(WAD_GAMEPLAY_PAL);
+
+            g_IopGameplay = IOP_TOP - RoundUp4K(gameplay);
+            g_IopSpaceships = g_IopGameplay - RoundUp4K(WadSectors(WAD_SPACESHIPS + variant));
+            DAT_00964564 = (u32 *)(g_IopSpaceships - RoundUp4K(WadSectors(WAD_ENTRY_166)));
+
+            sprintf(enginePath, "rc1/ps3data/level%d/engine.ps3", Level);
+            sprintf(vramPath, "rc1/ps3data/level%d/vram.ps3", Level);
+            g_LevelLoadPending = 1;
+            LoadAssetAsync(&TEX_BASE, enginePath, vramPath, (undefined4)&PTR_AdvanceLoadingStage_00705ad0);
+        }
+        break;
+    }
+
+    g_LoadingStage = stage;
+    return 0;
+}
+
+/* Gives a gadget's sound ids to its class, or (class absent) stores them for LoadGadgetModel. */
+static inline void SetClassSounds(int mClass, int *ids, int count)
+{
+    MobyClass *pClass = MobyClasses[mClass];
+
+    if (pClass == NULL) {
+        int gadget;
+
+        for (gadget = 0; gadget < maximumNumWeapons; gadget++) {
+            if (g_GadgetOClasses[gadget] == (short)(&mClass_to_oClass)[mClass]) {
+                break;
+            }
+        }
+        if (gadget < maximumNumWeapons) {
+            FastMemSet(g_GadgetSoundIds[gadget], -1, sizeof(g_GadgetSoundIds[gadget]));
+            for (int i = 0; i < count && i < MAX_GADGET_SOUNDS; i++) {
+                g_GadgetSoundIds[gadget][i] = (short)ids[i];
+            }
+        }
+        return;
+    }
+
+    if (count != pClass->sound_cnt) {
+        printf("internal moby sound mismatch on moby %d\n", (&mClass_to_oClass)[mClass]);
+    }
+    for (int i = 0; i < MobyClasses[mClass]->sound_cnt; i++) {
+        SoundDef *def = (SoundDef *)MobyClasses[mClass]->SoundDefs + i;
+
+        def->bank_index = g_BootSoundBank;
+        def->index = (short)ids[i];
+    }
+}
+
+/* Points a class's first GIF list at one texture header. */
+static inline void SetGifTexture(MobyClass *pClass, int header)
+{
+    MobyPacketHeader *packets = (MobyPacketHeader *)pClass->packets;
+    MobyGifRef *ref = packets->gifs0;
+
+    for (u32 i = 0; i < packets->cnt0; i++, ref++) {
+        ref->tex = header;
+        if (ref->wrap == 0) {
+            u32 format = *(u32 *)(header + 8);
+
+            ref->wrap = (u8)(((format >> 6) & 0xc) | (format & 3));
+        }
+    }
+}
+
+// 0x00df408 (0xc30 bytes)
+// Sets the level up from its engine file (on a full load), loads the ship models, then the
+// gameplay file; then either clears or restores the checkpoint.
+int LoadAllMobys(int reload, int restoreCheckpoint)
+{
+    char shipPath[64];
+    char vramPath[64];
+    int *engine = (int *)g_EngineData;
+    u8 *buffer = (u8 *)g_GameplayBuffer;
+    u8 *base = (u8 *)engine;
+
+    if (reload != 0) {
+        FastMemCopy32(&g_CheckpointLevelFlags, g_LevelFlags + Level, 0x10);
+
+        DAT_00a1bfd8 = engine[0x1d] + (int)engine;
+        IconTableEntry = (IconTableEntries *)(base + *(int *)(DAT_00a1bfd8 + 4));
+        g_LevelSoundBank = g_BootSoundBank;
+        TexturePointerArray = (int)engine + *(int *)(DAT_00a1bfd8 + 8);
+        TfragsCnt = *(u16 *)(DAT_00a15f74 + 6);
+        OcclGrid = engine[1] != 0 ? base + engine[1] : NULL;
+        Tfrags = (Tfrag *)*(int *)DAT_00a15f74;
+        ParseColl((char *)(base + engine[5]));
+
+        /* the moby classes */
+        int *classTable = (int *)(base + engine[0]);
+        EngineMobyClass *entry = (EngineMobyClass *)(classTable + 1);
+        for (int i = 0; i < classTable[0]; i++, entry++) {
+            MobyClass *pClass = entry->offset != 0 ? (MobyClass *)(base + entry->offset) : NULL;
+
+            LoadMobyPClasses(pClass, NULL, (char *)((int *)entry + 4), entry->oClass);
+        }
+
+        /* Ratchet's sequences are separate */
+        int *seqOffsets = (int *)(base + engine[6]);
+        for (int i = 0; i < MobyClasses[0]->seq_cnt; i++) {
+            if (seqOffsets[i] != 0) {
+                MobyClasses[0]->seqs[i] = (MobySeq *)(base + seqOffsets[i]);
+                ParseMobySeq(MobyClasses[0], i);
+            }
+        }
+
+        /* the gadgets */
+        g_gadgetIdx = -1;
+        g_GadgetBufferSlot = 0;
+        maximumNumWeapons = engine[0x14];
+        EngineGadget *gadget = (EngineGadget *)(base + engine[0x13]);
+        for (int i = 0; i < maximumNumWeapons; i++, gadget++) {
+            g_GadgetOClasses[i] = gadget->oClass;
+            g_GadgetModelSizes[i] = gadget->size;
+            g_GadgetModels[i] = (int)engine + gadget->model;
+        }
+
+        if (engine[0x10] == 0) {
+            g_byteGridStride = 0;
+            g_byteGridData = NULL;
+            g_byteGridRows = 0;
+            g_byteGridMin = 0;
+            g_byteGridMax = g_byteGridMin;
+        }
+        else {
+            LoadByteGrid((ByteGridHeader *)(base + engine[0x10]));
+        }
+
+        OcclOct = engine[2] != 0 ? base + engine[2] : NULL;
+        Loaders_RelocSpaceWadPtrs((int *)(base + engine[0x1c]));
+
+        /* the sounds: the level's SoundDefs go to the gameplay buffer */
+        EngineSounds *sounds = (EngineSounds *)(base + engine[0x12]);
+        int *remap = (int *)((u8 *)sounds + sounds->remap);
+        int defsSize = sounds->defCnt * (int)sizeof(SoundDef);
+
+        g_pSoundDefs = (SoundDef *)buffer;
+        g_TotalSoundDefCnt = sounds->defCnt;
+        FastMemCopy32(buffer, (u8 *)sounds + sounds->defs, defsSize);
+        for (int i = 0; i < g_TotalSoundDefCnt; i++) {
+            SoundDef *def = g_pSoundDefs + i;
+
+            if (def->index < sounds->remapCnt) {
+                def->index = (short)remap[def->index];
+            }
+            else {
+                printf("internal level sound mismatch\n");
+                def->index = -1;
+            }
+            def->bank_index = g_BootSoundBank;
+        }
+
+        for (int i = 0; i < oClass_to_mClass_lookup; i++) {
+            short *classSounds = sounds->classSounds[i];
+
+            SetClassSounds(i, (int *)((u8 *)sounds + classSounds[0]), classSounds[1]);
+        }
+        buffer = AlignUp64(buffer + defsSize);
+
+        /* the ship and cockpit: classes, then their two texture headers */
+        int shipOClass = OCLASSES_SPACESHIP[g_SpaceshipVariant];
+        int cockpitOClass = OCLASSES_COCKPIT[g_SpaceshipVariant];
+        sprintf(shipPath, "rc1/ps3data/global/spaceship%d.ps3", g_SpaceshipVariant + 1);
+        sprintf(vramPath, "rc1/ps3data/global/spaceship%d.vram", g_SpaceshipVariant + 1);
+        int shipSize = LoadAssetFromFile(shipPath, buffer, -1);
+        int *ship = (int *)buffer;
+        int texOffset = ship[2];
+
+        if ((&MobyClassLookup)[shipOClass] == 0xff) {
+            LoadMobyPClasses((MobyClass *)(buffer + ship[0]), NULL, NULL, shipOClass);
+        }
+        if ((&MobyClassLookup)[cockpitOClass] == 0xff) {
+            LoadMobyPClasses((MobyClass *)(buffer + ship[1]), NULL, NULL, cockpitOClass);
+        }
+
+        u8 *texHeaders = buffer + texOffset;
+        int texCnt = (shipSize - texOffset) / RSX_TEX_SIZE;
+        FUN_004fe5c8(DAT_00a15f50, 0x80);
+        u8 *vram = (u8 *)FUN_004fe5f4(DAT_00a15f50, 0x80);
+        int vramSize = LoadAssetFromFile(vramPath, vram, -1);
+        FUN_004fe6ec(DAT_00a15f50, vramSize);
+
+        int vramBase = *(int *)(DAT_00902e9c + 0x4ac);
+        for (int i = 0; i < texCnt; i++) {
+            *(int *)(texHeaders + i * RSX_TEX_SIZE) += (int)vram - vramBase;
+        }
+
+        SetGifTexture(MobyClasses[(&MobyClassLookup)[shipOClass]], (int)texHeaders);
+        SetGifTexture(MobyClasses[(&MobyClassLookup)[cockpitOClass]], (int)texHeaders + RSX_TEX_SIZE);
+
+        Gameplay = (u32)AlignUp64(buffer + shipSize);
+    }
+
+    LoadGameplayFile(reload);
+
+    if (restoreCheckpoint == 0) {
+        ClearCheckpointData();
+        for (int i = 0; i < 16; i++) {
+            ((u32 *)&DAT_00a0fcd4)[i] = 0;
+        }
+    }
+    else {
+        RestoreCheckpoint();
+    }
+
+    DAT_00a15c14 = 0;
+    DAT_00a15c0c = 0;
+    DAT_00a15c10 = 0;
+    UpdateMobysInitial();
+    worldUpdateTime++;
+    return 0;
+}
+
+// 0x00e0038 (0xd8 bytes)
+// Debug: whether the scene's npc file is on the host.
+int LoadNpcMobys(int level_id, int scene_id)
+{
+    char path[88];
+
+    STUB_00174cf4(1);
+    STUB_00503078(0);
+    if (Cutscene == 0) {
+        sprintf(path, "host0:z:/i5/levels/level%d/npcs/scene_%d/scene.dat", level_id, scene_id);
+    }
+    else {
+        sprintf(path, "host0:z:/i5/levels/level%d/npcs/scene_%d/scenep.dat", level_id, scene_id);
+    }
+
+    int file = HostOpen(path, 0);
+    if (file < 0) {
+        return 0;
+    }
+    HostClose(file);
+    return 1;
+}
+
+// 0x00e0110 (0x8 bytes)
+int LoadNpcSubtitles(void)
+{
+    return 1;
+}
+
+// 0x00e0118 (0x10c bytes)
+// Starts loading a scene chunk into the second half of the npc buffer.
+int PreLoadNpcChunk(int chunk_id)
+{
+    char path[64];
+    u32 dest = g_NpcBuffer + NPC_BUFFER_SIZE;
+
+    g_SceneLoadBuffer = dest;
+    if (g_IsPal == 0) {
+        sprintf(path, "rc1/ps3data/level%d/scene[%d]/chunk%d.ps3", Level, g_SceneId, chunk_id);
+    }
+    else {
+        sprintf(path, "rc1/ps3data/level%d/scene[%d]_pal/chunk%d.ps3", Level, g_SceneId, chunk_id);
+    }
+
+    if (GetFileSize(path) != 0) {
+        if (g_NpcChunkLoadHandle != 0) {
+            FUN_005040f4(g_NpcChunkLoadHandle);
+        }
+        g_NpcChunkLoadHandle = FUN_00503f8c(path, dest, NPC_BUFFER_SIZE);
+    }
+    return 1;
+}
+
+// 0x00e0230 (0x2f8 bytes)
+// Takes the loaded chunk: each actor gets a moby (made on the first chunk) playing the chunk's
+// sequence for it, held in an extra sequence slot of its class.
+void ParseNpcChunk(void)
+{
+    if (g_NpcChunkLoadHandle != 0) {
+        FUN_005040f4(g_NpcChunkLoadHandle);
+        g_NpcChunkLoadHandle = 0;
+    }
+
+    FastMemCopy((void *)g_NpcBuffer, (void *)g_SceneLoadBuffer, NPC_BUFFER_SIZE);
+    NpcChunk *chunk = (NpcChunk *)g_NpcBuffer;
+    u8 *base = (u8 *)chunk;
+
+    g_cutsceneCameraFrame = 0;
+    *(short *)&g_SpaceSceneNumFrames = (short)chunk->numFrames;
+    g_SpaceSceneCameraFrames = base + chunk->cameraFrames;
+    ((short *)&g_SpaceSceneMobyCnt)[1] = (short)chunk->unk08;
+    g_SpaceSceneMobyCnt = (short)chunk->mobyCnt;
+    g_SubtitleTable = chunk->subtitles >= SUBTITLE_MIN_OFFSET ? (u32)(base + chunk->subtitles) : 0;
+
+    for (int i = 0; i < g_SpaceSceneMobyCnt; i++) {
+        NpcActor *actor = (NpcActor *)(base + chunk->actors[i]);
+        int oClass = actor->oClass;
+
+        if (g_gameMode == GAME_MODE_SPACE && i == 0 && oClass == OCLASS_NPC_SHIP) {
+            oClass = OCLASSES_SPACESHIP[g_SpaceshipVariant];
+        }
+
+        if ((&MobyClassLookup)[oClass] == 0xff) {
+            printf("\nnpc error: moby class %d is not on the level\n", oClass);
+            continue;
+        }
+
+        MobyInstance *moby = g_SpaceSceneMobys[i];
+        if (moby == NULL) {
+            moby = CreateMoby(oClass);
+            if (moby->pClass == NULL) {
+                printf("\nnpc error: moby class %d is a null moby or a hand gadget\n", oClass);
+                continue;
+            }
+
+            u8 seq = moby->pClass->seq_cnt;
+            moby->pClass->seq_cnt = seq + 1;
+            moby->updateId = seq;
+            moby->animationId = seq;
+            moby->drawDistance = 0x1ff;
+            moby->unk72 = -1;
+            moby->collision = NULL;
+            moby->modeBits |= NO_POST_UPDATE | NO_UPDATE;
+            if (g_heroMobyPtr != NULL) {
+                moby->color = g_heroMobyPtr->color;
+                moby->light = g_heroMobyPtr->light;
+            }
+            else {
+                moby->color = NPC_COLOR;
+                moby->light = 0;
+            }
+            g_SpaceSceneMobys[i] = moby;
+        }
+
+        moby->pVar = base + actor->pVar;
+        moby->pClass->seqs[moby->updateId] = &actor->seq;
+        for (int j = 0; j < actor->seq.frameCnt; j++) {
+            actor->seq.frames[j] = (MobyFrame *)((u8 *)&actor->seq + (int)actor->seq.frames[j]);
+        }
+    }
+}
+
+/* A scene file: {offset, size} per chunk, until a size of 0. */
+static inline void SetSceneChunks(void)
+{
+    int *table = (int *)g_SceneLoadBuffer;
+
+    for (int i = 0; i < SCENE_CHUNK_MAX; i++, table += 2) {
+        if (table[1] == 0) {
+            return;
+        }
+        (&g_SceneChunkPtrs)[i] = g_SceneLoadBuffer + table[0];
+    }
+}
+
+// 0x00e0528 (0x12c bytes)
+void LoadWeaponCutscene(int weapon)
+{
+    char path[64];
+
+    FadeToBlack(4);
+    if (Cutscene == 0) {
+        if (g_IsPal == 0) {
+            sprintf(path, "rc1/ps3data/global/weapon%d.ps3", weapon);
+        }
+        else {
+            sprintf(path, "rc1/ps3data/global/weapon%d_pal.ps3", weapon);
+        }
+        LoadAssetFromFile(path, (void *)g_SceneLoadBuffer, -1);
+    }
+    else {
+        idol::PRINT_m_LoadGameFile(g_SceneLoadBuffer, "weapon_scenes_pal");
+    }
+
+    music_Sync(0);
+    music_Sync(1);
+    SetSceneChunks();
+}
+
+// 0x00e0654 (0x5c bytes)
+void ParseWeaponSceneChunk(int chunk_id)
+{
+    g_SceneLoadBuffer = (&g_SceneChunkPtrs)[chunk_id];
+    ParseNpcChunk();
+    g_SceneLoadBuffer = g_NpcBuffer + NPC_BUFFER_SIZE / 2;
+}
+
+// 0x00e06b0 (0x148 bytes)
+void LoadSpaceScene(int scene, int fade)
+{
+    char path[72];
+
+    if (fade != 0) {
+        FadeToBlack(fade);
+    }
+
+    if (Cutscene == 0) {
+        if (g_IsPal == 0) {
+            sprintf(path, "rc1/ps3data/global/space%d.ps3", scene);
+        }
+        else {
+            sprintf(path, "rc1/ps3data/global/space%d_pal.ps3", scene);
+        }
+        LoadAssetFromFile(path, (void *)g_SceneLoadBuffer, -1);
+    }
+    else {
+        idol::PRINT_m_LoadGameFile(g_SceneLoadBuffer, "space_scenes_pal");
+    }
+
+    if (fade != 0) {
+        music_Sync(0);
+    }
+    music_Sync(1);
+    SetSceneChunks();
+}
+
+// 0x00e07f8 (0x5c bytes)
+void ParseSpaceSceneChunk(int chunk_id)
+{
+    g_SceneLoadBuffer = (&g_SceneChunkPtrs)[chunk_id];
+    ParseNpcChunk();
+    g_SceneLoadBuffer = g_NpcBuffer + NPC_BUFFER_SIZE / 2;
+}
+
+// 0x00e0854 (0x1d8 bytes)
+// Copies a gadget's class into one of the two gadget class buffers (`slot` 1 / 0, -1 the one
+// not used last) and gives it its sounds.
+void LoadGadgetModel(int oClass, int slot)
+{
+    if (g_gadgetIdx >= 0 && g_GadgetOClasses[g_gadgetIdx] == oClass) {
+        return;
+    }
+
+    for (g_gadgetIdx = 0; g_gadgetIdx < maximumNumWeapons; g_gadgetIdx++) {
+        if (g_GadgetOClasses[g_gadgetIdx] == oClass) {
+            break;
+        }
+    }
+
+    if (slot == -1) {
+        slot = g_GadgetBufferSlot == 0;
+    }
+    int buffer = slot == 0 ? 1 : 0;
+    g_GadgetBufferSlot = slot == 0;
+
+    MobyClass *pClass = (MobyClass *)(g_MobyClassBuffer + buffer * GADGET_CLASS_SIZE);
+    u8 mClass = (&MobyClassLookup)[oClass];
+    memcpy(pClass, (void *)g_GadgetModels[g_gadgetIdx], g_GadgetModelSizes[g_gadgetIdx]);
+    MobyClasses[mClass] = pClass;
+    LoadMobyModel(pClass, NULL, NULL, oClass);
+
+    for (int i = 0; i < GADGET_SOUNDS; i++) {
+        short id = g_GadgetSoundIds[g_gadgetIdx][i];
+
+        if (id >= 0) {
+            SoundDef *def = (SoundDef *)MobyClasses[mClass]->SoundDefs + i;
+
+            def->index = id;
+            def->bank_index = g_LevelSoundBank;
+        }
+    }
+}
+
+/* Queues a clut + texture upload and returns its TEX0 register. */
+static inline u64 QueueUpload(int uLog, int vLog, void *clut, void *tex, int clutAddr, int texAddr)
+{
+    int tbw = uLog - 6;
+    u64 tex0 = SCE_GS_SET_TEX0(texAddr >> 8, 1 << (tbw < 0 ? 0 : tbw), PIF_FMT_8, uLog, vLog, 1, 0, clutAddr >> 8,
+                               PIF_FMT_32, 0, 0, 4);
+
+    if (g_PifLoadQueueCnt < PIF_QUEUE_MAX) {
+        PifLoad *load = &((PifLoad *)&g_PifLoadQueue)[g_PifLoadQueueCnt];
+
+        g_PifLoadQueueCnt++;
+        load->clut = clut;
+        load->clutFormat = PIF_FMT_32;
+        load->clutBlock = (short)((u32)clutAddr >> 8);
+        load->tex = tex;
+        load->uLog = (u8)uLog;
+        load->vLog = (u8)vLog;
+        load->texBlock = (short)((u32)texAddr >> 8);
+    }
+    return tex0;
+}
+
+// 0x00e0a2c (0x170 bytes)
+// An 8-bit pif with a 32-bit clut, given GS memory from g_GsRamAlloc.
+u64 QueuePifLoad(PifHeader *pPif)
+{
+    int uLog = FastLog2(pPif->uSize);
+    int vLog = FastLog2(pPif->vSize);
+    int clutAddr = g_GsRamAlloc;
+    int texAddr = g_GsRamAlloc + PIF_CLUT_SIZE;
+
+    g_GsRamAlloc = texAddr + (1 << (uLog + vLog));
+    return QueueUpload(uLog, vLog, pPif + 1, (u8 *)(pPif + 1) + PIF_CLUT_SIZE, clutAddr, texAddr);
+}
+
+// 0x00e0b9c (0x148 bytes)
+u64 QueuePifLoad(int log_w, int log_h, char *clut, char *tex)
+{
+    int clutAddr = g_GsRamAlloc;
+    int texAddr = g_GsRamAlloc + PIF_CLUT_SIZE;
+
+    g_GsRamAlloc = texAddr + (1 << (log_w + log_h));
+    return QueueUpload(log_w, log_h, clut, tex, clutAddr, texAddr);
+}
+
+// 0x00e0ce4 (0x12c bytes)
+u64 QueuePifLoad(int log_w, int log_h, char *clut, char *tex, int clut_addr, int tex_addr)
+{
+    return QueueUpload(log_w, log_h, clut, tex, clut_addr, tex_addr);
+}
+
+// 0x00e0e10 (0x4 bytes)
+void STUB_000e0e10(...)
+{
 }

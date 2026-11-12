@@ -261,6 +261,7 @@ extern undefined4 g_LameShadows; /* 0x95e5f0 */
 extern undefined4 g_MobyFuncList; /* 0x95ddd8 */
 extern undefined4 g_MobyFuncListArgs; /* 0x95ded8 */
 extern int g_MobyFuncListCount; /* 0x95dfd8 */
+extern int g_PartTexBaseIndex; /* 0xa52b38 */
 extern undefined4 g_PostDrawArgs; /* 0x95e4e4 */
 extern int g_PostDrawCount; /* 0x95e5e4 */
 extern undefined4 g_PostDrawFuncs; /* 0x95e3e4 */

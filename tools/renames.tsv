@@ -337,3 +337,13 @@ DAT_00a37390	g_MobyTexAddrs
 NAVG_LoadFile	LoadGameplayFile
 DAT_00a108f4	g_pGameplayFile
 DAT_00a202c0	g_CheckpointLevelFlags
+____Unused_IncCounter_a204ac	Unused_IncCounter_a204ac
+DAT_00a204b0	g_LevelLoadPending
+DAT_00964568	g_IopGameplay
+DAT_0096456c	g_IopSpaceships
+DAT_00a4d540	g_GadgetOClasses
+DAT_00a4d5a0	g_GadgetModels
+DAT_00a4d600	g_GadgetModelSizes
+DAT_00a4d7e0	g_GadgetSoundIds
+DAT_00a4daec	g_GadgetBufferSlot
+DAT_00a4dae0	g_LevelSoundBank
