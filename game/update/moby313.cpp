@@ -135,7 +135,7 @@ void UpdateMoby_313(MobyInstance *moby)
     if (iVar7 == 0) {
       iVar7 = CollLine(local_a0,lVar5 + 0x10,2,lVar5,0);
       if (iVar7 != 0) {
-        FastVecNormalize(pfVar4,pfVar4,0xa10980);
+        FastVecReflect(pfVar4,pfVar4,0xa10980);
         dVar8 = (double)MB_randRangeFloat(0.45,0.75);
         fVar1 = (float)((double)pfVar4[1] * dVar8);
         fVar2 = (float)((double)*pfVar4 * dVar8);

@@ -233,7 +233,7 @@ void FUN_0043ce28(undefined4 *param_1,int param_2,float *param_3)
     *(float *)(param_2 + 0x18) = (float)(dVar18 + dVar17);
     *(float *)(param_2 + 0x14) = (float)(dVar12 + dVar15);
     *(float *)(param_2 + 0x10) = (float)(dVar11 + dVar16);
-    FastVecNormalize(uVar10,uVar10,0xa10980);
+    FastVecReflect(uVar10,uVar10,0xa10980);
     *pfVar3 = *pfVar3 * 0.6;
     pfVar3[1] = pfVar3[1] * 0.6;
     pfVar3[2] = pfVar3[2] * 0.6;
@@ -1072,7 +1072,7 @@ LAB_0043e670:
             FUN_005e7e98(lVar20,0xa10960);
             FUN_005e7f98((double)(DAT_0071f418 * 9.7),auStack_440,0xa10980);
             FUN_005e7f54(lVar20,lVar20,auStack_440);
-            FastVecNormalize(uVar22,uVar22,0xa10980);
+            FastVecReflect(uVar22,uVar22,0xa10980);
             FUN_005e822c(dVar34,uVar22,uVar22);
             FUN_005e7f98(dVar31,auStack_440,0xa10980);
             FUN_005e81c0(auStack_440,local_490);
@@ -1102,7 +1102,7 @@ LAB_0043e670:
           else {
             moby->setByGroup = '\x01';
             FUN_005e7e98(lVar20,0xa10960);
-            FastVecNormalize(local_4b0,uVar22,0xa10980);
+            FastVecReflect(local_4b0,uVar22,0xa10980);
             FUN_005e7f98((double)(float)((double)g_FrameTime * dVar43),local_4b0,local_4b0
                         );
             FUN_005e7f98(dVar31,local_490,0xa10980);
@@ -1116,7 +1116,7 @@ LAB_0043e670:
          ((float)puVar4[2] < g_FrameTime * -9.8)) {
         moby->setByGroup = '\x01';
         FUN_005e7e98(lVar20,0xa10960);
-        FastVecNormalize(local_4b0,uVar22,0xa10980);
+        FastVecReflect(local_4b0,uVar22,0xa10980);
         FUN_005e7f98((double)(float)((double)g_FrameTime * dVar43),local_4b0,local_4b0);
         FUN_005e7f98(dVar31,local_490,0xa10980);
       }
@@ -1133,7 +1133,7 @@ LAB_0043e670:
         FUN_005e7f54(lVar20,lVar20,auStack_420);
         iVar12 = puVar4[2];
         dVar37 = (double)(float)puVar4[2];
-        FastVecNormalize(uVar22,uVar22,0xa10980);
+        FastVecReflect(uVar22,uVar22,0xa10980);
         FUN_005e822c(0x3fe3333340000000,uVar22,uVar22);
         iVar14 = worldUpdateTime;
         dVar23 = 0.5;

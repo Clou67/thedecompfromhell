@@ -879,7 +879,7 @@ void UpdateMoby_1009(MobyInstance *moby)
           *(float *)((int)puVar8 + 0x84) = (float)dVar29;
           dVar29 = (double)MB_randRangeFloat((float)dVar34,(float)dVar41);
           *(float *)(puVar8 + 0x11) = (float)dVar29;
-          FastVecNormalize(uVar13 - 0x130,out,0xa10980);
+          FastVecReflect(uVar13 - 0x130,out,0xa10980);
           dVar31 = (double)*(float *)((int)puVar8 + 0x94);
           dVar33 = (double)*(float *)(puVar8 + 0x12);
           fVar1 = *(float *)((int)puVar8 + 0x84);

@@ -189,7 +189,7 @@ void UpdateMoby_1193(MobyInstance *moby)
         (moby->pos).y = (float)((double)g_CollOutput.ip.y + dVar28);
         (moby->pos).z = (float)((double)g_CollOutput.ip.z + dVar29);
         (moby->pos).w = g_CollOutput.ip.w;
-        FastVecNormalize((int)pvVar8 + 0x10,(int)pvVar8 + 0x10,0xa10980);
+        FastVecReflect((int)pvVar8 + 0x10,(int)pvVar8 + 0x10,0xa10980);
         PlayMobySound(1,0,moby);
         sVar22 = *(short *)((int)pvVar8 + 0x2a);
         if (moby->state == '\0') {

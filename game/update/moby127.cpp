@@ -385,7 +385,7 @@ void M169_002a1698(undefined4 *param_1,int param_2,float *param_3)
     *(float *)(param_2 + 0x18) = (float)(dVar15 + dVar14);
     *(float *)(param_2 + 0x14) = (float)(dVar9 + dVar12);
     *(float *)(param_2 + 0x10) = (float)(dVar8 + dVar13);
-    FastVecNormalize(uVar7,uVar7,0xa10980);
+    FastVecReflect(uVar7,uVar7,0xa10980);
     *pfVar3 = *pfVar3 * 0.6;
     pfVar3[1] = pfVar3[1] * 0.6;
     pfVar3[2] = pfVar3[2] * 0.6;

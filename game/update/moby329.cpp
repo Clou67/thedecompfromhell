@@ -850,7 +850,7 @@ void UpdateMoby_329(MobyInstance *moby)
                   (moby->pos).z = fVar5 + fVar17;
                   (moby->pos).y = fVar4 + fVar19;
                   (moby->pos).x = fVar10 + fVar16;
-                  FastVecNormalize(uVar33 + 0x40,uVar33 + 0x40,0xa10980);
+                  FastVecReflect(uVar33 + 0x40,uVar33 + 0x40,0xa10980);
                   pfVar9[0x10] = pfVar9[0x10] * 0.25;
                   pfVar9[0x11] = pfVar9[0x11] * 0.25;
                   pfVar9[0x12] = pfVar9[0x12] * 0.25;

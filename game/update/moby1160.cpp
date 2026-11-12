@@ -1384,7 +1384,7 @@ void M1160_UpdateFlight(MobyInstance *moby,int param_2)
     (moby->pos).y = g_CollOutput.push.y;
     (moby->pos).z = g_CollOutput.push.z;
     (moby->pos).w = g_CollOutput.push.w;
-    FastVecNormalize(uVar20 - 0x140,uVar20 - 0x140,0xa10980);
+    FastVecReflect(uVar20 - 0x140,uVar20 - 0x140,0xa10980);
     dVar39 = ABS((double)*(float *)(puVar15 + 0x1a));
     dVar35 = ABS((double)*(float *)((int)puVar15 + 0xd4));
     dVar37 = (double)*(float *)(param_2 + 0xd8);
@@ -1541,7 +1541,7 @@ void M1160_UpdateFlight(MobyInstance *moby,int param_2)
     if (*(int *)(param_2 + 0xcc) == 0) {
       DAT_0096b2dc = DAT_0096b2dc - DAT_007650a0;
       if ((double)DAT_0096b2dc < dVar41) {
-        FastVecNormalize(uVar20 - 0x150,uVar20 - 0x140,0xa10980);
+        FastVecReflect(uVar20 - 0x150,uVar20 - 0x140,0xa10980);
         fVar2 = *(float *)((int)puVar15 + 0xc4);
         fVar1 = *(float *)(puVar15 + 0x18);
         fVar3 = *(float *)(puVar15 + 0x19);
@@ -1710,7 +1710,7 @@ void UpdateMoby_1160_JetFighterUnused(MobyInstance *moby)
           (moby->pos).x = (moby->pos).x + *(float *)(iVar16 + 0x10);
           (moby->pos).y = (moby->pos).y + *(float *)(iVar16 + 0x14);
           (moby->pos).z = (moby->pos).z + *(float *)(iVar16 + 0x18);
-          FastVecNormalize(lVar23,lVar23,iVar16 + 0x10);
+          FastVecReflect(lVar23,lVar23,iVar16 + 0x10);
           fVar3 = ABS(*(float *)(puVar11 + 0x18));
           dVar29 = (double)out[0x36];
           fVar7 = ABS(*(float *)((int)puVar11 + 0xc4));

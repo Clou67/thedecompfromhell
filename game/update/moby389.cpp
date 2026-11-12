@@ -212,7 +212,7 @@ void UpdateMoby_389(MobyInstance *moby)
          (MVar2 != QWARKS_STARFIGHTER_PART_018C)) &&
         ((MVar2 != QWARKS_STARFIGHTER_PART_018F && (MVar2 != QWARKS_STARFIGHTER_PART_0190))))))))))
   {
-    FastVecNormalize((int)pvVar3 + 0x10,(int)pvVar3 + 0x10,0xa10980);
+    FastVecReflect((int)pvVar3 + 0x10,(int)pvVar3 + 0x10,0xa10980);
     moby->state = '\x04';
   }
   dVar10 = (double)FastWrapRot((moby->rotation).x,*(float *)((int)pvVar3 + 0x30));

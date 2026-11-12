@@ -72,7 +72,7 @@ void UpdateMoby_189(MobyInstance *moby)
         (moby->pos).y = (float)((double)g_CollOutput.ip.y + dVar6);
         (moby->pos).z = (float)((double)g_CollOutput.ip.z + dVar8);
         (moby->pos).w = g_CollOutput.ip.w;
-        FastVecNormalize(pfVar2,pfVar2,0xa10980);
+        FastVecReflect(pfVar2,pfVar2,0xa10980);
         dVar6 = (double)MB_randRangeFloat(0.45,0.65);
         *pfVar2 = (float)((double)*pfVar2 * dVar6);
         pfVar2[1] = (float)((double)pfVar2[1] * dVar6);

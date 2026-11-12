@@ -250,7 +250,7 @@ void UpdateMoby_425(MobyInstance *moby)
         (moby->pos).y = g_CollOutput.ip.y;
         (moby->pos).z = g_CollOutput.ip.z;
         (moby->pos).w = g_CollOutput.ip.w;
-        FastVecNormalize(pfVar6,pfVar6,0xa10980);
+        FastVecReflect(pfVar6,pfVar6,0xa10980);
         fVar2 = pfVar6[1];
         fVar3 = *pfVar6;
         fVar4 = pfVar6[2];

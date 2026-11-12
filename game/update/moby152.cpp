@@ -176,7 +176,7 @@ void UpdateMoby_152(MobyInstance *moby)
             dVar16 = (double)(float)((double)g_CollOutput.ip.z + dVar24);
             dVar17 = (double)(float)((double)g_CollOutput.ip.y + dVar23);
             dVar19 = (double)(float)((double)g_CollOutput.ip.x + dVar19);
-            FastVecNormalize(&local_b0,(int)pvVar7 + 0x10,0xa10980);
+            FastVecReflect(&local_b0,(int)pvVar7 + 0x10,0xa10980);
             dVar25 = (double)SQRT(local_a8 * local_a8 + local_b0 * local_b0 + local_ac * local_ac);
             dVar24 = (double)(float)(dVar25 - (double)DAT_007ab454);
             if ((double)(float)(dVar25 - (double)DAT_007ab454) - dVar14 < 0.0) {

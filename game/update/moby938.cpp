@@ -201,7 +201,7 @@ M938_004c2ce8
       (param_1->pos).z = (float)(dVar27 + dVar24);
       (param_1->pos).y = (float)(dVar26 + dVar29);
       (param_1->pos).x = (float)(dVar25 + dVar23);
-      FastVecNormalize(param_2,param_2,0xa10980);
+      FastVecReflect(param_2,param_2,0xa10980);
       *param_2 = *param_2 * 0.35;
       param_2[1] = param_2[1] * 0.35;
       param_2[2] = param_2[2] * 0.35;
@@ -426,7 +426,7 @@ M938_004c2ce8
       (param_1->pos).z = (float)(dVar27 + dVar24);
       (param_1->pos).y = (float)(dVar26 + dVar29);
       (param_1->pos).x = (float)(dVar25 + dVar23);
-      FastVecNormalize(param_2,param_2,0xa10980);
+      FastVecReflect(param_2,param_2,0xa10980);
       *param_2 = *param_2 * 0.5;
       param_2[1] = param_2[1] * 0.5;
       param_2[2] = param_2[2] * 0.5;

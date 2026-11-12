@@ -171,7 +171,7 @@ void UpdateMoby_243(MobyInstance *moby)
           (moby->pos).y = g_CollOutput.ip.y;
           (moby->pos).z = g_CollOutput.ip.z;
           (moby->pos).w = g_CollOutput.ip.w;
-          FastVecNormalize(local_1d0,pfVar4,0xa10980);
+          FastVecReflect(local_1d0,pfVar4,0xa10980);
         }
       }
       else if (((g_CollOutput.pMoby != g_heroMobyPtr) &&
@@ -183,7 +183,7 @@ void UpdateMoby_243(MobyInstance *moby)
         (moby->pos).y = g_CollOutput.ip.y;
         (moby->pos).z = g_CollOutput.ip.z;
         (moby->pos).w = g_CollOutput.ip.w;
-        FastVecNormalize(local_1d0,pfVar4,0xa10980);
+        FastVecReflect(local_1d0,pfVar4,0xa10980);
       }
       if (moby->setByGroup != '\0') {
         uVar25 = 0x4008000000000000;

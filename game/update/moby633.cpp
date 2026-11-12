@@ -677,7 +677,7 @@ LAB_003f4428:
     local_bc = (moby->pos).y - g_CollOutput.ip.y;
     local_b8 = (moby->pos).z - g_CollOutput.ip.z;
     local_b4 = (moby->pos).w;
-    FastVecNormalize((int)pvVar8 + 0x40,(int)pvVar8 + 0x40,&local_c0);
+    FastVecReflect((int)pvVar8 + 0x40,(int)pvVar8 + 0x40,&local_c0);
     dVar30 = (double)FUN_005e8338((double)local_b8,
                                   (double)SQRT(local_c0 * local_c0 + local_bc * local_bc));
     dVar28 = 0.7853981852531433;

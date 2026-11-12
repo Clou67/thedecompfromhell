@@ -782,7 +782,7 @@ LAB_00241820:
     fVar4 = (moby->pos).x - g_CollOutput.ip.x;
     fVar5 = (moby->pos).y - g_CollOutput.ip.y;
     fVar6 = (moby->pos).z - g_CollOutput.ip.z;
-    FastVecNormalize(pfVar20 + 8,pfVar20 + 8,local_170);
+    FastVecReflect(pfVar20 + 8,pfVar20 + 8,local_170);
     fVar8 = (moby->pos).y - g_heroPosition.y;
     fVar9 = (moby->pos).x - g_heroPosition.x;
     if ((SQRT(fVar9 * fVar9 + fVar8 * fVar8) < DAT_0096bf68) &&

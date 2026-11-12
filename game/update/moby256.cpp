@@ -724,7 +724,7 @@ LAB_000edea4:
           local_3f0 = (float)dVar31;
           local_3ec = (float)dVar26;
           local_3e8 = (float)dVar32;
-          FastVecNormalize(&local_420,&local_400,0xa10980);
+          FastVecReflect(&local_420,&local_400,0xa10980);
           dVar31 = (double)SQRT(local_418 * local_418 + 0.0);
           dVar32 = (double)(g_CollOutput.normal.z * g_CollOutput.normal.z +
                            g_CollOutput.normal.x * g_CollOutput.normal.x +
@@ -809,7 +809,7 @@ LAB_000edea4:
           local_3f0 = (float)dVar31;
           local_3ec = (float)dVar26;
           local_3e8 = (float)dVar32;
-          FastVecNormalize(&local_420,&local_400,0xa10980);
+          FastVecReflect(&local_420,&local_400,0xa10980);
           dVar31 = (double)SQRT(local_418 * local_418 + 0.0);
           dVar34 = (double)(g_CollOutput.normal.z * g_CollOutput.normal.z +
                            g_CollOutput.normal.x * g_CollOutput.normal.x +

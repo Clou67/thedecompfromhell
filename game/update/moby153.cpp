@@ -1093,7 +1093,7 @@ LAB_002941a8:
         (moby->pos).z = g_CollOutput.ip.z;
         (moby->pos).w = g_CollOutput.ip.w;
         FUN_005e7f98(dVar37,local_490,local_490);
-        FastVecNormalize(&local_4d0,&local_4a0,0xa10980);
+        FastVecReflect(&local_4d0,&local_4a0,0xa10980);
         FUN_005e7f98((double)(g_FrameTime * 2.0),&local_4d0,&local_4d0);
         FUN_005e7f98(dVar37,&local_4c0,0xa10980);
         lVar17 = 0;
@@ -1109,7 +1109,7 @@ LAB_002941a8:
         (moby->pos).z = g_CollOutput.ip.z;
         (moby->pos).w = g_CollOutput.ip.w;
         FUN_005e7f98(dVar37,local_490,local_490);
-        FastVecNormalize(&local_4d0,&local_4a0,0xa10980);
+        FastVecReflect(&local_4d0,&local_4a0,0xa10980);
         FUN_005e7f98((double)(g_FrameTime * 2.0),&local_4d0,&local_4d0);
         FUN_005e7f98(dVar37,&local_4c0,0xa10980);
         lVar17 = lVar8;
@@ -1393,7 +1393,7 @@ LAB_002941a8:
       pfVar2[6] = 0.0;
       moby->setByGroup = '\0';
       FUN_005e7f98(dVar37,0xa10980,0xa10980);
-      FastVecNormalize(&local_3e0,&local_4a0,0xa10980);
+      FastVecReflect(&local_3e0,&local_4a0,0xa10980);
       dVar37 = (double)FUN_005e8338((double)local_3e0,(double)local_3dc);
       (moby->rotation).z = (float)dVar37;
       dVar37 = (double)FUN_005e8338((double)SQRT(local_3e0 * local_3e0 + local_3dc * local_3dc),

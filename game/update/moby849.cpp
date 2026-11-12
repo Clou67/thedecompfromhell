@@ -3456,7 +3456,7 @@ undefined8 FUN_0048c188(MobyInstance *param_1,longlong param_2)
             }
             M849_0048c008(param_1,pfVar16,1);
           }
-          FastVecNormalize(pfVar22,pfVar22,auStack_210);
+          FastVecReflect(pfVar22,pfVar22,auStack_210);
         }
         iVar19 = FastDecTimerS32(pfVar16 + 0x25);
         if (iVar19 != 0) {

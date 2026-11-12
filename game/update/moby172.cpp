@@ -853,7 +853,7 @@ void UpdateMoby_172(MobyInstance *moby)
             (moby->pos).y = g_CollOutput.ip.y;
             (moby->pos).z = g_CollOutput.ip.z;
             (moby->pos).w = g_CollOutput.ip.w;
-            FastVecNormalize(uVar13 - 0xf0,uVar13 - 0xe0,0xa10980);
+            FastVecReflect(uVar13 - 0xf0,uVar13 - 0xe0,0xa10980);
             fVar1 = *(float *)((int)puVar12 + 0xd4);
             fVar45 = *(float *)(puVar12 + 0x1a);
             fVar3 = *(float *)(puVar12 + 0x1b);
@@ -900,7 +900,7 @@ void UpdateMoby_172(MobyInstance *moby)
           (moby->pos).z = g_CollOutput.ip.z;
           uVar24 = (uint)(ZERO_MASK(iVar17)) & 1;
           (moby->pos).w = g_CollOutput.ip.w;
-          FastVecNormalize(uVar13 - 0xf0,uVar13 - 0xe0,0xa10980);
+          FastVecReflect(uVar13 - 0xf0,uVar13 - 0xe0,0xa10980);
           fVar1 = *(float *)((int)puVar12 + 0xd4);
           fVar45 = *(float *)(puVar12 + 0x1a);
           fVar3 = *(float *)(puVar12 + 0x1b);

@@ -782,7 +782,7 @@ LAB_002a2e58:
             (moby->pos).y = g_CollOutput.ip.y;
             (moby->pos).z = g_CollOutput.ip.z;
             (moby->pos).w = g_CollOutput.ip.w;
-            FastVecNormalize(local_300,uVar21,0xa10980);
+            FastVecReflect(local_300,uVar21,0xa10980);
             FUN_005e7f98((double)(float)((double)g_FrameTime * dVar42),local_300,local_300
                         );
             FUN_005e7f98(local_110,local_2e0,0xa10980);
@@ -800,7 +800,7 @@ LAB_002a2e58:
             (moby->pos).x = (moby->pos).x + local_280;
             (moby->pos).y = (moby->pos).y + local_27c;
             (moby->pos).z = (moby->pos).z + local_278;
-            FastVecNormalize(uVar21,uVar21,0xa10980);
+            FastVecReflect(uVar21,uVar21,0xa10980);
             *pfVar3 = *pfVar3 * 0.6;
             pfVar3[1] = pfVar3[1] * 0.6;
             pfVar3[2] = pfVar3[2] * 0.6;
@@ -868,7 +868,7 @@ LAB_002a2e58:
           (moby->pos).x = (moby->pos).x + local_290;
           (moby->pos).y = (moby->pos).y + local_28c;
           (moby->pos).z = (moby->pos).z + local_288;
-          FastVecNormalize(uVar21,uVar21,0xa10980);
+          FastVecReflect(uVar21,uVar21,0xa10980);
           *pfVar3 = *pfVar3 * 0.4;
           pfVar3[1] = pfVar3[1] * 0.4;
           pfVar3[2] = pfVar3[2] * 0.4;
@@ -900,7 +900,7 @@ LAB_002a2e58:
           (moby->pos).y = g_CollOutput.ip.y;
           (moby->pos).z = g_CollOutput.ip.z;
           (moby->pos).w = g_CollOutput.ip.w;
-          FastVecNormalize(local_300,uVar21,0xa10980);
+          FastVecReflect(local_300,uVar21,0xa10980);
           FUN_005e7f98((double)(float)((double)g_FrameTime * dVar42),local_300,local_300);
           FUN_005e7f98(local_110,local_2e0,0xa10980);
         }

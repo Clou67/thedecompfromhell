@@ -122,7 +122,7 @@ FUN_0038c8a0(double param_1,double param_2,double param_3,f32 param_4,f32 *param
       fVar2 = (pMoby->rotation).z;
       (pMoby->pos).w = g_CollOutput.ip.w;
       MB_SphericalToVector(pfVar3[0xc],fVar2,-(pMoby->rotation).y,afStack_80);
-      FastVecNormalize(local_60,afStack_80,0xa10980);
+      FastVecReflect(local_60,afStack_80,0xa10980);
       MB_genericExplosion
                 (uVar8,uVar8,0x4010000000000000,0x4000000000000000,0x4022000000000000,
                  0x3ff0000000000000,0x402e000000000000,pMoby,local_60,0,&DAT_0038c860,
@@ -1265,7 +1265,7 @@ LAB_0038e400:
             (moby->pos).y = g_CollOutput.ip.y;
             (moby->pos).z = g_CollOutput.ip.z;
             (moby->pos).w = g_CollOutput.ip.w;
-            FastVecNormalize(uVar18 - 0x210,uVar18 - 0x1f0,0xa10980);
+            FastVecReflect(uVar18 - 0x210,uVar18 - 0x1f0,0xa10980);
             fVar1 = g_FrameTime;
             fVar2 = *(float *)((int)puVar15 + 0xd4);
             fVar3 = *(float *)(puVar15 + 0x1a);
@@ -1317,7 +1317,7 @@ LAB_0038e400:
           (moby->pos).y = g_CollOutput.ip.y;
           (moby->pos).z = g_CollOutput.ip.z;
           (moby->pos).w = g_CollOutput.ip.w;
-          FastVecNormalize(uVar18 - 0x210,uVar18 - 0x1f0,0xa10980);
+          FastVecReflect(uVar18 - 0x210,uVar18 - 0x1f0,0xa10980);
           fVar1 = g_FrameTime;
           fVar2 = *(float *)((int)puVar15 + 0xd4);
           fVar3 = *(float *)(puVar15 + 0x1a);

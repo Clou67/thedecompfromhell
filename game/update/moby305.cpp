@@ -345,7 +345,7 @@ longlong FUN_0033a1d0(double param_1,double param_2,double param_3,double param_
         dVar24 = (double)MB_randRangeFloat((float)dVar42,(float)dVar41);
         dVar25 = (double)MB_randRangeFloat((float)dVar42,(float)dVar41);
         dVar26 = (double)MB_randRangeFloat((float)dVar42,(float)dVar41);
-        FastVecNormalize(uVar21 - 0x120,lVar20,0xa10980);
+        FastVecReflect(uVar21 - 0x120,lVar20,0xa10980);
         dVar29 = (double)*(float *)((int)puVar9 + 0x94);
         dVar30 = (double)*(float *)(puVar9 + 0x12);
         dVar31 = (double)*(float *)(puVar9 + 0x13);
@@ -435,7 +435,7 @@ longlong FUN_0033a1d0(double param_1,double param_2,double param_3,double param_
           lVar12 = 0;
         }
         else {
-          FastVecNormalize(lVar20,lVar20,0xa10980);
+          FastVecReflect(lVar20,lVar20,0xa10980);
           dVar38 = ABS((double)*(float *)(puVar9 + 0x10));
           dVar36 = ABS((double)*(float *)((int)puVar9 + 0x84));
           *(float *)(puVar9 + 0x15) = (float)(dVar38 - dVar36);
@@ -1020,7 +1020,7 @@ void UpdateMoby_305(MobyInstance *moby)
     dVar35 = (double)MB_randRangeFloat((float)dVar49,(float)dVar40);
     dVar36 = (double)MB_randRangeFloat((float)dVar49,(float)dVar40);
     dVar37 = (double)MB_randRangeFloat((float)dVar49,(float)dVar40);
-    FastVecNormalize(uVar21 - 0x200,lVar22,0xa10980);
+    FastVecReflect(uVar21 - 0x200,lVar22,0xa10980);
     dVar39 = (double)*(float *)((int)puVar19 + 0x94);
     dVar41 = (double)*(float *)(puVar19 + 0x12);
     dVar42 = (double)*(float *)(puVar19 + 0x13);
@@ -1122,7 +1122,7 @@ LAB_0033b718:
     DeleteMoby(moby);
     return;
   }
-  FastVecNormalize(uVar21 - 0x1f0,lVar22,0xa10980);
+  FastVecReflect(uVar21 - 0x1f0,lVar22,0xa10980);
   dVar48 = (double)*(float *)(puVar19 + 0x14);
   dVar50 = (double)*(float *)((int)puVar19 + 0xa4);
   dVar51 = ABS(dVar48);

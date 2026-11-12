@@ -780,7 +780,7 @@ LAB_003305c8:
       pfVar4[5] = -(float)(dVar22 * 0.05000000074505806 - (double)pfVar4[5]);
       if ((g_CollOutput.pMoby == (MobyInstance *)0x0) || ((g_CollOutput.pMoby)->oClass != SHUTTLE_01A8))
       {
-        FastVecNormalize(uVar21,uVar21,0xa10980);
+        FastVecReflect(uVar21,uVar21,0xa10980);
         fVar16 = pfVar4[0x21];
         *pfVar4 = *pfVar4 * fVar16;
         pfVar4[1] = pfVar4[1] * fVar16;

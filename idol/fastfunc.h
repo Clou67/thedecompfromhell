@@ -45,7 +45,7 @@ undefined8 STUB_00500544(...);
 undefined8 STUB_0050054c(...);
 void FastAbsF(float *param_1,float *param_2);
 void FastVecClamp(float *param_1,float *param_2);
-void FastVecNormalize(float *param_1,float *param_2,float *param_3);
+void FastVecReflect(float *param_1,float *param_2,float *param_3);
 void FastVecFromPackedBits(undefined8 param_1,undefined4 param_2);
 uint FastVecToPackedChars(Vec4 *param_1);
 void FastVecFromPackedShorts(Vec4 *param_1,ulonglong param_2);

@@ -1,6 +1,12 @@
-// game/mesh.cpp -- reconstructed from NPEA00385 EBOOT
-// STATUS: NOT STARTED (raw Ghidra output)
+// game/mesh.cpp -- water surfaces: tile wave simulation, water sheets, environment-map UVs
+// STATUS: IN PROGRESS
+// MERGE (17 of 19 functions cleaned; the rest are generated)
 // 19 functions, 0xe9114-0xea378
+//
+// A water surface is an array of 16x16-height tiles (WaterTile). Each tile keeps three height
+// buffers; a wave step reads one buffer as "previous", stages the current heights with a border
+// taken from the neighbours (StageTileBuf, 19 rows of 24 floats), and writes the new heights plus
+// the neighbours' border copies (WaterTile_StepWave).
 #include <math.h>
 #include <string.h>
 #include "game/mesh.h"
@@ -9,221 +15,121 @@
 #include "game/water.h"
 #include "idol/fastfunc.h"
 
+#define STAGE_W 24          /* staged grid: row 0 = top border, rows 1-16 the tile, 17-18 bottom;
+                               col 3 = left border, cols 4-19 the tile, 20-21 right */
+#define NO_LINK 0xff
+
+#define WAVE_SPREAD 0.25f   /* 0xe9bfc */
+#define WAVE_DAMP   0.0625f /* 0xe9c00 */
+#define ENV_SCALE   0.45f
+#define ENV_UV      0.5f    /* 0xea1f0 */
+
 // 0x00e9114 (0x14 bytes)
 void SECTION_HEADER_MESH(void)
-
 {
-  DAT_00726aac = 0x10000;
-  return;
+    DAT_00726aac = 0x10000;
 }
+
+/* PS2 VU code, emptied on PS3 */
 
 
 // 0x00e9130 (0x4 bytes)
 void STUB_000e9130(...)
-
 {
-  return;
 }
 
 
 // 0x00e9134 (0x4 bytes)
 void STUB_000e9134(...)
-
 {
-  return;
 }
 
 
 // 0x00e9138 (0x4 bytes)
 void STUB_000e9138(...)
-
 {
-  return;
 }
 
 
 // 0x00e913c (0x4 bytes)
 void STUB_000e913c(...)
-
 {
-  return;
 }
 
 
 // 0x00e9140 (0x8 bytes)
-undefined8 STUB_000e9140(...)
-
+int STUB_000e9140(...)
 {
-  return 0;
+    return 0;
 }
 
 
 // 0x00e9148 (0x4 bytes)
 void STUB_000e9148(...)
-
 {
-  return;
 }
 
 
 // 0x00e914c (0x4 bytes)
 void STUB_000e914c(...)
-
 {
-  return;
 }
 
 
 // 0x00e9150 (0x8 bytes)
-undefined8 STUB_000e9150(...)
-
+int STUB_000e9150(...)
 {
-  return 0;
+    return 0;
 }
 
 
 // 0x00e9158 (0x4 bytes)
 void STUB_000e9158(...)
-
 {
-  return;
 }
 
 
 // 0x00e915c (0x4c bytes)
-void AddUVOffsets(float *param_1,float *param_2,int param_3,float *param_4)
-
+void AddUVOffsets(Vec2 *dst, Vec2 *src, int count, Vec2 *offset)
 {
-  float fVar1;
-  float fVar2;
-  float *pfVar3;
-  
-  fVar1 = *param_4;
-  fVar2 = param_4[1];
-  if (0 < param_3) {
-    do {
-      param_3 = param_3 + -1;
-      *param_1 = *param_2 + fVar1;
-      pfVar3 = param_2 + 1;
-      param_2 = param_2 + 2;
-      param_1[1] = *pfVar3 + fVar2;
-      param_1 = param_1 + 2;
-    } while (0 < param_3);
-  }
-  return;
+    float u = offset->x, v = offset->y;
+    for (; count > 0; count--, dst++, src++) {
+        dst->x = src->x + u;
+        dst->y = src->y + v;
+    }
 }
 
 
 // 0x00e91a8 (0x138 bytes)
-void StageTileBuf(WaterTile *param_1,void *param_2)
-
+void StageTileBuf(float (*stage)[24], WaterTileBuf *buf)
 {
-  undefined4 uVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  undefined4 *puVar7;
-  float *pfVar8;
-  float *pfVar9;
-  float *pfVar10;
-  uint uVar11;
-  void *__src;
-  longlong lVar12;
-  
-  memcpy(param_1->tileLinkCorners,(void *)((int)param_2 + 0x400),0x40);
-  uVar11 = 0;
-  pfVar8 = (float *)param_1->tileLinkCorners;
-  __src = param_2;
-  do {
-    uVar11 = uVar11 + 1;
-    pfVar8 = pfVar8 + 0x18;
-    memcpy(pfVar8,__src,0x40);
-    __src = (void *)((int)__src + 0x40);
-  } while (uVar11 < 0x10);
-  memcpy(param_1->buf[1].height[1] + 10,(void *)((int)param_2 + 0x480),0x40);
-  memcpy(param_1->buf[1].height[3] + 2,(void *)((int)param_2 + 0x500),0x40);
-  uVar1 = *(undefined4 *)((int)param_2 + 0x580);
-  fVar2 = *(float *)((int)param_2 + 0x584);
-  fVar3 = *(float *)((int)param_2 + 0x588);
-  fVar4 = *(float *)((int)param_2 + 0x58c);
-  pfVar10 = (float *)&param_1->tileLinkTop;
-  fVar5 = *(float *)((int)param_2 + 0x590);
-  pfVar9 = param_1->buf[0].height[0] + 2;
-  pfVar8 = param_1->buf[0].height[0] + 3;
-  fVar6 = *(float *)((int)param_2 + 0x594);
-  lVar12 = 0x10;
-  do {
-    pfVar10[0x18] = *(float *)((int)param_2 + 0x440);
-    pfVar10 = pfVar10 + 0x18;
-    pfVar9[0x18] = (float)*(undefined4 *)((int)param_2 + 0x4c0);
-    puVar7 = (undefined4 *)((int)param_2 + 0x540);
-    pfVar9 = pfVar9 + 0x18;
-    param_2 = (void *)((int)param_2 + 4);
-    pfVar8[0x18] = (float)*puVar7;
-    pfVar8 = pfVar8 + 0x18;
-    lVar12 = lVar12 + -1;
-  } while (lVar12 != 0);
-  param_1->tileLinkTop = (char)((uint)uVar1 >> 0x18);
-  param_1->tileLinkLeft = (char)((uint)uVar1 >> 0x10);
-  param_1->tileLinkBottom = (char)((uint)uVar1 >> 8);
-  param_1->tileLinkRight = (char)uVar1;
-  param_1->buf[0].height[0][2] = fVar2;
-  param_1->buf[1].height[1][9] = fVar3;
-  param_1->buf[1].height[2][10] = fVar4;
-  param_1->buf[1].height[2][0xb] = fVar5;
-  param_1->buf[1].height[4][2] = fVar6;
-  return;
+    unsigned i;
+
+    memcpy(&stage[0][4], buf->heightTop, sizeof(buf->heightTop));
+    for (i = 0; i < 16; i++)
+        memcpy(&stage[i + 1][4], buf->height[i], sizeof(buf->height[i]));
+    memcpy(&stage[17][4], buf->heightBottom, sizeof(buf->heightBottom));
+    memcpy(&stage[18][4], buf->heightBottom2, sizeof(buf->heightBottom2));
+    for (i = 0; i < 16; i++) {
+        stage[i + 1][3] = buf->heightLeft[i];
+        stage[i + 1][20] = buf->heightRight[i];
+        stage[i + 1][21] = buf->heightRight2[i];
+    }
+    stage[0][3] = buf->heightCorner[0];
+    stage[0][20] = buf->heightCorner[1];
+    stage[17][3] = buf->heightCorner[2];
+    stage[17][20] = buf->heightCorner[3];
+    stage[17][21] = buf->heightCorner[4];
+    stage[18][20] = buf->heightCorner[5];
 }
 
 
 // 0x00e92e8 (0xb4 bytes)
-void WaterTileBufLerp(float t,float *dst,float *bufA,float *bufB)
-
+void WaterTileBufLerp(float t, float *dst, float *bufA, float *bufB)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  float fVar7;
-  uint uVar8;
-  float *pfVar9;
-  float *pfVar10;
-  float *pfVar11;
-  longlong lVar12;
-  
-  uVar8 = 0;
-  fVar7 = 1.0 - t;
-  do {
-    lVar12 = 4;
-    pfVar10 = bufB;
-    pfVar11 = bufA;
-    pfVar9 = dst;
-    do {
-      bufA = pfVar11 + 4;
-      fVar1 = pfVar10[1];
-      bufB = pfVar10 + 4;
-      fVar2 = pfVar10[2];
-      fVar3 = pfVar10[3];
-      fVar4 = pfVar11[1];
-      fVar5 = pfVar11[2];
-      dst = pfVar9 + 4;
-      fVar6 = pfVar11[3];
-      *pfVar9 = *pfVar11 * fVar7 + *pfVar10 * t;
-      pfVar9[1] = fVar4 * fVar7 + fVar1 * t;
-      pfVar9[2] = fVar5 * fVar7 + fVar2 * t;
-      pfVar9[3] = fVar6 * fVar7 + fVar3 * t;
-      lVar12 = lVar12 + -1;
-      pfVar10 = bufB;
-      pfVar11 = bufA;
-      pfVar9 = dst;
-    } while (lVar12 != 0);
-    uVar8 = uVar8 + 1;
-  } while (uVar8 < 0x17);
-  return;
+    float u = 1.0f - t;
+    for (unsigned i = 0; i < sizeof(WaterTileBuf) / sizeof(float); i++)
+        dst[i] = bufA[i] * u + bufB[i] * t;
 }
 
 
@@ -690,142 +596,62 @@ void ShadeVerts(WaterTile *tile)
 
 
 // 0x00e9c08 (0x320 bytes)
-void WaterTile_StepWave(float *stagedGrid,int tileIdx,int bufIdx,WaterTile *tile)
-
+/* one step of the wave equation for tiles[tileIdx]: buf[bufIdx] holds the previous heights and
+   gets the new ones, then the edges are copied into the neighbours' border arrays */
+void WaterTile_StepWave(float (*stage)[24], int tileIdx, int bufIdx, WaterTile *tiles)
 {
-  byte bVar1;
-  float fVar2;
-  undefined4 *puVar3;
-  int iVar4;
-  int iVar5;
-  int iVar6;
-  int iVar7;
-  int iVar8;
-  int iVar9;
-  float fVar10;
-  float *pfVar11;
-  int iVar12;
-  uint uVar13;
-  undefined4 *puVar14;
-  float *pfVar15;
-  int iVar16;
-  int iVar17;
-  int iVar18;
-  int iVar19;
-  int iVar20;
-  undefined4 *__src;
-  longlong lVar21;
-  
-  fVar10 = WaterTileConsts.minHeight;
-  iVar12 = tileIdx * 0x11a0;
-  iVar20 = bufIdx * 0x5c0;
-  iVar4 = iVar20 + iVar12;
-  pfVar11 = (float *)((int)tile + iVar20 + iVar12 + 0x50);
-  uVar13 = 0;
-  __src = (undefined4 *)((int)tile + iVar4 + 0x50);
-  do {
-    iVar16 = 0;
-    lVar21 = 0x10;
-    pfVar15 = pfVar11;
-    do {
-      iVar17 = iVar16 + 0xc;
-      iVar18 = iVar16 + 0x10;
-      iVar19 = iVar16 + 0x14;
-      iVar5 = iVar16 + 0x6c;
-      iVar6 = iVar16 + 0xcc;
-      pfVar11 = pfVar15 + 1;
-      iVar7 = iVar16 + 0x74;
-      iVar9 = iVar16 + 0xd0;
-      iVar8 = iVar16 + 0xd4;
-      iVar16 = iVar16 + 4;
-      fVar2 = (*(float *)(iVar17 + (int)stagedGrid) + *(float *)(iVar18 + (int)stagedGrid) +
-               *(float *)(iVar19 + (int)stagedGrid) + *(float *)((int)stagedGrid + iVar5) +
-               *(float *)((int)stagedGrid + iVar7) + *(float *)((int)stagedGrid + iVar6) +
-               *(float *)((int)stagedGrid + iVar9) + *(float *)((int)stagedGrid + iVar8)) * 0.25 -
-              *pfVar15;
-      if (fVar10 - ABS(fVar2) < 0.0) {
-        fVar2 = -(fVar2 * 0.0625 - fVar2);
-      }
-      *pfVar15 = fVar2;
-      lVar21 = lVar21 + -1;
-      pfVar15 = pfVar11;
-    } while (lVar21 != 0);
-    uVar13 = uVar13 + 1;
-    stagedGrid = stagedGrid + 0x18;
-  } while (uVar13 < 0x10);
-  bVar1 = *(byte *)((int)tile + iVar12 + 0xc);
-  if (bVar1 != 0xff) {
-    iVar16 = iVar20 + (uint)bVar1 * 0x11a0;
-    memcpy((void *)((int)tile + iVar16 + 0x4d0),__src,0x40);
-    memcpy((void *)((int)tile + iVar16 + 0x550),(void *)((int)tile + iVar4 + 0x90),0x40);
-  }
-  bVar1 = *(byte *)((int)tile + iVar12 + 0xd);
-  if (bVar1 != 0xff) {
-    iVar16 = (int)tile + iVar20 + (uint)bVar1 * 0x11a0;
-    lVar21 = 8;
-    puVar14 = __src;
-    do {
-      *(undefined4 *)(iVar16 + 0x510) = *puVar14;
-      *(undefined4 *)(iVar16 + 0x590) = puVar14[1];
-      *(undefined4 *)(iVar16 + 0x514) = puVar14[0x10];
-      puVar3 = puVar14 + 0x11;
-      puVar14 = puVar14 + 0x20;
-      *(undefined4 *)(iVar16 + 0x594) = *puVar3;
-      iVar16 = iVar16 + 8;
-      lVar21 = lVar21 + -1;
-    } while (lVar21 != 0);
-  }
-  bVar1 = *(byte *)((int)tile + iVar12 + 0xe);
-  if (bVar1 != 0xff) {
-    memcpy((void *)((int)tile + iVar20 + (uint)bVar1 * 0x11a0 + 0x450),
-                 (void *)((int)tile + iVar4 + 0x410),0x40);
-  }
-  bVar1 = *(byte *)((int)tile + iVar12 + 0xf);
-  if (bVar1 != 0xff) {
-    lVar21 = 4;
-    iVar16 = (int)tile + iVar20 + (uint)bVar1 * 0x11a0;
-    do {
-      *(undefined4 *)(iVar16 + 0x490) = __src[0xf];
-      *(undefined4 *)(iVar16 + 0x494) = __src[0x1f];
-      *(undefined4 *)(iVar16 + 0x498) = __src[0x2f];
-      puVar14 = __src + 0x3f;
-      __src = __src + 0x40;
-      *(undefined4 *)(iVar16 + 0x49c) = *puVar14;
-      iVar16 = iVar16 + 0x10;
-      lVar21 = lVar21 + -1;
-    } while (lVar21 != 0);
-  }
-  bVar1 = *(byte *)((int)tile + iVar12 + 0x10);
-  if (bVar1 != 0xff) {
-    iVar16 = iVar20 + (uint)bVar1 * 0x11a0;
-    *(undefined4 *)((int)tile + iVar16 + 0x5dc) = *(undefined4 *)((int)tile + iVar4 + 0x50);
-    *(undefined4 *)((int)tile + iVar16 + 0x5e0) = *(undefined4 *)((int)tile + iVar4 + 0x54);
-    *(undefined4 *)((int)tile + iVar16 + 0x5e4) = *(undefined4 *)((int)tile + iVar4 + 0x90);
-  }
-  bVar1 = *(byte *)((int)tile + iVar12 + 0x11);
-  if (bVar1 != 0xff) {
-    *(undefined4 *)((int)tile + iVar20 + (uint)bVar1 * 0x11a0 + 0x5d8) =
-         *(undefined4 *)((int)tile + iVar4 + 0x8c);
-  }
-  bVar1 = *(byte *)((int)tile + iVar12 + 0x12);
-  if (bVar1 != 0xff) {
-    *(undefined4 *)((int)tile + iVar20 + (uint)bVar1 * 0x11a0 + 0x5d4) =
-         *(undefined4 *)((int)tile + iVar4 + 0x410);
-  }
-  bVar1 = *(byte *)((int)tile + iVar12 + 0x13);
-  if (bVar1 != 0xff) {
-    *(undefined4 *)((int)tile + iVar20 + (uint)bVar1 * 0x11a0 + 0x5d0) =
-         *(undefined4 *)((int)tile + iVar4 + 0x44c);
-  }
-  return;
+    WaterTile *tile = &tiles[tileIdx];
+    WaterTileBuf *b = &tile->buf[bufIdx];
+    float minHeight = WaterTileConsts.minHeight;
+    int r, c, i;
+
+    for (r = 0; r < 16; r++, stage++) {
+        for (c = 0; c < 16; c++) {
+            float *s = &stage[0][c];
+            float h = (s[3] + s[4] + s[5] + s[STAGE_W + 3] + s[STAGE_W + 5]
+                       + s[2 * STAGE_W + 3] + s[2 * STAGE_W + 4] + s[2 * STAGE_W + 5]) * WAVE_SPREAD
+                      - b->height[r][c];
+            if (minHeight - fabsf(h) < 0.0f) h -= h * WAVE_DAMP;
+            b->height[r][c] = h;
+        }
+    }
+
+    if (tile->tileLinkTop != NO_LINK) {
+        WaterTileBuf *n = &tiles[tile->tileLinkTop].buf[bufIdx];
+        memcpy(n->heightBottom, b->height[0], sizeof(n->heightBottom));
+        memcpy(n->heightBottom2, b->height[1], sizeof(n->heightBottom2));
+    }
+    if (tile->tileLinkLeft != NO_LINK) {
+        WaterTileBuf *n = &tiles[tile->tileLinkLeft].buf[bufIdx];
+        for (i = 0; i < 16; i++) {
+            n->heightRight[i] = b->height[i][0];
+            n->heightRight2[i] = b->height[i][1];
+        }
+    }
+    if (tile->tileLinkBottom != NO_LINK)
+        memcpy(tiles[tile->tileLinkBottom].buf[bufIdx].heightTop, b->height[15], sizeof(b->height[15]));
+    if (tile->tileLinkRight != NO_LINK) {
+        WaterTileBuf *n = &tiles[tile->tileLinkRight].buf[bufIdx];
+        for (i = 0; i < 16; i++) n->heightLeft[i] = b->height[i][15];
+    }
+    if (tile->tileLinkCorners[0] != NO_LINK) {         /* up-left */
+        WaterTileBuf *n = &tiles[tile->tileLinkCorners[0]].buf[bufIdx];
+        n->heightCorner[3] = b->height[0][0];
+        n->heightCorner[4] = b->height[0][1];
+        n->heightCorner[5] = b->height[1][0];
+    }
+    if (tile->tileLinkCorners[1] != NO_LINK)           /* up-right */
+        tiles[tile->tileLinkCorners[1]].buf[bufIdx].heightCorner[2] = b->height[0][15];
+    if (tile->tileLinkCorners[2] != NO_LINK)           /* down-left */
+        tiles[tile->tileLinkCorners[2]].buf[bufIdx].heightCorner[1] = b->height[15][0];
+    if (tile->tileLinkCorners[3] != NO_LINK)           /* down-right */
+        tiles[tile->tileLinkCorners[3]].buf[bufIdx].heightCorner[0] = b->height[15][15];
 }
 
 
 // 0x00e9f28 (0x4 bytes)
 void STUB_000e9f28(...)
-
 {
-  return;
 }
 
 
@@ -982,37 +808,27 @@ void BuildVerts(WaterSheet *sheet,WaterSheetVert *outVerts)
 
 // 0x00ea1e8 (0x4 bytes)
 void STUB_000ea1e8(...)
-
 {
-  return;
 }
 
 
 // 0x00ea1f8 (0x180 bytes)
-void NormalsToEnvUV(int count,void *param_2,Vec3 *normals,Vec2 *outUV)
-
+/* environment-map UVs: reflect the direction to the camera off each normal */
+void NormalsToEnvUV(int count, Vec3 *positions, Vec3 *normals, Vec2 *outUV)
 {
-  int iVar1;
-  longlong lVar2;
-  double dVar3;
-  GPiece<16> local_70;
-  float local_60;
-  float local_5c;
-  
-  lVar2 = (longlong)(int)normals;
-  iVar1 = 0;
-  if (0 < count) {
-    dVar3 = 0.5;
-    do {
-      FastVecNormalize(&local_60,local_70,lVar2);
-      iVar1 = iVar1 + 1;
-      lVar2 = lVar2 + 0xc;
-      outUV->x = (float)((double)local_60 * dVar3);
-      outUV->y = (float)((double)local_5c * dVar3);
-      outUV = outUV + 1;
-    } while (iVar1 < count);
-  }
-  return;
+    for (int i = 0; i < count; i++, positions++, normals++, outUV++) {
+        float view[4], refl[4];
+        view[0] = GameCamera.posX - positions->x;
+        view[1] = GameCamera.posY - positions->y;
+        view[2] = GameCamera.posZ - positions->z;
+        view[3] = *(float *)GameCamera.field8_0x14c;
+        float len = sqrtf(view[2] * view[2] + (view[0] * view[0] + view[1] * view[1]));
+        float s = ENV_SCALE / len;
+        for (int k = 0; k < 3; k++) view[k] = len == 0.0f ? 0.0f : view[k] * s;   /* guarded normalize */
+        FastVecReflect(refl, view, (float *)normals);    /* 0x500608, name a guess (reflects off the normal) */
+        outUV->x = refl[0] * ENV_UV;
+        outUV->y = refl[1] * ENV_UV;
+    }
 }
 
 

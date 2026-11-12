@@ -74,7 +74,7 @@ void UpdateMoby_149(MobyInstance *moby)
         fVar3 = g_CollOutput.push.w;
         *(short *)((int)pvVar5 + 0xc) = sVar4 + -1;
         (moby->pos).w = fVar3;
-        FastVecNormalize((int)pvVar5 + 0x10,(int)pvVar5 + 0x10,0xa10980);
+        FastVecReflect((int)pvVar5 + 0x10,(int)pvVar5 + 0x10,0xa10980);
         *(undefined4 *)((int)pvVar5 + 0x20) = 0;
         *(float *)((int)pvVar5 + 0x10) = *(float *)((int)pvVar5 + 0x10) * 0.75;
         *(float *)((int)pvVar5 + 0x14) = *(float *)((int)pvVar5 + 0x14) * 0.75;

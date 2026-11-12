@@ -623,7 +623,7 @@ void UpdateMoby_1233(MobyInstance *moby)
           MB_randRangeFloat((float)dVar23,(float)dVar26);
           MB_randRangeFloat((float)dVar23,(float)dVar26);
           MB_randRangeFloat((float)dVar23,(float)dVar26);
-          FastVecNormalize(local_120,pfVar1,0xa10980);
+          FastVecReflect(local_120,pfVar1,0xa10980);
           MB_randRangeFloat
                     ((float)((double)g_FrameTime * dVar21),
                      (float)((double)g_FrameTime * dVar22));

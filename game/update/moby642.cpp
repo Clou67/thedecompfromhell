@@ -293,7 +293,7 @@ void UpdateMoby_642(MobyInstance *moby)
     pfVar6[6] = (float)dVar19;
     iVar12 = CollLine(local_80,local_70,6,0,0);
     if ((iVar12 != 0) && (iVar12 = MB_randInt(8), iVar12 == 0)) {
-      FastVecNormalize(pfVar6 + 4,pfVar6 + 4,0xa10980);
+      FastVecReflect(pfVar6 + 4,pfVar6 + 4,0xa10980);
       pfVar6[6] = (float)((double)DAT_00e5aef4 * dVar21 + (double)pfVar6[6]);
     }
     *pfVar6 = *pfVar6 + pfVar6[4];
@@ -351,7 +351,7 @@ void UpdateMoby_642(MobyInstance *moby)
       (moby->pos).y = g_CollOutput.ip.y;
       (moby->pos).z = g_CollOutput.ip.z;
       (moby->pos).w = g_CollOutput.ip.w;
-      FastVecNormalize(pfVar6,pfVar6,0xa10980);
+      FastVecReflect(pfVar6,pfVar6,0xa10980);
       fVar11 = *pfVar6;
       pfVar6[1] = pfVar6[1] * 0.25;
       *pfVar6 = fVar11 * 0.25;

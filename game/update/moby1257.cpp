@@ -117,7 +117,7 @@ void UpdateMoby_1257(void *this_,MobyInstance *moby)
           *(float *)((int)this_ + 0x14) = g_CollOutput.ip.y;
           *(float *)((int)this_ + 0x18) = g_CollOutput.ip.z;
           *(float *)((int)this_ + 0x1c) = g_CollOutput.ip.w;
-          FastVecNormalize(local_70,pfVar2,0xa10980);
+          FastVecReflect(local_70,pfVar2,0xa10980);
         }
       }
       else {

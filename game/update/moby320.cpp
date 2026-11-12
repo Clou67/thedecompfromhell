@@ -165,7 +165,7 @@ void UpdateMoby_320(MobyInstance *moby)
         return;
       }
       moby->scale = moby->scale * 0.8;
-      FastVecNormalize(pfVar4,pfVar4,0xa10980);
+      FastVecReflect(pfVar4,pfVar4,0xa10980);
       dVar8 = (double)MB_randRangeFloat(0.3,0.1);
       fVar1 = (float)((double)pfVar4[1] * dVar8);
       fVar2 = (float)((double)*pfVar4 * dVar8);

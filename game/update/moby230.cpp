@@ -504,7 +504,7 @@ void FUN_002fe4e8(undefined4 *param_1,int param_2,float *param_3)
     *(float *)(param_2 + 0x18) = fVar10 + fVar4;
     *(float *)(param_2 + 0x14) = fVar9 + fVar5;
     *(float *)(param_2 + 0x10) = fVar8 + fVar3;
-    FastVecNormalize(pfVar1,pfVar1,0xa10980);
+    FastVecReflect(pfVar1,pfVar1,0xa10980);
     *pfVar1 = *pfVar1 * 0.6;
     pfVar1[1] = pfVar1[1] * 0.6;
     pfVar1[2] = pfVar1[2] * 0.6;
@@ -1230,7 +1230,7 @@ void UpdateMoby_230(MobyInstance *moby)
         dVar29 = (double)g_CollOutput.push.z;
         (moby->pos).w = g_CollOutput.push.w;
         (moby->pos).z = -(float)(dVar27 * dVar28 - dVar29);
-        FastVecNormalize(uVar25,uVar25,0xa10980);
+        FastVecReflect(uVar25,uVar25,0xa10980);
         fVar3 = (float)((double)pfVar7[1] * dVar34);
         fVar4 = (float)((double)*pfVar7 * dVar34);
         fVar5 = (float)((double)pfVar7[2] * dVar34);
@@ -1273,7 +1273,7 @@ void UpdateMoby_230(MobyInstance *moby)
         (moby->pos).w = g_CollOutput.ip.w;
         (moby->pos).z =
              fVar3 + ((float)((double)DAT_0071f408 * dVar29) * moby->scale) / moby->pClass->gScale;
-        FastVecNormalize(uVar25,uVar25,0xa10980);
+        FastVecReflect(uVar25,uVar25,0xa10980);
         fVar3 = (float)((double)pfVar7[1] * dVar34);
         fVar4 = (float)((double)*pfVar7 * dVar34);
         fVar5 = (float)((double)pfVar7[2] * dVar34);

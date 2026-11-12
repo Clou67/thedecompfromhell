@@ -706,7 +706,7 @@ void UpdateMoby_113(MobyInstance *moby)
          (((MVar2 != (PLANETBUSTER_MAXIMUS_PART_0500|SUCKCANNON_0036) &&
            (MVar2 != (PLANETBUSTER_MAXIMUS_PART_0500|HANGAR_DOOR_0037))) &&
           ((MVar2 != 0x538 && ((MVar2 != 0x539 && (MVar2 != 0x53a)))))))))))) {
-      FastVecNormalize((int)pvVar3 + 0x10,(int)pvVar3 + 0x10,0xa10980);
+      FastVecReflect((int)pvVar3 + 0x10,(int)pvVar3 + 0x10,0xa10980);
       moby->state = '\x04';
     }
     dVar9 = (double)FastWrapRot((moby->rotation).x,*(float *)((int)pvVar3 + 0x30));

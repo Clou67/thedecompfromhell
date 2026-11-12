@@ -209,7 +209,7 @@ void UpdateMoby_344(MobyInstance *moby)
               (float)puVar5[0xe] * g_CollOutput.normal.z +
               (float)puVar5[0xc] * g_CollOutput.normal.x + (float)puVar5[0xd] * g_CollOutput.normal.y <
               0.0)))) {
-      FastVecNormalize(puVar5 + 0xc,puVar5 + 0xc,0xa10980);
+      FastVecReflect(puVar5 + 0xc,puVar5 + 0xc,0xa10980);
       puVar5[0xc] = (float)puVar5[0xc] * 0.5;
       puVar5[0xd] = (float)puVar5[0xd] * 0.5;
       puVar5[0xe] = (float)puVar5[0xe] * 0.5;

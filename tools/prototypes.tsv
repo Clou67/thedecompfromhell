@@ -18,3 +18,8 @@ SaveCheckpointMobyVar	void SaveCheckpointMobyVar(void *data,int size,MobyInstanc
 NAVG_AllocSlot	int NAVG_AllocSlot(int param_1,int param_2)
 Respawn_IncCounter	int Respawn_IncCounter(void)
 FastMemSet	void FastMemSet(void *param_1,int param_2,int param_3)
+AddUVOffsets	void AddUVOffsets(Vec2 *param_1,Vec2 *param_2,int param_3,Vec2 *param_4)
+StageTileBuf	void StageTileBuf(float (*param_1)[24],WaterTileBuf *param_2)
+WaterTile_StepWave	void WaterTile_StepWave(float (*stagedGrid)[24],int tileIdx,int bufIdx,WaterTile *tile)
+NormalsToEnvUV	void NormalsToEnvUV(int count,Vec3 *param_2,Vec3 *normals,Vec2 *outUV)
+FastVecReflect	void FastVecReflect(float *param_1,float *param_2,float *param_3)

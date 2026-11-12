@@ -845,7 +845,7 @@ void UpdateMoby_848(MobyInstance *moby)
             dVar41 = (double)MB_randRangeFloat((float)dVar49,(float)dVar43);
             dVar42 = (double)MB_randRangeFloat((float)dVar49,(float)dVar43);
             dVar52 = (double)MB_randRangeFloat((float)dVar49,(float)dVar43);
-            FastVecNormalize(uVar15 - 0x1e0,uVar15 - 0x250,0xa10980);
+            FastVecReflect(uVar15 - 0x1e0,uVar15 - 0x250,0xa10980);
             dVar45 = (double)*(float *)((int)puVar11 + 0x104);
             dVar46 = (double)*(float *)(puVar11 + 0x20);
             dVar47 = (double)*(float *)(puVar11 + 0x21);

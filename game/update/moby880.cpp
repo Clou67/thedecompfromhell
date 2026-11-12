@@ -328,7 +328,7 @@ void UpdateMoby_880(MobyInstance *moby)
             MB_randRangeFloat((float)dVar11,(float)dVar12);
             MB_randRangeFloat((float)dVar11,(float)dVar12);
             MB_randRangeFloat((float)dVar11,(float)dVar12);
-            FastVecNormalize(local_a0,(int)pvVar5 + 0x30,0xa10980);
+            FastVecReflect(local_a0,(int)pvVar5 + 0x30,0xa10980);
             MB_randRangeFloat
                       ((float)((double)g_FrameTime * dVar14),
                        (float)((double)g_FrameTime * dVar16));

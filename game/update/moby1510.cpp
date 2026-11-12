@@ -85,7 +85,7 @@ void UpdateMoby_1510(MobyInstance *moby)
           *pfVar2 = 0.0;
         }
         else {
-          FastVecNormalize(pfVar2,pfVar2,0xa10980);
+          FastVecReflect(pfVar2,pfVar2,0xa10980);
         }
       }
       MB_genericExplosion

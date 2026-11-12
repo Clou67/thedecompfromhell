@@ -242,7 +242,7 @@ void UpdateMoby_1886(MobyInstance *moby)
       (moby->pos).y = (float)((double)fVar3 + dVar30);
       (moby->pos).z = (float)((double)fVar4 + dVar28);
       if (bVar1) {
-        FastVecNormalize(pfVar7,pfVar7,0xa10980);
+        FastVecReflect(pfVar7,pfVar7,0xa10980);
         fVar3 = g_CollOutput.normal.z;
         dVar32 = ABS((double)g_CollOutput.normal.z);
         fVar34 = SQRT(g_CollOutput.normal.x * g_CollOutput.normal.x +
@@ -335,7 +335,7 @@ void UpdateMoby_1886(MobyInstance *moby)
         pfVar7[2] = (float)((double)pfVar7[2] * dVar29);
       }
       else {
-        FastVecNormalize(pfVar7,pfVar7,0xa10980);
+        FastVecReflect(pfVar7,pfVar7,0xa10980);
         fVar3 = g_CollOutput.normal.z;
         dVar32 = ABS((double)g_CollOutput.normal.z);
         fVar34 = SQRT(g_CollOutput.normal.x * g_CollOutput.normal.x +
@@ -466,7 +466,7 @@ void UpdateMoby_1886(MobyInstance *moby)
       (moby->pos).z = (float)((double)g_CollOutput.push.z + dVar31);
       (moby->pos).w = g_CollOutput.push.w;
       if (bVar1) {
-        FastVecNormalize(pfVar7,pfVar7,0xa10980);
+        FastVecReflect(pfVar7,pfVar7,0xa10980);
         fVar3 = g_CollOutput.normal.z;
         dVar32 = ABS((double)g_CollOutput.normal.z);
         fVar34 = SQRT(g_CollOutput.normal.x * g_CollOutput.normal.x +
@@ -556,7 +556,7 @@ void UpdateMoby_1886(MobyInstance *moby)
         pfVar7[2] = (float)((double)pfVar7[2] * dVar33);
       }
       else {
-        FastVecNormalize(pfVar7,pfVar7,0xa10980);
+        FastVecReflect(pfVar7,pfVar7,0xa10980);
         fVar3 = g_CollOutput.normal.z;
         dVar32 = ABS((double)g_CollOutput.normal.z);
         fVar34 = SQRT(g_CollOutput.normal.x * g_CollOutput.normal.x +

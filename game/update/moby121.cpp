@@ -1747,7 +1747,7 @@ void UpdateMoby_121(MobyInstance *moby)
               (moby->pos).y = g_CollOutput.ip.y;
               (moby->pos).z = g_CollOutput.ip.z;
               (moby->pos).w = g_CollOutput.ip.w;
-              FastVecNormalize(&local_300,pfVar3,0xa10980);
+              FastVecReflect(&local_300,pfVar3,0xa10980);
               FUN_005e7f98((double)(float)((double)g_FrameTime * dVar43),&local_300,
                            &local_300);
               FUN_005e7f98(dVar42,local_2f0,0xa10980);
@@ -1764,7 +1764,7 @@ void UpdateMoby_121(MobyInstance *moby)
             (moby->pos).y = g_CollOutput.ip.y;
             (moby->pos).z = g_CollOutput.ip.z;
             (moby->pos).w = g_CollOutput.ip.w;
-            FastVecNormalize(&local_300,pfVar3,0xa10980);
+            FastVecReflect(&local_300,pfVar3,0xa10980);
             FUN_005e7f98((double)(float)((double)g_FrameTime * dVar43),&local_300,
                          &local_300);
             FUN_005e7f98(dVar42,local_2f0,0xa10980);

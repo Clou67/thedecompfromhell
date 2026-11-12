@@ -1626,7 +1626,7 @@ void UpdateMoby_203(MobyInstance *moby)
                      *(float *)((int)pvVar10 + 0x18) + *(float *)(puVar19 + 0x1d);
               }
             }
-            FastVecNormalize(lVar38,lVar38,0xa10980);
+            FastVecReflect(lVar38,lVar38,0xa10980);
             if ((g_CollOutput.pMoby == (MobyInstance *)0x0) || (0 < g_CollOutput.poly)) {
               fVar4 = *(float *)((int)pvVar10 + 0x10);
               fVar12 = *(float *)((int)pvVar10 + 0x14);

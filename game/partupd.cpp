@@ -5686,7 +5686,7 @@ void UpdatePart_30(PartInstance *part)
       fVar7 = (float)part->update[2] + (fVar3 - fVar10);
     }
     else {
-      FastVecNormalize(lVar37,lVar37,0xa10980);
+      FastVecReflect(lVar37,lVar37,0xa10980);
       fVar4 = (float)part->update[0];
       fVar5 = 0.95;
       fVar6 = (float)part->update[1];
@@ -7462,7 +7462,7 @@ void UpdatePart_40(PartInstance *part)
   }
   else {
     dVar18 = 0.0;
-    FastVecNormalize(lVar12 + 0x20,lVar12 + 0x20,0xa10980);
+    FastVecReflect(lVar12 + 0x20,lVar12 + 0x20,0xa10980);
     fVar2 = (float)part->update[1];
     fVar3 = (float)part->update[2];
     part->update[0] = (int)((float)part->update[0] * 0.02);

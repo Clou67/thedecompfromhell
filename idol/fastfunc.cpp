@@ -534,7 +534,7 @@ void FastVecClamp(float *param_1,float *param_2)
 
 // 0x0500608 (0x110 bytes)
 // inlined: FastRSqrt @0x500650
-void FastVecNormalize(float *param_1,float *param_2,float *param_3)
+void FastVecReflect(float *param_1,float *param_2,float *param_3)
 
 {
   float fVar1;

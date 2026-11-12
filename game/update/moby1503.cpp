@@ -361,7 +361,7 @@ void UpdateMoby_1503(MobyInstance *moby)
                                  (double)(float)(dVar12 * dVar12 + (double)(float)(dVar11 * dVar11))
                                  ));
     if (dVar15 < 0.0) {
-      FastVecNormalize(pfVar5,pfVar5,0xa10980);
+      FastVecReflect(pfVar5,pfVar5,0xa10980);
       dVar16 = (double)SQRT(g_CollOutput.normal.z * g_CollOutput.normal.z +
                             g_CollOutput.normal.x * g_CollOutput.normal.x +
                             g_CollOutput.normal.y * g_CollOutput.normal.y);

@@ -74,7 +74,7 @@ void UpdateMoby_281(MobyInstance *moby)
         }
         if (fVar4 * *(float *)((int)pvVar2 + 0x18) +
             fVar6 * *(float *)((int)pvVar2 + 0x10) + fVar7 * *(float *)((int)pvVar2 + 0x14) < 0.0) {
-          FastVecNormalize(uVar10 + 0x10,uVar10 + 0x10,local_50);
+          FastVecReflect(uVar10 + 0x10,uVar10 + 0x10,local_50);
           *(float *)((int)pvVar2 + 0x10) = *(float *)((int)pvVar2 + 0x10) * 0.25;
           *(float *)((int)pvVar2 + 0x14) = *(float *)((int)pvVar2 + 0x14) * 0.25;
           *(float *)((int)pvVar2 + 0x18) = *(float *)((int)pvVar2 + 0x18) * 0.25;
@@ -99,7 +99,7 @@ void UpdateMoby_281(MobyInstance *moby)
         }
         if (local_38 * *(float *)((int)pvVar2 + 0x18) +
             fVar4 * *(float *)((int)pvVar2 + 0x10) + fVar5 * *(float *)((int)pvVar2 + 0x14) < 0.0) {
-          FastVecNormalize(uVar10 + 0x10,uVar10 + 0x10,local_40);
+          FastVecReflect(uVar10 + 0x10,uVar10 + 0x10,local_40);
           *(float *)((int)pvVar2 + 0x10) = *(float *)((int)pvVar2 + 0x10) * 0.25;
           *(float *)((int)pvVar2 + 0x14) = *(float *)((int)pvVar2 + 0x14) * 0.25;
           *(float *)((int)pvVar2 + 0x18) = *(float *)((int)pvVar2 + 0x18) * 0.25;

@@ -353,7 +353,7 @@ void UpdateMoby_200(MobyInstance *moby)
         (moby->rotation).y = (float)dVar26;
         dVar26 = (double)MB_randRangeFloat((float)dVar35,(float)dVar34);
         (moby->rotation).z = (float)dVar26;
-        FastVecNormalize(pfVar8,pfVar8,0xa10980);
+        FastVecReflect(pfVar8,pfVar8,0xa10980);
         dVar26 = (double)MB_randRangeFloat(0.07,0.13);
         *pfVar8 = (float)((double)*pfVar8 * dVar26 + dVar27);
         pfVar8[2] = (float)((double)pfVar8[2] * dVar26);

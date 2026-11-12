@@ -926,7 +926,7 @@ void UpdateMoby_212(MobyInstance *moby)
                                ((double)(float)(dVar24 * 6.199999809265137),lVar18 + 0x10,
                                 &DAT_002f0cc0,0,lVar18), iVar20 != 0)) {
           if (g_CollOutput.pMoby != (MobyInstance *)pfVar11[0x12]) {
-            FastVecNormalize(uVar23,uVar23,0xa10980);
+            FastVecReflect(uVar23,uVar23,0xa10980);
             (moby->pos).x = g_CollOutput.push.x;
             (moby->pos).y = g_CollOutput.push.y;
             (moby->pos).z = g_CollOutput.push.z;

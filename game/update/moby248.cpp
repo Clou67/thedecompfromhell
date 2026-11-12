@@ -237,7 +237,7 @@ void UpdateMoby_248(MobyInstance *moby)
     (moby->pos).y = g_CollOutput.ip.y;
     (moby->pos).z = g_CollOutput.ip.z;
     (moby->pos).w = g_CollOutput.ip.w;
-    FastVecNormalize(uVar15 + 0x10,uVar15 + 0x10,0xa10980);
+    FastVecReflect(uVar15 + 0x10,uVar15 + 0x10,0xa10980);
     fVar2 = *(float *)((int)pvVar6 + 0x14);
     fVar3 = *(float *)((int)pvVar6 + 0x10);
     fVar4 = *(float *)((int)pvVar6 + 0x18);
@@ -353,7 +353,7 @@ void UpdateMoby_248(MobyInstance *moby)
             (moby->pos).y = g_CollOutput.ip.y;
             (moby->pos).z = g_CollOutput.ip.z;
             (moby->pos).w = g_CollOutput.ip.w;
-            FastVecNormalize(uVar15 + 0x10,uVar15 + 0x10,0xa10980);
+            FastVecReflect(uVar15 + 0x10,uVar15 + 0x10,0xa10980);
             fVar2 = *(float *)((int)pvVar6 + 0x14);
             fVar3 = *(float *)((int)pvVar6 + 0x10);
             fVar4 = *(float *)((int)pvVar6 + 0x18);
@@ -391,7 +391,7 @@ void UpdateMoby_248(MobyInstance *moby)
             dVar23 = (double)g_CollOutput.ip.z;
             (moby->pos).w = g_CollOutput.ip.w;
             (moby->pos).z = (float)(dVar23 + dVar16);
-            FastVecNormalize(uVar15 + 0x10,uVar15 + 0x10,0xa10980);
+            FastVecReflect(uVar15 + 0x10,uVar15 + 0x10,0xa10980);
             dVar20 = 0.0;
             dVar25 = (double)(g_CollOutput.normal.z * *(float *)((int)pvVar6 + 0x10) -
                              g_CollOutput.normal.x * *(float *)((int)pvVar6 + 0x18));
@@ -514,7 +514,7 @@ void UpdateMoby_248(MobyInstance *moby)
         (moby->pos).y = g_CollOutput.ip.y;
         (moby->pos).z = g_CollOutput.ip.z;
         (moby->pos).w = g_CollOutput.ip.w;
-        FastVecNormalize(uVar15 + 0x10,uVar15 + 0x10,0xa10980);
+        FastVecReflect(uVar15 + 0x10,uVar15 + 0x10,0xa10980);
         fVar2 = *(float *)((int)pvVar6 + 0x14);
         fVar3 = *(float *)((int)pvVar6 + 0x10);
         fVar4 = *(float *)((int)pvVar6 + 0x18);

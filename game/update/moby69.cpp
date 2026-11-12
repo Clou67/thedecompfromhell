@@ -864,7 +864,7 @@ void M69_0041bf10(MobyInstance *param_1,longlong param_2)
     (param_1->pos).y = g_CollOutput.push.y;
     (param_1->pos).z = g_CollOutput.push.z;
     (param_1->pos).w = g_CollOutput.push.w;
-    FastVecNormalize(uVar25 - 0x220,uVar25 - 0x220,0xa10980);
+    FastVecReflect(uVar25 - 0x220,uVar25 - 0x220,0xa10980);
     dVar37 = ABS((double)*(float *)(puVar20 + 0x1a));
     dVar38 = (double)*(float *)(iVar21 + 0x38);
     dVar46 = ABS((double)*(float *)((int)puVar20 + 0xd4));
@@ -1051,7 +1051,7 @@ void M69_0041bf10(MobyInstance *param_1,longlong param_2)
     else if (*(int *)(iVar21 + 0xdc) == 0) {
       DAT_0096b2dc = DAT_0096b2dc - 5.0;
       if ((double)DAT_0096b2dc < dVar44) {
-        FastVecNormalize(uVar25 - 0x230,uVar25 - 0x220,0xa10980);
+        FastVecReflect(uVar25 - 0x230,uVar25 - 0x220,0xa10980);
         fVar5 = *(float *)((int)puVar20 + 0xc4);
         fVar6 = *(float *)(puVar20 + 0x18);
         fVar7 = *(float *)(puVar20 + 0x19);
@@ -1281,7 +1281,7 @@ void UpdateMoby_69(MobyInstance *moby)
         (moby->pos).x = fVar5 + fVar3;
         (moby->pos).y = fVar6 + fVar25;
         (moby->pos).z = fVar7 + fVar4;
-        FastVecNormalize(uVar20 - 0x130,uVar20 - 0x130,iVar24 + 0x10);
+        FastVecReflect(uVar20 - 0x130,uVar20 - 0x130,iVar24 + 0x10);
         fVar4 = ABS(*(float *)(puVar14 + 0x18));
         fVar3 = ABS(*(float *)((int)puVar14 + 0xc4));
         dVar36 = (double)out[0xe];
