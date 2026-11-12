@@ -25,7 +25,7 @@ Shared update functions are named `UpdateMoby_<first oClass>`, with every regist
 | game/hero.cpp | 241 | 0x7cf0c | 0xc8274 |
 | game/hud.cpp | 112 | 0xc8274 | 0xd88e4 |
 | game/initonce.cpp | 5 | 0xd88e4 | 0xd93a8 |
-| game/initsky.cpp | 5 | 0xd93a8 | 0xda2e0 |
+| game/inittransition.cpp | 5 | 0xd93a8 | 0xda2e0 |
 | game/lights.cpp | 9 | 0xda2e0 | 0xdb1e0 |
 | game/loaders.cpp | 41 | 0xdb1e0 | 0xe0e14 |
 | game/main.cpp | 2 | 0xe0e14 | 0xe1b0c |

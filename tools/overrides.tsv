@@ -6,3 +6,6 @@ crt0::_init	game/boot.cpp
 989snd::	sdk/libscream/989snd.cpp
 # sndHost_* : SCREAM host file-I/O hooks (object name inferred from the function names)
 0x63ff34-0x648b10	sdk/libscream/sndhost.cpp
+# the file after initonce starts with InitSky but is mostly space-scene (level transition) effects;
+# name a guess (DL keeps that code in transition.cpp), placed to fit the link order
+0xd93a8-0xda2e0	game/inittransition.cpp

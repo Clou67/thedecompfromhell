@@ -3,7 +3,7 @@
 // 1 functions, 0x2bc4b8-0x2bc748
 #include "game/update/moby1812.h"
 #include "game/freeze.h"
-#include "game/initsky.h"
+#include "game/inittransition.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/space.h"

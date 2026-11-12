@@ -1,5 +1,5 @@
 #pragma once
-// game/initsky.h
+// game/inittransition.h
 #include "types.h"
 
 // ---- globals

@@ -1,4 +1,4 @@
-# game/initsky.cpp -- original instructions (NPEA00385), same functions and order as the .cpp
+# game/inittransition.cpp -- original instructions (NPEA00385), same functions and order as the .cpp
 
 SECTION_HEADER_INITSKY:   # 0xd93a8, 0x14 bytes
   00d93a8  lis 3, 114

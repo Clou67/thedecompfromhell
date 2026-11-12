@@ -13,7 +13,7 @@
 #include "game/freeze.h"
 #include "game/help.h"
 #include "game/hud.h"
-#include "game/initsky.h"
+#include "game/inittransition.h"
 #include "game/loaders.h"
 #include "game/main.h"
 #include "game/map.h"

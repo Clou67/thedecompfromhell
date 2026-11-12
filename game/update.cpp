@@ -13,7 +13,7 @@
 #include "game/help.h"
 #include "game/hero.h"
 #include "game/hud.h"
-#include "game/initsky.h"
+#include "game/inittransition.h"
 #include "game/lights.h"
 #include "game/loaders.h"
 #include "game/main.h"

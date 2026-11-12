@@ -1,8 +1,8 @@
-// game/initsky.cpp -- the level's sky draw, and effects for the space (ship) cutscenes
+// game/inittransition.cpp -- InitSky, and the effects of the space (level transition) cutscenes
 // STATUS: CLEAN (checked against the asm; local names are mine)
 // 5 functions, 0xd93a8-0xda2e0
 #include <math.h>
-#include "game/initsky.h"
+#include "game/inittransition.h"
 #include "game/boot.h"
 #include "game/draw.h"
 #include "game/hero.h"

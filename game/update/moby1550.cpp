@@ -3,7 +3,7 @@
 // 1 functions, 0x2984f4-0x298594
 #include "game/update/moby1550.h"
 #include "game/freeze.h"
-#include "game/initsky.h"
+#include "game/inittransition.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 

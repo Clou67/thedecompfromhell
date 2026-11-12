@@ -757,11 +757,11 @@ addr	size	ghidra_name	c_name	file	basis
 00d88fc	0xd4	initonce::???_Unused_InitOnce_RunSysCallWait	???_Unused_InitOnce_RunSysCallWait	game/initonce.cpp	ns
 00d89d0	0x218	initonce::InitMemSlots	InitMemSlots	game/initonce.cpp	ns
 00d8be8	0x7c0	initonce::InitOnce	InitOnce	game/initonce.cpp	ns
-00d93a8	0x14	SECTION_HEADER_INITSKY	SECTION_HEADER_INITSKY	game/initsky.cpp	header
-00d93c0	0x28c	initsky::InitSky	InitSky	game/initsky.cpp	ns
-00d9668	0x558	initsky::DrawSceneShipEffect	DrawSceneShipEffect	game/initsky.cpp	ns
-00d9bf8	0x2d0	initsky::SpawnSceneShipParticles	SpawnSceneShipParticles	game/initsky.cpp	ns
-00d9ee8	0x3f8	initsky::UpdateSpaceSceneEffects	UpdateSpaceSceneEffects	game/initsky.cpp	ns
+00d93a8	0x14	SECTION_HEADER_INITSKY	SECTION_HEADER_INITSKY	game/inittransition.cpp	override
+00d93c0	0x28c	initsky::InitSky	InitSky	game/inittransition.cpp	override
+00d9668	0x558	initsky::DrawSceneShipEffect	DrawSceneShipEffect	game/inittransition.cpp	override
+00d9bf8	0x2d0	initsky::SpawnSceneShipParticles	SpawnSceneShipParticles	game/inittransition.cpp	override
+00d9ee8	0x3f8	initsky::UpdateSpaceSceneEffects	UpdateSpaceSceneEffects	game/inittransition.cpp	override
 00da2e0	0x14	SECTION_HEADER_LIGHTS	SECTION_HEADER_LIGHTS	game/lights.cpp	header
 00da2f8	0x8	stub::STUB_000da2f8_RET_0	STUB_000da2f8_RET_0	game/lights.cpp	fill
 00da308	0x1a4	lights::CreatePointLight3	CreatePointLight3	game/lights.cpp	ns

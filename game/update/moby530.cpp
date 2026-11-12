@@ -7,7 +7,7 @@
 #include "game/freeze.h"
 #include "game/hero.h"
 #include "game/hud.h"
-#include "game/initsky.h"
+#include "game/inittransition.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "idol/fastfunc.h"

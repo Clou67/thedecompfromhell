@@ -4,7 +4,7 @@
 #include "game/update/moby1548.h"
 #include "game/freeze.h"
 #include "game/hero.h"
-#include "game/initsky.h"
+#include "game/inittransition.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/partupd.h"
