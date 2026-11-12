@@ -1538,8 +1538,8 @@ uint DrawOxygenMeter(uint *param_1)
   iVar6 = 0;
   local_9c[0] = param_1[0x15];
   uVar11 = param_1[0x18];
-  bVar1 = *(byte *)(g_viewMtxPtr + 0x11);
-  if (*(int *)(g_viewMtxPtr + 0xc) == 0) {
+  bVar1 = *(byte *)(g_pIdolDraw + 0x11);
+  if (*(int *)(g_pIdolDraw + 0xc) == 0) {
     iVar6 = -0x50;
     if (bVar1 == 5) {
       iVar6 = -0x3c;
@@ -1890,8 +1890,8 @@ uint Draw_Moby185Meter(uint *param_1)
   local_90 = 0;
   local_8c[0] = param_1[0x15];
   uVar2 = param_1[0x18];
-  bVar1 = *(char *)(g_viewMtxPtr + 0x11) == '\x05';
-  if (*(int *)(g_viewMtxPtr + 0xc) == 0) {
+  bVar1 = *(char *)(g_pIdolDraw + 0x11) == '\x05';
+  if (*(int *)(g_pIdolDraw + 0xc) == 0) {
     local_90 = -0x50;
     if (bVar1) {
       local_90 = -0x3c;
@@ -2590,8 +2590,8 @@ uint Draw_Moby849Meter(uint *param_1)
   iVar9 = 0;
   local_3c = param_1[0x15];
   uVar11 = param_1[0x18];
-  bVar2 = *(byte *)(g_viewMtxPtr + 0x11);
-  if (*(int *)(g_viewMtxPtr + 0xc) == 0) {
+  bVar2 = *(byte *)(g_pIdolDraw + 0x11);
+  if (*(int *)(g_pIdolDraw + 0xc) == 0) {
     iVar9 = -0x50;
     if (bVar2 == 5) {
       iVar9 = -0x3c;
@@ -6985,7 +6985,7 @@ undefined4 Draw_RaceLapPlaceHud(int param_1)
   
   bVar1 = false;
   lVar9 = 0;
-  if ((*(char *)(g_viewMtxPtr + 0x11) == '\x04') || (*(char *)(g_viewMtxPtr + 0x11) == '\x05')) {
+  if ((*(char *)(g_pIdolDraw + 0x11) == '\x04') || (*(char *)(g_pIdolDraw + 0x11) == '\x05')) {
     bVar1 = true;
   }
   if (*(int *)(param_1 + 0x6c) < 1) {
@@ -7084,7 +7084,7 @@ undefined4 Draw_RaceTimeScoreHud(int param_1)
   
   bVar2 = false;
   uVar8 = 0;
-  if ((*(char *)(g_viewMtxPtr + 0x11) == '\x04') || (*(char *)(g_viewMtxPtr + 0x11) == '\x05')) {
+  if ((*(char *)(g_pIdolDraw + 0x11) == '\x04') || (*(char *)(g_pIdolDraw + 0x11) == '\x05')) {
     bVar2 = true;
   }
   if (0 < *(int *)(param_1 + 0x6c)) {

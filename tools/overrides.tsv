@@ -21,5 +21,5 @@ crt0::_init	game/boot.cpp
 # the tie drawing half of sUnk (GS presets, DrawTies): fits the link order between space and update
 0x1658d8-0x166e08	game/tieproc.cpp
 # mcstate.cpp: memory-card state machine between map and memcard. Its section header store
-# (0x726534 = 0x10000, between map's 0x724acc and memcard's 0x72666c) is folded into Map_InitColors.
+# (0x726534 = 0x10000, between map's 0x724acc and memcard's 0x72666c) is folded into MCSTATE_InitColors (was Map_InitColors).
 0xe64fc-0xe6b08	game/mcstate.cpp

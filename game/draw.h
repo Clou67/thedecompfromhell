@@ -137,7 +137,6 @@ extern undefined4 DAT_0095e5fc; /* 0x95e5fc */
 extern undefined4 DAT_0095e600; /* 0x95e600 */
 extern undefined4 DAT_0095e604; /* 0x95e604 */
 extern undefined4 DAT_0095e608; /* 0x95e608 */
-extern undefined4 DAT_0095e9f0; /* 0x95e9f0 */
 extern undefined4 DAT_0095ea14; /* no defined data */
 extern undefined4 DAT_0095ee18; /* 0x95ee18 */
 extern undefined4 DAT_0095ee1c; /* 0x95ee1c */
@@ -252,6 +251,7 @@ extern undefined4 _DAT_00736040; /* direct read */
 extern undefined4 _DAT_00736050; /* direct read */
 extern undefined4 _DAT_0095d240; /* direct read */
 extern undefined4 fogNearDist; /* 0x95d198 */
+extern int g_EffectTableCnt; /* 0x95e9f0 */ /* type set in global_types.tsv */
 extern int g_FontColorsEnabled; /* 0x95ee14 */
 extern short g_FrameBufHeight; /* 0x966b7e */
 extern short g_FrameBufWidth; /* 0x966b7c */
@@ -275,6 +275,7 @@ extern int g_ScreenHeight; /* 0x966b04 */
 extern undefined1 g_ScreenInsertEffect; /* 0x95cf30 */
 extern int g_ScreenWidth; /* 0x966b00 */
 extern undefined4 g_SubtitleTable; /* 0x95cd9c */
+extern undefined4 g_pIdolDraw; /* 0x8fa564: the Idol renderer object (was g_viewMtxPtr); +0xc widescreen, +0x4a8 main memory base for RSX offsets, +0x4ac VRAM base */ /* type set in global_types.tsv */
 
 // ---- functions
 void SECTION_HEADER_DRAW(void);

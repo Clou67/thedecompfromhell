@@ -161,8 +161,8 @@ void SkySpriteProc(void)
         RenderingStep *ctx = ForwardPass;
         u32 texHeaders = EffectTexHeaders;
 
-        idol_draw::BindVertexProgram(g_viewMtxPtr, (int)ctx, 5);
-        idol_draw::BindFragmentProgram(g_viewMtxPtr, (int)ctx, 6);
+        idol_draw::BindVertexProgram(g_pIdolDraw, (int)ctx, 5);
+        idol_draw::BindFragmentProgram(g_pIdolDraw, (int)ctx, 6);
 
         SkyVertex *vertices = (SkyVertex *)idol::AllocateMemAlign((int)FrameHeap, 4 * sizeof(SkyVertex), 16);
 
@@ -189,7 +189,7 @@ void SkySpriteProc(void)
         EmitMethod(ctx, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 1 * 4, VTX_FORMAT(2, CELL_GCM_VERTEX_F));
         EmitMethod(ctx, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 3 * 4, VTX_FORMAT(4, CELL_GCM_VERTEX_UB));
 
-        u32 offset = (u32)vertices - *(u32 *)(g_viewMtxPtr + 0x4a8);
+        u32 offset = (u32)vertices - *(u32 *)(g_pIdolDraw + 0x4a8);
 
         EmitMethod(ctx, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_OFFSET + 0 * 4, offset | MAIN_MEMORY);
         EmitMethod(ctx, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_OFFSET + 1 * 4, (offset + 12) | MAIN_MEMORY);

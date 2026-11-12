@@ -24,8 +24,8 @@ extern undefined * g_CardStateFuncs; /* 0x7265bc */
 extern int g_SaveCurCard; /* 0x71faf0 */ /* type set in global_types.tsv */
 
 // ---- functions
-void Map_InitColors(void);
-void FlowState_Update(void);
+void MCSTATE_InitColors(void);
+void MCSTATE_Update(void);
 void CardState_INIT(void);
 void CardState_GOOD_SAVE(void);
 void CardState_WARNING(void);

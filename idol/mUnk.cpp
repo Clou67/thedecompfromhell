@@ -1086,7 +1086,7 @@ bool FUN_004d44a0(undefined2 param_1,int param_2,undefined4 *param_3,int param_4
   puVar2[0xe] = 1;
   *(undefined2 *)(puVar2 + 8) = param_1;
   *(undefined4 *)(puVar2 + 4) = 0xaae4;
-  iVar1 = g_viewMtxPtr;
+  iVar1 = g_pIdolDraw;
   *(short *)(puVar2 + 10) = (short)param_2;
   *(undefined2 *)(puVar2 + 0xc) = 1;
   *(int *)(puVar2 + 0x10) = param_5;
@@ -1800,10 +1800,10 @@ void FUN_004d5880(undefined8 param_1)
   ulonglong uVar1;
   int iVar2;
   
-  iVar2 = g_viewMtxPtr;
-  uVar1 = (ulonglong)(LZCOUNT(*(undefined4 *)(g_viewMtxPtr + 0xc)) << 0x20) >> 0x25;
+  iVar2 = g_pIdolDraw;
+  uVar1 = (ulonglong)(LZCOUNT(*(undefined4 *)(g_pIdolDraw + 0xc)) << 0x20) >> 0x25;
   if (DAT_010ee154 == 0) {
-    idol_draw::BindFragmentProgram(g_viewMtxPtr,HUD_Pass,0x14);
+    idol_draw::BindFragmentProgram(g_pIdolDraw,HUD_Pass,0x14);
     FUN_004d5594(param_1,uVar1);
   }
   else {
@@ -1821,10 +1821,10 @@ void FUN_004d5934(undefined8 param_1)
   ulonglong uVar1;
   int iVar2;
   
-  iVar2 = g_viewMtxPtr;
-  uVar1 = (ulonglong)(LZCOUNT(*(undefined4 *)(g_viewMtxPtr + 0xc)) << 0x20) >> 0x25;
+  iVar2 = g_pIdolDraw;
+  uVar1 = (ulonglong)(LZCOUNT(*(undefined4 *)(g_pIdolDraw + 0xc)) << 0x20) >> 0x25;
   if (DAT_010ee154 == 0) {
-    idol_draw::BindFragmentProgram(g_viewMtxPtr,HUD_Pass,0x14);
+    idol_draw::BindFragmentProgram(g_pIdolDraw,HUD_Pass,0x14);
     FUN_004d5594(param_1,uVar1);
   }
   else {
@@ -1937,11 +1937,11 @@ int BinkPlayer_DrawFrame(BinkPlayer *param_1)
       }
     }
   }
-  iVar5 = g_viewMtxPtr;
+  iVar5 = g_pIdolDraw;
   if (bVar3 && iVar6 != 0) {
-    uVar2 = (ulonglong)(LZCOUNT(*(undefined4 *)(g_viewMtxPtr + 0xc)) << 0x20) >> 0x25;
+    uVar2 = (ulonglong)(LZCOUNT(*(undefined4 *)(g_pIdolDraw + 0xc)) << 0x20) >> 0x25;
     if (DAT_010ee154 == 0) {
-      idol_draw::BindFragmentProgram(g_viewMtxPtr,HUD_Pass,0x14);
+      idol_draw::BindFragmentProgram(g_pIdolDraw,HUD_Pass,0x14);
       FUN_004d5594(param_1,uVar2);
     }
     else {
@@ -2054,7 +2054,7 @@ void FUN_004d5e48(int param_1)
     iVar2 = *(int *)(DAT_010ef520 + 8);
   }
   lVar1 = sys_time_get_system_time();
-  if ((longlong)((ZERO_MASK((0x32 - *(int *)(g_viewMtxPtr + 0x18))) & 4000U) + 18000)
+  if ((longlong)((ZERO_MASK((0x32 - *(int *)(g_pIdolDraw + 0x18))) & 4000U) + 18000)
       < lVar1 - DAT_010ef500) {
     iVar2 = DAT_010ef4fc + 5;
     DAT_010ef4fc = iVar2 + ((uint)(0x14 - (longlong)iVar2 >> 0x3f) & 0x14U - iVar2);
@@ -2716,7 +2716,7 @@ void FUN_004d7088(u8 *param_1)
   param_1[0x8b9] = 0x3dcccccd;
   param_1[0x129] = 0;
   param_1[0x128] = 0;
-  g_viewMtxPtr = param_1;
+  g_pIdolDraw = param_1;
   param_1[0x69e] = 0x3ac49ba6;
   param_1[0x69f] = 0x3f000000;
   param_1[0x6a2] = 0;
@@ -5180,7 +5180,7 @@ void idol_draw::Gfx_ReconfigureVideoOut(int param_1)
     iVar1 = *(int *)(DAT_010ef520 + 8);
   }
   lVar2 = sys_time_get_system_time();
-  if ((longlong)((ZERO_MASK((0x32 - *(int *)(g_viewMtxPtr + 0x18))) & 4000U) + 18000)
+  if ((longlong)((ZERO_MASK((0x32 - *(int *)(g_pIdolDraw + 0x18))) & 4000U) + 18000)
       < lVar2 - DAT_010ef500) {
     iVar4 = DAT_010ef4fc + 5;
     DAT_010ef4fc = iVar4 + ((uint)(0x14 - (longlong)iVar4 >> 0x3f) & 0x14U - iVar4);
@@ -5233,7 +5233,7 @@ uint idol_draw::Gfx_EnableSpecialVideoOutMode(int param_1)
     }
     lVar2 = sys_time_get_system_time();
     if ((longlong)
-        ((ZERO_MASK((0x32 - *(int *)(g_viewMtxPtr + 0x18))) & 4000U) + 18000) <
+        ((ZERO_MASK((0x32 - *(int *)(g_pIdolDraw + 0x18))) & 4000U) + 18000) <
         lVar2 - DAT_010ef500) {
       iVar5 = DAT_010ef4fc + 5;
       DAT_010ef4fc = iVar5 + ((uint)(0x14 - (longlong)iVar5 >> 0x3f) & 0x14U - iVar5);
@@ -5707,7 +5707,7 @@ void FUN_004dd8e0(int param_1)
     iVar10 = iVar10 + 0x20;
     iVar9 = iVar9 + 4;
     ((int *)*puVar2)[2] = *(int *)*puVar2 + *piVar5;
-    iVar14 = g_viewMtxPtr;
+    iVar14 = g_pIdolDraw;
     pRVar4 = HUD_Pass;
   } while (iVar15 < 0xb);
   if ((*(int *)(param_1 + 0x1858c) != 0) &&
@@ -5943,7 +5943,7 @@ void idol_draw::BuildAndFlipFrame(longlong param_1)
     iVar11 = DAT_010ef520[2];
   }
   lVar20 = sys_time_get_system_time();
-  if ((longlong)((ZERO_MASK((0x32 - *(int *)(g_viewMtxPtr + 0x18))) & 4000U) + 18000)
+  if ((longlong)((ZERO_MASK((0x32 - *(int *)(g_pIdolDraw + 0x18))) & 4000U) + 18000)
       < lVar20 - DAT_010ef500) {
     iVar14 = DAT_010ef4fc + 5;
     DAT_010ef4fc = iVar14 + ((uint)(0x14 - (longlong)iVar14 >> 0x3f) & 0x14U - iVar14);
@@ -14498,7 +14498,7 @@ void * idol_draw::InitFrameRenderState
 void FUN_004ec844(int *param_1,longlong param_2)
 
 {
-  if ((*(char *)(g_viewMtxPtr + 0x10) == '\0') || ((*(uint *)(g_viewMtxPtr + 0x1a6c) & 1) == 0)) {
+  if ((*(char *)(g_pIdolDraw + 0x10) == '\0') || ((*(uint *)(g_pIdolDraw + 0x1a6c) & 1) == 0)) {
     **(undefined4 **)((int)param_1 + (int)(param_2 << 2) + *param_1 * 0x14 + 0x4800a8) = 0;
   }
   return;
@@ -14522,10 +14522,10 @@ void FUN_004ec8a4(int *param_1,undefined8 param_2,uint param_3)
   undefined8 local_80;
   GPiece<32> auStack_78;
   
-  bVar1 = *(char *)(g_viewMtxPtr + 0x10) == '\0';
-  if ((bVar1) || ((*(uint *)(g_viewMtxPtr + 0x1a6c) & 1) == 0)) {
+  bVar1 = *(char *)(g_pIdolDraw + 0x10) == '\0';
+  if ((bVar1) || ((*(uint *)(g_pIdolDraw + 0x1a6c) & 1) == 0)) {
     if (param_3 == 0) {
-      if ((bVar1) || ((*(uint *)(g_viewMtxPtr + 0x1a6c) & 1) == 0)) {
+      if ((bVar1) || ((*(uint *)(g_pIdolDraw + 0x1a6c) & 1) == 0)) {
         *(undefined4 *)param_1[*param_1 * 5 + 0x12002a] = 0;
       }
     }
@@ -14590,10 +14590,10 @@ void FUN_004ecc84(int *param_1,ulonglong param_2,ulonglong param_3)
   undefined8 local_d0;
   GPiece<56> auStack_c8;
   
-  bVar1 = *(char *)(g_viewMtxPtr + 0x10) == '\0';
-  if ((bVar1) || ((*(uint *)(g_viewMtxPtr + 0x1a6c) & 1) == 0)) {
+  bVar1 = *(char *)(g_pIdolDraw + 0x10) == '\0';
+  if ((bVar1) || ((*(uint *)(g_pIdolDraw + 0x1a6c) & 1) == 0)) {
     if ((int)param_3 == 0) {
-      if ((bVar1) || ((*(uint *)(g_viewMtxPtr + 0x1a6c) & 1) == 0)) {
+      if ((bVar1) || ((*(uint *)(g_pIdolDraw + 0x1a6c) & 1) == 0)) {
         *(undefined4 *)param_1[*param_1 * 5 + 0x12002b] = 0;
       }
     }
@@ -14668,10 +14668,10 @@ void FUN_004ed144(int *param_1,undefined8 param_2,longlong param_3)
   undefined8 local_80;
   GPiece<32> auStack_78;
   
-  bVar1 = *(char *)(g_viewMtxPtr + 0x10) == '\0';
-  if ((bVar1) || ((*(uint *)(g_viewMtxPtr + 0x1a6c) & 1) == 0)) {
+  bVar1 = *(char *)(g_pIdolDraw + 0x10) == '\0';
+  if ((bVar1) || ((*(uint *)(g_pIdolDraw + 0x1a6c) & 1) == 0)) {
     if ((int)param_3 == 0) {
-      if ((bVar1) || ((*(uint *)(g_viewMtxPtr + 0x1a6c) & 1) == 0)) {
+      if ((bVar1) || ((*(uint *)(g_pIdolDraw + 0x1a6c) & 1) == 0)) {
         *(undefined4 *)param_1[*param_1 * 5 + 0x12002c] = 0;
       }
     }
@@ -14739,10 +14739,10 @@ void FUN_004ed52c(int *param_1,ulonglong param_2,ulonglong param_3)
   GPiece<24> auStack_e8;
   ulonglong local_d0;
   
-  bVar1 = *(char *)(g_viewMtxPtr + 0x10) == '\0';
-  if ((bVar1) || ((*(uint *)(g_viewMtxPtr + 0x1a6c) & 1) == 0)) {
+  bVar1 = *(char *)(g_pIdolDraw + 0x10) == '\0';
+  if ((bVar1) || ((*(uint *)(g_pIdolDraw + 0x1a6c) & 1) == 0)) {
     if ((int)param_3 == 0) {
-      if ((bVar1) || ((*(uint *)(g_viewMtxPtr + 0x1a6c) & 1) == 0)) {
+      if ((bVar1) || ((*(uint *)(g_pIdolDraw + 0x1a6c) & 1) == 0)) {
         *(undefined4 *)param_1[*param_1 * 5 + 0x12002d] = 0;
       }
     }
@@ -14817,7 +14817,7 @@ void idol_draw::Insert_WaitCmd_Marker(uint *param_1,RenderingStep *param_2,longl
   ulonglong uVar4;
   undefined8 in_LR;
   
-  if ((*(char *)(g_viewMtxPtr + 0x10) != '\0') && ((*(uint *)(g_viewMtxPtr + 0x1a6c) & 1) != 0)) {
+  if ((*(char *)(g_pIdolDraw + 0x10) != '\0') && ((*(uint *)(g_pIdolDraw + 0x1a6c) & 1) != 0)) {
     return;
   }
   uVar4 = param_3 + (ulonglong)*param_1 * 5 + 0x40;
@@ -14855,7 +14855,7 @@ LAB_004edba0:
   uVar1.piece<1,1>() = param_2[0xc].field1_0x1;
   uVar1.piece<2,1>() = param_2[0xc].field2_0x2;
   uVar1.piece<3,1>() = param_2[0xc].field3_0x3;
-  FUN_004e3114(g_viewMtxPtr,uVar1);
+  FUN_004e3114(g_pIdolDraw,uVar1);
   *param_2->command = 0x40064;
   param_2->command[1] = (RsxCmd)((uVar4 & 0xffffffff) << 4) & 0xff0;
   pRVar2 = param_2->command;
@@ -14958,7 +14958,7 @@ void idol_draw::Spurs_FlushAndSwapQueue(uint *param_1)
   GPiece<8> auStack_40;
   GPiece<8> auStack_38;
   
-  if ((*(char *)(g_viewMtxPtr + 0x10) != '\0') && ((*(uint *)(g_viewMtxPtr + 0x1a6c) & 1) != 0)) {
+  if ((*(char *)(g_pIdolDraw + 0x10) != '\0') && ((*(uint *)(g_pIdolDraw + 0x1a6c) & 1) != 0)) {
     return;
   }
   if (param_1[0x120318] != 0) {

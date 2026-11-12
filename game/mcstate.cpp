@@ -7,7 +7,7 @@
 #include "idol/fastfunc.h"
 
 // 0x00e64fc (0x98 bytes)
-void Map_InitColors(void)
+void MCSTATE_InitColors(void)
 
 {
   DAT_00726534 = 0x10000;
@@ -19,7 +19,7 @@ void Map_InitColors(void)
 
 
 // 0x00e6598 (0x114 bytes)
-void FlowState_Update(void)
+void MCSTATE_Update(void)
 
 {
   int iVar1;

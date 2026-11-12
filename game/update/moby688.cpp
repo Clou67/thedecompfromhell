@@ -31,7 +31,6 @@
 #include "game/update/moby42.h"
 #include "game/update/moby617.h"
 #include "game/update/moby686.h"
-#include "game/vendor.h"
 #include "idol/fastfunc.h"
 #include "idol/mUnk.h"
 
@@ -2631,10 +2630,10 @@ void M688_0041b008(int param_1)
   fVar15 = *(float *)(iVar1 + 0xf0) + fVar15;
   *(float *)(iVar1 + 0xf0) = fVar15;
   iVar5 = FastDoubleToInt((double)((fVar15 * 251.0) / DAT_0096b2e0));
-  uVar2 = g_viewMtxPtr;
+  uVar2 = g_pIdolDraw;
   iVar5 = iVar5 + 2;
   iVar5 = iVar5 + ((uint)(0xfd - (longlong)iVar5 >> 0x3f) & 0xfdU - iVar5);
-  idol_draw::BindFragmentProgram(g_viewMtxPtr,HUD_Pass,0xd);
+  idol_draw::BindFragmentProgram(g_pIdolDraw,HUD_Pass,0xd);
   uVar3 = FUN_004de9c4(uVar2,0xd,"minHealth");
   idol_draw::Gfx_SubmitHudDrawCommands(uVar2,HUD_Pass,0xd,uVar3,local_80,1);
   GetEffectTex(*(int *)(iVar1 + 0x104) + 0x28);

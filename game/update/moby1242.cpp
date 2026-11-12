@@ -29,7 +29,6 @@
 #include "game/update/moby1379.h"
 #include "game/update/moby291.h"
 #include "game/update/moby335.h"
-#include "game/vendor.h"
 #include "game/vuchain.h"
 #include "idol/fastfunc.h"
 #include "idol/mUnk.h"
@@ -834,10 +833,10 @@ void M1242_Hud_Draw(int param_1)
   puVar4[0x22] = unaff_r23;
   iVar19 = 0;
   puVar4[0x29] = unaff_r30;
-  iVar15 = g_viewMtxPtr;
+  iVar15 = g_pIdolDraw;
   uVar2 = *(uint *)(param_1 + 0x78);
   uVar20 = (ulonglong)uVar2;
-  iVar13 = *(int *)(g_viewMtxPtr + 0xc);
+  iVar13 = *(int *)(g_pIdolDraw + 0xc);
   puVar4[0x26] = unaff_r27;
   puVar4[0x25] = unaff_r26;
   puVar4[0x24] = unaff_r25;

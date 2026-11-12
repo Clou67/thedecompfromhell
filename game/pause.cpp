@@ -150,8 +150,8 @@ void BeginMenu(int param_1)
   int iVar2;
   int iVar3;
   
-  DAT_00a534a4 = *(undefined4 *)(g_viewMtxPtr + 0x1a78);
-  *(undefined4 *)(g_viewMtxPtr + 0x1a78) = 0;
+  DAT_00a534a4 = *(undefined4 *)(g_pIdolDraw + 0x1a78);
+  *(undefined4 *)(g_pIdolDraw + 0x1a78) = 0;
   FUN_0060bc8c(0x1d);
   music_Pause(0);
   STUB_00505d20();
@@ -245,7 +245,7 @@ void Menu_UpdateViewMtxIfChanged(void)
 {
   if (DAT_00a52e64 != DAT_00a52e68) {
     DAT_00a52e68 = DAT_00a52e64;
-    FUN_004d6f50(g_viewMtxPtr,DAT_00a52e64);
+    FUN_004d6f50(g_pIdolDraw,DAT_00a52e64);
   }
   return;
 }
@@ -944,11 +944,11 @@ LAB_0013b904:
       STUB_00174cf4(1);
       iVar9 = DAT_00a52e68;
       iVar4 = DAT_00a52e64;
-      *(undefined4 *)(g_viewMtxPtr + 0x1a78) = DAT_00a534a4;
+      *(undefined4 *)(g_pIdolDraw + 0x1a78) = DAT_00a534a4;
       DAT_00a534a4 = 0;
       if (iVar4 != iVar9) {
         DAT_00a52e68 = DAT_00a52e64;
-        FUN_004d6f50(g_viewMtxPtr,DAT_00a52e64);
+        FUN_004d6f50(g_pIdolDraw,DAT_00a52e64);
       }
     }
   }
@@ -1486,7 +1486,7 @@ void FrontEnd_ShutdownMenu(void)
     } while (iVar3 < 0xe);
     if (DAT_00a52e64 != DAT_00a52e68) {
       DAT_00a52e68 = DAT_00a52e64;
-      FUN_004d6f50(g_viewMtxPtr,DAT_00a52e64);
+      FUN_004d6f50(g_pIdolDraw,DAT_00a52e64);
     }
     g_MenuScreen = 0x14;
     DAT_00a52bc4 = 2;
@@ -5373,7 +5373,7 @@ undefined8 WeaponView_Update(int param_1)
   iVar4 = (&DAT_00721008)[iVar7 * 0x13];
   bVar8 = false;
   *(float *)(param_1 + 0x38) = (float)dVar13;
-  piVar6 = g_viewMtxPtr;
+  piVar6 = g_pIdolDraw;
   iVar7 = (&DAT_00721008)[iVar7 * 0x13];
   if (((iVar4 != 2) && (iVar7 != 3)) && (iVar7 != 1)) {
     bVar8 = true;
@@ -5394,9 +5394,9 @@ undefined8 WeaponView_Update(int param_1)
     }
   }
   else if (iVar4 < 3) {
-    if (*(char *)((int)g_viewMtxPtr + 0x11) == -0x7f) {
-      if (((uint)g_viewMtxPtr[5] >> 1 & 1) == 0) {
-        (*(code *)**(undefined4 **)(*g_viewMtxPtr + 0x18))(g_viewMtxPtr);
+    if (*(char *)((int)g_pIdolDraw + 0x11) == -0x7f) {
+      if (((uint)g_pIdolDraw[5] >> 1 & 1) == 0) {
+        (*(code *)**(undefined4 **)(*g_pIdolDraw + 0x18))(g_pIdolDraw);
       }
       (*(code *)**(undefined4 **)(*piVar6 + 0x18))(piVar6);
       piVar6[0x6a3] = piVar6[0x6a3] + 2;
@@ -5942,7 +5942,7 @@ undefined8 Update_FoundGBsShipMenu(int param_1)
   char acStack_140 [264];
   
   if (DAT_00a534f0 == '\0') {
-    DAT_00a534f8 = *(int *)(g_viewMtxPtr + 0xc) == 0;
+    DAT_00a534f8 = *(int *)(g_pIdolDraw + 0xc) == 0;
     DAT_00a534f0 = '\x01';
   }
   if (DAT_00a534f8 == '\0') {
@@ -7616,7 +7616,7 @@ undefined8 DrawCameraSettingsFrame(undefined **param_1)
       uVar6 = 0x80ffa888;
       pSVar10 = (StringId *)(param_1[0xd] + iVar8);
       if (((iVar11 == 3) && (param_1 == &PTR_PTR_0072d360)) &&
-         (*(char *)(g_viewMtxPtr + 0x185a4) != '\0')) {
+         (*(char *)(g_pIdolDraw + 0x185a4) != '\0')) {
         iVar3 = iRam0072d380 >> 1;
         iVar9 = iVar13 + 4;
         uVar4 = 0x4028000000000000;

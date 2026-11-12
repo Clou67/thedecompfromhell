@@ -204,3 +204,18 @@ g_TransitionTimer	int NAME /* 0x9636f4 */
 g_LevelMusicFileSizes	int NAME[15] /* 0x10ea770 */
 DAT_009636c0	int NAME /* 0x9636c0 */
 DAT_009636c4	int NAME /* 0x9636c4 */
+g_byteGridStride	int NAME /* 0xa20498 */
+g_byteGridRows	int NAME /* 0xa2049c */
+g_byteGridMin	float NAME /* 0xa204a0 */
+g_byteGridMax	float NAME /* 0xa204a4 */
+g_byteGridData	u8 *NAME /* 0xa204a8 */
+g_EffectTableCnt	int NAME /* 0x95e9f0 */
+g_EffectTableEntries	int *NAME /* 0x95e9f4 */
+g_EffectTableOffsets	int *NAME /* 0x95e9f8 */
+g_pPifFileBuffer	void *NAME /* 0xa10914 */
+g_PifFileTexRegs	u64 NAME[][3] /* 0xa202d0 */
+g_EffectTexs	sky_tex NAME[112] /* 0x95d6d0: EffectTex, the same layout */
+g_EffectTexCnt	int NAME /* 0x95ddd0 */
+g_RatchetWideFixes	SeqFrameFix NAME[33] /* 0x724864 */
+g_pIdolDraw	undefined4 NAME /* 0x8fa564: the Idol renderer object (was g_viewMtxPtr); +0xc widescreen, +0x4a8 main memory base for RSX offsets, +0x4ac VRAM base */
+g_SkyData	char *NAME /* 0xa56140: the level's sky file */

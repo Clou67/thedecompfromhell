@@ -200,7 +200,6 @@ extern undefined4 g_VendorMenuState; /* 0xe5a6ac */
 extern undefined4 g_boltCount; /* 0x969ca0 */
 extern undefined4 g_lastVendorWasPda; /* 0xe5a690 */
 extern char g_purchasableVendorItems[12]; /* 0x71fb2c */
-extern undefined4 g_viewMtxPtr; /* 0x8fa564 */
 
 // ---- functions
 void SECTION_HEADER_VENDOR(void);

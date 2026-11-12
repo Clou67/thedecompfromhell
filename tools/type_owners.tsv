@@ -77,3 +77,5 @@ SoundDef	game/sound
 WaterDrift	game/water
 WaterStrip	game/water
 SndCompleteProc	idol/sound
+ByteGridHeader	game/loaders
+SeqFrameFix	game/loaders

@@ -921,11 +921,11 @@ int memcard_RestoreSaveGame(int result, char *data)
             g_memcardHadMidasTrophy = 1;
         }
 
-        if (*((u8 *)g_viewMtxPtr + 0x185a4) == 0) {
+        if (*((u8 *)g_pIdolDraw + 0x185a4) == 0) {
             DAT_00a52e64 = 0;
         }
         else {
-            FUN_004d6f50(g_viewMtxPtr, DAT_00a52e64);
+            FUN_004d6f50(g_pIdolDraw, DAT_00a52e64);
         }
 
         g_memcardGameSaved = 1;

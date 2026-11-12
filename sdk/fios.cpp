@@ -6,7 +6,6 @@
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/pause.h"
-#include "game/vendor.h"
 #include "idol/idol.h"
 #include "idol/idol_draw.h"
 #include "idol/mathfunc.h"
@@ -99,7 +98,7 @@ void load_engine_vram_pair(u8 *param_1,const char *param_2,const char *param_3)
   int *piVar9;
   int iVar10;
   
-  iVar3 = g_viewMtxPtr;
+  iVar3 = g_pIdolDraw;
   FUN_004fe61c(*param_1,param_1[2]);
   FUN_004fe61c(param_1[1],param_1[3]);
   memset(param_1 + 4,0,0x4864);
@@ -342,7 +341,7 @@ void FUN_00508738(int param_1,undefined4 *param_2)
   uVar2 = *(uint *)(param_1 + 0x484c);
   puVar4[0x1d] = unaff_r31;
   puVar4[0x15] = unaff_r23;
-  iVar13 = g_viewMtxPtr;
+  iVar13 = g_pIdolDraw;
   uVar18 = FrameHeap;
   uVar20 = (ulonglong)*(uint *)(param_1 + 0x4848);
   puVar4[0x1b] = unaff_r29;

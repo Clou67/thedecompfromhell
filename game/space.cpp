@@ -36,7 +36,6 @@
 #include "game/update/camera5.h"
 #include "game/update/moby1118.h"
 #include "game/update/moby998.h"
-#include "game/vendor.h"
 #include "game/vuchain.h"
 #include "idol/fastfunc.h"
 #include "idol/idol.h"
@@ -1200,11 +1199,11 @@ void ____Space_TransitionDrawPass(void)
     fVar1 = DAT_00a561e8;
     pfVar22[3] = fVar4;
     pfVar22[2] = fVar3 * fVar6 + fVar1;
-    iVar14 = g_viewMtxPtr;
+    iVar14 = g_pIdolDraw;
     lVar21 = lVar21 + 0x10;
     lVar27 = lVar27 + -1;
   } while (lVar27 != 0);
-  idol_draw::BindVertexProgram(g_viewMtxPtr,ForwardPass,5);
+  idol_draw::BindVertexProgram(g_pIdolDraw,ForwardPass,5);
   idol_draw::BindFragmentProgram(iVar14,ForwardPass,2);
   puVar20 = (undefined4 *)idol::AllocateMemAlign(FrameHeap,0x60,0x10);
   lVar27 = 4;
@@ -3623,7 +3622,7 @@ void SpaceTransition_LoadWad(void)
   iVar11 = g_Language + -1;
   random = -g_Language;
   uVar16 = uVar14 + DAT_00a10920[3] & 0xffffffff;
-  iVar18 = DAT_00a10924 - *(int *)(g_viewMtxPtr + 0x4ac);
+  iVar18 = DAT_00a10924 - *(int *)(g_pIdolDraw + 0x4ac);
   uVar17 = (uint)(uVar14 + DAT_00a10920[3]);
   DAT_00a10920[3] = uVar17;
   DAT_00a561c8 = (ulonglong)*puVar2 + 1 & 0xffffffff;
@@ -3711,7 +3710,7 @@ void SpaceTransition_LoadWad(void)
       uVar16 = uVar16 + 0x20;
     } while (uVar17 < puVar4[1]);
   }
-  ____Loaders_RelocSpaceWadPtrs(uVar14 + puVar4[8] & 0xffffffff,0,0,0);
+  Loaders_RelocSpaceWadPtrs(uVar14 + puVar4[8] & 0xffffffff,0,0,0);
   pMVar3 = (MobyInstance *)((int)DAT_00a10920 + iVar6 + 0x3f & 0xffffffc0);
   Gameplay = pMVar3;
   FastMemSetZero(PointLights,0x100);
@@ -3944,7 +3943,7 @@ void PlaySpacePlate(undefined8 param_1,int param_2,int param_3,longlong param_4,
         }
       }
       memcard_Update();
-      FlowState_Update();
+      MCSTATE_Update();
       STUB_00174cf4(1);
       STUB_00503078(0);
       STUB_000684a0();
@@ -4024,7 +4023,7 @@ void DoSpaceTransition(void)
   if ((int)g_newlevelnum < 0) {
     while (iVar3 = memcard_IsSaveSystemIdle(), iVar3 == 0) {
       memcard_Update();
-      FlowState_Update();
+      MCSTATE_Update();
     }
     FadeToBlack((int)(animationSpeed * 6.5));
     Level = g_newlevelnum;
@@ -4116,7 +4115,7 @@ void DoSpaceTransition(void)
         UpdateSpace();
         DisplayLoadingScreen();
         memcard_Update();
-        FlowState_Update();
+        MCSTATE_Update();
         STUB_00174cf4(1);
         STUB_00503078(0);
         g_MainLoopFrames = g_MainLoopFrames + 1;
@@ -4131,7 +4130,7 @@ void DoSpaceTransition(void)
       FlushCache(0);
       STUB_00503078(0);
       memcard_Update();
-      FlowState_Update();
+      MCSTATE_Update();
       SetFrameCount();
       iVar3 = LoadLevelFiles();
     } while (iVar3 == 0);

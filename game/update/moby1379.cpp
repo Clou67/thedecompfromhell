@@ -31,7 +31,6 @@
 #include "game/update/moby291.h"
 #include "game/update/moby295.h"
 #include "game/update/moby335.h"
-#include "game/vendor.h"
 #include "game/vuchain.h"
 #include "idol/fastfunc.h"
 #include "idol/mUnk.h"
@@ -1674,8 +1673,8 @@ void M1379_Hud_Draw(int param_1)
   puVar3[0x1c] = unaff_r23;
   uVar6 = idol_draw::PackCmd(0,1,0,1,0x80);
   SetGSReg(3,uVar6);
-  uVar4 = g_viewMtxPtr;
-  idol_draw::BindFragmentProgram(g_viewMtxPtr,HUD_Pass,0xd);
+  uVar4 = g_pIdolDraw;
+  idol_draw::BindFragmentProgram(g_pIdolDraw,HUD_Pass,0xd);
   auVar23 = ZEXT416(0xffffffff);
   auVar23 = auVar23 | auVar23 << 0x20 | auVar23 << 0x40 | auVar23 << 0x60;
   auVar21 = loadVectorLeftIndexed(0xf4,uVar14);

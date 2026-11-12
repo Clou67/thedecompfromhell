@@ -79,36 +79,36 @@ void ProjectBoxToScreenInt
   fStack00000040 = (float)((ulonglong)param_3 >> 0x20);
   fStack00000038 = (float)((ulonglong)param_2 >> 0x20);
   fStack00000048 = (float)((ulonglong)param_4 >> 0x20);
-  fVar1 = *(float *)(g_viewMtxPtr + 0x11c) * 1.0;
-  fVar2 = 1.0 / (*(float *)(g_viewMtxPtr + 0xec) * fStack00000030 +
-                 *(float *)(g_viewMtxPtr + 0xfc) * fStack00000034 +
-                 *(float *)(g_viewMtxPtr + 0x10c) * fStack00000038 + fVar1);
-  fVar1 = 1.0 / (*(float *)(g_viewMtxPtr + 0xec) * fStack00000040 +
-                 *(float *)(g_viewMtxPtr + 0xfc) * fStack00000044 +
-                 *(float *)(g_viewMtxPtr + 0x10c) * fStack00000048 + fVar1);
+  fVar1 = *(float *)(g_pIdolDraw + 0x11c) * 1.0;
+  fVar2 = 1.0 / (*(float *)(g_pIdolDraw + 0xec) * fStack00000030 +
+                 *(float *)(g_pIdolDraw + 0xfc) * fStack00000034 +
+                 *(float *)(g_pIdolDraw + 0x10c) * fStack00000038 + fVar1);
+  fVar1 = 1.0 / (*(float *)(g_pIdolDraw + 0xec) * fStack00000040 +
+                 *(float *)(g_pIdolDraw + 0xfc) * fStack00000044 +
+                 *(float *)(g_pIdolDraw + 0x10c) * fStack00000048 + fVar1);
   dVar8 = (double)g_ViewContext.fontClipScale.x;
-  fVar3 = *(float *)(g_viewMtxPtr + 0x110) * 1.0;
-  fVar4 = *(float *)(g_viewMtxPtr + 0x114) * 1.0;
-  dVar12 = (double)((*(float *)(g_viewMtxPtr + 0xe0) * fStack00000040 +
-                     *(float *)(g_viewMtxPtr + 0xf0) * fStack00000044 +
-                     *(float *)(g_viewMtxPtr + 0x100) * fStack00000048 + fVar3) * fVar1);
-  dVar9 = (double)((*(float *)(g_viewMtxPtr + 0xe4) * fStack00000040 +
-                    *(float *)(g_viewMtxPtr + 0xf4) * fStack00000044 +
-                    *(float *)(g_viewMtxPtr + 0x104) * fStack00000048 + fVar4) * fVar1);
+  fVar3 = *(float *)(g_pIdolDraw + 0x110) * 1.0;
+  fVar4 = *(float *)(g_pIdolDraw + 0x114) * 1.0;
+  dVar12 = (double)((*(float *)(g_pIdolDraw + 0xe0) * fStack00000040 +
+                     *(float *)(g_pIdolDraw + 0xf0) * fStack00000044 +
+                     *(float *)(g_pIdolDraw + 0x100) * fStack00000048 + fVar3) * fVar1);
+  dVar9 = (double)((*(float *)(g_pIdolDraw + 0xe4) * fStack00000040 +
+                    *(float *)(g_pIdolDraw + 0xf4) * fStack00000044 +
+                    *(float *)(g_pIdolDraw + 0x104) * fStack00000048 + fVar4) * fVar1);
   dVar13 = dVar6;
-  if (*(int *)(g_viewMtxPtr + 0xc) != 0) {
+  if (*(int *)(g_pIdolDraw + 0xc) != 0) {
     dVar13 = 1.2999999523162842;
   }
   dVar7 = (double)g_ViewContext.fontClipScale.y;
   dVar13 = (double)((float)(dVar8 * dVar13) *
-                   (*(float *)(g_viewMtxPtr + 0xe0) * fStack00000030 +
-                    *(float *)(g_viewMtxPtr + 0xf0) * fStack00000034 +
-                    *(float *)(g_viewMtxPtr + 0x100) * fStack00000038 + fVar3) * fVar2);
-  dVar14 = (double)(float)(-(double)((*(float *)(g_viewMtxPtr + 0xe4) * fStack00000030 +
-                                      *(float *)(g_viewMtxPtr + 0xf4) * fStack00000034 +
-                                      *(float *)(g_viewMtxPtr + 0x104) * fStack00000038 + fVar4) *
+                   (*(float *)(g_pIdolDraw + 0xe0) * fStack00000030 +
+                    *(float *)(g_pIdolDraw + 0xf0) * fStack00000034 +
+                    *(float *)(g_pIdolDraw + 0x100) * fStack00000038 + fVar3) * fVar2);
+  dVar14 = (double)(float)(-(double)((*(float *)(g_pIdolDraw + 0xe4) * fStack00000030 +
+                                      *(float *)(g_pIdolDraw + 0xf4) * fStack00000034 +
+                                      *(float *)(g_pIdolDraw + 0x104) * fStack00000038 + fVar4) *
                                     fVar2) * dVar7);
-  if (*(int *)(g_viewMtxPtr + 0xc) != 0) {
+  if (*(int *)(g_pIdolDraw + 0xc) != 0) {
     dVar6 = 1.2999999523162842;
   }
   dVar11 = (double)(float)(dVar8 * dVar6);
@@ -165,36 +165,36 @@ void ProjectBoxToScreen
   fStack00000040 = (float)((ulonglong)param_3 >> 0x20);
   fStack00000038 = (float)((ulonglong)param_2 >> 0x20);
   fStack00000048 = (float)((ulonglong)param_4 >> 0x20);
-  fVar5 = *(float *)(g_viewMtxPtr + 0x11c) * 1.0;
-  fVar2 = *(float *)(g_viewMtxPtr + 0xe0);
-  fVar3 = *(float *)(g_viewMtxPtr + 0xf0);
-  fVar4 = *(float *)(g_viewMtxPtr + 0x100);
-  fVar6 = 1.0 / (*(float *)(g_viewMtxPtr + 0xec) * fStack00000030 +
-                 *(float *)(g_viewMtxPtr + 0xfc) * fStack00000034 +
-                 *(float *)(g_viewMtxPtr + 0x10c) * fStack00000038 + fVar5);
-  fVar5 = 1.0 / (*(float *)(g_viewMtxPtr + 0xec) * fStack00000040 +
-                 *(float *)(g_viewMtxPtr + 0xfc) * fStack00000044 +
-                 *(float *)(g_viewMtxPtr + 0x10c) * fStack00000048 + fVar5);
-  fVar7 = *(float *)(g_viewMtxPtr + 0x110) * 1.0;
-  fVar8 = *(float *)(g_viewMtxPtr + 0x114) * 1.0;
+  fVar5 = *(float *)(g_pIdolDraw + 0x11c) * 1.0;
+  fVar2 = *(float *)(g_pIdolDraw + 0xe0);
+  fVar3 = *(float *)(g_pIdolDraw + 0xf0);
+  fVar4 = *(float *)(g_pIdolDraw + 0x100);
+  fVar6 = 1.0 / (*(float *)(g_pIdolDraw + 0xec) * fStack00000030 +
+                 *(float *)(g_pIdolDraw + 0xfc) * fStack00000034 +
+                 *(float *)(g_pIdolDraw + 0x10c) * fStack00000038 + fVar5);
+  fVar5 = 1.0 / (*(float *)(g_pIdolDraw + 0xec) * fStack00000040 +
+                 *(float *)(g_pIdolDraw + 0xfc) * fStack00000044 +
+                 *(float *)(g_pIdolDraw + 0x10c) * fStack00000048 + fVar5);
+  fVar7 = *(float *)(g_pIdolDraw + 0x110) * 1.0;
+  fVar8 = *(float *)(g_pIdolDraw + 0x114) * 1.0;
   fVar9 = fVar1;
-  if (*(int *)(g_viewMtxPtr + 0xc) != 0) {
+  if (*(int *)(g_pIdolDraw + 0xc) != 0) {
     fVar9 = 1.3;
   }
   fVar9 = g_ViewContext.fontClipScale.x * fVar9 *
           (fVar2 * fStack00000030 + fVar3 * fStack00000034 + fVar4 * fStack00000038 + fVar7) * fVar6
   ;
-  fVar6 = -((*(float *)(g_viewMtxPtr + 0xe4) * fStack00000030 +
-             *(float *)(g_viewMtxPtr + 0xf4) * fStack00000034 +
-             *(float *)(g_viewMtxPtr + 0x104) * fStack00000038 + fVar8) * fVar6) *
+  fVar6 = -((*(float *)(g_pIdolDraw + 0xe4) * fStack00000030 +
+             *(float *)(g_pIdolDraw + 0xf4) * fStack00000034 +
+             *(float *)(g_pIdolDraw + 0x104) * fStack00000038 + fVar8) * fVar6) *
           g_ViewContext.fontClipScale.y;
-  if (*(int *)(g_viewMtxPtr + 0xc) != 0) {
+  if (*(int *)(g_pIdolDraw + 0xc) != 0) {
     fVar1 = 1.3;
   }
   fVar1 = g_ViewContext.fontClipScale.x * fVar1;
-  fVar8 = -((*(float *)(g_viewMtxPtr + 0xe4) * fStack00000040 +
-             *(float *)(g_viewMtxPtr + 0xf4) * fStack00000044 +
-             *(float *)(g_viewMtxPtr + 0x104) * fStack00000048 + fVar8) * fVar5) *
+  fVar8 = -((*(float *)(g_pIdolDraw + 0xe4) * fStack00000040 +
+             *(float *)(g_pIdolDraw + 0xf4) * fStack00000044 +
+             *(float *)(g_pIdolDraw + 0x104) * fStack00000048 + fVar8) * fVar5) *
           g_ViewContext.fontClipScale.y;
   *param_7 = fVar9 * 0.25 + 256.0;
   *param_8 = fVar6 * 0.25 + 208.0;
@@ -323,13 +323,13 @@ void Spawn_Moby11_Vendor(MobyInstance *moby)
   double dVar7;
   
   if (DAT_00e5aa38 == '\0') {
-    DAT_00e5a9d2 = *(int *)(g_viewMtxPtr + 0xc) == 0;
+    DAT_00e5a9d2 = *(int *)(g_pIdolDraw + 0xc) == 0;
     DAT_00e5aa38 = '\x01';
     DAT_00e5aa40 = DAT_00e5a9d2;
   }
-  DAT_00e5a830 = *(undefined4 *)(g_viewMtxPtr + 0x1a78);
+  DAT_00e5a830 = *(undefined4 *)(g_pIdolDraw + 0x1a78);
   dVar7 = 0.0;
-  *(undefined4 *)(g_viewMtxPtr + 0x1a78) = 0;
+  *(undefined4 *)(g_pIdolDraw + 0x1a78) = 0;
   FastMemSet(&g_OpenVendorState,0,0x1e0);
   FastMemSet(&DAT_00e5a990,0,0x40);
   if (moby == (MobyInstance *)0x0) {
@@ -495,7 +495,7 @@ void Vendor_EndWeaponCutscene(int param_1)
   
   id = DAT_00e5a6a4;
   bVar1 = DAT_00e5a6a4 != -1;
-  *(undefined4 *)(g_viewMtxPtr + 0x1a78) = DAT_00e5a830;
+  *(undefined4 *)(g_pIdolDraw + 0x1a78) = DAT_00e5a830;
   if (bVar1) {
     Hud_SetEntryValueById(id,0);
   }
@@ -626,9 +626,9 @@ int StartGadgetPickupCutscene(int param_1,longlong param_2)
   double dVar3;
   double dVar4;
   
-  piVar1 = g_viewMtxPtr;
-  if ((*(char *)((int)g_viewMtxPtr + 0x11) == -0x7f) && (((uint)g_viewMtxPtr[5] >> 1 & 1) == 0)) {
-    (*(code *)**(undefined4 **)(*g_viewMtxPtr + 0x18))(g_viewMtxPtr);
+  piVar1 = g_pIdolDraw;
+  if ((*(char *)((int)g_pIdolDraw + 0x11) == -0x7f) && (((uint)g_pIdolDraw[5] >> 1 & 1) == 0)) {
+    (*(code *)**(undefined4 **)(*g_pIdolDraw + 0x18))(g_pIdolDraw);
   }
   (*(code *)**(undefined4 **)(*piVar1 + 0x18))(piVar1);
   piVar1[0x6a3] = piVar1[0x6a3] + 2;
@@ -1002,10 +1002,10 @@ void Vendor_SpawnPreviewMoby(void)
   float *pfVar22;
   undefined4 oClass;
   
-  piVar16 = g_viewMtxPtr;
-  iVar20 = g_viewMtxPtr[3];
-  if ((*(char *)((int)g_viewMtxPtr + 0x11) == -0x7f) && (((uint)g_viewMtxPtr[5] >> 1 & 1) == 0)) {
-    (*(code *)**(undefined4 **)(*g_viewMtxPtr + 0x18))(g_viewMtxPtr);
+  piVar16 = g_pIdolDraw;
+  iVar20 = g_pIdolDraw[3];
+  if ((*(char *)((int)g_pIdolDraw + 0x11) == -0x7f) && (((uint)g_pIdolDraw[5] >> 1 & 1) == 0)) {
+    (*(code *)**(undefined4 **)(*g_pIdolDraw + 0x18))(g_pIdolDraw);
   }
   (*(code *)**(undefined4 **)(*piVar16 + 0x18))(piVar16);
   piVar16[0x6a3] = piVar16[0x6a3] + 2;
@@ -1565,8 +1565,8 @@ void Vendor_PreUpdate(void)
       pMVar18 = DAT_00e5a670;
       pMVar23 = DAT_00e5a66c;
       fVar4 = DAT_0073889c;
-      if (((*(char *)(g_viewMtxPtr + 0x11) == '\x04') || (*(char *)(g_viewMtxPtr + 0x11) == '\x05'))
-         && (*(int *)(g_viewMtxPtr + 0xc) == 0)) {
+      if (((*(char *)(g_pIdolDraw + 0x11) == '\x04') || (*(char *)(g_pIdolDraw + 0x11) == '\x05'))
+         && (*(int *)(g_pIdolDraw + 0xc) == 0)) {
         DAT_00738894 = -3.1;
       }
       else {
@@ -2978,7 +2978,7 @@ void Vendor_SetupScreenRender(double param_1,uint param_2,uint param_3)
   fVar1 = g_ViewContext.yratio;
   dVar37 = (double)g_ViewContext.yratio;
   *(float *)(puVar15 + 0x3c) = (float)dVar40;
-  piVar22 = g_viewMtxPtr;
+  piVar22 = g_pIdolDraw;
   dVar37 = ABS(dVar37);
   *(float *)((int)puVar15 + 0x1e4) = (float)(ABS(dVar40) - dVar37);
   iVar32 = (int)(((ulonglong)(*(uint *)(puVar15 + 0x3c) >> 0x1c) & 8 |
@@ -4042,9 +4042,9 @@ void Vendor_PostUpdate(void)
     DAT_00e5a670[5].drawDistance = 0x40;
     UpdateMobyTransform(pMVar9);
     MB_SetLights(DAT_00e5a670 + 5,0x202020,0xe,0xe,0);
-    piVar5 = g_viewMtxPtr;
-    if ((*(char *)((int)g_viewMtxPtr + 0x11) == -0x7f) && (((uint)g_viewMtxPtr[5] >> 1 & 1) == 0)) {
-      (*(code *)**(undefined4 **)(*g_viewMtxPtr + 0x18))(g_viewMtxPtr);
+    piVar5 = g_pIdolDraw;
+    if ((*(char *)((int)g_pIdolDraw + 0x11) == -0x7f) && (((uint)g_pIdolDraw[5] >> 1 & 1) == 0)) {
+      (*(code *)**(undefined4 **)(*g_pIdolDraw + 0x18))(g_pIdolDraw);
     }
     piVar5[0x6a3] = piVar5[0x6a3] + 2;
     Vendor_SpawnPreviewMoby();

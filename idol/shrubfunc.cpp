@@ -8,7 +8,6 @@
 #include "game/main.h"
 #include "game/skyfunc.h"
 #include "game/skyproc.h"
-#include "game/vendor.h"
 #include "idol/fastfunc.h"
 #include "idol/idol_draw.h"
 #include "idol/mUnk.h"
@@ -126,7 +125,7 @@ void DrawShrub(int param_1,ulonglong param_2)
     idol_draw::RsxCmd_DebugStr_Marker(DL_Pass,"Shrub");
     idol_draw::RsxCmd_DebugStr_Marker(DL_DepthPass,"Shrub");
     pRVar12 = M_Depth;
-    puVar7[0x2b] = (ulonglong)g_viewMtxPtr;
+    puVar7[0x2b] = (ulonglong)g_pIdolDraw;
     idol_draw::Insert_WaitCmd_Marker(&DAT_01111700,pRVar12,2);
     pRVar12 = M_Pass;
     uVar15 = idol_draw::PackCmd(0,1,0,1,0x80);
@@ -762,8 +761,8 @@ void FUN_00509d60(int param_1)
   RsxCmd local_a0 [16];
   
   idol_draw::RsxCmd_DebugStr_Marker(ForwardPass,"Sky");
-  iVar7 = g_viewMtxPtr;
-  idol_draw::BindVertexProgram(g_viewMtxPtr,ForwardPass,3);
+  iVar7 = g_pIdolDraw;
+  idol_draw::BindVertexProgram(g_pIdolDraw,ForwardPass,3);
   idol_draw::BindFragmentProgram(iVar7,ForwardPass,10);
   pRVar5 = ForwardPass;
   *ForwardPass->command = NV4097_CLEAR_SURFACE_x1;
@@ -1111,7 +1110,7 @@ void idol_draw::DrawSkyShell
   undefined8 uStack00000060;
   undefined8 uStack00000068;
   
-  iVar7 = g_viewMtxPtr;
+  iVar7 = g_pIdolDraw;
   uVar8 = ZEXT48(&stack0x00000000);
   auVar23 = ZEXT416(0);
   auVar39 = auVar23 | auVar23 << 0x20 | auVar23 << 0x40 | auVar23 << 0x60;
@@ -1136,7 +1135,7 @@ void idol_draw::DrawSkyShell
   uStack00000058 = param_6;
   uStack00000060 = param_7;
   uStack00000068 = param_8;
-  BindVertexProgram(g_viewMtxPtr,ForwardPass,3);
+  BindVertexProgram(g_pIdolDraw,ForwardPass,3);
   BindFragmentProgram(iVar7,ForwardPass,10);
   pRVar5 = ForwardPass;
   *ForwardPass->command = NV4097_SET_VERTEX_DATA_ARRAY_FORMAT_x1;
@@ -1448,7 +1447,7 @@ void FUN_0050ad78(undefined4 *param_1,int param_2,int *param_3)
   float *pfVar18;
   float fVar19;
   
-  iVar4 = g_viewMtxPtr;
+  iVar4 = g_pIdolDraw;
   piVar6 = (int *)idol::AllocateMemAlign
                             (FrameHeap,(ulonglong)*(ushort *)((int)param_1 + 6) << 4,0x10);
   piVar7 = (int *)idol::AllocateMemAlign(FrameHeap,param_2 << 5,0x10);

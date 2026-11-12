@@ -30,7 +30,6 @@
 #include "game/skyproc.h"
 #include "game/space.h"
 #include "game/update.h"
-#include "game/vendor.h"
 #include "game/vuchain.h"
 #include "game/water.h"
 #include "idol/fastfunc.h"
@@ -237,7 +236,7 @@ void UploadViewMatricesToPasses(void)
   puVar8[0x47] = unaff_r31;
   fVar4 = g_ViewContext.yratio;
   *(undefined4 *)(puVar8 + 0x3c) = 0x3f800000;
-  piVar11 = g_viewMtxPtr;
+  piVar11 = g_pIdolDraw;
   fVar2 = ABS(fVar4);
   *(float *)((int)puVar8 + 0x1e4) = 1.0 - fVar2;
   fVar12 = FLOAT_0095d1c8;
@@ -1912,8 +1911,8 @@ void InitViewContext(void)
   SCREEN_PROJECTION_MAP_X = (undefined4)((0x800U - (longlong)g_ScreenHalfWidth & 0xffffffff) << 4);
   DAT_00966b1c = g_ScreenHalfHeight * 0x10 + 0x8000;
   SCREEN_PROJECTION_MAP_Y = (undefined4)((0x800U - (longlong)g_ScreenHalfHeight & 0xffffffff) << 4);
-  DAT_00966b20 = *(undefined4 *)(g_viewMtxPtr + 4);
-  DAT_00966b24 = *(undefined4 *)(g_viewMtxPtr + 8);
+  DAT_00966b20 = *(undefined4 *)(g_pIdolDraw + 4);
+  DAT_00966b24 = *(undefined4 *)(g_pIdolDraw + 8);
   g_ViewContext.nearClip = 32.0;
   g_ViewContext.farClip = 745472.0;
   g_ViewContext.xratio = 0.63;
@@ -2024,7 +2023,7 @@ void UpdateOcclusion(int param_1)
 {
   int *piVar1;
   
-  piVar1 = g_viewMtxPtr;
+  piVar1 = g_pIdolDraw;
   ComposeCameraMatrix();
   if (param_1 != '\0') {
     if (OcclUpdate == 0) {
@@ -2046,7 +2045,7 @@ void Render_DispatchJob(void)
 {
   idol_draw::Spurs_FlushAndSwapQueue(&DAT_01111700);
   OcclMode = 0;
-  (*(code *)**(undefined4 **)(*g_viewMtxPtr + 0x18))(g_viewMtxPtr);
+  (*(code *)**(undefined4 **)(*g_pIdolDraw + 0x18))(g_pIdolDraw);
   return;
 }
 
@@ -2067,8 +2066,8 @@ void DrawFullScreenQuad(int rgba,void *tex)
   RenderingStep *pRVar2;
   undefined4 uVar3;
   
-  uVar3 = g_viewMtxPtr;
-  FUN_004deab8(g_viewMtxPtr,g_FrameBufWidth,g_FrameBufHeight);
+  uVar3 = g_pIdolDraw;
+  FUN_004deab8(g_pIdolDraw,g_FrameBufWidth,g_FrameBufHeight);
   uVar1 = *(uint *)((int)tex + 0x18);
   idol_draw::BindTexture(HUD_Pass,0,tex,TexSamplerFlags);
   idol_draw::ResetPassState(HUD_Pass);
@@ -3352,8 +3351,8 @@ void DrawScreenEffect(void)
   int iVar7;
   int iVar8;
   
-  uVar4 = g_viewMtxPtr;
-  FUN_004deab8(g_viewMtxPtr,g_FrameBufWidth,g_FrameBufHeight);
+  uVar4 = g_pIdolDraw;
+  FUN_004deab8(g_pIdolDraw,g_FrameBufWidth,g_FrameBufHeight);
   sVar5 = g_FrameBufHeight;
   lVar6 = (longlong)g_FrameBufHeight;
   if (*(ulonglong *)(ScreenColorEffectNow + 8) != 0) {
@@ -3526,8 +3525,8 @@ void DrawScreenInsertEffect(void *effect)
   undefined4 uVar1;
   undefined8 uVar2;
   
-  uVar1 = g_viewMtxPtr;
-  FUN_004deab8(g_viewMtxPtr,g_FrameBufWidth,g_FrameBufHeight);
+  uVar1 = g_pIdolDraw;
+  FUN_004deab8(g_pIdolDraw,g_FrameBufWidth,g_FrameBufHeight);
   if (*(ulonglong *)((int)effect + 8) != 0) {
     SetGSReg(3,*(ulonglong *)((int)effect + 8) & 0xff000000ff);
   }
@@ -4634,13 +4633,13 @@ void FadeToBlack(int param_1)
   GPiece<16> auVar18;
   GPiece<16> auVar19;
   
-  piVar5 = g_viewMtxPtr;
+  piVar5 = g_pIdolDraw;
   uVar6 = 0x70;
   auVar14.piece<0,4>() = param_1;
   auVar14.piece<4,4>() = param_1;
   auVar14.piece<8,4>() = param_1;
   auVar14.piece<12,4>() = param_1;
-  if (g_viewMtxPtr[0x6a3] == 0) {
+  if (g_pIdolDraw[0x6a3] == 0) {
     idol_draw::Spurs_FlushAndSwapQueue(&DAT_01111700);
     FUN_004edcfc(&DAT_01111700);
     if ((piVar5[0x128] == 1) && ((piVar5[0x69b] & 1U) != 0)) {
@@ -4797,7 +4796,7 @@ void Draw_FlushAndPresent(void)
 {
   int iVar1;
   
-  iVar1 = g_viewMtxPtr;
+  iVar1 = g_pIdolDraw;
   idol_draw::Spurs_FlushAndSwapQueue(&DAT_01111700);
   FUN_004edcfc(&DAT_01111700);
   idol_draw::Gfx_Present(iVar1,iVar1 + 0x1fe0);
@@ -4824,7 +4823,7 @@ void DrawRenderTargetToScreen(void)
   RenderingStep *pRVar12;
   int iVar13;
   
-  iVar13 = g_viewMtxPtr;
+  iVar13 = g_pIdolDraw;
   pRVar12 = ForwardPass;
   *ForwardPass->command = NV4097_SET_DEPTH_TEST_ENABLE_x1;
   pRVar12->command[1] = 0;
@@ -5132,7 +5131,7 @@ void Sprite_DrawRotated
   pRVar2[1] = (RsxCmd)((uVar12 & 0xffffffff) << 0x10) | RVar7;
   pRVar9->command = pRVar2 + 2;
   if (in_stack_000000a7 != '\0') {
-    FUN_004e3178(g_viewMtxPtr);
+    FUN_004e3178(g_pIdolDraw);
   }
   pRVar9 = HUD_Pass;
   pRVar2 = HUD_Pass->command;
@@ -5147,7 +5146,7 @@ void Sprite_DrawRotated
   pRVar2[1] = (RsxCmd)(uVar11 << 0x10) | RVar7;
   pRVar9->command = pRVar2 + 2;
   if (in_stack_000000a7 != '\0') {
-    FUN_004e3178(g_viewMtxPtr);
+    FUN_004e3178(g_pIdolDraw);
   }
   pRVar9 = HUD_Pass;
   RVar7 = (RsxCmd)(ZERO_MASK((in_stack_00000084 & 0xff))) & RVar8 & 0xffff;
@@ -5163,7 +5162,7 @@ void Sprite_DrawRotated
   pRVar2[1] = (RsxCmd)(uVar11 << 0x10) | RVar7;
   pRVar9->command = pRVar2 + 2;
   if (in_stack_000000a7 != '\0') {
-    FUN_004e3178(g_viewMtxPtr);
+    FUN_004e3178(g_pIdolDraw);
   }
   pRVar9 = HUD_Pass;
   pRVar2 = HUD_Pass->command;
@@ -5178,7 +5177,7 @@ void Sprite_DrawRotated
   pRVar2[1] = (RsxCmd)((uVar12 & 0xffffffff) << 0x10) | RVar7;
   pRVar9->command = pRVar2 + 2;
   if (in_stack_000000a7 != '\0') {
-    FUN_004e3178(g_viewMtxPtr);
+    FUN_004e3178(g_pIdolDraw);
   }
   pRVar9 = HUD_Pass;
   pRVar2 = HUD_Pass->command;
@@ -6351,11 +6350,11 @@ void SetScreenResolution
   g_ViewContext.fogFarIntensity = 0.0;
   UpdateViewContext();
   UploadViewMatricesToPasses();
-  iVar12 = g_viewMtxPtr;
+  iVar12 = g_pIdolDraw;
   DAT_00966b8c = (undefined2)uVar5;
   DAT_00966b8e = (undefined2)RVar4;
   lVar19 = 3;
-  *(int *)(g_viewMtxPtr + 0x22d8) = *(int *)(g_viewMtxPtr + 0x22d8) + 1;
+  *(int *)(g_pIdolDraw + 0x22d8) = *(int *)(g_pIdolDraw + 0x22d8) + 1;
   *(undefined4 *)(puVar7 + 0x10) = 0;
   *(undefined4 *)((int)puVar7 + 0x84) = 0;
   *(undefined4 *)((int)puVar7 + 0x8c) = 0;
@@ -6611,10 +6610,10 @@ void ResetHUDPass(void)
   STUB_000780fc();
   InitViewContext();
   UpdateViewContext();
-  piVar7 = g_viewMtxPtr;
+  piVar7 = g_pIdolDraw;
   pRVar6 = HUD_Pass;
   pRVar3 = HUD_Pass->command;
-  g_viewMtxPtr[0x8b6] = g_viewMtxPtr[0x8b6] + -1;
+  g_pIdolDraw[0x8b6] = g_pIdolDraw[0x8b6] + -1;
   *pRVar3 = NV4097_SET_CONTEXT_DMA_COLOR_A_x1;
   pRVar6->command[1] = *(byte *)(piVar7 + 0x6fa) + 0xfeed0000;
   pRVar3 = pRVar6->command;
@@ -6725,7 +6724,7 @@ void ____Draw_FogBlendPass(void)
 {
   undefined8 uVar1;
   
-  if (DAT_0095e9f0 != 0) {
+  if (g_EffectTableCnt != 0) {
     uVar1 = SCE_GS_SET_CLAMP(1,1,0,0,0,0);
     SetGSReg(6,uVar1);
     uVar1 = SCE_GS_SET_TEX1(1,0,1,1,0,0,0);
@@ -6868,9 +6867,9 @@ void FastDrawQuad(undefined4 *param_1,uint param_2,undefined8 param_3,longlong p
   undefined4 local_50;
   undefined4 local_4c [3];
   
-  iVar1 = g_viewMtxPtr;
+  iVar1 = g_pIdolDraw;
   pRVar2 = *(RenderingStep **)((int)&DepthPass + ((uint)((param_5 & 0xffffffff) << 2) & 0x3c));
-  idol_draw::BindVertexProgram(g_viewMtxPtr,pRVar2,5);
+  idol_draw::BindVertexProgram(g_pIdolDraw,pRVar2,5);
   idol_draw::BindFragmentProgram(iVar1,pRVar2,6);
   puVar6 = (undefined4 *)idol::AllocateMemAlign(FrameHeap,0x60,0x10);
   lVar14 = 4;
@@ -7030,9 +7029,9 @@ void FastDrawStrip_DL(longlong param_1,int param_2)
   ulonglong uVar8;
   ulonglong uVar10;
   
-  iVar6 = g_viewMtxPtr;
+  iVar6 = g_pIdolDraw;
   pRVar3 = DL_Pass;
-  idol_draw::BindVertexProgram(g_viewMtxPtr,DL_Pass,10);
+  idol_draw::BindVertexProgram(g_pIdolDraw,DL_Pass,10);
   idol_draw::BindFragmentProgram(iVar6,pRVar3,0xb);
   *pRVar3->command = NV4097_SET_VERTEX_DATA_ARRAY_FORMAT_x1;
   pRVar3->command[1] = 0x2032;
@@ -7145,7 +7144,7 @@ void FastDrawStrip_DLNoState(int param_1,void *param_2)
   ulonglong uVar8;
   ulonglong uVar10;
   
-  iVar6 = g_viewMtxPtr;
+  iVar6 = g_pIdolDraw;
   pRVar3 = DL_Pass;
   *DL_Pass->command = NV4097_SET_VERTEX_DATA_ARRAY_FORMAT_x1;
   pRVar3->command[1] = 0x2032;
@@ -7249,10 +7248,10 @@ void FastDrawStrip_Pass(int param_1,void *param_2,int param_3)
   ulonglong uVar12;
   int iVar13;
   
-  iVar2 = g_viewMtxPtr;
+  iVar2 = g_pIdolDraw;
   if (((int)param_3 == 2) || ((int)param_3 == 9)) {
     iVar1 = (int)(param_3 << 2);
-    idol_draw::BindVertexProgram(g_viewMtxPtr,*(undefined4 *)((int)&DepthPass + iVar1),4);
+    idol_draw::BindVertexProgram(g_pIdolDraw,*(undefined4 *)((int)&DepthPass + iVar1),4);
     idol_draw::BindFragmentProgram(iVar2,*(undefined4 *)((int)&DepthPass + iVar1),6);
   }
   iVar5 = (int)(param_3 << 2);
@@ -7578,9 +7577,9 @@ void FastDrawStrip2UV_Pass(longlong param_1,int param_2,longlong param_3)
   ulonglong uVar10;
   ulonglong uVar12;
   
-  iVar8 = g_viewMtxPtr;
+  iVar8 = g_pIdolDraw;
   iVar4 = (int)(param_3 << 2);
-  idol_draw::BindVertexProgram(g_viewMtxPtr,*(undefined4 *)((int)&DepthPass + iVar4),7);
+  idol_draw::BindVertexProgram(g_pIdolDraw,*(undefined4 *)((int)&DepthPass + iVar4),7);
   idol_draw::BindFragmentProgram(iVar8,*(undefined4 *)((int)&DepthPass + iVar4),7);
   iVar3 = *(int *)((int)&DepthPass + iVar4);
   **(undefined4 **)(iVar3 + 8) = 0x41740;
@@ -7687,10 +7686,10 @@ void FastDrawStrip2UV_PassNoState(longlong param_1,int param_2,longlong param_3)
   ulonglong uVar12;
   int iVar13;
   
-  iVar2 = g_viewMtxPtr;
+  iVar2 = g_pIdolDraw;
   if (((int)param_3 == 2) || ((int)param_3 == 9)) {
     iVar1 = (int)(param_3 << 2);
-    idol_draw::BindVertexProgram(g_viewMtxPtr,*(undefined4 *)((int)&DepthPass + iVar1),7);
+    idol_draw::BindVertexProgram(g_pIdolDraw,*(undefined4 *)((int)&DepthPass + iVar1),7);
     idol_draw::BindFragmentProgram(iVar2,*(undefined4 *)((int)&DepthPass + iVar1),7);
   }
   iVar5 = (int)(param_3 << 2);
@@ -7902,7 +7901,7 @@ void FastDrawStripColor(int param_1,void *param_2,int param_3)
   longlong lVar17;
   undefined4 local_70 [16];
   
-  iVar2 = g_viewMtxPtr;
+  iVar2 = g_pIdolDraw;
   iVar5 = (int)(param_3 << 2);
   idol_draw::ResetPassState(*(undefined4 *)((int)&DepthPass + iVar5));
   iVar13 = (int)param_3;
@@ -8120,7 +8119,7 @@ void FastDrawStripFog(int param_1,void *param_2,int param_3)
   longlong lVar17;
   undefined4 local_70 [16];
   
-  iVar16 = g_viewMtxPtr;
+  iVar16 = g_pIdolDraw;
   iVar5 = (int)(param_3 << 2);
   iVar4 = *(int *)((int)&DepthPass + iVar5);
   puVar12 = local_70;

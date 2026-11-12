@@ -7,7 +7,6 @@
 #include "game/hero.h"
 #include "game/main.h"
 #include "game/skyfunc.h"
-#include "game/vendor.h"
 #include "idol/fastfunc.h"
 #include "idol/idol_draw.h"
 #include "idol/mUnk.h"
@@ -61,7 +60,7 @@ void DrawTfrag(int param_1,RsxCmd *param_2,int *param_3)
   GPiece<16> auVar37;
   RsxCmd local_d0 [18];
   
-  iVar17 = g_viewMtxPtr;
+  iVar17 = g_pIdolDraw;
   if (DAT_0159c365 == '\0') {
     idol_draw::RsxCmd_DebugStr_Marker(DepthPass,"TFrag");
     idol_draw::RsxCmd_DebugStr_Marker(ForwardPass,"TFrag");
@@ -650,7 +649,7 @@ void FUN_0050c020(int param_1,undefined4 *param_2)
   puVar4[0x2f] = unaff_r31;
   uVar20 = (ulonglong)*(uint *)(param_1 + 0x2438);
   puVar4[0x28] = unaff_r24;
-  iVar9 = g_viewMtxPtr;
+  iVar9 = g_pIdolDraw;
   uVar25 = FrameHeap;
   puVar4[0x2d] = unaff_r29;
   puVar4[0x2c] = unaff_r28;

@@ -4,7 +4,6 @@
 #include "idol/tiefunc.h"
 #include "game/draw.h"
 #include "game/skyfunc.h"
-#include "game/vendor.h"
 #include "idol/mUnk.h"
 #include "idol/mathfunc.h"
 #include "sdk/libgcm_cmd/marker.h"
@@ -54,7 +53,7 @@ void DrawTie(int param_1,int *param_2)
     idol_draw::RsxCmd_DebugStr_Marker(ForwardPass,"Tie");
     idol_draw::RsxCmd_DebugStr_Marker(DepthPass,"Tie");
     idol_draw::Insert_WaitCmd_Marker(&DAT_01111700,DepthPass,1);
-    uVar8 = g_viewMtxPtr;
+    uVar8 = g_pIdolDraw;
     pRVar7 = ForwardPass;
     pRVar15 = (RsxCmd *)(*(int *)(param_1 + 0x18) + 0x10);
     lVar25 = 2;
@@ -461,7 +460,7 @@ void FUN_0050d240(int param_1,int *param_2,longlong param_3)
   if ((param_2[2] != 0) && (DAT_0159c369 == '\0')) {
     idol_draw::RsxCmd_DebugStr_Marker(ForwardPass,"Tie");
     idol_draw::RsxCmd_DebugStr_Marker(DepthPass,"Tie");
-    uVar9 = g_viewMtxPtr;
+    uVar9 = g_pIdolDraw;
     idol_draw::Insert_WaitCmd_Marker(&DAT_01111700,DepthPass,1);
     pRVar7 = DepthPass;
     lVar27 = 2;

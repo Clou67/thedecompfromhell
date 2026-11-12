@@ -315,3 +315,17 @@ DAT_009636d2	g_MusicLoadStop
 DAT_009636d4	g_MusicLoadSector
 DAT_009636d8	g_MusicLoadSectors
 DAT_009636dc	g_MusicLoadBuffer
+Map_InitColors	MCSTATE_InitColors
+FlowState_Update	MCSTATE_Update
+g_viewMtxPtr	g_pIdolDraw
+____Loaders_RelocEffectTable	Loaders_RelocEffectTable
+____Loaders_RelocSpaceWadPtrs	Loaders_RelocSpaceWadPtrs
+DAT_00a2049c	g_byteGridRows
+DAT_00a204a0	g_byteGridMin
+DAT_00a204a4	g_byteGridMax
+DAT_0095e9f0	g_EffectTableCnt
+DAT_0095e9f4	g_EffectTableEntries
+DAT_0095e9f8	g_EffectTableOffsets
+DAT_00a10914	g_pPifFileBuffer
+DAT_00a202d0	g_PifFileTexRegs
+DAT_00724864	g_RatchetWideFixes

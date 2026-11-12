@@ -20,7 +20,6 @@
 #include "game/partupd.h"
 #include "game/pause.h"
 #include "game/skyproc.h"
-#include "game/vendor.h"
 #include "idol/idol_draw.h"
 #include "idol/mUnk.h"
 #include <cell/gcm/gcm_macros.h>
@@ -345,7 +344,7 @@ void DrawPartBatch(int quadCount, u32 *vertexOffset)
     EmitMethod(ctx, CELL_GCM_NV4097_SET_TEXTURE_CONTROL3, tex[7]);
 
     /* position, uv and colour arrays */
-    u32 offset = vertices - *(u32 *)(g_viewMtxPtr + 0x4a8);
+    u32 offset = vertices - *(u32 *)(g_pIdolDraw + 0x4a8);
     EmitMethod(ctx, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_OFFSET + 0 * 4, offset | MAIN_MEMORY);
     EmitMethod(ctx, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_OFFSET + 1 * 4, (offset + 12) | MAIN_MEMORY);
     EmitMethod(ctx, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_OFFSET + 3 * 4, (offset + 20) | MAIN_MEMORY);
@@ -395,8 +394,8 @@ void DrawParts(void)
     u32 vertexOffset = (u32)buffer;
     PartVertex *quad = buffer;
 
-    idol_draw::BindVertexProgram(g_viewMtxPtr, (int)ctx, 5);
-    idol_draw::BindFragmentProgram(g_viewMtxPtr, (int)ctx, 6);
+    idol_draw::BindVertexProgram(g_pIdolDraw, (int)ctx, 5);
+    idol_draw::BindFragmentProgram(g_pIdolDraw, (int)ctx, 6);
 
     EmitMethod(ctx, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 0 * 4, VTX_FORMAT(3, CELL_GCM_VERTEX_F));
     EmitMethod(ctx, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 1 * 4, VTX_FORMAT(2, CELL_GCM_VERTEX_F));

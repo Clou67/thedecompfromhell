@@ -3054,8 +3054,8 @@ void DrawCrosshairSprite
                dVar15,dVar10,dVar10);
   }
   else if (iVar5 < 3) {
-    if (*(int *)(g_viewMtxPtr + 0x4a0) == 1) {
-      param_1 = (double)(float)(param_1 - (double)*(float *)(g_viewMtxPtr + 0x1a84));
+    if (*(int *)(g_pIdolDraw + 0x4a0) == 1) {
+      param_1 = (double)(float)(param_1 - (double)*(float *)(g_pIdolDraw + 0x1a84));
     }
     Sprite_DrawRotated
               ((float)param_1,(float)param_2,(double)(float)(dVar13 * 40.0),

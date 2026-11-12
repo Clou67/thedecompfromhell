@@ -10,7 +10,6 @@
 #include "game/mobyutil.h"
 #include "game/update/moby172.h"
 #include "game/update/moby831.h"
-#include "game/vendor.h"
 #include "game/water.h"
 #include "idol/fastfunc.h"
 #include "idol/mUnk.h"
@@ -61,9 +60,9 @@ void M832_00480000(int param_1)
   
   uVar4 = DAT_00966b24;
   uVar3 = DAT_00966b20;
-  uVar2 = g_viewMtxPtr;
+  uVar2 = g_pIdolDraw;
   iVar1 = *(int *)(param_1 + 0x78);
-  FUN_004deab8(g_viewMtxPtr,DAT_00966b20,DAT_00966b24);
+  FUN_004deab8(g_pIdolDraw,DAT_00966b20,DAT_00966b24);
   FastIntToDouble(((int)uVar3 >> 1) + (uint)((int)uVar3 < 0 && (uVar3 & 1) != 0));
   FastIntToDouble(((int)uVar4 >> 1) + (uint)((int)uVar4 < 0 && (uVar4 & 1) != 0));
   GetEffectTex(0x1e);

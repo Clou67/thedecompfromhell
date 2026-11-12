@@ -14615,7 +14615,7 @@ void SetNtscPalTiming(int param_1)
 {
   bool bVar1;
   
-  bVar1 = *(int *)(g_viewMtxPtr + 0x18) != 0x3c;
+  bVar1 = *(int *)(g_pIdolDraw + 0x18) != 0x3c;
   if (bVar1) {
     DAT_0071f420 = 6;
     DAT_0071f408 = 1.2;
@@ -18477,9 +18477,9 @@ double MB_SampleByteGrid(undefined8 param_1)
   
   fStack00000034 = (float)param_1;
   fStack00000030 = (float)((ulonglong)param_1 >> 0x20);
-  return (double)((DAT_00a204a4 - DAT_00a204a0) *
+  return (double)((g_byteGridMax - g_byteGridMin) *
                   -((float)*(byte *)(g_byteGridData + g_byteGridStride * (int)fStack00000034 +
-                                    (int)fStack00000030) * 0.003921569 - 1.0) + DAT_00a204a0);
+                                    (int)fStack00000030) * 0.003921569 - 1.0) + g_byteGridMin);
 }
 
 

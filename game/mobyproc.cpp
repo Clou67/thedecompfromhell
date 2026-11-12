@@ -19,7 +19,6 @@
 #include "game/sound.h"
 #include "game/space.h"
 #include "game/update.h"
-#include "game/vendor.h"
 #include "idol/fastfunc.h"
 #include "idol/idol_draw.h"
 #include "idol/mUnk.h"
@@ -3243,7 +3242,7 @@ u8 *MB_BuildDrawEntry(MobyInstance *param_1,u8 *param_2,int param_3,int param_4)
   puVar5[0x3f] = unaff_r14;
   gVar11 = g_gameMode;
   puVar5[0x48] = unaff_r23;
-  iVar17 = g_viewMtxPtr;
+  iVar17 = g_pIdolDraw;
   puVar5[0x50] = unaff_r31;
   puVar5[0x4f] = unaff_r30;
   puVar5[0x4e] = unaff_r29;

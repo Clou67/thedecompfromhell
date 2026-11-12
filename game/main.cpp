@@ -235,7 +235,7 @@ void startLevel(void)
             }
 
             memcard_Update();
-            FlowState_Update();
+            MCSTATE_Update();
             if (IsMemcardActivityState(DAT_0071fb00) && !g_HideActivityIcon) {
                 STUB_0006d704(0);
                 SetGSReg(0x16, idol_draw::Blend(1, 5, 4, 0, 0, 0, 1, 1));

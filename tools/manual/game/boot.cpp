@@ -684,7 +684,7 @@ void Load_Front_End(void)
     load_engine_vram_pair((u8 *)&TEX_BASE, "rc1/ps3data/global/boot/engine.ps3", "rc1/ps3data/global/boot/vram.ps3");
     LoadAssetFromFile("rc1/ps3data/japan_font.ps3", &g_JapanFontTex, 0x24);
     LoadAssetFromFile("rc1/ps3data/japan_font.vram", g_FontVram, 0x80000);
-    g_JapanFontTex += (u32)g_FontVram - *(u32 *)((u8 *)g_viewMtxPtr + 0x4ac);
+    g_JapanFontTex += (u32)g_FontVram - *(u32 *)((u8 *)g_pIdolDraw + 0x4ac);
     music_Sync(1);
 
     /* the engine file: its moby classes, icons and effect textures */
@@ -745,7 +745,7 @@ void Load_Front_End(void)
 
     LoadAssetFromFile("rc1/ps3data/global/boot/japanLogo.ps3", &g_JapanLogoTex, 0x24);
     LoadAssetFromFile("rc1/ps3data/global/boot/japanLogo.vram", (void *)(DAT_00a10924 + 0x200000), 0x40000);
-    g_JapanLogoTex = (DAT_00a10924 - *(u32 *)((u8 *)g_viewMtxPtr + 0x4ac)) + 0x200000;
+    g_JapanLogoTex = (DAT_00a10924 - *(u32 *)((u8 *)g_pIdolDraw + 0x4ac)) + 0x200000;
 
     /* the frame (oClass FRAME) uses five of the boot sound defs */
     {
@@ -818,7 +818,7 @@ void PrepareFrontbin(void)
             STUB_00078134();
             STUB_000780fc();
             memcard_Update();
-            FlowState_Update();
+            MCSTATE_Update();
             UpdatePad();
             g_CutscenePlaying = 0;
 
@@ -915,10 +915,10 @@ void DrawSplashScreen(void *tex)
     u32 offset;
     bool wide;
 
-    FUN_004d86b0(g_viewMtxPtr);
+    FUN_004d86b0(g_pIdolDraw);
 
     scaledWidth = (int)((float)width * 1.1f);
-    wide = *(u32 *)((u8 *)g_viewMtxPtr + 12) == 1;
+    wide = *(u32 *)((u8 *)g_pIdolDraw + 12) == 1;
     drawWidth = wide ? scaledWidth : width;
     offset = wide ? width - scaledWidth : 0;
 
@@ -1258,9 +1258,9 @@ void GameShutDown(void)
     pad_Shutdown();
     FUN_005057a0();
 
-    if (g_viewMtxPtr != 0) {
+    if (g_pIdolDraw != 0) {
         printf("!!! Shutdown Graphics !!!\n");
-        VirtualMethod((void *)g_viewMtxPtr, 0x1c)((void *)g_viewMtxPtr);
+        VirtualMethod((void *)g_pIdolDraw, 0x1c)((void *)g_pIdolDraw);
     }
 
     if (g_pHWSystem != NULL) {
