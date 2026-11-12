@@ -17,3 +17,29 @@ g_pMsgDialog	IdolMsgDialog *NAME /* 0x1111640 */
 g_LevelRecords	LevelRecord NAME[] /* 0xa0fd24 */
 g_StartLevelClear	u8 NAME /* 0xa106c4: the one byte startLevel clears first (Ghidra label "startLevel") */
 g_Freeze	FreezeState NAME /* 0x963670 */
+g_FreezeOpt1Y	int NAME /* 0x71f330: y of the second option line (115) */
+g_FreezeOpt2Y	int NAME /* 0x71f334: y of the third option line (130) */
+g_FreezeTextColor0	u32 NAME /* 0x71f338: prompt text colour, faded in to ...Color1 */
+g_FreezeTextColor1	u32 NAME /* 0x71f33c */
+g_QuitBoxX	int NAME /* 0x71f340: "quit race?" box centre and half size (256,185 100x50) */
+g_QuitBoxY	int NAME /* 0x71f344 */
+g_QuitBoxHalfW	int NAME /* 0x71f348 */
+g_QuitBoxHalfH	int NAME /* 0x71f34c */
+g_QuitTextY	int NAME /* 0x71f350 */
+g_ResultBoxX	int NAME /* 0x71f354: race results box centre and half size (256,205 100x120) */
+g_ResultBoxY	int NAME /* 0x71f358 */
+g_ResultBoxHalfW	int NAME /* 0x71f35c */
+g_ResultBoxHalfH	int NAME /* 0x71f360 */
+g_ResultTextY	int NAME /* 0x71f364 */
+g_FreezePulsePeriod	int NAME /* 0x71f368: frames per pulse of the box colour (180) */
+g_FreezePulseColor0	u32 NAME /* 0x71f36c */
+g_FreezePulseColor1	u32 NAME /* 0x71f370 */
+g_RaceTextColor0	u32 NAME /* 0x71f374: race prompt colours, faded from ...0 to ...1 */
+g_RaceTextColor1	u32 NAME /* 0x71f378 */
+g_RaceGoodColor0	u32 NAME /* 0x71f37c */
+g_RaceGoodColor1	u32 NAME /* 0x71f380 */
+g_RaceBadColor0	u32 NAME /* 0x71f384 */
+g_RaceBadColor1	u32 NAME /* 0x71f388 */
+g_RacePlace	int NAME /* 0x96a5a0: finishing place, 1 = first */
+g_RaceBestTime	int NAME[2] /* 0xa0cd04: best race time in frames, [0] Rilgar, [1] Kalebo (was "BoltsRewardedFromRacePB"; it is compared with g_RaceTime) */
+g_RaceBestScore	int NAME[2] /* 0xa0cd10: best race score, [0] Rilgar, [1] Kalebo; guess */

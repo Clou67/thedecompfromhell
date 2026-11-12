@@ -686,7 +686,6 @@ extern undefined4 DAT_0096a594; /* 0x96a594 */
 extern undefined4 DAT_0096a598; /* 0x96a598 */
 extern undefined2 DAT_0096a59c; /* 0x96a59c */
 extern undefined2 DAT_0096a59e; /* 0x96a59e */
-extern undefined4 DAT_0096a5a0; /* 0x96a5a0 */
 extern undefined4 DAT_0096a5a4; /* 0x96a5a4 */
 extern undefined2 DAT_0096a5a8; /* 0x96a5a8 */
 extern undefined2 DAT_0096a5aa; /* 0x96a5aa */
@@ -987,7 +986,6 @@ extern undefined2 DAT_0096bfde; /* 0x96bfde */
 extern undefined4 DAT_0096bfe0; /* 0x96bfe0 */
 extern undefined4 DAT_00970000; /* no defined data */
 extern undefined4 DAT_00a0cd08; /* 0xa0cd08 */
-extern undefined4 DAT_00a0cd10; /* 0xa0cd10 */
 extern undefined4 DAT_00a0cd14; /* 0xa0cd14 */
 extern undefined4 DAT_00a0f644; /* no defined data */
 extern undefined4 DAT_00a0f6dc; /* 0xa0f6dc */
@@ -1068,7 +1066,6 @@ extern pointer32 PTR_TrickHud_Update_00705850; /* 0x705850 */
 extern pointer32 PTR_UpdateQuickSelect_007057c0; /* 0x7057c0 */
 extern Items UnlockableItems; /* 0x96c140 */
 extern float animationSpeed; /* 0x71f410 */
-extern int g_BoltsRewardedFromRacePB; /* 0xa0cd04 */
 extern undefined4 g_CurrentWeapon; /* 0x96ad98 */
 extern undefined4 g_DustHoverState; /* 0x96a0f8 */
 extern float g_FrameTime; /* 0x71f414 */
@@ -1079,6 +1076,9 @@ extern undefined2 g_HeroNearSwingshot; /* 0x96a67e */
 extern undefined4 g_HeroRequestedCamType; /* 0x96bf64 */
 extern undefined1 g_MetalDetectorSpotIsClose; /* 0x96bd28 */
 extern undefined4 g_Oxygen; /* 0x96bf80 */
+extern int g_RaceBestScore[2]; /* 0xa0cd10: best race score, [0] Rilgar, [1] Kalebo; guess */ /* type set in global_types.tsv */
+extern int g_RaceBestTime[2]; /* 0xa0cd04: best race time in frames, [0] Rilgar, [1] Kalebo (was "BoltsRewardedFromRacePB"; it is compared with g_RaceTime) */ /* type set in global_types.tsv */
+extern int g_RacePlace; /* 0x96a5a0: finishing place, 1 = first */ /* type set in global_types.tsv */
 extern undefined4 g_RaceScore; /* 0x96a588 */
 extern undefined4 g_RaceTime; /* 0x96a574 */
 extern undefined2 g_SwingshotReleasedTimer; /* 0x969ec6 */

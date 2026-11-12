@@ -1666,7 +1666,7 @@ void UpdateMoby_717(MobyInstance *moby)
       }
       *(float *)((int)pvVar8 + 0x208) = (float)(dVar34 + dVar33);
       iVar19 = FastDecTimerS16(uVar29 + 0x25a);
-      iVar28 = DAT_0096a5a0;
+      iVar28 = g_RacePlace;
       iVar20 = g_RaceTime;
       fVar53 = g_FrameTime;
       if (iVar19 == 0) {

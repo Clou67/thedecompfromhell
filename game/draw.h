@@ -3,6 +3,25 @@
 #include "types.h"
 #include "game/camera.h"
 
+// ---- types
+/* a text box for the font printers (FontPrintMediumOpt, FontPrintOptWestern); built on the stack
+   by the callers. Field names are guesses from DrawDialogText. */
+typedef struct TextLayout {
+    short top;              /* 0x00 */
+    short bottom;           /* 0x02 */
+    short left;             /* 0x04 */
+    short right;            /* 0x06 */
+    short x;                /* 0x08  text anchor (256 = screen centre) */
+    short y;                /* 0x0a */
+    short unk0C;            /* 0x0c */
+    short height;           /* 0x0e  out: height of the text */
+    short lineHeight;       /* 0x10 */
+    short flags;            /* 0x12  4: only measure (fills in height); others unknown */
+    short unk14;            /* 0x14 */
+    short unk16;            /* 0x16 */
+} TextLayout;
+typedef char TextLayout_size_check[sizeof(TextLayout) == 0x18 ? 1 : -1];
+
 // ---- globals
 extern Vec4 CameraCollPos; /* 0x95d230 */
 extern undefined4 CurrentOceanSubmitter; /* 0x95dfdc */
@@ -266,7 +285,7 @@ void STUB_0006849c(...);
 void STUB_000684a0(...);
 void UpdateOcclusion(int param_1);
 void Render_DispatchJob(void);
-undefined4 GetEffectTex(longlong param_1);
+void *GetEffectTex(int param_1);
 void DrawFullScreenQuad(int rgba,void *tex);
 void Sprite_DrawShape (RsxCmd param_1,ulonglong param_2,int param_3,longlong param_4,longlong param_5, longlong param_6,int param_7,longlong param_8);
 void Sprite_DrawShapeF(double param_1,double param_2,double param_3,double param_4);
@@ -276,11 +295,11 @@ void FontPrintOptJapanese (double param_1,undefined8 param_2,undefined4 param_3,
 void DrawSpriteFont(double param_1,double param_2,double param_3,double param_4);
 void DrawSpriteFont_thunk(void);
 void FontPrint_unk3 (double param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5, undefined4 param_6,int param_7,int param_8,undefined8 param_9,undefined8 param_10, int param_11);
-void FontPrintOptWestern (double param_1,undefined8 param_2,undefined4 param_3,int param_4,int param_5, undefined8 param_6,longlong param_7);
-void FontPrintMediumOpt (undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4);
+void FontPrintOptWestern(float param_1,TextLayout *param_2,u32 param_3,const char *param_4,int param_5,void *param_6,void *param_7);
+void FontPrintMediumOpt(TextLayout *param_1,u32 param_2,const char *param_3,int param_4);
 void Sprite_DrawShapeWrapper(void);
 void DrawRectOverlay(int top,int bot,int left,int right,int color);
-void DrawRoundedRect (undefined8 param_1,int param_2,undefined8 param_3,undefined8 param_4,int param_5);
+void DrawRoundedRect(short param_1,short param_2,short param_3,short param_4,int param_5);
 void SetFontWindow(FontWindow *window,int win_top,int win_bot,int win_left,int win_right, int text_x,int text_y,int line_spacing,int flags);
 undefined8 ShouldForceSubtitles(void);
 void DrawSubtitles(void);
@@ -323,7 +342,7 @@ void DrawRenderTargetToScreen(void);
 void STUB_0006e71c(...);
 void Sprite_DrawRotated (float param_1,float param_2,double param_3,double param_4,double param_5, double param_6,double param_7);
 void DrawTexturedQuadHud(int param_1,int param_2,undefined8 param_3,int param_4,int param_5);
-void DrawTextBox(undefined8 param_1,int param_2,undefined8 param_3,int param_4,uint param_5);
+void DrawTextBox(int param_1,int param_2,int param_3,int param_4,u32 param_5);
 int FontLenSmall(char *s,int len);
 int FontLenLarge(char *s,int len);
 int FontLenScaledWithTable (double param_1,int param_2,int param_3,undefined8 param_4,int param_5);
@@ -339,7 +358,7 @@ void FontPrintRightWithScale (double param_1,int param_2,int param_3,undefined8 
 void FontPrintMediumRight (int param_1,undefined8 param_2,undefined8 param_3,char *param_4,undefined8 param_5);
 void FontPrintSmallRight (int param_1,undefined8 param_2,undefined8 param_3,char *param_4,undefined8 param_5);
 void FontPrintLargeRight (int param_1,undefined8 param_2,undefined8 param_3,char *param_4,undefined8 param_5);
-int FontPrintMediumCenter (int param_1,undefined8 param_2,undefined8 param_3,char *param_4,undefined8 param_5);
+int FontPrintMediumCenter(int param_1,int param_2,u32 param_3,const char *param_4,int param_5);
 int FontPrintCenterScaled (double param_1,int param_2,int param_3,undefined8 param_4,int param_5, undefined8 param_6);
 int FontPrintSmallCenter (int param_1,undefined8 param_2,undefined8 param_3,char *param_4,undefined8 param_5);
 int FontPrintLargeCenter (int param_1,undefined8 param_2,undefined8 param_3,char *param_4,undefined8 param_5);

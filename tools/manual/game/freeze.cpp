@@ -1,12 +1,12 @@
 // game/freeze.cpp -- in-game prompts ("freeze" mode): quit / continue / reconnect controller ...
-// STATUS: IN PROGRESS
-// MERGE
+// STATUS: CLEAN (checked against the asm; local names are mine)
 // 5 functions, 0x78140-0x7a338
 //
 // DisplayPrompt switches the game into GAME_MODE_FREEZE and sets up g_Freeze for one of the prompt
 // types; UpdateFreeze runs it and DrawDialogText draws it. Timers are frame counts scaled by
 // animationSpeed (the frame-rate factor, 1.0 at 60 fps).
 #include "rc1.h"
+#include "idol/fastinline.h"
 
 #define FREEZE_OPEN_FRAMES   30.5f      /* constants at 0x7816c */
 #define FREEZE_DELAY_FRAMES  10.5f
@@ -107,6 +107,219 @@ void DisplayPrompt(int dialog, int arg, int option)
         g_Freeze.timer = 120;
         break;
     }
+}
+
+#define FADE_ALPHA           80.0f      /* 0x784b4 */
+#define LAYOUT_MEASURE       4          /* TextLayout.flags: only measure the text */
+#define PROMPT_TEXT_FADE     0x0020ffff /* button label colour, faded in to ... */
+#define PROMPT_TEXT          0x8020ffff
+#define OPTION_TITLE_COLOR   0x8000c0c0
+#define OPTION_COLOR         0x80ffa888
+
+/* how far the open/close timer has run, 0 -> 1 */
+static inline float OpenFraction(int timer)
+{
+    return 1.0f - timer / (float)ScaledFrames(FREEZE_OPEN_FRAMES);
+}
+
+/* box colour pulsing between two colours once every g_FreezePulsePeriod frames */
+static u32 PulseColor(void)
+{
+    float period = (float)FastIntToDouble(g_FreezePulsePeriod);
+    float t = (g_MainLoopFrames % g_FreezePulsePeriod) / period;
+    return FastLerpColor(FastSinInline(t * 6.28318f - 3.14159f) * 0.5f + 0.5f,
+                         g_FreezePulseColor0, g_FreezePulseColor1);
+}
+
+/* a box of half size (halfW, halfH) around (x, y), scaled by s */
+static void DrawScaledBox(int x, int y, int halfW, int halfH, float s, u32 color)
+{
+    int top = y - FastDoubleToInt(halfH * s);
+    int bottom = y + FastDoubleToInt(halfH * s);
+    int left = x - FastDoubleToInt(halfW * s);
+    DrawTextBox(top, bottom, left, x + FastDoubleToInt(halfW * s), color);
+}
+
+/* the "continue" / "quit" lines. The Japanese strings start with a two-byte button glyph;
+   there the glyphs are swapped (circle confirms): the continue line gets the first byte of the
+   "no" string, the quit line the glyph of the continue string. */
+static void DrawContinueQuit(int y, u32 color)
+{
+    char buf[512];
+
+    if (!g_JapaneseMode) {
+        FontPrintMediumCenter(256, y, color, help_msg_string_by_index(STR_CONTINUE), -1);
+        FontPrintMediumCenter(256, y + 24, color, help_msg_string_by_index(STR_QUIT_2), -1);
+        return;
+    }
+    char *no = help_msg_string_by_index(STR_NO);
+    strcpy(buf, help_msg_string_by_index(STR_CONTINUE));
+    buf[2] = no[0];
+    FontPrintMediumCenter(256, y, color, buf + 2, -1);
+    help_msg_string_by_index(STR_CONTINUE);             /* result unused */
+    strcpy(buf + 2, help_msg_string_by_index(STR_QUIT_2));
+    FontPrintMediumCenter(256, y + 24, color, buf, -1);
+}
+
+/* centred message box sized to its text (memory card prompts) with an optional button line */
+static void DrawMessageBox(const char *text, StringId button)
+{
+    TextLayout box = { 0, (short)g_ScreenHeight, 96, 416, 256, 104, 0, 0, 16, 1 | LAYOUT_MEASURE, 0, 0 };
+
+    FontPrintMediumOpt(&box, 0, text, -1);
+    int h = box.height + 40;
+    box.top = (g_ScreenHeight - h) >> 1;
+    box.bottom = box.top + h;
+    box.y = box.top + 4;
+    float t = OpenFraction(g_Freeze.timer);
+    DrawRoundedRect(box.top, box.bottom, 96, 416, (int)(t * FADE_ALPHA));
+    box.flags ^= LAYOUT_MEASURE;
+    FontPrintMediumOpt(&box, FastLerpColor(t, g_FreezeTextColor0, g_FreezeTextColor1), text, -1);
+    u32 color = FastLerpColor(OpenFraction(g_Freeze.openAnim2), PROMPT_TEXT_FADE, PROMPT_TEXT);
+    if (button)
+        FontPrintMediumCenter(256, box.bottom - 20, color, help_msg_string_by_index(button), -1);
+}
+
+/* "quit race?" while racing, the results screen after it */
+static void DrawRacePrompt(void)
+{
+    u32 box = PulseColor();
+    float open = g_Freeze.openAnim * 0.125f;
+    if (open > 1.0f) open = 1.0f;
+    else if (!(open >= 0.1f)) open = 0.1f;
+
+    u32 text = g_RaceTextColor0, good = g_RaceGoodColor0, bad = g_RaceBadColor0;
+    if (g_Freeze.openAnim2) {
+        float f = g_Freeze.openAnim2 * 0.125f;
+        if (f > 1.0f) f = 1.0f;
+        else if (!(f >= 0.0f)) f = 0.0f;
+        text = FastLerpColor(f, g_RaceTextColor0, g_RaceTextColor1);
+        good = FastLerpColor(f, g_RaceGoodColor0, g_RaceGoodColor1);
+        bad = FastLerpColor(f, g_RaceBadColor0, g_RaceBadColor1);
+    }
+
+    if (DAT_0096a57a < 3) {
+        DrawScaledBox(g_QuitBoxX, g_QuitBoxY, g_QuitBoxHalfW, g_QuitBoxHalfH, open, box);
+        FontPrintMediumCenter(256, g_QuitTextY, text, help_msg_string_by_index(STR_QUIT_RACE), -1);
+        DrawContinueQuit(g_QuitTextY + 24, text);
+        return;
+    }
+
+    char line[64];
+    int y = g_ResultTextY;
+    DrawScaledBox(g_ResultBoxX, g_ResultBoxY, g_ResultBoxHalfW, g_ResultBoxHalfH, open, box);
+    int place = g_RacePlace - 1;
+    if (place > 4) place = 4;
+    sprintf(line, "%s %s", help_msg_string_by_index((StringId)(STR_ST + place)),
+            help_msg_string_by_index(STR_PLACE));
+    FontPrintMediumCenter(256, y, g_RacePlace == 1 ? good : bad, line, -1);
+
+    int track = Level == Kalebo;
+    if (g_RaceBestTime[track] == g_RaceTime) {
+        int perMin = g_IsPal ? 3000 : 3600;
+        int perSec = (perMin + 1) / 60;     /* as the binary computes it: 50 or 60 */
+        int min = g_RaceTime / perMin;
+        int rest = g_RaceTime - min * perMin;
+        int sec = rest / perSec;
+        sprintf(line, "%s", help_msg_string_by_index(STR_NEW_BEST_TIME));
+        FontPrintMediumCenter(256, y + 38, good, line, -1);
+        sprintf(line, "%d:%02d:%02d", min, sec, (rest - sec * perSec) * 100 / perSec);
+        FontPrintMediumCenter(256, y + 58, good, line, -1);
+    } else {
+        sprintf(line, "%s", help_msg_string_by_index(STR_NO_NEW_TIME));
+        FontPrintMediumCenter(256, y + 48, bad, line, -1);
+    }
+    int best = g_RaceBestScore[Level == Kalebo];
+    if (best != 0 && best == g_RaceScore) {
+        sprintf(line, "%s", help_msg_string_by_index(STR_NEW_HIGH_SCORE));
+        FontPrintMediumCenter(256, g_ResultTextY + 86, good, line, -1);
+        sprintf(line, "%d", g_RaceScore);
+        FontPrintMediumCenter(256, g_ResultTextY + 106, good, line, -1);
+    } else {
+        sprintf(line, "%s", help_msg_string_by_index(STR_NO_NEW_SCORE));
+        FontPrintMediumCenter(256, g_ResultTextY + 96, bad, line, -1);
+    }
+    DrawContinueQuit(g_ResultTextY + 144, text);
+}
+
+/* the display mode prompt (dialog 6): yes/no, then the result */
+static void DrawDisplayPrompt(void)
+{
+    TextLayout box = { 100, 300, 96, 416, 256, 104, 0, 0, 16, 1, 0, 0 };
+    float t = OpenFraction(g_Freeze.timer);
+    StringId msg;
+
+    DrawRoundedRect(100, 300, 96, 416, (int)(t * FADE_ALPHA));
+    u32 text = FastLerpColor(t, g_FreezeTextColor0, g_FreezeTextColor1);
+    u32 button = FastLerpColor(t, PROMPT_TEXT_FADE, PROMPT_TEXT);
+    switch (g_Freeze.state) {
+    case 0:
+    case 1:
+    case 2:
+        FontPrintMediumCenter(202, 280, button, help_msg_string_by_index(g_JapaneseMode ? STR_YES_3 : STR_YES_2), -1);
+        FontPrintMediumCenter(309, 280, button, help_msg_string_by_index(STR_NO), -1);
+        msg = g_Freeze.state == 2 ? STR_THE_DISPLAY_IS_NOW_0x522B : STR_THE_SCREEN_WILL_NOW_0x522A;
+        break;
+    case 3:
+        FontPrintMediumCenter(256, 280, button,
+                              help_msg_string_by_index(g_JapaneseMode ? STR_CONTINUE : STR_CONTINUE_2), -1);
+        msg = STR_THE_DISPLAY_HAS_BEEN_0x522C;
+        break;
+    default:
+        return;
+    }
+    char *str = help_msg_string_by_index(msg);
+    FontPrintOptWestern(1.0f, &box, text, str, -1, GetEffectTex(1), &MediumWesternGlyphs);
+}
+
+// 0x00784e8 (0x1620 bytes)
+void DrawDialogText(void)
+{
+    DrawScreenOverlay(0, 0, 0, 48);
+    if (g_Freeze.delay != 0) return;            /* skips the STUB_0006d708 below too */
+    STUB_0006d704(0);
+
+    switch (g_Freeze.dialogType) {
+    case 9:
+    case 5:
+    case 3:
+        break;
+    case 8:                                     /* save failed */
+        if (g_Freeze.openAnim > 0)
+            DrawMessageBox(help_msg_string_by_index(g_Freeze.option == 0 ? STR_SAVE_FAILED_PLEASE_CHECK_0x4FBC
+                                                                         : STR_SAVE_FAILED_PLEASE_CHECK_0x4FBD),
+                           g_Freeze.timer == 0 ? STR_CONTINUE_2 : (StringId)0);
+        break;
+    case 7:
+        if (g_Freeze.openAnim > 0) {
+            char buf[512];
+            StringId button = g_Freeze.timer == 0 ? STR_CONTINUE_2 : (StringId)0;
+            char *p = buf;
+            strncpy(buf, help_msg_string_by_index(STR_MEMORY_CARD_PS2_IN_0x4FA6), 1024);   /* sic: 1024 */
+            /* the message is "<a>\1<b>": show the part after the \1 separators */
+            while (*p != 0 && *p != 1) p++;
+            while (*p == 1) *p++ = 0;
+            DrawMessageBox(p, button);
+        }
+        break;
+    case 6:
+        DrawDisplayPrompt();
+        break;
+    case 2:
+        DrawTextBox(100, 160, 176, 336, PulseColor());
+        FontPrintMediumCenter(256, 122, OPTION_TITLE_COLOR, g_Freeze.options[0], -1);
+        break;
+    case 0:
+        DrawRacePrompt();
+        break;
+    default:                                    /* 1, 4: title and two options */
+        DrawTextBox(80, g_FreezeOpt2Y + 26, 176, 336, PulseColor());
+        if (g_Freeze.options[0]) FontPrintMediumCenter(256, 90, OPTION_TITLE_COLOR, g_Freeze.options[0], -1);
+        if (g_Freeze.options[1]) FontPrintMediumCenter(256, g_FreezeOpt1Y, OPTION_COLOR, g_Freeze.options[1], -1);
+        if (g_Freeze.options[2]) FontPrintMediumCenter(256, g_FreezeOpt2Y, OPTION_COLOR, g_Freeze.options[2], -1);
+        break;
+    }
+    STUB_0006d708();
 }
 
 // 0x0079b18 (0x820 bytes)

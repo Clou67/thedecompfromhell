@@ -2050,7 +2050,7 @@ void Render_DispatchJob(void)
 
 
 // 0x00685c4 (0x1c bytes)
-undefined4 GetEffectTex(longlong param_1)
+void *GetEffectTex(int param_1)
 
 {
   return *(undefined4 *)(TexInfo + (int)(param_1 << 2));
@@ -2743,9 +2743,7 @@ void FontPrint_unk3
 
 
 // 0x0069db8 (0x750 bytes)
-void FontPrintOptWestern
-               (double param_1,undefined8 param_2,undefined4 param_3,int param_4,int param_5,
-               undefined8 param_6,longlong param_7)
+void FontPrintOptWestern(float param_1,TextLayout *param_2,u32 param_3,const char *param_4,int param_5,void *param_6,void *param_7)
 
 {
   byte bVar1;
@@ -3081,8 +3079,7 @@ LAB_0006a184:
 
 
 // 0x006a510 (0xb4 bytes)
-void FontPrintMediumOpt
-               (undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4)
+void FontPrintMediumOpt(TextLayout *param_1,u32 param_2,const char *param_3,int param_4)
 
 {
                     /* Is used in cheats menu
@@ -3124,8 +3121,7 @@ void DrawRectOverlay(int top,int bot,int left,int right,int color)
 
 
 // 0x006a718 (0x578 bytes)
-void DrawRoundedRect
-               (undefined8 param_1,int param_2,undefined8 param_3,undefined8 param_4,int param_5)
+void DrawRoundedRect(short param_1,short param_2,short param_3,short param_4,int param_5)
 
 {
   uint rgba;
@@ -5387,7 +5383,7 @@ void DrawTexturedQuadHud(int param_1,int param_2,undefined8 param_3,int param_4,
 
 
 // 0x006f0a0 (0x710 bytes)
-void DrawTextBox(undefined8 param_1,int param_2,undefined8 param_3,int param_4,uint param_5)
+void DrawTextBox(int param_1,int param_2,int param_3,int param_4,u32 param_5)
 
 {
   int iVar1;
@@ -5904,8 +5900,7 @@ void FontPrintLargeRight
 
 
 // 0x0070514 (0x164 bytes)
-int FontPrintMediumCenter
-              (int param_1,undefined8 param_2,undefined8 param_3,char *param_4,undefined8 param_5)
+int FontPrintMediumCenter(int param_1,int param_2,u32 param_3,const char *param_4,int param_5)
 
 {
   byte bVar1;

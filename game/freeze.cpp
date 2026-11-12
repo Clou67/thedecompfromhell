@@ -1,6 +1,5 @@
 // game/freeze.cpp -- in-game prompts ("freeze" mode): quit / continue / reconnect controller ...
-// STATUS: IN PROGRESS
-// MERGE (4 of 5 functions cleaned; the rest are generated)
+// STATUS: CLEAN (checked against the asm; local names are mine)
 // 5 functions, 0x78140-0x7a338
 //
 // DisplayPrompt switches the game into GAME_MODE_FREEZE and sets up g_Freeze for one of the prompt
@@ -22,13 +21,13 @@
 #include "game/mobyutil.h"
 #include "game/music.h"
 #include "game/pad.h"
-#include "game/path.h"
 #include "game/pause.h"
 #include "game/sound.h"
 #include "game/space.h"
 #include "idol/fastfunc.h"
 #include "idol/idol.h"
 #include "sdk/mUnk4.h"
+#include "idol/fastinline.h"
 
 #define FREEZE_OPEN_FRAMES   30.5f      /* constants at 0x7816c */
 #define FREEZE_DELAY_FRAMES  10.5f
@@ -53,13 +52,11 @@ void SECTION_HEADER_FREEZE(void)
     DAT_0071f30c = 0x10000;
 }
 
-
 // 0x0078158 (0x14 bytes)
 gameMode_t GetFreezePrevGameMode(void)
 {
     return g_Freeze.prevGameMode;
 }
-
 
 // 0x0078178 (0x334 bytes)
 void DisplayPrompt(int dialog, int arg, int option)
@@ -133,442 +130,218 @@ void DisplayPrompt(int dialog, int arg, int option)
     }
 }
 
+#define FADE_ALPHA           80.0f      /* 0x784b4 */
+#define LAYOUT_MEASURE       4          /* TextLayout.flags: only measure the text */
+#define PROMPT_TEXT_FADE     0x0020ffff /* button label colour, faded in to ... */
+#define PROMPT_TEXT          0x8020ffff
+#define OPTION_TITLE_COLOR   0x8000c0c0
+#define OPTION_COLOR         0x80ffa888
 
-// 0x00784e8 (0x1620 bytes)
-// strings: 00078c24: '8`RNH' (raw) | 00078c4c: '8`RKH' (raw) | 00078d4c: '8`RJH' (raw) | 00652018: '%s %s' | 00652028: '%d:%02d:%02d'
-
-
-void DrawDialogText(void)
-
+/* how far the open/close timer has run, 0 -> 1 */
+static inline float OpenFraction(int timer)
 {
-  short sVar1;
-  float fVar2;
-  uint uVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  undefined8 color;
-  undefined8 uVar7;
-  undefined *puVar9;
-  undefined4 uVar10;
-  undefined4 uVar11;
-  int iVar12;
-  int iVar13;
-  int iVar14;
-  int iVar15;
-  char *pcVar16;
-  char *pcVar17;
-  undefined8 uVar8;
-  short sVar18;
-  byte *pbVar19;
-  StringId SVar20;
-  byte in_cr6;
-  double dVar21;
-  double dVar22;
-  double dVar23;
-  undefined8 uVar24;
-  GPiece<16> auVar25;
-  GPiece<16> auVar26;
-  GPiece<16> auVar27;
-  GPiece<16> auVar28;
-  GPiece<16> auVar29;
-  GPiece<24> local_300;
-  GPiece<24> local_2e8;
-  GPiece<24> local_2d0;
-  char acStack_2b8 [64];
-  byte local_278 [2];
-  char local_276 [510];
-  longlong local_78;
-  
-  DrawScreenOverlay(0,0,0,0x30);
-  if (g_Freeze.delay != 0) {
-    return;
-  }
-  STUB_0006d704(0);
-  if (g_Freeze.dialogType != 9) {
-    if (g_Freeze.dialogType == 8) {
-      if (0 < g_Freeze.openAnim) {
-        uVar8 = help_msg_string_by_index
-                          ((int)(ZERO_MASK(g_Freeze.option)) +
-                           STR_SAVE_FAILED_PLEASE_CHECK_0x4FBD);
-        SVar20 = (StringId)(ZERO_MASK(g_Freeze.timer)) & STR_CONTINUE_2;
-        FontPrintMediumOpt(local_2e8,0,uVar8,0xffffffffffffffff);
-        sVar1 = (short)(g_ScreenHeight + -0x28 >> 1);
-        sVar18 = sVar1 + 0x28;
-        dVar23 = 30.5;
-        dVar22 = 1.0;
-        dVar21 = (double)(1.0 - (float)(longlong)g_Freeze.timer /
-                                (float)(longlong)(animationSpeed * 30.5));
-        local_78 = (longlong)(int)(dVar21 * 80.0);
-        DrawRoundedRect(sVar1,sVar18,0x60,0x1a0,(int)(dVar21 * 80.0));
-        color = FastLerpColor(dVar21,ABGR_0071f338,ABGR_0071f33c);
-        FontPrintMediumOpt(local_2e8,color,uVar8,0xffffffffffffffff);
-        local_78 = (longlong)g_Freeze.openAnim2;
-        uVar8 = FastLerpColor
-                          ((double)(float)(dVar22 - (double)(float)((double)local_78 /
-                                                                   (double)(longlong)
-                                                                           ((double)animationSpeed *
-                                                                           dVar23))),0x20ffff,
-                           0xffffffff8020ffff);
-        if (SVar20 != STR_TO_USE_YOUR_BOMB_0x0000) {
-          color = help_msg_string_by_index(SVar20);
-          FontPrintMediumCenter(0x100,(longlong)sVar18 + -0x14,uVar8,color,0xffffffffffffffff)
-          ;
-        }
-      }
-    }
-    else if (g_Freeze.dialogType == 7) {
-      if (0 < g_Freeze.openAnim) {
-        uVar8 = help_msg_string_by_index(STR_MEMORY_CARD_PS2_IN_0x4FA6);
-        pbVar19 = local_278;
-        strcpy(pbVar19,uVar8,0x400);
-        iVar12 = g_Freeze.timer;
-        for (; 1 < *pbVar19; pbVar19 = pbVar19 + 1) {
-        }
-        for (; *pbVar19 == 1; pbVar19 = pbVar19 + 1) {
-          *pbVar19 = 0;
-        }
-        SVar20 = (StringId)(ZERO_MASK(iVar12)) & STR_CONTINUE_2;
-        FontPrintMediumOpt(local_300,0,pbVar19,0xffffffffffffffff);
-        sVar1 = (short)(g_ScreenHeight + -0x28 >> 1);
-        sVar18 = sVar1 + 0x28;
-        dVar23 = 30.5;
-        dVar22 = 1.0;
-        dVar21 = (double)(1.0 - (float)(longlong)g_Freeze.timer /
-                                (float)(longlong)(animationSpeed * 30.5));
-        local_78 = (longlong)(int)(dVar21 * 80.0);
-        DrawRoundedRect(sVar1,sVar18,0x60,0x1a0,(int)(dVar21 * 80.0));
-        uVar8 = FastLerpColor(dVar21,ABGR_0071f338,ABGR_0071f33c);
-        FontPrintMediumOpt(local_300,uVar8,pbVar19,0xffffffffffffffff);
-        local_78 = (longlong)g_Freeze.openAnim2;
-        uVar8 = FastLerpColor
-                          ((double)(float)(dVar22 - (double)(float)((double)local_78 /
-                                                                   (double)(longlong)
-                                                                           ((double)animationSpeed *
-                                                                           dVar23))),0x20ffff,
-                           0xffffffff8020ffff);
-        if (SVar20 != STR_TO_USE_YOUR_BOMB_0x0000) {
-          color = help_msg_string_by_index(SVar20);
-          FontPrintMediumCenter(0x100,(longlong)sVar18 + -0x14,uVar8,color,0xffffffffffffffff)
-          ;
-        }
-      }
-    }
-    else if (g_Freeze.dialogType == 6) {
-      uVar24 = 0x3ff0000000000000;
-      dVar21 = (double)(1.0 - (float)(longlong)g_Freeze.timer /
-                              (float)(longlong)(animationSpeed * 30.5));
-      local_78 = (longlong)(int)(dVar21 * 80.0);
-      DrawRoundedRect(100,300,0x60,0x1a0,(int)(dVar21 * 80.0));
-      uVar8 = FastLerpColor(dVar21,ABGR_0071f338,ABGR_0071f33c);
-      color = FastLerpColor(dVar21,0x20ffff,0xffffffff8020ffff);
-      if (g_Freeze.state < 2) {
-        if (g_Freeze.state < 0) goto LAB_00079abc;
-        if (g_JapaneseMode == false) {
-          uVar7 = help_msg_string_by_index(STR_YES_2);
-          FontPrintMediumCenter(0xca,0x118,color,uVar7,0xffffffffffffffff);
-        }
-        else {
-          uVar7 = help_msg_string_by_index(STR_YES_3);
-          FontPrintMediumCenter(0xca,0x118,color,uVar7,0xffffffffffffffff);
-        }
-        uVar7 = help_msg_string_by_index(STR_NO);
-        FontPrintMediumCenter(0x135,0x118,color,uVar7,0xffffffffffffffff);
-        SVar20 = STR_THE_SCREEN_WILL_NOW_0x522A;
-      }
-      else if (g_Freeze.state < 3) {
-        if (g_JapaneseMode == false) {
-          uVar7 = help_msg_string_by_index(STR_YES_2);
-          FontPrintMediumCenter(0xca,0x118,color,uVar7,0xffffffffffffffff);
-        }
-        else {
-          uVar7 = help_msg_string_by_index(STR_YES_3);
-          FontPrintMediumCenter(0xca,0x118,color,uVar7,0xffffffffffffffff);
-        }
-        uVar7 = help_msg_string_by_index(STR_NO);
-        FontPrintMediumCenter(0x135,0x118,color,uVar7,0xffffffffffffffff);
-        SVar20 = STR_THE_DISPLAY_IS_NOW_0x522B;
-      }
-      else {
-        if (3 < g_Freeze.state) goto LAB_00079abc;
-        if (g_JapaneseMode == false) {
-          uVar7 = help_msg_string_by_index(STR_CONTINUE_2);
-          FontPrintMediumCenter(0x100,0x118,color,uVar7,0xffffffffffffffff);
-        }
-        else {
-          uVar7 = help_msg_string_by_index(STR_CONTINUE);
-          FontPrintMediumCenter(0x100,0x118,color,uVar7,0xffffffffffffffff);
-        }
-        SVar20 = STR_THE_DISPLAY_HAS_BEEN_0x522C;
-      }
-      color = help_msg_string_by_index(SVar20);
-      uVar7 = GetEffectTex(1);
-      FontPrintOptWestern
-                (uVar24,local_2d0,uVar8,color,0xffffffffffffffff,uVar7,&MediumWesternGlyphs);
-    }
-    else if ((g_Freeze.dialogType != 5) && (g_Freeze.dialogType != 3)) {
-      if (g_Freeze.dialogType == 2) {
-        dVar21 = (double)FastIntToDouble(DAT_0071f368);
-        local_78 = (longlong)(g_MainLoopFrames - (g_MainLoopFrames / DAT_0071f368) * DAT_0071f368);
-        fVar2 = (float)((double)local_78 / dVar21) * 6.28318 - 3.14159;
-        fVar4 = 3.1415925 - fVar2;
-        if (fVar2 - (3.1415925 - fVar2) < 0.0) {
-          fVar4 = fVar2;
-        }
-        fVar5 = -3.1415925 - fVar2;
-        if ((-3.1415925 - fVar2) - fVar4 < 0.0) {
-          fVar5 = fVar4;
-        }
-        fVar2 = fVar5 * fVar5;
-        fVar4 = fVar2 * fVar2 * fVar5;
-        fVar6 = fVar2 * fVar4;
-        uVar8 = FastLerpColor
-                          ((double)((fVar2 * fVar6 * 2.601887e-06 +
-                                    fVar6 * -0.0001980741 +
-                                    fVar4 * 0.0083330255 + fVar2 * fVar5 * -0.16666657 + fVar5) *
-                                    0.5 + 0.5),DAT_0071f36c,DAT_0071f370);
-        DrawTextBox(100,0xa0,0xb0,0x150,uVar8);
-        FontPrintMediumCenter(0x100,0x7a,0x8000c0c0,g_Freeze.options[0],0xffffffffffffffff);
-      }
-      else if (g_Freeze.dialogType == 0) {
-        dVar21 = (double)FastIntToDouble(DAT_0071f368);
-        local_78 = (longlong)(g_MainLoopFrames - (g_MainLoopFrames / DAT_0071f368) * DAT_0071f368);
-        fVar2 = (float)((double)local_78 / dVar21) * 6.28318 - 3.14159;
-        fVar4 = 3.1415925 - fVar2;
-        if (fVar2 - (3.1415925 - fVar2) < 0.0) {
-          fVar4 = fVar2;
-        }
-        fVar5 = -3.1415925 - fVar2;
-        if ((-3.1415925 - fVar2) - fVar4 < 0.0) {
-          fVar5 = fVar4;
-        }
-        fVar2 = fVar5 * fVar5;
-        fVar4 = fVar2 * fVar2 * fVar5;
-        fVar6 = fVar2 * fVar4;
-        uVar8 = FastLerpColor
-                          ((double)((fVar2 * fVar6 * 2.601887e-06 +
-                                    fVar6 * -0.0001980741 +
-                                    fVar4 * 0.0083330255 + fVar2 * fVar5 * -0.16666657 + fVar5) *
-                                    0.5 + 0.5),DAT_0071f36c,DAT_0071f370);
-        auVar25 = ZEXT416(0xffffffff);
-        auVar25 = auVar25 | auVar25 << 0x20 | auVar25 << 0x40 | auVar25 << 0x60;
-        auVar26 = loadVectorLeftIndexed(0x20,0x963670);
-        auVar28 = vectorConvertFromSignedFixedPointWord(auVar26,0);
-        auVar26 = vectorShiftLeftIntegerWord(auVar25,auVar25);
-        auVar25 = loadVectorLeftIndexed(0x30,0x784ac);
-        auVar25 = auVar25 >> 0x60 & (GPiece<16>)0xffffffff;
-        auVar27 = auVar25 | auVar25 << 0x20 | auVar25 << 0x40 | auVar25 << 0x60;
-        auVar25 = loadVectorLeftIndexed(4,0x784ac);
-        dVar21 = 1.0;
-        auVar28 = vectorMultiplyAddFloatingPoint(auVar28,auVar27,auVar26);
-        auVar25 = auVar25 >> 0x60 & (GPiece<16>)0xffffffff;
-        auVar26 = auVar25 | auVar25 << 0x20 | auVar25 << 0x40 | auVar25 << 0x60;
-        auVar25 = auVar28 >> 0x60 & (GPiece<16>)0xffffffff;
-        auVar28 = auVar25 | auVar25 << 0x20 | auVar25 << 0x40 | auVar25 << 0x60;
-        auVar25 = loadVectorLeftIndexed(0x24,0x963670);
-        vectorCompareGreaterThanFloatingPoint(auVar28,auVar26);
-        dVar22 = dVar21;
-        if ((bool)(in_cr6 >> 1 & 1)) {
-          auVar29 = loadVectorLeftIndexed(0x34,0x784ac);
-          auVar29 = auVar29 >> 0x60 & (GPiece<16>)0xffffffff;
-          vectorCompareGreaterThanOrEqualToFloatingPoint
-                    (auVar28,auVar29 | auVar29 << 0x20 | auVar29 << 0x40 | auVar29 << 0x60);
-          dVar22 = (double)((float)(longlong)g_Freeze.openAnim * 0.125);
-          if ((bool)(in_cr6 >> 1 & 1)) {
-            dVar22 = 0.10000000149011612;
-          }
-        }
-        puVar9 = PTR_DAT_0071f374;
-        uVar10 = DAT_0071f37c;
-        uVar11 = DAT_0071f384;
-        if (g_Freeze.openAnim2 != 0) {
-          local_78 = (longlong)g_Freeze.openAnim2;
-          auVar28 = vectorConvertFromSignedFixedPointWord(auVar25,0);
-          auVar25 = ZEXT416(0xffffffff);
-          auVar25 = auVar25 | auVar25 << 0x20 | auVar25 << 0x40 | auVar25 << 0x60;
-          auVar25 = vectorShiftLeftIntegerWord(auVar25,auVar25);
-          auVar25 = vectorMultiplyAddFloatingPoint(auVar28,auVar27,auVar25);
-          auVar25 = auVar25 >> 0x60 & (GPiece<16>)0xffffffff;
-          auVar25 = auVar25 | auVar25 << 0x20 | auVar25 << 0x40 | auVar25 << 0x60;
-          vectorCompareGreaterThanFloatingPoint(auVar25,auVar26);
-          if ((bool)(in_cr6 >> 1 & 1)) {
-            auVar26 = ZEXT416(0);
-            vectorCompareGreaterThanOrEqualToFloatingPoint
-                      (auVar25,auVar26 | auVar26 << 0x20 | auVar26 << 0x40 | auVar26 << 0x60);
-            dVar21 = (double)((float)local_78 * 0.125);
-            if ((bool)(in_cr6 >> 1 & 1)) {
-              dVar21 = 0.0;
-            }
-          }
-          puVar9 = (undefined *)FastLerpColor(dVar21,PTR_DAT_0071f374,DAT_0071f378);
-          uVar10 = FastLerpColor(dVar21,DAT_0071f37c,DAT_0071f380);
-          uVar11 = FastLerpColor(dVar21,DAT_0071f384,DAT_0071f388);
-        }
-        if (DAT_0096a57a < 3) {
-          local_78 = (longlong)DAT_0071f34c;
-          iVar12 = FastDoubleToInt((double)(float)((double)local_78 * dVar22));
-          local_78 = (longlong)DAT_0071f34c;
-          iVar12 = DAT_0071f344 - iVar12;
-          iVar13 = FastDoubleToInt((double)(float)((double)local_78 * dVar22));
-          local_78 = (longlong)DAT_0071f348;
-          iVar13 = DAT_0071f344 + iVar13;
-          iVar14 = FastDoubleToInt((double)(float)((double)local_78 * dVar22));
-          local_78 = (longlong)DAT_0071f348;
-          iVar14 = DAT_0071f340 - iVar14;
-          iVar15 = FastDoubleToInt((double)(float)((double)local_78 * dVar22));
-          DrawTextBox(iVar12,iVar13,iVar14,DAT_0071f340 + iVar15,uVar8);
-          iVar12 = DAT_0071f350;
-          uVar8 = help_msg_string_by_index(STR_QUIT_RACE);
-          FontPrintMediumCenter(0x100,iVar12,puVar9,uVar8,0xffffffffffffffff);
-          if (g_JapaneseMode == false) {
-            iVar12 = DAT_0071f350 + 0x18;
-            uVar8 = help_msg_string_by_index(STR_CONTINUE);
-            FontPrintMediumCenter(0x100,iVar12,puVar9,uVar8,0xffffffffffffffff);
-            iVar12 = DAT_0071f350 + 0x30;
-            uVar8 = help_msg_string_by_index(STR_QUIT_2);
-            FontPrintMediumCenter(0x100,iVar12,puVar9,uVar8,0xffffffffffffffff);
-          }
-          else {
-            pcVar16 = (char *)help_msg_string_by_index(STR_NO);
-            pcVar17 = (char *)help_msg_string_by_index(STR_CONTINUE);
-            strcpy((char *)local_278,pcVar17);
-            local_276[0] = *pcVar16;
-            FontPrintMediumCenter
-                      (0x100,DAT_0071f350 + 0x18,puVar9,local_276,0xffffffffffffffff);
-            help_msg_string_by_index(STR_CONTINUE);
-            pcVar16 = (char *)help_msg_string_by_index(STR_QUIT_2);
-            strcpy(local_276,pcVar16);
-            FontPrintMediumCenter
-                      (0x100,DAT_0071f350 + 0x30,puVar9,local_278,0xffffffffffffffff);
-          }
-        }
-        else {
-          local_78 = (longlong)DAT_0071f360;
-          iVar12 = FastDoubleToInt((double)(float)((double)local_78 * dVar22));
-          local_78 = (longlong)DAT_0071f360;
-          iVar12 = DAT_0071f358 - iVar12;
-          iVar13 = FastDoubleToInt((double)(float)((double)local_78 * dVar22));
-          local_78 = (longlong)DAT_0071f35c;
-          iVar13 = DAT_0071f358 + iVar13;
-          iVar14 = FastDoubleToInt((double)(float)((double)local_78 * dVar22));
-          local_78 = (longlong)DAT_0071f35c;
-          iVar14 = DAT_0071f354 - iVar14;
-          iVar15 = FastDoubleToInt((double)(float)((double)local_78 * dVar22));
-          DrawTextBox(iVar12,iVar13,iVar14,DAT_0071f354 + iVar15,uVar8);
-          iVar12 = DAT_0096a5a0 + -1;
-          uVar8 = help_msg_string_by_index
-                            (iVar12 + ((uint)(4 - (longlong)iVar12 >> 0x3f) & 4U - iVar12) + STR_ST)
-          ;
-          color = help_msg_string_by_index(STR_PLACE);
-          snprintf(acStack_2b8,"%s %s",uVar8,color);
-          if (DAT_0096a5a0 == 1) {
-            FontPrintMediumCenter(0x100,DAT_0071f364,uVar10,acStack_2b8,0xffffffffffffffff);
-          }
-          else {
-            FontPrintMediumCenter(0x100,DAT_0071f364,uVar11,acStack_2b8,0xffffffffffffffff);
-          }
-          if (*(int *)((int)&g_BoltsRewardedFromRacePB + ((uint)LZCOUNT(Level - Kalebo) >> 3 & 4))
-              == g_RaceTime) {
-            uVar3 = (uint)(ZERO_MASK(g_IsPal)) & 600;
-            iVar13 = uVar3 + 3000;
-            iVar12 = g_RaceTime / iVar13;
-            iVar14 = g_RaceTime - iVar12 * iVar13;
-            uVar3 = (uVar3 + 0xbb9) * 0x111 >> 0xe;
-            iVar13 = iVar14 / (int)uVar3;
-            uVar8 = help_msg_string_by_index(STR_NEW_BEST_TIME);
-            snprintf(acStack_2b8,"%s",uVar8);
-            FontPrintMediumCenter
-                      (0x100,DAT_0071f364 + 0x26,uVar10,acStack_2b8,0xffffffffffffffff);
-            snprintf(acStack_2b8,"%d:%02d:%02d",iVar12,iVar13,
-                           (int)((iVar14 - iVar13 * uVar3) * 100) / (int)uVar3);
-            FontPrintMediumCenter
-                      (0x100,DAT_0071f364 + 0x3a,uVar10,acStack_2b8,0xffffffffffffffff);
-          }
-          else {
-            uVar8 = help_msg_string_by_index(STR_NO_NEW_TIME);
-            snprintf(acStack_2b8,"%s",uVar8);
-            FontPrintMediumCenter
-                      (0x100,DAT_0071f364 + 0x30,uVar11,acStack_2b8,0xffffffffffffffff);
-          }
-          iVar12 = *(int *)((int)&DAT_00a0cd10 + ((uint)LZCOUNT(Level - Kalebo) >> 3 & 4));
-          if ((iVar12 == 0) || (iVar12 != g_RaceScore)) {
-            uVar8 = help_msg_string_by_index(STR_NO_NEW_SCORE);
-            snprintf(acStack_2b8,"%s",uVar8);
-            FontPrintMediumCenter
-                      (0x100,DAT_0071f364 + 0x60,uVar11,acStack_2b8,0xffffffffffffffff);
-          }
-          else {
-            uVar8 = help_msg_string_by_index(STR_NEW_HIGH_SCORE);
-            snprintf(acStack_2b8,"%s",uVar8);
-            FontPrintMediumCenter
-                      (0x100,DAT_0071f364 + 0x56,uVar10,acStack_2b8,0xffffffffffffffff);
-            snprintf(acStack_2b8,"%d",g_RaceScore);
-            FontPrintMediumCenter
-                      (0x100,DAT_0071f364 + 0x6a,uVar10,acStack_2b8,0xffffffffffffffff);
-          }
-          if (g_JapaneseMode == false) {
-            iVar12 = DAT_0071f364 + 0x90;
-            uVar8 = help_msg_string_by_index(STR_CONTINUE);
-            FontPrintMediumCenter(0x100,iVar12,puVar9,uVar8,0xffffffffffffffff);
-            iVar12 = DAT_0071f364 + 0xa8;
-            uVar8 = help_msg_string_by_index(STR_QUIT_2);
-            FontPrintMediumCenter(0x100,iVar12,puVar9,uVar8,0xffffffffffffffff);
-          }
-          else {
-            pcVar16 = (char *)help_msg_string_by_index(STR_NO);
-            pcVar17 = (char *)help_msg_string_by_index(STR_CONTINUE);
-            strcpy((char *)local_278,pcVar17);
-            local_276[0] = *pcVar16;
-            FontPrintMediumCenter
-                      (0x100,DAT_0071f364 + 0x90,puVar9,local_276,0xffffffffffffffff);
-            help_msg_string_by_index(STR_CONTINUE);
-            pcVar16 = (char *)help_msg_string_by_index(STR_QUIT_2);
-            strcpy(local_276,pcVar16);
-            FontPrintMediumCenter
-                      (0x100,DAT_0071f364 + 0xa8,puVar9,local_278,0xffffffffffffffff);
-          }
-        }
-      }
-      else {
-        dVar21 = (double)FastIntToDouble(DAT_0071f368);
-        local_78 = (longlong)(g_MainLoopFrames - (g_MainLoopFrames / DAT_0071f368) * DAT_0071f368);
-        fVar2 = (float)((double)local_78 / dVar21) * 6.28318 - 3.14159;
-        fVar4 = 3.1415925 - fVar2;
-        if (fVar2 - (3.1415925 - fVar2) < 0.0) {
-          fVar4 = fVar2;
-        }
-        fVar5 = -3.1415925 - fVar2;
-        if ((-3.1415925 - fVar2) - fVar4 < 0.0) {
-          fVar5 = fVar4;
-        }
-        fVar2 = fVar5 * fVar5;
-        fVar4 = fVar2 * fVar2 * fVar5;
-        fVar6 = fVar2 * fVar4;
-        uVar8 = FastLerpColor
-                          ((double)((fVar2 * fVar6 * 2.601887e-06 +
-                                    fVar6 * -0.0001980741 +
-                                    fVar4 * 0.0083330255 + fVar2 * fVar5 * -0.16666657 + fVar5) *
-                                    0.5 + 0.5),DAT_0071f36c,DAT_0071f370);
-        DrawTextBox(0x50,DAT_0071f334 + 0x1a,0xb0,0x150,uVar8);
-        if (g_Freeze.options[0] != 0) {
-          FontPrintMediumCenter(0x100,0x5a,0x8000c0c0,g_Freeze.options[0],0xffffffffffffffff);
-        }
-        if (g_Freeze.options[1] != 0) {
-          FontPrintMediumCenter(0x100,DAT_0071f330,0x80ffa888,g_Freeze.options[1],0xffffffffffffffff)
-          ;
-        }
-        if (g_Freeze.options[2] != 0) {
-          FontPrintMediumCenter(0x100,DAT_0071f334,0x80ffa888,g_Freeze.options[2],0xffffffffffffffff)
-          ;
-        }
-      }
-    }
-  }
-LAB_00079abc:
-  STUB_0006d708();
-  return;
+    return 1.0f - timer / (float)ScaledFrames(FREEZE_OPEN_FRAMES);
 }
 
+/* box colour pulsing between two colours once every g_FreezePulsePeriod frames */
+static u32 PulseColor(void)
+{
+    float period = (float)FastIntToDouble(g_FreezePulsePeriod);
+    float t = (g_MainLoopFrames % g_FreezePulsePeriod) / period;
+    return FastLerpColor(FastSinInline(t * 6.28318f - 3.14159f) * 0.5f + 0.5f,
+                         g_FreezePulseColor0, g_FreezePulseColor1);
+}
+
+/* a box of half size (halfW, halfH) around (x, y), scaled by s */
+static void DrawScaledBox(int x, int y, int halfW, int halfH, float s, u32 color)
+{
+    int top = y - FastDoubleToInt(halfH * s);
+    int bottom = y + FastDoubleToInt(halfH * s);
+    int left = x - FastDoubleToInt(halfW * s);
+    DrawTextBox(top, bottom, left, x + FastDoubleToInt(halfW * s), color);
+}
+
+/* the "continue" / "quit" lines. The Japanese strings start with a two-byte button glyph;
+   there the glyphs are swapped (circle confirms): the continue line gets the first byte of the
+   "no" string, the quit line the glyph of the continue string. */
+static void DrawContinueQuit(int y, u32 color)
+{
+    char buf[512];
+
+    if (!g_JapaneseMode) {
+        FontPrintMediumCenter(256, y, color, help_msg_string_by_index(STR_CONTINUE), -1);
+        FontPrintMediumCenter(256, y + 24, color, help_msg_string_by_index(STR_QUIT_2), -1);
+        return;
+    }
+    char *no = help_msg_string_by_index(STR_NO);
+    strcpy(buf, help_msg_string_by_index(STR_CONTINUE));
+    buf[2] = no[0];
+    FontPrintMediumCenter(256, y, color, buf + 2, -1);
+    help_msg_string_by_index(STR_CONTINUE);             /* result unused */
+    strcpy(buf + 2, help_msg_string_by_index(STR_QUIT_2));
+    FontPrintMediumCenter(256, y + 24, color, buf, -1);
+}
+
+/* centred message box sized to its text (memory card prompts) with an optional button line */
+static void DrawMessageBox(const char *text, StringId button)
+{
+    TextLayout box = { 0, (short)g_ScreenHeight, 96, 416, 256, 104, 0, 0, 16, 1 | LAYOUT_MEASURE, 0, 0 };
+
+    FontPrintMediumOpt(&box, 0, text, -1);
+    int h = box.height + 40;
+    box.top = (g_ScreenHeight - h) >> 1;
+    box.bottom = box.top + h;
+    box.y = box.top + 4;
+    float t = OpenFraction(g_Freeze.timer);
+    DrawRoundedRect(box.top, box.bottom, 96, 416, (int)(t * FADE_ALPHA));
+    box.flags ^= LAYOUT_MEASURE;
+    FontPrintMediumOpt(&box, FastLerpColor(t, g_FreezeTextColor0, g_FreezeTextColor1), text, -1);
+    u32 color = FastLerpColor(OpenFraction(g_Freeze.openAnim2), PROMPT_TEXT_FADE, PROMPT_TEXT);
+    if (button)
+        FontPrintMediumCenter(256, box.bottom - 20, color, help_msg_string_by_index(button), -1);
+}
+
+/* "quit race?" while racing, the results screen after it */
+static void DrawRacePrompt(void)
+{
+    u32 box = PulseColor();
+    float open = g_Freeze.openAnim * 0.125f;
+    if (open > 1.0f) open = 1.0f;
+    else if (!(open >= 0.1f)) open = 0.1f;
+
+    u32 text = g_RaceTextColor0, good = g_RaceGoodColor0, bad = g_RaceBadColor0;
+    if (g_Freeze.openAnim2) {
+        float f = g_Freeze.openAnim2 * 0.125f;
+        if (f > 1.0f) f = 1.0f;
+        else if (!(f >= 0.0f)) f = 0.0f;
+        text = FastLerpColor(f, g_RaceTextColor0, g_RaceTextColor1);
+        good = FastLerpColor(f, g_RaceGoodColor0, g_RaceGoodColor1);
+        bad = FastLerpColor(f, g_RaceBadColor0, g_RaceBadColor1);
+    }
+
+    if (DAT_0096a57a < 3) {
+        DrawScaledBox(g_QuitBoxX, g_QuitBoxY, g_QuitBoxHalfW, g_QuitBoxHalfH, open, box);
+        FontPrintMediumCenter(256, g_QuitTextY, text, help_msg_string_by_index(STR_QUIT_RACE), -1);
+        DrawContinueQuit(g_QuitTextY + 24, text);
+        return;
+    }
+
+    char line[64];
+    int y = g_ResultTextY;
+    DrawScaledBox(g_ResultBoxX, g_ResultBoxY, g_ResultBoxHalfW, g_ResultBoxHalfH, open, box);
+    int place = g_RacePlace - 1;
+    if (place > 4) place = 4;
+    sprintf(line, "%s %s", help_msg_string_by_index((StringId)(STR_ST + place)),
+            help_msg_string_by_index(STR_PLACE));
+    FontPrintMediumCenter(256, y, g_RacePlace == 1 ? good : bad, line, -1);
+
+    int track = Level == Kalebo;
+    if (g_RaceBestTime[track] == g_RaceTime) {
+        int perMin = g_IsPal ? 3000 : 3600;
+        int perSec = (perMin + 1) / 60;     /* as the binary computes it: 50 or 60 */
+        int min = g_RaceTime / perMin;
+        int rest = g_RaceTime - min * perMin;
+        int sec = rest / perSec;
+        sprintf(line, "%s", help_msg_string_by_index(STR_NEW_BEST_TIME));
+        FontPrintMediumCenter(256, y + 38, good, line, -1);
+        sprintf(line, "%d:%02d:%02d", min, sec, (rest - sec * perSec) * 100 / perSec);
+        FontPrintMediumCenter(256, y + 58, good, line, -1);
+    } else {
+        sprintf(line, "%s", help_msg_string_by_index(STR_NO_NEW_TIME));
+        FontPrintMediumCenter(256, y + 48, bad, line, -1);
+    }
+    int best = g_RaceBestScore[Level == Kalebo];
+    if (best != 0 && best == g_RaceScore) {
+        sprintf(line, "%s", help_msg_string_by_index(STR_NEW_HIGH_SCORE));
+        FontPrintMediumCenter(256, g_ResultTextY + 86, good, line, -1);
+        sprintf(line, "%d", g_RaceScore);
+        FontPrintMediumCenter(256, g_ResultTextY + 106, good, line, -1);
+    } else {
+        sprintf(line, "%s", help_msg_string_by_index(STR_NO_NEW_SCORE));
+        FontPrintMediumCenter(256, g_ResultTextY + 96, bad, line, -1);
+    }
+    DrawContinueQuit(g_ResultTextY + 144, text);
+}
+
+/* the display mode prompt (dialog 6): yes/no, then the result */
+static void DrawDisplayPrompt(void)
+{
+    TextLayout box = { 100, 300, 96, 416, 256, 104, 0, 0, 16, 1, 0, 0 };
+    float t = OpenFraction(g_Freeze.timer);
+    StringId msg;
+
+    DrawRoundedRect(100, 300, 96, 416, (int)(t * FADE_ALPHA));
+    u32 text = FastLerpColor(t, g_FreezeTextColor0, g_FreezeTextColor1);
+    u32 button = FastLerpColor(t, PROMPT_TEXT_FADE, PROMPT_TEXT);
+    switch (g_Freeze.state) {
+    case 0:
+    case 1:
+    case 2:
+        FontPrintMediumCenter(202, 280, button, help_msg_string_by_index(g_JapaneseMode ? STR_YES_3 : STR_YES_2), -1);
+        FontPrintMediumCenter(309, 280, button, help_msg_string_by_index(STR_NO), -1);
+        msg = g_Freeze.state == 2 ? STR_THE_DISPLAY_IS_NOW_0x522B : STR_THE_SCREEN_WILL_NOW_0x522A;
+        break;
+    case 3:
+        FontPrintMediumCenter(256, 280, button,
+                              help_msg_string_by_index(g_JapaneseMode ? STR_CONTINUE : STR_CONTINUE_2), -1);
+        msg = STR_THE_DISPLAY_HAS_BEEN_0x522C;
+        break;
+    default:
+        return;
+    }
+    char *str = help_msg_string_by_index(msg);
+    FontPrintOptWestern(1.0f, &box, text, str, -1, GetEffectTex(1), &MediumWesternGlyphs);
+}
+
+// 0x00784e8 (0x1620 bytes)
+void DrawDialogText(void)
+{
+    DrawScreenOverlay(0, 0, 0, 48);
+    if (g_Freeze.delay != 0) return;            /* skips the STUB_0006d708 below too */
+    STUB_0006d704(0);
+
+    switch (g_Freeze.dialogType) {
+    case 9:
+    case 5:
+    case 3:
+        break;
+    case 8:                                     /* save failed */
+        if (g_Freeze.openAnim > 0)
+            DrawMessageBox(help_msg_string_by_index(g_Freeze.option == 0 ? STR_SAVE_FAILED_PLEASE_CHECK_0x4FBC
+                                                                         : STR_SAVE_FAILED_PLEASE_CHECK_0x4FBD),
+                           g_Freeze.timer == 0 ? STR_CONTINUE_2 : (StringId)0);
+        break;
+    case 7:
+        if (g_Freeze.openAnim > 0) {
+            char buf[512];
+            StringId button = g_Freeze.timer == 0 ? STR_CONTINUE_2 : (StringId)0;
+            char *p = buf;
+            strncpy(buf, help_msg_string_by_index(STR_MEMORY_CARD_PS2_IN_0x4FA6), 1024);   /* sic: 1024 */
+            /* the message is "<a>\1<b>": show the part after the \1 separators */
+            while (*p != 0 && *p != 1) p++;
+            while (*p == 1) *p++ = 0;
+            DrawMessageBox(p, button);
+        }
+        break;
+    case 6:
+        DrawDisplayPrompt();
+        break;
+    case 2:
+        DrawTextBox(100, 160, 176, 336, PulseColor());
+        FontPrintMediumCenter(256, 122, OPTION_TITLE_COLOR, g_Freeze.options[0], -1);
+        break;
+    case 0:
+        DrawRacePrompt();
+        break;
+    default:                                    /* 1, 4: title and two options */
+        DrawTextBox(80, g_FreezeOpt2Y + 26, 176, 336, PulseColor());
+        if (g_Freeze.options[0]) FontPrintMediumCenter(256, 90, OPTION_TITLE_COLOR, g_Freeze.options[0], -1);
+        if (g_Freeze.options[1]) FontPrintMediumCenter(256, g_FreezeOpt1Y, OPTION_COLOR, g_Freeze.options[1], -1);
+        if (g_Freeze.options[2]) FontPrintMediumCenter(256, g_FreezeOpt2Y, OPTION_COLOR, g_Freeze.options[2], -1);
+        break;
+    }
+    STUB_0006d708();
+}
 
 // 0x0079b18 (0x820 bytes)
 void UpdateFreeze(void)
@@ -741,5 +514,3 @@ void UpdateFreeze(void)
         STUB_00505d20();
     }
 }
-
-

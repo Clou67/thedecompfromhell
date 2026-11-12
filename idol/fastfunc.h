@@ -104,7 +104,7 @@ double FastIntToDouble(int arg);
 int FastDoubleToInt(double double_);
 void STUB_00502794(...);
 void FastFMod(void);
-undefined4 FastLerpColor(double param_1,undefined4 param_2,undefined4 param_3);
+u32 FastLerpColor(float param_1,u32 param_2,u32 param_3);
 undefined4 FUN_00502850(void);
 undefined8 FastCheckBsphereInView(undefined8 param_1,undefined8 param_2);
 undefined8 FUN_005029c0(undefined8 param_1,undefined8 param_2);

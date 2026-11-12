@@ -2424,8 +2424,8 @@ undefined4 Draw_PromptMsg(int param_1)
              (g_heroPosition.y - fVar4) * (g_heroPosition.y - fVar4)) < 5.0) {
       DAT_00a15c88 = iVar20 + 100;
       uVar6 = (uint)LZCOUNT(Level - Kalebo) >> 3 & 4;
-      iVar19 = *(int *)((int)&g_BoltsRewardedFromRacePB + uVar6);
-      iVar10 = *(int *)((int)&DAT_00a0cd10 + uVar6);
+      iVar19 = *(int *)((int)&g_RaceBestTime + uVar6);
+      iVar10 = *(int *)((int)&g_RaceBestScore + uVar6);
       if (iVar19 != 0) {
         uVar6 = (uint)(ZERO_MASK(g_IsPal)) & 600;
         iVar12 = uVar6 + 3000;
@@ -7012,7 +7012,7 @@ undefined4 Draw_RaceLapPlaceHud(int param_1)
     FontPrintLarge(iVar10 + iVar4 + -1,iVar11 + 2,0x80000000,acStack_98,0xffffffffffffffff);
     FontPrintLarge(iVar10 + iVar4,iVar11,DAT_00724548,acStack_98,0xffffffffffffffff);
     iVar10 = DAT_0072455c;
-    iVar4 = DAT_0096a5a0 + -1;
+    iVar4 = g_RacePlace + -1;
     uVar2 = help_msg_string_by_index
                       (iVar4 + ((uint)(4 - (longlong)iVar4 >> 0x3f) & 4U - iVar4) + STR_ST);
     snprintf(acStack_98,"%s",uVar2);

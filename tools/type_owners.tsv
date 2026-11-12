@@ -19,3 +19,4 @@ g_MainLoopFrames	game/main
 g_HideActivityIcon	game/main
 FreezeState	game/freeze
 g_Freeze	game/freeze
+TextLayout	game/draw

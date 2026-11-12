@@ -1366,7 +1366,7 @@ void UpdateMoby_556(MobyInstance *moby)
         }
         *(float *)((int)pvVar9 + 0x268) = (float)(dVar46 + dVar37);
         iVar23 = FastDecTimerS16(uVar32 + 0x2f6);
-        iVar33 = DAT_0096a5a0;
+        iVar33 = g_RacePlace;
         iVar22 = g_RaceTime;
         if (iVar23 == 0) {
           Delt(*(float *)((int)pvVar9 + 0x2b8),DAT_0071f418 * 20.0,

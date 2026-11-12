@@ -21825,7 +21825,7 @@ void Hero_UpdateHoverboardRace(void)
         } while (iVar21 < *(int *)(iVar5 + 0x40));
       }
       iVar21 = 0;
-      DAT_0096a5a0 = 1;
+      g_RacePlace = 1;
       if (0 < *(int *)(iVar5 + 0x40)) {
         iVar24 = 0;
         puVar27 = puVar28;
@@ -21833,7 +21833,7 @@ void Hero_UpdateHoverboardRace(void)
           if ((DAT_0096a57a < *(short *)(puVar27 + 0x1e8)) ||
              ((*(short *)((int)&DAT_0096a480 + iVar24) == DAT_0096a57a &&
               (DAT_0096a578 <= *(short *)(puVar27 + 0x1ec))))) {
-            DAT_0096a5a0 = DAT_0096a5a0 + 1;
+            g_RacePlace = g_RacePlace + 1;
           }
           iVar21 = iVar21 + 1;
           puVar27 = (undefined4 *)((int)puVar27 + 2);
@@ -21893,26 +21893,26 @@ void Hero_UpdateHoverboardRace(void)
           }
           iVar21 = *(int *)(iVar5 + 0x28);
           if (iVar21 != -1) {
-            if ((g_MiscLevelFlags.Zoomerator == false) && (DAT_0096a5a0 == 1)) {
+            if ((g_MiscLevelFlags.Zoomerator == false) && (g_RacePlace == 1)) {
               g_MobyInstance[iVar21].setByGroup = '\x01';
             }
             else {
               DAT_0096a570 = g_MobyInstance + iVar21;
               DisplayPrompt(0,0,0);
             }
-            if (g_BoltsRewardedFromRacePB == 0) {
+            if (g_RaceBestTime == 0) {
               g_boltCount = g_boltCount + 1000;
-              g_BoltsRewardedFromRacePB = g_RaceTime;
+              g_RaceBestTime = g_RaceTime;
               g_totalBoltsCollected = g_totalBoltsCollected + 1000;
             }
-            else if (g_RaceTime < g_BoltsRewardedFromRacePB) {
-              g_BoltsRewardedFromRacePB = g_RaceTime;
+            else if (g_RaceTime < g_RaceBestTime) {
+              g_RaceBestTime = g_RaceTime;
               g_boltCount = g_boltCount + 1000;
               g_totalBoltsCollected = g_totalBoltsCollected + 1000;
             }
-            if (DAT_00a0cd10 < g_RaceScore) {
+            if (g_RaceBestScore < g_RaceScore) {
               g_boltCount = g_boltCount + 1000;
-              DAT_00a0cd10 = g_RaceScore;
+              g_RaceBestScore = g_RaceScore;
               g_totalBoltsCollected = g_totalBoltsCollected + 1000;
             }
             g_MobyInstance[*(int *)(iVar5 + 0x28)].updateDistance = -1;
@@ -21924,7 +21924,7 @@ void Hero_UpdateHoverboardRace(void)
           }
         }
         else if ((Level == Kalebo) && (iVar21 = *(int *)(iVar5 + 0x28), iVar21 != -1)) {
-          if ((UnlockableItems.hologuise == '\0') && (DAT_0096a5a0 == 1)) {
+          if ((UnlockableItems.hologuise == '\0') && (g_RacePlace == 1)) {
             g_MobyInstance[iVar21].setByGroup = '\x01';
           }
           else {

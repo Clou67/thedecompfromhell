@@ -2603,7 +2603,7 @@ void FastFMod(void)
 
 
 // 0x05027bc (0x94 bytes)
-undefined4 FastLerpColor(double param_1,undefined4 param_2,undefined4 param_3)
+u32 FastLerpColor(float param_1,u32 param_2,u32 param_3)
 
 {
   undefined1 uVar1;
