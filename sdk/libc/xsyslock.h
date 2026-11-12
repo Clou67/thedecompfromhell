@@ -9,5 +9,5 @@ extern pointer PTR_DAT_0071c3ac; /* 0x71c3ac */
 extern pointer PTR_DAT_0071c3b0; /* 0x71c3b0 */
 
 // ---- functions
-void FUN_005cbc68(void);
-void FUN_005cbd60(void);
+void _Initlocks(void);
+void _Clearlocks(void);

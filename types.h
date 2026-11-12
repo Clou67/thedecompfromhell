@@ -2597,6 +2597,8 @@ struct UpdateCam { /* DL struct UpdateCam (RC1 size 0xa0); 48 of them at UpdateC
 
 extern undefined4 DAT_0011eec0; /* 0x11eec0 */
 extern undefined4 DAT_0015aa20; /* 0x15aa20 */
+extern undefined4 DAT_0071a32c; /* 0x71a32c */
+extern undefined4 DAT_0071a364; /* 0x71a364 */
 extern undefined4 DAT_009313a4; /* no defined data */
 extern undefined4 DAT_009313a8; /* no defined data */
 extern undefined4 DAT_009313b4; /* no defined data */
@@ -2637,7 +2639,15 @@ extern undefined4 DAT_00a1e128; /* no defined data */
 extern undefined4 DAT_00a1e12c; /* no defined data */
 extern undefined4 DAT_00ec4080; /* no defined data */
 extern undefined4 g_Manipulator; /* 0x96c07b */
+extern pointer PTR_DAT_0071a328; /* 0x71a328 */
+extern pointer PTR_DAT_0071a358; /* 0x71a358 */
+extern pointer PTR_DAT_0071a36c; /* 0x71a36c */
+extern pointer PTR_DAT_0071a370; /* 0x71a370 */
+extern pointer PTR_DAT_0071a378; /* 0x71a378 */
 extern pointer32 PTR_DrawSceneShipEffect_007059a8; /* 0x7059a8 */
+extern pointer PTR_PTR_0071a35c; /* 0x71a35c */
+extern pointer PTR_PTR_0071a360; /* 0x71a360 */
+extern pointer PTR_PTR_0071a368; /* 0x71a368 */
 extern undefined4 _DAT_000e93b0; /* direct read */
 extern undefined4 _DAT_000e93c0; /* direct read */
 extern undefined4 _DAT_000e93d0; /* direct read */

@@ -13,4 +13,4 @@ void FUN_005d045c(int param_1);
 void FUN_005d0488(void);
 void FUN_005d04b0(undefined4 *param_1);
 void FUN_005d0504(int *param_1,undefined4 *param_2);
-void FUN_005d05b8(void);
+void FUN_005d05b8(u32 *param_1,u32 *param_2);

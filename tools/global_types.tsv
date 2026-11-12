@@ -99,3 +99,14 @@ g_PartBatchBlend	int NAME /* 0xa52b80: PartInstance.gsAlpha of the batch being c
 g_PartBatchTex	u32 *NAME /* 0xa52b84: texture header (8 RSX words) of the batch */
 g_PartBatchCount	int NAME /* 0x729648: quads in the batch */
 g_PartNoShrink	u8 NAME /* 0x8fa54c: set: DrawParts does not shrink big particles */
+g_CrtArgs	CrtArgs NAME /* 0x9270e0: main's argc/argv (GetArgc/GetArgv) */
+g_EntryR12	u32 NAME /* 0x9043f4: r12 at entry, as lv2 passes it */
+g_ProcessStartTime	u64 NAME /* 0x16062f0 */
+g_CrtLibInit0	u32 NAME /* 0x16062e4: passed to FUN_005d05b8 */
+g_CrtLibInit1	u32 NAME /* 0x16062e8 */
+g_PrxLibraries	int NAME[3] /* 0x9270e8: non-zero: register that PRX library at start-up */
+__dtors_completed	u8 NAME /* 0x9270f4: crtstuff's completed.N */
+__dtors_next	PtrFunc *NAME /* 0x9044f0: crtstuff's p, walks __DTOR_LIST__ */
+__frame_object	u8 NAME[24] /* 0x9270f8: crtstuff's object for __register_frame_info */
+__JCR_LIST__	void *NAME[1] /* 0x700bc8 */
+__CTOR_END__	PtrFunc NAME[1] /* 0x700b98 */

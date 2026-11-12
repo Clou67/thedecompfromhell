@@ -215,7 +215,7 @@ void GameShutDown(void);
 void sysutil_gameexit_callback(longlong arg);
 uint CopyInitDataRecords(void);
 void ResetLevelGlobals(void);
-undefined8 boot(undefined8 param_1,uint *param_2);
+int boot(int param_1,char **param_2,char **param_3);
 void StaticDestroy_BootGlobals(void);
 void StaticInit_BootGlobals(void);
 undefined4 _start(void);

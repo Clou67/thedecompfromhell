@@ -3,7 +3,7 @@ errors	file
 220	game/boot.cpp
 371	game/camera.cpp
 175	game/collproc.cpp
-26	game/crt0.cpp
+0	game/crt0.cpp
 103	game/debug.cpp
 792	game/draw.cpp
 14	game/fUnk.cpp
@@ -1019,7 +1019,7 @@ errors	file
 72	idol/fastfunc.cpp
 131	idol/idol.cpp
 485	idol/idol_draw.cpp
-1798	idol/mUnk.cpp
+1799	idol/mUnk.cpp
 37	idol/mUnk2.cpp
 1097	idol/mathfunc.cpp
 359	idol/sUnk.cpp
@@ -1035,10 +1035,10 @@ errors	file
 14	sdk/fUnk2.cpp
 34	sdk/fUnk3.cpp
 43	sdk/fios.cpp
-3060	sdk/lUnk.cpp
+3061	sdk/lUnk.cpp
 104	sdk/lUnk2.cpp
 12	sdk/libc.cpp
-26	sdk/libc/abort.cpp
+25	sdk/libc/abort.cpp
 1	sdk/libc/asctime.cpp
 14	sdk/libc/atexit.cpp
 4	sdk/libc/bsearch.cpp
@@ -1127,7 +1127,7 @@ errors	file
 2	sdk/libc/xwctob.cpp
 5	sdk/libc/xwctomb.cpp
 11	sdk/libcgb/cgb.cpp
-259	sdk/libcgc/libcgc_cell_localize.cpp
+262	sdk/libcgc/libcgc_cell_localize.cpp
 18	sdk/libfios/fios_base.cpp
 504	sdk/libfios/fios_caching.cpp
 505	sdk/libfios/fios_dearchive.cpp
@@ -1172,7 +1172,7 @@ errors	file
 2	sdk/sUnk.cpp
 12	sdk/sUnk2.cpp
 174	sdk/sce.cpp
-108	sdk/sys.cpp
+109	sdk/sys.cpp
 101	sdk/tUnk.cpp
 0	sdk/vUnk.cpp
 19	sdk/vUnk2.cpp

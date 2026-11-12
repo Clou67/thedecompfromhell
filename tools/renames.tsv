@@ -179,3 +179,9 @@ DAT_00a245a8	g_FrustumPlanes[0].x
 DAT_00a245ac	g_FrustumPlanes[0].y
 DAT_00a245b0	g_FrustumPlanes[0].z
 DAT_00a245b4	g_FrustumPlanes[0].w
+FUN_005c505c	_close_all_FILE
+FUN_005cbc68	_Initlocks
+FUN_005cbd60	_Clearlocks
+FUN_005cffa8	_fs_initialize
+FUN_005e1fc0	__register_frame_info
+FUN_005e21b8	__deregister_frame_info

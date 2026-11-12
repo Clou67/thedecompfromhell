@@ -458,7 +458,7 @@ void sys_lwcond_wait(void)
 
 
 // 0x0650584 (0x20 bytes)
-void _sys_process_atexitspawn(void)
+void _sys_process_atexitspawn(void (*param_1)(void))
 
 {
   ulonglong uStack00000028;
@@ -514,7 +514,7 @@ void sys_mmapper_free_memory(void)
 
 
 // 0x0650604 (0x20 bytes)
-void sys_prx_register_library(void)
+void sys_prx_register_library(void *param_1)
 
 {
   ulonglong uStack00000028;
@@ -556,7 +556,7 @@ void sys_process_is_stack(void)
 
 
 // 0x0650664 (0x20 bytes)
-void sys_initialize_tls(void)
+void sys_initialize_tls(u64 param_1,u32 param_2,u32 param_3,u32 param_4)
 
 {
   ulonglong uStack00000028;
@@ -570,7 +570,7 @@ void sys_initialize_tls(void)
 
 
 // 0x0650684 (0x20 bytes)
-void sys_time_get_system_time(void)
+u64 sys_time_get_system_time(u32 param_1,u32 param_2)
 
 {
   ulonglong uStack00000028;
@@ -584,7 +584,7 @@ void sys_time_get_system_time(void)
 
 
 // 0x06506a4 (0x20 bytes)
-void _sys_process_at_Exitspawn(void)
+void _sys_process_at_Exitspawn(void (*param_1)(void))
 
 {
   ulonglong uStack00000028;
@@ -598,7 +598,7 @@ void _sys_process_at_Exitspawn(void)
 
 
 // 0x06506c4 (0x20 bytes)
-void sys_prx_exitspawn_with_level(void)
+void sys_prx_exitspawn_with_level(u64 param_1)
 
 {
   ulonglong uStack00000028;
@@ -724,7 +724,7 @@ void sys_mmapper_map_memory(void)
 
 
 // 0x06507e4 (0x20 bytes)
-void sys_process_exit(void)
+void sys_process_exit(int param_1)
 
 {
   ulonglong uStack00000028;

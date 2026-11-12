@@ -1928,7 +1928,7 @@ void ResetLevelGlobals(void)
 // 0x001401c (0x838 bytes)
 // strings: 0096c074: 'None' | 0065171c: "Error, __sys_process_param.size of 0. I don't know how this could happen, but it will cause some problems\n" | 0065178c: '\n\nargv[0] %s\n' | 0065179c: 'RC1.ppu.self' | 006517ac: 'NPUA' (raw) | 006517b4: 'NPUA80643' | 006517c4: 'UP9000-NPUA80643_00' | 006517dc: 'NPEA' (raw) | 006517e4: 'NPEA00385' | 006517f4: 'EP9000-NPEA00385_00' | 0065180c: 'BCUS' (raw) | 00651814: 'BCUS98212' | 00651824: 'UP9000-BCUS98212_00' | 0065183c: 'BCES' (raw) | 00651844: 'BCES01503' | 00651854: 'EP9000-BCES01503_00' | 0065186c: 'ERROR: (boot.cpp) Error Registering Exit callback function\n' | 006518ac: '(boot.cpp) After InitGameSystem' | 006518cc: 'Setting ps3medius with %d\n' | 006518ec: '/app_home' | 006518fc: '.psarc' | 00651904: 'rc1/ps3data/PS3arc.psarc' | 00651924: 'Before InitGameGraphics' | 0065193c: 'After InitGameGraphics' | 00651954: 'Checking for saves' | 00651974: 'DONE!\n'
 
-undefined8 boot(undefined8 param_1,uint *param_2)
+int boot(int param_1,char **param_2,char **param_3)
 
 {
   byte bVar1;

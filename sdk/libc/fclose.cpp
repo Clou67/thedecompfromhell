@@ -49,7 +49,7 @@ undefined4 FUN_005c4f10(ushort *param_1)
 
 // SDK libc.a(fclose.o): _close_all_FILE  [fuzzy 1.000 match]
 // 0x05c505c (0x70 bytes)
-void FUN_005c505c(void)
+void _close_all_FILE(void)
 
 {
   int iVar1;

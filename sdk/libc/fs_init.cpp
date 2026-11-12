@@ -6,7 +6,7 @@
 
 // SDK libc.a(fs_init.o): _fs_initialize  [fuzzy 1.000 match]
 // 0x05cffa8 (0x64 bytes)
-void FUN_005cffa8(void)
+void _fs_initialize(void)
 
 {
   undefined *puVar1;

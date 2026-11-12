@@ -51,3 +51,5 @@ PartUpdateFn	game/partupd
 MemSlots_IMSeqMem_descriptor	idol/idol_draw
 g_PartProfile	game/partproc
 sky_sprite	game/skyfunc
+CrtArgs	game/crt0
+g_CrtArgs	game/crt0

@@ -6,7 +6,7 @@
 
 // SDK libc.a(xsyslock.o): _Initlocks  [fuzzy 1.000 match]
 // 0x05cbc68 (0xf8 bytes)
-void FUN_005cbc68(void)
+void _Initlocks(void)
 
 {
   short sVar1;
@@ -49,7 +49,7 @@ void FUN_005cbc68(void)
 
 // SDK libc.a(xsyslock.o): _Clearlocks  [fuzzy 1.000 match]
 // 0x05cbd60 (0x5c bytes)
-void FUN_005cbd60(void)
+void _Clearlocks(void)
 
 {
   undefined *puVar1;

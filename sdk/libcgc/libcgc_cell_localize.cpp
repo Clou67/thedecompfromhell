@@ -1859,7 +1859,7 @@ void FUN_005e1f08(int *param_1,undefined4 *param_2,undefined4 param_3,undefined4
 
 
 // 0x05e1fc0 (0x2c bytes)
-void FUN_005e1fc0(undefined8 param_1,undefined8 param_2)
+void __register_frame_info(const void *param_1,void *param_2)
 
 {
   FUN_005e1f08(param_1,param_2,0,0);
@@ -1875,7 +1875,7 @@ void FUN_005e1fec(int *param_1)
   
   if (*param_1 != 0) {
     uVar1 = FUN_005d5838(0x18);
-    FUN_005e1fc0(param_1,uVar1);
+    __register_frame_info(param_1,uVar1);
   }
   return;
 }
@@ -1937,7 +1937,7 @@ LAB_005e214c:
 
 
 // 0x05e21b8 (0x28 bytes)
-undefined4 FUN_005e21b8(void)
+void __deregister_frame_info(const void *param_1)
 
 {
   undefined4 uVar1;
@@ -1954,7 +1954,7 @@ void FUN_005e21e0(int *param_1)
   undefined4 uVar1;
   
   if (*param_1 != 0) {
-    uVar1 = FUN_005e21b8();
+    uVar1 = __deregister_frame_info();
     FUN_005d580c(uVar1);
   }
   return;

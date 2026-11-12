@@ -9,4 +9,4 @@ extern pointer PTR_DAT_0071c260; /* 0x71c260 */
 extern pointer PTR_DAT_0071c264; /* 0x71c264 */
 
 // ---- functions
-void FUN_005c505c(void);
+void _close_all_FILE(void);

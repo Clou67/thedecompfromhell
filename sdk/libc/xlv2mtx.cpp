@@ -112,7 +112,7 @@ void FUN_005d0504(int *param_1,undefined4 *param_2)
 
 
 // 0x05d05b8 (0x38 bytes)
-void FUN_005d05b8(void)
+void FUN_005d05b8(u32 *param_1,u32 *param_2)
 
 {
   int iVar1;
