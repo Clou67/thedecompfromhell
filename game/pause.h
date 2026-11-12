@@ -5,20 +5,6 @@
 // ---- types
 typedef unsigned int    dword;
 
-typedef unsigned short    word;
-
-struct EffectTexHeader { /* Pre-baked RSX texture registers; words 0-6 go to methods 0x1A00+unit*0x20 (OFFSET,FORMAT,ADDRESS,CONTROL0,CONTROL1,FILTER,IMAGE_RECT), word 7 to 0x1840+unit*4 (CONTROL3) */
-    int offset;
-    int format;
-    int address;
-    int control0;
-    int control1;
-    int filter;
-    int imageRect;
-    int control3;
-    int unknown_20;
-};
-
 struct GameSettings {
     dword CameraUpDown;
     dword CameraLeftRight;

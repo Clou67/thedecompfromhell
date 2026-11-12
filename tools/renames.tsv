@@ -136,10 +136,6 @@ DAT_00a15d40	g_MissionMobys
 DAT_00a20820	g_MapAlt
 DAT_00a205c4	g_MapHeroU[0]
 DAT_00a20614	g_MapHeroV[0]
-DAT_00a245a8	g_MissionState[0]
-DAT_00a245ac	g_MissionState[1]
-DAT_00a245b0	g_MissionState[2]
-DAT_00a245b4	g_MissionState[3]
 FUN_00502ea0	SCE_GIF_SET_TAG
 FUN_00503044	SCE_GS_SET_BITBLTBUF
 FUN_00502e70	SCE_GS_SET_PRIM
@@ -174,3 +170,12 @@ DAT_00a52b70	g_PartView.camPos.x
 DAT_00a52b74	g_PartView.camPos.y
 DAT_00a52b78	g_PartView.camPos.z
 DAT_00a52b7c	g_PartView.camPos.w
+____DrawParts_DepthPass	DrawPartBatch
+DAT_00a52b80	g_PartBatchBlend
+DAT_00a52b84	g_PartBatchTex
+DAT_00729648	g_PartBatchCount
+PTR_DAT_008fa54c	g_PartNoShrink
+DAT_00a245a8	g_FrustumPlanes[0].x
+DAT_00a245ac	g_FrustumPlanes[0].y
+DAT_00a245b0	g_FrustumPlanes[0].z
+DAT_00a245b4	g_FrustumPlanes[0].w

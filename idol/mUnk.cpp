@@ -2064,7 +2064,7 @@ void FUN_004d5e48(int param_1)
     iVar2 = DAT_010ef4fc + -1;
     DAT_010ef4fc = iVar2 + (iVar2 >> 0x1f & -iVar2);
   }
-  PTR_DAT_008fa54c.piece<0,1>() = (char)((ulonglong)(LZCOUNT(DAT_010ef4fc) << 0x20) >> 0x25);
+  g_PartNoShrink.piece<0,1>() = (char)((ulonglong)(LZCOUNT(DAT_010ef4fc) << 0x20) >> 0x25);
   DAT_010ef500 = lVar1;
   return;
 }
@@ -5190,7 +5190,7 @@ void idol_draw::Gfx_ReconfigureVideoOut(int param_1)
     iVar4 = DAT_010ef4fc + -1;
     DAT_010ef4fc = iVar4 + (iVar4 >> 0x1f & -iVar4);
   }
-  PTR_DAT_008fa54c.piece<0,1>() = (undefined1)((ulonglong)(LZCOUNT(DAT_010ef4fc) << 0x20) >> 0x25);
+  g_PartNoShrink.piece<0,1>() = (undefined1)((ulonglong)(LZCOUNT(DAT_010ef4fc) << 0x20) >> 0x25);
   DAT_010ef500 = lVar2;
   uVar3 = cellVideoOutConfigure(0,param_1 + 0x22ec,0,0);
   if ((int)uVar3 != 0) {
@@ -5243,7 +5243,7 @@ uint idol_draw::Gfx_EnableSpecialVideoOutMode(int param_1)
       iVar5 = DAT_010ef4fc + -1;
       DAT_010ef4fc = iVar5 + (iVar5 >> 0x1f & -iVar5);
     }
-    PTR_DAT_008fa54c.piece<0,1>() = (undefined1)((ulonglong)(LZCOUNT(DAT_010ef4fc) << 0x20) >> 0x25);
+    g_PartNoShrink.piece<0,1>() = (undefined1)((ulonglong)(LZCOUNT(DAT_010ef4fc) << 0x20) >> 0x25);
     DAT_010ef500 = lVar2;
     uVar3 = cellVideoOutConfigure(0,local_30,0,0);
     if ((int)uVar3 == 0) {
@@ -5953,7 +5953,7 @@ void idol_draw::BuildAndFlipFrame(longlong param_1)
     iVar14 = DAT_010ef4fc + -1;
     DAT_010ef4fc = iVar14 + (iVar14 >> 0x1f & -iVar14);
   }
-  PTR_DAT_008fa54c.piece<0,1>() = (undefined1)((ulonglong)(LZCOUNT(DAT_010ef4fc) << 0x20) >> 0x25);
+  g_PartNoShrink.piece<0,1>() = (undefined1)((ulonglong)(LZCOUNT(DAT_010ef4fc) << 0x20) >> 0x25);
   DAT_010ef500 = lVar20;
   if ((*(int *)(iVar7 + 0x4a4) != *(int *)(iVar7 + 0x4a0)) && ((*(uint *)(iVar7 + 0x1a6c) & 1) == 0)
      ) {

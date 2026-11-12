@@ -23,6 +23,7 @@
 #include "game/mobyutil.h"
 #include "game/music.h"
 #include "game/pad.h"
+#include "game/partproc.h"
 #include "game/path.h"
 #include "game/respawn.h"
 #include "game/sUnk.h"

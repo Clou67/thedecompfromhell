@@ -79,7 +79,7 @@ g_MissionMobys	MobyInstance *NAME[121] /* 0xa15d40: the mobys of the current lev
 g_MapAlt	int NAME /* 0xa20820: set: the map uses level + 100 (guess: alternate map) */
 g_MapHeroU	int NAME[20] /* 0xa205c4: Ratchet's map position per level, 16.16; 0x08000000 = none */
 g_MapHeroV	int NAME[20] /* 0xa20614 */
-g_MissionState	int NAME[24] /* 0xa245a8: cleared by ResetMissionState */
+g_FrustumPlanes	Vec4 NAME[6] /* 0xa245a8: view frustum planes (x, y, z, d), points inside give >= 0 (DrawParts culls with them); cleared by ResetMissionState */
 g_GsTex	GsTex NAME[1024] /* 0x9313a0 */
 g_GsTexCount	int NAME /* 0x9513a0 */
 g_GsRamAlloc	int NAME /* 0x966ad0: next free GS memory, bytes */
@@ -95,3 +95,7 @@ g_NibbleBitCount	u8 NAME[16] /* 0x735570: bits set in each 4-bit value */
 g_pDebugCounterMode	u32 *NAME /* 0x9271fc */
 g_PartProfile	PartProfile NAME[128] /* 0x11004000: per class: count and cycles (debug build only) */
 g_PartView	PartView NAME /* 0xa52b40: camera axes and position for drawing particles (UpdateParts) */
+g_PartBatchBlend	int NAME /* 0xa52b80: PartInstance.gsAlpha of the batch being collected */
+g_PartBatchTex	u32 *NAME /* 0xa52b84: texture header (8 RSX words) of the batch */
+g_PartBatchCount	int NAME /* 0x729648: quads in the batch */
+g_PartNoShrink	u8 NAME /* 0x8fa54c: set: DrawParts does not shrink big particles */

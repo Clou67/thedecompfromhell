@@ -26,7 +26,7 @@ errors	file
 765	game/mobyutil.cpp
 72	game/music.cpp
 0	game/pad.cpp
-43	game/partproc.cpp
+0	game/partproc.cpp
 440	game/partupd.cpp
 75	game/path.cpp
 755	game/pause.cpp

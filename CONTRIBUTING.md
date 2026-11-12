@@ -45,6 +45,10 @@ data, not hand edits to generated files. See `STYLE.md` for how cleaned code sho
      for a field or object with the same role, and say so in the comment.
    - **vector code.** `tools/vecsym.py` runs a stretch of a `.s` symbolically and prints what each
      store computes; that is how `ShadeVerts` was read.
+   - **RSX command buffers.** `RenderingStep` starts like libgcm's `CellGcmContextData` (`command`
+     is `current`). Draw code writes method headers `(count << 18) | method` plus values; write
+     them with the SDK's `CELL_GCM_METHOD(CELL_GCM_NV4097_..., count)` (`<cell/gcm/gcm_macros.h>`,
+     `<cell/gcm/gcm_enum.h>`). Repeated command sequences are inlined helpers (see `partproc.cpp`).
    - **the inlines.** `// inlined: FastAtan2 @0x...` marks known inline helpers; repeated blocks
      inside one function are usually an inline or a macro in the source (see `lights.cpp`).
 3. Write `tools/manual/<path>.cpp` (start it with `#include "rc1.h"`; the generator replaces that

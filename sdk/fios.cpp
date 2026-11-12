@@ -5,7 +5,6 @@
 #include "sdk/fios.h"
 #include "game/draw.h"
 #include "game/hero.h"
-#include "game/mission.h"
 #include "game/pause.h"
 #include "game/vendor.h"
 #include "idol/idol.h"
@@ -368,7 +367,7 @@ void FUN_00508738(int param_1,undefined4 *param_2)
       if ((((int)DAT_00903000 < 0) || (uVar21 == DAT_00903000)) &&
          (uVar5 = (uint)uVar20, (*(byte *)(uVar5 + 0x5f) & 1) == 0)) {
         iVar19 = 0;
-        pfVar17 = (float *)&g_MissionState[0];
+        pfVar17 = (float *)&g_FrustumPlanes[0].x;
         do {
           if (pfVar17[1] * *(float *)(uVar5 + 0x44) +
               pfVar17[2] * *(float *)(uVar5 + 0x48) +

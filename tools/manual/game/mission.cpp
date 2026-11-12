@@ -41,7 +41,12 @@ static inline bool Byte(const void *base, int i)
 // 0x00ea378 (0x54 bytes)
 void ResetMissionState(void)
 {
-    for (int i = 0; i < 24; i++) g_MissionState[i] = 0;
+    for (int i = 0; i < 6; i++) {
+        g_FrustumPlanes[i].x = 0.0f;
+        g_FrustumPlanes[i].y = 0.0f;
+        g_FrustumPlanes[i].z = 0.0f;
+        g_FrustumPlanes[i].w = 0.0f;
+    }
     DAT_00a24608 = 0;
     DAT_00a2460c = 0;
     DAT_00a24610 = 0;

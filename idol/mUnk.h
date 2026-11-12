@@ -1409,7 +1409,6 @@ extern pointer PTR_DAT_0065996c; /* 0x65996c */
 extern undefined * PTR_DAT_008fa400; /* 0x8fa400 */
 extern pointer PTR_DAT_008fa448; /* 0x8fa448 */
 extern pointer PTR_DAT_008fa488; /* 0x8fa488 */
-extern pointer PTR_DAT_008fa54c; /* 0x8fa54c */
 extern pointer PTR_DAT_008fa624; /* 0x8fa624 */
 extern pointer PTR_DAT_008fabb0; /* 0x8fabb0 */
 extern pointer PTR_Elf64_Ehdr_008fa648; /* 0x8fa648 */
@@ -1538,6 +1537,7 @@ extern undefined4 _DAT_004e2dd0; /* direct read */
 extern undefined4 _DAT_011116a0; /* direct read */
 extern undefined4 _DAT_011116b0; /* direct read */
 extern undefined4 _DAT_011116c0; /* direct read */
+extern u8 g_PartNoShrink; /* 0x8fa54c: set: DrawParts does not shrink big particles */ /* type set in global_types.tsv */
 extern void * g_pGame; /* 0x902ecc */
 extern void * g_pHWSystem; /* 0x902ed0 */
 extern IdolMsgDialog *g_pMsgDialog; /* 0x1111640 */ /* type set in global_types.tsv */

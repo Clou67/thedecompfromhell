@@ -6,8 +6,7 @@
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/main.h"
-#include "game/mission.h"
-#include "game/pause.h"
+#include "game/partproc.h"
 #include "game/skyfunc.h"
 #include "game/vendor.h"
 #include "idol/fastfunc.h"
@@ -1469,7 +1468,7 @@ void FUN_0050ad78(undefined4 *param_1,int param_2,int *param_3)
     if (uVar1 != 0) {
       do {
         iVar14 = 0;
-        pfVar18 = (float *)&g_MissionState[0];
+        pfVar18 = (float *)&g_FrustumPlanes[0].x;
         do {
           if (pfVar18[1] * pfVar8[1] + pfVar18[2] * pfVar8[2] + *pfVar18 * *pfVar8 + pfVar18[3] +
               ABS(pfVar8[3]) < 0.0) goto LAB_0050b04c;

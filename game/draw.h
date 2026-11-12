@@ -255,6 +255,7 @@ extern undefined4 _DAT_0095d240; /* direct read */
 extern int g_FontColorsEnabled; /* 0x95ee14 */
 extern short g_FrameBufHeight; /* 0x966b7e */
 extern short g_FrameBufWidth; /* 0x966b7c */
+extern Vec4 g_FrustumPlanes[6]; /* 0xa245a8: view frustum planes (x, y, z, d), points inside give >= 0 (DrawParts culls with them); cleared by ResetMissionState */ /* type set in global_types.tsv */
 extern bool g_JapaneseMode; /* 0x159c351 */
 extern undefined4 g_LameShadows; /* 0x95e5f0 */
 extern undefined4 g_MobyFuncList; /* 0x95ddd8 */

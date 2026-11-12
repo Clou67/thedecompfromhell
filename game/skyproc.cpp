@@ -6,6 +6,7 @@
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/hud.h"
+#include "game/partproc.h"
 #include "game/pause.h"
 #include "game/skyfunc.h"
 #include "game/vendor.h"

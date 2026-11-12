@@ -8,7 +8,6 @@
 #include "game/camera.h"
 #include "game/draw.h"
 #include "game/hero.h"
-#include "game/mission.h"
 #include "game/skyfunc.h"
 #include "game/space.h"
 #include "idol/tiefunc.h"
@@ -401,10 +400,10 @@ bool FUN_005e86d8(double param_1,double param_2,undefined8 param_3,undefined8 pa
   fStack00000030 = (float)((ulonglong)param_3 >> 0x20);
   fStack00000034 = (float)param_3;
   do {
-    if ((float)((double)((float)(&g_MissionState[0])[iVar2 * 4] * fStack00000030 +
-                         (float)(&g_MissionState[1])[iVar2 * 4] * fStack00000034 +
-                         (float)(&g_MissionState[2])[iVar2 * 4] * fVar1 +
-                        (float)(&g_MissionState[3])[iVar2 * 4]) + param_1) < 0.0) {
+    if ((float)((double)((float)(&g_FrustumPlanes[0].x)[iVar2 * 4] * fStack00000030 +
+                         (float)(&g_FrustumPlanes[0].y)[iVar2 * 4] * fStack00000034 +
+                         (float)(&g_FrustumPlanes[0].z)[iVar2 * 4] * fVar1 +
+                        (float)(&g_FrustumPlanes[0].w)[iVar2 * 4]) + param_1) < 0.0) {
       return false;
     }
     iVar2 = iVar2 + 1;
