@@ -56,7 +56,7 @@ void FUN_0050e998(int param_1,char *param_2)
 
 
 // 0x050eaf8 (0x164 bytes)
-void idol_draw::RsxCmd_DebugStr_Marker(int param_1,char *param_2)
+void idol_draw::RsxCmd_DebugStr_Marker(RenderingStep *param_1,char *param_2)
 
 {
   int iVar1;

@@ -542,7 +542,7 @@ namespace idol_draw { void DrawDepth(RenderingStep *param_1,ulonglong param_2); 
 void FUN_004d65c8(int param_1,ulonglong param_2);
 void FUN_004d6634(int param_1,ulonglong param_2);
 void FUN_004d6704(ulonglong param_1,int *param_2,int *param_3);
-void FUN_004d676c(int param_1,ulonglong param_2,undefined4 *param_3,uint param_4,ulonglong param_5);
+void FUN_004d676c(RenderingStep *param_1,int param_2,u8 *param_3,int param_4,int param_5);
 void FUN_004d6888(int param_1,undefined8 param_2,undefined8 param_3,ulonglong param_4);
 namespace idol_draw { void ResetPassState(RenderingStep *param_1); } 
 void FUN_004d6bb0(RenderingStep *param_1,ulonglong param_2,RsxCmd *param_3);

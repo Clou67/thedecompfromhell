@@ -7643,7 +7643,7 @@ bool FUN_004ff210(double param_1,uint param_2)
 // 0x04ff328 (0x154 bytes)
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-bool FastCheckBsphere(double param_1,double param_2,uint param_3)
+int FastCheckBsphere(u8 *param_1,float param_2,float param_3,Vec4 param_4)
 
 {
   undefined8 in_r0;

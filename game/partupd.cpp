@@ -727,18 +727,18 @@ void UpdatePart_3(PartInstance *part)
     }
     part->update[7] = 0;
   }
-  fVar2 = DAT_00e5aef4;
-  fVar1 = DAT_00e5aee4 + 1.5707963;
-  fVar4 = 3.1415925 - DAT_00e5aee4;
-  if (DAT_00e5aee4 - (3.1415925 - DAT_00e5aee4) < 0.0) {
-    fVar4 = DAT_00e5aee4;
+  fVar2 = g_WaterDrift.speed;
+  fVar1 = g_WaterDrift.angle + 1.5707963;
+  fVar4 = 3.1415925 - g_WaterDrift.angle;
+  if (g_WaterDrift.angle - (3.1415925 - g_WaterDrift.angle) < 0.0) {
+    fVar4 = g_WaterDrift.angle;
   }
   fVar3 = 3.1415925 - fVar1;
   if (fVar1 - (3.1415925 - fVar1) < 0.0) {
     fVar3 = fVar1;
   }
-  fVar6 = -3.1415925 - DAT_00e5aee4;
-  if ((-3.1415925 - DAT_00e5aee4) - fVar4 < 0.0) {
+  fVar6 = -3.1415925 - g_WaterDrift.angle;
+  if ((-3.1415925 - g_WaterDrift.angle) - fVar4 < 0.0) {
     fVar6 = fVar4;
   }
   fVar4 = -3.1415925 - fVar1;

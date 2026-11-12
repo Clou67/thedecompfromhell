@@ -73,8 +73,8 @@ void UpdateMoby_642(MobyInstance *moby)
       dVar13 = (double)MB_randRangeFloat((float)dVar19,(float)dVar20);
       dVar14 = (double)MB_randRangeFloat((float)dVar19,(float)dVar20);
       dVar15 = (double)MB_randRangeFloat((float)dVar19,(float)dVar20);
-      fVar2 = DAT_00e5aef4;
-      fVar11 = DAT_00e5aee4 + 1.5707963;
+      fVar2 = g_WaterDrift.speed;
+      fVar11 = g_WaterDrift.angle + 1.5707963;
       dVar19 = (double)SQRT((float)(dVar15 * dVar15 +
                                    (double)(float)(dVar13 * dVar13 +
                                                   (double)(float)(dVar14 * dVar14))));
@@ -87,7 +87,7 @@ void UpdateMoby_642(MobyInstance *moby)
       if ((-3.1415925 - fVar11) - fVar1 < 0.0) {
         fVar4 = fVar1;
       }
-      dVar22 = (double)(float)((double)(DAT_00e5aef4 * 0.2) / dVar19);
+      dVar22 = (double)(float)((double)(g_WaterDrift.speed * 0.2) / dVar19);
       fVar11 = fVar4 * fVar4;
       dVar20 = dVar23;
       if (dVar23 - dVar19 < 0.0) {
@@ -121,14 +121,14 @@ void UpdateMoby_642(MobyInstance *moby)
       *pfVar6 = fVar2 * (fVar11 * fVar5 * 2.601887e-06 +
                         fVar5 * -0.0001980741 +
                         fVar1 * 0.0083330255 + fVar11 * fVar4 * -0.16666657 + fVar4);
-      fVar1 = DAT_00e5aef4;
-      fVar11 = 3.1415925 - DAT_00e5aee4;
-      if (DAT_00e5aee4 - (3.1415925 - DAT_00e5aee4) < 0.0) {
-        fVar11 = DAT_00e5aee4;
+      fVar1 = g_WaterDrift.speed;
+      fVar11 = 3.1415925 - g_WaterDrift.angle;
+      if (g_WaterDrift.angle - (3.1415925 - g_WaterDrift.angle) < 0.0) {
+        fVar11 = g_WaterDrift.angle;
       }
       dVar14 = (double)(float)(3.1415927410125732 / dVar13);
-      fVar2 = -3.1415925 - DAT_00e5aee4;
-      if ((-3.1415925 - DAT_00e5aee4) - fVar11 < 0.0) {
+      fVar2 = -3.1415925 - g_WaterDrift.angle;
+      if ((-3.1415925 - g_WaterDrift.angle) - fVar11 < 0.0) {
         fVar2 = fVar11;
       }
       fVar11 = fVar2 * fVar2;
@@ -189,7 +189,7 @@ void UpdateMoby_642(MobyInstance *moby)
       pfVar6[8] = (float)dVar14;
       pfVar6[9] = (float)dVar19;
       pfVar6[10] = (float)dVar22;
-      fVar11 = DAT_00e5aef4 * 0.5;
+      fVar11 = g_WaterDrift.speed * 0.5;
       pfVar6[7] = 0.0;
       dVar15 = (double)(float)((double)fVar11 / dVar13);
       dVar14 = dVar23;
@@ -228,7 +228,7 @@ void UpdateMoby_642(MobyInstance *moby)
     dVar20 = (double)SQRT((float)(dVar15 * dVar15 +
                                  (double)(float)(dVar13 * dVar13 + (double)(float)(dVar14 * dVar14))
                                  ));
-    dVar17 = (double)(float)((double)(DAT_00e5aef4 * 0.1) / dVar20);
+    dVar17 = (double)(float)((double)(g_WaterDrift.speed * 0.1) / dVar20);
     dVar19 = dVar23;
     if (dVar23 - dVar20 < 0.0) {
       dVar19 = (double)(float)(dVar14 * dVar17);
@@ -266,7 +266,7 @@ void UpdateMoby_642(MobyInstance *moby)
     fVar4 = pfVar6[4];
     fVar5 = pfVar6[6];
     dVar14 = (double)SQRT(fVar5 * fVar5 + fVar4 * fVar4 + fVar2 * fVar2);
-    fVar1 = (float)((double)(DAT_00e5aef4 * 0.5) / dVar14);
+    fVar1 = (float)((double)(g_WaterDrift.speed * 0.5) / dVar14);
     dVar13 = dVar23;
     if (dVar23 - dVar14 < 0.0) {
       dVar13 = (double)(fVar4 * fVar1);
@@ -294,22 +294,22 @@ void UpdateMoby_642(MobyInstance *moby)
     iVar12 = CollLine(local_80,local_70,6,0,0);
     if ((iVar12 != 0) && (iVar12 = MB_randInt(8), iVar12 == 0)) {
       FastVecReflect(pfVar6 + 4,pfVar6 + 4,0xa10980);
-      pfVar6[6] = (float)((double)DAT_00e5aef4 * dVar21 + (double)pfVar6[6]);
+      pfVar6[6] = (float)((double)g_WaterDrift.speed * dVar21 + (double)pfVar6[6]);
     }
     *pfVar6 = *pfVar6 + pfVar6[4];
     pfVar6[1] = pfVar6[1] + pfVar6[5];
     pfVar6[2] = pfVar6[2] + pfVar6[6];
-    fVar1 = DAT_00e5aee4 + 1.5707963;
-    fVar2 = 3.1415925 - DAT_00e5aee4;
-    if (DAT_00e5aee4 - (3.1415925 - DAT_00e5aee4) < 0.0) {
-      fVar2 = DAT_00e5aee4;
+    fVar1 = g_WaterDrift.angle + 1.5707963;
+    fVar2 = 3.1415925 - g_WaterDrift.angle;
+    if (g_WaterDrift.angle - (3.1415925 - g_WaterDrift.angle) < 0.0) {
+      fVar2 = g_WaterDrift.angle;
     }
     fVar4 = 3.1415925 - fVar1;
     if (fVar1 - (3.1415925 - fVar1) < 0.0) {
       fVar4 = fVar1;
     }
-    fVar5 = -3.1415925 - DAT_00e5aee4;
-    if ((-3.1415925 - DAT_00e5aee4) - fVar2 < 0.0) {
+    fVar5 = -3.1415925 - g_WaterDrift.angle;
+    if ((-3.1415925 - g_WaterDrift.angle) - fVar2 < 0.0) {
       fVar5 = fVar2;
     }
     fVar2 = -3.1415925 - fVar1;
@@ -322,10 +322,10 @@ void UpdateMoby_642(MobyInstance *moby)
     fVar7 = fVar4 * fVar4 * fVar2;
     fVar10 = fVar1 * fVar9;
     fVar8 = fVar4 * fVar7;
-    fVar5 = DAT_00e5aef4 *
+    fVar5 = g_WaterDrift.speed *
             (fVar1 * fVar10 * 2.601887e-06 +
             fVar10 * -0.0001980741 + fVar9 * 0.0083330255 + fVar1 * fVar5 * -0.16666657 + fVar5);
-    fVar7 = DAT_00e5aef4 *
+    fVar7 = g_WaterDrift.speed *
             (fVar4 * fVar8 * 2.601887e-06 +
             fVar8 * -0.0001980741 + fVar7 * 0.0083330255 + fVar4 * fVar2 * -0.16666657 + fVar2);
     dVar13 = -0.5;
@@ -359,17 +359,17 @@ void UpdateMoby_642(MobyInstance *moby)
       (moby->pos).x = (moby->pos).x + fVar11 * 0.25;
       (moby->pos).y = (moby->pos).y + pfVar6[1];
       (moby->pos).z = (moby->pos).z + pfVar6[2];
-      fVar11 = DAT_00e5aef4 * 0.2 + pfVar6[2];
+      fVar11 = g_WaterDrift.speed * 0.2 + pfVar6[2];
       pfVar6[2] = fVar11;
     }
     dVar14 = (double)fVar11;
-    if ((double)DAT_00e5aef4 < dVar22) {
+    if ((double)g_WaterDrift.speed < dVar22) {
       dVar20 = (double)pfVar6[1];
       dVar17 = (double)*pfVar6;
       dVar18 = (double)SQRT((float)(dVar14 * dVar14 +
                                    (double)(float)(dVar17 * dVar17 +
                                                   (double)(float)(dVar20 * dVar20))));
-      dVar22 = (double)(float)((double)DAT_00e5aef4 / dVar18);
+      dVar22 = (double)(float)((double)g_WaterDrift.speed / dVar18);
       dVar15 = dVar14 * dVar22;
       dVar19 = dVar23;
       if (dVar23 - dVar18 < 0.0) {

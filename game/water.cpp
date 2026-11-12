@@ -1,6 +1,15 @@
-// game/water.cpp -- reconstructed from NPEA00385 EBOOT
-// STATUS: NOT STARTED (raw Ghidra output)
+// game/water.cpp -- water: the rippling tile surfaces (waves, drops, heights), water sheets, the
+// ocean planes and their fog, the ice strips, and the drift that pushes things along on water
+// STATUS: CLEAN (checked against the asm; local names are mine)
 // 37 functions, 0x17b214-0x17f7c0
+//
+// A water surface is an array of 16x16-cell WaterTiles (see mesh.cpp for the wave step and
+// shading). Each tile keeps three height buffers: the wave step writes g_WaterBufCur from
+// g_WaterBufPrev, and between steps the shown buffer (2) is a blend of the two. A tile is drawn
+// as 4x4 cells of 4x4 squares (46-vertex strips), in two layers: a wobbling base texture and an
+// overlay lit by the shading pass. Oceans are grids of 7x7-square cells, each a 124-vertex strip
+// over a fixed 8x8 vertex patch, with an animated texture.
+#include <math.h>
 #include <string.h>
 #include "game/water.h"
 #include "game/camera.h"
@@ -19,2576 +28,1325 @@
 #include "idol/mUnk.h"
 #include "idol/shrubfunc.h"
 #include "idol/tiefunc.h"
-#include "sdk/lUnk.h"
 #include "sdk/libgcm_cmd/marker.h"
+#include "idol/fastinline.h"
+#include <cell/gcm/gcm_macros.h>
+#include <cell/gcm/gcm_enum.h>
+
+#define TILE_CELLS          16      /* squares per tile side */
+#define CELL_SQUARES        4       /* squares per drawn cell side */
+#define GRID_VERTS          17      /* vertices per tile side */
+#define CELL_STRIP_VERTS    46
+#define WATER_UV_COUNT      46
+
+#define OCEAN_CELL          7       /* squares per ocean cell side */
+#define OCEAN_PATCH         8       /* vertices per ocean cell side */
+#define OCEAN_STRIP_VERTS   124
+#define OCEAN_DEPTH_ONLY    0x80    /* OceanPlane.depth: drawn into the depth pass too */
+
+#define BUF_SHOWN           2       /* the blended buffer between wave steps */
+#define NO_LINK             0xff
+
+#define DRAW_STRIP_TEXTURED 9       /* FastDrawStripColor mode */
+
+#define WATER_TILE_FLAG_TOP     1   /* WaterTile.flags: flatten that edge to tilePos.z */
+#define WATER_TILE_FLAG_RIGHT   2
+#define WATER_TILE_FLAG_BOTTOM  4
+#define WATER_TILE_FLAG_LEFT    8
+
+#define FOG_MODE_FIXED      1       /* LevelFogMode: the level's fog is never replaced */
+
+#define DRIFT_SPEED_SCALE   9.6f
+
+/* a vertex of FastDrawStripColor's strips */
+typedef struct WaterStripVert {
+    float x, y, z;
+    float u, v;
+    u32 color;
+} WaterStripVert;
+
+/* a vertex of FastDrawStripFog's ocean strips */
+typedef struct OceanVert {
+    float x, y, z;
+    float u, v;
+    float blend;                /* between the two animation textures */
+    u32 color;
+} OceanVert;
+
+/* the vertex grid WaterTile_BuildVertexGrid leaves in the scratch buffer */
+#define g_WaterGrid             ((Vec3 (*)[GRID_VERTS])(g_ScratchBuf + 0x2000))
+
+/* out = v * m (a row vector times all four rows) */
+static inline void MulVec4Mtx4(Vec4 *out, const Vec4 *v, const Mtx4 *m)
+{
+    out->x = m->v0.x * v->x + m->v1.x * v->y + m->v2.x * v->z + m->v3.x * v->w;
+    out->y = m->v0.y * v->x + m->v1.y * v->y + m->v2.y * v->z + m->v3.y * v->w;
+    out->z = m->v0.z * v->x + m->v1.z * v->y + m->v2.z * v->z + m->v3.z * v->w;
+    out->w = m->v0.w * v->x + m->v1.w * v->y + m->v2.w * v->z + m->v3.w * v->w;
+}
+
+/* 1/sqrt (the binary: frsqrte and three Newton steps) */
+static inline float FastRSqrtInline(float x)
+{
+    return 1.0f / sqrtf(x);
+}
+
+/* a color channel scaled, rounded and clamped to 255 (the VMX colour passes) */
+static inline u32 ScaleChannel(u32 value, float scale)
+{
+    float f = (float)value * scale;
+
+    if (f > 255.0f) {
+        f = 255.0f;
+    }
+
+    f += 0.5f;
+
+    if (f > 255.0f) {
+        f = 255.0f;
+    }
+
+    return (u32)(int)f;
+}
+
+/* a draw-depth alpha: double the 0..0x80 alpha, at most 0xff */
+static inline int DoubledAlpha(int alpha)
+{
+    return alpha * 2 > 0xff ? 0xff : alpha * 2;
+}
+
+static inline void BindEffectTex(RenderingStep *pass, int unit, int tex)
+{
+    FUN_004d676c(pass, unit, (u8 *)EffectTexHeaders + GetEffectTex(tex) * 0x24, 1, 1);
+}
+
+/* back to normal alpha blending after the water passes */
+static inline void RestoreBlend(RenderingStep *pass)
+{
+    *pass->command++ = (RsxCmd)CELL_GCM_METHOD(CELL_GCM_NV4097_SET_BLEND_EQUATION, 1);
+    *pass->command++ = (RsxCmd)(CELL_GCM_FUNC_ADD << 16 | CELL_GCM_FUNC_ADD);
+    *pass->command++ = (RsxCmd)CELL_GCM_METHOD(CELL_GCM_NV4097_SET_BLEND_FUNC_SFACTOR, 2);
+    *pass->command++ = (RsxCmd)(CELL_GCM_SRC_ALPHA << 16 | CELL_GCM_SRC_ALPHA);
+    *pass->command++ = (RsxCmd)(CELL_GCM_ONE_MINUS_SRC_ALPHA << 16 | CELL_GCM_ONE_MINUS_SRC_ALPHA);
+}
+
+static inline void SaveFog(void)
+{
+    OceanFogNearDist = g_ViewContext.fogNearDist;
+    OceanFogFarDist = g_ViewContext.fogFarDist;
+    OceanFogNearIntensity = g_ViewContext.fogNearIntensity;
+    OceanFogFarIntensity = g_ViewContext.fogFarIntensity;
+    OceanFogR = g_ViewContext.fogR;
+    OceanFogG = g_ViewContext.fogG;
+    OceanFogB = g_ViewContext.fogB;
+}
+
+/* the ocean's fog in place of the level's (the colour is kept on Umbris unless always) */
+static inline void SetOceanFog(OceanPlane *ocean, bool alwaysColor)
+{
+    if (LevelFogMode == FOG_MODE_FIXED) {
+        return;
+    }
+
+    g_ViewContext.fogNearDist = ocean->fogNearDist;
+    g_ViewContext.fogFarDist = ocean->fogFarDist;
+    g_ViewContext.fogNearIntensity = ocean->fogNearIntensity;
+    g_ViewContext.fogFarIntensity = ocean->fogFarIntensity;
+
+    if (alwaysColor || Level != Umbris) {
+        g_ViewContext.fogR = ocean->fogR;
+        g_ViewContext.fogG = ocean->fogG;
+        g_ViewContext.fogB = ocean->fogB;
+    }
+
+    RebuildSharedWaveTables();
+}
 
 // 0x017b214 (0x14 bytes)
 void SECTION_HEADER_WATER(void)
-
 {
-  DAT_0073a924 = 0x10000;
-  return;
+    DAT_0073a924 = 0x10000;
 }
-
 
 // 0x017b230 (0x274 bytes)
-void WaterTile_InitAll(WaterTile *tiles,int tileCnt)
-
+void WaterTile_InitAll(WaterTile *tiles, int tileCnt)
 {
-  float *pfVar1;
-  int iVar2;
-  float *pfVar3;
-  float *pfVar4;
-  float *pfVar5;
-  float *pfVar6;
-  float *pfVar7;
-  float *pfVar8;
-  float *pfVar9;
-  int iVar10;
-  float *pfVar11;
-  float *pfVar12;
-  float *pfVar13;
-  float *pfVar14;
-  float *pfVar15;
-  float *pfVar16;
-  float *pfVar17;
-  float *pfVar18;
-  
-  iVar2 = 0;
-  if (0 < tileCnt) {
-    pfVar1 = tiles->buf[0].height[0] + 2;
-    pfVar6 = tiles->buf[0].heightBottom2 + 2;
-    pfVar7 = tiles->buf[0].heightRight + 2;
-    pfVar3 = tiles->buf[0].heightTop + 2;
-    pfVar8 = tiles->buf[0].heightRight2 + 2;
-    pfVar4 = tiles->buf[0].heightLeft + 2;
-    pfVar5 = tiles->buf[0].heightBottom + 2;
-    pfVar9 = tiles->buf[0].heightCorner + 2;
-    do {
-      iVar10 = 0;
-      pfVar18 = pfVar9;
-      pfVar14 = pfVar5;
-      pfVar13 = pfVar4;
-      pfVar17 = pfVar8;
-      pfVar12 = pfVar3;
-      pfVar16 = pfVar7;
-      pfVar15 = pfVar6;
-      pfVar11 = pfVar1;
-      do {
-        memset(pfVar11,0,0x400);
-        memset(pfVar12,0,0x40);
-        memset(pfVar13,0,0x40);
-        memset(pfVar14,0,0x40);
-        memset(pfVar15,0,0x40);
-        memset(pfVar16,0,0x40);
-        memset(pfVar17,0,0x40);
-        memset(pfVar18,0,0x18);
-        iVar10 = iVar10 + 1;
-        pfVar11 = pfVar11 + 0x170;
-        pfVar17 = pfVar17 + 0x170;
-        pfVar12 = pfVar12 + 0x170;
-        pfVar13 = pfVar13 + 0x170;
-        pfVar14 = pfVar14 + 0x170;
-        pfVar15 = pfVar15 + 0x170;
-        pfVar16 = pfVar16 + 0x170;
-        pfVar18 = pfVar18 + 0x170;
-      } while (iVar10 < 3);
-      (tiles->scroll).x = 0.0;
-      (tiles->scroll).y = 0.0;
-      (tiles->scrollRate).x = -0.0016;
-      (tiles->scrollRate).y = -0.0016;
-      (tiles->rotRate).x = 0.02;
-      (tiles->rotAngle).x = 1.5707964;
-      (tiles->rotAngle).y = -1.5707964;
-      pfVar3 = pfVar3 + 0x468;
-      pfVar4 = pfVar4 + 0x468;
-      (tiles->rotRate).y = -0.031;
-      pfVar5 = pfVar5 + 0x468;
-      tiles->wig_size = 0.03;
-      pfVar1 = pfVar1 + 0x468;
-      tiles->flags = 0;
-      pfVar6 = pfVar6 + 0x468;
-      pfVar7 = pfVar7 + 0x468;
-      pfVar8 = pfVar8 + 0x468;
-      iVar2 = iVar2 + 1;
-      pfVar9 = pfVar9 + 0x468;
-      tiles = (WaterTile *)&tiles[1].ovlTex;
-    } while (iVar2 < tileCnt);
-  }
-  return;
-}
+    int i;
+    int b;
 
+    for (i = 0; i < tileCnt; i++) {
+        WaterTile *tile = &tiles[i];
+
+        for (b = 0; b < 3; b++) {
+            memset(tile->buf[b].height, 0, sizeof(tile->buf[b].height));
+            memset(tile->buf[b].heightTop, 0, sizeof(tile->buf[b].heightTop));
+            memset(tile->buf[b].heightLeft, 0, sizeof(tile->buf[b].heightLeft));
+            memset(tile->buf[b].heightBottom, 0, sizeof(tile->buf[b].heightBottom));
+            memset(tile->buf[b].heightBottom2, 0, sizeof(tile->buf[b].heightBottom2));
+            memset(tile->buf[b].heightRight, 0, sizeof(tile->buf[b].heightRight));
+            memset(tile->buf[b].heightRight2, 0, sizeof(tile->buf[b].heightRight2));
+            memset(tile->buf[b].heightCorner, 0, sizeof(tile->buf[b].heightCorner));
+        }
+
+        tile->scroll.x = 0.0f;
+        tile->scroll.y = 0.0f;
+        tile->scrollRate.x = -0.0016f;
+        tile->scrollRate.y = -0.0016f;
+        tile->rotRate.x = 0.02f;
+        tile->rotAngle.x = 1.5707964f;
+        tile->rotAngle.y = -1.5707964f;
+        tile->rotRate.y = -0.031f;
+        tile->wig_size = 0.03f;
+        tile->flags = 0;
+    }
+}
 
 // 0x017b4b0 (0xe8 bytes)
-void WaterTile_CalcGridBSphere(WaterTile *tile,BSphere *bounds)
-
+/* the tile's bounding box in the 1/1024 units of WaterTileBoxes */
+void WaterTile_CalcGridBSphere(WaterTile *tile, WaterTileBox *box)
 {
-  float fVar1;
-  float fVar2;
-  f32 fVar3;
-  undefined2 radInt;
-  double rad;
-  double bsphereConst;
-  
-  bsphereConst = 1024.0;
-  fVar3 = (f32)FastDoubleToInt
-                         ((double)(((tile->tilePos).x + WaterTileConsts.TileOffset.x) * 1024.0));
-  fVar2 = WaterTileConsts.TileOffset.y;
-  fVar1 = (tile->tilePos).y;
-  bounds->x = fVar3;
-  fVar3 = (f32)FastDoubleToInt((double)(float)((double)(fVar1 + fVar2) * bsphereConst));
-  bounds->y = fVar3;
-  fVar3 = (f32)FastDoubleToInt
-                         ((double)(float)((double)((tile->tilePos).z - 1.0) * bsphereConst));
-  rad = (double)WaterTileConsts.TileSize.x;
-  bounds->z = fVar3;
-  radInt = FastDoubleToInt((double)(float)(rad * bsphereConst));
-  rad = (double)WaterTileConsts.TileSize.x;
-  *(undefined2 *)&bounds->rad = radInt;
-  radInt = FastDoubleToInt((double)(float)(rad * bsphereConst));
-  *(undefined2 *)((int)&bounds->rad + 2) = radInt;
-  return;
+    box->min_x = FastDoubleToInt((tile->tilePos.x + WaterTileConsts.TileOffset.x) * 1024.0f);
+    box->min_y = FastDoubleToInt((tile->tilePos.y + WaterTileConsts.TileOffset.y) * 1024.0f);
+    box->min_z = FastDoubleToInt((tile->tilePos.z - 1.0f) * 1024.0f);
+    box->size_x = FastDoubleToInt(WaterTileConsts.TileSize.x * 1024.0f);
+    box->size_y = FastDoubleToInt(WaterTileConsts.TileSize.x * 1024.0f);
 }
-
 
 // 0x017b5a0 (0x1e0 bytes)
-int WaterTile_LookupTile(float x,float y,float z)
-
+/* the water tile under a point (it must be in a drawn cell), or -1 */
+int WaterTile_LookupTile(float x, float y, float z)
 {
-  int iVar1;
-  int iVar2;
-  int iVar3;
-  int tileCnt;
-  float *pfVar4;
-  int iVar5;
-  int iVar6;
-  WaterTileBox *pWVar7;
-  int iVar8;
-  double dVar9;
-  double dVar10;
-  double dVar11;
-  double dVar12;
-  
-  dVar11 = (double)z;
-  dVar9 = (double)x;
-  dVar10 = (double)y;
-  dVar12 = 1024.0;
-  iVar1 = FastDoubleToInt((double)(float)(dVar9 * 1024.0),dVar10,dVar11);
-  iVar2 = FastDoubleToInt((double)(float)(dVar10 * dVar12));
-  iVar3 = FastDoubleToInt((double)(float)(dVar11 * dVar12));
-  iVar8 = 0;
-  tileCnt = WaterTileCnt;
-  pWVar7 = WaterTileBoxes;
-  if (0 < WaterTileCnt) {
-    do {
-      if ((((pWVar7->min_x <= iVar1) && (pWVar7->min_y <= iVar2)) && (pWVar7->min_z <= iVar3)) &&
-         (((iVar1 < (int)(pWVar7->min_x + (uint)pWVar7->size_x) &&
-           (iVar2 < (int)(pWVar7->min_y + (uint)pWVar7->size_y))) && (iVar3 < pWVar7->min_z + 0x800)
-          ))) {
-        pfVar4 = (float *)((int)WaterTiles + iVar8 * 0x11a0);
-        iVar5 = FastDoubleToInt
-                          ((double)((float)(dVar9 - (double)(*pfVar4 + WaterTileConsts.TileOffset.x)
-                                           ) / WaterTileConsts.TileGridSize.x));
-        iVar6 = FastDoubleToInt
-                          ((double)((float)(dVar10 - (double)(pfVar4[1] +
-                                                             WaterTileConsts.TileOffset.y)) /
-                                   WaterTileConsts.TileGridSize.y));
-        tileCnt = WaterTileCnt;
-        if (((uint)*(ushort *)((int)pfVar4 + 0x1e) & 1 << ((iVar6 >> 2 & 3U) << 2 | iVar5 >> 2 & 3U)
-            ) != 0) {
-          return iVar8;
-        }
-      }
-      iVar8 = iVar8 + 1;
-      pWVar7 = pWVar7 + 1;
-    } while (iVar8 < tileCnt);
-  }
-  return -1;
-}
+    int ix = FastDoubleToInt(x * 1024.0f);
+    int iy = FastDoubleToInt(y * 1024.0f);
+    int iz = FastDoubleToInt(z * 1024.0f);
+    int i;
 
+    for (i = 0; i < WaterTileCnt; i++) {
+        WaterTileBox *box = &WaterTileBoxes[i];
+        WaterTile *tile;
+        int gx;
+        int gy;
+
+        if (ix < box->min_x || iy < box->min_y || iz < box->min_z) {
+            continue;
+        }
+
+        if (ix >= box->min_x + box->size_x || iy >= box->min_y + box->size_y || iz >= box->min_z + 0x800) {
+            continue;
+        }
+
+        tile = &WaterTiles[i];
+        gx = FastDoubleToInt((x - (tile->tilePos.x + WaterTileConsts.TileOffset.x)) / WaterTileConsts.TileGridSize.x);
+        gy = FastDoubleToInt((y - (tile->tilePos.y + WaterTileConsts.TileOffset.y)) / WaterTileConsts.TileGridSize.y);
+
+        if (tile->mask & (1 << (((gy >> 2) & 3) << 2 | ((gx >> 2) & 3)))) {
+            return i;
+        }
+    }
+
+    return -1;
+}
 
 // 0x017b780 (0x3c bytes)
+/* scales the wobble uv table so that its entry 8 becomes scale */
 void WaterWave_ScaleTable(float scale)
-
 {
-  float fVar1;
-  float *pfVar2;
-  longlong lVar3;
-  
-  pfVar2 = (float *)&DAT_0073aac0;
-  lVar3 = 0x2e;
-  fVar1 = scale / CONST_1_0f;
-  do {
-    *pfVar2 = *pfVar2 * fVar1;
-    pfVar2[1] = pfVar2[1] * fVar1;
-    pfVar2 = pfVar2 + 2;
-    lVar3 = lVar3 + -1;
-  } while (lVar3 != 0);
-  return;
+    int i;
+
+    scale /= CONST_1_0f;     /* g_WaterUV[8].x */
+
+    for (i = 0; i < WATER_UV_COUNT; i++) {
+        g_WaterUV[i].x *= scale;
+        g_WaterUV[i].y *= scale;
+    }
 }
 
+/* one wave step for every tile with something drawn, then the buffers turn */
+static inline void StepAllTiles(WaterTile *tiles, int count)
+{
+    int prev;
+    int i;
+
+    for (i = 0; i < count; i++) {
+        if (tiles[i].mask != 0) {
+            StageTileBuf((float (*)[24])g_ScratchBuf, &tiles[i].buf[g_WaterBufCur]);
+            WaterTile_StepWave((float (*)[24])g_ScratchBuf, i, g_WaterBufPrev, tiles);
+        }
+    }
+
+    prev = g_WaterBufPrev;
+    g_WaterBufPrev = g_WaterBufCur;
+    g_WaterBufCur = prev;
+}
 
 // 0x017b7bc (0xf4 bytes)
-void WaterTile_StepSim(WaterTile *tile,int cnt)
-
+void WaterTile_StepSim(WaterTile *tiles, int count)
 {
-  int iVar1;
-  
-  iVar1 = 0;
-  if (0 < cnt) {
-    do {
-      if (*(short *)((int)tile + iVar1 * 0x11a0 + 0x1e) != 0) {
-        StageTileBuf(g_ScratchBuf,
-                           (void *)((int)tile + DAT_00e5aaa4 * 0x5c0 + iVar1 * 0x11a0 + 0x50));
-        WaterTile_StepWave((float *)g_ScratchBuf,iVar1,DAT_0073a9f0,tile);
-      }
-      iVar1 = iVar1 + 1;
-    } while (iVar1 < cnt);
-  }
-  iVar1 = DAT_0073a9f0;
-  DAT_0073a9f0 = DAT_00e5aaa4;
-  DAT_00e5aaa4 = iVar1;
-  return;
+    StepAllTiles(tiles, count);
 }
-
 
 // 0x017b8b8 (0x1d4 bytes)
-void WaterTile_UpdateWaves(WaterTile *tiles,int nTiles)
-
+/* A wave step every 1 / waveInc frames; in between the shown buffer blends the last two. */
+void WaterTile_UpdateWaves(WaterTile *tiles, int count)
 {
-  int iVar1;
-  float *pfVar2;
-  
-  if (DAT_0073aa40 < 1.0 - WaterTileConsts.waveInc) {
-    iVar1 = 0;
-    DAT_0073a9f4 = 2;
-    if (0 < nTiles) {
-      pfVar2 = tiles->buf[0].height[0] + 2;
-      do {
-        if (tiles->mask != 0) {
-          WaterTileBufLerp
-                    (DAT_0073aa40,pfVar2 + DAT_0073a9f4 * 0x170,pfVar2 + DAT_0073a9f0 * 0x170,
-                     pfVar2 + DAT_00e5aaa4 * 0x170);
+    int i;
+
+    if (g_WaterLerpT < 1.0f - WaterTileConsts.waveInc) {
+        g_WaterBufShown = BUF_SHOWN;
+
+        for (i = 0; i < count; i++) {
+            if (tiles[i].mask != 0) {
+                WaterTileBufLerp(g_WaterLerpT, &tiles[i].buf[g_WaterBufShown].height[0][0],
+                                 &tiles[i].buf[g_WaterBufPrev].height[0][0],
+                                 &tiles[i].buf[g_WaterBufCur].height[0][0]);
+            }
         }
-        iVar1 = iVar1 + 1;
-        pfVar2 = pfVar2 + 0x468;
-        tiles = (WaterTile *)&tiles[1].ovlTex;
-      } while (iVar1 < nTiles);
-    }
-  }
-  else {
-    iVar1 = 0;
-    DAT_0073aa40 = WaterTileConsts.waveInc;
-    if (0 < nTiles) {
-      do {
-        if (*(short *)((int)tiles + iVar1 * 0x11a0 + 0x1e) != 0) {
-          StageTileBuf(g_ScratchBuf,
-                             (void *)((int)tiles + DAT_00e5aaa4 * 0x5c0 + iVar1 * 0x11a0 + 0x50));
-          WaterTile_StepWave((float *)g_ScratchBuf,iVar1,DAT_0073a9f0,tiles);
-        }
-        iVar1 = iVar1 + 1;
-      } while (iVar1 < nTiles);
-    }
-    DAT_0073a9f4 = DAT_00e5aaa4;
-    iVar1 = DAT_0073a9f0;
-    DAT_0073a9f0 = DAT_00e5aaa4;
-    DAT_00e5aaa4 = iVar1;
-  }
-  DAT_0073aa40 = DAT_0073aa40 + WaterTileConsts.waveInc;
-  return;
-}
-
-
-// 0x017bab0 (0x2dc bytes)
-void WaterTile_UpdateWaves(WaterTile *tile)
-
-{
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  float fVar7;
-  float fVar8;
-  float fVar9;
-  float fVar10;
-  float fVar11;
-  float *pfVar12;
-  float *pfVar13;
-  float *pfVar14;
-  int iVar15;
-  float *pfVar16;
-  double dVar17;
-  double dVar18;
-  double dVar19;
-  double dVar20;
-  double dVar21;
-  double dVar22;
-  
-  fVar4 = (tile->scroll).x + (tile->scrollRate).x;
-  fVar1 = (tile->scrollRate).y;
-  fVar2 = (tile->rotAngle).x;
-  fVar3 = (tile->rotRate).x;
-  (tile->scroll).x = fVar4;
-  if (1.0 < fVar4) {
-    fVar4 = fVar4 - 1.0;
-    (tile->scroll).x = fVar4;
-  }
-  if (fVar4 < 0.0) {
-    (tile->scroll).x = fVar4 + 1.0;
-  }
-  fVar1 = (tile->scroll).y + fVar1;
-  (tile->scroll).y = fVar1;
-  if (1.0 < fVar1) {
-    fVar1 = fVar1 - 1.0;
-    (tile->scroll).y = fVar1;
-  }
-  if (fVar1 < 0.0) {
-    (tile->scroll).y = fVar1 + 1.0;
-  }
-  dVar17 = (double)FastWrapRot(fVar2,fVar3);
-  (tile->rotAngle).x = (float)dVar17;
-  dVar18 = (double)FastWrapRot((tile->rotAngle).y,(tile->rotRate).y);
-  (tile->rotAngle).y = (float)dVar18;
-  dVar20 = (double)(tile->rotAngle).x;
-  fVar1 = (float)(dVar20 + 1.570796251296997);
-  fVar2 = (float)(dVar18 + 1.570796251296997);
-  fVar3 = (tile->scroll).x;
-  pfVar14 = (float *)&DAT_0073ac40;
-  pfVar13 = (float *)&DAT_0073aac0;
-  iVar15 = 0;
-  dVar17 = (double)(float)(3.141592502593994 - dVar18);
-  if (dVar18 - (double)(float)(3.141592502593994 - dVar18) < 0.0) {
-    dVar17 = dVar18;
-  }
-  dVar21 = (double)(float)(3.141592502593994 - dVar20);
-  if (dVar20 - (double)(float)(3.141592502593994 - dVar20) < 0.0) {
-    dVar21 = dVar20;
-  }
-  fVar4 = tile->wig_size;
-  fVar5 = (tile->scroll).y;
-  pfVar16 = (float *)&DAT_0073aac4;
-  fVar6 = 3.1415925 - fVar1;
-  if (fVar1 - (3.1415925 - fVar1) < 0.0) {
-    fVar6 = fVar1;
-  }
-  fVar9 = 3.1415925 - fVar2;
-  if (fVar2 - (3.1415925 - fVar2) < 0.0) {
-    fVar9 = fVar2;
-  }
-  pfVar12 = (float *)&DAT_0073ac44;
-  dVar19 = (double)(float)(-3.141592502593994 - dVar18);
-  if ((double)(float)(-3.141592502593994 - dVar18) - dVar17 < 0.0) {
-    dVar19 = dVar17;
-  }
-  dVar17 = (double)(float)(-3.141592502593994 - dVar20);
-  if ((double)(float)(-3.141592502593994 - dVar20) - dVar21 < 0.0) {
-    dVar17 = dVar21;
-  }
-  fVar11 = -3.1415925 - fVar1;
-  if ((-3.1415925 - fVar1) - fVar6 < 0.0) {
-    fVar11 = fVar6;
-  }
-  fVar1 = -3.1415925 - fVar2;
-  if ((-3.1415925 - fVar2) - fVar9 < 0.0) {
-    fVar1 = fVar9;
-  }
-  do {
-    if (*(int *)(&DAT_0073ae70 + (iVar15 >> 1) * 4) == 0) {
-      fVar2 = *pfVar14;
-      fVar6 = *pfVar12;
-      dVar20 = dVar17;
-      dVar18 = dVar17 * dVar17;
-      fVar9 = fVar11;
-      fVar10 = fVar11 * fVar11;
     }
     else {
-      fVar2 = *pfVar14;
-      fVar6 = *pfVar12;
-      dVar20 = dVar19;
-      dVar18 = dVar19 * dVar19;
-      fVar9 = fVar1;
-      fVar10 = fVar1 * fVar1;
+        g_WaterLerpT = WaterTileConsts.waveInc;
+        StepAllTiles(tiles, count);
+        g_WaterBufShown = g_WaterBufPrev;
     }
-    dVar22 = (double)(float)dVar18;
-    iVar15 = iVar15 + 2;
-    pfVar14 = pfVar14 + 2;
-    pfVar12 = pfVar12 + 2;
-    fVar7 = fVar10 * fVar10 * fVar9;
-    dVar18 = (double)(float)(dVar22 * (double)(float)(dVar22 * dVar20));
-    fVar8 = fVar10 * fVar7;
-    dVar21 = (double)(float)(dVar22 * dVar18);
-    *pfVar13 = fVar2 + (fVar10 * fVar8 * 2.601887e-06 +
-                       fVar8 * -0.0001980741 +
-                       fVar7 * 0.0083330255 + fVar10 * fVar9 * -0.16666657 + fVar9) * fVar4 + fVar3;
-    *pfVar16 = fVar6 + ((float)(dVar22 * dVar21) * 2.601887e-06 +
-                       (float)(dVar21 * -0.0001980741071747616 +
-                              (double)(float)(dVar18 * 0.008333025500178337 +
-                                             (double)(float)((double)(float)(dVar22 * dVar20) *
-                                                             -0.16666656732559204 + dVar20)))) *
-                       fVar4 + fVar5;
-    pfVar13 = pfVar13 + 2;
-    pfVar16 = pfVar16 + 2;
-  } while (iVar15 < 0x5c);
-  return;
+
+    g_WaterLerpT += WaterTileConsts.waveInc;
 }
 
+// 0x017bab0 (0x2dc bytes)
+/* Scrolls the tile's base texture and wobbles its uv table: each entry turns on a small circle,
+   driven by rotAngle.x or (for the entries flagged in g_WaterUVUseY) rotAngle.y. */
+void WaterTile_UpdateUVs(WaterTile *tile)
+{
+    float sinX, cosX, sinY, cosY;
+    int i;
+
+    tile->scroll.x += tile->scrollRate.x;
+
+    if (tile->scroll.x > 1.0f) {
+        tile->scroll.x -= 1.0f;
+    }
+
+    if (tile->scroll.x < 0.0f) {
+        tile->scroll.x += 1.0f;
+    }
+
+    tile->scroll.y += tile->scrollRate.y;
+
+    if (tile->scroll.y > 1.0f) {
+        tile->scroll.y -= 1.0f;
+    }
+
+    if (tile->scroll.y < 0.0f) {
+        tile->scroll.y += 1.0f;
+    }
+
+    tile->rotAngle.x = FastWrapRot(tile->rotAngle.x, tile->rotRate.x);
+    tile->rotAngle.y = FastWrapRot(tile->rotAngle.y, tile->rotRate.y);
+
+    sinX = FastSinInline(tile->rotAngle.x);
+    cosX = FastCosInline(tile->rotAngle.x);
+    sinY = FastSinInline(tile->rotAngle.y);
+    cosY = FastCosInline(tile->rotAngle.y);
+
+    for (i = 0; i < WATER_UV_COUNT; i++) {
+        float c = g_WaterUVUseY[i] ? cosY : cosX;
+        float s = g_WaterUVUseY[i] ? sinY : sinX;
+
+        g_WaterUV[i].x = g_WaterBaseUV[i].x + c * tile->wig_size + tile->scroll.x;
+        g_WaterUV[i].y = g_WaterBaseUV[i].y + s * tile->wig_size + tile->scroll.y;
+    }
+}
 
 // 0x017bd90 (0x620 bytes)
-void WaterTile_PutDrop
-               (float x,float y,float radius,float height,WaterTile *tiles,int tileCount,float add)
-
+/* Raises the water around (x, y): height / distance within radius cells (height itself within
+   one). add: add to the shown heights, else keep whichever is larger. The edge values are copied
+   into the neighbouring tiles' border arrays as they are written. */
+void WaterTile_PutDrop(WaterTile *tiles, int count, float x, float y, float radius, float height, int add)
 {
-  uint uVar1;
-  uint uVar2;
-  byte bVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  float fVar7;
-  int iVar8;
-  int iVar9;
-  int iVar10;
-  float fVar11;
-  float fVar12;
-  float fVar13;
-  longlong lVar14;
-  int iVar15;
-  int iVar16;
-  longlong lVar17;
-  int iVar19;
-  longlong lVar18;
-  float *pfVar21;
-  longlong lVar20;
-  longlong lVar22;
-  int in_r9;
-  longlong lVar23;
-  int iVar24;
-  int iVar25;
-  longlong lVar26;
-  
-  lVar20 = (longlong)(int)tiles;
-  iVar16 = 0;
-  if (0 < tileCount) {
-    do {
-      fVar13 = WaterTileConsts.TileGridSize.y;
-      fVar12 = WaterTileConsts.TileGridSize.x;
-      fVar11 = WaterTileConsts.TileOffset.x;
-      pfVar21 = (float *)lVar20;
-      fVar6 = (x - (*pfVar21 + WaterTileConsts.TileOffset.x)) / WaterTileConsts.TileGridSize.x;
-      fVar5 = (y - (pfVar21[1] + WaterTileConsts.TileOffset.y)) / WaterTileConsts.TileGridSize.y;
-      uVar1 = (uint)(fVar6 - radius);
-      iVar25 = (int)(fVar6 + radius);
-      uVar2 = (uint)(fVar5 - radius);
-      iVar15 = (int)(fVar5 + radius);
-      lVar23 = (ulonglong)uVar2 + ((longlong)(int)uVar2 >> 0x3f & -(ulonglong)uVar2);
-      iVar25 = iVar25 + ((uint)(0xf - (longlong)iVar25 >> 0x3f) & 0xfU - iVar25);
-      lVar14 = (ulonglong)uVar1 + ((longlong)(int)uVar1 >> 0x3f & -(ulonglong)uVar1);
-      iVar15 = iVar15 + ((uint)(0xf - (longlong)iVar15 >> 0x3f) & 0xfU - iVar15);
-      fVar5 = WaterTileConsts.TileGridSize.y * (float)(longlong)(int)lVar23 +
-              pfVar21[1] + WaterTileConsts.TileOffset.y;
-      if ((int)lVar23 <= iVar15) {
-        lVar26 = lVar23 * 4;
-        lVar22 = lVar23 * 0x40 + lVar20;
-        do {
-          fVar6 = fVar12 * (float)(longlong)(int)lVar14 + *pfVar21 + fVar11;
-          if ((int)lVar14 <= iVar25) {
-            lVar17 = lVar14 * 4;
-            lVar18 = lVar14;
-            do {
-              fVar4 = (x - fVar6) * (x - fVar6) + (y - fVar5) * (y - fVar5);
-              fVar7 = height / SQRT(fVar4);
-              if (fVar4 - 1.0 < 0.0) {
-                fVar7 = height;
-              }
-              iVar8 = (int)lVar17;
-              iVar9 = (int)lVar22;
-              if (in_r9 == 0) {
-                fVar4 = *(float *)(DAT_00e5aaa4 * 0x5c0 + iVar9 + iVar8 + 0x50);
-                if (ABS(fVar7) < ABS(fVar4)) {
-                  fVar7 = fVar4;
-                }
-              }
-              else {
-                fVar7 = fVar7 + *(float *)(DAT_0073a9f4 * 0x5c0 + iVar9 + iVar8 + 0x50);
-              }
-              iVar24 = (int)lVar23;
-              *(float *)(DAT_00e5aaa4 * 0x5c0 + iVar9 + iVar8 + 0x50) = fVar7;
-              if (iVar24 < 2) {
-                bVar3 = *(byte *)(pfVar21 + 3);
-                if (bVar3 != 0xff) {
-                  if (iVar24 == 0) {
-                    *(undefined4 *)
-                     ((int)tiles + iVar8 + DAT_00e5aaa4 * 0x5c0 + (uint)bVar3 * 0x11a0 + 0x4d0) =
-                         *(undefined4 *)(DAT_00e5aaa4 * 0x5c0 + iVar9 + iVar8 + 0x50);
-                  }
-                  else {
-                    *(undefined4 *)
-                     ((int)tiles + iVar8 + DAT_00e5aaa4 * 0x5c0 + (uint)bVar3 * 0x11a0 + 0x550) =
-                         *(undefined4 *)(DAT_00e5aaa4 * 0x5c0 + iVar9 + iVar8 + 0x50);
-                  }
-                }
-              }
-              iVar19 = (int)lVar18;
-              iVar10 = (int)lVar26;
-              if (iVar19 < 2) {
-                bVar3 = *(byte *)((int)pfVar21 + 0xd);
-                if (bVar3 != 0xff) {
-                  if (iVar19 == 0) {
-                    *(undefined4 *)
-                     ((int)tiles + iVar10 + DAT_00e5aaa4 * 0x5c0 + (uint)bVar3 * 0x11a0 + 0x510) =
-                         *(undefined4 *)(DAT_00e5aaa4 * 0x5c0 + iVar9 + iVar8 + 0x50);
-                  }
-                  else {
-                    *(undefined4 *)
-                     ((int)tiles + iVar10 + DAT_00e5aaa4 * 0x5c0 + (uint)bVar3 * 0x11a0 + 0x590) =
-                         *(undefined4 *)(DAT_00e5aaa4 * 0x5c0 + iVar9 + iVar8 + 0x50);
-                  }
-                }
-              }
-              if ((iVar24 == 0xf) && (*(byte *)((int)pfVar21 + 0xe) != 0xff)) {
-                *(undefined4 *)
-                 ((int)tiles +
-                 iVar8 + DAT_00e5aaa4 * 0x5c0 + (uint)*(byte *)((int)pfVar21 + 0xe) * 0x11a0 + 0x450
-                 ) = *(undefined4 *)(DAT_00e5aaa4 * 0x5c0 + iVar9 + iVar8 + 0x50);
-              }
-              if ((iVar19 == 0xf) && (*(byte *)((int)pfVar21 + 0xf) != 0xff)) {
-                *(undefined4 *)
-                 ((int)tiles +
-                 iVar10 + DAT_00e5aaa4 * 0x5c0 + (uint)*(byte *)((int)pfVar21 + 0xf) * 0x11a0 +
-                 0x490) = *(undefined4 *)(DAT_00e5aaa4 * 0x5c0 + iVar9 + iVar8 + 0x50);
-              }
-              if (*(byte *)(pfVar21 + 4) != 0xff) {
-                if (iVar19 == 0 && iVar24 == 0) {
-                  *(float *)((int)tiles +
-                            DAT_00e5aaa4 * 0x5c0 + (uint)*(byte *)(pfVar21 + 4) * 0x11a0 + 0x5dc) =
-                       pfVar21[DAT_00e5aaa4 * 0x170 + 0x14];
-                }
-                if (iVar19 == 1 && iVar24 == 0) {
-                  *(float *)((int)tiles +
-                            DAT_00e5aaa4 * 0x5c0 + (uint)*(byte *)(pfVar21 + 4) * 0x11a0 + 0x5e0) =
-                       pfVar21[DAT_00e5aaa4 * 0x170 + 0x15];
-                }
-                if (iVar19 == 0 && iVar24 == 1) {
-                  *(float *)((int)tiles +
-                            DAT_00e5aaa4 * 0x5c0 + (uint)*(byte *)(pfVar21 + 4) * 0x11a0 + 0x5e4) =
-                       pfVar21[DAT_00e5aaa4 * 0x170 + 0x24];
-                }
-              }
-              if ((*(byte *)((int)pfVar21 + 0x11) != 0xff) && (iVar19 == 0xf && iVar24 == 0)) {
-                *(float *)((int)tiles +
-                          DAT_00e5aaa4 * 0x5c0 +
-                          (uint)*(byte *)((int)pfVar21 + 0x11) * 0x11a0 + 0x5d8) =
-                     pfVar21[DAT_00e5aaa4 * 0x170 + 0x23];
-              }
-              if ((*(byte *)((int)pfVar21 + 0x12) != 0xff) && (iVar19 == 0 && iVar24 == 0xf)) {
-                *(float *)((int)tiles +
-                          DAT_00e5aaa4 * 0x5c0 +
-                          (uint)*(byte *)((int)pfVar21 + 0x12) * 0x11a0 + 0x5d4) =
-                     pfVar21[DAT_00e5aaa4 * 0x170 + 0x104];
-              }
-              if ((*(byte *)((int)pfVar21 + 0x13) != 0xff) && (iVar19 == 0xf && iVar24 == 0xf)) {
-                *(float *)((int)tiles +
-                          DAT_00e5aaa4 * 0x5c0 +
-                          (uint)*(byte *)((int)pfVar21 + 0x13) * 0x11a0 + 0x5d0) =
-                     pfVar21[DAT_00e5aaa4 * 0x170 + 0x113];
-              }
-              lVar18 = lVar18 + 1;
-              lVar17 = lVar17 + 4;
-              fVar6 = fVar6 + fVar12;
-            } while ((int)lVar18 <= iVar25);
-          }
-          lVar23 = lVar23 + 1;
-          fVar5 = fVar5 + fVar13;
-          lVar22 = lVar22 + 0x40;
-          lVar26 = lVar26 + 4;
-        } while ((int)lVar23 <= iVar15);
-      }
-      lVar20 = lVar20 + 0x11a0;
-      iVar16 = iVar16 + 1;
-    } while (iVar16 < tileCount);
-  }
-  return;
-}
+    int t;
 
+    for (t = 0; t < count; t++) {
+        WaterTile *tile = &tiles[t];
+        WaterTileBuf *buf = &tile->buf[g_WaterBufCur];
+        float gridX = WaterTileConsts.TileGridSize.x;
+        float gridY = WaterTileConsts.TileGridSize.y;
+        float cx = (x - (tile->tilePos.x + WaterTileConsts.TileOffset.x)) / gridX;
+        float cy = (y - (tile->tilePos.y + WaterTileConsts.TileOffset.y)) / gridY;
+        int col0 = (int)(cx - radius);
+        int col1 = (int)(cx + radius);
+        int row0 = (int)(cy - radius);
+        int row1 = (int)(cy + radius);
+        float py;
+        int row;
+
+        if (row0 < 0) {
+            row0 = 0;
+        }
+
+        if (col1 > 15) {
+            col1 = 15;
+        }
+
+        if (col0 < 0) {
+            col0 = 0;
+        }
+
+        if (row1 > 15) {
+            row1 = 15;
+        }
+
+        py = gridY * (float)row0 + tile->tilePos.y + WaterTileConsts.TileOffset.y;
+
+        for (row = row0; row <= row1; row++, py += gridY) {
+            float px = gridX * (float)col0 + tile->tilePos.x + WaterTileConsts.TileOffset.x;
+            int col;
+
+            for (col = col0; col <= col1; col++, px += gridX) {
+                float dist2 = (x - px) * (x - px) + (y - py) * (y - py);
+                float h = height / sqrtf(dist2);
+
+                if (dist2 - 1.0f < 0.0f) {
+                    h = height;
+                }
+
+                if (!add) {
+                    if (fabsf(h) < fabsf(buf->height[row][col])) {
+                        h = buf->height[row][col];
+                    }
+                }
+                else {
+                    h += tile->buf[g_WaterBufShown].height[row][col];
+                }
+
+                buf->height[row][col] = h;
+
+                if (row < 2 && tile->tileLinkTop != NO_LINK) {
+                    WaterTileBuf *other = &tiles[tile->tileLinkTop].buf[g_WaterBufCur];
+
+                    if (row == 0) {
+                        other->heightBottom[col] = buf->height[row][col];
+                    }
+                    else {
+                        other->heightBottom2[col] = buf->height[row][col];
+                    }
+                }
+
+                if (col < 2 && tile->tileLinkLeft != NO_LINK) {
+                    WaterTileBuf *other = &tiles[tile->tileLinkLeft].buf[g_WaterBufCur];
+
+                    if (col == 0) {
+                        other->heightRight[row] = buf->height[row][col];
+                    }
+                    else {
+                        other->heightRight2[row] = buf->height[row][col];
+                    }
+                }
+
+                if (row == 15 && tile->tileLinkBottom != NO_LINK) {
+                    tiles[tile->tileLinkBottom].buf[g_WaterBufCur].heightTop[col] = buf->height[row][col];
+                }
+
+                if (col == 15 && tile->tileLinkRight != NO_LINK) {
+                    tiles[tile->tileLinkRight].buf[g_WaterBufCur].heightLeft[row] = buf->height[row][col];
+                }
+
+                if (tile->tileLinkCorners[0] != NO_LINK) {
+                    WaterTileBuf *other = &tiles[tile->tileLinkCorners[0]].buf[g_WaterBufCur];
+
+                    if (col == 0 && row == 0) {
+                        other->heightCorner[3] = buf->height[0][0];
+                    }
+
+                    if (col == 1 && row == 0) {
+                        other->heightCorner[4] = buf->height[0][1];
+                    }
+
+                    if (col == 0 && row == 1) {
+                        other->heightCorner[5] = buf->height[1][0];
+                    }
+                }
+
+                if (tile->tileLinkCorners[1] != NO_LINK && col == 15 && row == 0) {
+                    tiles[tile->tileLinkCorners[1]].buf[g_WaterBufCur].heightCorner[2] = buf->height[0][15];
+                }
+
+                if (tile->tileLinkCorners[2] != NO_LINK && col == 0 && row == 15) {
+                    tiles[tile->tileLinkCorners[2]].buf[g_WaterBufCur].heightCorner[1] = buf->height[15][0];
+                }
+
+                if (tile->tileLinkCorners[3] != NO_LINK && col == 15 && row == 15) {
+                    tiles[tile->tileLinkCorners[3]].buf[g_WaterBufCur].heightCorner[0] = buf->height[15][15];
+                }
+            }
+        }
+    }
+}
 
 // 0x017c3b0 (0x24 bytes)
-void WaterTile_PutDrop_Thunk
-               (double param_1,double param_2,double param_3,double param_4,double param_5,
-               WaterTile *param_6,int param_7)
-
+void WaterTile_PutDrop_Thunk(WaterTile *tiles, int count, float x, float y, float radius, float height)
 {
-  WaterTile_PutDrop((float)param_1,(float)param_2,(float)param_3,(float)param_4,param_6,param_7,
-                    (float)param_5);
-  return;
+    WaterTile_PutDrop(tiles, count, x, y, radius, height, 0);
 }
-
 
 // 0x017c3e0 (0x2dc bytes)
 // inlined: FastRSqrt @0x17c628
-float WaterTile_GetHeight(float x,float y,float z)
-
+/* The shown water surface at (x, y): its height in *outZ and its normal in *outNormal (either
+   may be NULL). Returns 0 if there is no water tile there. */
+int WaterTile_GetHeight(float x, float y, float z, float *outZ, Vec4 *outNormal)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  int iVar6;
-  int iVar9;
-  longlong lVar7;
-  longlong lVar8;
-  float *in_r6;
-  int iVar10;
-  float *in_r7;
-  float *pfVar11;
-  int iVar12;
-  int iVar13;
-  double dVar14;
-  double dVar15;
-  double dVar16;
-  double dVar17;
-  double dVar18;
-  double dVar19;
-  double dVar20;
-  
-  dVar14 = (double)x;
-  dVar17 = (double)y;
-  dVar18 = (double)x;
-  iVar9 = WaterTile_LookupTile(x,y,z);
-  if (-1 < iVar9) {
-    pfVar11 = (float *)((int)WaterTiles + iVar9 * 0x11a0);
-    dVar18 = (double)(float)(dVar14 - (double)(*pfVar11 + WaterTileConsts.TileOffset.x));
-    dVar17 = (double)(float)(dVar17 - (double)(pfVar11[1] + WaterTileConsts.TileOffset.y));
-    lVar7 = FastDoubleToInt
-                      ((double)(float)(dVar18 / (double)WaterTileConsts.TileGridSize.x));
-    lVar8 = FastDoubleToInt
-                      ((double)(float)(dVar17 / (double)WaterTileConsts.TileGridSize.y));
-    dVar14 = (double)FastIntToDouble(lVar7);
-    dVar20 = (double)(float)(-(double)(float)(dVar14 * (double)WaterTileConsts.TileGridSize.x -
-                                             dVar18) / (double)WaterTileConsts.TileGridSize.x);
-    dVar14 = (double)FastIntToDouble(lVar8);
-    dVar19 = (double)WaterTileConsts.TileGridSize.y;
-    iVar12 = (int)lVar7;
-    iVar10 = DAT_0073a9f4 * 0x5c0;
-    iVar9 = (int)(lVar7 << 2);
-    iVar6 = iVar9 + (int)(lVar8 << 6) + iVar10;
-    dVar18 = (double)*(float *)((int)pfVar11 + iVar6 + 0x50);
-    if (iVar12 == 0xf) {
-      fVar1 = *(float *)((int)pfVar11 + (int)(lVar8 << 2) + iVar10 + 0x510);
-    }
-    else {
-      fVar1 = *(float *)((int)pfVar11 + iVar6 + 0x54);
-    }
-    iVar13 = (int)lVar8;
-    if (iVar13 == 0xf) {
-      fVar2 = *(float *)((int)pfVar11 + iVar9 + iVar10 + 0x4d0);
-    }
-    else {
-      fVar2 = *(float *)((int)pfVar11 + iVar6 + 0x90);
-    }
-    dVar15 = (double)fVar2;
-    if ((iVar12 == 0xf) && (iVar13 == 0xf)) {
-      dVar16 = (double)pfVar11[DAT_0073a9f4 * 0x170 + 0x177];
-    }
-    else if (iVar12 == 0xf) {
-      dVar16 = (double)*(float *)((int)pfVar11 + (int)(lVar8 << 2) + iVar10 + 0x514);
-    }
-    else if (iVar13 == 0xf) {
-      dVar16 = (double)*(float *)((int)pfVar11 + iVar9 + iVar10 + 0x4d4);
-    }
-    else {
-      dVar16 = (double)*(float *)((int)pfVar11 + iVar6 + 0x94);
-    }
-    if (in_r6 != (float *)0x0) {
-      fVar2 = (float)((double)(float)((double)fVar1 - dVar18) * dVar20 + dVar18);
-      *in_r6 = ((float)((double)(float)(dVar16 - dVar15) * dVar20 + dVar15) - fVar2) *
-               (float)(-(double)(float)(dVar14 * dVar19 - dVar17) / dVar19) + fVar2 + pfVar11[2];
-      dVar19 = (double)WaterTileConsts.TileGridSize.y;
-    }
-    if (in_r7 != (float *)0x0) {
-      dVar14 = (double)WaterTileConsts.TileGridSize.x;
-      in_r7[1] = (float)(dVar14 * (double)(float)(dVar15 - dVar18));
-      *in_r7 = (float)((double)(float)((double)fVar1 - dVar18) * dVar19);
-      in_r7[2] = -(float)(dVar14 * dVar19);
-      fVar1 = in_r7[1];
-      fVar2 = *in_r7;
-      fVar3 = in_r7[2];
-      dVar18 = 0.0;
-      in_r7[3] = 0.0;
-      fVar4 = fVar3 * fVar3 + fVar2 * fVar2 + fVar1 * fVar1;
-      dVar14 = dVar18;
-      dVar17 = dVar18;
-      if (SQRT(fVar4) != 0.0) {
-        fVar5 = 1.0 / SQRT(fVar4);
-        fVar5 = -(fVar4 * fVar5 * fVar5 - 1.0) * fVar5 * 0.5 + fVar5;
-        fVar5 = -(fVar4 * fVar5 * fVar5 - 1.0) * fVar5 * 0.5 + fVar5;
-        fVar5 = -(fVar4 * fVar5 * fVar5 - 1.0) * fVar5 * 0.5 + fVar5;
-        dVar18 = (double)(fVar2 * fVar5);
-        dVar14 = (double)(fVar1 * fVar5);
-        dVar17 = (double)(fVar3 * fVar5);
-      }
-      *in_r7 = (float)dVar18;
-      in_r7[1] = (float)dVar14;
-      in_r7[2] = (float)dVar17;
-    }
-  }
-  return (float)dVar18;
-}
+    WaterTile *tile;
+    WaterTileBuf *buf;
+    float dx, dy;
+    float fx, fy;
+    float h00, h10, h01, h11;
+    int gx, gy;
+    int i = WaterTile_LookupTile(x, y, z);
 
+    if (i < 0) {
+        return 0;
+    }
+
+    tile = &WaterTiles[i];
+    dx = x - (tile->tilePos.x + WaterTileConsts.TileOffset.x);
+    dy = y - (tile->tilePos.y + WaterTileConsts.TileOffset.y);
+    gx = FastDoubleToInt(dx / WaterTileConsts.TileGridSize.x);
+    gy = FastDoubleToInt(dy / WaterTileConsts.TileGridSize.y);
+    fx = (dx - FastIntToDouble(gx) * WaterTileConsts.TileGridSize.x) / WaterTileConsts.TileGridSize.x;
+    fy = (dy - FastIntToDouble(gy) * WaterTileConsts.TileGridSize.y) / WaterTileConsts.TileGridSize.y;
+
+    /* the four corners of the square, from the border arrays at the far edges */
+    buf = &tile->buf[g_WaterBufShown];
+    h00 = buf->height[gy][gx];
+    h10 = gx == 15 ? buf->heightRight[gy] : buf->height[gy][gx + 1];
+    h01 = gy == 15 ? buf->heightBottom[gx] : buf->height[gy + 1][gx];
+
+    if (gx == 15 && gy == 15) {
+        h11 = buf->heightCorner[3];
+    }
+    else if (gx == 15) {
+        h11 = buf->heightRight[gy + 1];
+    }
+    else if (gy == 15) {
+        h11 = buf->heightBottom[gx + 1];
+    }
+    else {
+        h11 = buf->height[gy + 1][gx + 1];
+    }
+
+    if (outZ != NULL) {
+        float top = (h10 - h00) * fx + h00;
+        float bottom = (h11 - h01) * fx + h01;
+
+        *outZ = (bottom - top) * fy + top + tile->tilePos.z;
+    }
+
+    if (outNormal != NULL) {
+        float len2;
+
+        outNormal->y = WaterTileConsts.TileGridSize.x * (h01 - h00);
+        outNormal->x = (h10 - h00) * WaterTileConsts.TileGridSize.y;
+        outNormal->z = -(WaterTileConsts.TileGridSize.x * WaterTileConsts.TileGridSize.y);
+        outNormal->w = 0.0f;
+
+        len2 = outNormal->z * outNormal->z + (outNormal->x * outNormal->x + outNormal->y * outNormal->y);
+
+        if (sqrtf(len2) != 0.0f) {
+            float scale = FastRSqrtInline(len2);
+
+            outNormal->x *= scale;
+            outNormal->y *= scale;
+            outNormal->z *= scale;
+        }
+        else {
+            outNormal->x = 0.0f;
+            outNormal->y = 0.0f;
+            outNormal->z = 0.0f;
+        }
+    }
+
+    return 1;
+}
 
 // 0x017c6bc (0x94 bytes)
+/* the tile's 17x17 vertex positions from the staged heights */
 void WaterTile_BuildVertexGrid(WaterTile *tile)
-
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float *pfVar4;
-  float *pfVar5;
-  int iVar6;
-  float *pfVar7;
-  float *pfVar8;
-  longlong lVar9;
-  
-  iVar6 = 0;
-  pfVar7 = (float *)(g_ScratchBuf + 0x2000);
-  pfVar4 = (float *)(g_ScratchBuf + 0x70);
-  fVar2 = (tile->tilePos).y + WaterTileConsts.TileOffset.y;
-  do {
-    lVar9 = 0x11;
-    fVar3 = (tile->tilePos).x + WaterTileConsts.TileOffset.x;
-    pfVar5 = pfVar4;
-    pfVar8 = pfVar7;
-    do {
-      fVar1 = *pfVar5;
-      *pfVar8 = fVar3;
-      pfVar8[1] = fVar2;
-      pfVar5 = pfVar5 + 1;
-      pfVar7 = pfVar8 + 3;
-      pfVar8[2] = fVar1 + (tile->tilePos).z;
-      fVar3 = fVar3 + WaterTileConsts.TileGridSize.x;
-      lVar9 = lVar9 + -1;
-      pfVar8 = pfVar7;
-    } while (lVar9 != 0);
-    iVar6 = iVar6 + 1;
-    pfVar4 = pfVar4 + 0x18;
-    fVar2 = fVar2 + WaterTileConsts.TileGridSize.y;
-  } while (iVar6 < 0x11);
-  return;
+    WaterStage *stage = (WaterStage *)g_ScratchBuf;
+    Vec3 *out = &g_WaterGrid[0][0];
+    float y = tile->tilePos.y + WaterTileConsts.TileOffset.y;
+    int row;
+    int col;
+
+    for (row = 0; row < GRID_VERTS; row++) {
+        float x = tile->tilePos.x + WaterTileConsts.TileOffset.x;
+
+        for (col = 0; col < GRID_VERTS; col++) {
+            out->x = x;
+            out->y = y;
+            out->z = stage->grid[row + 1][4 + col] + tile->tilePos.z;
+            out++;
+            x += WaterTileConsts.TileGridSize.x;
+        }
+
+        y += WaterTileConsts.TileGridSize.y;
+    }
 }
 
+/* the first vertex of cell idx (4x4 cells of 4x4 squares) in the 17x17 grid */
+static inline int CellFirstVert(u32 idx)
+{
+    return (idx & 3) * CELL_SQUARES + ((int)idx >> 2) * CELL_SQUARES * GRID_VERTS;
+}
 
 // 0x017c750 (0x120 bytes)
-void WaterTile_DrawCellBase(WaterTile *tile,uint idx)
-
+/* a cell with the wobbling uv table and a flat grey */
+void WaterTile_DrawCellBase(WaterTile *tile, u32 idx)
 {
-  undefined4 uVar1;
-  short sVar2;
-  int iVar3;
-  int iVar4;
-  undefined4 *puVar5;
-  undefined4 *puVar6;
-  short *psVar7;
-  undefined4 *puVar8;
-  longlong lVar9;
-  
-  puVar5 = (undefined4 *)idol::AllocateMemAlign(FrameHeap,0x450,0x10);
-  lVar9 = 0x2e;
-  puVar6 = &DAT_0073aac0;
-  iVar3 = g_ScratchBuf +
-          ((idx & 3) * 4 +
-          (int)((longlong)((int)idx >> 2) << 6) + (int)((longlong)((int)idx >> 2) << 2)) * 0xc +
-          0x2000;
-  psVar7 = &DAT_0073aa60;
-  puVar8 = puVar5;
-  do {
-    sVar2 = *psVar7;
-    psVar7 = psVar7 + 1;
-    iVar4 = sVar2 * 3;
-    *puVar8 = *(undefined4 *)(iVar3 + sVar2 * 0xc);
-    puVar8[1] = *(undefined4 *)(iVar3 + (iVar4 + 1) * 4);
-    puVar8[2] = *(undefined4 *)(iVar3 + (iVar4 + 2) * 4);
-    puVar8[3] = *puVar6;
-    uVar1 = puVar6[1];
-    puVar8[5] = 0x7f7f7f7f;
-    puVar6 = puVar6 + 2;
-    puVar8[4] = uVar1;
-    puVar8 = puVar8 + 6;
-    lVar9 = lVar9 + -1;
-  } while (lVar9 != 0);
-  FastDrawStripColor(0x2e,puVar5,9);
-  return;
-}
+    WaterStripVert *verts = (WaterStripVert *)idol::AllocateMemAlign(FrameHeap, CELL_STRIP_VERTS * sizeof(WaterStripVert), 16);
+    Vec3 *grid = &g_WaterGrid[0][0] + CellFirstVert(idx);
+    int i;
 
+    for (i = 0; i < CELL_STRIP_VERTS; i++) {
+        Vec3 *pos = &grid[g_WaterStripIdx[i]];
+
+        verts[i].x = pos->x;
+        verts[i].y = pos->y;
+        verts[i].z = pos->z;
+        verts[i].u = g_WaterUV[i].x;
+        verts[i].v = g_WaterUV[i].y;
+        verts[i].color = 0x7f7f7f7f;
+    }
+
+    FastDrawStripColor(CELL_STRIP_VERTS, verts, DRAW_STRIP_TEXTURED);
+}
 
 // 0x017c888 (0x28c bytes)
-void WaterTile_DrawCellOvl(WaterTile *tile,uint idx)
-
+/* a cell with the shading pass's env-map uvs and its colours at half strength (the halving is
+   done in VMX) */
+void WaterTile_DrawCellOvl(WaterTile *tile, u32 idx)
 {
-  undefined4 uVar1;
-  int iVar2;
-  int iVar3;
-  longlong lVar4;
-  longlong lVar5;
-  ulonglong uVar6;
-  longlong lVar7;
-  short *psVar8;
-  undefined4 *puVar10;
-  longlong lVar9;
-  ulonglong uVar11;
-  undefined8 in_LR;
-  longlong lVar12;
-  GPiece<16> auVar13;
-  GPiece<16> auVar14;
-  GPiece<16> auVar15;
-  GPiece<16> auVar16;
-  GPiece<16> auVar17;
-  GPiece<16> auVar18;
-  GPiece<16> auVar19;
-  GPiece<16> auVar20;
-  GPiece<16> auVar21;
-  GPiece<16> auVar22;
-  GPiece<16> auVar23;
-  GPiece<16> auVar24;
-  GPiece<16> auVar25;
-  
-  lVar5 = idol::AllocateMemAlign(FrameHeap,0x450,0x10);
-  uVar6 = ((ulonglong)idx & 3) * 4 + (longlong)((int)idx >> 2) * 0x44;
-  auVar17 = loadVectorLeftIndexed(in_LR,0x17c870);
-  auVar17 = auVar17 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar18 = auVar17 | auVar17 << 0x20 | auVar17 << 0x40 | auVar17 << 0x60;
-  auVar17 = loadVectorLeftIndexed(4,0x17c870);
-  auVar17 = auVar17 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar16 = auVar17 | auVar17 << 0x20 | auVar17 << 0x40 | auVar17 << 0x60;
-  iVar2 = g_ScratchBuf + (int)uVar6 * 0xc + 0x2000;
-  auVar17 = loadVectorLeftIndexed(8,0x17c870);
-  auVar14 = loadVectorLeftIndexed(0xc,0x17c870);
-  auVar13 = loadVectorLeftIndexed(0x10,0x17c870);
-  auVar17 = auVar17 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar15 = auVar17 | auVar17 << 0x20 | auVar17 << 0x40 | auVar17 << 0x60;
-  iVar3 = g_ScratchBuf + (int)((uVar6 & 0xffffffff) << 3) + 0x780;
-  auVar17 = auVar14 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar14 = auVar17 | auVar17 << 0x20 | auVar17 << 0x40 | auVar17 << 0x60;
-  auVar17 = auVar13 >> 0x60 & (GPiece<16>)0xffffffff;
-  psVar8 = &DAT_0073aa60;
-  uVar6 = (ulonglong)g_ScratchBuf + (uVar6 & 0x3fffffff) * 4 + 0x1088 & 0xffffffff;
-  lVar7 = lVar5 + 0x14;
-  lVar12 = 0x2e;
-  lVar9 = lVar5;
-  do {
-    uVar11 = (ulonglong)*psVar8;
-    auVar13 = ZEXT416(0xfffffff8);
-    auVar20 = ZEXT416(0xffffffff);
-    auVar21 = auVar20 | auVar20 << 0x20 | auVar20 << 0x40 | auVar20 << 0x60;
-    puVar10 = (undefined4 *)lVar9;
-    *puVar10 = *(undefined4 *)(iVar2 + *psVar8 * 0xc);
-    puVar10[1] = *(undefined4 *)(iVar2 + (int)(uVar11 * 3 + 1) * 4);
-    lVar4 = (uVar11 & 0x3fffffff) * 4;
-    puVar10[2] = *(undefined4 *)(iVar2 + (int)(uVar11 * 3 + 2) * 4);
-    auVar20 = ZEXT416(0xffffffff);
-    auVar23 = auVar20 | auVar20 << 0x20 | auVar20 << 0x40 | auVar20 << 0x60;
-    puVar10[3] = *(undefined4 *)(iVar3 + (int)((uVar11 & 0x7fffffff) << 3));
-    auVar20 = ZEXT416(0xffffffff);
-    auVar25 = auVar20 | auVar20 << 0x20 | auVar20 << 0x40 | auVar20 << 0x60;
-    puVar10[4] = *(undefined4 *)(iVar3 + (int)((uVar11 & 0x7fffffff) * 2 + 1) * 4);
-    auVar19 = loadVectorLeftIndexed(lVar4,uVar6);
-    auVar20 = loadVectorRightIndexed(lVar4 + 0x10,uVar6);
-    auVar22 = vectorShiftLeftIntegerWord(auVar21,auVar21);
-    auVar19 = auVar19 | auVar20;
-    auVar20 = ZEXT416(0xfffffff0);
-    auVar24 = vectorShiftLeftIntegerWord(auVar23,auVar23);
-    auVar25 = vectorShiftLeftIntegerWord(auVar25,auVar25);
-    auVar21 = vectorRotateLeftIntegerWord
-                        (auVar19,auVar13 | auVar13 << 0x20 | auVar13 << 0x40 | auVar13 << 0x60);
-    auVar20 = vectorRotateLeftIntegerWord
-                        (auVar19,auVar20 | auVar20 << 0x20 | auVar20 << 0x40 | auVar20 << 0x60);
-    auVar23 = vectorLogicalAnd(auVar19,auVar15);
-    auVar13 = vectorShiftRightWord(auVar19,auVar14);
-    auVar21 = vectorLogicalAnd(auVar21,auVar15);
-    auVar19 = vectorLogicalAnd(auVar20,auVar15);
-    auVar23 = vectorConvertFromUnsignedFixedPointWord(auVar23,0);
-    auVar20 = vectorConvertFromUnsignedFixedPointWord(auVar13,0);
-    auVar13 = ZEXT416(0xffffffff);
-    auVar13 = auVar13 | auVar13 << 0x20 | auVar13 << 0x40 | auVar13 << 0x60;
-    auVar21 = vectorConvertFromUnsignedFixedPointWord(auVar21,0);
-    auVar19 = vectorConvertFromUnsignedFixedPointWord(auVar19,0);
-    lVar9 = lVar9 + 0x18;
-    psVar8 = psVar8 + 1;
-    auVar23 = vectorMultiplyAddFloatingPoint(auVar23,auVar18,auVar24);
-    auVar21 = vectorMultiplyAddFloatingPoint(auVar21,auVar18,auVar22);
-    auVar19 = vectorMultiplyAddFloatingPoint(auVar19,auVar18,auVar25);
-    auVar13 = vectorShiftLeftIntegerWord(auVar13,auVar13);
-    auVar13 = vectorMultiplyAddFloatingPoint(auVar20,auVar18,auVar13);
-    auVar20 = vectorCompareGreaterThanFloatingPoint(auVar23,auVar16);
-    auVar22 = vectorCompareGreaterThanFloatingPoint(auVar21,auVar16);
-    auVar23 = vectorConditionalSelect(auVar23,auVar16,auVar20);
-    auVar24 = vectorCompareGreaterThanFloatingPoint(auVar19,auVar16);
-    auVar20 = vectorConditionalSelect(auVar21,auVar16,auVar22);
-    auVar19 = vectorConditionalSelect(auVar19,auVar16,auVar24);
-    auVar23 = vectorAddFloatingPoint(auVar23,auVar18);
-    auVar22 = vectorCompareGreaterThanFloatingPoint(auVar13,auVar16);
-    auVar21 = vectorAddFloatingPoint(auVar20,auVar18);
-    auVar20 = vectorConditionalSelect(auVar13,auVar16,auVar22);
-    auVar19 = vectorAddFloatingPoint(auVar19,auVar18);
-    auVar13 = ZEXT416(8);
-    auVar20 = vectorAddFloatingPoint(auVar20,auVar18);
-    auVar24 = vectorCompareGreaterThanFloatingPoint(auVar23,auVar16);
-    auVar22 = vectorCompareGreaterThanFloatingPoint(auVar21,auVar16);
-    auVar23 = vectorConditionalSelect(auVar23,auVar16,auVar24);
-    auVar21 = vectorConditionalSelect(auVar21,auVar16,auVar22);
-    auVar22 = vectorCompareGreaterThanFloatingPoint(auVar19,auVar16);
-    auVar19 = vectorConditionalSelect(auVar19,auVar16,auVar22);
-    auVar21 = vectorConvertToSignedFixedPointWordSaturate(auVar21,0);
-    auVar22 = vectorCompareGreaterThanFloatingPoint(auVar20,auVar16);
-    auVar23 = vectorConvertToSignedFixedPointWordSaturate(auVar23,0);
-    auVar20 = vectorConditionalSelect(auVar20,auVar16,auVar22);
-    auVar19 = vectorConvertToSignedFixedPointWordSaturate(auVar19,0);
-    auVar20 = vectorConvertToSignedFixedPointWordSaturate(auVar20,0);
-    auVar21 = vectorShiftLeftIntegerWord
-                        (auVar21,auVar13 | auVar13 << 0x20 | auVar13 << 0x40 | auVar13 << 0x60);
-    auVar19 = vectorShiftLeftIntegerWord
-                        (auVar19,auVar17 | auVar17 << 0x20 | auVar17 << 0x40 | auVar17 << 0x60);
-    auVar13 = vectorShiftLeftIntegerWord(auVar20,auVar14);
-    auVar13 = (auVar23 | auVar21 | auVar19 | auVar13) >> 0x60 & (GPiece<16>)0xffffffff;
-    uVar1 = storeVectorElementWordIndexed
-                      (auVar13 | auVar13 << 0x20 | auVar13 << 0x40 | auVar13 << 0x60,0,lVar7);
-    *(undefined4 *)((uint)lVar7 & 0xfffffffc) = uVar1;
-    lVar7 = lVar7 + 0x18;
-    lVar12 = lVar12 + -1;
-  } while (lVar12 != 0);
-  FastDrawStripColor(0x2e,lVar5,9);
-  return;
-}
+    WaterStripVert *verts = (WaterStripVert *)idol::AllocateMemAlign(FrameHeap, CELL_STRIP_VERTS * sizeof(WaterStripVert), 16);
+    WaterStage *stage = (WaterStage *)g_ScratchBuf;
+    int first = CellFirstVert(idx);
+    Vec3 *grid = &g_WaterGrid[0][0] + first;
+    int i;
 
+    for (i = 0; i < CELL_STRIP_VERTS; i++) {
+        int v = g_WaterStripIdx[i];
+        u32 color = stage->color[first + v];
+
+        verts[i].x = grid[v].x;
+        verts[i].y = grid[v].y;
+        verts[i].z = grid[v].z;
+        verts[i].u = stage->envUV[first + v].x;
+        verts[i].v = stage->envUV[first + v].y;
+        verts[i].color = ScaleChannel(color & 0xff, 0.5f) |
+                         ScaleChannel((color >> 8) & 0xff, 0.5f) << 8 |
+                         ScaleChannel((color >> 16) & 0xff, 0.5f) << 16 |
+                         ScaleChannel(color >> 24, 0.5f) << 24;
+    }
+
+    FastDrawStripColor(CELL_STRIP_VERTS, verts, DRAW_STRIP_TEXTURED);
+}
 
 // 0x017cb20 (0x494 bytes)
-void WaterTile_CullAndDrawCell(WaterTile *tile,uint idx,int clipMode)
-
+/* Frustum-tests a cell's four corners (in the 1024x units of the camera matrices) and queues it
+   for the VU draw (STUB_000e9f28; 0xe with clipping, 0xc without). clipMode 1 drops the clipping
+   when no corner is outside the guard band. */
+void WaterTile_CullAndDrawCell(WaterTile *tile, u32 idx, int clipMode)
 {
-  longlong lVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  undefined4 uVar6;
-  ulonglong *puVar7;
-  float fVar8;
-  float fVar9;
-  float fVar10;
-  uint uVar11;
-  float fVar12;
-  float fVar13;
-  float fVar14;
-  float fVar15;
-  float fVar16;
-  float fVar17;
-  float fVar18;
-  float fVar19;
-  float fVar20;
-  float fVar21;
-  float fVar22;
-  float fVar23;
-  float fVar24;
-  ulonglong uVar25;
-  ulonglong uVar26;
-  ulonglong unaff_r24;
-  ulonglong uVar27;
-  ulonglong unaff_r25;
-  ulonglong uVar28;
-  ulonglong unaff_r26;
-  int iVar29;
-  ulonglong unaff_r27;
-  ulonglong unaff_r28;
-  ulonglong unaff_r29;
-  ulonglong unaff_r30;
-  longlong lVar30;
-  float *pfVar31;
-  ulonglong unaff_r31;
-  ulonglong in_LR;
-  ulonglong in_f30;
-  ulonglong in_f31;
-  double dVar32;
-  GPiece<16> auVar33;
-  GPiece<16> auVar34;
-  GPiece<16> auVar35;
-  GPiece<16> auVar36;
-  GPiece<16> auVar37;
-  GPiece<16> auVar38;
-  GPiece<16> auVar39;
-  GPiece<16> auVar40;
-  
-  uVar25 = ZEXT48(&stack0x00000000);
-  lVar1 = uVar25 - 0x130;
-  puVar7 = (ulonglong *)lVar1;
-  *puVar7 = uVar25;
-  puVar7[0x28] = in_LR;
-  puVar7[0x24] = in_f30;
-  puVar7[0x25] = in_f31;
-  puVar7[0x1f] = unaff_r27;
-  *(uint *)(puVar7 + 0x1a) = idx;
-  puVar7[0x23] = unaff_r31;
-  *(uint *)((int)puVar7 + 0xd4) = idx;
-  *(uint *)(puVar7 + 0x1b) = idx;
-  *(uint *)((int)puVar7 + 0xdc) = idx;
-  puVar7[0x22] = unaff_r30;
-  puVar7[0x21] = unaff_r29;
-  puVar7[0x20] = unaff_r28;
-  puVar7[0x1e] = unaff_r26;
-  puVar7[0x1d] = unaff_r25;
-  puVar7[0x1c] = unaff_r24;
-  if (clipMode != 0) {
-    auVar34 = ZEXT416(3);
-    auVar35 = ZEXT416(0xffffffff);
-    auVar36 = auVar35 | auVar35 << 0x20 | auVar35 << 0x40 | auVar35 << 0x60;
-    auVar35 = ZEXT416(0xffffffff);
-    auVar38 = auVar35 | auVar35 << 0x20 | auVar35 << 0x40 | auVar35 << 0x60;
-    auVar35 = ZEXT416(2);
-    auVar33 = vectorLogicalAnd(*(undefined1 (*) [16])(puVar7 + 0x1a),
-                               auVar34 | auVar34 << 0x20 | auVar34 << 0x40 | auVar34 << 0x60);
-    auVar37 = vectorShiftLeftIntegerWord(auVar36,auVar36);
-    auVar34 = loadVectorLeftIndexed(0xd0,0x17cb14);
-    auVar39 = vectorShiftLeftIntegerWord(auVar38,auVar38);
-    auVar34 = auVar34 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar36 = auVar34 | auVar34 << 0x20 | auVar34 << 0x40 | auVar34 << 0x60;
-    auVar38 = loadVectorLeftIndexed(8,0x73aa00);
-    auVar33 = vectorConvertFromSignedFixedPointWord(auVar33,0);
-    auVar40 = loadVectorLeftIndexed(0xc,0x73aa00);
-    auVar37 = vectorMultiplyAddFloatingPoint(auVar38,auVar36,auVar37);
-    auVar34 = vectorShiftRightAlgebraicWord
-                        (*(undefined1 (*) [16])(puVar7 + 0x1a),
-                         auVar35 | auVar35 << 0x20 | auVar35 << 0x40 | auVar35 << 0x60);
-    auVar35 = vectorMultiplyAddFloatingPoint(auVar40,auVar36,auVar39);
-    auVar36 = loadVectorLeftIndexed(0xd0,(longlong)(int)tile);
-    auVar34 = vectorConvertFromSignedFixedPointWord(auVar34,0);
-    auVar36 = vectorAddFloatingPoint(auVar36,auVar38);
-    auVar38 = loadVectorLeftIndexed(4,(longlong)(int)tile);
-    fVar4 = (tile->tilePos).z;
-    auVar38 = vectorAddFloatingPoint(auVar38,auVar40);
-    auVar39 = vectorMultiplyAddFloatingPoint(auVar37,auVar33,auVar37);
-    uVar28 = 0;
-    auVar40 = vectorMultiplyAddFloatingPoint(auVar35,auVar34,auVar35);
-    auVar33 = vectorMultiplyAddFloatingPoint(auVar37,auVar33,auVar36);
-    auVar35 = vectorMultiplyAddFloatingPoint(auVar35,auVar34,auVar38);
-    iVar29 = 0;
-    auVar36 = vectorAddFloatingPoint(auVar36,auVar39);
-    uVar27 = 0;
-    lVar30 = uVar25 - 0xa0;
-    auVar38 = vectorAddFloatingPoint(auVar38,auVar40);
-    auVar34 = auVar33 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar33 = auVar34 | auVar34 << 0x20 | auVar34 << 0x40 | auVar34 << 0x60;
-    auVar34 = auVar35 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar35 = auVar34 | auVar34 << 0x20 | auVar34 << 0x40 | auVar34 << 0x60;
-    auVar34 = auVar36 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar36 = auVar34 | auVar34 << 0x20 | auVar34 << 0x40 | auVar34 << 0x60;
-    uVar6 = storeVectorElementWordIndexed(auVar33,0x90,lVar1);
-    *(undefined4 *)(puVar7 + 0x12) = uVar6;
-    uVar6 = storeVectorElementWordIndexed(auVar35,0x94,lVar1);
-    *(undefined4 *)((int)puVar7 + 0x94) = uVar6;
-    *(float *)(puVar7 + 0x13) = fVar4;
-    *(undefined4 *)((int)puVar7 + 0x9c) = 0x3f800000;
-    auVar34 = auVar38 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar34 = auVar34 | auVar34 << 0x20 | auVar34 << 0x40 | auVar34 << 0x60;
-    uVar6 = storeVectorElementWordIndexed(auVar36,0xa0,lVar1);
-    *(undefined4 *)(puVar7 + 0x14) = uVar6;
-    uVar6 = storeVectorElementWordIndexed(auVar35,0xa4,lVar1);
-    *(undefined4 *)((int)puVar7 + 0xa4) = uVar6;
-    uVar6 = storeVectorElementWordIndexed(auVar33,0xb0,lVar1);
-    *(undefined4 *)(puVar7 + 0x16) = uVar6;
-    *(float *)(puVar7 + 0x15) = fVar4;
-    *(undefined4 *)((int)puVar7 + 0xac) = 0x3f800000;
-    uVar6 = storeVectorElementWordIndexed(auVar34,0xb4,lVar1);
-    *(undefined4 *)((int)puVar7 + 0xb4) = uVar6;
-    *(float *)(puVar7 + 0x17) = fVar4;
-    uVar6 = storeVectorElementWordIndexed(auVar36,0xc0,lVar1);
-    *(undefined4 *)(puVar7 + 0x18) = uVar6;
-    *(undefined4 *)((int)puVar7 + 0xbc) = 0x3f800000;
-    uVar6 = storeVectorElementWordIndexed(auVar34,0xc4,lVar1);
-    *(undefined4 *)((int)puVar7 + 0xc4) = uVar6;
-    *(float *)(puVar7 + 0x19) = fVar4;
-    *(undefined4 *)((int)puVar7 + 0xcc) = 0x3f800000;
-    dVar32 = 1024.0;
-    do {
-      fVar8 = GameCamera.posZ;
-      fVar3 = GameCamera.posY;
-      fVar15 = GameCamera.mtx3.v1.z;
-      fVar14 = GameCamera.mtx3.v1.y;
-      fVar13 = GameCamera.mtx3.v1.x;
-      fVar9 = GameCamera.mtx3.v0.x;
-      pfVar31 = (float *)lVar30;
-      fVar4 = *pfVar31 - GameCamera.posX;
-      *(float *)(puVar7 + 0xe) = fVar4;
-      fVar17 = GameCamera.mtx3.v2.x;
-      fVar16 = GameCamera.mtx3.v1.w;
-      fVar12 = GameCamera.mtx3.v0.z;
-      fVar10 = GameCamera.mtx3.v0.y;
-      fVar4 = (float)((double)fVar4 * dVar32);
-      fVar2 = (float)((double)(pfVar31[1] - fVar3) * dVar32);
-      *(float *)((int)puVar7 + 0x74) = pfVar31[1] - fVar3;
-      fVar21 = GameCamera.mtx3.v3.x;
-      fVar19 = GameCamera.mtx3.v2.z;
-      fVar18 = GameCamera.mtx3.v2.y;
-      fVar5 = pfVar31[3];
-      fVar3 = (float)((double)(pfVar31[2] - fVar8) * dVar32);
-      fVar8 = GameCamera.mtx3.v0.w * fVar4;
-      *(float *)(puVar7 + 0x10) = fVar4;
-      *(float *)((int)puVar7 + 0x84) = fVar2;
-      fVar22 = GameCamera.mtx3.v3.y;
-      fVar20 = GameCamera.mtx3.v2.w;
-      *(float *)(puVar7 + 0x11) = fVar3;
-      *(float *)((int)puVar7 + 0x8c) = fVar5;
-      fVar24 = GameCamera.mtx3.v3.w;
-      fVar23 = GameCamera.mtx3.v3.z;
-      *(float *)((int)puVar7 + 0x7c) = fVar5;
-      *(float *)(puVar7 + 0xe) = fVar4;
-      *(float *)((int)puVar7 + 0x74) = fVar2;
-      *(float *)(puVar7 + 0xf) = fVar3;
-      *(float *)(puVar7 + 0x10) = fVar21 * fVar5 + fVar17 * fVar3 + fVar9 * fVar4 + fVar13 * fVar2;
-      *(float *)((int)puVar7 + 0x84) =
-           fVar22 * fVar5 + fVar18 * fVar3 + fVar10 * fVar4 + fVar14 * fVar2;
-      *(float *)(puVar7 + 0x11) = fVar23 * fVar5 + fVar19 * fVar3 + fVar12 * fVar4 + fVar15 * fVar2;
-      *(float *)((int)puVar7 + 0x8c) = fVar24 * fVar5 + fVar20 * fVar3 + fVar8 + fVar16 * fVar2;
-      fVar8 = GameCamera.mtx4.v1.y * fVar2;
-      fVar9 = GameCamera.mtx4.v1.z * fVar2;
-      fVar10 = GameCamera.mtx4.v1.w * fVar2;
-      fVar12 = GameCamera.mtx4.v0.y * fVar4;
-      fVar13 = GameCamera.mtx4.v0.z * fVar4;
-      fVar14 = GameCamera.mtx4.v0.w * fVar4;
-      fVar15 = GameCamera.mtx4.v2.y * fVar3;
-      fVar16 = GameCamera.mtx4.v2.z * fVar3;
-      fVar17 = GameCamera.mtx4.v2.w * fVar3;
-      fVar18 = GameCamera.mtx4.v3.y * fVar5;
-      fVar19 = GameCamera.mtx4.v3.z * fVar5;
-      fVar20 = GameCamera.mtx4.v3.w * fVar5;
-      *(float *)(puVar7 + 0xe) =
-           GameCamera.mtx4.v3.x * fVar5 +
-           GameCamera.mtx4.v2.x * fVar3 +
-           GameCamera.mtx4.v0.x * fVar4 + GameCamera.mtx4.v1.x * fVar2;
-      *(float *)((int)puVar7 + 0x74) = fVar18 + fVar15 + fVar12 + fVar8;
-      *(float *)(puVar7 + 0xf) = fVar19 + fVar16 + fVar13 + fVar9;
-      *(float *)((int)puVar7 + 0x7c) = fVar20 + fVar17 + fVar14 + fVar10;
-      uVar26 = FastUpdateClipFlags(uVar25 - 0xb0);
-      uVar28 = (uVar28 & 0xffffff) << 8 | uVar26;
-      uVar26 = FastUpdateClipFlags(uVar25 - 0xc0);
-      iVar29 = iVar29 + 1;
-      uVar27 = (uVar27 & 0xffffff) << 8 | uVar26;
-      lVar30 = lVar30 + 0x10;
-    } while (iVar29 < 4);
-    uVar11 = (uint)uVar27;
-    if (clipMode == 1) {
-      if ((undefined *)(uVar11 & 0x1010101) == &DAT_01010101) {
-        return;
-      }
-      if ((uVar11 & 0x2020202) == 0x2020202) {
-        return;
-      }
-      if ((uVar11 & 0x4040404) == 0x4040404) {
-        return;
-      }
-      if ((uVar11 & 0x8080808) == 0x8080808) {
-        return;
-      }
-      if ((uVar11 & 0x20202020) == 0x20202020) {
-        return;
-      }
-      if ((int)uVar28 == 0) {
-        clipMode = 0;
-      }
-    }
-    else {
-      if ((undefined *)(uVar11 & 0x1010101) == &DAT_01010101) {
-        return;
-      }
-      if ((uVar11 & 0x2020202) == 0x2020202) {
-        return;
-      }
-      if ((uVar11 & 0x4040404) == 0x4040404) {
-        return;
-      }
-      if ((uVar11 & 0x8080808) == 0x8080808) {
-        return;
-      }
-      if ((uVar11 & 0x20202020) == 0x20202020) {
-        return;
-      }
-      clipMode = 0;
-    }
-  }
-  STUB_000e9f28((ZERO_MASK(clipMode) & 0xfffffffffffffffeU) + 0xe,
-                      (idx & 3) * 4 +
-                      (int)((longlong)((int)idx >> 2) << 6) + (int)((longlong)((int)idx >> 2) << 2))
-  ;
-  return;
-}
+    if (clipMode != 0) {
+        Vec4 corners[4];
+        float cell = WaterTileConsts.TileOffset.x * -0.5f;
+        float cellY = WaterTileConsts.TileOffset.y * -0.5f;
+        float cx = (float)(int)(idx & 3);
+        float cy = (float)((int)idx >> 2);
+        float x0 = cell * cx + (tile->tilePos.x + WaterTileConsts.TileOffset.x);
+        float y0 = cellY * cy + (tile->tilePos.y + WaterTileConsts.TileOffset.y);
+        float x1 = (tile->tilePos.x + WaterTileConsts.TileOffset.x) + (cell * cx + cell);
+        float y1 = (tile->tilePos.y + WaterTileConsts.TileOffset.y) + (cellY * cy + cellY);
+        u32 guardFlags = 0;
+        u32 clipFlags = 0;
+        int i;
 
+        corners[0].x = x0;
+        corners[0].y = y0;
+        corners[1].x = x1;
+        corners[1].y = y0;
+        corners[2].x = x0;
+        corners[2].y = y1;
+        corners[3].x = x1;
+        corners[3].y = y1;
+
+        for (i = 0; i < 4; i++) {
+            corners[i].z = tile->tilePos.z;
+            corners[i].w = 1.0f;
+        }
+
+        for (i = 0; i < 4; i++) {
+            Vec4 rel;
+            Vec4 guard;
+            Vec4 clip;
+
+            rel.x = (corners[i].x - GameCamera.posX) * 1024.0f;
+            rel.y = (corners[i].y - GameCamera.posY) * 1024.0f;
+            rel.z = (corners[i].z - GameCamera.posZ) * 1024.0f;
+            rel.w = corners[i].w;
+
+            MulVec4Mtx4(&guard, &rel, &GameCamera.mtx3);
+            MulVec4Mtx4(&clip, &rel, &GameCamera.mtx4);
+
+            guardFlags = guardFlags << 8 | FastUpdateClipFlags(&guard);
+            clipFlags = clipFlags << 8 | FastUpdateClipFlags(&clip);
+        }
+
+        /* all four corners out past the same plane */
+        if ((clipFlags & 0x01010101) == 0x01010101 || (clipFlags & 0x02020202) == 0x02020202 ||
+            (clipFlags & 0x04040404) == 0x04040404 || (clipFlags & 0x08080808) == 0x08080808 ||
+            (clipFlags & 0x20202020) == 0x20202020) {
+            return;
+        }
+
+        if (clipMode != 1 || guardFlags == 0) {
+            clipMode = 0;
+        }
+    }
+
+    STUB_000e9f28(clipMode != 0 ? 0xe : 0xc, CellFirstVert(idx));
+}
 
 // 0x017cfb4 (0x28 bytes)
 void ____Unused_Water_ResetIds_73aa44(void)
-
 {
-  DAT_0073aa44 = 0xffffffff;
-  DAT_0073aa50 = 0xffffffff;
-  DAT_0073aa48 = 0xffffffff;
-  DAT_0073aa4c = 0xffffffff;
-  return;
+    g_WaterBoundTex = -1;
+    DAT_0073aa50 = -1;
+    DAT_0073aa48 = -1;
+    g_WaterBoundAlpha = -1;
 }
 
+/* binds a tile layer's texture and alpha unless they are already bound */
+static inline void BindTileLayer(u32 tex, u8 alpha)
+{
+    if (tex != g_WaterBoundTex || alpha != g_WaterBoundAlpha) {
+        idol_draw::DrawDepth(DL_Pass, idol_draw::PackCmd(0, 1, 2, 1, DoubledAlpha(alpha)));
+        BindEffectTex(DL_Pass, 0, tex);
+        g_WaterBoundTex = tex;
+        g_WaterBoundAlpha = alpha;
+    }
+}
 
 // 0x017cfdc (0x474 bytes)
-void WaterTile_DrawAll(WaterTile *tile,int cnt)
-
+/* Draws a water surface: per tile, stage and shade it, build its vertices, flatten the flagged
+   edges, then draw its cells in both layers. */
+void WaterTile_DrawAll(WaterTile *tile, int cnt)
 {
-  RsxCmd *pRVar1;
-  RenderingStep *pRVar2;
-  ulonglong uVar3;
-  undefined8 uVar4;
-  int iVar5;
-  int iVar6;
-  uint uVar7;
-  int iVar8;
-  longlong lVar9;
-  
-  DAT_0073aa44 = 0xffffffff;
-  iVar8 = 0;
-  DAT_0073aa48 = 0xffffffff;
-  DAT_0073aa4c = 0xffffffff;
-  DAT_0073aa50 = 0xffffffff;
-  if (0 < cnt) {
-    do {
-      if (tile->mask != 0) {
-        StageTileBuf(g_ScratchBuf,tile->buf[DAT_0073a9f4].height[0] + 2);
+    int t;
+    int i;
+
+    g_WaterBoundTex = -1;
+    DAT_0073aa48 = -1;
+    g_WaterBoundAlpha = -1;
+    DAT_0073aa50 = -1;
+
+    for (t = 0; t < cnt; t++, tile++) {
+        u32 mask;
+
+        if (tile->mask == 0) {
+            continue;
+        }
+
+        StageTileBuf((float (*)[24])g_ScratchBuf, &tile->buf[g_WaterBufShown]);
         ShadeVerts(tile);
         WaterTile_BuildVertexGrid(tile);
-        WaterTile_UpdateWaves(tile);
-        uVar7 = tile->flags;
-        if ((uVar7 & 1) != 0) {
-          lVar9 = 0x11;
-          iVar6 = 0;
-          do {
-            *(float *)((int)g_ScratchBuf[1].buf[2].height[10] + iVar6 + 0x38) = (tile->tilePos).z;
-            lVar9 = lVar9 + -1;
-            iVar6 = iVar6 + 0xc;
-          } while (lVar9 != 0);
-          uVar7 = tile->flags;
-        }
-        if ((uVar7 & 2) != 0) {
-          lVar9 = 0x11;
-          iVar6 = 0;
-          do {
-            *(float *)((int)g_ScratchBuf[1].buf[2].height[0xd] + iVar6 + 0x38) = (tile->tilePos).z;
-            lVar9 = lVar9 + -1;
-            iVar6 = iVar6 + 0xcc;
-          } while (lVar9 != 0);
-          uVar7 = tile->flags;
-        }
-        if ((uVar7 & 4) != 0) {
-          lVar9 = 0x11;
-          iVar6 = 0;
-          do {
-            *(float *)((int)g_ScratchBuf[2].buf[1].heightTop + iVar6 + -0x50) = (tile->tilePos).z;
-            lVar9 = lVar9 + -1;
-            iVar6 = iVar6 + 0xc;
-          } while (lVar9 != 0);
-          uVar7 = tile->flags;
-        }
-        if ((uVar7 & 8) != 0) {
-          lVar9 = 0x11;
-          iVar6 = 0;
-          do {
-            *(float *)((int)g_ScratchBuf[1].buf[2].height[10] + iVar6 + 0x38) = (tile->tilePos).z;
-            lVar9 = lVar9 + -1;
-            iVar6 = iVar6 + 0xcc;
-          } while (lVar9 != 0);
-        }
-        pRVar2 = DL_Pass;
-        uVar7 = (uint)tile->mask;
-        if ((tile->ovlTex != DAT_0073aa44) || (tile->ovlAlpha != DAT_0073aa4c)) {
-          uVar3 = (ulonglong)tile->ovlAlpha;
-          uVar4 = idol_draw::PackCmd(0,1,2,1,uVar3 * 2 +
-                                             ((longlong)(uVar3 * -2 + 0xff) >> 0x3f &
-                                             uVar3 * -2 + 0xff));
-          idol_draw::DrawDepth(pRVar2,uVar4);
-          iVar6 = EffectTexHeaders;
-          pRVar2 = DL_Pass;
-          iVar5 = GetEffectTex(tile->ovlTex);
-          FUN_004d676c(pRVar2,0,iVar6 + iVar5 * 0x24,1,1);
-          DAT_0073aa44 = tile->ovlTex;
-          DAT_0073aa4c = (uint)tile->ovlAlpha;
-        }
-        iVar6 = 0;
-        do {
-          if ((uVar7 & 1) != 0) {
-            WaterTile_DrawCellBase(tile,iVar6);
-          }
-          pRVar2 = DL_Pass;
-          iVar6 = iVar6 + 1;
-          uVar7 = (int)uVar7 >> 1;
-        } while (iVar6 < 0x10);
-        uVar7 = (uint)tile->mask;
-        if ((tile->baseTex != DAT_0073aa44) || (tile->baseAlpha != DAT_0073aa4c)) {
-          uVar3 = (ulonglong)tile->baseAlpha;
-          uVar4 = idol_draw::PackCmd(0,1,2,1,uVar3 * 2 +
-                                             ((longlong)(uVar3 * -2 + 0xff) >> 0x3f &
-                                             uVar3 * -2 + 0xff));
-          idol_draw::DrawDepth(pRVar2,uVar4);
-          iVar6 = EffectTexHeaders;
-          pRVar2 = DL_Pass;
-          iVar5 = GetEffectTex(tile->baseTex);
-          FUN_004d676c(pRVar2,0,iVar6 + iVar5 * 0x24,1,1);
-          DAT_0073aa44 = tile->baseTex;
-          DAT_0073aa4c = (uint)tile->baseAlpha;
-        }
-        iVar6 = 0;
-        do {
-          if ((uVar7 & 1) != 0) {
-            WaterTile_DrawCellOvl(tile,iVar6);
-          }
-          iVar6 = iVar6 + 1;
-          uVar7 = (int)uVar7 >> 1;
-        } while (iVar6 < 0x10);
-      }
-      iVar8 = iVar8 + 1;
-      tile = (WaterTile *)&tile[1].ovlTex;
-    } while (iVar8 < cnt);
-  }
-  pRVar1 = DL_Pass->command;
-  DL_Pass->command = pRVar1 + 2;
-  pRVar2 = DL_Pass;
-  *pRVar1 = NV4097_SET_BLEND_EQUATION_x1;
-  pRVar1[1] = 0x80068006;
-  pRVar1 = pRVar2->command;
-  *pRVar1 = NV4097_SET_BLEND_FUNC_SFACTOR_x2;
-  pRVar1[1] = 0x3020302;
-  pRVar1[2] = 0x3030303;
-  pRVar2->command = pRVar1 + 3;
-  return;
-}
+        WaterTile_UpdateUVs(tile);
 
+        if (tile->flags & WATER_TILE_FLAG_TOP) {
+            for (i = 0; i < GRID_VERTS; i++) {
+                g_WaterGrid[0][i].z = tile->tilePos.z;
+            }
+        }
+
+        if (tile->flags & WATER_TILE_FLAG_RIGHT) {
+            for (i = 0; i < GRID_VERTS; i++) {
+                g_WaterGrid[i][GRID_VERTS - 1].z = tile->tilePos.z;
+            }
+        }
+
+        if (tile->flags & WATER_TILE_FLAG_BOTTOM) {
+            for (i = 0; i < GRID_VERTS; i++) {
+                g_WaterGrid[GRID_VERTS - 1][i].z = tile->tilePos.z;
+            }
+        }
+
+        if (tile->flags & WATER_TILE_FLAG_LEFT) {
+            for (i = 0; i < GRID_VERTS; i++) {
+                g_WaterGrid[i][0].z = tile->tilePos.z;
+            }
+        }
+
+        mask = tile->mask;
+        BindTileLayer(tile->ovlTex, tile->ovlAlpha);
+
+        for (i = 0; i < 16; i++, mask >>= 1) {
+            if (mask & 1) {
+                WaterTile_DrawCellBase(tile, i);
+            }
+        }
+
+        mask = tile->mask;
+        BindTileLayer(tile->baseTex, tile->baseAlpha);
+
+        for (i = 0; i < 16; i++, mask >>= 1) {
+            if (mask & 1) {
+                WaterTile_DrawCellOvl(tile, i);
+            }
+        }
+    }
+
+    RestoreBlend(DL_Pass);
+}
 
 // 0x017d450 (0x38 bytes)
-void Sheet_ResetScroll(int cnt,WaterSheet *sheet)
-
+void Sheet_ResetScroll(int cnt, WaterSheet *sheet)
 {
-  if (0 < cnt) {
-    do {
-      sheet->offsetU0 = 0.0;
-      sheet->offsetV0 = 0.0;
-      cnt = cnt + -1;
-      sheet->offsetU1 = 0.0;
-      sheet->offsetV1 = 0.0;
-      sheet->frameRate = 0;
-      sheet = sheet + 1;
-    } while (0 < cnt);
-  }
-  return;
+    for (; cnt > 0; cnt--, sheet++) {
+        sheet->offsetU0 = 0.0f;
+        sheet->offsetV0 = 0.0f;
+        sheet->offsetU1 = 0.0f;
+        sheet->offsetV1 = 0.0f;
+        sheet->frameRate = 0;
+    }
 }
-
 
 // 0x017d488 (0x24 bytes)
 void CALL_STUB_0017d488(void)
-
 {
-  STUB_00071170();
-  return;
+    STUB_00071170();
 }
 
+/* a texture scroll offset kept within -1..1 */
+static inline float WrapOffset(float offset)
+{
+    if (offset > 1.0f) {
+        return offset - 1.0f;
+    }
+
+    if (offset < -1.0f) {
+        return offset + 1.0f;
+    }
+
+    return offset;
+}
 
 // 0x017d4b8 (0x3b8 bytes)
-void WaterSheet_DrawAll(int cnt,WaterSheet *sheet)
-
+/* Scrolls each sheet's two texture layers and draws the visible ones (layer 0 with state,
+   layer 1 over it reusing the same vertices). */
+void WaterSheet_DrawAll(int cnt, WaterSheet *sheet)
 {
-  RsxCmd *pRVar1;
-  float fVar2;
-  float fVar3;
-  RenderingStep *pRVar4;
-  int iVar8;
-  undefined8 uVar5;
-  ulonglong uVar6;
-  undefined8 uVar7;
-  int iVar9;
-  int iVar10;
-  double dVar11;
-  double dVar12;
-  double dVar13;
-  double dVar14;
-  undefined8 uVar15;
-  
-  iVar10 = 0;
-  if (0 < cnt) {
-    dVar13 = 1.0;
-    dVar14 = -1.0;
-    uVar15 = 0x4079000000000000;
-    do {
-      fVar2 = sheet->velocityU0 * sheet->scrollSpeedLayer0 + sheet->offsetU0;
-      dVar12 = (double)fVar2;
-      fVar3 = sheet->velocityV0 * sheet->scrollSpeedLayer0 + sheet->offsetV0;
-      dVar11 = (double)fVar3;
-      sheet->offsetU0 = fVar2;
-      sheet->offsetV0 = fVar3;
-      if (dVar12 <= dVar13) {
-        if (dVar12 < dVar14) {
-          sheet->offsetU0 = (float)(dVar12 + dVar13);
-        }
-      }
-      else {
-        sheet->offsetU0 = (float)(dVar12 - dVar13);
-      }
-      if (dVar11 <= dVar13) {
-        if (dVar11 < dVar14) {
-          sheet->offsetV0 = (float)(dVar11 + dVar13);
-        }
-      }
-      else {
-        sheet->offsetV0 = (float)(dVar11 - dVar13);
-      }
-      fVar2 = sheet->velocityU1 * sheet->scrollSpeedLayer1 + sheet->offsetU1;
-      dVar12 = (double)fVar2;
-      fVar3 = sheet->velocityV1 * sheet->scrollSpeedLayer1 + sheet->offsetV1;
-      dVar11 = (double)fVar3;
-      sheet->offsetU1 = fVar2;
-      sheet->offsetV1 = fVar3;
-      if (dVar12 <= dVar13) {
-        if (dVar12 < dVar14) {
-          sheet->offsetU1 = (float)(dVar12 + dVar13);
-        }
-      }
-      else {
-        sheet->offsetU1 = (float)(dVar12 - dVar13);
-      }
-      if (dVar11 <= dVar13) {
-        if (dVar11 < dVar14) {
-          sheet->offsetV1 = (float)(dVar11 + dVar13);
-        }
-      }
-      else {
-        sheet->offsetV1 = (float)(dVar11 - dVar13);
-      }
-      sheet->frameCounter = sheet->frameCounter + sheet->frameRate & 0xffffff;
-      iVar8 = FastCheckBsphereInView(uVar15,sheet->cullData);
-      if (iVar8 != -1) {
-        uVar5 = idol::AllocateMemAlign(FrameHeap,sheet->vertexCount << 5,0x10);
-        BuildVerts(sheet,(WaterSheetVert *)uVar5);
-        pRVar4 = DL_Pass;
-        uVar6 = (ulonglong)sheet->depthBias0;
-        uVar7 = idol_draw::PackCmd(0,1,2,1,uVar6 * 2 +
-                                           ((longlong)(uVar6 * -2 + 0xff) >> 0x3f &
-                                           uVar6 * -2 + 0xff));
-        idol_draw::DrawDepth(pRVar4,uVar7);
-        iVar8 = EffectTexHeaders;
-        pRVar4 = DL_Pass;
-        iVar9 = GetEffectTex(sheet->textureId0);
-        FUN_004d676c(pRVar4,0,iVar8 + iVar9 * 0x24,1,1);
-        FastDrawStrip_Pass(sheet->vertexCount,uVar5,9);
-        pRVar4 = DL_Pass;
-        uVar6 = (ulonglong)sheet->depthBias1;
-        uVar7 = idol_draw::PackCmd(0,1,2,1,uVar6 * 2 +
-                                           ((longlong)(uVar6 * -2 + 0xff) >> 0x3f &
-                                           uVar6 * -2 + 0xff));
-        idol_draw::DrawDepth(pRVar4,uVar7);
-        iVar8 = EffectTexHeaders;
-        pRVar4 = DL_Pass;
-        iVar9 = GetEffectTex(sheet->textureId1);
-        FUN_004d676c(pRVar4,0,iVar8 + iVar9 * 0x24,1,1);
-        FastDrawStrip_DLNoState(sheet->vertexCount,uVar5);
-      }
-      iVar10 = iVar10 + 1;
-      sheet = sheet + 1;
-    } while (iVar10 < cnt);
-  }
-  pRVar1 = DL_Pass->command;
-  DL_Pass->command = pRVar1 + 2;
-  pRVar4 = DL_Pass;
-  *pRVar1 = NV4097_SET_BLEND_EQUATION_x1;
-  pRVar1[1] = 0x80068006;
-  pRVar1 = pRVar4->command;
-  *pRVar1 = NV4097_SET_BLEND_FUNC_SFACTOR_x2;
-  pRVar1[1] = 0x3020302;
-  pRVar1[2] = 0x3030303;
-  pRVar4->command = pRVar1 + 3;
-  return;
-}
+    int i;
 
+    for (i = 0; i < cnt; i++, sheet++) {
+        sheet->offsetU0 = sheet->velocityU0 * sheet->scrollSpeedLayer0 + sheet->offsetU0;
+        sheet->offsetV0 = sheet->velocityV0 * sheet->scrollSpeedLayer0 + sheet->offsetV0;
+        sheet->offsetU0 = WrapOffset(sheet->offsetU0);
+        sheet->offsetV0 = WrapOffset(sheet->offsetV0);
+
+        sheet->offsetU1 = sheet->velocityU1 * sheet->scrollSpeedLayer1 + sheet->offsetU1;
+        sheet->offsetV1 = sheet->velocityV1 * sheet->scrollSpeedLayer1 + sheet->offsetV1;
+        sheet->offsetU1 = WrapOffset(sheet->offsetU1);
+        sheet->offsetV1 = WrapOffset(sheet->offsetV1);
+
+        sheet->frameCounter = (sheet->frameCounter + sheet->frameRate) & 0xffffff;
+
+        if (FastCheckBsphereInView(400.0f, sheet->cullData) != -1) {
+            WaterSheetVert *verts = (WaterSheetVert *)idol::AllocateMemAlign(FrameHeap, sheet->vertexCount * 32, 16);
+
+            BuildVerts(sheet, verts);
+
+            idol_draw::DrawDepth(DL_Pass, idol_draw::PackCmd(0, 1, 2, 1, DoubledAlpha(sheet->depthBias0)));
+            BindEffectTex(DL_Pass, 0, sheet->textureId0);
+            FastDrawStrip_Pass(sheet->vertexCount, verts, DRAW_STRIP_TEXTURED);
+
+            idol_draw::DrawDepth(DL_Pass, idol_draw::PackCmd(0, 1, 2, 1, DoubledAlpha(sheet->depthBias1)));
+            BindEffectTex(DL_Pass, 0, sheet->textureId1);
+            FastDrawStrip_DLNoState(sheet->vertexCount, verts);
+        }
+    }
+
+    RestoreBlend(DL_Pass);
+}
 
 // 0x017d870 (0x4 bytes)
-void STUB_0017d870(...)
-
+void STUB_0017d870(void)
 {
-  return;
 }
-
 
 // 0x017d8f8 (0x3a4 bytes)
-/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
-
-void SubmitOceanCell
-               (double param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
-               undefined8 param_6,longlong param_7,undefined8 param_8,undefined8 param_9)
-
+/* One ocean cell: an 8x8 vertex patch from (x, y) at the ocean's height, strung into a
+   124-vertex strip with the scaled wave uvs, the cell's colours (RGB doubled, byte order
+   swapped, alpha forced to 0xff; done in VMX) and the texture blend. Drawn into the pass, and
+   into the depth pass too for a depth-only ocean. The patch's w lane is never set. */
+void SubmitOceanCell(OceanPlane *ocean, float x, float y, u32 *colors, float blend, int passIdx)
 {
-  short sVar1;
-  undefined4 uVar2;
-  ulonglong *puVar3;
-  uint uVar4;
-  undefined1 (*pauVar5) [16];
-  undefined8 uVar6;
-  ulonglong uVar7;
-  longlong lVar8;
-  int iVar9;
-  longlong lVar10;
-  longlong lVar11;
-  longlong lVar12;
-  undefined4 *puVar13;
-  undefined4 *puVar14;
-  short *psVar15;
-  ulonglong unaff_r28;
-  ulonglong unaff_r29;
-  ulonglong unaff_r30;
-  ulonglong unaff_r31;
-  ulonglong in_LR;
-  longlong lVar16;
-  longlong lVar17;
-  ulonglong in_f31;
-  GPiece<16> auVar18;
-  GPiece<16> auVar19;
-  GPiece<16> auVar20;
-  GPiece<16> auVar21;
-  GPiece<16> auVar22;
-  GPiece<16> auVar23;
-  GPiece<16> auVar24;
-  GPiece<16> auVar25;
-  GPiece<16> auVar26;
-  GPiece<16> auVar27;
-  GPiece<16> auVar28;
-  GPiece<16> auVar29;
-  GPiece<16> auVar30;
-  GPiece<16> auVar31;
-  GPiece<2048> local_800;
-  
-  uVar7 = ZEXT48(&stack0x00000000);
-  puVar3 = (ulonglong *)(uVar7 - 0x8a0);
-  *puVar3 = uVar7;
-  puVar3[0x116] = in_LR;
-  puVar3[0x113] = in_f31;
-  puVar3[0x110] = unaff_r29;
-  auVar23 = _DAT_0017d8a0;
-  auVar22 = _DAT_0017d890;
-  auVar20 = _DAT_0017d880;
-  auVar18 = ZEXT416(0);
-  auVar26 = auVar18 | auVar18 << 0x20 | auVar18 << 0x40 | auVar18 << 0x60;
-  auVar18 = loadVectorLeftIndexed(8,param_4);
-  auVar21 = loadVectorLeftIndexed(0x10,param_4);
-  auVar18 = auVar18 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar19 = auVar18 | auVar18 << 0x20 | auVar18 << 0x40 | auVar18 << 0x60;
-  auVar24 = loadVectorLeftIndexed(0x14,param_4);
-  iVar9 = 0;
-  lVar10 = uVar7 - 0x800;
-  puVar3[0x111] = unaff_r30;
-  puVar3[0x112] = unaff_r31;
-  auVar18 = vectorPermute(auVar21,auVar26,auVar20);
-  uVar2 = storeVectorElementWordIndexed(auVar19,0x78,uVar7 - 0x8a0);
-  *(undefined4 *)(puVar3 + 0xf) = uVar2;
-  *(float *)(puVar3 + 0x10c) = (float)param_2;
-  *(float *)((int)puVar3 + 0x74) = (float)param_2;
-  *(float *)((int)puVar3 + 0x864) = (float)param_2;
-  auVar25 = vectorPermute(auVar18,*(undefined1 (*) [16])(puVar3 + 0x10),auVar22);
-  *(float *)(puVar3 + 0x10d) = (float)param_2;
-  *(float *)((int)puVar3 + 0x86c) = (float)param_2;
-  auVar20 = _DAT_0017d8c0;
-  auVar18 = _DAT_0017d8b0;
-  auVar23 = vectorPermute(auVar26,auVar24,auVar23);
-  auVar21 = vectorAddFloatingPoint(auVar25,auVar25);
-  auVar23 = vectorPermute(auVar23,*(undefined1 (*) [16])(puVar3 + 0x12),auVar22);
-  auVar22 = *(undefined1 (*) [16])(puVar3 + 0x10c);
-  *(float *)(puVar3 + 0x10c) = (float)param_1;
-  uVar6 = 0x860;
-  *(float *)((int)puVar3 + 0x864) = (float)param_1;
-  auVar22 = vectorPermute(auVar22,auVar19,auVar18);
-  *(float *)(puVar3 + 0x10d) = (float)param_1;
-  *(float *)((int)puVar3 + 0x86c) = (float)param_1;
-  auVar18 = _DAT_0017d8d0;
-  auVar24 = vectorPermute(auVar22,*(undefined1 (*) [16])(puVar3 + 0xe),auVar20);
-  auVar22 = vectorAddFloatingPoint(auVar21,auVar25);
-  puVar3[0x10f] = unaff_r28;
-  auVar20 = vectorAddFloatingPoint(auVar21,auVar21);
-  auVar19 = *(undefined1 (*) [16])(puVar3 + 0x10c);
-  do {
-    auVar24 = vectorPermute(auVar19,auVar24,auVar18);
-    *(float *)(puVar3 + 0xe) = (float)param_1;
-    lVar16 = 2;
-    do {
-      auVar26 = vectorAddFloatingPoint(auVar24,auVar25);
-      auVar27 = vectorAddFloatingPoint(auVar24,auVar21);
-      pauVar5 = (undefined1 (*) [16])lVar10;
-      auVar29 = vectorAddFloatingPoint(auVar24,auVar22);
-      *pauVar5 = auVar24;
-      lVar10 = lVar10 + 0x40;
-      auVar24 = vectorAddFloatingPoint(auVar24,auVar20);
-      pauVar5[1] = auVar26;
-      pauVar5[2] = auVar27;
-      pauVar5[3] = auVar29;
-      lVar16 = lVar16 + -1;
-    } while (lVar16 != 0);
-    auVar24 = vectorAddFloatingPoint(auVar24,auVar23);
-    iVar9 = iVar9 + 1;
-    *(undefined1 (*) [16])(puVar3 + 0xe) = auVar24;
-  } while (iVar9 < 8);
-  lVar16 = idol::AllocateMemAlign(FrameHeap,0xd90,0x10);
-  auVar18 = loadVectorLeftIndexed(0x60,0x17d880);
-  auVar22 = loadVectorLeftIndexed(0x68,0x17d880);
-  auVar20 = loadVectorLeftIndexed(100,0x17d880);
-  auVar23 = loadVectorLeftIndexed(0x6c,0x17d880);
-  auVar18 = auVar18 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar19 = auVar18 | auVar18 << 0x20 | auVar18 << 0x40 | auVar18 << 0x60;
-  auVar18 = auVar22 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar24 = auVar18 | auVar18 << 0x20 | auVar18 << 0x40 | auVar18 << 0x60;
-  auVar18 = auVar20 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar21 = auVar18 | auVar18 << 0x20 | auVar18 << 0x40 | auVar18 << 0x60;
-  auVar22 = loadVectorLeftIndexed(0x70,0x17d880);
-  puVar13 = &DAT_00e5aad4;
-  auVar20 = loadVectorLeftIndexed(0x74,0x17d880);
-  psVar15 = &DAT_0073b330;
-  puVar14 = &DAT_00e5aad0;
-  auVar18 = auVar23 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar23 = auVar18 | auVar18 << 0x20 | auVar18 << 0x40 | auVar18 << 0x60;
-  lVar12 = lVar16 + 4;
-  auVar18 = auVar22 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar22 = auVar18 | auVar18 << 0x20 | auVar18 << 0x40 | auVar18 << 0x60;
-  lVar11 = lVar16 + 8;
-  auVar18 = auVar20 >> 0x60 & (GPiece<16>)0xffffffff;
-  param_7 = param_7 + 0x10;
-  lVar8 = lVar16 + 0x18;
-  lVar17 = 0x7c;
-  lVar10 = lVar16;
-  do {
-    sVar1 = *psVar15;
-    auVar20 = ZEXT416(0xfffffff0);
-    auVar25 = ZEXT416(0xffffffff);
-    auVar26 = auVar25 | auVar25 << 0x20 | auVar25 << 0x40 | auVar25 << 0x60;
-    auVar25 = ZEXT416(0xffffffff);
-    auVar25 = auVar25 | auVar25 << 0x20 | auVar25 << 0x40 | auVar25 << 0x60;
-    auVar30 = vectorShiftLeftIntegerWord(auVar26,auVar26);
-    auVar31 = vectorShiftLeftIntegerWord(auVar25,auVar25);
-    auVar25 = ZEXT416(0xffffffff);
-    auVar29 = auVar25 | auVar25 << 0x20 | auVar25 << 0x40 | auVar25 << 0x60;
-    psVar15 = psVar15 + 1;
-    auVar27 = *(undefined1 (*) [16])(local_800 + (int)((longlong)sVar1 << 4));
-    auVar25 = auVar27 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar26 = auVar27 >> 0x40 & (GPiece<16>)0xffffffff;
-    auVar27 = auVar27 >> 0x20 & (GPiece<16>)0xffffffff;
-    auVar29 = vectorShiftLeftIntegerWord(auVar29,auVar29);
-    uVar4 = (uint)lVar10;
-    uVar2 = storeVectorElementWordIndexed
-                      (auVar25 | auVar25 << 0x20 | auVar25 << 0x40 | auVar25 << 0x60,0,lVar10);
-    *(undefined4 *)(uVar4 & 0xfffffffc) = uVar2;
-    uVar2 = storeVectorElementWordIndexed
-                      (auVar26 | auVar26 << 0x20 | auVar26 << 0x40 | auVar26 << 0x60,0,lVar12);
-    *(undefined4 *)((uint)lVar12 & 0xfffffffc) = uVar2;
-    uVar2 = storeVectorElementWordIndexed
-                      (auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60,0,lVar11);
-    *(undefined4 *)((uint)lVar11 & 0xfffffffc) = uVar2;
-    auVar25 = ZEXT416(0xfffffff8);
-    *(undefined4 *)(uVar4 + 0xc) = *puVar14;
-    uVar2 = *puVar13;
-    *(float *)(uVar4 + 0x14) = (float)param_3;
-    *(undefined4 *)(uVar4 + 0x10) = uVar2;
-    auVar26 = loadVectorLeftIndexed(uVar6,param_7);
-    auVar20 = vectorRotateLeftIntegerWord
-                        (auVar26,auVar20 | auVar20 << 0x20 | auVar20 << 0x40 | auVar20 << 0x60);
-    auVar27 = vectorRotateLeftIntegerWord
-                        (auVar26,auVar25 | auVar25 << 0x20 | auVar25 << 0x40 | auVar25 << 0x60);
-    auVar28 = vectorLogicalAnd(auVar26,auVar23);
-    auVar25 = vectorShiftRightWord(auVar26,auVar22);
-    auVar20 = vectorLogicalAnd(auVar20,auVar23);
-    auVar26 = vectorLogicalAnd(auVar27,auVar23);
-    auVar27 = vectorConvertFromUnsignedFixedPointWord(auVar28,0);
-    auVar25 = vectorConvertFromUnsignedFixedPointWord(auVar25,0);
-    auVar20 = vectorConvertFromUnsignedFixedPointWord(auVar20,0);
-    auVar26 = vectorConvertFromUnsignedFixedPointWord(auVar26,0);
-    lVar12 = lVar12 + 0x1c;
-    lVar11 = lVar11 + 0x1c;
-    lVar10 = lVar10 + 0x1c;
-    puVar14 = puVar14 + 2;
-    puVar13 = puVar13 + 2;
-    param_7 = param_7 + 4;
-    auVar29 = vectorMultiplyAddFloatingPoint(auVar27,auVar19,auVar29);
-    auVar27 = vectorAddFloatingPoint(auVar25,auVar24);
-    auVar25 = vectorMultiplyAddFloatingPoint(auVar20,auVar19,auVar30);
-    auVar26 = vectorMultiplyAddFloatingPoint(auVar26,auVar19,auVar31);
-    auVar20 = vectorCompareGreaterThanFloatingPoint(auVar29,auVar21);
-    auVar28 = vectorCompareGreaterThanFloatingPoint(auVar25,auVar21);
-    auVar20 = vectorConditionalSelect(auVar29,auVar21,auVar20);
-    auVar29 = vectorCompareGreaterThanFloatingPoint(auVar26,auVar21);
-    auVar25 = vectorConditionalSelect(auVar25,auVar21,auVar28);
-    auVar29 = vectorConditionalSelect(auVar26,auVar21,auVar29);
-    auVar28 = vectorAddFloatingPoint(auVar20,auVar24);
-    auVar20 = ZEXT416(8);
-    auVar26 = vectorAddFloatingPoint(auVar25,auVar24);
-    auVar29 = vectorAddFloatingPoint(auVar29,auVar24);
-    auVar25 = vectorCompareGreaterThanFloatingPoint(auVar28,auVar21);
-    auVar30 = vectorCompareGreaterThanFloatingPoint(auVar26,auVar21);
-    auVar28 = vectorConditionalSelect(auVar28,auVar21,auVar25);
-    auVar25 = vectorConditionalSelect(auVar26,auVar21,auVar30);
-    auVar26 = vectorCompareGreaterThanFloatingPoint(auVar29,auVar21);
-    auVar28 = vectorConvertToSignedFixedPointWordSaturate(auVar28,0);
-    auVar29 = vectorConditionalSelect(auVar29,auVar21,auVar26);
-    auVar26 = vectorCompareGreaterThanFloatingPoint(auVar27,auVar21);
-    auVar25 = vectorConvertToSignedFixedPointWordSaturate(auVar25,0);
-    auVar26 = vectorConditionalSelect(auVar27,auVar21,auVar26);
-    auVar27 = vectorConvertToSignedFixedPointWordSaturate(auVar29,0);
-    auVar26 = vectorConvertToSignedFixedPointWordSaturate(auVar26,0);
-    auVar29 = vectorShiftLeftIntegerWord(auVar28,auVar22);
-    auVar20 = vectorShiftLeftIntegerWord
-                        (auVar25,auVar20 | auVar20 << 0x20 | auVar20 << 0x40 | auVar20 << 0x60);
-    auVar25 = vectorShiftLeftIntegerWord
-                        (auVar27,auVar18 | auVar18 << 0x20 | auVar18 << 0x40 | auVar18 << 0x60);
-    auVar20 = (auVar26 | auVar20 | auVar25 | auVar29 | auVar23) >> 0x60 &
-              (GPiece<16>)0xffffffff;
-    uVar2 = storeVectorElementWordIndexed
-                      (auVar20 | auVar20 << 0x20 | auVar20 << 0x40 | auVar20 << 0x60,0,lVar8);
-    *(undefined4 *)((uint)lVar8 & 0xfffffffc) = uVar2;
-    lVar8 = lVar8 + 0x1c;
-    lVar17 = lVar17 + -1;
-  } while (lVar17 != 0);
-  FastDrawStripFog(0x7c,lVar16,param_9);
-  if (*(char *)((int)param_4 + 0x3f) == -0x80) {
-    FastDrawStripFog(0x7c,lVar16,0);
-  }
-  return;
-}
+    Vec4 patch[OCEAN_PATCH * OCEAN_PATCH];
+    OceanVert *verts;
+    Vec4 row;
+    int r;
+    int c;
+    int i;
 
+    row.x = x;
+    row.y = y;
+    row.z = ocean->z;
+
+    for (r = 0; r < OCEAN_PATCH; r++) {
+        Vec4 p = row;
+
+        for (c = 0; c < OCEAN_PATCH; c++) {
+            patch[r * OCEAN_PATCH + c] = p;
+            p.x += ocean->scaleX;
+        }
+
+        row.y += ocean->scaleY;
+    }
+
+    verts = (OceanVert *)idol::AllocateMemAlign(FrameHeap, OCEAN_STRIP_VERTS * sizeof(OceanVert), 16);
+
+    for (i = 0; i < OCEAN_STRIP_VERTS; i++) {
+        Vec4 *pos = &patch[g_OceanStripIdx[i]];
+        u32 color = colors[4 + i];
+
+        verts[i].x = pos->x;
+        verts[i].y = pos->y;
+        verts[i].z = pos->z;
+        verts[i].u = g_OceanUV[i].x;
+        verts[i].v = g_OceanUV[i].y;
+        verts[i].blend = blend;
+        verts[i].color = ScaleChannel(color & 0xff, 2.0f) << 24 |
+                         ScaleChannel((color >> 8) & 0xff, 2.0f) << 16 |
+                         ScaleChannel((color >> 16) & 0xff, 2.0f) << 8 |
+                         0xff;
+    }
+
+    FastDrawStripFog(OCEAN_STRIP_VERTS, verts, passIdx);
+
+    if (ocean->depth == OCEAN_DEPTH_ONLY) {
+        FastDrawStripFog(OCEAN_STRIP_VERTS, verts, 0);
+    }
+}
 
 // 0x017dd20 (0x5fc bytes)
-// strings: 00654124: 'Ocean'
-
-/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
-
-double OceanPass(OceanPlane *ocean)
-
+/* Draws an ocean plane: picks its pass and depth state, binds the two animation frames, then
+   submits each occupied 7x7 cell whose bounding sphere is in view. Returns the frame blend. */
+float OceanPass(OceanPlane *ocean)
 {
-  longlong lVar1;
-  byte bVar2;
-  char cVar3;
-  float fVar4;
-  ushort uVar5;
-  ushort uVar6;
-  undefined4 uVar7;
-  ulonglong *puVar8;
-  int iVar9;
-  float fVar10;
-  float fVar11;
-  RenderingStep *pRVar12;
-  longlong lVar13;
-  undefined4 *puVar14;
-  longlong lVar15;
-  int iVar16;
-  int iVar17;
-  int iVar18;
-  ushort uVar19;
-  ulonglong unaff_r20;
-  ulonglong uVar20;
-  ulonglong unaff_r21;
-  ulonglong unaff_r22;
-  ulonglong unaff_r23;
-  ulonglong unaff_r24;
-  ulonglong unaff_r25;
-  ulonglong unaff_r26;
-  ulonglong unaff_r27;
-  char *pcVar21;
-  ulonglong unaff_r28;
-  int TEXTURE;
-  ulonglong unaff_r29;
-  ulonglong unaff_r30;
-  longlong lVar22;
-  ulonglong unaff_r31;
-  ulonglong in_LR;
-  ulonglong uVar23;
-  ulonglong uVar24;
-  ulonglong in_f26;
-  double dVar25;
-  ulonglong in_f27;
-  double dVar26;
-  ulonglong in_f28;
-  double dVar27;
-  ulonglong in_f29;
-  double dVar28;
-  ulonglong in_f30;
-  double dVar29;
-  ulonglong in_f31;
-  double dVar30;
-  GPiece<16> auVar31;
-  GPiece<16> auVar32;
-  GPiece<16> auVar33;
-  GPiece<16> auVar34;
-  GPiece<16> auVar35;
-  GPiece<16> auVar36;
-  GPiece<16> auVar37;
-  GPiece<16> auVar38;
-  undefined4 in_vr31_32_0;
-  undefined4 in_vr31_32_1;
-  undefined4 in_vr31_32_2;
-  undefined4 in_vr31_32_3;
-  
-  lVar15 = (longlong)(int)ocean;
-  uVar20 = ZEXT48(&stack0x00000000);
-  lVar1 = uVar20 - 400;
-  puVar8 = (ulonglong *)lVar1;
-  *puVar8 = uVar20;
-  puVar8[0x34] = in_LR;
-  puVar8[0x2c] = in_f26;
-  puVar8[0x2d] = in_f27;
-  puVar8[0x2e] = in_f28;
-  puVar8[0x2f] = in_f29;
-  puVar8[0x30] = in_f30;
-  puVar8[0x31] = in_f31;
-  puVar8[0x2b] = unaff_r31;
-  lVar13 = uVar20 - 0xa0;
-  puVar14 = (undefined4 *)lVar13;
-  puVar14[3] = in_vr31_32_3;
-  puVar14[2] = in_vr31_32_2;
-  puVar14[1] = in_vr31_32_1;
-  *puVar14 = in_vr31_32_0;
-  puVar8[0x29] = unaff_r29;
-  puVar8[0x21] = unaff_r21;
-  bVar2 = ocean->depth;
-  puVar8[0x2a] = unaff_r30;
-  puVar8[0x28] = unaff_r28;
-  puVar8[0x27] = unaff_r27;
-  puVar8[0x26] = unaff_r26;
-  puVar8[0x25] = unaff_r25;
-  puVar8[0x24] = unaff_r24;
-  puVar8[0x23] = unaff_r23;
-  puVar8[0x22] = unaff_r22;
-  puVar8[0x20] = unaff_r20;
-  if (bVar2 == 0x80) {
-    lVar22 = 2;
-    idol_draw::DrawDepth(DepthPass,0);
-    pRVar12 = DepthPass;
-    *DepthPass->command = NV4097_SET_ALPHA_TEST_ENABLE_x1;
-    pRVar12->command[1] = 0;
-    pRVar12->command = pRVar12->command + 2;
-    idol_draw::DrawDepth(ForwardPass,0);
-    pRVar12 = ForwardPass;
-    *ForwardPass->command = NV4097_SET_ALPHA_TEST_ENABLE_x1;
-    pRVar12->command[1] = 0;
-    pRVar12->command = pRVar12->command + 2;
-  }
-  else if (Level == Kerwan) {
-    lVar22 = 1;
-    idol_draw::DrawDepth(OceanForwardPass,0xc000000064);
-    pRVar12 = OceanForwardPass;
-    *OceanForwardPass->command = NV4097_SET_ALPHA_TEST_ENABLE_x1;
-    pRVar12->command[1] = 0;
-    pRVar12->command = pRVar12->command + 2;
-  }
-  else {
-    lVar22 = 2;
-    idol_draw::DrawDepth(ForwardPass,(ulonglong)bVar2 << 0x21 | 100);
-    pRVar12 = ForwardPass;
-    *ForwardPass->command = NV4097_SET_ALPHA_TEST_ENABLE_x1;
-    pRVar12->command[1] = 0;
-    pRVar12->command = pRVar12->command + 2;
-  }
-  iVar9 = (int)(lVar22 << 2);
-  idol_draw::RsxCmd_DebugStr_Marker(*(undefined4 *)((int)&DepthPass + iVar9),"Ocean");
-  bVar2 = ocean->field16_0x33;
-  iVar17 = worldUpdateTime / (int)(uint)bVar2;
-  puVar8[0x14] = (longlong)worldUpdateTime;
-  uVar23 = puVar8[0x14];
-  puVar8[0x14] = (ulonglong)bVar2;
-  bVar2 = ocean->num_texs_to_cycle;
-  uVar24 = puVar8[0x14];
-  puVar8[0x14] = (longlong)iVar17;
-  iVar18 = EffectTexHeaders;
-  uVar5 = ocean->tex_offset;
-  uVar20 = (ulonglong)DAT_00902e9c;
-  TEXTURE = (uint)uVar5 + (iVar17 - (iVar17 / (int)(uint)bVar2) * (uint)bVar2);
-  uVar7 = *(undefined4 *)((int)&DepthPass + iVar9);
-  dVar30 = (double)(float)((double)(float)((double)(longlong)uVar23 / (double)(longlong)uVar24) -
-                          (double)(longlong)puVar8[0x14]);
-  iVar16 = GetEffectTex((double)(longlong)puVar8[0x14],(double)(longlong)uVar24,TEXTURE);
-  FUN_004d676c(uVar7,0,iVar18 + iVar16 * 0x24,1,1);
-  iVar18 = EffectTexHeaders;
-  uVar7 = *(undefined4 *)((int)&DepthPass + iVar9);
-  iVar17 = GetEffectTex((uint)uVar5 +
-                              ((iVar17 + 1) - ((iVar17 + 1) / (int)(uint)bVar2) * (uint)bVar2));
-  FUN_004d676c(uVar7,1,iVar18 + iVar17 * 0x24,1,1);
-  iVar17 = EffectTexHeaders;
-  pRVar12 = DepthPass;
-  if (ocean->depth == 0x80) {
-    iVar18 = GetEffectTex(TEXTURE);
-    FUN_004d676c(pRVar12,0,iVar17 + iVar18 * 0x24,1,1);
-  }
-  idol_draw::ResetPassState(*(undefined4 *)((int)&DepthPass + iVar9));
-  auVar31 = ZEXT416(0xffffffff);
-  auVar31 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  dVar25 = 7.0;
-  dVar29 = (double)ocean->field3_0xc;
-  fVar10 = ocean->scaleY * 7.0;
-  fVar11 = ocean->scaleX * 7.0;
-  auVar33 = loadVectorLeftIndexed(8,0x17dca0);
-  auVar32 = vectorShiftLeftIntegerWord(auVar31,auVar31);
-  auVar31 = auVar33 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar34 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar31 = ZEXT416(0xffffffff);
-  auVar31 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar33 = loadVectorLeftIndexed(0x14,lVar15);
-  auVar37 = vectorMultiplyAddFloatingPoint(auVar33,auVar34,auVar32);
-  auVar31 = vectorShiftLeftIntegerWord(auVar31,auVar31);
-  auVar33 = loadVectorLeftIndexed(0x10,lVar15);
-  pcVar21 = ocean->occupied_ocean_cells;
-  fVar4 = ocean->y;
-  auVar34 = vectorMultiplyAddFloatingPoint(auVar33,auVar34,auVar31);
-  auVar31 = loadVectorLeftIndexed(4,lVar15);
-  auVar32 = loadVectorLeftIndexed(8,lVar15);
-  uVar19 = ocean->cellsX;
-  auVar35 = loadVectorLeftIndexed(0x10,0x17dca0);
-  if (fVar10 - fVar11 < 0.0) {
-    fVar10 = fVar11;
-  }
-  auVar35 = auVar35 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar31 = vectorMultiplyAddFloatingPoint
-                      (auVar37,auVar35 | auVar35 << 0x20 | auVar35 << 0x40 | auVar35 << 0x60,auVar31
-                      );
-  dVar28 = (double)SQRT(fVar10 * fVar10 * 2.0);
-  if (0 < (short)ocean->cellsY) {
-    auVar35 = auVar32 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar36 = auVar31 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar38 = loadVectorLeftIndexed(0x14,0x17dca0);
-    uVar7 = storeVectorElementWordIndexed
-                      (auVar35 | auVar35 << 0x20 | auVar35 << 0x40 | auVar35 << 0x60,0x78,lVar1);
-    *(undefined4 *)(puVar8 + 0xf) = uVar7;
-    uVar7 = storeVectorElementWordIndexed
-                      (auVar36 | auVar36 << 0x20 | auVar36 << 0x40 | auVar36 << 0x60,0x74,lVar1);
-    *(undefined4 *)((int)puVar8 + 0x74) = uVar7;
-    auVar35 = ZEXT416(0);
-    auVar36 = auVar35 | auVar35 << 0x20 | auVar35 << 0x40 | auVar35 << 0x60;
-    auVar35 = auVar38 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar38 = auVar35 | auVar35 << 0x20 | auVar35 << 0x40 | auVar35 << 0x60;
-    iVar17 = 0;
-    auVar31 = vectorPermute(auVar31,auVar32,_DAT_0017dcc0);
-    auVar34 = vectorPermute(auVar34,auVar36,_DAT_0017dce0);
-    auVar32 = vectorPermute(auVar31,*(undefined1 (*) [16])(puVar8 + 0xe),_DAT_0017dcd0);
-    auVar31 = vectorPermute(auVar36,auVar37,_DAT_0017dd00);
-    auVar35 = vectorPermute(auVar34,*(undefined1 (*) [16])(puVar8 + 0x12),_DAT_0017dcf0);
-    auVar34 = vectorPermute(auVar31,*(undefined1 (*) [16])(puVar8 + 0x10),_DAT_0017dcf0);
-    auVar31 = _DAT_0017dd10;
-    do {
-      dVar27 = (double)fVar4;
-      auVar37 = auVar33 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar36 = loadVectorLeftIndexed(lVar13,lVar15);
-      fVar4 = ocean->x;
-      auVar36 = vectorMultiplyAddFloatingPoint
-                          (auVar37 | auVar37 << 0x20 | auVar37 << 0x40 | auVar37 << 0x60,auVar38,
-                           auVar36);
-      auVar37 = auVar36 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar32 = vectorPermute(auVar36,auVar32,auVar31);
-      uVar7 = storeVectorElementWordIndexed
-                        (auVar37 | auVar37 << 0x20 | auVar37 << 0x40 | auVar37 << 0x60,0x70,lVar1);
-      *(undefined4 *)(puVar8 + 0xe) = uVar7;
-      if (0 < (short)uVar19) {
-        iVar18 = 0;
-        auVar32 = *(undefined1 (*) [16])(puVar8 + 0xe);
-        do {
-          dVar26 = (double)fVar4;
-          cVar3 = *pcVar21;
-          pcVar21 = pcVar21 + 1;
-          if ((cVar3 == '\x01') &&
-             (iVar16 = FastCheckBsphere(dVar28,dVar29,uVar20 + 800), iVar16 != 0)) {
-            SubmitOceanCell(dVar26,dVar27,dVar30,lVar15);
-          }
-          auVar32 = vectorAddFloatingPoint(auVar32,auVar35);
-          uVar19 = ocean->cellsX;
-          iVar18 = iVar18 + 7;
-          fVar4 = (float)((double)ocean->scaleX * dVar25 + dVar26);
-          auVar33 = loadVectorLeftIndexed(0x10,lVar15);
-        } while (iVar18 < (short)uVar19);
-      }
-      auVar32 = vectorAddFloatingPoint(auVar32,auVar34);
-      uVar6 = ocean->cellsY;
-      iVar17 = iVar17 + 7;
-      auVar33 = auVar33 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar33 = auVar33 | auVar33 << 0x20 | auVar33 << 0x40 | auVar33 << 0x60;
-      fVar4 = (float)((double)ocean->scaleY * dVar25 + dVar27);
-      *(undefined1 (*) [16])(puVar8 + 0xe) = auVar32;
-    } while (iVar17 < (short)uVar6);
-  }
-  idol_draw::RsxCmd_WritePass(*(RenderingStep **)((int)&DepthPass + iVar9));
-  return dVar30;
+    RenderingStep **passes = g_OceanPasses;
+    RenderingStep *pass;
+    int passIdx;
+    int frame;
+    float blend;
+    int tex;
+    int nextTex;
+    float cellW;
+    float cellH;
+    float radius;
+    Vec4 center;
+    char *occupied;
+    u32 *colors;
+    float cellX;
+    float cellY;
+    int row;
+    int col;
+
+    if (ocean->depth == OCEAN_DEPTH_ONLY) {
+        passIdx = 2;
+        idol_draw::DrawDepth(DepthPass, 0);
+        *DepthPass->command++ = (RsxCmd)CELL_GCM_METHOD(CELL_GCM_NV4097_SET_ALPHA_TEST_ENABLE, 1);
+        *DepthPass->command++ = (RsxCmd)0;
+        idol_draw::DrawDepth(ForwardPass, 0);
+        *ForwardPass->command++ = (RsxCmd)CELL_GCM_METHOD(CELL_GCM_NV4097_SET_ALPHA_TEST_ENABLE, 1);
+        *ForwardPass->command++ = (RsxCmd)0;
+    }
+    else if (Level == Kerwan) {
+        passIdx = 1;
+        idol_draw::DrawDepth(OceanForwardPass, 0xc000000064ULL);
+        *OceanForwardPass->command++ = (RsxCmd)CELL_GCM_METHOD(CELL_GCM_NV4097_SET_ALPHA_TEST_ENABLE, 1);
+        *OceanForwardPass->command++ = (RsxCmd)0;
+    }
+    else {
+        passIdx = 2;
+        idol_draw::DrawDepth(ForwardPass, (u64)ocean->depth << 33 | 100);
+        *ForwardPass->command++ = (RsxCmd)CELL_GCM_METHOD(CELL_GCM_NV4097_SET_ALPHA_TEST_ENABLE, 1);
+        *ForwardPass->command++ = (RsxCmd)0;
+    }
+
+    pass = passes[passIdx];
+    idol_draw::RsxCmd_DebugStr_Marker(pass, "Ocean");
+
+    /* the animated texture: this frame and the next, and how far between them */
+    frame = (int)worldUpdateTime / ocean->field16_0x33;
+    blend = (float)(s64)(int)worldUpdateTime / (float)(s64)ocean->field16_0x33 - (float)(s64)frame;
+    tex = ocean->tex_offset + frame % ocean->num_texs_to_cycle;
+    nextTex = ocean->tex_offset + (frame + 1) % ocean->num_texs_to_cycle;
+
+    BindEffectTex(passes[passIdx], 0, tex);
+    BindEffectTex(passes[passIdx], 1, nextTex);
+
+    if (ocean->depth == OCEAN_DEPTH_ONLY) {
+        BindEffectTex(DepthPass, 0, tex);
+    }
+
+    idol_draw::ResetPassState(passes[passIdx]);
+
+    cellW = ocean->scaleX * OCEAN_CELL;
+    cellH = ocean->scaleY * OCEAN_CELL;
+    radius = sqrtf((cellH < cellW ? cellW : cellH) * (cellH < cellW ? cellW : cellH) * 2.0f);
+
+    occupied = ocean->occupied_ocean_cells;
+    colors = (u32 *)ocean->vertex_color_ptr;
+    center.y = ocean->y + ocean->scaleY * OCEAN_CELL * 0.5f;
+    center.z = ocean->z;
+    cellY = ocean->y;
+
+    for (row = 0; row < (short)ocean->cellsY; row += OCEAN_CELL) {
+        center.x = ocean->x + ocean->scaleX * 3.5f;
+        cellX = ocean->x;
+
+        for (col = 0; col < (short)ocean->cellsX; col += OCEAN_CELL) {
+            if (*occupied++ == 1 &&
+                FastCheckBsphere((u8 *)DAT_00902e9c + 800, radius, ocean->field3_0xc, center) != 0) {
+                SubmitOceanCell(ocean, cellX, cellY, colors, blend, passIdx);
+            }
+
+            center.x += cellW;
+            colors += OCEAN_PATCH * OCEAN_PATCH * 2;
+            cellX = ocean->scaleX * OCEAN_CELL + cellX;
+        }
+
+        center.y += cellH;
+        cellY = ocean->scaleY * OCEAN_CELL + cellY;
+    }
+
+    idol_draw::RsxCmd_WritePass(passes[passIdx]);
+    return blend;
 }
 
+/* the ocean wave uv table, scaled */
+static inline void ScaleOceanUV(float scale)
+{
+    int i;
+
+    for (i = 0; i < OCEAN_STRIP_VERTS; i++) {
+        g_OceanUV[i].x = g_OceanBaseUV[i].x * scale;
+        g_OceanUV[i].y = g_OceanBaseUV[i].y * scale;
+    }
+}
 
 // 0x017e31c (0x4c bytes)
-void OceanPlane_SetDepth(float scale,OceanPlane *ocean,undefined8 param_3,byte depth)
-
+void OceanPlane_SetDepth(float scale, OceanPlane *ocean, u64 unused, u8 depth)
 {
-  float fVar1;
-  float fVar2;
-  float *pfVar3;
-  float *pfVar4;
-  longlong lVar5;
-  
-  ocean->depth = depth;
-  lVar5 = 0x7c;
-  pfVar4 = (float *)&DAT_0073af50;
-  pfVar3 = (float *)&DAT_00e5aad0;
-  do {
-    fVar1 = *pfVar4;
-    fVar2 = pfVar4[1];
-    pfVar4 = pfVar4 + 2;
-    *pfVar3 = fVar1 * scale;
-    pfVar3[1] = fVar2 * scale;
-    pfVar3 = pfVar3 + 2;
-    lVar5 = lVar5 + -1;
-  } while (lVar5 != 0);
-  return;
+    ocean->depth = depth;
+    ScaleOceanUV(scale);
 }
-
 
 // 0x017e368 (0x50 bytes)
-void OceanPlane_SetDefaultDepth(double scale,OceanPlane *param_2)
-
+void OceanPlane_SetDefaultDepth(float scale, OceanPlane *ocean)
 {
-  float fVar1;
-  float fVar2;
-  float *pfVar3;
-  float *pfVar4;
-  longlong lVar5;
-  
-  param_2->depth = 0x80;
-  lVar5 = 0x7c;
-  pfVar4 = (float *)&DAT_0073af50;
-  pfVar3 = (float *)&DAT_00e5aad0;
-  do {
-    fVar1 = *pfVar4;
-    fVar2 = pfVar4[1];
-    pfVar4 = pfVar4 + 2;
-    *pfVar3 = (float)((double)fVar1 * scale);
-    pfVar3[1] = (float)((double)fVar2 * scale);
-    pfVar3 = pfVar3 + 2;
-    lVar5 = lVar5 + -1;
-  } while (lVar5 != 0);
-  return;
+    ocean->depth = OCEAN_DEPTH_ONLY;
+    ScaleOceanUV(scale);
 }
-
 
 // 0x017e3b8 (0x110 bytes)
 void PushOceanFog(OceanPlane *ocean)
-
 {
-  undefined8 cmd;
-  
-  OceanFogNearDist = g_ViewContext.fogNearDist;
-  OceanFogFarDist = g_ViewContext.fogFarDist;
-  OceanFogNearIntensity = g_ViewContext.fogNearIntensity;
-  OceanFogFarIntensity = g_ViewContext.fogFarIntensity;
-  OceanFogR = g_ViewContext.fogR;
-  OceanFogG = g_ViewContext.fogG;
-  OceanFogB = g_ViewContext.fogB;
-  if (LevelFogMode != 1) {
-    g_ViewContext.fogNearDist = ocean->fogNearDist;
-    g_ViewContext.fogFarDist = ocean->fogFarDist;
-    g_ViewContext.fogNearIntensity = ocean->fogNearIntensity;
-    g_ViewContext.fogFarIntensity = ocean->fogFarIntensity;
-    if (Level != Umbris) {
-      g_ViewContext.fogR = (int)ocean->fogR;
-      g_ViewContext.fogG = (int)ocean->fogG;
-      g_ViewContext.fogB = (int)ocean->fogB;
-    }
-    RebuildSharedWaveTables();
-  }
-  cmd = idol_draw::PackCmd(0,1,2,1,ocean->depth);
-  SetGSReg(3,cmd);
-  return;
+    SaveFog();
+    SetOceanFog(ocean, false);
+    SetGSReg(3, idol_draw::PackCmd(0, 1, 2, 1, ocean->depth));
 }
 
+/* back to the fog saved by SaveFog */
+static inline void RestoreFog(void)
+{
+    if (LevelFogMode == FOG_MODE_FIXED) {
+        return;
+    }
+
+    g_ViewContext.fogNearDist = OceanFogNearDist;
+    g_ViewContext.fogFarDist = OceanFogFarDist;
+    g_ViewContext.fogNearIntensity = OceanFogNearIntensity;
+    g_ViewContext.fogFarIntensity = OceanFogFarIntensity;
+    g_ViewContext.fogR = OceanFogR;
+    g_ViewContext.fogG = OceanFogG;
+    g_ViewContext.fogB = OceanFogB;
+    RebuildSharedWaveTables();
+}
 
 // 0x017e4c8 (0x90 bytes)
 void PopZoneFog(OceanPlane *ocean)
-
 {
-  if (LevelFogMode != 1) {
-    g_ViewContext.fogNearDist = OceanFogNearDist;
-    g_ViewContext.fogFarDist = OceanFogFarDist;
-    g_ViewContext.fogNearIntensity = OceanFogNearIntensity;
-    g_ViewContext.fogFarIntensity = OceanFogFarIntensity;
-    g_ViewContext.fogR = OceanFogR;
-    g_ViewContext.fogG = OceanFogG;
-    g_ViewContext.fogB = OceanFogB;
-    RebuildSharedWaveTables();
-  }
-  return;
+    RestoreFog();
 }
 
-
 // 0x017e558 (0x19c bytes)
-undefined8 SubmitZone(OceanPlane *ocean)
-
+/* an ocean with its own fog */
+float SubmitZone(OceanPlane *ocean)
 {
-  undefined8 uVar1;
-  
-  OceanFogNearDist = g_ViewContext.fogNearDist;
-  OceanFogFarDist = g_ViewContext.fogFarDist;
-  OceanFogNearIntensity = g_ViewContext.fogNearIntensity;
-  OceanFogFarIntensity = g_ViewContext.fogFarIntensity;
-  OceanFogR = g_ViewContext.fogR;
-  OceanFogG = g_ViewContext.fogG;
-  OceanFogB = g_ViewContext.fogB;
-  if (LevelFogMode != 1) {
-    g_ViewContext.fogNearDist = ocean->fogNearDist;
-    g_ViewContext.fogFarDist = ocean->fogFarDist;
-    g_ViewContext.fogNearIntensity = ocean->fogNearIntensity;
-    g_ViewContext.fogFarIntensity = ocean->fogFarIntensity;
-    if (Level != Umbris) {
-      g_ViewContext.fogR = (int)ocean->fogR;
-      g_ViewContext.fogG = (int)ocean->fogG;
-      g_ViewContext.fogB = (int)ocean->fogB;
-    }
-    RebuildSharedWaveTables();
-  }
-  uVar1 = idol_draw::PackCmd(0,1,2,1,ocean->depth);
-  SetGSReg(3,uVar1);
-  uVar1 = OceanPass(ocean);
-  if (LevelFogMode != 1) {
-    g_ViewContext.fogNearDist = OceanFogNearDist;
-    g_ViewContext.fogFarDist = OceanFogFarDist;
-    g_ViewContext.fogNearIntensity = OceanFogNearIntensity;
-    g_ViewContext.fogFarIntensity = OceanFogFarIntensity;
-    g_ViewContext.fogR = OceanFogR;
-    g_ViewContext.fogG = OceanFogG;
-    g_ViewContext.fogB = OceanFogB;
-    RebuildSharedWaveTables();
-  }
-  return uVar1;
+    float blend;
+
+    PushOceanFog(ocean);
+    blend = OceanPass(ocean);
+    RestoreFog();
+
+    return blend;
 }
 
 
 // 0x017e700 (0x304 bytes)
-// strings: 0065412c: 'OceanSpecial'
-
-void OceanSpecialPass(undefined8 param_1,OceanPlane *param_2,int param_3,int param_4)
-
+/* An ocean made of prebuilt strips in one colour, uvs at half scale. */
+void OceanSpecialPass(float alpha, OceanPlane *ocean, WaterStrip *strips, int count)
 {
-  float *pfVar1;
-  float *pfVar2;
-  undefined8 uVar3;
-  int iVar4;
-  longlong lVar5;
-  int iVar6;
-  longlong lVar7;
-  double dVar8;
-  
-  idol_draw::RsxCmd_DebugStr_Marker(ForwardPass,"OceanSpecial");
-  idol_draw::RsxCmd_DebugStr_Marker(DepthPass,"OceanSpecial");
-  OceanFogNearDist = g_ViewContext.fogNearDist;
-  OceanFogFarDist = g_ViewContext.fogFarDist;
-  OceanFogNearIntensity = g_ViewContext.fogNearIntensity;
-  OceanFogFarIntensity = g_ViewContext.fogFarIntensity;
-  OceanFogR = g_ViewContext.fogR;
-  OceanFogG = g_ViewContext.fogG;
-  OceanFogB = g_ViewContext.fogB;
-  if (LevelFogMode != 1) {
-    g_ViewContext.fogNearDist = param_2->fogNearDist;
-    g_ViewContext.fogFarDist = param_2->fogFarDist;
-    g_ViewContext.fogNearIntensity = param_2->fogNearIntensity;
-    g_ViewContext.fogFarIntensity = param_2->fogFarIntensity;
-    g_ViewContext.fogR = (int)param_2->fogR;
-    g_ViewContext.fogG = (int)param_2->fogG;
-    g_ViewContext.fogB = (int)param_2->fogB;
-    RebuildSharedWaveTables();
-  }
-  uVar3 = idol_draw::PackCmd(0,1,2,1,param_2->depth);
-  SetGSReg(3,uVar3);
-  STUB_00071170();
-  iVar6 = 0;
-  lVar7 = 0x80;
-  do {
-    *(undefined4 *)(g_ScratchBuf + iVar6) = 0xff757c8e;
-    iVar4 = g_ScratchBuf + iVar6;
-    iVar6 = iVar6 + 8;
-    *(undefined4 *)(iVar4 + 4) = 0xff757c8e;
-    lVar7 = lVar7 + -1;
-  } while (lVar7 != 0);
-  iVar6 = 0;
-  if (0 < param_4) {
-    uVar3 = 0x4070000000000000;
-    dVar8 = 0.5;
-    do {
-      iVar4 = FastCheckBsphereInView(uVar3,param_3);
-      if (iVar4 != -1) {
-        iVar4 = *(int *)(param_3 + 0x1c);
-        lVar5 = (longlong)iVar4;
-        pfVar1 = *(float **)(param_3 + 0x14);
-        lVar7 = lVar5;
-        pfVar2 = (float *)(g_ScratchBuf + 0x1000);
-        while (0 < iVar4) {
-          lVar7 = lVar7 + -1;
-          *pfVar2 = (float)((double)*pfVar1 * dVar8);
-          pfVar2[1] = (float)((double)pfVar1[1] * dVar8);
-          pfVar1 = pfVar1 + 2;
-          pfVar2 = pfVar2 + 2;
-          iVar4 = (int)lVar7;
-        }
-        DrawOceanStrip
-                  (param_1,lVar5,*(undefined4 *)(param_3 + 0x10),g_ScratchBuf,g_ScratchBuf + 0x1000)
-        ;
-      }
-      iVar6 = iVar6 + 1;
-      param_3 = param_3 + 0x20;
-    } while (iVar6 < param_4);
-  }
-  if (LevelFogMode != 1) {
-    g_ViewContext.fogNearDist = OceanFogNearDist;
-    g_ViewContext.fogFarDist = OceanFogFarDist;
-    g_ViewContext.fogNearIntensity = OceanFogNearIntensity;
-    g_ViewContext.fogFarIntensity = OceanFogFarIntensity;
-    g_ViewContext.fogR = OceanFogR;
-    g_ViewContext.fogG = OceanFogG;
-    g_ViewContext.fogB = OceanFogB;
-    RebuildSharedWaveTables();
-  }
-  idol_draw::RsxCmd_WritePass(ForwardPass);
-  idol_draw::RsxCmd_WritePass(DepthPass);
-  return;
-}
+    u32 *colors = (u32 *)g_ScratchBuf;
+    Vec2 *uvs = (Vec2 *)(g_ScratchBuf + 0x1000);
+    int i;
+    int s;
 
+    idol_draw::RsxCmd_DebugStr_Marker(ForwardPass, "OceanSpecial");
+    idol_draw::RsxCmd_DebugStr_Marker(DepthPass, "OceanSpecial");
+
+    SaveFog();
+    SetOceanFog(ocean, true);
+    SetGSReg(3, idol_draw::PackCmd(0, 1, 2, 1, ocean->depth));
+    STUB_00071170();
+
+    for (i = 0; i < 256; i++) {
+        colors[i] = 0xff757c8e;
+    }
+
+    for (s = 0; s < count; s++, strips++) {
+        if (FastCheckBsphereInView(256.0f, strips) != -1) {
+            for (i = 0; i < strips->count; i++) {
+                uvs[i].x = strips->uvs[i].x * 0.5f;
+                uvs[i].y = strips->uvs[i].y * 0.5f;
+            }
+
+            DrawOceanStrip(alpha, strips->count, strips->positions, colors, uvs);
+        }
+    }
+
+    RestoreFog();
+    idol_draw::RsxCmd_WritePass(ForwardPass);
+    idol_draw::RsxCmd_WritePass(DepthPass);
+}
 
 // 0x017ea04 (0x48 bytes)
 void ScaleWaveTable(float scale)
-
 {
-  float fVar1;
-  float fVar2;
-  float *pfVar3;
-  float *pfVar4;
-  longlong lVar5;
-  
-  lVar5 = 0x7c;
-  pfVar4 = (float *)&DAT_0073af50;
-  pfVar3 = (float *)&DAT_00e5aad0;
-  do {
-    fVar1 = *pfVar4;
-    fVar2 = pfVar4[1];
-    pfVar4 = pfVar4 + 2;
-    *pfVar3 = fVar1 * scale;
-    pfVar3[1] = fVar2 * scale;
-    pfVar3 = pfVar3 + 2;
-    lVar5 = lVar5 + -1;
-  } while (lVar5 != 0);
-  return;
+    ScaleOceanUV(scale);
 }
-
 
 // 0x017ea4c (0x124 bytes)
-void SetFogVars(float neardist,float fardist,float nearintensity,float farintensity)
-
+/* fog for a special ocean (r, g, b are kept on Umbris) */
+void SetFogVars(float nearDist, float farDist, float nearIntensity, float farIntensity, u32 r, u32 g, u32 b)
 {
-  undefined8 cmd;
-  uint in_r7;
-  uint in_r8;
-  uint in_r9;
-  
-  OceanFogNearDist = g_ViewContext.fogNearDist;
-  OceanFogFarDist = g_ViewContext.fogFarDist;
-  OceanFogNearIntensity = g_ViewContext.fogNearIntensity;
-  OceanFogFarIntensity = g_ViewContext.fogFarIntensity;
-  OceanFogR = g_ViewContext.fogR;
-  OceanFogG = g_ViewContext.fogG;
-  OceanFogB = g_ViewContext.fogB;
-  if (LevelFogMode != 1) {
-    if (Level != Umbris) {
-      g_ViewContext.fogR = in_r7 & 0xff;
-      g_ViewContext.fogG = in_r8 & 0xff;
-      g_ViewContext.fogB = in_r9 & 0xff;
-    }
-    g_ViewContext.fogNearDist = neardist;
-    g_ViewContext.fogFarDist = fardist;
-    g_ViewContext.fogNearIntensity = nearintensity;
-    g_ViewContext.fogFarIntensity = farintensity;
-    RebuildSharedWaveTables();
-  }
-  cmd = idol_draw::PackCmd(0,1,2,1,0x80);
-  SetGSReg(3,cmd);
-  STUB_00500458(&DAT_0073b330,g_ScratchBuf + 0x2800,0xf8);
-  return;
-}
+    SaveFog();
 
+    if (LevelFogMode != FOG_MODE_FIXED) {
+        if (Level != Umbris) {
+            g_ViewContext.fogR = r & 0xff;
+            g_ViewContext.fogG = g & 0xff;
+            g_ViewContext.fogB = b & 0xff;
+        }
+
+        g_ViewContext.fogNearDist = nearDist;
+        g_ViewContext.fogFarDist = farDist;
+        g_ViewContext.fogNearIntensity = nearIntensity;
+        g_ViewContext.fogFarIntensity = farIntensity;
+        RebuildSharedWaveTables();
+    }
+
+    SetGSReg(3, idol_draw::PackCmd(0, 1, 2, 1, 0x80));
+    STUB_00500458(g_OceanStripIdx, g_ScratchBuf + 0x2800, 0xf8);
+}
 
 // 0x017eb70 (0x90 bytes)
 void RestoreFogVars(void)
-
 {
-  if (LevelFogMode != 1) {
-    g_ViewContext.fogNearDist = OceanFogNearDist;
-    g_ViewContext.fogFarDist = OceanFogFarDist;
-    g_ViewContext.fogNearIntensity = OceanFogNearIntensity;
-    g_ViewContext.fogFarIntensity = OceanFogFarIntensity;
-    g_ViewContext.fogR = OceanFogR;
-    g_ViewContext.fogG = OceanFogG;
-    g_ViewContext.fogB = OceanFogB;
-    RebuildSharedWaveTables();
-  }
-  return;
+    RestoreFog();
 }
-
 
 // 0x017ec00 (0x38 bytes)
 void OceanPass_Thunk(OceanPlane *ocean)
-
 {
-  STUB_000ea1e8();
-  OceanPass(ocean);
-  return;
+    STUB_000ea1e8();
+    OceanPass(ocean);
 }
-
 
 // 0x017ec40 (0x1d4 bytes)
-// strings: 0065413c: 'Ice'
-
-void IcePass(int param_1,int param_2,undefined8 param_3,undefined8 param_4)
-
+/* Ice: strips in a flat grey with an environment map from their normals. */
+void IcePass(WaterStrip *strips, int count, int tex0, int tex1)
 {
-  undefined8 uVar1;
-  undefined4 *puVar2;
-  int iVar3;
-  int iVar4;
-  longlong lVar5;
-  undefined8 uVar6;
-  
-  idol_draw::RsxCmd_DebugStr_Marker(DL_Pass,"Ice");
-  idol_draw::RsxCmd_DebugStr_Marker(DL_DepthPass,"Ice");
-  STUB_00071170();
-  uVar1 = idol_draw::PackCmd(0,1,2,1,0x80);
-  idol_draw::PackCmd(0,1,2,1,0x40);
-  lVar5 = 0x2d;
-  puVar2 = g_ScratchBuf;
-  do {
-    *puVar2 = 0x80808080;
-    puVar2[1] = 0x80808080;
-    puVar2[2] = 0x80808080;
-    puVar2[3] = 0x80808080;
-    lVar5 = lVar5 + -1;
-    puVar2 = puVar2 + 4;
-  } while (lVar5 != 0);
-  iVar4 = 0;
-  if (0 < param_2) {
-    uVar6 = 0x4070000000000000;
-    do {
-      iVar3 = FastCheckBsphereInView(uVar6,param_1);
-      if (iVar3 != -1) {
-        NormalsToEnvUV
-                  (*(int *)(param_1 + 0x1c),*(void **)(param_1 + 0x10),*(Vec3 **)(param_1 + 0x18),
-                   (Vec2 *)(g_ScratchBuf + 0x400));
-        DrawTexturedStrips
-                  (*(undefined4 *)(param_1 + 0x1c),*(undefined4 *)(param_1 + 0x10),g_ScratchBuf,
-                   *(undefined4 *)(param_1 + 0x14),g_ScratchBuf + 0x400,param_3,param_4,uVar1);
-      }
-      iVar4 = iVar4 + 1;
-      param_1 = param_1 + 0x20;
-    } while (iVar4 < param_2);
-  }
-  idol_draw::RsxCmd_WritePass(DL_Pass);
-  idol_draw::RsxCmd_WritePass(DL_DepthPass);
-  return;
-}
+    u32 *colors = (u32 *)g_ScratchBuf;
+    Vec2 *envUV = (Vec2 *)(g_ScratchBuf + 0x400);
+    u64 depthCmd;
+    int i;
 
+    idol_draw::RsxCmd_DebugStr_Marker(DL_Pass, "Ice");
+    idol_draw::RsxCmd_DebugStr_Marker(DL_DepthPass, "Ice");
+    STUB_00071170();
+
+    depthCmd = idol_draw::PackCmd(0, 1, 2, 1, 0x80);
+    idol_draw::PackCmd(0, 1, 2, 1, 0x40);
+
+    for (i = 0; i < 0xb4; i++) {
+        colors[i] = 0x80808080;
+    }
+
+    for (i = 0; i < count; i++, strips++) {
+        if (FastCheckBsphereInView(256.0f, strips) != -1) {
+            NormalsToEnvUV(strips->count, strips->positions, strips->normals, envUV);
+            DrawTexturedStrips(strips->count, strips->positions, colors, strips->uvs, envUV, tex0, tex1, depthCmd);
+        }
+    }
+
+    idol_draw::RsxCmd_WritePass(DL_Pass);
+    idol_draw::RsxCmd_WritePass(DL_DepthPass);
+}
 
 // 0x017ee14 (0x32c bytes)
+/* the PS2 GS packets the water code once sent (static constructor) */
 void Water_StaticInitGsPackets(void)
-
 {
-  DAT_0073b50c = 0x10000;
-  DAT_0073a980 = SCE_GIF_SET_TAG(1,1,0,0,0,6);
-  DAT_0073a990 = idol_draw::Blend(1,5,0x60,3,0,0,1,2);
-  DAT_0073a9a0 = idol_draw::Blend(1,5,0x60,3,0,0,1,2);
-  DAT_0073a9b0 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
-  DAT_0073a9c0 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
-  DAT_0073a9d0 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
-  DAT_0073a9e0 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
-  DAT_0073adc8 = FUN_00502e98(4,4,0);
-  DAT_0073adf4 = FUN_005030dc(0);
-  DAT_0073ae08 = FUN_00502e98(1,3,0);
-  DAT_0073ae20 = FUN_005030ec(0);
-  DAT_0073ae60 = FUN_005030ec(0);
-  DAT_0073b430 = SCE_GIF_SET_TAG(1,1,0,0,0,8);
-  DAT_0073b440 = FUN_00502f98(0,0,0,0,0,0,1,2);
-  DAT_0073b450 = FUN_00502f98(0,0,0,0,0,0,1,2);
-  DAT_0073b460 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
-  DAT_0073b470 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
-  DAT_0073b480 = idol_draw::PackCmd(0,1,2,1,0x80);
-  DAT_0073b490 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
-  DAT_0073b4a0 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
-  DAT_0073b4b0 = idol_draw::PackCmd(0,1,2,1,0x40);
-  return;
-}
+    DAT_0073b50c = 0x10000;
 
+    DAT_0073a980 = SCE_GIF_SET_TAG(1, 1, 0, 0, 0, 6);
+    DAT_0073a990 = idol_draw::Blend(1, 5, 0x60, 3, 0, 0, 1, 2);
+    DAT_0073a9a0 = idol_draw::Blend(1, 5, 0x60, 3, 0, 0, 1, 2);
+    DAT_0073a9b0 = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
+    DAT_0073a9c0 = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
+    DAT_0073a9d0 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
+    DAT_0073a9e0 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
+    DAT_0073adc8 = FUN_00502e98(4, 4, 0);
+    DAT_0073adf4 = FUN_005030dc(0);
+    DAT_0073ae08 = FUN_00502e98(1, 3, 0);
+    DAT_0073ae20 = FUN_005030ec(0);
+    DAT_0073ae60 = FUN_005030ec(0);
+
+    DAT_0073b430 = SCE_GIF_SET_TAG(1, 1, 0, 0, 0, 8);
+    DAT_0073b440 = FUN_00502f98(0, 0, 0, 0, 0, 0, 1, 2);
+    DAT_0073b450 = FUN_00502f98(0, 0, 0, 0, 0, 0, 1, 2);
+    DAT_0073b460 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
+    DAT_0073b470 = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
+    DAT_0073b480 = idol_draw::PackCmd(0, 1, 2, 1, 0x80);
+    DAT_0073b490 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
+    DAT_0073b4a0 = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
+    DAT_0073b4b0 = idol_draw::PackCmd(0, 1, 2, 1, 0x40);
+}
 
 // 0x017f148 (0x7c bytes)
-void WaterDrift_Set
-               (double param_1,double param_2,int param_3,undefined8 param_4,undefined8 param_5,
-               undefined2 param_6)
-
+/* Sets the water drift (the current that pushes the hero along): mode 0 none, 2 and 3 wander
+   from the given direction and speed. A speed over 9.6 per frame becomes that limit over the
+   speed (as in the binary). */
+void WaterDrift_Set(int mode, float angle, float speed, short period)
 {
-  DAT_00e5aeec = (short)param_3;
-  if (param_3 == 0) {
-    DAT_00e5aee0 = 0.0;
-    DAT_00e5aef0 = 0.0;
-    DAT_00e5aefc = 0;
-  }
-  else {
-    DAT_00e5aee4 = (float)param_1;
-    DAT_00e5aee0 = (float)param_1;
-    DAT_00e5aeee = 0;
-    if ((double)(g_FrameTime * 9.6) - ABS(param_2) < 0.0) {
-      param_2 = (double)(float)((double)(g_FrameTime * 9.6) / ABS(param_2));
+    g_WaterDrift.mode = mode;
+
+    if (mode == 0) {
+        g_WaterDrift.baseAngle = 0.0f;
+        g_WaterDrift.baseSpeed = 0.0f;
+        g_WaterDrift.period = 0;
+        return;
     }
-    DAT_00e5aef0 = (float)param_2;
-    DAT_00e5aef4 = (float)param_2;
-    DAT_00e5aefc = param_6;
-  }
-  return;
+
+    {
+        float maxSpeed = g_FrameTime * DRIFT_SPEED_SCALE;
+
+        g_WaterDrift.angle = angle;
+        g_WaterDrift.period = period;
+        g_WaterDrift.baseAngle = angle;
+        g_WaterDrift.state = 0;
+
+        if (maxSpeed - fabsf(speed) < 0.0) {
+            speed = maxSpeed / fabsf(speed);
+        }
+
+        g_WaterDrift.baseSpeed = speed;
+        g_WaterDrift.speed = speed;
+    }
 }
 
+/* starts a turn: a random new direction (within turnRange of the base) and speed, reached over
+   the given frames */
+static inline void StartDriftTurn(float frames, float turnRange, float speedMin, float speedMax, short nextState)
+{
+    float angle = FastWrapRot(g_WaterDrift.baseAngle, MB_randRangeFloat(-turnRange, turnRange));
+    float speed = MB_randRangeFloat(speedMin, speedMax);
+
+    g_WaterDrift.angleStep = FastDiffRots(angle, g_WaterDrift.angle) / frames;
+    g_WaterDrift.speedStep = (speed - g_WaterDrift.speed) / frames;
+    g_WaterDrift.timer = FastDoubleToInt(frames);
+    g_WaterDrift.state = nextState;
+}
+
+/* one frame of a turn; at its end, a pause of period * (pauseMin..pauseMax) */
+static inline void StepDriftTurn(float pauseMin, float pauseMax, short nextState)
+{
+    if (FastDecTimerS16((u16 *)&g_WaterDrift.timer) == 0) {
+        float maxSpeed;
+
+        g_WaterDrift.angle = FastWrapRot(g_WaterDrift.angle, g_WaterDrift.angleStep);
+        g_WaterDrift.speed += g_WaterDrift.speedStep;
+        maxSpeed = g_FrameTime * DRIFT_SPEED_SCALE;
+
+        if (fabsf(g_WaterDrift.speed) > maxSpeed) {
+            g_WaterDrift.speed = maxSpeed * (g_WaterDrift.speed - 0.0f < 0.0f ? -1.0f : 1.0f);
+        }
+    }
+    else {
+        g_WaterDrift.timer = FastDoubleToInt(FastIntToDouble(g_WaterDrift.period) * MB_randRangeFloat(pauseMin, pauseMax));
+        g_WaterDrift.state = nextState;
+    }
+}
 
 // 0x017f210 (0x5b0 bytes)
+/* Mode 2: pause, turn up to 60 degrees off the base direction, repeat. Mode 3: pause, a wide turn
+   (90 degrees, faster), a short pause, a small turn (45 degrees), repeat. */
 void WaterDrift_Update(void)
-
 {
-  float fVar1;
-  int iVar2;
-  undefined8 uVar3;
-  double dVar4;
-  double dVar5;
-  double dVar6;
-  double dVar7;
-  double dVar8;
-  
-  if (1 < DAT_00e5aeec) {
-    if (DAT_00e5aeec < 3) {
-      if (DAT_00e5aeee < 1) {
-        if ((-1 < DAT_00e5aeee) && (iVar2 = FastDecTimerS16(&DAT_00e5aefe), iVar2 != 0)) {
-          dVar4 = (double)FastIntToDouble(DAT_00e5aefc);
-          dVar6 = 0.5;
-          dVar7 = 1.5;
-          dVar5 = (double)MB_randRangeFloat(0.5,1.5);
-          dVar8 = (double)(float)(dVar4 * dVar5);
-          dVar5 = (double)DAT_00e5aee0;
-          dVar4 = (double)MB_randRangeFloat(-1.0471976,1.0471976);
-          uVar3 = FastWrapRot((float)dVar5,(float)dVar4);
-          dVar4 = (double)MB_randRangeFloat
-                                    ((float)((double)DAT_00e5aef0 * dVar6),
-                                     (float)((double)DAT_00e5aef0 * dVar7));
-          dVar5 = (double)FastDiffRots(uVar3,(double)DAT_00e5aee4);
-          DAT_00e5aee8 = (float)(dVar5 / dVar8);
-          DAT_00e5aef8 = (float)((double)(float)(dVar4 - (double)DAT_00e5aef4) / dVar8);
-          DAT_00e5aefe = FastDoubleToInt(dVar8);
-          DAT_00e5aeee = 1;
-        }
-      }
-      else if (DAT_00e5aeee < 2) {
-        iVar2 = FastDecTimerS16(&DAT_00e5aefe);
-        if (iVar2 == 0) {
-          dVar4 = (double)FastWrapRot(DAT_00e5aee4,DAT_00e5aee8);
-          DAT_00e5aee4 = (float)dVar4;
-          DAT_00e5aef4 = DAT_00e5aef4 + DAT_00e5aef8;
-          if (g_FrameTime * 9.6 < ABS(DAT_00e5aef4)) {
-            fVar1 = 1.0;
-            if (DAT_00e5aef4 - 0.0 < 0.0) {
-              fVar1 = -1.0;
+    if (g_WaterDrift.mode == 2) {
+        switch (g_WaterDrift.state) {
+        case 0:
+            if (FastDecTimerS16((u16 *)&g_WaterDrift.timer) != 0) {
+                float frames = FastIntToDouble(g_WaterDrift.period) * MB_randRangeFloat(0.5f, 1.5f);
+
+                StartDriftTurn(frames, 1.0471976f, g_WaterDrift.baseSpeed * 0.5f, g_WaterDrift.baseSpeed * 1.5f, 1);
             }
-            DAT_00e5aef4 = g_FrameTime * 9.6 * fVar1;
-          }
+            break;
+        case 1:
+            StepDriftTurn(2.0f, 3.0f, 0);
+            break;
         }
-        else {
-          dVar4 = (double)FastIntToDouble(DAT_00e5aefc);
-          dVar5 = (double)MB_randRangeFloat(2.0,3.0);
-          DAT_00e5aefe = FastDoubleToInt((double)(float)(dVar4 * dVar5));
-          DAT_00e5aeee = 0;
-        }
-      }
     }
-    else if (DAT_00e5aeec < 4) {
-      if (DAT_00e5aeee < 2) {
-        if (-1 < DAT_00e5aeee) {
-          if (DAT_00e5aeee < 1) {
-            iVar2 = FastDecTimerS16(&DAT_00e5aefe);
-            if (iVar2 != 0) {
-              dVar4 = (double)MB_randRangeFloat(45.0,60.0);
-              dVar5 = (double)DAT_00e5aee0;
-              dVar7 = (double)(float)(dVar4 * (double)animationSpeed);
-              dVar4 = (double)MB_randRangeFloat(-1.5707964,1.5707964);
-              uVar3 = FastWrapRot((float)dVar5,(float)dVar4);
-              dVar4 = (double)MB_randRangeFloat(DAT_00e5aef0 * 1.5,DAT_00e5aef0 * 2.0);
-              dVar5 = (double)FastDiffRots(uVar3,(double)DAT_00e5aee4);
-              DAT_00e5aee8 = (float)(dVar5 / dVar7);
-              DAT_00e5aef8 = (float)((double)(float)(dVar4 - (double)DAT_00e5aef4) / dVar7);
-              DAT_00e5aefe = FastDoubleToInt(dVar7);
-              DAT_00e5aeee = 1;
+    else if (g_WaterDrift.mode == 3) {
+        switch (g_WaterDrift.state) {
+        case 0:
+            if (FastDecTimerS16((u16 *)&g_WaterDrift.timer) != 0) {
+                float frames = MB_randRangeFloat(45.0f, 60.0f) * animationSpeed;
+
+                StartDriftTurn(frames, 1.5707964f, g_WaterDrift.baseSpeed * 1.5f, g_WaterDrift.baseSpeed * 2.0f, 1);
             }
-          }
-          else {
-            iVar2 = FastDecTimerS16(&DAT_00e5aefe);
-            if (iVar2 == 0) {
-              dVar4 = (double)FastWrapRot(DAT_00e5aee4,DAT_00e5aee8);
-              DAT_00e5aee4 = (float)dVar4;
-              DAT_00e5aef4 = DAT_00e5aef4 + DAT_00e5aef8;
-              if (g_FrameTime * 9.6 < ABS(DAT_00e5aef4)) {
-                fVar1 = 1.0;
-                if (DAT_00e5aef4 - 0.0 < 0.0) {
-                  fVar1 = -1.0;
-                }
-                DAT_00e5aef4 = g_FrameTime * 9.6 * fVar1;
-              }
+            break;
+        case 1:
+            StepDriftTurn(1.0f, 1.5f, 2);
+            break;
+        case 2:
+            if (FastDecTimerS16((u16 *)&g_WaterDrift.timer) != 0) {
+                float frames = MB_randRangeFloat(45.0f, 60.0f) * animationSpeed;
+
+                StartDriftTurn(frames, 0.785398f, g_WaterDrift.baseSpeed * 0.8f, g_WaterDrift.baseSpeed * 1.2f, 3);
             }
-            else {
-              dVar4 = (double)FastIntToDouble(DAT_00e5aefc);
-              dVar5 = (double)MB_randRangeFloat(1.0,1.5);
-              DAT_00e5aefe = FastDoubleToInt((double)(float)(dVar4 * dVar5));
-              DAT_00e5aeee = 2;
-            }
-          }
+            break;
+        case 3:
+            StepDriftTurn(3.0f, 5.0f, 0);
+            break;
         }
-      }
-      else if (DAT_00e5aeee < 3) {
-        iVar2 = FastDecTimerS16(&DAT_00e5aefe);
-        if (iVar2 != 0) {
-          dVar4 = (double)MB_randRangeFloat(45.0,60.0);
-          dVar5 = (double)DAT_00e5aee0;
-          dVar7 = (double)(float)(dVar4 * (double)animationSpeed);
-          dVar4 = (double)MB_randRangeFloat(-0.785398,0.785398);
-          uVar3 = FastWrapRot((float)dVar5,(float)dVar4);
-          dVar4 = (double)MB_randRangeFloat(DAT_00e5aef0 * 0.8,DAT_00e5aef0 * 1.2);
-          dVar5 = (double)FastDiffRots(uVar3,(double)DAT_00e5aee4);
-          DAT_00e5aee8 = (float)(dVar5 / dVar7);
-          DAT_00e5aef8 = (float)((double)(float)(dVar4 - (double)DAT_00e5aef4) / dVar7);
-          DAT_00e5aefe = FastDoubleToInt(dVar7);
-          DAT_00e5aeee = 3;
-        }
-      }
-      else if (DAT_00e5aeee < 4) {
-        iVar2 = FastDecTimerS16(&DAT_00e5aefe);
-        if (iVar2 == 0) {
-          dVar4 = (double)FastWrapRot(DAT_00e5aee4,DAT_00e5aee8);
-          DAT_00e5aee4 = (float)dVar4;
-          DAT_00e5aef4 = DAT_00e5aef4 + DAT_00e5aef8;
-          if (g_FrameTime * 9.6 < ABS(DAT_00e5aef4)) {
-            fVar1 = 1.0;
-            if (DAT_00e5aef4 - 0.0 < 0.0) {
-              fVar1 = -1.0;
-            }
-            DAT_00e5aef4 = g_FrameTime * 9.6 * fVar1;
-          }
-        }
-        else {
-          dVar4 = (double)FastIntToDouble(DAT_00e5aefc);
-          dVar5 = (double)MB_randRangeFloat(3.0,5.0);
-          DAT_00e5aefe = FastDoubleToInt((double)(float)(dVar4 * dVar5));
-          DAT_00e5aeee = 0;
-        }
-      }
     }
-  }
-  return;
 }
-
-

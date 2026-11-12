@@ -381,7 +381,7 @@ undefined8 FastMemCmp(int *param_1,int *param_2,int param_3)
 
 
 // 0x0500458 (0x4 bytes)
-void STUB_00500458(...)
+void STUB_00500458(void *param_1,void *param_2,int param_3)
 
 {
   return;
@@ -397,7 +397,7 @@ void STUB_0050045c(...)
 
 
 // 0x0500460 (0xe0 bytes)
-ulonglong FastUpdateClipFlags(uint *param_1)
+u32 FastUpdateClipFlags(Vec4 *param_1)
 
 {
   uint uVar1;
@@ -2462,7 +2462,7 @@ void FastVecMtx4MultLerp(double param_1,float *param_2,float *param_3,float *par
 
 
 // 0x0502578 (0x58 bytes)
-double FastWrapRot(float param_1,float param_2)
+float FastWrapRot(float param_1,float param_2)
 
 {
   double dVar1;
@@ -2481,7 +2481,7 @@ double FastWrapRot(float param_1,float param_2)
 
 
 // 0x05025e0 (0x58 bytes)
-double FastDiffRots(double param_1,double param_2)
+float FastDiffRots(float param_1,float param_2)
 
 {
   double dVar1;
@@ -2684,7 +2684,7 @@ undefined4 FUN_00502850(void)
 // 0x0502910 (0x88 bytes)
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-undefined8 FastCheckBsphereInView(undefined8 param_1,undefined8 param_2)
+int FastCheckBsphereInView(float param_1,void *param_2)
 
 {
   int iVar2;
@@ -3207,7 +3207,7 @@ undefined8 FUN_00502e90(void)
 
 
 // 0x0502e98 (0x8 bytes)
-undefined8 FUN_00502e98(void)
+u64 FUN_00502e98(int param_1,int param_2,int param_3)
 
 {
   return 0;
@@ -3292,7 +3292,7 @@ uint idol_draw::Blend(int param_1,int param_2,int param_3,int param_4,int param_
 
 
 // 0x0502f98 (0x1c bytes)
-uint FUN_00502f98(uint param_1,int param_2,int param_3)
+u64 FUN_00502f98(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6,int param_7,int param_8)
 
 {
   return param_1 | param_2 << 1 | param_3 << 4;
@@ -3644,7 +3644,7 @@ undefined8 FUN_005030d4(void)
 
 
 // 0x05030dc (0x8 bytes)
-undefined8 FUN_005030dc(void)
+u64 FUN_005030dc(int param_1)
 
 {
   return 0;
@@ -3660,7 +3660,7 @@ undefined8 FUN_005030e4(void)
 
 
 // 0x05030ec (0x8 bytes)
-undefined8 FUN_005030ec(void)
+u64 FUN_005030ec(int param_1)
 
 {
   return 0;

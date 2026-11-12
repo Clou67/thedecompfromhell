@@ -34,7 +34,6 @@
 #include "game/update/moby1118.h"
 #include "game/vendor.h"
 #include "game/vuchain.h"
-#include "game/water.h"
 #include "idol/fastfunc.h"
 #include "idol/idol.h"
 #include "idol/mUnk.h"

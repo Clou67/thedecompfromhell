@@ -74,3 +74,5 @@ g_EnvSamples	game/mobyfunc
 BinkPlayer	idol/mUnk
 SceneSound	game/boot
 SoundDef	game/sound
+WaterDrift	game/water
+WaterStrip	game/water

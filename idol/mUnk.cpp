@@ -31,7 +31,6 @@
 #include "game/update/moby1118.h"
 #include "game/vendor.h"
 #include "game/vuchain.h"
-#include "game/water.h"
 #include "idol/fUnk.h"
 #include "idol/fastfunc.h"
 #include "idol/idol.h"
@@ -2340,7 +2339,7 @@ void FUN_004d6704(ulonglong param_1,int *param_2,int *param_3)
 
 
 // 0x04d676c (0x11c bytes)
-void FUN_004d676c(int param_1,ulonglong param_2,undefined4 *param_3,uint param_4,ulonglong param_5)
+void FUN_004d676c(RenderingStep *param_1,int param_2,u8 *param_3,int param_4,int param_5)
 
 {
   undefined4 uVar1;

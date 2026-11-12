@@ -10,6 +10,7 @@
 #include <string.h>
 #include "game/mesh.h"
 #include "game/camera.h"
+#include "game/draw.h"
 #include "game/water.h"
 #include "idol/fastfunc.h"
 

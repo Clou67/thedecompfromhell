@@ -167,3 +167,25 @@ DAT_008fabd0	char *NAME /* 0x8fabd0: &Cheats[4] */
 DAT_008fa630	void *NAME /* 0x8fa630 */
 DAT_0090d714	u8 *NAME /* 0x90d714 */
 DAT_00964564	u32 *NAME /* 0x964564: the initialised-data records */
+g_WaterDrift	WaterDrift NAME /* 0xe5aee0 */
+g_WaterBufPrev	int NAME /* 0x73a9f0: the wave step reads this height buffer */
+g_WaterBufCur	int NAME /* 0xe5aaa4: and writes this one */
+g_WaterBufShown	int NAME /* 0x73a9f4: the buffer drawn and sampled (2 = the blend of the two) */
+g_WaterLerpT	float NAME /* 0x73aa40 */
+g_WaterBoundTex	u32 NAME /* 0x73aa44: the tile layer texture last bound */
+g_WaterBoundAlpha	u32 NAME /* 0x73aa4c */
+g_WaterStripIdx	s16 NAME[46] /* 0x73aa60: the vertices of a cell's strip, in its 17-wide grid */
+g_WaterUV	Vec2 NAME[46] /* 0x73aac0: a cell's base layer uvs, wobbled each tile */
+g_WaterBaseUV	Vec2 NAME[46] /* 0x73ac40 */
+g_WaterUVUseY	int NAME[46] /* 0x73ae70: entries wobbled by rotAngle.y instead of .x */
+g_OceanBaseUV	Vec2 NAME[124] /* 0x73af50 */
+g_OceanUV	Vec2 NAME[124] /* 0xe5aad0: g_OceanBaseUV scaled */
+g_OceanStripIdx	s16 NAME[124] /* 0x73b330: the vertices of an ocean cell's strip, in its 8x8 patch */
+g_OceanPasses	RenderingStep *NAME[3] /* 0x8fa414: DepthPass, OceanForwardPass, ForwardPass */
+OceanFogNearDist	float NAME /* 0xe5aeb8: the fog saved while an ocean's is used */
+OceanFogFarDist	float NAME /* 0xe5aebc */
+OceanFogNearIntensity	float NAME /* 0xe5aec0 */
+OceanFogFarIntensity	float NAME /* 0xe5aec4 */
+OceanFogR	int NAME /* 0xe5aec8 */
+OceanFogG	int NAME /* 0xe5aecc */
+OceanFogB	int NAME /* 0xe5aed0 */

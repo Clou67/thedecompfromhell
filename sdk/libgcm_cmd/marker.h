@@ -4,7 +4,7 @@
 
 // ---- functions
 void FUN_0050e998(int param_1,char *param_2);
-namespace idol_draw { void RsxCmd_DebugStr_Marker(int param_1,char *param_2); } 
+namespace idol_draw { void RsxCmd_DebugStr_Marker(RenderingStep *param_1,char *param_2); } 
 namespace idol_draw { void RsxCmd_WritePass(RenderingStep *STEP); } 
 void FUN_0050ecec(int param_1,char *param_2);
 void FUN_0050edbc(int param_1,char *param_2);

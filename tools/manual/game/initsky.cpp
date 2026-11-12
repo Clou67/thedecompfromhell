@@ -12,7 +12,7 @@ void SECTION_HEADER_INITSKY(void)
 // 0x00d93c0 (0x28c bytes)
 void InitSky(void)
 {
-    idol_draw::RsxCmd_DebugStr_Marker((int)ForwardPass, (char *)"Sky");
+    idol_draw::RsxCmd_DebugStr_Marker(ForwardPass, (char *)"Sky");
     SetupGifPaging();
     switch (Level) {
     case 0:  SkyLevel_00(); break;

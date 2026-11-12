@@ -191,7 +191,7 @@ void SkySpriteProc(void)
         int sampler0, sampler1;
 
         FUN_004d6704(1, &sampler0, &sampler1);
-        FUN_004d676c((int)ctx, 0, (undefined4 *)(texHeaders + texIndex * 36), sampler0, sampler1);
+        FUN_004d676c(ctx, 0, (u8 *)(texHeaders + texIndex * 36), sampler0, sampler1);
         idol_draw::ResetPassState(ctx);
 
         EmitMethod(ctx, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 0 * 4, VTX_FORMAT(3, CELL_GCM_VERTEX_F));

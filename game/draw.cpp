@@ -7131,7 +7131,7 @@ void FastDrawStrip_DL(longlong param_1,int param_2)
 
 
 // 0x0072b1c (0x2c0 bytes)
-void FastDrawStrip_DLNoState(longlong param_1,int param_2)
+void FastDrawStrip_DLNoState(int param_1,void *param_2)
 
 {
   RsxCmd *pRVar1;
@@ -7232,7 +7232,7 @@ void FastDrawStrip_DLNoState(longlong param_1,int param_2)
 
 
 // 0x0072ddc (0x394 bytes)
-void FastDrawStrip_Pass(longlong param_1,int param_2,longlong param_3)
+void FastDrawStrip_Pass(int param_1,void *param_2,int param_3)
 
 {
   int iVar1;
@@ -7355,9 +7355,7 @@ void FastDrawStrip_Pass(longlong param_1,int param_2,longlong param_3)
 
 
 // 0x00731c8 (0x4b0 bytes)
-void DrawTexturedStrips
-               (ulonglong param_1,undefined4 *param_2,longlong param_3,undefined4 *param_4,
-               undefined4 *param_5,undefined4 param_6,undefined4 param_7)
+void DrawTexturedStrips(int param_1,Vec3 *param_2,u32 *param_3,Vec2 *param_4,Vec2 *param_5,int param_6,int param_7,u64 param_8)
 
 {
   undefined4 uVar1;
@@ -7882,7 +7880,7 @@ void DrawLavaStrips
 
 
 // 0x0074150 (0x450 bytes)
-void FastDrawStripColor(longlong param_1,int param_2,longlong param_3)
+void FastDrawStripColor(int param_1,void *param_2,int param_3)
 
 {
   undefined4 uVar1;
@@ -8100,7 +8098,7 @@ void DrawMeshSet(ulonglong param_1,undefined4 *param_2,uint *param_3,undefined4 
 
 
 // 0x0074780 (0x460 bytes)
-void FastDrawStripFog(longlong param_1,int param_2,longlong param_3)
+void FastDrawStripFog(int param_1,void *param_2,int param_3)
 
 {
   int iVar1;
@@ -8235,9 +8233,7 @@ void FastDrawStripFog(longlong param_1,int param_2,longlong param_3)
 
 
 // 0x0074be0 (0x108 bytes)
-void DrawOceanStrip
-               (double param_1,ulonglong param_2,undefined4 *param_3,uint *param_4,
-               undefined4 *param_5)
+void DrawOceanStrip(float param_1,int param_2,Vec3 *param_3,u32 *param_4,Vec2 *param_5)
 
 {
   undefined4 uVar1;

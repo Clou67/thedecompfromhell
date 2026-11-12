@@ -2578,6 +2578,14 @@ extern undefined4 DAT_0071fad8; /* no defined data */
 extern undefined2 DAT_0072b33c; /* 0x72b33c */
 extern undefined2 DAT_0072b348; /* 0x72b348 */
 extern undefined2 DAT_0072b354; /* 0x72b354 */
+extern undefined2 DAT_0073aa60; /* 0x73aa60 */
+extern undefined4 DAT_0073aac0; /* 0x73aac0 */
+extern undefined4 DAT_0073aac4; /* 0x73aac4 */
+extern undefined4 DAT_0073ac40; /* 0x73ac40 */
+extern undefined4 DAT_0073ac44; /* 0x73ac44 */
+extern undefined4 DAT_0073ae70; /* no defined data */
+extern undefined4 DAT_0073af50; /* 0x73af50 */
+extern undefined2 DAT_0073b330; /* 0x73b330 */
 extern undefined4 DAT_009313a4; /* no defined data */
 extern undefined4 DAT_009313a8; /* no defined data */
 extern undefined4 DAT_009313b4; /* no defined data */
@@ -2617,6 +2625,8 @@ extern undefined4 DAT_00a1e124; /* no defined data */
 extern undefined4 DAT_00a1e128; /* no defined data */
 extern undefined4 DAT_00a1e12c; /* no defined data */
 extern undefined1 DAT_00a2c444; /* 0xa2c444 */
+extern undefined4 DAT_00e5aad0; /* 0xe5aad0 */
+extern undefined4 DAT_00e5aad4; /* 0xe5aad4 */
 extern undefined4 DAT_00ec4080; /* no defined data */
 extern undefined4 g_Manipulator; /* 0x96c07b */
 extern pointer PTR_DAT_0071a328; /* 0x71a328 */
@@ -2647,6 +2657,18 @@ extern undefined4 _DAT_000e9450; /* direct read */
 extern undefined4 _DAT_0011e860; /* direct read */
 extern undefined4 _DAT_0011e880; /* direct read */
 extern undefined4 _DAT_0011e890; /* direct read */
+extern undefined4 _DAT_0017d880; /* direct read */
+extern undefined4 _DAT_0017d890; /* direct read */
+extern undefined4 _DAT_0017d8a0; /* direct read */
+extern undefined4 _DAT_0017d8b0; /* direct read */
+extern undefined4 _DAT_0017d8c0; /* direct read */
+extern undefined4 _DAT_0017d8d0; /* direct read */
+extern undefined4 _DAT_0017dcc0; /* direct read */
+extern undefined4 _DAT_0017dcd0; /* direct read */
+extern undefined4 _DAT_0017dce0; /* direct read */
+extern undefined4 _DAT_0017dcf0; /* direct read */
+extern undefined4 _DAT_0017dd00; /* direct read */
+extern undefined4 _DAT_0017dd10; /* direct read */
 extern undefined4 japanese_mode; /* 0xd9208 */
 extern char s_MESSAGE_DOES_NOT_EXIST_00720b94[23]; /* 0x720b94 */
 extern undefined4 skip_directionalLightCopy; /* 0x118a8 */

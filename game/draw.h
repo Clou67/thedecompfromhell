@@ -251,6 +251,7 @@ extern undefined4 _DAT_00735dc0; /* direct read */
 extern undefined4 _DAT_00736040; /* direct read */
 extern undefined4 _DAT_00736050; /* direct read */
 extern undefined4 _DAT_0095d240; /* direct read */
+extern undefined4 fogNearDist; /* 0x95d198 */
 extern int g_FontColorsEnabled; /* 0x95ee14 */
 extern short g_FrameBufHeight; /* 0x966b7e */
 extern short g_FrameBufWidth; /* 0x966b7c */
@@ -268,6 +269,7 @@ extern int g_PostPreDrawCount; /* 0x95e3e0 */
 extern undefined4 g_PostPreDrawFuncs; /* 0x95e1e0 */
 extern int g_PreDrawCount; /* 0x95e1dc */
 extern RENDER g_RenderFlags; /* 0x95cd44 */
+extern u8 *g_ScratchBuf; /* 0x902ec8: scratch memory shared by the drawing code (water uses it as a WaterStage) */ /* type set in global_types.tsv */
 extern int g_ScreenHalfWidth; /* 0x966b08 */
 extern int g_ScreenHeight; /* 0x966b04 */
 extern undefined1 g_ScreenInsertEffect; /* 0x95cf30 */
@@ -394,18 +396,18 @@ undefined8 STUB_00072230_RET_0(...);
 void FastDrawQuad(undefined4 *param_1,uint param_2,undefined8 param_3,longlong param_4, ulonglong param_5);
 void STUB_00072788(...);
 void FastDrawStrip_DL(longlong param_1,int param_2);
-void FastDrawStrip_DLNoState(longlong param_1,int param_2);
-void FastDrawStrip_Pass(longlong param_1,int param_2,longlong param_3);
-void DrawTexturedStrips (ulonglong param_1,undefined4 *param_2,longlong param_3,undefined4 *param_4, undefined4 *param_5,undefined4 param_6,undefined4 param_7);
+void FastDrawStrip_DLNoState(int param_1,void *param_2);
+void FastDrawStrip_Pass(int param_1,void *param_2,int param_3);
+void DrawTexturedStrips(int param_1,Vec3 *param_2,u32 *param_3,Vec2 *param_4,Vec2 *param_5,int param_6,int param_7,u64 param_8);
 void FastDrawStrip2UV_Pass(longlong param_1,int param_2,longlong param_3);
 void FastDrawStrip2UV_PassNoState(longlong param_1,int param_2,longlong param_3);
 void DrawLavaStrips (double param_1,longlong param_2,undefined4 *param_3,uint *param_4, undefined4 *param_5,undefined4 *param_6,undefined4 param_7,undefined4 param_8, undefined8 param_9);
-void FastDrawStripColor(longlong param_1,int param_2,longlong param_3);
+void FastDrawStripColor(int param_1,void *param_2,int param_3);
 bool ____Draw_IsFlagMode2(ulonglong param_1);
 undefined8 ____Draw_IsBlendModeMatch(ulonglong param_1);
 void DrawMeshSet(ulonglong param_1,undefined4 *param_2,uint *param_3,undefined4 *param_4, ulonglong param_5);
-void FastDrawStripFog(longlong param_1,int param_2,longlong param_3);
-void DrawOceanStrip (double param_1,ulonglong param_2,undefined4 *param_3,uint *param_4, undefined4 *param_5);
+void FastDrawStripFog(int param_1,void *param_2,int param_3);
+void DrawOceanStrip(float param_1,int param_2,Vec3 *param_3,u32 *param_4,Vec2 *param_5);
 void STUB_00074ce8(...);
 void STUB_00074cec(...);
 int ImpactSprite_Add (double param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4, undefined2 param_5);

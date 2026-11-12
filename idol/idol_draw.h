@@ -350,7 +350,7 @@ void FUN_004feb14(void);
 void FUN_004feb28(void);
 void FUN_004feb98(uint param_1,uint param_2);
 bool FUN_004ff210(double param_1,uint param_2);
-bool FastCheckBsphere(double param_1,double param_2,uint param_3);
+int FastCheckBsphere(u8 *param_1,float param_2,float param_3,Vec4 param_4);
 int32_t FUN_004ff480(void);
 void FUN_004ff4ac(undefined8 param_1,undefined8 param_2);
 namespace idol { int32_t print_mem_error (undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4, undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8); } 

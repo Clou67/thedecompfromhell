@@ -2,6 +2,7 @@
 // game/water.h
 #include "types.h"
 #include "game/mesh.h"
+#include "game/mobyfunc.h"
 
 // ---- types
 struct OceanPlane {
@@ -143,6 +144,31 @@ struct WaterTileConst {
     char pad[2];
 };
 
+/* the current that pushes things along on water (WaterDrift_Set / _Update; @0xe5aee0) */
+typedef struct WaterDrift {
+    float baseAngle;         /* 0x00 */
+    float angle;             /* 0x04 */
+    float angleStep;         /* 0x08  per frame during a turn */
+    s16 mode;                /* 0x0c  0 none, 2 and 3 wander */
+    s16 state;               /* 0x0e */
+    float baseSpeed;         /* 0x10 */
+    float speed;             /* 0x14 */
+    float speedStep;         /* 0x18 */
+    s16 period;              /* 0x1c  frames */
+    s16 timer;               /* 0x1e */
+} WaterDrift;
+typedef char WaterDrift_size_check[sizeof(WaterDrift) == 0x20 ? 1 : -1];
+
+/* a strip of a special ocean or ice mesh (0x20 bytes) */
+typedef struct WaterStrip {
+    BSphere bSphere;         /* 0x00 */
+    Vec3 *positions;         /* 0x10 */
+    Vec2 *uvs;               /* 0x14 */
+    Vec3 *normals;           /* 0x18 */
+    int count;               /* 0x1c */
+} WaterStrip;
+typedef char WaterStrip_size_check[sizeof(WaterStrip) == 0x20 ? 1 : -1];
+
 // ---- globals
 extern float CONST_1_0f; /* 0x73ab00 */
 extern undefined4 DAT_0073a924; /* 0x73a924 */
@@ -153,26 +179,13 @@ extern undefined8 DAT_0073a9b0; /* 0x73a9b0 */
 extern undefined8 DAT_0073a9c0; /* 0x73a9c0 */
 extern undefined8 DAT_0073a9d0; /* 0x73a9d0 */
 extern undefined8 DAT_0073a9e0; /* 0x73a9e0 */
-extern undefined4 DAT_0073a9f0; /* 0x73a9f0 */
-extern undefined4 DAT_0073a9f4; /* 0x73a9f4 */
-extern undefined4 DAT_0073aa40; /* 0x73aa40 */
-extern undefined4 DAT_0073aa44; /* 0x73aa44 */
 extern undefined4 DAT_0073aa48; /* 0x73aa48 */
-extern undefined4 DAT_0073aa4c; /* 0x73aa4c */
 extern undefined4 DAT_0073aa50; /* 0x73aa50 */
-extern undefined2 DAT_0073aa60; /* 0x73aa60 */
-extern undefined4 DAT_0073aac0; /* 0x73aac0 */
-extern undefined4 DAT_0073aac4; /* 0x73aac4 */
-extern undefined4 DAT_0073ac40; /* 0x73ac40 */
-extern undefined4 DAT_0073ac44; /* 0x73ac44 */
 extern undefined4 DAT_0073adc8; /* 0x73adc8 */
 extern undefined4 DAT_0073adf4; /* 0x73adf4 */
 extern undefined4 DAT_0073ae08; /* 0x73ae08 */
 extern undefined4 DAT_0073ae20; /* 0x73ae20 */
 extern undefined4 DAT_0073ae60; /* 0x73ae60 */
-extern undefined4 DAT_0073ae70; /* no defined data */
-extern undefined4 DAT_0073af50; /* 0x73af50 */
-extern undefined2 DAT_0073b330; /* 0x73b330 */
 extern undefined8 DAT_0073b430; /* 0x73b430 */
 extern undefined8 DAT_0073b440; /* 0x73b440 */
 extern undefined8 DAT_0073b450; /* 0x73b450 */
@@ -183,81 +196,69 @@ extern undefined8 DAT_0073b490; /* 0x73b490 */
 extern undefined8 DAT_0073b4a0; /* 0x73b4a0 */
 extern undefined8 DAT_0073b4b0; /* 0x73b4b0 */
 extern undefined4 DAT_0073b50c; /* 0x73b50c */
-extern undefined4 DAT_00e5aaa4; /* 0xe5aaa4 */
-extern undefined4 DAT_00e5aad0; /* 0xe5aad0 */
-extern undefined4 DAT_00e5aad4; /* 0xe5aad4 */
-extern undefined4 DAT_00e5aee0; /* 0xe5aee0 */
-extern undefined4 DAT_00e5aee4; /* 0xe5aee4 */
-extern undefined4 DAT_00e5aee8; /* 0xe5aee8 */
-extern undefined2 DAT_00e5aeec; /* 0xe5aeec */
-extern undefined2 DAT_00e5aeee; /* 0xe5aeee */
-extern undefined4 DAT_00e5aef0; /* 0xe5aef0 */
-extern undefined4 DAT_00e5aef4; /* 0xe5aef4 */
-extern undefined4 DAT_00e5aef8; /* 0xe5aef8 */
-extern undefined2 DAT_00e5aefc; /* 0xe5aefc */
-extern undefined2 DAT_00e5aefe; /* 0xe5aefe */
 extern undefined4 LevelFogMode; /* 0x95ea10 */
-extern undefined4 OceanFogB; /* 0xe5aed0 */
-extern undefined4 OceanFogFarDist; /* 0xe5aebc */
-extern undefined4 OceanFogFarIntensity; /* 0xe5aec4 */
-extern undefined4 OceanFogG; /* 0xe5aecc */
-extern undefined4 OceanFogNearDist; /* 0xe5aeb8 */
-extern undefined4 OceanFogNearIntensity; /* 0xe5aec0 */
-extern undefined4 OceanFogR; /* 0xe5aec8 */
+extern int OceanFogB; /* 0xe5aed0 */ /* type set in global_types.tsv */
+extern float OceanFogFarDist; /* 0xe5aebc */ /* type set in global_types.tsv */
+extern float OceanFogFarIntensity; /* 0xe5aec4 */ /* type set in global_types.tsv */
+extern int OceanFogG; /* 0xe5aecc */ /* type set in global_types.tsv */
+extern float OceanFogNearDist; /* 0xe5aeb8: the fog saved while an ocean's is used */ /* type set in global_types.tsv */
+extern float OceanFogNearIntensity; /* 0xe5aec0 */ /* type set in global_types.tsv */
+extern int OceanFogR; /* 0xe5aec8 */ /* type set in global_types.tsv */
 extern WaterTileBox * WaterTileBoxes; /* 0xe5aa84 */
 extern int WaterTileCnt; /* 0xe5aa88 */
 extern WaterTileConst WaterTileConsts; /* 0x73aa00 */
 extern WaterTile * WaterTiles; /* 0xe5aa80 */
-extern undefined4 _DAT_0017d880; /* direct read */
-extern undefined4 _DAT_0017d890; /* direct read */
-extern undefined4 _DAT_0017d8a0; /* direct read */
-extern undefined4 _DAT_0017d8b0; /* direct read */
-extern undefined4 _DAT_0017d8c0; /* direct read */
-extern undefined4 _DAT_0017d8d0; /* direct read */
-extern undefined4 _DAT_0017dcc0; /* direct read */
-extern undefined4 _DAT_0017dcd0; /* direct read */
-extern undefined4 _DAT_0017dce0; /* direct read */
-extern undefined4 _DAT_0017dcf0; /* direct read */
-extern undefined4 _DAT_0017dd00; /* direct read */
-extern undefined4 _DAT_0017dd10; /* direct read */
-extern undefined4 fogNearDist; /* 0x95d198 */
-extern u8 *g_ScratchBuf; /* 0x902ec8: scratch memory shared by the drawing code (water uses it as a WaterStage) */ /* type set in global_types.tsv */
+extern Vec2 g_OceanBaseUV[124]; /* 0x73af50 */ /* type set in global_types.tsv */
+extern RenderingStep *g_OceanPasses[3]; /* 0x8fa414: DepthPass, OceanForwardPass, ForwardPass */ /* type set in global_types.tsv */
+extern s16 g_OceanStripIdx[124]; /* 0x73b330: the vertices of an ocean cell's strip, in its 8x8 patch */ /* type set in global_types.tsv */
+extern Vec2 g_OceanUV[124]; /* 0xe5aad0: g_OceanBaseUV scaled */ /* type set in global_types.tsv */
+extern Vec2 g_WaterBaseUV[46]; /* 0x73ac40 */ /* type set in global_types.tsv */
+extern u32 g_WaterBoundAlpha; /* 0x73aa4c */ /* type set in global_types.tsv */
+extern u32 g_WaterBoundTex; /* 0x73aa44: the tile layer texture last bound */ /* type set in global_types.tsv */
+extern int g_WaterBufCur; /* 0xe5aaa4: and writes this one */ /* type set in global_types.tsv */
+extern int g_WaterBufPrev; /* 0x73a9f0: the wave step reads this height buffer */ /* type set in global_types.tsv */
+extern int g_WaterBufShown; /* 0x73a9f4: the buffer drawn and sampled (2 = the blend of the two) */ /* type set in global_types.tsv */
+extern WaterDrift g_WaterDrift; /* 0xe5aee0 */ /* type set in global_types.tsv */
+extern float g_WaterLerpT; /* 0x73aa40 */ /* type set in global_types.tsv */
+extern s16 g_WaterStripIdx[46]; /* 0x73aa60: the vertices of a cell's strip, in its 17-wide grid */ /* type set in global_types.tsv */
+extern Vec2 g_WaterUV[46]; /* 0x73aac0: a cell's base layer uvs, wobbled each tile */ /* type set in global_types.tsv */
+extern int g_WaterUVUseY[46]; /* 0x73ae70: entries wobbled by rotAngle.y instead of .x */ /* type set in global_types.tsv */
 
 // ---- functions
 void SECTION_HEADER_WATER(void);
-void WaterTile_InitAll(WaterTile *tiles,int tileCnt);
-void WaterTile_CalcGridBSphere(WaterTile *tile,BSphere *bounds);
-int WaterTile_LookupTile(float x,float y,float z);
+void WaterTile_InitAll(WaterTile *tiles, int tileCnt);
+void WaterTile_CalcGridBSphere(WaterTile *tile, WaterTileBox *box);
+int WaterTile_LookupTile(float x, float y, float z);
 void WaterWave_ScaleTable(float scale);
-void WaterTile_StepSim(WaterTile *tile,int cnt);
-void WaterTile_UpdateWaves(WaterTile *tiles,int nTiles);
-void WaterTile_UpdateWaves(WaterTile *tile);
-void WaterTile_PutDrop (float x,float y,float radius,float height,WaterTile *tiles,int tileCount,float add);
-void WaterTile_PutDrop_Thunk (double param_1,double param_2,double param_3,double param_4,double param_5, WaterTile *param_6,int param_7);
-float WaterTile_GetHeight(float x,float y,float z);
+void WaterTile_StepSim(WaterTile *tiles, int count);
+void WaterTile_UpdateWaves(WaterTile *tiles, int count);
+void WaterTile_UpdateUVs(WaterTile *tile);
+void WaterTile_PutDrop(WaterTile *tiles, int count, float x, float y, float radius, float height, int add);
+void WaterTile_PutDrop_Thunk(WaterTile *tiles, int count, float x, float y, float radius, float height);
+int WaterTile_GetHeight(float x, float y, float z, float *outZ, Vec4 *outNormal);
 void WaterTile_BuildVertexGrid(WaterTile *tile);
-void WaterTile_DrawCellBase(WaterTile *tile,uint idx);
-void WaterTile_DrawCellOvl(WaterTile *tile,uint idx);
-void WaterTile_CullAndDrawCell(WaterTile *tile,uint idx,int clipMode);
+void WaterTile_DrawCellBase(WaterTile *tile, u32 idx);
+void WaterTile_DrawCellOvl(WaterTile *tile, u32 idx);
+void WaterTile_CullAndDrawCell(WaterTile *tile, u32 idx, int clipMode);
 void ____Unused_Water_ResetIds_73aa44(void);
-void WaterTile_DrawAll(WaterTile *tile,int cnt);
-void Sheet_ResetScroll(int cnt,WaterSheet *sheet);
+void WaterTile_DrawAll(WaterTile *tile, int cnt);
+void Sheet_ResetScroll(int cnt, WaterSheet *sheet);
 void CALL_STUB_0017d488(void);
-void WaterSheet_DrawAll(int cnt,WaterSheet *sheet);
-void STUB_0017d870(...);
-void SubmitOceanCell (double param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5, undefined8 param_6,longlong param_7,undefined8 param_8,undefined8 param_9);
-double OceanPass(OceanPlane *ocean);
-void OceanPlane_SetDepth(float scale,OceanPlane *ocean,undefined8 param_3,byte depth);
-void OceanPlane_SetDefaultDepth(double scale,OceanPlane *param_2);
+void WaterSheet_DrawAll(int cnt, WaterSheet *sheet);
+void STUB_0017d870(void);
+void SubmitOceanCell(OceanPlane *ocean, float x, float y, u32 *colors, float blend, int passIdx);
+float OceanPass(OceanPlane *ocean);
+void OceanPlane_SetDepth(float scale, OceanPlane *ocean, u64 unused, u8 depth);
+void OceanPlane_SetDefaultDepth(float scale, OceanPlane *ocean);
 void PushOceanFog(OceanPlane *ocean);
 void PopZoneFog(OceanPlane *ocean);
-undefined8 SubmitZone(OceanPlane *ocean);
-void OceanSpecialPass(undefined8 param_1,OceanPlane *param_2,int param_3,int param_4);
+float SubmitZone(OceanPlane *ocean);
+void OceanSpecialPass(float alpha, OceanPlane *ocean, WaterStrip *strips, int count);
 void ScaleWaveTable(float scale);
-void SetFogVars(float neardist,float fardist,float nearintensity,float farintensity);
+void SetFogVars(float nearDist, float farDist, float nearIntensity, float farIntensity, u32 r, u32 g, u32 b);
 void RestoreFogVars(void);
 void OceanPass_Thunk(OceanPlane *ocean);
-void IcePass(int param_1,int param_2,undefined8 param_3,undefined8 param_4);
+void IcePass(WaterStrip *strips, int count, int tex0, int tex1);
 void Water_StaticInitGsPackets(void);
-void WaterDrift_Set (double param_1,double param_2,int param_3,undefined8 param_4,undefined8 param_5, undefined2 param_6);
+void WaterDrift_Set(int mode, float angle, float speed, short period);
 void WaterDrift_Update(void);
