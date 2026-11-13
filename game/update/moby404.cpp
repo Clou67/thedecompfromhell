@@ -79,7 +79,7 @@ longlong FUN_00363aa0(int param_1,float *param_2,u8 param_3)
       piVar4[4] = 0;
       piVar4[3] = iVar7;
       piVar4[5] = 0;
-      iVar7 = DAT_00a1a85c + iVar7 * 0x20;
+      iVar7 = g_GrindPaths + iVar7 * 0x20;
       MB_PathFollowToPos
                 (0x4034000000000000,0x4014000000000000,0,*(undefined4 *)(iVar7 + 0x10),
                  (longlong)(int)pMVar6 + 0x10,auStack_50,uVar8 + 0x10,uVar8 + 0x14,iVar7,0);

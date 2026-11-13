@@ -14,7 +14,6 @@
 #include "game/update.h"
 #include "game/update/camera5.h"
 #include "game/update/moby1118.h"
-#include "game/update/moby1826.h"
 #include "game/update/moby542.h"
 #include "game/update/moby648.h"
 #include "game/update/moby651.h"

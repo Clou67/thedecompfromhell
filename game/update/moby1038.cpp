@@ -249,7 +249,7 @@ void M1038_00194678(undefined8 param_1)
   *(float *)(puVar7 + 0xe) = fVar3;
   fVar9 = fVar9 - *(float *)(iVar17 + 0x14);
   *(float *)((int)puVar7 + 0x74) = fVar9;
-  acVar14 = GameCamera.field8_0x14c;
+  acVar14 = GameCamera.posW;
   fVar10 = fVar10 - *(float *)(iVar17 + 0x18);
   *(float *)(puVar7 + 0xf) = fVar10;
   *(char (*) [4])((int)puVar7 + 0x7c) = acVar14;

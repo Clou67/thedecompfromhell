@@ -129,9 +129,9 @@ undefined8 ____Cam22_ModifyFollowRot(double param_1,double param_2,int param_3)
   dVar23 = 0.0;
   iVar7 = *(int *)(*(int *)(ImportCameras + (int)((longlong)*(short *)(param_3 + 0x84) << 5) + 0x1c)
                   + 0x48);
-  dVar26 = (double)(float)GameCamera.field17_0x1b4.piece<12,4>();
-  dVar25 = (double)(float)GameCamera.field17_0x1b4.piece<16,4>();
-  dVar24 = (double)(float)GameCamera.field17_0x1b4.piece<20,4>();
+  dVar26 = (double)(float)GameCamera.camStatics.heroUpActual.x;
+  dVar25 = (double)(float)GameCamera.camStatics.heroUpActual.y;
+  dVar24 = (double)(float)GameCamera.camStatics.heroUpActual.z;
   if (param_1 != 0.0 || param_2 != 0.0) {
     dVar28 = (double)(Cuboids[iVar7].pos.y - *(float *)((int)GameCamera.pCurrentUpdCam + 0x34));
     dVar30 = (double)(Cuboids[iVar7].pos.x - *(float *)((int)GameCamera.pCurrentUpdCam + 0x30));

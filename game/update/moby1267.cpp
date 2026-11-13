@@ -490,7 +490,7 @@ void UpdateMoby_1267(MobyInstance *moby)
       *(float *)(puVar13 + 0x24) = GameCamera.posX;
       fVar5 = GameCamera.posZ;
       *(float *)((int)puVar13 + 0x124) = fVar4;
-      acVar17 = GameCamera.field8_0x14c;
+      acVar17 = GameCamera.posW;
       *(float *)(puVar13 + 0x25) = fVar5;
       *(char (*) [4])((int)puVar13 + 300) = acVar17;
       pfVar25 = (float *)(uVar20 - 0xf0);
@@ -720,7 +720,7 @@ void UpdateMoby_1267(MobyInstance *moby)
         auVar52 = ZEXT416(0xffffffff);
         auVar52 = auVar52 | auVar52 << 0x20 | auVar52 << 0x40 | auVar52 << 0x60;
         auVar53 = vectorShiftLeftIntegerWord(auVar52,auVar52);
-        GameCamera.offset0.amp = 0.03;
+        GameCamera.shake.strength = 0.03;
         auVar52 = loadVectorLeftIndexed(0x40,0x1562c);
         auVar54 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
         auVar52 = auVar52 >> 0x60 & (GPiece<16>)0xffffffff;
@@ -735,11 +735,11 @@ void UpdateMoby_1267(MobyInstance *moby)
         auVar55 = vectorShiftLeftIntegerWord(auVar55,auVar55);
         auVar52 = vectorConvertToSignedFixedPointWordSaturate(auVar53,0);
         auVar52 = auVar52 >> 0x60 & (GPiece<16>)0xffffffff;
-        GameCamera.offset0.total =
+        GameCamera.shake.time =
              storeVectorElementWordIndexed
                        (auVar52 | auVar52 << 0x20 | auVar52 << 0x40 | auVar52 << 0x60,0x168,0x9513c0
                        );
-        GameCamera.offset1.amp = 0.03;
+        GameCamera.shakeFwd.strength = 0.03;
         auVar52 = loadVectorLeftIndexed(0x44,0x1562c);
         auVar52 = auVar52 >> 0x60 & (GPiece<16>)0xffffffff;
         dVar49 = 7.5;
@@ -749,7 +749,7 @@ void UpdateMoby_1267(MobyInstance *moby)
         auVar53 = vectorShiftLeftIntegerWord(auVar56,auVar56);
         auVar52 = vectorConvertToSignedFixedPointWordSaturate(auVar52,0);
         auVar52 = auVar52 >> 0x60 & (GPiece<16>)0xffffffff;
-        GameCamera.offset1.total =
+        GameCamera.shakeFwd.time =
              storeVectorElementWordIndexed
                        (auVar52 | auVar52 << 0x20 | auVar52 << 0x40 | auVar52 << 0x60,0x178,0x9513c0
                        );

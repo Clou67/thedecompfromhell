@@ -53,13 +53,13 @@ void UpdateSound_4(void *param_1)
     local_a0 = GameCamera.posX + local_a0;
     local_98 = GameCamera.posZ + local_98;
     local_9c = GameCamera.posY + local_9c;
-    local_94[0] = GameCamera.field8_0x14c[0];
-    local_94[1] = GameCamera.field8_0x14c[1];
-    local_94[2] = GameCamera.field8_0x14c[2];
-    local_94[3] = GameCamera.field8_0x14c[3];
+    local_94[0] = ((u8 *)&GameCamera.posW)[0];
+    local_94[1] = ((u8 *)&GameCamera.posW)[1];
+    local_94[2] = ((u8 *)&GameCamera.posW)[2];
+    local_94[3] = ((u8 *)&GameCamera.posW)[3];
     dVar5 = (double)MB_SampleByteGrid
                               (CONCAT44(local_a0,local_9c),
-                               CONCAT44(local_98,GameCamera.field8_0x14c));
+                               CONCAT44(local_98,GameCamera.posW));
     dVar11 = (double)(float)(dVar11 + dVar10);
     dVar6 = (double)GameCamera.posZ;
     if (dVar5 - dVar6 < 0.0) {
@@ -100,7 +100,7 @@ void UpdateSound_4(void *param_1)
   fVar2 = GameCamera.posY;
   *(float *)((int)g_SoundChannels + iVar4 + 0x28) = (float)dVar6;
   *(float *)((int)g_SoundChannels + iVar4 + 0x24) = fVar2;
-  *(char (*) [4])((int)g_SoundChannels + iVar4 + 0x2c) = GameCamera.field8_0x14c;
+  *(char (*) [4])((int)g_SoundChannels + iVar4 + 0x2c) = GameCamera.posW;
   if ((g_SoundChannels[piVar1[2]].pSoundInstance != param_1) ||
      (g_SoundChannels[piVar1[2]].state == '\0')) {
     iVar4 = sound_AmbientPlay(*piVar1,0x15,param_1,0x400);

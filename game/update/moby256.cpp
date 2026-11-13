@@ -147,7 +147,7 @@ Spawn_Moby256_Rocket
       pfVar2[7] = local_48[0];
       pfVar2[2] = fVar1 + local_48[0];
     }
-    if (SQRT(DAT_00969e28 * DAT_00969e28 + DAT_00969e20 * DAT_00969e20 + DAT_00969e24 * DAT_00969e24
+    if (SQRT(g_heroFrameMove.z * g_heroFrameMove.z + g_heroFrameMove.x * g_heroFrameMove.x + g_heroFrameMove.y * g_heroFrameMove.y
             ) <= fVar5 * 0.1) {
       auVar9 = ZEXT416(0xffffffff);
       auVar9 = auVar9 | auVar9 << 0x20 | auVar9 << 0x40 | auVar9 << 0x60;
@@ -407,10 +407,10 @@ void UpdateMoby_256_GC_Rocket(MobyInstance *moby)
   dVar19 = (double)FastIntToDouble(*(undefined2 *)(pfVar4 + 0xf));
   dVar20 = (double)FastIntToDouble(*(undefined2 *)((int)pfVar4 + 0x3e));
   local_3d8 = (float)(dVar19 / dVar20);
-  local_3d4 = DAT_00969e2c;
-  local_3e0 = DAT_00969e20 * local_3d8;
-  local_3dc = DAT_00969e24 * local_3d8;
-  local_3d8 = DAT_00969e28 * local_3d8;
+  local_3d4 = g_heroFrameMove.w;
+  local_3e0 = g_heroFrameMove.x * local_3d8;
+  local_3dc = g_heroFrameMove.y * local_3d8;
+  local_3d8 = g_heroFrameMove.z * local_3d8;
   if (ScreenColorEffectEnabled == '\0') {
 LAB_000edbf0:
     if (fVar5 != 0.0) {
@@ -1225,7 +1225,7 @@ LAB_000edea4:
       if (dVar24 - 20.0 < 0.0) {
         fVar5 = (float)(dVar24 * 0.017500000074505806);
       }
-      GameCamera.offset0.amp = 0.4 - fVar5;
+      GameCamera.shake.strength = 0.4 - fVar5;
       auVar45 = loadVectorLeftIndexed(0xb4,0xed88c);
       auVar45 = auVar45 >> 0x60 & (GPiece<16>)0xffffffff;
       auVar44 = vectorMultiplyAddFloatingPoint
@@ -1233,7 +1233,7 @@ LAB_000edea4:
                            auVar44);
       auVar44 = vectorConvertToSignedFixedPointWordSaturate(auVar44,0);
       auVar44 = auVar44 >> 0x60 & (GPiece<16>)0xffffffff;
-      GameCamera.offset0.total =
+      GameCamera.shake.time =
            storeVectorElementWordIndexed
                      (auVar44 | auVar44 << 0x20 | auVar44 << 0x40 | auVar44 << 0x60,0x168,0x9513c0);
       PlayMobySound(0,0,moby);

@@ -1823,7 +1823,7 @@ void UpdateMoby_1109(MobyInstance *moby)
           (moby->pos).x = GameCamera.posX;
           (moby->pos).y = GameCamera.posY;
           (moby->pos).z = GameCamera.posZ;
-          (moby->pos).w = (f32)GameCamera.field8_0x14c;
+          (moby->pos).w = (f32)GameCamera.posW;
           PlayMobySound(2,0,moby);
           (moby->pos).x = (float)dVar44;
           (moby->pos).y = (float)dVar43;

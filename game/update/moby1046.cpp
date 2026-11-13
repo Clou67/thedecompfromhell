@@ -218,7 +218,7 @@ Spawn_Moby1046
     auVar4 = ZEXT416(0xffffffff);
     auVar4 = auVar4 | auVar4 << 0x20 | auVar4 << 0x40 | auVar4 << 0x60;
     auVar5 = vectorShiftLeftIntegerWord(auVar4,auVar4);
-    GameCamera.offset0.amp = -(SQRT(fVar1 * fVar1 + fVar3 * fVar3) * 0.01 - 0.3);
+    GameCamera.shake.strength = -(SQRT(fVar1 * fVar1 + fVar3 * fVar3) * 0.01 - 0.3);
     auVar4 = loadVectorLeftIndexed(8,0x19ddc0);
     auVar6 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
     auVar4 = auVar4 >> 0x60 & (GPiece<16>)0xffffffff;
@@ -226,7 +226,7 @@ Spawn_Moby1046
                        (auVar6,auVar4 | auVar4 << 0x20 | auVar4 << 0x40 | auVar4 << 0x60,auVar5);
     auVar4 = vectorConvertToSignedFixedPointWordSaturate(auVar4,0);
     auVar4 = auVar4 >> 0x60 & (GPiece<16>)0xffffffff;
-    GameCamera.offset0.total =
+    GameCamera.shake.time =
          storeVectorElementWordIndexed
                    (auVar4 | auVar4 << 0x20 | auVar4 << 0x40 | auVar4 << 0x60,0x168,0x9513c0);
     UpdateMobyTransform(pMoby);

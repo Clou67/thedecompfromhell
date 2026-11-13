@@ -368,7 +368,7 @@ char FrontEnd_UpdateSceneCamera(void)
     GameCamera.posX = frame->x;
     GameCamera.posY = frame->y;
     GameCamera.posZ = frame->z;
-    memcpy(&GameCamera.field8_0x14c, frame->flags, 4);
+    memcpy(&GameCamera.posW, frame->flags, 4);
 
     memcpy(&unused, &DAT_00651080, sizeof(Mtx4));
     sinX = std::_FSin(frame->rotX, 0);

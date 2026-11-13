@@ -88,7 +88,7 @@ void M71_0042b640(int param_1)
   fVar6 = fVar6 - fVar2;
   *(float *)(puVar7 + 0xe) = fVar5;
   *(float *)((int)puVar7 + 0x74) = fVar4;
-  *(char (*) [4])((int)puVar7 + 0x7c) = GameCamera.field8_0x14c;
+  *(char (*) [4])((int)puVar7 + 0x7c) = GameCamera.posW;
   *(float *)(puVar7 + 0xf) = fVar6;
   *(float *)((int)puVar7 + 0x94) = fVar6;
   fVar2 = SQRT(fVar5 * fVar5 + fVar4 * fVar4);
@@ -631,9 +631,9 @@ ulonglong UpdateMoby_71(MobyInstance *moby)
     local_178 = (moby->pos).z;
     local_174 = (moby->pos).w;
     if (moby->state == '\n') {
-      fVar10 = DAT_00969e20 * 0.7 + local_180;
-      fVar12 = DAT_00969e24 * 0.7 + local_17c;
-      fVar11 = DAT_00969e28 * 0.7 + local_178;
+      fVar10 = g_heroFrameMove.x * 0.7 + local_180;
+      fVar12 = g_heroFrameMove.y * 0.7 + local_17c;
+      fVar11 = g_heroFrameMove.z * 0.7 + local_178;
       (moby->pos).x = fVar10;
       (moby->pos).y = fVar12;
       (moby->pos).z = fVar11;

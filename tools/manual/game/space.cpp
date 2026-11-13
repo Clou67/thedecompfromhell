@@ -170,7 +170,7 @@ char Space_SetCutsceneCamera(void)
     GameCamera.posX = frame->x;
     GameCamera.posY = frame->y;
     GameCamera.posZ = frame->z;
-    memcpy(&GameCamera.field8_0x14c, frame->flags, 4);
+    memcpy(&GameCamera.posW, frame->flags, 4);
 
     memcpy(&copy, &DAT_00653758, sizeof(Mtx4));
     float sinX = std::_FSin(frame->rotX, 0);
@@ -1220,7 +1220,7 @@ static inline char SpaceSceneCamera(void)
     GameCamera.posX = frame->x;
     GameCamera.posY = frame->y;
     GameCamera.posZ = frame->z;
-    memcpy(&GameCamera.field8_0x14c, frame->flags, 4);
+    memcpy(&GameCamera.posW, frame->flags, 4);
     FUN_005e7d64(&GameCamera.posX, &GameCamera.posX, (float *)&g_SpaceshipPtr->transform);
     GameCamera.posX += g_SpaceshipPtr->pos.x;
     GameCamera.posY += g_SpaceshipPtr->pos.y;

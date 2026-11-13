@@ -152,7 +152,7 @@ void Camera_SetMobyDrivenMode(int param_1,undefined4 param_2)
     *(float *)(iVar1 + 0x114) = g_heroPosition.y;
     *(float *)(iVar1 + 0x118) = g_heroPosition.z;
     *(float *)(iVar1 + 0x11c) = g_heroPosition.w;
-    ____Camera_CalcPolarToTarget(iVar1 + 0xfc,0x951500,&g_heroPosition);
+    Camera_Pos2Polar(iVar1 + 0xfc,0x951500,&g_heroPosition);
   }
   *(undefined4 *)(iVar1 + 0xe4) = param_2;
   *(undefined4 *)(iVar1 + 0xe0) = param_2;
@@ -203,7 +203,7 @@ void SetCameraPosition
   GPiece<24> local_b0;
   
   pNewCam = Camera_FindCameraOfType(5);
-  acVar5 = GameCamera.field8_0x14c;
+  acVar5 = GameCamera.posW;
   fVar4 = GameCamera.posZ;
   fVar3 = GameCamera.posY;
   fVar2 = GameCamera.posX;
@@ -218,7 +218,7 @@ void SetCameraPosition
   dVar14 = (double)GameCamera.rot.azimuth;
   dVar15 = (double)GameCamera.rot.elevation;
   dVar16 = (double)GameCamera.rot.radius;
-  dVar17 = (double)(float)GameCamera.field10_0x15c;
+  dVar17 = (double)(float)GameCamera.rotW;
   Camera_switchToNewCam(pNewCam);
   pvVar1 = pNewCam->control;
   pNewCam->pos[0] = (float)dVar13;
@@ -230,7 +230,7 @@ void SetCameraPosition
   GameCamera.posX = (float)dVar13;
   GameCamera.posY = (float)dVar12;
   GameCamera.posZ = (float)dVar11;
-  GameCamera.field8_0x14c = (char  [4])(float)dVar10;
+  GameCamera.posW = (char  [4])(float)dVar10;
   pNewCam->rot[0] = (float)dVar9;
   pNewCam->rot[1] = (float)dVar8;
   pNewCam->rot[2] = (float)dVar7;
@@ -268,7 +268,7 @@ void SetCameraPosition
     *(float *)((int)pvVar1 + 0x114) = g_heroPosition.y;
     *(float *)((int)pvVar1 + 0x118) = g_heroPosition.z;
     *(float *)((int)pvVar1 + 0x11c) = g_heroPosition.w;
-    ____Camera_CalcPolarToTarget((int)pvVar1 + 0xfc,local_b0,&g_heroPosition);
+    Camera_Pos2Polar((int)pvVar1 + 0xfc,local_b0,&g_heroPosition);
   }
   *(undefined4 *)((int)pvVar1 + 0xe4) = param_4;
   *(undefined4 *)((int)pvVar1 + 0xe0) = param_4;
@@ -364,8 +364,8 @@ void Camera_DeactivateMobyDrivenCam(int exitFlags)
   else if (exitFlags == 2) {
     GameCamera.blender.reqType = '\0';
     *(undefined2 *)((int)p1 + 0x7e) = 2;
-    GameCamera.blender.reqPosInterpAdd = 0.018;
-    GameCamera.blender.reqQuatInterpAdd = 0.018;
+    GameCamera.blender.blendData.posData.reqPosInterpAdd = 0.018;
+    GameCamera.blender.blendData.posData.reqQuatInterpAdd = 0.018;
   }
   else if (exitFlags == 1) {
     *(undefined2 *)((int)p1 + 0x7e) = 3;
@@ -373,8 +373,8 @@ void Camera_DeactivateMobyDrivenCam(int exitFlags)
   else if (exitFlags == 4) {
     GameCamera.blender.reqType = '\0';
     *(undefined2 *)((int)p1 + 0x7e) = 5;
-    GameCamera.blender.reqPosInterpAdd = 0.018;
-    GameCamera.blender.reqQuatInterpAdd = 0.018;
+    GameCamera.blender.blendData.posData.reqPosInterpAdd = 0.018;
+    GameCamera.blender.blendData.posData.reqQuatInterpAdd = 0.018;
   }
   return;
 }
@@ -465,7 +465,7 @@ void UpdateMobyDrivenCam(UpdateCam *pCam)
       dVar6 = (double)FastIntToDouble(*(undefined4 *)((int)pvVar2 + 0xe4));
       lVar4 = (longlong)(*(int *)((int)pvVar2 + 0xe4) - *(int *)((int)pvVar2 + 0xe0));
       dVar8 = (double)(float)((double)lVar4 / dVar6);
-      ____Camera_CalcPolarToTarget
+      Camera_Pos2Polar
                 (dVar6,(double)lVar4,(int)pvVar2 + 0xe8,(int)pvVar2 + 0x80,&g_heroPosition);
       dVar6 = (double)FastDiffRots
                                 ((double)*(float *)((int)pvVar2 + 0xe8),
@@ -501,7 +501,7 @@ void UpdateMobyDrivenCam(UpdateCam *pCam)
       iVar5 = (int)pvVar2 + 0x110;
       *(float *)((int)pvVar2 + 0x100) = (float)dVar6;
       MB_CosineInterpolateUnitVec(dVar8,iVar5,iVar5,&g_heroPosition);
-      Camera_ClampAngles(lVar3 + 0x30,(int)pvVar2 + 0xfc,iVar5);
+      Camera_Polar2Pos(lVar3 + 0x30,(int)pvVar2 + 0xfc,iVar5);
       MB_CosineInterpolateAngVec(dVar8,lVar3 + 0x40,lVar3 + 0x40,(int)pvVar2 + 0x90);
     }
     else {

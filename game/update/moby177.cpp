@@ -378,9 +378,9 @@ void M177_002b4818(ulonglong param_1)
   *(float *)((int)puVar10 + 0x94) = (float)dVar60;
   fVar70 = pfVar7[8];
   *(float *)(puVar10 + 0x13) = (float)dVar58;
-  dVar41 = (double)DAT_00969f74;
-  dVar44 = (double)DAT_00969f78;
-  dVar47 = (double)g_heroGravityDir;
+  dVar41 = (double)g_heroGravityDir.y;
+  dVar44 = (double)g_heroGravityDir.z;
+  dVar47 = (double)g_heroGravityDir.x;
   if ((fVar70 != 0.0) || (pfVar7[0xe] != 0.0)) {
     *(float *)((int)puVar10 + 0xbc) = (float)dVar37;
     *(float *)(puVar10 + 0x16) = (float)(dVar41 * dVar58 - (double)(float)(dVar44 * dVar60));

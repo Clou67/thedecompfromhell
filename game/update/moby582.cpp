@@ -348,7 +348,7 @@ void UpdateMoby_582(MobyInstance *moby)
     iVar10 = 0;
     moby->updateDistance = -1;
     moby->state = '\x01';
-    iVar9 = DAT_00a1a860;
+    iVar9 = g_GrindPathCnt;
     do {
       iVar11 = 0;
       if (0 < iVar9) {
@@ -359,8 +359,8 @@ void UpdateMoby_582(MobyInstance *moby)
         piVar13 = piVar19 + iVar10 * 2 + 9;
         iVar17 = iVar9;
         do {
-          iVar7 = DAT_00a1a85c;
-          iVar2 = DAT_00a1a85c + iVar16;
+          iVar7 = g_GrindPaths;
+          iVar2 = g_GrindPaths + iVar16;
           if (*(int *)(iVar2 + 0xc) != 0) {
             *(int *)((int)piVar19 + iVar18) = iVar2;
             iVar20 = 0;
@@ -384,9 +384,9 @@ void UpdateMoby_582(MobyInstance *moby)
                     *piVar13 = *(int *)(iVar7 + 0xc);
                     *(undefined4 *)(iVar7 + 0xc) = 0;
                     piVar13 = piVar13 + 2;
-                    *(undefined4 *)(DAT_00a1a85c + iVar16 + 0xc) = 0;
-                    iVar9 = DAT_00a1a860;
-                    iVar17 = DAT_00a1a860;
+                    *(undefined4 *)(g_GrindPaths + iVar16 + 0xc) = 0;
+                    iVar9 = g_GrindPathCnt;
+                    iVar17 = g_GrindPathCnt;
                     break;
                   }
                 }
@@ -412,8 +412,8 @@ void UpdateMoby_582(MobyInstance *moby)
     DAT_00969eaa = 5;
     do {
       if ((g_heroStateType != 0xf) ||
-         ((DAT_0096a240 != *(int *)(*piVar19 + 0x10) &&
-          (DAT_0096a240 != *(int *)(piVar19[1] + 0x10))))) {
+         ((g_heroGrindPath != *(int *)(*piVar19 + 0x10) &&
+          (g_heroGrindPath != *(int *)(piVar19[1] + 0x10))))) {
         iVar10 = *piVar19;
         fVar3 = g_heroPosition.y - *(float *)(*(int *)(iVar10 + 0x10) + 0x14);
         fVar4 = g_heroPosition.y - *(float *)(*(int *)(piVar19[1] + 0x10) + 0x14);

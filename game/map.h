@@ -43,7 +43,6 @@ extern undefined4 DAT_007264d8; /* 0x7264d8 */
 extern undefined4 DAT_007264dc; /* 0x7264dc */
 extern undefined4 DAT_007264e0; /* 0x7264e0 */
 extern undefined4 DAT_007264e4; /* 0x7264e4 */
-extern undefined1 DAT_0096afc4; /* 0x96afc4 */
 extern undefined4 DAT_0096ca34; /* no defined data */
 extern undefined4 DAT_00a204c0; /* 0xa204c0 */
 extern undefined4 DAT_00a204c4; /* 0xa204c4 */

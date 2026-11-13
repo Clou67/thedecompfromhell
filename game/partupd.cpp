@@ -8532,9 +8532,9 @@ void UpdatePart_44(PartInstance *part)
     FastVecScaleSelf((double)(part->pos).w,auStack_60,local_70);
     FastVecAddSelf(auStack_50,lVar3 + 0x10,local_70);
     dVar6 = (double)(float)part->update[3];
-    dVar7 = (double)g_heroGravityDir;
-    dVar8 = (double)DAT_00969f74;
-    dVar9 = (double)DAT_00969f78;
+    dVar7 = (double)g_heroGravityDir.x;
+    dVar8 = (double)g_heroGravityDir.y;
+    dVar9 = (double)g_heroGravityDir.z;
     fVar1 = (float)part->update[6];
     fVar2 = (float)part->update[5];
     part->rot = part->rot + *(char *)(part->update + 4);
@@ -12648,12 +12648,12 @@ void UpdatePart_78(PartInstance *part)
     dVar22 = (double)(*(float *)(iVar20 + 0x14) - fVar13);
     dVar21 = (double)(*(float *)(iVar20 + 0x18) - fVar11);
     if (dVar22 <= 2.0 && dVar23 <= 2.0) {
-      fVar1 = (float)((double)DAT_00969f78 * dVar23 -
-                     (double)(float)((double)g_heroGravityDir * dVar21));
-      fVar2 = (float)((double)DAT_00969f74 * dVar21 - (double)(float)((double)DAT_00969f78 * dVar22)
+      fVar1 = (float)((double)g_heroGravityDir.z * dVar23 -
+                     (double)(float)((double)g_heroGravityDir.x * dVar21));
+      fVar2 = (float)((double)g_heroGravityDir.y * dVar21 - (double)(float)((double)g_heroGravityDir.z * dVar22)
                      );
-      fVar3 = (float)((double)g_heroGravityDir * dVar22 -
-                     (double)(float)((double)DAT_00969f74 * dVar23));
+      fVar3 = (float)((double)g_heroGravityDir.x * dVar22 -
+                     (double)(float)((double)g_heroGravityDir.y * dVar23));
       fVar4 = 0.0;
       fVar10 = SQRT(fVar3 * fVar3 + fVar2 * fVar2 + fVar1 * fVar1);
       fVar17 = DAT_00729758 / fVar10;

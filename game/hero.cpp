@@ -104,15 +104,15 @@ void Hero_AddGravity(float amount,float *out,float *in)
     }
     else {
       fVar1 = 0.0;
-      fVar2 = SQRT(g_heroGravityDir * g_heroGravityDir + DAT_00969f74 * DAT_00969f74 +
-                   DAT_00969f78 * DAT_00969f78);
+      fVar2 = SQRT(g_heroGravityDir.x * g_heroGravityDir.x + g_heroGravityDir.y * g_heroGravityDir.y +
+                   g_heroGravityDir.z * g_heroGravityDir.z);
       fVar5 = fVar1;
       fVar6 = fVar1;
       if (fVar2 != 0.0) {
         fVar2 = amount / fVar2;
-        fVar1 = DAT_00969f78 * fVar2;
-        fVar5 = DAT_00969f74 * fVar2;
-        fVar6 = g_heroGravityDir * fVar2;
+        fVar1 = g_heroGravityDir.z * fVar2;
+        fVar5 = g_heroGravityDir.y * fVar2;
+        fVar6 = g_heroGravityDir.x * fVar2;
       }
     }
     fVar2 = *in;
@@ -856,30 +856,30 @@ void Hero_GetGroundCollTestVecs
   }
   else {
     fVar2 = 0.0;
-    fVar1 = SQRT(g_heroGravityDir * g_heroGravityDir + DAT_00969f74 * DAT_00969f74 +
-                 DAT_00969f78 * DAT_00969f78);
+    fVar1 = SQRT(g_heroGravityDir.x * g_heroGravityDir.x + g_heroGravityDir.y * g_heroGravityDir.y +
+                 g_heroGravityDir.z * g_heroGravityDir.z);
     fVar3 = fVar2;
     fVar4 = fVar2;
     fVar5 = fVar2;
     if (fVar1 != 0.0) {
       fVar1 = -bot / fVar1;
-      fVar3 = DAT_00969f78 * fVar1;
-      fVar4 = DAT_00969f74 * fVar1;
-      fVar5 = g_heroGravityDir * fVar1;
+      fVar3 = g_heroGravityDir.z * fVar1;
+      fVar4 = g_heroGravityDir.y * fVar1;
+      fVar5 = g_heroGravityDir.x * fVar1;
     }
     *outBot = g_heroPosition.x + fVar5;
     outBot[1] = g_heroPosition.y + fVar4;
     outBot[2] = g_heroPosition.z + fVar3;
     outBot[3] = g_heroPosition.w;
-    fVar1 = SQRT(g_heroGravityDir * g_heroGravityDir + DAT_00969f74 * DAT_00969f74 +
-                 DAT_00969f78 * DAT_00969f78);
+    fVar1 = SQRT(g_heroGravityDir.x * g_heroGravityDir.x + g_heroGravityDir.y * g_heroGravityDir.y +
+                 g_heroGravityDir.z * g_heroGravityDir.z);
     fVar3 = fVar2;
     fVar4 = fVar2;
     if (fVar1 != 0.0) {
       fVar1 = -top / fVar1;
-      fVar2 = DAT_00969f78 * fVar1;
-      fVar3 = DAT_00969f74 * fVar1;
-      fVar4 = g_heroGravityDir * fVar1;
+      fVar2 = g_heroGravityDir.z * fVar1;
+      fVar3 = g_heroGravityDir.y * fVar1;
+      fVar4 = g_heroGravityDir.x * fVar1;
     }
     *outTop = g_heroPosition.x + fVar4;
     outTop[1] = g_heroPosition.y + fVar3;
@@ -1145,35 +1145,35 @@ void Hero_GetGroundInfo(void)
     DAT_00969fd8 = 0;
   }
 LAB_0007ec84:
-  DAT_00969f7c = (float)dVar20;
-  DAT_00969f78 = (float)dVar20;
-  DAT_00969f74 = (float)dVar20;
-  g_heroGravityDir = (float)dVar20;
+  g_heroGravityDir.w = (float)dVar20;
+  g_heroGravityDir.z = (float)dVar20;
+  g_heroGravityDir.y = (float)dVar20;
+  g_heroGravityDir.x = (float)dVar20;
   if (g_heroGravityMode == 0) {
-    DAT_00969f78 = -1.0;
+    g_heroGravityDir.z = -1.0;
   }
   else if (g_heroGravityMode < 2) {
-    g_heroGravityDir = -g_heroGroundNormal;
-    DAT_00969f74 = -DAT_00969f54;
-    DAT_00969f78 = -DAT_00969f58;
-    DAT_00969f7c = DAT_00969f5c;
+    g_heroGravityDir.x = -g_heroGroundNormal;
+    g_heroGravityDir.y = -DAT_00969f54;
+    g_heroGravityDir.z = -DAT_00969f58;
+    g_heroGravityDir.w = DAT_00969f5c;
   }
   else if (g_heroGravityMode < 3) {
     fVar2 = DAT_00969d90 - g_heroPosition.x;
     fVar3 = DAT_00969d94 - g_heroPosition.y;
     fVar5 = DAT_00969d98 - g_heroPosition.z;
-    DAT_00969f7c = DAT_00969d9c;
+    g_heroGravityDir.w = DAT_00969d9c;
     dVar21 = (double)SQRT(fVar2 * fVar2 + fVar3 * fVar3 + fVar5 * fVar5);
     if (dVar21 == dVar20) {
-      DAT_00969f78 = (float)dVar20;
-      DAT_00969f74 = (float)dVar20;
-      g_heroGravityDir = (float)dVar20;
+      g_heroGravityDir.z = (float)dVar20;
+      g_heroGravityDir.y = (float)dVar20;
+      g_heroGravityDir.x = (float)dVar20;
     }
     else {
       fVar1 = (float)(dVar19 / dVar21);
-      g_heroGravityDir = fVar2 * fVar1;
-      DAT_00969f74 = fVar3 * fVar1;
-      DAT_00969f78 = fVar5 * fVar1;
+      g_heroGravityDir.x = fVar2 * fVar1;
+      g_heroGravityDir.y = fVar3 * fVar1;
+      g_heroGravityDir.z = fVar5 * fVar1;
     }
   }
   DAT_00969fc4 = (float)dVar20;
@@ -3772,17 +3772,17 @@ undefined4 * Hero_HandleGroundType(void)
     if (sVar3 == 0xe) {
       g_heroWaterZ = g_heroGroundZ + 0.2;
       DAT_0096bf84 = 0.2;
-      DAT_0096afc4 = 1;
+      g_heroHotSpotWater = 1;
     }
     if (sVar3 == 0) {
       DAT_0096bf84 = g_heroWaterZ - g_heroGroundZ;
       if ((DAT_0096bf84 < 0.85) && (0.25 < DAT_0096bf84)) {
         DAT_0096bd89 = 1;
       }
-      DAT_0096afc4 = 1;
+      g_heroHotSpotWater = 1;
     }
     if (sVar3 == 3) {
-      DAT_0096afc6 = '\x01';
+      g_heroHotSpotQuickSand = '\x01';
     }
     if ((((Level == Gemlik) && (g_heroState != DEATH_MUD)) &&
         (iVar5 = CollSphere
@@ -3794,7 +3794,7 @@ undefined4 * Hero_HandleGroundType(void)
       iVar5 = DAT_0096bf60;
       LVar2 = Level;
       if (sVar3 == 0xb) {
-        DAT_0096afcb = 1;
+        g_heroHotSpotDeathSand = 1;
       }
       if (sVar3 == 5) {
         DAT_0096afc8 = 1;
@@ -3812,10 +3812,10 @@ undefined4 * Hero_HandleGroundType(void)
         DAT_0096afc2 = 1;
       }
       if (sVar3 == 0xd) {
-        DAT_0096afcc = '\x01';
+        g_heroHotSpotIceWater = '\x01';
       }
       if (sVar3 == 1) {
-        DAT_0096afc5 = '\x01';
+        g_heroHotSpotLava = '\x01';
       }
       if (sVar3 == 8) {
         DAT_0096afca = 1;
@@ -3831,11 +3831,11 @@ undefined4 * Hero_HandleGroundType(void)
         puVar6 = (undefined4 *)TransitionMovement(0x31,1);
         return puVar6;
       }
-      if ((((DAT_0096afc5 == '\0') || (g_framesGroundedCnt == 0)) || (g_heroType != '\x01')) ||
+      if ((((g_heroHotSpotLava == '\0') || (g_framesGroundedCnt == 0)) || (g_heroType != '\x01')) ||
          (g_heroState == UNK_7D)) {
-        if (((DAT_0096afc5 == '\0') || (g_framesGroundedCnt == 0)) ||
+        if (((g_heroHotSpotLava == '\0') || (g_framesGroundedCnt == 0)) ||
            ((g_heroState == TAKING_DAMAGE_LAVA && (DAT_0096a0fe == 0)))) {
-          if ((((DAT_0096afcc != '\0') && (g_heroState != DEATH_ICE)) &&
+          if ((((g_heroHotSpotIceWater != '\0') && (g_heroState != DEATH_ICE)) &&
               (ABS(g_heroWaterZ - (g_heroPosition.z + 0.25)) < 1.0)) &&
              ((0.0 < g_heroWaterZ - g_heroPosition.z && (DAT_00969de8 < 0.0)))) {
             if (g_heroType == '\x03') {
@@ -3844,7 +3844,7 @@ undefined4 * Hero_HandleGroundType(void)
             puVar6 = (undefined4 *)TransitionMovement(0x7f,1);
             return puVar6;
           }
-          if (((((DAT_0096afc6 != '\0') && (g_heroState != MUD_SINKING)) &&
+          if (((((g_heroHotSpotQuickSand != '\0') && (g_heroState != MUD_SINKING)) &&
                (g_heroState != DEATH_MUD)) &&
               ((ABS(DAT_00969fd4 - (g_heroPosition.z + 0.25)) < 1.0 &&
                (0.0 < DAT_00969fd4 - g_heroPosition.z)))) &&
@@ -3859,8 +3859,8 @@ undefined4 * Hero_HandleGroundType(void)
             puVar6 = (undefined4 *)TransitionMovement(0x68,1);
             return puVar6;
           }
-          puVar6 = (undefined4 *)(uint)DAT_0096afcb;
-          if (((DAT_0096afcb != 0) && (puVar6 = (undefined4 *)g_heroState, g_heroState != DEATH_MUD)
+          puVar6 = (undefined4 *)(uint)g_heroHotSpotDeathSand;
+          if (((g_heroHotSpotDeathSand != 0) && (puVar6 = (undefined4 *)g_heroState, g_heroState != DEATH_MUD)
               ) && ((puVar6 = &DAT_00083aa4, ABS(DAT_00969fd4 - (g_heroPosition.z + 0.25)) < 1.0 &&
                     ((puVar6 = &DAT_00083aa4, 0.0 < DAT_00969fd4 - g_heroPosition.z &&
                      (DAT_00969de8 < 0.0)))))) {
@@ -4218,7 +4218,7 @@ double Hero_UpdateCollisionSize(void)
     DAT_00969f0c = 0.9;
   }
   if ((((DAT_00969f37 == '\0') || (DAT_0096bd74 == 0x12)) || (g_heroStateType == 0x11)) ||
-     ((DAT_0096afc4 != '\0' ||
+     ((g_heroHotSpotWater != '\0' ||
       (dVar1 = (double)SQRT((DAT_00969ef0 - g_heroPosition.x) * (DAT_00969ef0 - g_heroPosition.x) +
                             (DAT_00969ef4 - g_heroPosition.y) * (DAT_00969ef4 - g_heroPosition.y)),
       (double)(g_heroCollRadius * 0.5) < dVar1)))) {
@@ -4734,7 +4734,7 @@ LAB_00085a94:
        ((((g_heroStateType == 0 || (g_heroStateType == 1)) || (g_heroStateType == 2)) ||
         (((g_heroState == GLIDING || (g_heroState == MOVEMENT_JUMP)) || (g_heroState == DOUBLE_JUMP)
          ))))) {
-      if (DAT_0096afc4 == '\0') {
+      if (g_heroHotSpotWater == '\0') {
         iVar1 = 1;
       }
       else {
@@ -6489,9 +6489,9 @@ void Hero_CancelGravity(float *out,float *in)
   float fVar8;
   float fVar9;
   
-  fVar6 = DAT_00969f78;
-  fVar5 = DAT_00969f74;
-  fVar1 = g_heroGravityDir;
+  fVar6 = g_heroGravityDir.z;
+  fVar5 = g_heroGravityDir.y;
+  fVar1 = g_heroGravityDir.x;
   if (g_heroGravityMode == 0) {
     *out = *in;
     out[1] = in[1];
@@ -6524,10 +6524,10 @@ void Hero_CancelGravity(float *out,float *in)
   else if (g_heroGravityMode < 3) {
     fVar2 = *in;
     fVar3 = in[1];
-    fVar7 = g_heroGravityDir * fVar2;
-    fVar9 = DAT_00969f74 * fVar3;
+    fVar7 = g_heroGravityDir.x * fVar2;
+    fVar9 = g_heroGravityDir.y * fVar3;
     fVar4 = in[2];
-    fVar8 = DAT_00969f78 * fVar4;
+    fVar8 = g_heroGravityDir.z * fVar4;
     out[3] = in[3];
     fVar8 = fVar7 + fVar9 + fVar8;
     *out = fVar2 - fVar1 * fVar8;
@@ -6963,12 +6963,12 @@ void Hero_MoveWithPlatform(void)
             DAT_0096a1b0 = (float)((double)DAT_0096a1b0 + dVar20);
             DAT_0096a1b4 = (float)((double)DAT_0096a1b4 + dVar18);
             DAT_0096a1b8 = (float)((double)DAT_0096a1b8 + dVar28);
-            if (0.1 < SQRT((float)(dVar20 - (double)DAT_00969e20) *
-                           (float)(dVar20 - (double)DAT_00969e20) +
-                           (float)(dVar18 - (double)DAT_00969e24) *
-                           (float)(dVar18 - (double)DAT_00969e24) +
-                           (float)(dVar28 - (double)DAT_00969e28) *
-                           (float)(dVar28 - (double)DAT_00969e28))) {
+            if (0.1 < SQRT((float)(dVar20 - (double)g_heroFrameMove.x) *
+                           (float)(dVar20 - (double)g_heroFrameMove.x) +
+                           (float)(dVar18 - (double)g_heroFrameMove.y) *
+                           (float)(dVar18 - (double)g_heroFrameMove.y) +
+                           (float)(dVar28 - (double)g_heroFrameMove.z) *
+                           (float)(dVar28 - (double)g_heroFrameMove.z))) {
               DAT_0096a044 = DAT_0096a044 & 0xfffffffe;
             }
           }
@@ -7341,16 +7341,16 @@ void Hero_ApplyMotion(void)
     DAT_00969dec = g_heroPosition.w;
     Hero_SnapToGround();
   }
-  DAT_00969e2c = DAT_00969ddc;
+  g_heroFrameMove.w = DAT_00969ddc;
   DAT_00969de0 = (float)((double)g_heroPosition.x - dVar14);
   DAT_00969ddc = (float)dVar7;
   DAT_00969de4 = (float)((double)g_heroPosition.y - dVar13);
   DAT_00969de8 = (float)((double)g_heroPosition.z - dVar12);
   DAT_00969dec = g_heroPosition.w;
   DAT_00969e4c = (float)dVar7;
-  DAT_00969e20 = (float)((double)g_heroPosition.x - dVar11);
-  DAT_00969e24 = (float)((double)g_heroPosition.y - dVar9);
-  DAT_00969e28 = (float)((double)g_heroPosition.z - dVar8);
+  g_heroFrameMove.x = (float)((double)g_heroPosition.x - dVar11);
+  g_heroFrameMove.y = (float)((double)g_heroPosition.y - dVar9);
+  g_heroFrameMove.z = (float)((double)g_heroPosition.z - dVar8);
   if (0.004 < DAT_00969e44) {
     DAT_00969e4c = DAT_00969de8 / DAT_00969e44;
     if (DAT_00969e4c <= 0.5) {
@@ -12324,24 +12324,24 @@ Hero_FindGrindRail
   uVar5 = 0;
   _fStack00000030 = param_1;
   _fStack00000038 = param_2;
-  if (0 < DAT_00a1a860) {
+  if (0 < g_GrindPathCnt) {
     do {
       if ((((param_8 == 0) ||
-           (*(int *)(DAT_00a1a85c + 0x10 + (int)((uVar5 & 0xffffffff) << 5)) != param_8)) &&
+           (*(int *)(g_GrindPaths + 0x10 + (int)((uVar5 & 0xffffffff) << 5)) != param_8)) &&
           ((in_stack_00000074 == 0 ||
-           (*(int *)(DAT_00a1a85c + 0x10 + (int)((uVar5 & 0xffffffff) << 5)) == in_stack_00000074)))
-          ) && (iVar2 = (int)uVar5 * 0x20, **(int **)(DAT_00a1a85c + 0x10 + iVar2) != 0)) {
-        pfVar4 = (float *)(DAT_00a1a85c + iVar2);
+           (*(int *)(g_GrindPaths + 0x10 + (int)((uVar5 & 0xffffffff) << 5)) == in_stack_00000074)))
+          ) && (iVar2 = (int)uVar5 * 0x20, **(int **)(g_GrindPaths + 0x10 + iVar2) != 0)) {
+        pfVar4 = (float *)(g_GrindPaths + iVar2);
         if (SQRT((*pfVar4 - fStack00000030) * (*pfVar4 - fStack00000030) +
                  (pfVar4[1] - fStack00000034) * (pfVar4[1] - fStack00000034) +
                  (pfVar4[2] - fStack00000038) * (pfVar4[2] - fStack00000038)) <=
-            *(float *)(DAT_00a1a85c + 0xc + iVar2)) {
+            *(float *)(g_GrindPaths + 0xc + iVar2)) {
           dVar7 = 10.0;
           iVar3 = MB_PathFollowToPos
                             (0x4028000000000000,0x4024000000000000,0,
-                             *(undefined4 *)(DAT_00a1a85c + 0x10 + iVar2),&stack0x00000030,param_4,
+                             *(undefined4 *)(g_GrindPaths + 0x10 + iVar2),&stack0x00000030,param_4,
                              &local_80,local_7c,&DAT_00094b60,
-                             *(undefined4 *)(DAT_00a1a85c + 0x14 + iVar2));
+                             *(undefined4 *)(g_GrindPaths + 0x14 + iVar2));
           if (iVar3 != 0) {
             fVar1 = 0.9;
             if ((g_heroStateType == 0) || (g_heroStateType == 1)) {
@@ -12355,8 +12355,8 @@ Hero_FindGrindRail
             if (ABS((double)(fStack00000038 - param_4[2])) < dVar6 &&
                 SQRT((fStack00000030 - *param_4) * (fStack00000030 - *param_4) +
                      (fStack00000034 - param_4[1]) * (fStack00000034 - param_4[1])) < fVar1) {
-              *param_3 = *(undefined4 *)(DAT_00a1a85c + 0x10 + iVar2);
-              iVar3 = DAT_00a1a85c;
+              *param_3 = *(undefined4 *)(g_GrindPaths + 0x10 + iVar2);
+              iVar3 = g_GrindPaths;
               *param_5 = local_80;
               *param_6 = local_7c[0];
               *param_7 = *(undefined4 *)(iVar3 + 0x14 + iVar2);
@@ -12366,7 +12366,7 @@ Hero_FindGrindRail
         }
       }
       uVar5 = uVar5 + 1;
-    } while ((int)uVar5 < DAT_00a1a860);
+    } while ((int)uVar5 < g_GrindPathCnt);
   }
   return 0;
 }
@@ -12496,14 +12496,14 @@ LAB_0009531c:
      ((iVar2 = Hero_FindGrindRail(CONCAT44(g_heroPosition.x,g_heroPosition.y),
                                   CONCAT44(g_heroPosition.z,g_heroPosition.w),&local_20,&local_30,
                                   &local_1c,&local_18,local_14), iVar2 != 0 &&
-      (((((g_heroState != GRINDRAIL_JUMP || (DAT_0096a2a4 == 0)) || (local_20 != DAT_0096a240)) &&
+      (((((g_heroState != GRINDRAIL_JUMP || (DAT_0096a2a4 == 0)) || (local_20 != g_heroGrindPath)) &&
         (-0.5 < g_heroPosition.z - local_28)) &&
        ((g_heroPosition.z - local_28 < 0.57 || (DAT_00969eaa != 0)))))))) {
     DAT_0096a1e0 = local_30;
     DAT_0096a1e4 = local_2c;
     DAT_0096a1e8 = local_28;
     DAT_0096a1ec = local_24;
-    DAT_0096a240 = local_20;
+    g_heroGrindPath = local_20;
     DAT_0096a244 = local_1c;
     DAT_0096a248 = local_18;
     DAT_0096a264 = local_14[0];
@@ -19227,7 +19227,7 @@ int Hero_SwimSurfTransition(void)
       }
       iVar2 = 0;
       iVar4 = 0;
-      if (DAT_0096afc4 != '\0') {
+      if (g_heroHotSpotWater != '\0') {
         if (g_heroStateType == 0x11) {
           if (((DAT_0096bd68 != 1) && (0.0 < DAT_00969de8)) &&
              (g_heroWaterZ - 0.4 < g_heroPosition.z)) {
@@ -23478,7 +23478,7 @@ LAB_000b2028:
           puVar20 = &DAT_0096a1e0;
           uVar33 = 0x4004000000000000;
           MB_PathFollowToPos
-                    (0x408f380000000000,0x4000000000000000,0x4004000000000000,DAT_0096a240,
+                    (0x408f380000000000,0x4000000000000000,0x4004000000000000,g_heroGrindPath,
                      &g_heroPosition,&DAT_0096a1e0,&DAT_0096a244,&DAT_0096a248);
           if (DAT_0096a270 != 0) {
             MB_PathFollowToPos
@@ -23510,7 +23510,7 @@ LAB_000b2028:
             local_c8 = (ulonglong)DAT_0096a258;
             dVar30 = (double)fVar36;
             lVar24 = uVar8 - 0x5f0;
-            MB_PathMoveDist(dVar30,DAT_0096a240,lVar24,&DAT_0096a244,&DAT_0096a248);
+            MB_PathMoveDist(dVar30,g_heroGrindPath,lVar24,&DAT_0096a244,&DAT_0096a248);
             if (DAT_0096a270 != 0) {
               MB_PathMoveDist
                         (dVar30,DAT_0096a274,uVar8 - 0x5e0,&DAT_0096a278,&DAT_0096a27c);
@@ -23525,12 +23525,12 @@ LAB_000b2028:
               local_e8 = DAT_0096a244;
               local_e4 = DAT_0096a248;
               iVar10 = MB_PathMoveDist
-                                 (dVar34,DAT_0096a240,uVar8 - 0x5d0,uVar8 - 0xe8,uVar8 - 0xe4);
+                                 (dVar34,g_heroGrindPath,uVar8 - 0x5d0,uVar8 - 0xe8,uVar8 - 0xe4);
               FUN_005e7e98(uVar8 - 0x5c0,&g_heroPosition);
               local_e8 = DAT_0096a244;
               local_e4 = DAT_0096a248;
               iVar15 = MB_PathMoveDist
-                                 ((double)(float)(dVar34 + 0.10000000149011612),DAT_0096a240,
+                                 ((double)(float)(dVar34 + 0.10000000149011612),g_heroGrindPath,
                                   uVar8 - 0x5c0,uVar8 - 0xe8,uVar8 - 0xe4);
               if ((iVar10 == 0 && iVar15 == 0) || (DAT_0096a264 != 0)) {
                 dVar30 = (double)DAT_0096a25c;
@@ -23617,10 +23617,10 @@ LAB_000b2028:
                 }
               }
             }
-            iVar10 = MB_PathStepIndex(DAT_0096a240,DAT_0096a244,DAT_0096a258,DAT_0096a264)
+            iVar10 = MB_PathStepIndex(g_heroGrindPath,DAT_0096a244,DAT_0096a258,DAT_0096a264)
             ;
             lVar22 = uVar8 - 0x5a0;
-            FUN_005e81f0(lVar22,DAT_0096a240 + iVar10 * 4 + 4,lVar24);
+            FUN_005e81f0(lVar22,g_heroGrindPath + iVar10 * 4 + 4,lVar24);
             dVar30 = (double)FUN_005e8030(lVar22);
             if (0.0010000000474974513 <= dVar30) {
               dVar30 = (double)FUN_005e8338((double)local_5a0,(double)local_59c);
@@ -23772,7 +23772,7 @@ LAB_000b2028:
               local_dc = DAT_0096a244;
               local_d8 = DAT_0096a248;
               FUN_005e7e98(lVar22,&g_heroPosition);
-              MB_PathMoveDist(dVar31,DAT_0096a240,lVar22,uVar8 - 0xdc,uVar8 - 0xd8);
+              MB_PathMoveDist(dVar31,g_heroGrindPath,lVar22,uVar8 - 0xdc,uVar8 - 0xd8);
               uVar7 = FUN_005e8588(&DAT_0096a1e0,lVar22);
               dVar30 = (double)FUN_005e8338(uVar7,(double)(local_528 - DAT_0096a1e8));
               if (dVar30 <= dVar26) {
@@ -24412,7 +24412,7 @@ LAB_000b2028:
               if ((int)g_heroState < 0x3f) {
                 uVar7 = 0x3ff0000000000000;
                 FUN_005e7f98(0x3ff0000000000000,uVar8 - 0x890,&DAT_00969de0);
-                dVar28 = (double)FUN_005e81c0(&g_heroGravityDir,uVar8 - 0x890);
+                dVar28 = (double)FUN_005e81c0(&g_heroGravityDir.x,uVar8 - 0x890);
                 FUN_005e81c0(&g_heroGroundNormal,&DAT_0096a450);
                 FUN_005e7f98(uVar8 - 0x870,&g_heroGroundNormal);
                 FUN_005e81f0(&DAT_0096a450,&DAT_0096a450,uVar8 - 0x870);
@@ -24454,22 +24454,22 @@ LAB_000b2028:
                   }
                 }
                 if (((g_framesNotGrounded != 0) && (DAT_0096a56a == 0)) &&
-                   (dVar30 = (double)FUN_005e81c0(&g_heroGravityDir,&DAT_00969de0), dVar30 < 0.0)) {
+                   (dVar30 = (double)FUN_005e81c0(&g_heroGravityDir.x,&DAT_00969de0), dVar30 < 0.0)) {
                   if ((dVar28 < -0.800000011920929) || ((-0.5 > dVar28 && (DAT_0096a56c != '\0'))))
                   {
                     DAT_0096a56e = '\x01';
-                    FUN_005e7e98(&g_heroVelocity,&g_heroGravityDir);
+                    FUN_005e7e98(&g_heroVelocity,&g_heroGravityDir.x);
                     FUN_005e822c(-(double)DAT_0096a53c,&g_heroVelocity,&g_heroVelocity);
                     dVar30 = (double)(g_FrameTime * 1.5);
                     if (DAT_0096a56c != '\0') {
                       dVar30 = (double)(float)(dVar30 + (double)(g_FrameTime * 3.0));
                     }
-                    FUN_005e7f98(-dVar30,uVar8 - 0x850,&g_heroGravityDir);
+                    FUN_005e7f98(-dVar30,uVar8 - 0x850,&g_heroGravityDir.x);
                     FUN_005e7f54(&g_heroVelocity,&g_heroVelocity,uVar8 - 0x850);
                     FUN_005e7e98(&DAT_00969de0,&g_heroVelocity);
                   }
                   DAT_0096a56c = '\0';
-                  dVar30 = (double)FUN_005e81c0(&g_heroGravityDir,&DAT_00969de0);
+                  dVar30 = (double)FUN_005e81c0(&g_heroGravityDir.x,&DAT_00969de0);
                   DAT_0096a534 = (float)-dVar30;
                 }
                 DAT_0096a56a = g_framesNotGrounded;
@@ -24508,7 +24508,7 @@ LAB_000b2028:
                   iVar10 = PadRingBitsOn(0x40,iVar10,(int *)0x0);
                   if (iVar10 != 0) {
                     if (dVar28 >= -0.800000011920929 && -0.5 <= dVar28) {
-                      dVar28 = (double)FUN_005e81c0(&g_heroGravityDir,&DAT_00969de0);
+                      dVar28 = (double)FUN_005e81c0(&g_heroGravityDir.x,&DAT_00969de0);
                       DAT_0096a534 = g_FrameTime * 5.0;
                       if (0.0 < -dVar28) {
                         DAT_0096a534 = (float)((double)DAT_0096a534 + -dVar28);
@@ -24571,7 +24571,7 @@ LAB_000b2028:
                 sVar16 = g_framesNotGrounded;
                 if (g_framesNotGrounded == 0) {
                   dVar30 = (double)(g_FrameTime * 20.0);
-                  dVar28 = (double)FUN_005e81c0(&DAT_00969de0,&g_heroGravityDir);
+                  dVar28 = (double)FUN_005e81c0(&DAT_00969de0,&g_heroGravityDir.x);
                   dVar28 = -dVar28;
                   if ((double)(g_FrameTime * 0.5) < ABS(dVar28)) {
                     if (dVar28 < 0.0) {
@@ -25403,8 +25403,8 @@ LAB_000b3bd8:
             }
             if (((double)DAT_0096a198 != dVar28) && (g_framesNotGrounded == 0)) {
               if (DAT_0096a1a4 == 0) {
-                GameCamera.offset0.amp = 0.2;
-                GameCamera.offset0.total = idol::GetAnimDuration(0x28);
+                GameCamera.shake.strength = 0.2;
+                GameCamera.shake.time = idol::GetAnimDuration(0x28);
               }
               DAT_0096a1a4 = DAT_0096a1a4 + 1;
             }
@@ -26131,8 +26131,8 @@ LAB_000b6bfc:
           }
           if (bVar19) {
 LAB_000b68e8:
-            GameCamera.offset0.amp = 0.1;
-            GameCamera.offset0.total = idol::GetAnimDuration(0x14);
+            GameCamera.shake.strength = 0.1;
+            GameCamera.shake.time = idol::GetAnimDuration(0x14);
           }
           else {
             bVar19 = false;
@@ -27223,7 +27223,7 @@ LAB_000acc38:
         }
 LAB_000b1630:
         bVar19 = false;
-        if ((DAT_0096afc4 != '\0') && (DAT_0096bf84 < 0.25)) {
+        if ((g_heroHotSpotWater != '\0') && (DAT_0096bf84 < 0.25)) {
           bVar19 = true;
         }
         if (DAT_0096bd89 != '\0' || bVar19) {
@@ -27947,7 +27947,7 @@ int TransitionMovement(int state,int force)
               DAT_0096a2a0 = 0;
               uVar19 = 0x3ff0000000000000;
               MB_PathMoveDist
-                        (0x3ff0000000000000,DAT_0096a240,auStack_100,local_c0,local_bc,1,
+                        (0x3ff0000000000000,g_heroGrindPath,auStack_100,local_c0,local_bc,1,
                          DAT_0096a264);
               FUN_005e81f0(&local_110,auStack_100,&g_heroPosition);
               dVar14 = (double)FUN_005e8030(&local_110);
@@ -29646,7 +29646,7 @@ LAB_000ba14c:
       DAT_0096a59c = 0;
       DAT_0096a57c = 0;
       if (DAT_0096bd74 == 0x16) {
-        dVar14 = (double)FUN_005e81c0(&g_heroGravityDir,&DAT_00969de0);
+        dVar14 = (double)FUN_005e81c0(&g_heroGravityDir.x,&DAT_00969de0);
         DAT_0096a534 = (float)-dVar14;
       }
       else {
@@ -29823,7 +29823,7 @@ LAB_000ba7d0:
     g_HeroRequestedCamType = 3;
   }
   FUN_005e7e98(&g_heroVelocity,&DAT_00969df0);
-  if (((g_heroState != WATER_JUMP) && (DAT_0096afc4 != '\0')) &&
+  if (((g_heroState != WATER_JUMP) && (g_heroHotSpotWater != '\0')) &&
      (g_heroPosition.z < g_heroWaterZ + 0.5)) {
     Hero_SpawnWaterSplash(3,0x10,0);
   }
@@ -31415,8 +31415,8 @@ LAB_000c6d38:
                 if (g_DustHoverState == 0) {
                   if ((g_framesNotGrounded == 0) && (DAT_0096a0fe != 0)) {
                     g_DustHoverState = idol::GetAnimDuration(1);
-                    GameCamera.offset0.amp = 0.15;
-                    GameCamera.offset0.total = idol::GetAnimDuration(0x1e);
+                    GameCamera.shake.strength = 0.15;
+                    GameCamera.shake.time = idol::GetAnimDuration(0x1e);
                     iVar15 = FastDoubleToInt((double)DAT_0096a128);
                     if (g_heroAnimFrame < DAT_0096a124) {
                       bVar3 = pMVar8->animationId;
@@ -32639,7 +32639,7 @@ LAB_000c1c40:
                 local_118 = DAT_0096a244;
                 local_114 = DAT_0096a248;
                 iVar15 = MB_PathMoveDist
-                                   (dVar33,DAT_0096a240,lVar13,uVar12 - 0x118,uVar12 - 0x114);
+                                   (dVar33,g_heroGrindPath,lVar13,uVar12 - 0x118,uVar12 - 0x114);
                 if (iVar15 != 0) {
                   iVar15 = idol::GetAnimDuration(0x30);
                   local_b0 = (ulonglong)iVar15;
@@ -32656,15 +32656,15 @@ LAB_000c1c40:
                 iVar15 = Hero_FindGrindRail(CONCAT44(local_270,local_26c),
                                             CONCAT44(local_268,local_264),param_3,uVar12 - 0x260,
                                             uVar12 - 0x104,uVar12 - 0x110,uVar12 - 0x10c,
-                                            DAT_0096a240);
+                                            g_heroGrindPath);
                 if (iVar15 != 0) {
                   param_3 = ZEXT48(&DAT_0096a1e0);
-                  DAT_0096a274 = DAT_0096a240;
+                  DAT_0096a274 = g_heroGrindPath;
                   DAT_0096a278 = DAT_0096a244;
                   DAT_0096a27c = DAT_0096a248;
                   DAT_0096a280 = DAT_0096a264;
                   FUN_005e7e98(&DAT_0096a220,&DAT_0096a1e0);
-                  DAT_0096a240 = local_108;
+                  g_heroGrindPath = local_108;
                   DAT_0096a264 = local_10c;
                   MB_PathFollowToPos
                             (0x408f380000000000,dVar29,0,local_108,&g_heroPosition,&DAT_0096a1e0,
@@ -32846,7 +32846,7 @@ LAB_000c1c40:
               iVar18 = idol::GetAnimDuration(0x11);
               local_b0 = (ulonglong)iVar18;
               Hero_TransAnim((float)(longlong)local_b0,iVar15,0);
-              FUN_005e7e98(&g_heroExternalMomentum,&DAT_00969e20);
+              FUN_005e7e98(&g_heroExternalMomentum,&g_heroFrameMove.x);
             }
           }
           goto LAB_000c81a8;
@@ -33507,7 +33507,7 @@ LAB_000c03e4:
               iVar15 = idol::GetAnimDuration(0x1b);
               if (iVar15 < (int)uVar16) {
                 if (g_heroHealth < 1) {
-                  if (DAT_0096afc5 == '\0') {
+                  if (g_heroHotSpotLava == '\0') {
                     TransitionMovement(0x3d,1);
                   }
                   else {

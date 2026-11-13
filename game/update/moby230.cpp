@@ -1194,7 +1194,7 @@ void UpdateMoby_230(MobyInstance *moby)
       dVar32 = (double)((moby->pos).y + pfVar7[1]);
       dVar30 = (double)(moby->pos).w;
       dVar31 = (double)((moby->pos).z + fVar3);
-      FastVecAddSelf(uVar18 - 0xb0,lVar19 + 0x10,&DAT_00969e20);
+      FastVecAddSelf(uVar18 - 0xb0,lVar19 + 0x10,&g_heroFrameMove.x);
       fVar8 = (moby->pos).y;
       *(f32 *)(puVar14 + 0xe) = (moby->pos).x;
       fVar3 = (moby->pos).z;

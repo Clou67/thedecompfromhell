@@ -8,7 +8,6 @@
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
-#include "game/update/moby1826.h"
 #include "game/update/moby832.h"
 #include "game/update/moby849.h"
 #include "idol/fastfunc.h"

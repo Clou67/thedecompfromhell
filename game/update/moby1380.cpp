@@ -113,8 +113,8 @@ void M1380_00265b38(int param_1,float *param_2,undefined4 *param_3)
   param_2[1] = fVar5;
   fVar7 = SQRT(fVar2 * fVar2 + fVar5 * fVar5);
   param_2[2] = GameCamera.posZ - *(float *)(param_1 + 0x18);
-  acVar10 = GameCamera.field8_0x14c;
-  *(char (*) [4])(param_2 + 3) = GameCamera.field8_0x14c;
+  acVar10 = GameCamera.posW;
+  *(char (*) [4])(param_2 + 3) = GameCamera.posW;
   fVar1 = 0.0;
   fVar3 = fVar1;
   fVar4 = fVar1;

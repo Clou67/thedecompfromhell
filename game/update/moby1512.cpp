@@ -61,7 +61,7 @@ void M1512_0028f3f0(int param_1)
   fVar3 = (float)((double)GameCamera.posZ - dVar14);
   dVar27 = (double)*(float *)(param_1 + 0x1c);
   fVar5 = fVar3 * fVar3 + fVar2 * fVar2 + fVar1 * fVar1;
-  dVar26 = (double)(float)GameCamera.field8_0x14c;
+  dVar26 = (double)(float)GameCamera.posW;
   dVar17 = dVar23;
   dVar18 = dVar23;
   dVar19 = dVar23;

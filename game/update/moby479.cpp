@@ -845,7 +845,7 @@ void UpdateMoby_479(MobyInstance *moby)
             fVar4 = GameCamera.posX + GameCamera.orientMtx.up.x;
             fVar7 = GameCamera.posY + GameCamera.orientMtx.up.y;
             fVar8 = GameCamera.posZ + GameCamera.orientMtx.up.z;
-            (moby->pos).w = (f32)GameCamera.field8_0x14c;
+            (moby->pos).w = (f32)GameCamera.posW;
             (moby->pos).x = fVar4 - GameCamera.orientMtx.forward.x;
             (moby->pos).y = fVar7 - GameCamera.orientMtx.forward.y;
             (moby->pos).z = fVar8 - GameCamera.orientMtx.forward.z;

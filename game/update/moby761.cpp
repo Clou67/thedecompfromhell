@@ -140,11 +140,11 @@ void M761_0044fea8(ulonglong param_1)
   bVar3 = *(byte *)(psVar23 + 0x2e);
   bVar4 = *(byte *)((int)psVar23 + 0x5f);
   puVar26[0x41] = unaff_r27;
-  acVar34 = GameCamera.field8_0x14c;
+  acVar34 = GameCamera.posW;
   bVar5 = *(byte *)(psVar23 + 0x2f);
   bVar6 = *(byte *)((int)psVar23 + 0x5d);
   dVar60 = 1.0;
-  *(char (*) [4])((int)puVar26 + 0x7c) = GameCamera.field8_0x14c;
+  *(char (*) [4])((int)puVar26 + 0x7c) = GameCamera.posW;
   dVar59 = 0.0;
   puVar26[0x31] = param_1;
   pCVar27 = Cuboids;

@@ -116,34 +116,34 @@ void Cam9_CalcDesiredPos(int param_1,float *param_2,int param_3)
   iVar14 = *(int *)(param_1 + 0x70);
   fVar5 = *(float *)(iVar14 + 0x24) - *(float *)(iVar14 + 0x84);
   fVar11 = *(float *)(iVar14 + 0x20) - *(float *)(iVar14 + 0x80);
-  fVar1 = SQRT((float)GameCamera.field17_0x1b4.piece<20,4>() * (float)GameCamera.field17_0x1b4.piece<20,4>() +
-               (float)GameCamera.field17_0x1b4.piece<12,4>() * (float)GameCamera.field17_0x1b4.piece<12,4>() +
-               (float)GameCamera.field17_0x1b4.piece<16,4>() * (float)GameCamera.field17_0x1b4.piece<16,4>());
+  fVar1 = SQRT((float)GameCamera.camStatics.heroUpActual.z * (float)GameCamera.camStatics.heroUpActual.z +
+               (float)GameCamera.camStatics.heroUpActual.x * (float)GameCamera.camStatics.heroUpActual.x +
+               (float)GameCamera.camStatics.heroUpActual.y * (float)GameCamera.camStatics.heroUpActual.y);
   fVar13 = 0.0;
   fVar6 = *(float *)(iVar14 + 0x28) - *(float *)(iVar14 + 0x88);
-  fVar8 = (fVar6 * (float)GameCamera.field17_0x1b4.piece<20,4>() +
-          fVar11 * (float)GameCamera.field17_0x1b4.piece<12,4>() +
-          fVar5 * (float)GameCamera.field17_0x1b4.piece<16,4>()) / fVar1;
+  fVar8 = (fVar6 * (float)GameCamera.camStatics.heroUpActual.z +
+          fVar11 * (float)GameCamera.camStatics.heroUpActual.x +
+          fVar5 * (float)GameCamera.camStatics.heroUpActual.y) / fVar1;
   fVar7 = fVar13;
   if (0.0 - fVar1 < 0.0) {
-    fVar7 = (float)GameCamera.field17_0x1b4.piece<16,4>() * fVar8;
+    fVar7 = (float)GameCamera.camStatics.heroUpActual.y * fVar8;
   }
   fVar9 = fVar13;
   if (0.0 - fVar1 < 0.0) {
-    fVar9 = (float)GameCamera.field17_0x1b4.piece<12,4>() * fVar8;
+    fVar9 = (float)GameCamera.camStatics.heroUpActual.x * fVar8;
   }
   fVar10 = fVar13;
   if (0.0 - fVar1 < 0.0) {
-    fVar10 = (float)GameCamera.field17_0x1b4.piece<20,4>() * fVar8;
+    fVar10 = (float)GameCamera.camStatics.heroUpActual.z * fVar8;
   }
   if (fVar1 - 0.0 < 0.0) {
-    fVar7 = (float)GameCamera.field17_0x1b4.piece<16,4>() * fVar8;
+    fVar7 = (float)GameCamera.camStatics.heroUpActual.y * fVar8;
   }
   if (fVar1 - 0.0 < 0.0) {
-    fVar9 = (float)GameCamera.field17_0x1b4.piece<12,4>() * fVar8;
+    fVar9 = (float)GameCamera.camStatics.heroUpActual.x * fVar8;
   }
   if (fVar1 - 0.0 < 0.0) {
-    fVar10 = (float)GameCamera.field17_0x1b4.piece<20,4>() * fVar8;
+    fVar10 = (float)GameCamera.camStatics.heroUpActual.z * fVar8;
   }
   fVar5 = fVar5 - fVar7;
   fVar11 = fVar11 - fVar9;
@@ -161,12 +161,12 @@ void Cam9_CalcDesiredPos(int param_1,float *param_2,int param_3)
     fVar7 = fVar5 * fVar9;
     fVar9 = fVar6 * fVar9;
   }
-  fVar2 = (float)GameCamera.field17_0x1b4.piece<20,4>() * fVar8 -
-          (float)GameCamera.field17_0x1b4.piece<12,4>() * fVar9;
-  fVar3 = (float)GameCamera.field17_0x1b4.piece<16,4>() * fVar9 -
-          (float)GameCamera.field17_0x1b4.piece<20,4>() * fVar7;
-  fVar12 = (float)GameCamera.field17_0x1b4.piece<12,4>() * fVar7 -
-           (float)GameCamera.field17_0x1b4.piece<16,4>() * fVar8;
+  fVar2 = (float)GameCamera.camStatics.heroUpActual.z * fVar8 -
+          (float)GameCamera.camStatics.heroUpActual.x * fVar9;
+  fVar3 = (float)GameCamera.camStatics.heroUpActual.y * fVar9 -
+          (float)GameCamera.camStatics.heroUpActual.z * fVar7;
+  fVar12 = (float)GameCamera.camStatics.heroUpActual.x * fVar7 -
+           (float)GameCamera.camStatics.heroUpActual.y * fVar8;
   fVar10 = fVar12 * fVar12 + fVar3 * fVar3 + fVar2 * fVar2;
   fVar6 = fVar13;
   fVar11 = fVar13;
@@ -183,23 +183,23 @@ void Cam9_CalcDesiredPos(int param_1,float *param_2,int param_3)
   fVar2 = *(float *)(iVar14 + 0x44) / fVar1;
   fVar10 = fVar13;
   if (0.0 - fVar1 < 0.0) {
-    fVar10 = (float)GameCamera.field17_0x1b4.piece<12,4>() * fVar2;
+    fVar10 = (float)GameCamera.camStatics.heroUpActual.x * fVar2;
   }
   fVar12 = fVar13;
   if (0.0 - fVar1 < 0.0) {
-    fVar12 = (float)GameCamera.field17_0x1b4.piece<16,4>() * fVar2;
+    fVar12 = (float)GameCamera.camStatics.heroUpActual.y * fVar2;
   }
   if (0.0 - fVar1 < 0.0) {
-    fVar13 = (float)GameCamera.field17_0x1b4.piece<20,4>() * fVar2;
+    fVar13 = (float)GameCamera.camStatics.heroUpActual.z * fVar2;
   }
   if (fVar1 - 0.0 < 0.0) {
-    fVar10 = (float)GameCamera.field17_0x1b4.piece<12,4>() * fVar2;
+    fVar10 = (float)GameCamera.camStatics.heroUpActual.x * fVar2;
   }
   if (fVar1 - 0.0 < 0.0) {
-    fVar12 = (float)GameCamera.field17_0x1b4.piece<16,4>() * fVar2;
+    fVar12 = (float)GameCamera.camStatics.heroUpActual.y * fVar2;
   }
   if (fVar1 - 0.0 < 0.0) {
-    fVar13 = (float)GameCamera.field17_0x1b4.piece<20,4>() * fVar2;
+    fVar13 = (float)GameCamera.camStatics.heroUpActual.z * fVar2;
   }
   fVar1 = *(float *)(iVar14 + 0x2c);
   fVar2 = *(float *)(iVar14 + 0x50);
@@ -292,41 +292,41 @@ void Cam9_InitPos(float *param_1)
   *(f32 *)((int)fVar4 + 0x88) = fVar1;
   *(f32 *)((int)fVar4 + 0x8c) = fVar2;
   Cam9_CalcDesiredPos(param_1,param_1 + 0xc,0,1);
-  uVar17 = GameCamera.field17_0x1b4.piece<20,4>();
-  uVar16 = GameCamera.field17_0x1b4.piece<16,4>();
-  uVar15 = GameCamera.field17_0x1b4.piece<12,4>();
-  fVar7 = SQRT((float)GameCamera.field17_0x1b4.piece<20,4>() * (float)GameCamera.field17_0x1b4.piece<20,4>() +
-               (float)GameCamera.field17_0x1b4.piece<12,4>() * (float)GameCamera.field17_0x1b4.piece<12,4>() +
-               (float)GameCamera.field17_0x1b4.piece<16,4>() * (float)GameCamera.field17_0x1b4.piece<16,4>());
+  uVar17 = GameCamera.camStatics.heroUpActual.z;
+  uVar16 = GameCamera.camStatics.heroUpActual.y;
+  uVar15 = GameCamera.camStatics.heroUpActual.x;
+  fVar7 = SQRT((float)GameCamera.camStatics.heroUpActual.z * (float)GameCamera.camStatics.heroUpActual.z +
+               (float)GameCamera.camStatics.heroUpActual.x * (float)GameCamera.camStatics.heroUpActual.x +
+               (float)GameCamera.camStatics.heroUpActual.y * (float)GameCamera.camStatics.heroUpActual.y);
   fVar4 = 0.0;
   fVar10 = *(float *)((int)fVar3 + 0x44) / fVar7;
   fVar8 = fVar4;
   if (0.0 - fVar7 < 0.0) {
-    fVar8 = (float)GameCamera.field17_0x1b4.piece<16,4>() * fVar10;
+    fVar8 = (float)GameCamera.camStatics.heroUpActual.y * fVar10;
   }
   fVar9 = fVar4;
   if (0.0 - fVar7 < 0.0) {
-    fVar9 = (float)GameCamera.field17_0x1b4.piece<12,4>() * fVar10;
+    fVar9 = (float)GameCamera.camStatics.heroUpActual.x * fVar10;
   }
   fVar11 = fVar4;
   if (0.0 - fVar7 < 0.0) {
-    fVar11 = (float)GameCamera.field17_0x1b4.piece<20,4>() * fVar10;
+    fVar11 = (float)GameCamera.camStatics.heroUpActual.z * fVar10;
   }
   if (fVar7 - 0.0 < 0.0) {
-    fVar8 = (float)GameCamera.field17_0x1b4.piece<16,4>() * fVar10;
+    fVar8 = (float)GameCamera.camStatics.heroUpActual.y * fVar10;
   }
   if (fVar7 - 0.0 < 0.0) {
-    fVar9 = (float)GameCamera.field17_0x1b4.piece<12,4>() * fVar10;
+    fVar9 = (float)GameCamera.camStatics.heroUpActual.x * fVar10;
   }
   if (fVar7 - 0.0 < 0.0) {
-    fVar11 = (float)GameCamera.field17_0x1b4.piece<20,4>() * fVar10;
+    fVar11 = (float)GameCamera.camStatics.heroUpActual.z * fVar10;
   }
   fVar8 = (fVar8 + *(float *)((int)fVar3 + 0x24)) - param_1[0xd];
   fVar10 = (fVar9 + *(float *)((int)fVar3 + 0x20)) - param_1[0xc];
   fVar3 = (fVar11 + *(float *)((int)fVar3 + 0x28)) - param_1[0xe];
   fVar7 = fVar3 * fVar3 + fVar10 * fVar10 + fVar8 * fVar8;
   if (SQRT(fVar7) == 0.0) {
-    param_1[3] = (float)GameCamera.field17_0x1b4.piece<24,4>();
+    param_1[3] = (float)GameCamera.camStatics.heroUpActual.w;
     param_1[2] = fVar3;
     *param_1 = fVar10;
     param_1[1] = fVar8;
@@ -336,7 +336,7 @@ void Cam9_InitPos(float *param_1)
   }
   else {
     fVar9 = 1.0 / SQRT(fVar7);
-    param_1[3] = (float)GameCamera.field17_0x1b4.piece<24,4>();
+    param_1[3] = (float)GameCamera.camStatics.heroUpActual.w;
     fVar9 = -(fVar7 * fVar9 * fVar9 - 1.0) * fVar9 * 0.5 + fVar9;
     fVar9 = -(fVar7 * fVar9 * fVar9 - 1.0) * fVar9 * 0.5 + fVar9;
     fVar9 = -(fVar7 * fVar9 * fVar9 - 1.0) * fVar9 * 0.5 + fVar9;
@@ -707,9 +707,9 @@ void Cam9_UpdateRot(float *param_1)
     *(undefined4 *)(puVar12 + 0x13) = 0x3f800000;
     *(undefined4 *)((int)puVar12 + 0x9c) = 0;
     MB_RotateQuatAxisAngle((float)dVar34,outQuat,outQuat);
-    uVar17 = GameCamera.field17_0x1b4.piece<20,4>();
-    uVar16 = GameCamera.field17_0x1b4.piece<16,4>();
-    uVar15 = GameCamera.field17_0x1b4.piece<12,4>();
+    uVar17 = GameCamera.camStatics.heroUpActual.z;
+    uVar16 = GameCamera.camStatics.heroUpActual.y;
+    uVar15 = GameCamera.camStatics.heroUpActual.x;
     fVar35 = *(float *)((int)fVar7 + 0x54);
     fVar6 = *(float *)((int)fVar7 + 0x50);
     fVar2 = (float)((double)(float)(dVar29 - (double)*(float *)((int)fVar7 + 0x58)) *
@@ -727,7 +727,7 @@ void Cam9_UpdateRot(float *param_1)
     fVar35 = fVar35 * fVar3;
     fVar6 = fVar6 * fVar3;
     fVar2 = fVar2 * fVar3;
-    fVar3 = fVar35 * (float)GameCamera.field17_0x1b4.piece<16,4>();
+    fVar3 = fVar35 * (float)GameCamera.camStatics.heroUpActual.y;
     *(float *)((int)fVar7 + 0x50) = fVar6;
     *(float *)((int)fVar7 + 0x54) = fVar35;
     *(float *)((int)fVar7 + 0x58) = fVar2;
@@ -825,41 +825,41 @@ void Cam9_UpdatePos(float *param_1)
   fVar13 = Cam_InterpValues(param_1[0xe],local_58,*(float *)((int)fVar1 + 0x10),
                             *(float *)((int)fVar1 + 0x14),*(float *)((int)fVar1 + 0x18),speed);
   param_1[0xe] = fVar13;
-  uVar11 = GameCamera.field17_0x1b4.piece<20,4>();
-  uVar10 = GameCamera.field17_0x1b4.piece<16,4>();
-  uVar9 = GameCamera.field17_0x1b4.piece<12,4>();
+  uVar11 = GameCamera.camStatics.heroUpActual.z;
+  uVar10 = GameCamera.camStatics.heroUpActual.y;
+  uVar9 = GameCamera.camStatics.heroUpActual.x;
   fVar12 = 0.0;
-  fVar3 = SQRT((float)GameCamera.field17_0x1b4.piece<20,4>() * (float)GameCamera.field17_0x1b4.piece<20,4>() +
-               (float)GameCamera.field17_0x1b4.piece<12,4>() * (float)GameCamera.field17_0x1b4.piece<12,4>() +
-               (float)GameCamera.field17_0x1b4.piece<16,4>() * (float)GameCamera.field17_0x1b4.piece<16,4>());
+  fVar3 = SQRT((float)GameCamera.camStatics.heroUpActual.z * (float)GameCamera.camStatics.heroUpActual.z +
+               (float)GameCamera.camStatics.heroUpActual.x * (float)GameCamera.camStatics.heroUpActual.x +
+               (float)GameCamera.camStatics.heroUpActual.y * (float)GameCamera.camStatics.heroUpActual.y);
   fVar4 = *(float *)((int)fVar1 + 0x44) / fVar3;
   fVar2 = fVar12;
   if (0.0 - fVar3 < 0.0) {
-    fVar2 = (float)GameCamera.field17_0x1b4.piece<16,4>() * fVar4;
+    fVar2 = (float)GameCamera.camStatics.heroUpActual.y * fVar4;
   }
   fVar5 = fVar12;
   if (0.0 - fVar3 < 0.0) {
-    fVar5 = (float)GameCamera.field17_0x1b4.piece<12,4>() * fVar4;
+    fVar5 = (float)GameCamera.camStatics.heroUpActual.x * fVar4;
   }
   fVar6 = fVar12;
   if (0.0 - fVar3 < 0.0) {
-    fVar6 = (float)GameCamera.field17_0x1b4.piece<20,4>() * fVar4;
+    fVar6 = (float)GameCamera.camStatics.heroUpActual.z * fVar4;
   }
   if (fVar3 - 0.0 < 0.0) {
-    fVar2 = (float)GameCamera.field17_0x1b4.piece<16,4>() * fVar4;
+    fVar2 = (float)GameCamera.camStatics.heroUpActual.y * fVar4;
   }
   if (fVar3 - 0.0 < 0.0) {
-    fVar5 = (float)GameCamera.field17_0x1b4.piece<12,4>() * fVar4;
+    fVar5 = (float)GameCamera.camStatics.heroUpActual.x * fVar4;
   }
   if (fVar3 - 0.0 < 0.0) {
-    fVar6 = (float)GameCamera.field17_0x1b4.piece<20,4>() * fVar4;
+    fVar6 = (float)GameCamera.camStatics.heroUpActual.z * fVar4;
   }
   fVar2 = (fVar2 + *(float *)((int)fVar1 + 0x24)) - param_1[0xd];
   fVar4 = (fVar5 + *(float *)((int)fVar1 + 0x20)) - param_1[0xc];
   fVar13 = (fVar6 + *(float *)((int)fVar1 + 0x28)) - fVar13;
   fVar1 = fVar13 * fVar13 + fVar4 * fVar4 + fVar2 * fVar2;
   if (SQRT(fVar1) == 0.0) {
-    param_1[3] = (float)GameCamera.field17_0x1b4.piece<24,4>();
+    param_1[3] = (float)GameCamera.camStatics.heroUpActual.w;
     param_1[2] = fVar13;
     *param_1 = fVar4;
     param_1[1] = fVar2;
@@ -869,7 +869,7 @@ void Cam9_UpdatePos(float *param_1)
   }
   else {
     fVar3 = 1.0 / SQRT(fVar1);
-    param_1[3] = (float)GameCamera.field17_0x1b4.piece<24,4>();
+    param_1[3] = (float)GameCamera.camStatics.heroUpActual.w;
     fVar3 = -(fVar1 * fVar3 * fVar3 - 1.0) * fVar3 * 0.5 + fVar3;
     fVar3 = -(fVar1 * fVar3 * fVar3 - 1.0) * fVar3 * 0.5 + fVar3;
     fVar3 = -(fVar1 * fVar3 * fVar3 - 1.0) * fVar3 * 0.5 + fVar3;

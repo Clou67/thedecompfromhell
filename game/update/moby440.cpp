@@ -1236,7 +1236,7 @@ void UpdateMoby_440(MobyInstance *moby)
           auVar51 = ZEXT416(0xffffffff);
           auVar51 = auVar51 | auVar51 << 0x20 | auVar51 << 0x40 | auVar51 << 0x60;
           auVar49 = vectorShiftLeftIntegerWord(auVar51,auVar51);
-          GameCamera.offset0.amp = 0.03;
+          GameCamera.shake.strength = 0.03;
           auVar51 = loadVectorLeftIndexed(100,0x3822c0);
           auVar51 = auVar51 >> 0x60 & (GPiece<16>)0xffffffff;
           auVar52 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
@@ -1252,11 +1252,11 @@ void UpdateMoby_440(MobyInstance *moby)
           iVar19 = 0;
           auVar51 = vectorConvertToSignedFixedPointWordSaturate(auVar49,0);
           auVar51 = auVar51 >> 0x60 & (GPiece<16>)0xffffffff;
-          GameCamera.offset0.total =
+          GameCamera.shake.time =
                storeVectorElementWordIndexed
                          (auVar51 | auVar51 << 0x20 | auVar51 << 0x40 | auVar51 << 0x60,0x168,
                           0x9513c0);
-          GameCamera.offset1.amp = 0.03;
+          GameCamera.shakeFwd.strength = 0.03;
           auVar51 = loadVectorLeftIndexed(0x68,0x3822c0);
           auVar51 = auVar51 >> 0x60 & (GPiece<16>)0xffffffff;
           dVar41 = 7.5;
@@ -1266,7 +1266,7 @@ void UpdateMoby_440(MobyInstance *moby)
           auVar49 = vectorShiftLeftIntegerWord(auVar53,auVar53);
           auVar51 = vectorConvertToSignedFixedPointWordSaturate(auVar51,0);
           auVar51 = auVar51 >> 0x60 & (GPiece<16>)0xffffffff;
-          GameCamera.offset1.total =
+          GameCamera.shakeFwd.time =
                storeVectorElementWordIndexed
                          (auVar51 | auVar51 << 0x20 | auVar51 << 0x40 | auVar51 << 0x60,0x178,
                           0x9513c0);
@@ -1418,7 +1418,7 @@ void UpdateMoby_440(MobyInstance *moby)
           auVar51 = ZEXT416(0xffffffff);
           auVar51 = auVar51 | auVar51 << 0x20 | auVar51 << 0x40 | auVar51 << 0x60;
           auVar49 = vectorShiftLeftIntegerWord(auVar51,auVar51);
-          GameCamera.offset0.amp = 0.03;
+          GameCamera.shake.strength = 0.03;
           auVar51 = loadVectorLeftIndexed(100,0x3822c0);
           auVar51 = auVar51 >> 0x60 & (GPiece<16>)0xffffffff;
           auVar52 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
@@ -1434,11 +1434,11 @@ void UpdateMoby_440(MobyInstance *moby)
           iVar19 = 0;
           auVar51 = vectorConvertToSignedFixedPointWordSaturate(auVar49,0);
           auVar51 = auVar51 >> 0x60 & (GPiece<16>)0xffffffff;
-          GameCamera.offset0.total =
+          GameCamera.shake.time =
                storeVectorElementWordIndexed
                          (auVar51 | auVar51 << 0x20 | auVar51 << 0x40 | auVar51 << 0x60,0x168,
                           0x9513c0);
-          GameCamera.offset1.amp = 0.03;
+          GameCamera.shakeFwd.strength = 0.03;
           auVar51 = loadVectorLeftIndexed(0x68,0x3822c0);
           auVar51 = auVar51 >> 0x60 & (GPiece<16>)0xffffffff;
           dVar41 = 7.5;
@@ -1448,7 +1448,7 @@ void UpdateMoby_440(MobyInstance *moby)
           auVar49 = vectorShiftLeftIntegerWord(auVar53,auVar53);
           auVar51 = vectorConvertToSignedFixedPointWordSaturate(auVar51,0);
           auVar51 = auVar51 >> 0x60 & (GPiece<16>)0xffffffff;
-          GameCamera.offset1.total =
+          GameCamera.shakeFwd.time =
                storeVectorElementWordIndexed
                          (auVar51 | auVar51 << 0x20 | auVar51 << 0x40 | auVar51 << 0x60,0x178,
                           0x9513c0);

@@ -147,7 +147,7 @@ void UpdateMoby_258(MobyInstance *moby)
     local_50.x = GameCamera.posX;
     local_50.y = GameCamera.posY;
     local_50.z = GameCamera.posZ;
-    local_50.w = (float)GameCamera.field8_0x14c;
+    local_50.w = (float)GameCamera.posW;
   }
   if (((0 < piVar2[1]) &&
       (fVar4 = (moby->pos).y - local_50.y, fVar5 = (moby->pos).z - local_50.z,

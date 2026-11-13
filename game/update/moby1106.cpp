@@ -152,11 +152,11 @@ void M1106_001bfb58(int param_1)
   fVar2 = *(float *)(param_1 + 0x10) - GameCamera.posX;
   fVar3 = *(float *)(param_1 + 0x18) - GameCamera.posZ;
   fVar1 = SQRT(fVar3 * fVar3 + fVar2 * fVar2 + fVar1 * fVar1);
-  GameCamera.offset0.total = 0x14;
+  GameCamera.shake.time = 0x14;
   if (80.0 - fVar1 < 0.0) {
     fVar1 = 80.0;
   }
-  GameCamera.offset0.amp = (80.0 - fVar1) * 0.0125 * 0.1;
+  GameCamera.shake.strength = (80.0 - fVar1) * 0.0125 * 0.1;
   return;
 }
 
@@ -2456,32 +2456,32 @@ double M1106_001c3a18(longlong param_1,float *param_2)
   dVar44 = (double)FastWrapRot(DAT_00eefa24,0.1);
   DAT_00eefa24 = (float)dVar44;
   dVar33 = -1.0;
-  dVar21 = (double)SQRT(DAT_00969f78 * DAT_00969f78 +
-                        g_heroGravityDir * g_heroGravityDir +
-                        DAT_00969f74 * DAT_00969f74);
-  local_174 = DAT_00969f7c;
+  dVar21 = (double)SQRT(g_heroGravityDir.z * g_heroGravityDir.z +
+                        g_heroGravityDir.x * g_heroGravityDir.x +
+                        g_heroGravityDir.y * g_heroGravityDir.y);
+  local_174 = g_heroGravityDir.w;
   local_184 = 0;
   fVar3 = (float)(-1.0 / dVar21);
   dVar44 = dVar38;
   if (dVar38 - dVar21 < 0.0) {
-    dVar44 = (double)(g_heroGravityDir * fVar3);
+    dVar44 = (double)(g_heroGravityDir.x * fVar3);
   }
   dVar37 = dVar38;
   if (dVar38 - dVar21 < 0.0) {
-    dVar37 = (double)(DAT_00969f78 * fVar3);
+    dVar37 = (double)(g_heroGravityDir.z * fVar3);
   }
   dVar36 = dVar38;
   if (dVar38 - dVar21 < 0.0) {
-    dVar36 = (double)(DAT_00969f74 * fVar3);
+    dVar36 = (double)(g_heroGravityDir.y * fVar3);
   }
   if (dVar21 - dVar38 < 0.0) {
-    dVar44 = (double)(g_heroGravityDir * fVar3);
+    dVar44 = (double)(g_heroGravityDir.x * fVar3);
   }
   if (dVar21 - dVar38 < 0.0) {
-    dVar37 = (double)(DAT_00969f78 * fVar3);
+    dVar37 = (double)(g_heroGravityDir.z * fVar3);
   }
   if (dVar21 - dVar38 < 0.0) {
-    dVar36 = (double)(DAT_00969f74 * fVar3);
+    dVar36 = (double)(g_heroGravityDir.y * fVar3);
   }
   local_180 = (float)dVar44;
   local_17c = (float)dVar36;
@@ -2623,17 +2623,17 @@ double M1106_001c3a18(longlong param_1,float *param_2)
       local_140 = dVar34;
     }
     if (ABS(dVar41) <= 2.0999999046325684) {
-      dVar25 = (double)SQRT(DAT_00969f78 * DAT_00969f78 +
-                            g_heroGravityDir * g_heroGravityDir +
-                            DAT_00969f74 * DAT_00969f74);
+      dVar25 = (double)SQRT(g_heroGravityDir.z * g_heroGravityDir.z +
+                            g_heroGravityDir.x * g_heroGravityDir.x +
+                            g_heroGravityDir.y * g_heroGravityDir.y);
       dVar37 = dVar38;
       dVar44 = dVar38;
       dVar36 = dVar38;
       if (dVar25 != dVar38) {
         fVar3 = (float)(dVar33 / dVar25);
-        dVar44 = (double)(g_heroGravityDir * fVar3);
-        dVar36 = (double)(DAT_00969f74 * fVar3);
-        dVar37 = (double)(DAT_00969f78 * fVar3);
+        dVar44 = (double)(g_heroGravityDir.x * fVar3);
+        dVar36 = (double)(g_heroGravityDir.y * fVar3);
+        dVar37 = (double)(g_heroGravityDir.z * fVar3);
       }
     }
     else {

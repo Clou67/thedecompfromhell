@@ -287,7 +287,7 @@ void InitCamera_7(UpdateCam *pCam)
                       );
   auVar31 = vectorConvertToSignedFixedPointWordSaturate(auVar31,0);
   auVar31 = auVar31 >> 0x60 & (GPiece<16>)0xffffffff;
-  GameCamera.blender.reqInterpFrames =
+  GameCamera.blender.blendData.polarData.reqInterpFrames =
        storeVectorElementWordIndexed
                  (auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60,0x2f4,0x9513c0);
   return;
@@ -885,12 +885,12 @@ void Cam7_UpdateRot(float *param_1)
   param_1[1] = (float)dVar12;
   param_1[2] = (float)dVar11;
   param_1[3] = fVar4;
-  fVar5 = (float)((double)(float)GameCamera.field17_0x1b4.piece<4,4>() * dVar13 -
-                 (double)(float)((double)GameCamera.field16_0x1b0 * dVar11));
-  fVar1 = (float)((double)(float)GameCamera.field17_0x1b4.piece<0,4>() * dVar11 -
-                 (double)(float)((double)(float)GameCamera.field17_0x1b4.piece<4,4>() * dVar12));
-  fVar3 = (float)((double)GameCamera.field16_0x1b0 * dVar12 -
-                 (double)(float)((double)(float)GameCamera.field17_0x1b4.piece<0,4>() * dVar13));
+  fVar5 = (float)((double)(float)GameCamera.camStatics.heroUp.z * dVar13 -
+                 (double)(float)((double)GameCamera.camStatics.heroUp.x * dVar11));
+  fVar1 = (float)((double)(float)GameCamera.camStatics.heroUp.y * dVar11 -
+                 (double)(float)((double)(float)GameCamera.camStatics.heroUp.z * dVar12));
+  fVar3 = (float)((double)GameCamera.camStatics.heroUp.x * dVar12 -
+                 (double)(float)((double)(float)GameCamera.camStatics.heroUp.y * dVar13));
   param_1[7] = 0.0;
   dVar14 = (double)(fVar3 * fVar3 + fVar1 * fVar1 + fVar5 * fVar5);
   dVar7 = dVar9;
@@ -936,7 +936,7 @@ void CamZoomOfs_Reset(void)
   GameCamera.orientMtx.position.x = 0.0;
   GameCamera.orientMtx.position.z = 10000.0;
   GameCamera.orientMtx.position.w = 0.0;
-  GameCamera.field22_0x390 = (char  [4])&PTR_CamZoomOfs_Update_00704158;
+  GameCamera.ofsUpdate = CamZoomOfs_Update;
   return;
 }
 
@@ -1108,7 +1108,7 @@ void UpdateCamera_7(UpdateCam *pCam)
                          (auVar5,auVar3 | auVar3 << 0x20 | auVar3 << 0x40 | auVar3 << 0x60,auVar4);
       auVar3 = vectorConvertToSignedFixedPointWordSaturate(auVar3,0);
       auVar3 = auVar3 >> 0x60 & (GPiece<16>)0xffffffff;
-      GameCamera.blender.reqInterpFrames =
+      GameCamera.blender.blendData.polarData.reqInterpFrames =
            storeVectorElementWordIndexed
                      (auVar3 | auVar3 << 0x20 | auVar3 << 0x40 | auVar3 << 0x60,0x2f4,0x9513c0);
     }
@@ -1142,7 +1142,7 @@ void UpdateCamera_7(UpdateCam *pCam)
                        (auVar5,auVar3 | auVar3 << 0x20 | auVar3 << 0x40 | auVar3 << 0x60,auVar4);
     auVar3 = vectorConvertToSignedFixedPointWordSaturate(auVar3,0);
     auVar3 = auVar3 >> 0x60 & (GPiece<16>)0xffffffff;
-    GameCamera.blender.reqInterpFrames =
+    GameCamera.blender.blendData.polarData.reqInterpFrames =
          storeVectorElementWordIndexed
                    (auVar3 | auVar3 << 0x20 | auVar3 << 0x40 | auVar3 << 0x60,0x2f4,0x9513c0);
   }

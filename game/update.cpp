@@ -408,7 +408,7 @@ void mode_sceneUnInit(void)
     GameCamera.posX = g_SceneSavedCamPos[0];
     GameCamera.posY = g_SceneSavedCamPos[1];
     GameCamera.posZ = g_SceneSavedCamPos[2];
-    memcpy(GameCamera.field8_0x14c, g_SceneSavedCamFlags, 4);
+    memcpy(&GameCamera.posW, g_SceneSavedCamFlags, 4);
 
     if (g_SceneRecording != 0) {
         printf("\nwrote %d frames\n", g_SceneFramesWritten);
@@ -530,7 +530,7 @@ void mode_sceneInit(int absolute_scene_id)
     g_SceneSavedCamPos[0] = GameCamera.posX;
     g_SceneSavedCamPos[1] = GameCamera.posY;
     g_SceneSavedCamPos[2] = GameCamera.posZ;
-    memcpy(g_SceneSavedCamFlags, GameCamera.field8_0x14c, 4);
+    memcpy(g_SceneSavedCamFlags, &GameCamera.posW, 4);
 
     TransitionMovement(100, 2);
     g_heroInvisible = 1;
@@ -625,7 +625,7 @@ char UpdateSceneCamera(void)
     GameCamera.posX = frame->x;
     GameCamera.posY = frame->y;
     GameCamera.posZ = frame->z;
-    memcpy(&GameCamera.field8_0x14c, frame->flags, 4);
+    memcpy(&GameCamera.posW, frame->flags, 4);
 
     float sinX = std::_FSin(frame->rotX, 0);
     float cosX = std::_FSin(frame->rotX, 1);

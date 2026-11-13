@@ -140,11 +140,11 @@ void Cam15_0003bad8(float *param_1)
   param_1[0x11] = (float)dVar10;
   param_1[0x12] = (float)dVar11;
   param_1[0x13] = fVar4;
-  fVar1 = (float)((double)DAT_00969f78 * dVar9 -
-                 (double)(float)((double)g_heroGravityDir * dVar11));
-  fVar2 = (float)((double)DAT_00969f74 * dVar11 - (double)(float)((double)DAT_00969f78 * dVar10));
-  fVar3 = (float)((double)g_heroGravityDir * dVar10 -
-                 (double)(float)((double)DAT_00969f74 * dVar9));
+  fVar1 = (float)((double)g_heroGravityDir.z * dVar9 -
+                 (double)(float)((double)g_heroGravityDir.x * dVar11));
+  fVar2 = (float)((double)g_heroGravityDir.y * dVar11 - (double)(float)((double)g_heroGravityDir.z * dVar10));
+  fVar3 = (float)((double)g_heroGravityDir.x * dVar10 -
+                 (double)(float)((double)g_heroGravityDir.y * dVar9));
   param_1[7] = 0.0;
   param_1[0xb] = 0.0;
   dVar15 = (double)SQRT(fVar3 * fVar3 + fVar2 * fVar2 + fVar1 * fVar1);
@@ -341,11 +341,11 @@ void Cam15_0003bef0(float *param_1)
   param_1[0x11] = (float)dVar15;
   param_1[0x12] = (float)dVar14;
   param_1[0x13] = local_64;
-  fVar22 = (float)((double)DAT_00969f78 * dVar17 -
-                  (double)(float)((double)g_heroGravityDir * dVar14));
-  fVar2 = (float)((double)DAT_00969f74 * dVar14 - (double)(float)((double)DAT_00969f78 * dVar15));
-  fVar1 = (float)((double)g_heroGravityDir * dVar15 -
-                 (double)(float)((double)DAT_00969f74 * dVar17));
+  fVar22 = (float)((double)g_heroGravityDir.z * dVar17 -
+                  (double)(float)((double)g_heroGravityDir.x * dVar14));
+  fVar2 = (float)((double)g_heroGravityDir.y * dVar14 - (double)(float)((double)g_heroGravityDir.z * dVar15));
+  fVar1 = (float)((double)g_heroGravityDir.x * dVar15 -
+                 (double)(float)((double)g_heroGravityDir.y * dVar17));
   param_1[7] = 0.0;
   dVar16 = -1.0;
   param_1[0xb] = 0.0;
@@ -432,11 +432,11 @@ void Cam15_0003bef0(float *param_1)
   dVar15 = (double)param_1[2];
   dVar17 = (double)param_1[1];
   dVar19 = (double)*param_1;
-  fVar22 = (float)((double)DAT_00969f78 * dVar19 -
-                  (double)(float)((double)g_heroGravityDir * dVar15));
-  fVar2 = (float)((double)DAT_00969f74 * dVar15 - (double)(float)((double)DAT_00969f78 * dVar17));
-  fVar1 = (float)((double)g_heroGravityDir * dVar17 -
-                 (double)(float)((double)DAT_00969f74 * dVar19));
+  fVar22 = (float)((double)g_heroGravityDir.z * dVar19 -
+                  (double)(float)((double)g_heroGravityDir.x * dVar15));
+  fVar2 = (float)((double)g_heroGravityDir.y * dVar15 - (double)(float)((double)g_heroGravityDir.z * dVar17));
+  fVar1 = (float)((double)g_heroGravityDir.x * dVar17 -
+                 (double)(float)((double)g_heroGravityDir.y * dVar19));
   param_1[7] = 0.0;
   param_1[0xb] = 0.0;
   dVar13 = (double)SQRT(fVar1 * fVar1 + fVar2 * fVar2 + fVar22 * fVar22);

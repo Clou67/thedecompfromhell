@@ -1805,7 +1805,7 @@ void FastQuaternionMult(float *param_1,float *param_2,float *param_3)
 
 // 0x0501848 (0x110 bytes)
 // inlined: FastRSqrt @0x501900
-void FastSlerp(double param_1,float *param_2,float *param_3,float *param_4)
+void FastSlerp(float param_1,float *param_2,float *param_3,float *param_4)
 
 {
   float fVar1;
@@ -2121,7 +2121,7 @@ void FastVecFromSignedShort(undefined8 param_1,undefined8 param_2)
 
 
 // 0x0501e18 (0x74 bytes)
-void FastQuaternionToMtx4Identity(undefined8 param_1,uint param_2)
+void FastQuaternionToMtx4Identity(Vec4 *param_1,Mtx4 *param_2)
 
 {
   undefined4 *puVar1;
@@ -2500,7 +2500,7 @@ float FastDiffRots(float param_1,float param_2)
 
 
 // 0x0502648 (0x4c bytes)
-void FastAddRots(float param_1)
+float FastAddRots(float param_1)
 
 {
   if (3.1415927 < param_1) {

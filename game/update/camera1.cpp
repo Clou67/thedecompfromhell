@@ -182,12 +182,12 @@ void Cam1_UpdateCam(float *param_1)
   param_1[1] = (float)dVar9;
   param_1[2] = (float)dVar8;
   param_1[3] = fVar4;
-  fVar5 = (float)((double)(float)GameCamera.field17_0x1b4.piece<4,4>() * dVar10 -
-                 (double)(float)((double)GameCamera.field16_0x1b0 * dVar8));
-  fVar1 = (float)((double)(float)GameCamera.field17_0x1b4.piece<0,4>() * dVar8 -
-                 (double)(float)((double)(float)GameCamera.field17_0x1b4.piece<4,4>() * dVar9));
-  fVar3 = (float)((double)GameCamera.field16_0x1b0 * dVar9 -
-                 (double)(float)((double)(float)GameCamera.field17_0x1b4.piece<0,4>() * dVar10));
+  fVar5 = (float)((double)(float)GameCamera.camStatics.heroUp.z * dVar10 -
+                 (double)(float)((double)GameCamera.camStatics.heroUp.x * dVar8));
+  fVar1 = (float)((double)(float)GameCamera.camStatics.heroUp.y * dVar8 -
+                 (double)(float)((double)(float)GameCamera.camStatics.heroUp.z * dVar9));
+  fVar3 = (float)((double)GameCamera.camStatics.heroUp.x * dVar9 -
+                 (double)(float)((double)(float)GameCamera.camStatics.heroUp.y * dVar10));
   param_1[7] = 0.0;
   dVar7 = (double)(fVar3 * fVar3 + fVar1 * fVar1 + fVar5 * fVar5);
   dVar11 = dVar13;
@@ -234,8 +234,8 @@ undefined8 ActivateCamera_1(int param_1,int param_2)
     }
     GameCamera.blender.reqType = '\0';
     *(undefined2 *)((int)GameCamera.pCurrentUpdCam + 0x7e) = 2;
-    GameCamera.blender.reqQuatInterpAdd = 0.018;
-    GameCamera.blender.reqPosInterpAdd = 0.018;
+    GameCamera.blender.blendData.posData.reqQuatInterpAdd = 0.018;
+    GameCamera.blender.blendData.posData.reqPosInterpAdd = 0.018;
     return 1;
   }
   return 0;

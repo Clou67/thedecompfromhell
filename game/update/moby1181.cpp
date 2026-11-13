@@ -989,7 +989,7 @@ void UpdateMoby_1181(MobyInstance *moby)
     fVar5 = GameCamera.posX - (moby->pos).x;
     fVar7 = GameCamera.posY - (moby->pos).y;
     fVar4 = GameCamera.posZ - (moby->pos).z;
-    *(char (*) [4])((int)puVar13 + 0xdc) = GameCamera.field8_0x14c;
+    *(char (*) [4])((int)puVar13 + 0xdc) = GameCamera.posW;
     *(float *)(puVar13 + 0x1a) = fVar5;
     *(float *)((int)puVar13 + 0xd4) = fVar7;
     *(float *)(puVar13 + 0x1b) = fVar4;

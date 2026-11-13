@@ -60,7 +60,7 @@ void UpdateMoby_25(MobyInstance *moby)
   Camera_CreateReticule(moby);
   fVar11 = GameCamera.rot.radius;
   fVar5 = GameCamera.posZ;
-  if (DAT_00951784 == 1) {
+  if (g_ReticuleActive == 1) {
     fVar3 = *(float *)(Reticule + 0x10) - GameCamera.posX;
     fVar4 = *(float *)(Reticule + 0x14) - GameCamera.posY;
     fVar1 = *(float *)(Reticule + 0x18);
@@ -142,7 +142,7 @@ void UpdateMoby_25(MobyInstance *moby)
     if (((dVar22 < 480.0) && (dVar21 < 1.5707963705062866)) &&
        (iVar15 = CollLine(0x951500,Reticule + 0x10,0x84,Reticule,0),
        iVar15 == 0)) {
-      DAT_00951788 = 0x3f800000;
+      g_ReticuleDraw = 0x3f800000;
     }
   }
   return;

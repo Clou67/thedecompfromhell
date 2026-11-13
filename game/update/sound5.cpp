@@ -22,7 +22,7 @@ void UpdateSound_5(void *param_1)
   g_SoundChannels[iVar3].pos[0] = GameCamera.posX;
   g_SoundChannels[iVar3].pos[1] = GameCamera.posY;
   g_SoundChannels[iVar3].pos[2] = GameCamera.posZ;
-  g_SoundChannels[iVar3].pos[3] = (float)GameCamera.field8_0x14c;
+  g_SoundChannels[iVar3].pos[3] = (float)GameCamera.posW;
   iVar3 = piVar1[1];
   if ((g_SoundChannels[iVar3].pSoundInstance == param_1) &&
      (g_SoundChannels[iVar3].state != '\0')) {

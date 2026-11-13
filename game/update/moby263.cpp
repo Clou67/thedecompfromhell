@@ -784,7 +784,7 @@ void M267_0031eca8(MobyInstance *param_1)
           auVar27 = auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60;
           auVar28 = vectorShiftLeftIntegerWord(auVar27,auVar27);
           auVar29 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
-          GameCamera.offset0.amp = (64.0 - fVar14) * 0.01;
+          GameCamera.shake.strength = (64.0 - fVar14) * 0.01;
           auVar27 = loadVectorLeftIndexed(0x44,0x31ec34);
           auVar27 = auVar27 >> 0x60 & (GPiece<16>)0xffffffff;
           auVar27 = vectorMultiplyAddFloatingPoint
@@ -792,7 +792,7 @@ void M267_0031eca8(MobyInstance *param_1)
                                ,auVar28);
           auVar27 = vectorConvertToSignedFixedPointWordSaturate(auVar27,0);
           auVar27 = auVar27 >> 0x60 & (GPiece<16>)0xffffffff;
-          GameCamera.offset0.total =
+          GameCamera.shake.time =
                storeVectorElementWordIndexed
                          (auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60,0x168,
                           0x9513c0);
@@ -887,7 +887,7 @@ void M267_0031eca8(MobyInstance *param_1)
           auVar27 = auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60;
           auVar28 = vectorShiftLeftIntegerWord(auVar27,auVar27);
           auVar29 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
-          GameCamera.offset0.amp = (64.0 - fVar14) * 0.01;
+          GameCamera.shake.strength = (64.0 - fVar14) * 0.01;
           auVar27 = loadVectorLeftIndexed(0x44,0x31ec34);
           auVar27 = auVar27 >> 0x60 & (GPiece<16>)0xffffffff;
           auVar27 = vectorMultiplyAddFloatingPoint
@@ -895,7 +895,7 @@ void M267_0031eca8(MobyInstance *param_1)
                                ,auVar28);
           auVar27 = vectorConvertToSignedFixedPointWordSaturate(auVar27,0);
           auVar27 = auVar27 >> 0x60 & (GPiece<16>)0xffffffff;
-          GameCamera.offset0.total =
+          GameCamera.shake.time =
                storeVectorElementWordIndexed
                          (auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60,0x168,
                           0x9513c0);

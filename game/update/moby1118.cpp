@@ -242,7 +242,7 @@ MiscLevelFlags * UpdateMoby_1118(MobyInstance *moby)
       auVar17 = ZEXT416(0xffffffff);
       auVar17 = auVar17 | auVar17 << 0x20 | auVar17 << 0x40 | auVar17 << 0x60;
       auVar18 = vectorShiftLeftIntegerWord(auVar17,auVar17);
-      GameCamera.offset0.amp = 0.3;
+      GameCamera.shake.strength = 0.3;
       auVar17 = loadVectorLeftIndexed(0x34,0x1d42cc);
       auVar19 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
       auVar17 = auVar17 >> 0x60 & (GPiece<16>)0xffffffff;
@@ -251,7 +251,7 @@ MiscLevelFlags * UpdateMoby_1118(MobyInstance *moby)
                            auVar18);
       auVar17 = vectorConvertToSignedFixedPointWordSaturate(auVar17,0);
       auVar17 = auVar17 >> 0x60 & (GPiece<16>)0xffffffff;
-      GameCamera.offset0.total =
+      GameCamera.shake.time =
            storeVectorElementWordIndexed
                      (auVar17 | auVar17 << 0x20 | auVar17 << 0x40 | auVar17 << 0x60,0x168,0x9513c0);
       pMVar10 = (MiscLevelFlags *)sound_LevelPlay(0,0,moby);

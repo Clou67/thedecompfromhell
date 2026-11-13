@@ -368,11 +368,11 @@ void UpdateMoby_615(MobyInstance *moby)
         *(float *)((int)pvVar3 + 0xf0) = GameCamera.posX;
         *(float *)((int)pvVar3 + 0xf4) = GameCamera.posY;
         *(float *)((int)pvVar3 + 0xf8) = GameCamera.posZ;
-        *(char (*) [4])((int)pvVar3 + 0xfc) = GameCamera.field8_0x14c;
+        *(char (*) [4])((int)pvVar3 + 0xfc) = GameCamera.posW;
         *(float *)((int)pvVar3 + 0x100) = GameCamera.rot.azimuth;
         *(float *)((int)pvVar3 + 0x104) = GameCamera.rot.elevation;
         *(float *)((int)pvVar3 + 0x108) = GameCamera.rot.radius;
-        *(char (*) [4])((int)pvVar3 + 0x10c) = GameCamera.field10_0x15c;
+        *(char (*) [4])((int)pvVar3 + 0x10c) = GameCamera.rotW;
       }
     }
     else {

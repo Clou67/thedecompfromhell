@@ -286,7 +286,7 @@ void M576_003c74e8(MobyInstance *param_1)
                  Splines[*(int *)((int)pvVar2 + 0x1e0)]->cnt);
       if (*(int *)((int)pvVar2 + 0x1c4) == 2) {
         if (g_heroStateType == 0xf) {
-          piVar7 = DAT_0096a240 + *DAT_0096a240 * 4;
+          piVar7 = g_heroGrindPath + *g_heroGrindPath * 4;
           *(int *)((int)pvVar2 + 0x180) = *piVar7;
           *(int *)((int)pvVar2 + 0x184) = piVar7[1];
           *(int *)((int)pvVar2 + 0x188) = piVar7[2];

@@ -667,10 +667,10 @@ void ComposeCameraMatrix(void)
   DAT_0159c340 = GameCamera.posX;
   DAT_0159c344 = GameCamera.posY;
   DAT_0159c348 = GameCamera.posZ;
-  DAT_0159c34c[0] = GameCamera.field8_0x14c[0];
-  DAT_0159c34c[1] = GameCamera.field8_0x14c[1];
-  DAT_0159c34c[2] = GameCamera.field8_0x14c[2];
-  DAT_0159c34c[3] = GameCamera.field8_0x14c[3];
+  DAT_0159c34c[0] = ((u8 *)&GameCamera.posW)[0];
+  DAT_0159c34c[1] = ((u8 *)&GameCamera.posW)[1];
+  DAT_0159c34c[2] = ((u8 *)&GameCamera.posW)[2];
+  DAT_0159c34c[3] = ((u8 *)&GameCamera.posW)[3];
   UploadViewMatricesToPasses();
   return;
 }
@@ -4999,9 +4999,7 @@ void STUB_0006e71c(...)
 
 
 // 0x006e740 (0x598 bytes)
-void Sprite_DrawRotated
-               (float param_1,float param_2,double param_3,double param_4,double param_5,
-               double param_6,double param_7)
+void Sprite_DrawRotated(float param_1,float param_2,float param_3,float param_4,float param_5,float param_6,float param_7,int param_8,int param_9,int param_10,int param_11,u32 param_12,int param_13,int param_14,int param_15)
 
 {
   float fVar1;

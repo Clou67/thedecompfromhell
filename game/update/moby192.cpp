@@ -574,10 +574,10 @@ void UpdateMoby_192(MobyInstance *moby)
                                                   float)(dVar22 * dVar12) * dVar19 + dVar12)))) *
                            dVar29);
         local_1ac = GameCamera.posY + local_1bc;
-        local_1a4[0] = GameCamera.field8_0x14c[0];
-        local_1a4[1] = GameCamera.field8_0x14c[1];
-        local_1a4[2] = GameCamera.field8_0x14c[2];
-        local_1a4[3] = GameCamera.field8_0x14c[3];
+        local_1a4[0] = ((u8 *)&GameCamera.posW)[0];
+        local_1a4[1] = ((u8 *)&GameCamera.posW)[1];
+        local_1a4[2] = ((u8 *)&GameCamera.posW)[2];
+        local_1a4[3] = ((u8 *)&GameCamera.posW)[3];
         local_1b0 = GameCamera.posX + local_1c0;
         local_1b8 = (float)(dVar28 * dVar29);
         iVar8 = CollLine(0x951500,&local_1b0,2,moby,0);

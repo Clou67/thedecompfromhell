@@ -407,7 +407,7 @@ void UpdateMoby_454(MobyInstance *moby)
     fVar9 = -GameCamera.rot.elevation;
     *(float *)(puVar13 + 0x10) = GameCamera.rot.azimuth;
     *(float *)((int)puVar13 + 0x84) = fVar6;
-    acVar15 = GameCamera.field10_0x15c;
+    acVar15 = GameCamera.rotW;
     *(float *)(puVar13 + 0x11) = fVar5;
     *(char (*) [4])((int)puVar13 + 0x8c) = acVar15;
     *(float *)((int)puVar13 + 0x84) = fVar9;
@@ -585,9 +585,9 @@ void UpdateMoby_454(MobyInstance *moby)
           fVar6 = *(float *)((int)puVar13 + 0x124);
           fVar5 = *(float *)(puVar13 + 0x24);
         }
-        fVar5 = (DAT_00969de0 + DAT_00969e20) * 3.0 + fVar5;
-        fVar6 = (DAT_00969de4 + DAT_00969e24) * 3.0 + fVar6;
-        fVar9 = (DAT_00969de8 + DAT_00969e28) * 3.0 + fVar9;
+        fVar5 = (DAT_00969de0 + g_heroFrameMove.x) * 3.0 + fVar5;
+        fVar6 = (DAT_00969de4 + g_heroFrameMove.y) * 3.0 + fVar6;
+        fVar9 = (DAT_00969de8 + g_heroFrameMove.z) * 3.0 + fVar9;
         if (DAT_0096af90 == 0) {
           *(float *)((int)puVar13 + 0x14c) = fVar5;
           *(float *)(puVar13 + 0x2a) = fVar6;
@@ -772,7 +772,7 @@ void UpdateMoby_454(MobyInstance *moby)
           *(float *)((int)puVar13 + 0xc4) = fVar5;
           *(short *)((int)piVar10 + 0x12) =
                sVar27 + ((short)(iVar19 >> 2) - (short)(iVar19 >> 0x1f)) * -7;
-          acVar15 = GameCamera.field10_0x15c;
+          acVar15 = GameCamera.rotW;
           *(float *)(puVar13 + 0x19) = fVar6;
           *(char (*) [4])((int)puVar13 + 0xcc) = acVar15;
           *(float *)((int)puVar13 + 0xc4) = fVar9;

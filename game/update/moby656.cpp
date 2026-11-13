@@ -179,7 +179,7 @@ void M656_00406790(int param_1)
   puVar11[0x1c] = uVar16;
   uVar7 = DAT_00854b60;
   dVar40 = 0.0;
-  dVar41 = (double)(float)GameCamera.field8_0x14c;
+  dVar41 = (double)(float)GameCamera.posW;
   fVar12 = SQRT(fVar3 * fVar3 + fVar2 * fVar2 + fVar1 * fVar1);
   fVar13 = 0.3 / fVar12;
   dVar39 = dVar40;
@@ -222,11 +222,11 @@ void M656_00406790(int param_1)
     dVar29 = (double)(fVar1 * fVar5);
     dVar31 = (double)(fVar3 * fVar5);
   }
-  fVar1 = (float)((double)DAT_00969f78 * dVar39 -
-                 (double)(float)((double)g_heroGravityDir * dVar31));
-  fVar2 = (float)((double)DAT_00969f74 * dVar31 - (double)(float)((double)DAT_00969f78 * dVar29));
-  fVar3 = (float)((double)g_heroGravityDir * dVar29 -
-                 (double)(float)((double)DAT_00969f74 * dVar39));
+  fVar1 = (float)((double)g_heroGravityDir.z * dVar39 -
+                 (double)(float)((double)g_heroGravityDir.x * dVar31));
+  fVar2 = (float)((double)g_heroGravityDir.y * dVar31 - (double)(float)((double)g_heroGravityDir.z * dVar29));
+  fVar3 = (float)((double)g_heroGravityDir.x * dVar29 -
+                 (double)(float)((double)g_heroGravityDir.y * dVar39));
   *(undefined4 *)((int)puVar11 + 0xbc) = DAT_00854b60;
   *(undefined4 *)(puVar11 + 0x17) = uVar7;
   *(undefined4 *)((int)puVar11 + 0xb4) = uVar7;

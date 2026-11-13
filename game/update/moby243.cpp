@@ -302,7 +302,7 @@ void UpdateMoby_243(MobyInstance *moby)
         if (dVar21 - 20.0 < 0.0) {
           fVar8 = (float)(dVar21 * 0.017500000074505806);
         }
-        GameCamera.offset0.amp = 0.4 - fVar8;
+        GameCamera.shake.strength = 0.4 - fVar8;
         auVar32 = loadVectorLeftIndexed(0x50,0x30f790);
         auVar32 = auVar32 >> 0x60 & (GPiece<16>)0xffffffff;
         auVar30 = vectorMultiplyAddFloatingPoint
@@ -310,7 +310,7 @@ void UpdateMoby_243(MobyInstance *moby)
                              auVar31);
         auVar30 = vectorConvertToSignedFixedPointWordSaturate(auVar30,0);
         auVar30 = auVar30 >> 0x60 & (GPiece<16>)0xffffffff;
-        GameCamera.offset0.total =
+        GameCamera.shake.time =
              storeVectorElementWordIndexed
                        (auVar30 | auVar30 << 0x20 | auVar30 << 0x40 | auVar30 << 0x60,0x168,0x9513c0
                        );

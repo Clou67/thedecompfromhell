@@ -252,7 +252,7 @@ void M211_002edb38(int param_1)
   uVar29 = (ulonglong)uVar12;
   sVar11 = *(short *)(uVar12 + 0x8e);
   iVar20 = *(int *)(uVar12 + 100);
-  iVar16 = DAT_00a1a85c + *(int *)(uVar12 + 0x60) * 0x20;
+  iVar16 = g_GrindPaths + *(int *)(uVar12 + 0x60) * 0x20;
   puVar15[0x7d] = unaff_r29;
   puVar15[0x7c] = unaff_r28;
   puVar15[0x7b] = unaff_r27;
@@ -989,7 +989,7 @@ void M211_002eefd8(int param_1)
   iVar1 = *(int *)(param_1 + 0x78);
   MB_PathMoveDist
             ((double)(g_FrameTime * DAT_007fec04),
-             *(undefined4 *)(DAT_00a1a85c + *(int *)(iVar1 + 0x60) * 0x20 + 0x10),param_1 + 0x10,
+             *(undefined4 *)(g_GrindPaths + *(int *)(iVar1 + 0x60) * 0x20 + 0x10),param_1 + 0x10,
              iVar1 + 100,iVar1 + 0x68,iVar1,0);
   return;
 }
@@ -1013,7 +1013,7 @@ longlong M211_002ef040(int param_1)
   double dVar12;
   
   iVar8 = *(int *)(param_1 + 0x78);
-  iVar9 = *(int *)(DAT_00a1a85c + *(int *)(iVar8 + 0x60) * 0x20 + 0x10);
+  iVar9 = *(int *)(g_GrindPaths + *(int *)(iVar8 + 0x60) * 0x20 + 0x10);
   iVar11 = FastDecTimerS32(iVar8 + 0x6c);
   dVar12 = (double)FastIntToDouble(*(undefined4 *)(iVar8 + 0x6c));
   fVar1 = (float)(dVar12 * (double)*(float *)(iVar8 + 0x70));
@@ -1049,7 +1049,7 @@ void M211_002ef158(int param_1)
   GPiece<12> local_5c;
   
   iVar2 = *(int *)(param_1 + 0x78);
-  iVar4 = *(int *)(DAT_00a1a85c + *(int *)(iVar2 + 0x60) * 0x20 + 0x10);
+  iVar4 = *(int *)(g_GrindPaths + *(int *)(iVar2 + 0x60) * 0x20 + 0x10);
   *(undefined4 *)(iVar2 + 100) = 0;
   dVar7 = 0.0;
   *(undefined4 *)(iVar2 + 0x68) = 0;
@@ -1169,7 +1169,7 @@ void UpdateMoby_211(MobyInstance *moby)
   else if (uVar1 == '\x05') {
     MB_PathMoveDist
               ((double)(g_FrameTime * DAT_007fec04),
-               *(undefined4 *)(DAT_00a1a85c + *(int *)((int)pvVar4 + 0x60) * 0x20 + 0x10),
+               *(undefined4 *)(g_GrindPaths + *(int *)((int)pvVar4 + 0x60) * 0x20 + 0x10),
                lVar17 + 0x10,uVar20 + 100,uVar20 + 0x68,0x800000,0);
   }
   else if (uVar1 == '\x04') {
@@ -1228,7 +1228,7 @@ void UpdateMoby_211(MobyInstance *moby)
             DeleteMoby(moby);
             return;
           }
-          if (**(int **)(DAT_00a1a85c + *(int *)((int)pvVar4 + 0x60) * 0x20 + 0x10) == 0) {
+          if (**(int **)(g_GrindPaths + *(int *)((int)pvVar4 + 0x60) * 0x20 + 0x10) == 0) {
             DeleteMoby(moby);
             return;
           }

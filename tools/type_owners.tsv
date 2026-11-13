@@ -97,3 +97,13 @@ CollBox	game/collproc
 CollRot	game/collproc
 CollDamageIn	game/collproc
 CollCellStep	game/collproc
+CameraStatics	game/camera
+ImportCamera	game/loaders
+CameraImportVars	game/loaders
+CamPostUpdFunc	game/camera
+CamBlenderPosQuat	game/camera
+CamBlenderPolarQuat	game/camera
+CamBlenderData	game/camera
+CamCrosshair	game/camera
+Pill	game/loaders
+CamCollGridPrim	game/camera

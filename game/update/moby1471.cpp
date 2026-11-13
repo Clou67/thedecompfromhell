@@ -287,11 +287,11 @@ void M1471_002877e8(undefined8 param_1,ulonglong param_2)
     dVar30 = (double)(fVar66 * fVar1);
     dVar43 = (double)(fVar3 * fVar1);
   }
-  fVar2 = (float)((double)DAT_00969f78 * dVar31 -
-                 (double)(float)((double)g_heroGravityDir * dVar43));
-  fVar3 = (float)((double)DAT_00969f74 * dVar43 - (double)(float)((double)DAT_00969f78 * dVar30));
-  fVar1 = (float)((double)g_heroGravityDir * dVar30 -
-                 (double)(float)((double)DAT_00969f74 * dVar31));
+  fVar2 = (float)((double)g_heroGravityDir.z * dVar31 -
+                 (double)(float)((double)g_heroGravityDir.x * dVar43));
+  fVar3 = (float)((double)g_heroGravityDir.y * dVar43 - (double)(float)((double)g_heroGravityDir.z * dVar30));
+  fVar1 = (float)((double)g_heroGravityDir.x * dVar30 -
+                 (double)(float)((double)g_heroGravityDir.y * dVar31));
   auVar59 = ZEXT416(0);
   auVar62 = auVar59 | auVar59 << 0x20 | auVar59 << 0x40 | auVar59 << 0x60;
   dVar35 = (double)*(float *)(iVar24 + 0xfad3a4);

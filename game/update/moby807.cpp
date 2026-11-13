@@ -144,7 +144,7 @@ void M807_004687d8(int param_1)
   *(float *)((int)puVar19 + 0xa4) = fVar2;
   fVar6 = fVar6 - fVar5;
   *(float *)(puVar19 + 0x15) = fVar5;
-  acVar22 = GameCamera.field8_0x14c;
+  acVar22 = GameCamera.posW;
   dVar42 = 0.0;
   fVar1 = fVar6 * fVar6 + fVar3 * fVar3 + fVar4 * fVar4;
   dVar44 = dVar42;

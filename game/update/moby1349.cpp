@@ -138,7 +138,7 @@ void UpdateMoby_1349(MobyInstance *moby)
       }
     }
   }
-  if (DAT_00969f78 * -1.0 < 0.1) {
+  if (g_heroGravityDir.z * -1.0 < 0.1) {
     HelpData[0x380] = -1;
     HelpData[0x381] = -1;
   }

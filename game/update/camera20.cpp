@@ -439,9 +439,9 @@ void UpdateCamera_20(UpdateCam *pCam)
     fVar4 = pSVar17->points[0].z;
     pCam->pos[2] = fVar4;
     pCam->pos[3] = pSVar17->points[0].w;
-    fVar12 = DAT_00969f78;
-    fVar11 = DAT_00969f74;
-    fVar1 = g_heroGravityDir;
+    fVar12 = g_heroGravityDir.z;
+    fVar11 = g_heroGravityDir.y;
+    fVar1 = g_heroGravityDir.x;
     if (iVar22 < 0) {
       fVar9 = pSVar18->points[0].x;
       fVar10 = pSVar18->points[0].y;
@@ -633,9 +633,9 @@ void UpdateCamera_20(UpdateCam *pCam)
                    GameCamera.orientMtx.up.z * fVar12 +
                    GameCamera.orientMtx.forward.z * fVar11 + GameCamera.orientMtx.right.z * fVar1;
       }
-      fVar9 = DAT_00969f78;
-      fVar8 = DAT_00969f74;
-      fVar12 = g_heroGravityDir;
+      fVar9 = g_heroGravityDir.z;
+      fVar8 = g_heroGravityDir.y;
+      fVar12 = g_heroGravityDir.x;
       fVar3 = local_8c - fVar3;
       fVar2 = local_90 - fVar2;
       fVar4 = local_88 - fVar4;
@@ -722,12 +722,12 @@ void UpdateCamera_20(UpdateCam *pCam)
       pMVar21 = g_MobyInstance;
       LetterBoxOn = 0;
       iVar16 = *(int *)(iVar16 + 0x50);
-      GameCamera.screenFade = 0.25;
+      GameCamera.camStatics.fadeSpeed = 0.25;
       (pCam->activation).deactivate = 4;
       M1412_002ef9c8(pMVar21 + iVar16);
-      uVar20 = DAT_0096a240;
+      uVar20 = g_heroGrindPath;
       MB_PathMoveDist
-                (0x4024000000000000,DAT_0096a240,(longlong)(int)pCam + 0x30,local_80,local_7c);
+                (0x4024000000000000,g_heroGrindPath,(longlong)(int)pCam + 0x30,local_80,local_7c);
       pCam->pos[2] = pCam->pos[2] + 2.0;
       dVar36 = 0.0;
       MB_PathMoveDist(0,uVar20,&local_a0,local_80,local_7c);
@@ -760,12 +760,12 @@ void UpdateCamera_20(UpdateCam *pCam)
       pCam->mtx[0] = (float)dVar31;
       pCam->mtx[1] = (float)dVar35;
       pCam->mtx[2] = (float)dVar34;
-      fVar3 = (float)((double)DAT_00969f78 * dVar31 -
-                     (double)(float)((double)g_heroGravityDir * dVar34));
-      fVar4 = (float)((double)DAT_00969f74 * dVar34 - (double)(float)((double)DAT_00969f78 * dVar35)
+      fVar3 = (float)((double)g_heroGravityDir.z * dVar31 -
+                     (double)(float)((double)g_heroGravityDir.x * dVar34));
+      fVar4 = (float)((double)g_heroGravityDir.y * dVar34 - (double)(float)((double)g_heroGravityDir.z * dVar35)
                      );
-      fVar1 = (float)((double)g_heroGravityDir * dVar35 -
-                     (double)(float)((double)DAT_00969f74 * dVar31));
+      fVar1 = (float)((double)g_heroGravityDir.x * dVar35 -
+                     (double)(float)((double)g_heroGravityDir.y * dVar31));
       pCam->mtx[7] = 0.0;
       pCam->mtx[0xb] = 0.0;
       dVar33 = (double)SQRT(fVar1 * fVar1 + fVar4 * fVar4 + fVar3 * fVar3);

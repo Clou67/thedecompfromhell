@@ -197,30 +197,30 @@ void Cam10_00035560(int param_1,float *param_2)
       }
       fVar4 = SQRT(fVar3 * fVar3 + fVar2 * fVar2 + fVar1 * fVar1);
       local_a4 = g_heroPosition.w;
-      fVar5 = SQRT(DAT_00969f78 * DAT_00969f78 +
-                   g_heroGravityDir * g_heroGravityDir + DAT_00969f74 * DAT_00969f74);
+      fVar5 = SQRT(g_heroGravityDir.z * g_heroGravityDir.z +
+                   g_heroGravityDir.x * g_heroGravityDir.x + g_heroGravityDir.y * g_heroGravityDir.y);
       fVar10 = -param_2[0x1a] / fVar4;
       fVar9 = -*(float *)(iVar12 + 0x60) / fVar5;
       fVar6 = local_b0;
       if (0.0 - fVar5 < 0.0) {
-        fVar6 = DAT_00969f78 * fVar9;
+        fVar6 = g_heroGravityDir.z * fVar9;
       }
       fVar7 = local_b0;
       if (0.0 - fVar5 < 0.0) {
-        fVar7 = DAT_00969f74 * fVar9;
+        fVar7 = g_heroGravityDir.y * fVar9;
       }
       fVar8 = local_b0;
       if (0.0 - fVar5 < 0.0) {
-        fVar8 = g_heroGravityDir * fVar9;
+        fVar8 = g_heroGravityDir.x * fVar9;
       }
       if (fVar5 - 0.0 < 0.0) {
-        fVar6 = DAT_00969f78 * fVar9;
+        fVar6 = g_heroGravityDir.z * fVar9;
       }
       if (fVar5 - 0.0 < 0.0) {
-        fVar7 = DAT_00969f74 * fVar9;
+        fVar7 = g_heroGravityDir.y * fVar9;
       }
       if (fVar5 - 0.0 < 0.0) {
-        fVar8 = g_heroGravityDir * fVar9;
+        fVar8 = g_heroGravityDir.x * fVar9;
       }
       local_a8 = local_b0;
       if (0.0 - fVar4 < 0.0) {
@@ -285,8 +285,8 @@ void Cam10_00035560(int param_1,float *param_2)
       }
       fVar4 = SQRT(fVar3 * fVar3 + fVar2 * fVar2 + fVar1 * fVar1);
       local_84 = g_heroPosition.w;
-      fVar6 = SQRT(DAT_00969f78 * DAT_00969f78 +
-                   g_heroGravityDir * g_heroGravityDir + DAT_00969f74 * DAT_00969f74);
+      fVar6 = SQRT(g_heroGravityDir.z * g_heroGravityDir.z +
+                   g_heroGravityDir.x * g_heroGravityDir.x + g_heroGravityDir.y * g_heroGravityDir.y);
       fVar10 = -param_2[0x1a] / fVar4;
       fVar9 = -*(float *)(iVar12 + 0x60) / fVar6;
       local_88 = fVar5;
@@ -312,23 +312,23 @@ void Cam10_00035560(int param_1,float *param_2)
       }
       fVar4 = fVar5;
       if (0.0 - fVar6 < 0.0) {
-        fVar4 = DAT_00969f78 * fVar9;
+        fVar4 = g_heroGravityDir.z * fVar9;
       }
       fVar10 = fVar5;
       if (0.0 - fVar6 < 0.0) {
-        fVar10 = DAT_00969f74 * fVar9;
+        fVar10 = g_heroGravityDir.y * fVar9;
       }
       if (0.0 - fVar6 < 0.0) {
-        fVar5 = g_heroGravityDir * fVar9;
+        fVar5 = g_heroGravityDir.x * fVar9;
       }
       if (fVar6 - 0.0 < 0.0) {
-        fVar4 = DAT_00969f78 * fVar9;
+        fVar4 = g_heroGravityDir.z * fVar9;
       }
       if (fVar6 - 0.0 < 0.0) {
-        fVar10 = DAT_00969f74 * fVar9;
+        fVar10 = g_heroGravityDir.y * fVar9;
       }
       if (fVar6 - 0.0 < 0.0) {
-        fVar5 = g_heroGravityDir * fVar9;
+        fVar5 = g_heroGravityDir.x * fVar9;
       }
       local_88 = g_heroPosition.z + fVar4 + local_88;
       local_8c = g_heroPosition.y + fVar10 + local_8c;
@@ -480,9 +480,9 @@ void Cam10_00035d68(int param_1)
     dVar15 = (double)SQRT((float)(dVar23 * dVar23 +
                                  (double)(float)(dVar12 * dVar12 + (double)(float)(dVar10 * dVar10))
                                  ));
-    dVar13 = (double)SQRT(DAT_00969f78 * DAT_00969f78 +
-                          g_heroGravityDir * g_heroGravityDir +
-                          DAT_00969f74 * DAT_00969f74);
+    dVar13 = (double)SQRT(g_heroGravityDir.z * g_heroGravityDir.z +
+                          g_heroGravityDir.x * g_heroGravityDir.x +
+                          g_heroGravityDir.y * g_heroGravityDir.y);
     dVar16 = (double)(float)(-(double)*(float *)(iVar3 + 0x50) / dVar15);
     fVar1 = (float)(-(double)*(float *)(iVar3 + 0x60) / dVar13);
     dVar9 = dVar22;
@@ -508,24 +508,24 @@ void Cam10_00035d68(int param_1)
     }
     dVar23 = dVar22;
     if (dVar22 - dVar13 < 0.0) {
-      dVar23 = (double)(DAT_00969f78 * fVar1);
+      dVar23 = (double)(g_heroGravityDir.z * fVar1);
     }
     dVar10 = dVar22;
     if (dVar22 - dVar13 < 0.0) {
-      dVar10 = (double)(DAT_00969f74 * fVar1);
+      dVar10 = (double)(g_heroGravityDir.y * fVar1);
     }
     dVar12 = dVar22;
     if (dVar22 - dVar13 < 0.0) {
-      dVar12 = (double)(g_heroGravityDir * fVar1);
+      dVar12 = (double)(g_heroGravityDir.x * fVar1);
     }
     if (dVar13 - dVar22 < 0.0) {
-      dVar23 = (double)(DAT_00969f78 * fVar1);
+      dVar23 = (double)(g_heroGravityDir.z * fVar1);
     }
     if (dVar13 - dVar22 < 0.0) {
-      dVar10 = (double)(DAT_00969f74 * fVar1);
+      dVar10 = (double)(g_heroGravityDir.y * fVar1);
     }
     if (dVar13 - dVar22 < 0.0) {
-      dVar12 = (double)(g_heroGravityDir * fVar1);
+      dVar12 = (double)(g_heroGravityDir.x * fVar1);
     }
     if (speed == (float *)0x0) {
       *(float *)(param_1 + 0x30) =
@@ -612,9 +612,9 @@ void Cam10_00036230(float *param_1)
   float fVar26;
   
   fVar26 = g_heroPosition.w;
-  uVar25 = GameCamera.field17_0x1b4.piece<4,4>();
-  uVar24 = GameCamera.field17_0x1b4.piece<0,4>();
-  fVar23 = GameCamera.field16_0x1b0;
+  uVar25 = GameCamera.camStatics.heroUp.z;
+  uVar24 = GameCamera.camStatics.heroUp.y;
+  fVar23 = GameCamera.camStatics.heroUp.x;
   fVar10 = param_1[0x1c];
   fVar1 = *(float *)((int)fVar10 + 0xe4);
   fVar2 = *(float *)((int)fVar10 + 0xe0);
@@ -943,9 +943,9 @@ void Cam10_00036a40(int param_1)
   double dVar26;
   float fVar27;
   
-  uVar24 = GameCamera.field17_0x1b4.piece<4,4>();
-  uVar23 = GameCamera.field17_0x1b4.piece<0,4>();
-  fVar22 = GameCamera.field16_0x1b0;
+  uVar24 = GameCamera.camStatics.heroUp.z;
+  uVar23 = GameCamera.camStatics.heroUp.y;
+  fVar22 = GameCamera.camStatics.heroUp.x;
   iVar12 = *(int *)(param_1 + 0x70);
   fVar27 = *(float *)(iVar12 + 0xe4);
   fVar1 = *(float *)(iVar12 + 0xe0);
@@ -1074,34 +1074,34 @@ void Cam10_00036e18(int param_1)
   fVar17 = *(float *)(iVar4 + 0xe4);
   fVar2 = *(float *)(iVar4 + 0xe0);
   fVar3 = *(float *)(iVar4 + 0xe8);
-  fVar1 = SQRT(DAT_00969f78 * DAT_00969f78 +
-               g_heroGravityDir * g_heroGravityDir + DAT_00969f74 * DAT_00969f74);
+  fVar1 = SQRT(g_heroGravityDir.z * g_heroGravityDir.z +
+               g_heroGravityDir.x * g_heroGravityDir.x + g_heroGravityDir.y * g_heroGravityDir.y);
   fVar8 = 0.0;
   fVar5 = SQRT(fVar3 * fVar3 + fVar2 * fVar2 + fVar17 * fVar17);
   fVar7 = -*(float *)(iVar4 + 0x60) / fVar1;
-  fVar6 = SQRT(DAT_00969f78 * DAT_00969f78 +
-               g_heroGravityDir * g_heroGravityDir + DAT_00969f74 * DAT_00969f74);
+  fVar6 = SQRT(g_heroGravityDir.z * g_heroGravityDir.z +
+               g_heroGravityDir.x * g_heroGravityDir.x + g_heroGravityDir.y * g_heroGravityDir.y);
   fVar12 = -*(float *)(iVar4 + 0x50) / fVar5;
   fVar9 = fVar8;
   if (0.0 - fVar1 < 0.0) {
-    fVar9 = DAT_00969f78 * fVar7;
+    fVar9 = g_heroGravityDir.z * fVar7;
   }
   fVar10 = fVar8;
   if (0.0 - fVar1 < 0.0) {
-    fVar10 = DAT_00969f74 * fVar7;
+    fVar10 = g_heroGravityDir.y * fVar7;
   }
   fVar11 = fVar8;
   if (0.0 - fVar1 < 0.0) {
-    fVar11 = g_heroGravityDir * fVar7;
+    fVar11 = g_heroGravityDir.x * fVar7;
   }
   if (fVar1 - 0.0 < 0.0) {
-    fVar11 = g_heroGravityDir * fVar7;
+    fVar11 = g_heroGravityDir.x * fVar7;
   }
   if (fVar1 - 0.0 < 0.0) {
-    fVar9 = DAT_00969f78 * fVar7;
+    fVar9 = g_heroGravityDir.z * fVar7;
   }
   if (fVar1 - 0.0 < 0.0) {
-    fVar10 = DAT_00969f74 * fVar7;
+    fVar10 = g_heroGravityDir.y * fVar7;
   }
   local_a8 = fVar8;
   if (0.0 - fVar5 < 0.0) {
@@ -1130,23 +1130,23 @@ void Cam10_00036e18(int param_1)
   fVar2 = -*(float *)(iVar4 + 0x44) / fVar6;
   fVar17 = fVar8;
   if (0.0 - fVar6 < 0.0) {
-    fVar17 = DAT_00969f78 * fVar2;
+    fVar17 = g_heroGravityDir.z * fVar2;
   }
   fVar3 = fVar8;
   if (0.0 - fVar6 < 0.0) {
-    fVar3 = DAT_00969f74 * fVar2;
+    fVar3 = g_heroGravityDir.y * fVar2;
   }
   if (0.0 - fVar6 < 0.0) {
-    fVar8 = g_heroGravityDir * fVar2;
+    fVar8 = g_heroGravityDir.x * fVar2;
   }
   if (fVar6 - 0.0 < 0.0) {
-    fVar17 = DAT_00969f78 * fVar2;
+    fVar17 = g_heroGravityDir.z * fVar2;
   }
   if (fVar6 - 0.0 < 0.0) {
-    fVar3 = DAT_00969f74 * fVar2;
+    fVar3 = g_heroGravityDir.y * fVar2;
   }
   if (fVar6 - 0.0 < 0.0) {
-    fVar8 = g_heroGravityDir * fVar2;
+    fVar8 = g_heroGravityDir.x * fVar2;
   }
   dVar16 = (double)(*(float *)(iVar4 + 0x10c) + fVar17);
   dVar15 = (double)(g_heroPosition.y + fVar3);
@@ -1218,9 +1218,9 @@ void Cam10_000371e0
   fVar5 = param_1[1];
   fVar2 = *param_1;
   fVar3 = param_1[2];
-  dVar6 = (double)(float)GameCamera.field17_0x1b4.piece<0,4>();
-  dVar7 = (double)(float)GameCamera.field17_0x1b4.piece<4,4>();
-  dVar8 = (double)GameCamera.field16_0x1b0;
+  dVar6 = (double)(float)GameCamera.camStatics.heroUp.y;
+  dVar7 = (double)(float)GameCamera.camStatics.heroUp.z;
+  dVar8 = (double)GameCamera.camStatics.heroUp.x;
   dVar9 = (double)(fVar3 * fVar3 + fVar2 * fVar2 + fVar5 * fVar5);
   if ((double)(float)SQRT(dVar9) == dVar13) {
     param_1[0x10] = *param_1;

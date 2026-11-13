@@ -1812,6 +1812,8 @@ typedef enum TROPHIES_ENUM {
 
 // ---- globals
 extern CollDamageOut CollDamage[64]; /* 0xa14c00 */
+extern Cuboid * Cuboids; /* 0xa51bd8 */
+extern Cylinder * Cylinders; /* 0xa51bd0 */
 extern undefined4 DAT_000fc230; /* 0xfc230 */
 extern undefined4 DAT_000fd8b4; /* 0xfd8b4 */
 extern undefined4 DAT_0010afe8; /* 0x10afe8 */
@@ -1840,6 +1842,10 @@ extern undefined4 DAT_007294fc; /* 0x7294fc */
 extern undefined4 DAT_00729500; /* 0x729500 */
 extern undefined4 DAT_00729504; /* 0x729504 */
 extern undefined4 DAT_00729578; /* no defined data */
+extern undefined4 DAT_007358c0; /* 0x7358c0 */
+extern undefined4 DAT_007358c4; /* 0x7358c4 */
+extern undefined4 DAT_007358c8; /* 0x7358c8 */
+extern undefined4 DAT_007358cc; /* 0x7358cc */
 extern undefined4 DAT_00737d42; /* no defined data */
 extern undefined4 DAT_0095e5f8; /* 0x95e5f8 */
 extern undefined4 DAT_0095e60c; /* no defined data */
@@ -1927,7 +1933,7 @@ void MB_randVector(double minRadius,double maxRadius,Vec4 *outPos);
 void MB_randCircle(double param_1,float *param_2);
 void MB_randSphere(double param_1,double param_2,float *param_3);
 double MB_catmullRom (double param_1,double param_2,double param_3,double param_4,double param_5);
-double MB_CosineInterpolate(double param_1,double param_2,double param_3);
+float MB_CosineInterpolate(float param_1,float param_2,float param_3);
 void MB_lerpRotCosine(double param_1,undefined8 param_2,double param_3);
 void MB_CosineInterpolateUnitVec (double param_1,float *param_2,float *param_3,float *param_4);
 void MB_CosineInterpolateAngVec (double param_1,float *param_2,float *param_3,float *param_4);
@@ -2040,7 +2046,7 @@ void MB_TransformToQuat(float *param_1,Vec4 *param_2);
 void MB_CopyHeroLights(int param_1);
 void MB_AxisAngleToQuat(float angle,float *outQuat,float *axis);
 void ____MB_ClampVecToPlanes(undefined8 param_1,undefined8 param_2,float *param_3);
-void MB_MtxToEuler(int param_1,MobyInstance *param_2);
+void MB_MtxToEuler(Mtx4 *param_1,float *param_2);
 void MB_UpdateLightsTransition(undefined8 param_1,undefined8 param_2);
 void MB_ColorDyingMoby(MobyInstance *param_1,undefined8 param_2);
 int MB_PathStepIndex(int *path,int idx,int delta,int wrap);
@@ -2069,7 +2075,7 @@ int MB_IsPntInCuboid(Vec4 *point,longlong cuboidLink);
 int MB_IsPntInCylinder(Vec4 *point,longlong cylinderLink);
 undefined8 MB_IsPntInSphere(Vec4 *point,longlong sphereLink);
 void MB_MtxFromDir(double param_1,Vec4 *param_2,float *param_3);
-void MB_QuatRotate(undefined8 param_1,undefined8 param_2,undefined4 param_3);
+void MB_QuatRotate(float *param_1,float *param_2,float *param_3);
 void MB_RotateQuatAxisAngle(float angle,float *outQuat,float *inQuat,float *axis);
 void MB_QuatBetweenVecs (float *param_1,float *param_2,float *param_3,undefined8 param_4,int param_5);
 f32 MB_getTarget(double param_1,int param_2,undefined8 param_3,f32 *param_4);

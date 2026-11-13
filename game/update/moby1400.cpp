@@ -148,14 +148,14 @@ LAB_0026b044:
     local_130 = GameCamera.posX;
     local_12c = GameCamera.posY;
     local_128 = GameCamera.posZ;
-    DAT_00a52b9c[0] = GameCamera.field8_0x14c[0];
-    DAT_00a52b9c[1] = GameCamera.field8_0x14c[1];
-    DAT_00a52b9c[2] = GameCamera.field8_0x14c[2];
-    DAT_00a52b9c[3] = GameCamera.field8_0x14c[3];
-    local_124[0] = GameCamera.field8_0x14c[0];
-    local_124[1] = GameCamera.field8_0x14c[1];
-    local_124[2] = GameCamera.field8_0x14c[2];
-    local_124[3] = GameCamera.field8_0x14c[3];
+    DAT_00a52b9c[0] = ((u8 *)&GameCamera.posW)[0];
+    DAT_00a52b9c[1] = ((u8 *)&GameCamera.posW)[1];
+    DAT_00a52b9c[2] = ((u8 *)&GameCamera.posW)[2];
+    DAT_00a52b9c[3] = ((u8 *)&GameCamera.posW)[3];
+    local_124[0] = ((u8 *)&GameCamera.posW)[0];
+    local_124[1] = ((u8 *)&GameCamera.posW)[1];
+    local_124[2] = ((u8 *)&GameCamera.posW)[2];
+    local_124[3] = ((u8 *)&GameCamera.posW)[3];
     MB_AddVectorSphere(&local_130,&local_130);
     iVar9 = 0;
     iVar7 = 0;
@@ -253,10 +253,10 @@ LAB_0026b044:
     local_128 = GameCamera.posZ + DAT_0079cbec;
     local_130 = GameCamera.posX;
     local_12c = GameCamera.posY;
-    local_124[0] = GameCamera.field8_0x14c[0];
-    local_124[1] = GameCamera.field8_0x14c[1];
-    local_124[2] = GameCamera.field8_0x14c[2];
-    local_124[3] = GameCamera.field8_0x14c[3];
+    local_124[0] = ((u8 *)&GameCamera.posW)[0];
+    local_124[1] = ((u8 *)&GameCamera.posW)[1];
+    local_124[2] = ((u8 *)&GameCamera.posW)[2];
+    local_124[3] = ((u8 *)&GameCamera.posW)[3];
     uVar1 = (uint)((float)(longlong)iVar6 * 1.4);
     local_100 = (longlong)(int)uVar1;
     if (0 < (int)uVar1) {
@@ -340,10 +340,10 @@ LAB_0026b044:
       local_130 = GameCamera.posX;
       local_12c = GameCamera.posY;
       local_128 = GameCamera.posZ;
-      local_124[0] = GameCamera.field8_0x14c[0];
-      local_124[1] = GameCamera.field8_0x14c[1];
-      local_124[2] = GameCamera.field8_0x14c[2];
-      local_124[3] = GameCamera.field8_0x14c[3];
+      local_124[0] = ((u8 *)&GameCamera.posW)[0];
+      local_124[1] = ((u8 *)&GameCamera.posW)[1];
+      local_124[2] = ((u8 *)&GameCamera.posW)[2];
+      local_124[3] = ((u8 *)&GameCamera.posW)[3];
       dVar24 = 30.0;
       MB_AddVectorSphere(&local_130,&local_130);
       iVar10 = 0;
@@ -409,10 +409,10 @@ LAB_0026b044:
       local_130 = GameCamera.posX;
       local_12c = GameCamera.posY;
       local_128 = GameCamera.posZ;
-      local_124[0] = GameCamera.field8_0x14c[0];
-      local_124[1] = GameCamera.field8_0x14c[1];
-      local_124[2] = GameCamera.field8_0x14c[2];
-      local_124[3] = GameCamera.field8_0x14c[3];
+      local_124[0] = ((u8 *)&GameCamera.posW)[0];
+      local_124[1] = ((u8 *)&GameCamera.posW)[1];
+      local_124[2] = ((u8 *)&GameCamera.posW)[2];
+      local_124[3] = ((u8 *)&GameCamera.posW)[3];
       MB_AddVectorSphere(&local_130,&local_130);
       local_128 = GameCamera.posZ + DAT_0079cbec;
       if (0 < (int)(((int)uVar1 >> 1) + (uint)((int)uVar1 < 0 && (uVar1 & 1) != 0))) {
@@ -479,7 +479,7 @@ LAB_0026b044:
   *(float *)((int)pvVar2 + 0x30) = GameCamera.posX;
   *(float *)((int)pvVar2 + 0x34) = GameCamera.posY;
   *(float *)((int)pvVar2 + 0x38) = GameCamera.posZ;
-  *(char (*) [4])((int)pvVar2 + 0x3c) = GameCamera.field8_0x14c;
+  *(char (*) [4])((int)pvVar2 + 0x3c) = GameCamera.posW;
   return;
 }
 

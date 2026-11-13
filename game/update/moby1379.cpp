@@ -3535,7 +3535,7 @@ void UpdateMoby_1379_JetFighterFleet(MobyInstance *moby)
           auVar35 = ZEXT416(0xffffffff);
           auVar35 = auVar35 | auVar35 << 0x20 | auVar35 << 0x40 | auVar35 << 0x60;
           auVar36 = vectorShiftLeftIntegerWord(auVar35,auVar35);
-          GameCamera.offset0.amp = 1.0;
+          GameCamera.shake.strength = 1.0;
           auVar35 = loadVectorLeftIndexed(in_LR,0x2641f8);
           auVar35 = auVar35 >> 0x60 & (GPiece<16>)0xffffffff;
           auVar37 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
@@ -3544,7 +3544,7 @@ void UpdateMoby_1379_JetFighterFleet(MobyInstance *moby)
                                ,auVar36);
           auVar35 = vectorConvertToSignedFixedPointWordSaturate(auVar35,0);
           auVar35 = auVar35 >> 0x60 & (GPiece<16>)0xffffffff;
-          GameCamera.offset0.total =
+          GameCamera.shake.time =
                storeVectorElementWordIndexed
                          (auVar35 | auVar35 << 0x20 | auVar35 << 0x40 | auVar35 << 0x60,0x168,
                           0x9513c0);
@@ -3732,7 +3732,7 @@ void UpdateMoby_1379_JetFighterFleet(MobyInstance *moby)
         auVar35 = ZEXT416(0xffffffff);
         auVar35 = auVar35 | auVar35 << 0x20 | auVar35 << 0x40 | auVar35 << 0x60;
         auVar36 = vectorShiftLeftIntegerWord(auVar35,auVar35);
-        GameCamera.offset0.amp = 0.2;
+        GameCamera.shake.strength = 0.2;
         auVar35 = loadVectorLeftIndexed(0x14,0x2641f8);
         auVar35 = auVar35 >> 0x60 & (GPiece<16>)0xffffffff;
         auVar37 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
@@ -3744,7 +3744,7 @@ void UpdateMoby_1379_JetFighterFleet(MobyInstance *moby)
         auVar37 = vectorShiftLeftIntegerWord(auVar35,auVar35);
         auVar35 = vectorConvertToSignedFixedPointWordSaturate(auVar36,0);
         auVar35 = auVar35 >> 0x60 & (GPiece<16>)0xffffffff;
-        GameCamera.offset0.total =
+        GameCamera.shake.time =
              storeVectorElementWordIndexed
                        (auVar35 | auVar35 << 0x20 | auVar35 << 0x40 | auVar35 << 0x60,0x168,0x9513c0
                        );

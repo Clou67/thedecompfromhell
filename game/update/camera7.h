@@ -10,7 +10,6 @@ extern undefined4 DAT_0071e7c0; /* 0x71e7c0 */
 extern undefined4 DAT_0071e7e4; /* 0x71e7e4 */
 extern undefined4 DAT_0071e7e8; /* 0x71e7e8 */
 extern pointer32 PTR_CamZoomOfs_PostUpd_00704160; /* 0x704160 */
-extern pointer32 PTR_CamZoomOfs_Update_00704158; /* 0x704158 */
 
 // ---- functions
 void SECTION_HEADER_CAMERA_UNK(void);

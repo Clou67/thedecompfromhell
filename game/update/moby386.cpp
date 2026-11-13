@@ -685,10 +685,10 @@ void UpdateMoby_386(MobyInstance *moby)
   }
   else if ((moby->state < 2) &&
           (((g_heroStateType == 0xf &&
-            (((DAT_0096a240 == *(int *)(DAT_00a1a85c + *(int *)((int)pvVar1 + 500) * 0x20 + 0x10) ||
-              (DAT_0096a240 == *(int *)(DAT_00a1a85c + *(int *)((int)pvVar1 + 0x1f8) * 0x20 + 0x10))
-              ) || (DAT_0096a240 ==
-                    *(int *)(DAT_00a1a85c + *(int *)((int)pvVar1 + 0x1fc) * 0x20 + 0x10))))) ||
+            (((g_heroGrindPath == *(int *)(g_GrindPaths + *(int *)((int)pvVar1 + 500) * 0x20 + 0x10) ||
+              (g_heroGrindPath == *(int *)(g_GrindPaths + *(int *)((int)pvVar1 + 0x1f8) * 0x20 + 0x10))
+              ) || (g_heroGrindPath ==
+                    *(int *)(g_GrindPaths + *(int *)((int)pvVar1 + 0x1fc) * 0x20 + 0x10))))) ||
            ((ABS(g_heroPosition.x - (moby->pos).x) <= 16.0 &&
             (ABS(g_heroPosition.y - (moby->pos).y) <= 16.0)))))) {
     iVar3 = IsMobyPlayingSound(moby,*(int *)((int)pvVar1 + 0x204));

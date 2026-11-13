@@ -609,7 +609,7 @@ void UpdateMoby_409(MobyInstance *moby)
       auVar35 = ZEXT416(0xffffffff);
       auVar35 = auVar35 | auVar35 << 0x20 | auVar35 << 0x40 | auVar35 << 0x60;
       auVar34 = vectorShiftLeftIntegerWord(auVar35,auVar35);
-      GameCamera.offset0.amp = 0.025;
+      GameCamera.shake.strength = 0.025;
       auVar35 = loadVectorLeftIndexed(0x9c,0x1f700);
       auVar35 = auVar35 >> 0x60 & (GPiece<16>)0xffffffff;
       auVar38 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
@@ -618,7 +618,7 @@ void UpdateMoby_409(MobyInstance *moby)
                            auVar34);
       auVar35 = vectorConvertToSignedFixedPointWordSaturate(auVar35,0);
       auVar35 = auVar35 >> 0x60 & (GPiece<16>)0xffffffff;
-      GameCamera.offset0.total =
+      GameCamera.shake.time =
            storeVectorElementWordIndexed
                      (auVar35 | auVar35 << 0x20 | auVar35 << 0x40 | auVar35 << 0x60,0x168,0x9513c0);
     }

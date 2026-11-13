@@ -1027,7 +1027,7 @@ void M229_002fc3f8
         dVar49 = (double)GameCamera.posY;
         dVar41 = (double)GameCamera.posZ;
         *(float *)(puVar15 + 0x11) = fVar10;
-        acVar17 = GameCamera.field8_0x14c;
+        acVar17 = GameCamera.posW;
         fVar10 = (float)((double)(float)((double)(float)(dVar48 * dVar42) * dVar36 +
                                         (double)(float)(dVar42 * dVar37 +
                                                        (double)(float)(dVar32 * dVar38 +

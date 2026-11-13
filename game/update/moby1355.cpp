@@ -568,7 +568,7 @@ undefined4 * UpdateMoby_1355(MobyInstance *moby)
       (moby->pos).x = GameCamera.posX;
       (moby->pos).y = GameCamera.posY;
       fVar51 = GameCamera.posZ;
-      (moby->pos).w = (f32)GameCamera.field8_0x14c;
+      (moby->pos).w = (f32)GameCamera.posW;
       (moby->pos).z = fVar51 + 20.0;
       auVar48 = loadVectorLeftIndexed(0x18,0x256ed8);
       auVar48 = auVar48 >> 0x60 & (GPiece<16>)0xffffffff;

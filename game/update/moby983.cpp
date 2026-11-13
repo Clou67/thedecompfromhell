@@ -142,7 +142,7 @@ void M983_004c8510(MobyInstance *param_1)
     auVar18 = auVar16 | auVar16 << 0x20 | auVar16 << 0x40 | auVar16 << 0x60;
     auVar16 = loadVectorLeftIndexed(0x516c,0x8f0000);
     auVar17 = vectorConvertFromSignedFixedPointWord(auVar16,0);
-    GameCamera.offset0.amp = DAT_008f5168;
+    GameCamera.shake.strength = DAT_008f5168;
     auVar16 = loadVectorLeftIndexed(0x14,0x4c84c8);
     auVar19 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
     auVar16 = auVar16 >> 0x60 & (GPiece<16>)0xffffffff;
@@ -152,7 +152,7 @@ void M983_004c8510(MobyInstance *param_1)
     auVar16 = vectorMultiplyAddFloatingPoint(auVar19,auVar16,auVar17);
     auVar16 = vectorConvertToSignedFixedPointWordSaturate(auVar16,0);
     auVar16 = auVar16 >> 0x60 & (GPiece<16>)0xffffffff;
-    GameCamera.offset0.total =
+    GameCamera.shake.time =
          storeVectorElementWordIndexed
                    (auVar16 | auVar16 << 0x20 | auVar16 << 0x40 | auVar16 << 0x60,0x168,0x9513c0);
   }
@@ -347,9 +347,9 @@ void M983_004c8df0(int param_1)
     dVar29 = (double)(fVar58 * fVar4);
     dVar40 = (double)(fVar57 * fVar4);
   }
-  dVar31 = (double)DAT_00969f74;
-  dVar33 = (double)DAT_00969f78;
-  dVar35 = (double)g_heroGravityDir;
+  dVar31 = (double)g_heroGravityDir.y;
+  dVar33 = (double)g_heroGravityDir.z;
+  dVar35 = (double)g_heroGravityDir.x;
   *(float *)(puVar9 + 0x10) = (float)dVar38;
   *(float *)((int)puVar9 + 0x84) = (float)dVar29;
   *(float *)(puVar9 + 0x11) = (float)dVar40;
@@ -668,14 +668,14 @@ void M983_004c8df0(int param_1)
     uVar26 = (ulonglong)(iVar27 + 1);
     dVar39 = dVar50;
   } while (iVar27 + 1 < 0x14);
-  fVar57 = DAT_00969f78 * *(float *)(puVar9 + 0x10) -
-           g_heroGravityDir * *(float *)(puVar9 + 0x11);
-  fVar58 = DAT_00969f74 * *(float *)(puVar9 + 0x11) - DAT_00969f78 * *(float *)((int)puVar9 + 0x84);
-  fVar5 = g_heroGravityDir * *(float *)((int)puVar9 + 0x84) -
-          DAT_00969f74 * *(float *)(puVar9 + 0x10);
+  fVar57 = g_heroGravityDir.z * *(float *)(puVar9 + 0x10) -
+           g_heroGravityDir.x * *(float *)(puVar9 + 0x11);
+  fVar58 = g_heroGravityDir.y * *(float *)(puVar9 + 0x11) - g_heroGravityDir.z * *(float *)((int)puVar9 + 0x84);
+  fVar5 = g_heroGravityDir.x * *(float *)((int)puVar9 + 0x84) -
+          g_heroGravityDir.y * *(float *)(puVar9 + 0x10);
   auVar56 = loadVectorLeftIndexed(8,0x4c8d7c);
   *(undefined4 *)((int)puVar9 + 0xbc) = 0;
-  fVar4 = g_heroGravityDir;
+  fVar4 = g_heroGravityDir.x;
   auVar56 = auVar56 >> 0x60 & (GPiece<16>)0xffffffff;
   auVar56 = auVar56 | auVar56 << 0x20 | auVar56 << 0x40 | auVar56 << 0x60;
   dVar31 = (double)(fVar5 * fVar5 + fVar58 * fVar58 + fVar57 * fVar57);
@@ -694,19 +694,19 @@ void M983_004c8df0(int param_1)
     dVar39 = (double)(fVar57 * fVar2);
     dVar38 = (double)(fVar5 * fVar2);
   }
-  fVar58 = DAT_00969f74 * DAT_00969f74;
+  fVar58 = g_heroGravityDir.y * g_heroGravityDir.y;
   *(float *)(puVar9 + 0x17) = (float)dVar38;
-  fVar5 = DAT_00969f78;
+  fVar5 = g_heroGravityDir.z;
   *(float *)(puVar9 + 0x16) = (float)dVar40;
   *(float *)((int)puVar9 + 0xb4) = (float)dVar39;
-  uVar3 = DAT_00969f7c;
-  fVar57 = DAT_00969f74;
+  uVar3 = g_heroGravityDir.w;
+  fVar57 = g_heroGravityDir.y;
   dVar38 = (double)(fVar5 * fVar5 + fVar4 * fVar4 + fVar58);
   if ((double)(float)SQRT(dVar38) == dVar52) {
     *(float *)(puVar9 + 0x18) = fVar4;
-    fVar58 = DAT_00969f78;
+    fVar58 = g_heroGravityDir.z;
     *(float *)((int)puVar9 + 0xc4) = fVar57;
-    uVar3 = DAT_00969f7c;
+    uVar3 = g_heroGravityDir.w;
     *(float *)(puVar9 + 0x19) = fVar58;
     *(undefined4 *)(puVar9 + 0x19) = 0;
     *(undefined4 *)((int)puVar9 + 0xc4) = 0;
@@ -720,8 +720,8 @@ void M983_004c8df0(int param_1)
                              (double)(float)(dVar30 * dVar39) + dVar39);
     fVar58 = (float)(-(double)(float)((double)(float)(dVar38 * dVar39) * dVar39 - 1.0) *
                      (double)(float)(dVar30 * dVar39) + dVar39);
-    fVar57 = DAT_00969f74 * fVar58;
-    fVar5 = DAT_00969f78 * fVar58;
+    fVar57 = g_heroGravityDir.y * fVar58;
+    fVar5 = g_heroGravityDir.z * fVar58;
     *(float *)(puVar9 + 0x18) = fVar4 * fVar58;
     *(float *)((int)puVar9 + 0xc4) = fVar57;
     *(float *)(puVar9 + 0x19) = fVar5;

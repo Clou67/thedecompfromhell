@@ -1162,7 +1162,7 @@ void UpdateMoby_1843(MobyInstance *moby)
       *(float *)(puVar21 + 0x10) = fVar5;
       fVar5 = GameCamera.rot.radius;
       *(float *)((int)puVar21 + 0x84) = GameCamera.rot.elevation;
-      acVar27 = GameCamera.field10_0x15c;
+      acVar27 = GameCamera.rotW;
       iVar29 = (uVar20 >> 1 ^ (uint)fVar6) - uVar20;
       *(float *)(puVar21 + 0x11) = fVar5;
       *(char (*) [4])((int)puVar21 + 0x8c) = acVar27;
@@ -1270,7 +1270,7 @@ void UpdateMoby_1843(MobyInstance *moby)
       fVar17 = fVar2 * fVar16;
       fVar5 = (float)(20.0 / dVar44);
       dVar43 = (double)GameCamera.posZ;
-      *(char (*) [4])((int)puVar21 + 0x7c) = GameCamera.field8_0x14c;
+      *(char (*) [4])((int)puVar21 + 0x7c) = GameCamera.posW;
       pfVar34 = (float *)((int)pvVar19 + 0x6c);
       puVar21[0x36] = (ulonglong)dVar52;
       fVar2 = (float)((double)((fVar2 * fVar17 * 2.601887e-06 +

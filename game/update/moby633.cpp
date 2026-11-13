@@ -5,7 +5,6 @@
 #include <math.h>
 #include "game/update/moby633.h"
 #include "game/boot.h"
-#include "game/camera.h"
 #include "game/collproc.h"
 #include "game/debug.h"
 #include "game/draw.h"
@@ -240,9 +239,9 @@ void UpdateMoby_633(MobyInstance *moby)
       (moby->pos).y = (moby->pos).y + *(float *)((int)pvVar8 + 0x44);
       (moby->pos).z = (moby->pos).z + *(float *)((int)pvVar8 + 0x48);
       FUN_005e7f98((double)*(float *)((int)pvVar8 + 0x74),&local_130,&local_130);
-      (moby->pos).x = (moby->pos).x + local_130 + DAT_00969e20;
-      (moby->pos).y = (moby->pos).y + local_12c + DAT_00969e24;
-      fVar17 = (moby->pos).z + fVar14 + DAT_00969e28;
+      (moby->pos).x = (moby->pos).x + local_130 + g_heroFrameMove.x;
+      (moby->pos).y = (moby->pos).y + local_12c + g_heroFrameMove.y;
+      fVar17 = (moby->pos).z + fVar14 + g_heroFrameMove.z;
       (moby->pos).z = fVar17;
       fVar17 = fVar17 - DAT_00969f88;
       FUN_005e825c(local_110,local_110,&g_heroGravityMtx);

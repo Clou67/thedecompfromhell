@@ -80,7 +80,7 @@ void M156_00298e30(void)
   fVar1 = GameCamera.posZ - g_CollOutput.ip.z;
   *(float *)(puVar7 + 0xe) = fVar5;
   *(float *)((int)puVar7 + 0x74) = fVar4;
-  *(char (*) [4])((int)puVar7 + 0x7c) = GameCamera.field8_0x14c;
+  *(char (*) [4])((int)puVar7 + 0x7c) = GameCamera.posW;
   *(float *)(puVar7 + 0xf) = fVar1;
   *(float *)((int)puVar7 + 0x94) = fVar1;
   fVar2 = SQRT(fVar5 * fVar5 + fVar4 * fVar4);

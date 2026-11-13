@@ -10,7 +10,6 @@
 #include "game/mobyutil.h"
 #include "game/sound.h"
 #include "game/update.h"
-#include "game/update/moby1826.h"
 #include "game/update/moby650.h"
 
 // 0x0401f88 (0xc4 bytes)

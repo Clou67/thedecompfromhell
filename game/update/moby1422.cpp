@@ -3057,7 +3057,7 @@ void UpdateMoby_1422(MobyInstance *moby)
       bVar8 = true;
     }
     if ((g_heroStateType == 0xf) &&
-       (dVar23 = (double)FUN_005e8588(&g_heroPosition,DAT_0096a240 + *DAT_0096a240 * 4),
+       (dVar23 = (double)FUN_005e8588(&g_heroPosition,g_heroGrindPath + *g_heroGrindPath * 4),
        dVar23 < 3.0)) {
       bVar8 = true;
     }

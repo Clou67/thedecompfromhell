@@ -537,3 +537,17 @@ FUN_005e7b50	Mtx33_MulVec3
 FUN_005e7bf8	Vec3_Normalize
 FUN_004ff98c	Idol_Break
 DAT_00a14a00	g_CollMobyHits
+DAT_00953d60	g_BackupCamControl
+DAT_00a1a85c	g_GrindPaths
+DAT_00a1a860	g_GrindPathCnt
+DAT_0096a240	g_heroGrindPath
+DAT_0096afc4	g_heroHotSpotWater
+DAT_0096afc5	g_heroHotSpotLava
+DAT_0096afc6	g_heroHotSpotQuickSand
+DAT_0096afcb	g_heroHotSpotDeathSand
+DAT_0096afcc	g_heroHotSpotIceWater
+Camera_ClampAngles	Camera_Polar2Pos
+???_Camera_CalcPolarToTarget	Camera_Pos2Polar
+____Camera_CalcPolarToTarget	Camera_Pos2Polar
+DAT_00951784	g_ReticuleActive
+DAT_00951788	g_ReticuleDraw

@@ -72,7 +72,7 @@ void InitCamera_21(UpdateCam *pCam)
   puVar8[0x18] = in_f30;
   puVar8[0x19] = in_f31;
   puVar8[0x17] = unaff_r31;
-  iVar10 = DAT_00a1a85c;
+  iVar10 = g_GrindPaths;
   iVar23 = ImportCameras + (int)((longlong)pCam->importCameraIdx << 5);
   puVar8[0x16] = unaff_r30;
   iVar20 = 0;
@@ -227,11 +227,11 @@ void InitCamera_21(UpdateCam *pCam)
   *(float *)((int)puVar8 + 0x74) = (float)dVar25;
   *(undefined4 *)(puVar8 + 0xf) = uVar2;
   *(undefined4 *)((int)puVar8 + 0x7c) = *(undefined4 *)((int)pvVar4 + 0x68);
-  Camera_ClampAngles((longlong)(int)pCam + 0x30,uVar11 - 0x5c,&g_heroPosition);
+  Camera_Polar2Pos((longlong)(int)pCam + 0x30,uVar11 - 0x5c,&g_heroPosition);
   fVar3 = g_heroPosition.w;
-  dVar26 = (double)(DAT_00969f74 * -1.5);
-  dVar25 = (double)(g_heroGravityDir * -1.5);
-  dVar27 = (double)(DAT_00969f78 * -1.5);
+  dVar26 = (double)(g_heroGravityDir.y * -1.5);
+  dVar25 = (double)(g_heroGravityDir.x * -1.5);
+  dVar27 = (double)(g_heroGravityDir.z * -1.5);
   fVar6 = (float)((double)(g_heroPosition.y - pCam->pos[1]) + dVar26);
   fVar7 = (float)((double)(g_heroPosition.x - pCam->pos[0]) + dVar25);
   fVar1 = (float)((double)(g_heroPosition.z - pCam->pos[2]) + dVar27);
@@ -385,15 +385,15 @@ void UpdateCamera_21(UpdateCam *pCam)
   pvVar4 = pCam->control;
   puVar16[0x1f] = unaff_r30;
   puVar16[0x1e] = unaff_r29;
-  iVar20 = DAT_00a1a85c;
+  iVar20 = g_GrindPaths;
   fVar42 = DAT_0096a248;
   iVar7 = DAT_0096a244;
-  iVar24 = DAT_0096a240;
+  iVar24 = g_heroGrindPath;
   DAT_00931378 = *(undefined4 *)((int)pvVar4 + 0x88);
   iVar5 = *(int *)(iVar5 + (int)((longlong)sVar28 << 5) + 0x1c);
   DAT_0093137c = *(undefined4 *)((int)pvVar4 + 0x8c);
   sVar28 = *(short *)(iVar5 + 0x32);
-  iVar6 = *(int *)(DAT_00a1a85c + *(int *)(iVar5 + 0x34) * 0x20 + 0x10);
+  iVar6 = *(int *)(g_GrindPaths + *(int *)(iVar5 + 0x34) * 0x20 + 0x10);
   puVar16[0x1c] = unaff_r27;
   puVar16[0x1b] = unaff_r26;
   if (iVar24 != iVar6) {
@@ -407,7 +407,7 @@ void UpdateCamera_21(UpdateCam *pCam)
      (*(float *)((int)((uVar29 & 0xffffffff) << 2) + 0x71e3cc + sVar28 * 0xc) <= fVar42)) {
     sVar28 = sVar28 + 1;
     *(short *)(iVar5 + 0x32) = sVar28;
-    iVar24 = DAT_0096a240;
+    iVar24 = g_heroGrindPath;
   }
   pMVar19 = g_MobyInstance;
   if (sVar28 == 1) {
@@ -893,19 +893,19 @@ void UpdateCamera_21(UpdateCam *pCam)
   *(float *)((int)puVar16 + 0x84) = (float)dVar36;
   *(undefined4 *)(puVar16 + 0x11) = uVar15;
   *(undefined4 *)((int)puVar16 + 0x8c) = *(undefined4 *)((int)pvVar4 + 0x68);
-  Camera_ClampAngles((longlong)(int)pCam + 0x30,uVar21 - 0xac,&g_heroPosition);
+  Camera_Polar2Pos((longlong)(int)pCam + 0x30,uVar21 - 0xac,&g_heroPosition);
   fVar3 = g_heroPosition.w;
-  fVar1 = DAT_00969f74 * -1.5;
+  fVar1 = g_heroGravityDir.y * -1.5;
   dVar34 = (double)fVar1;
-  dVar36 = (double)(g_heroGravityDir * -1.5);
-  fVar2 = DAT_00969f78 * -1.5;
+  dVar36 = (double)(g_heroGravityDir.x * -1.5);
+  fVar2 = g_heroGravityDir.z * -1.5;
   dVar37 = (double)fVar2;
   fVar42 = (float)((double)(g_heroPosition.y - pCam->pos[1]) + dVar34);
   fVar12 = (float)((double)(g_heroPosition.x - pCam->pos[0]) + dVar36);
   fVar13 = (float)((double)(g_heroPosition.z - pCam->pos[2]) + dVar37);
-  *(float *)(puVar16 + 0xe) = g_heroGravityDir * -1.5;
+  *(float *)(puVar16 + 0xe) = g_heroGravityDir.x * -1.5;
   *(float *)((int)puVar16 + 0x74) = fVar1;
-  uVar15 = DAT_00969f7c;
+  uVar15 = g_heroGravityDir.w;
   *(float *)(puVar16 + 0xf) = fVar2;
   *(undefined4 *)((int)puVar16 + 0x7c) = uVar15;
   fVar1 = fVar13 * fVar13 + fVar12 * fVar12 + fVar42 * fVar42;

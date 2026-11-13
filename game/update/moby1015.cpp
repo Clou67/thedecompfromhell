@@ -124,7 +124,7 @@ void UpdateMoby_1015(MobyInstance *moby)
           }
           iVar6 = M1282_00187a68
                             (moby,&GameCamera,CONCAT44(GameCamera.posX,GameCamera.posY),
-                             CONCAT44(GameCamera.posZ,GameCamera.field8_0x14c));
+                             CONCAT44(GameCamera.posZ,GameCamera.posW));
           if ((iVar6 != 0) ||
              (iVar6 = M1282_00187a68
                                 (moby,&g_heroMtx,CONCAT44(g_heroPosition.x,g_heroPosition.y),

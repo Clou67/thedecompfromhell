@@ -39,6 +39,17 @@ struct astruct {
     undefined1 field32_0x20;
 };
 
+struct HudEntry {
+    dword ctx;
+    dword pad;
+    dword pad2;
+    dword pad3;
+    void *ptr1;
+    void *ptr2;
+    void *callbackPtr;
+    dword field7_0x1c;
+};
+
 struct HudElement { /* RC1 HUD entry, 13 x 0x90 at HudEntries (existing HudEntry[13] type is 0x20-stride and wrong). Offsets from HudEntry_Reset/CalcNumberSize/ApplyAlignment/ShowEntryById. */
     int iconId;
     int value;
@@ -106,17 +117,6 @@ struct HudElement { /* RC1 HUD entry, 13 x 0x90 at HudEntries (existing HudEntry
     undefined field63_0x8d;
     undefined field64_0x8e;
     undefined field65_0x8f;
-};
-
-struct HudEntry {
-    dword ctx;
-    dword pad;
-    dword pad2;
-    dword pad3;
-    void *ptr1;
-    void *ptr2;
-    void *callbackPtr;
-    dword field7_0x1c;
 };
 
 struct IconTableEntries {

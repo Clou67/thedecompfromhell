@@ -147,7 +147,7 @@ void UpdateMoby_403(MobyInstance *moby)
     fVar1 = (moby->pos).x;
     fVar2 = (moby->pos).y;
     MB_PathMoveDist
-              ((double)(float)piVar4[2],*(undefined4 *)(DAT_00a1a85c + piVar4[3] * 0x20 + 0x10),
+              ((double)(float)piVar4[2],*(undefined4 *)(g_GrindPaths + piVar4[3] * 0x20 + 0x10),
                lVar7 + 0x10,piVar4 + 4,piVar4 + 5,in_r7,0);
     fVar3 = (moby->pos).y;
     piVar4[6] = (int)((moby->pos).x - fVar1);

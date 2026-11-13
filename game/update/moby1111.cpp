@@ -622,10 +622,10 @@ void UpdateMoby_1111(MobyInstance *moby)
     DAT_00ef26b0 = GameCamera.posX;
     DAT_00ef26b4 = GameCamera.posY;
     DAT_00ef26b8 = GameCamera.posZ;
-    DAT_00ef26bc[0] = GameCamera.field8_0x14c[0];
-    DAT_00ef26bc[1] = GameCamera.field8_0x14c[1];
-    DAT_00ef26bc[2] = GameCamera.field8_0x14c[2];
-    DAT_00ef26bc[3] = GameCamera.field8_0x14c[3];
+    DAT_00ef26bc[0] = ((u8 *)&GameCamera.posW)[0];
+    DAT_00ef26bc[1] = ((u8 *)&GameCamera.posW)[1];
+    DAT_00ef26bc[2] = ((u8 *)&GameCamera.posW)[2];
+    DAT_00ef26bc[3] = ((u8 *)&GameCamera.posW)[3];
     DAT_00ef1a94 = *(float *)((int)pvVar2 + 0x14);
   }
   else {
@@ -644,7 +644,7 @@ void UpdateMoby_1111(MobyInstance *moby)
     DAT_00ef26b4 = GameCamera.posY;
     DAT_00ef26b8 = GameCamera.posZ;
     dVar19 = (double)(GameCamera.posX - fVar1);
-    DAT_00ef26bc = GameCamera.field8_0x14c;
+    DAT_00ef26bc = GameCamera.posW;
     dVar20 = (double)(GameCamera.posY - fVar4);
     uVar3 = (int)*(uint *)((int)pvVar2 + 0x20) >> 0x1f;
     if ((int)((uVar3 >> 1 ^ *(uint *)((int)pvVar2 + 0x20)) - uVar3) < iVar8) {

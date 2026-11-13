@@ -106,6 +106,7 @@ extern undefined1 DAT_0073a961; /* 0x73a961 */
 extern undefined1 DAT_0073a962; /* 0x73a962 */
 extern undefined1 DAT_0073a963; /* 0x73a963 */
 extern undefined4 DAT_0073adf0; /* 0x73adf0 */
+extern undefined4 DAT_00808080; /* no defined data */
 extern undefined4 DAT_0095cae0; /* 0x95cae0 */
 extern undefined4 DAT_0095ccf0; /* 0x95ccf0 */
 extern undefined4 DAT_0095cd40; /* 0x95cd40 */
@@ -359,7 +360,7 @@ void FadeToBlack(int param_1);
 void Draw_FlushAndPresent(void);
 void DrawRenderTargetToScreen(void);
 void STUB_0006e71c(...);
-void Sprite_DrawRotated (float param_1,float param_2,double param_3,double param_4,double param_5, double param_6,double param_7);
+void Sprite_DrawRotated(float param_1,float param_2,float param_3,float param_4,float param_5,float param_6,float param_7,int param_8,int param_9,int param_10,int param_11,u32 param_12,int param_13,int param_14,int param_15);
 void DrawTexturedQuadHud(int param_1,int param_2,undefined8 param_3,int param_4,int param_5);
 void DrawTextBox(int param_1,int param_2,int param_3,int param_4,u32 param_5);
 int FontLenSmall(char *s,int len);

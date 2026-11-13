@@ -456,9 +456,9 @@ void UpdateCamera_19(UpdateCam *pCam)
       iVar20 = *(int *)(iVar16 + 0x28);
       pCam->pos[2] = fVar3;
       pCam->pos[3] = pSVar17->points[0].w;
-      fVar12 = DAT_00969f78;
-      fVar11 = DAT_00969f74;
-      fVar10 = g_heroGravityDir;
+      fVar12 = g_heroGravityDir.z;
+      fVar11 = g_heroGravityDir.y;
+      fVar10 = g_heroGravityDir.x;
       if (iVar20 < 0) {
         fVar8 = pSVar18->points[0].x;
         fVar9 = pSVar18->points[0].y;
@@ -571,7 +571,7 @@ void UpdateCamera_19(UpdateCam *pCam)
         *(undefined1 *)(iVar16 + 0x39) = 1;
         LetterBoxOn = 0;
         iVar20 = *(int *)(iVar16 + 0x4c);
-        GameCamera.screenFade = 0.05;
+        GameCamera.camStatics.fadeSpeed = 0.05;
         (pCam->activation).deactivate = 4;
         if (iVar20 == 0) {
           TransitionMovement(0,1);
@@ -722,9 +722,9 @@ void UpdateCamera_19(UpdateCam *pCam)
                    GameCamera.orientMtx.up.z * fVar12 +
                    GameCamera.orientMtx.forward.z * fVar11 + GameCamera.orientMtx.right.z * fVar10;
       }
-      fVar8 = DAT_00969f78;
-      fVar7 = DAT_00969f74;
-      fVar12 = g_heroGravityDir;
+      fVar8 = g_heroGravityDir.z;
+      fVar7 = g_heroGravityDir.y;
+      fVar12 = g_heroGravityDir.x;
       fVar2 = local_9c - fVar2;
       fVar1 = local_a0 - fVar1;
       fVar3 = local_98 - fVar3;

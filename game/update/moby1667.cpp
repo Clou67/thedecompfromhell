@@ -542,7 +542,7 @@ void M1671_002a94c8(int param_1)
     fVar5 = GameCamera.posX - fVar1;
     fVar6 = *(float *)((int)puVar18 + 0xbc);
     fVar4 = GameCamera.posZ - fVar8;
-    dVar40 = (double)(float)GameCamera.field8_0x14c;
+    dVar40 = (double)(float)GameCamera.posW;
     dVar42 = (double)(fVar4 * fVar4 + fVar5 * fVar5 + fVar3 * fVar3);
     dVar38 = dVar44;
     dVar39 = dVar44;
@@ -559,11 +559,11 @@ void M1671_002a94c8(int param_1)
       dVar39 = (double)(fVar3 * fVar2);
       dVar38 = (double)(fVar4 * fVar2);
     }
-    fVar4 = (float)((double)DAT_00969f78 * dVar41 -
-                   (double)(float)((double)g_heroGravityDir * dVar38));
-    fVar5 = (float)((double)DAT_00969f74 * dVar38 - (double)(float)((double)DAT_00969f78 * dVar39));
-    fVar2 = (float)((double)g_heroGravityDir * dVar39 -
-                   (double)(float)((double)DAT_00969f74 * dVar41));
+    fVar4 = (float)((double)g_heroGravityDir.z * dVar41 -
+                   (double)(float)((double)g_heroGravityDir.x * dVar38));
+    fVar5 = (float)((double)g_heroGravityDir.y * dVar38 - (double)(float)((double)g_heroGravityDir.z * dVar39));
+    fVar2 = (float)((double)g_heroGravityDir.x * dVar39 -
+                   (double)(float)((double)g_heroGravityDir.y * dVar41));
     lVar35 = 4;
     *(undefined4 *)((int)puVar18 + 0x19c) = 0x7f2020ff;
     *(undefined4 *)(puVar18 + 0x33) = 0x7f2020ff;

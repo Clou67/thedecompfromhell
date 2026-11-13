@@ -2347,7 +2347,7 @@ Map_RegionVisible_e51f0
   
   bVar1 = 0;
   uVar2 = 0;
-  if ((g_heroStateType == 0x11 || g_heroStateType == 0x12) || (DAT_0096afc4 == '\x01'))
+  if ((g_heroStateType == 0x11 || g_heroStateType == 0x12) || (g_heroHotSpotWater == '\x01'))
   {
     bVar1 = 1;
   }
@@ -2393,7 +2393,7 @@ Map_RegionVisible_e5310(undefined8 param_1,undefined8 param_2,double param_3,int
   
   if (param_4 < 0x100) {
     uVar1 = 0;
-    if ((g_heroStateType == 0x11 || g_heroStateType == 0x12) || (DAT_0096afc4 == '\x01')
+    if ((g_heroStateType == 0x11 || g_heroStateType == 0x12) || (g_heroHotSpotWater == '\x01')
        ) {
       uVar1 = 1;
     }
@@ -2486,7 +2486,7 @@ Map_RegionVisible_e5420(double param_1,double param_2,double param_3,int param_4
   }
   else {
     if ((((g_heroStateType == 0x11 || g_heroStateType == 0x12) ||
-         (DAT_0096afc4 == '\x01')) && ((param_5 + -0xb8) * 0xf + (param_4 + -299) * -0x3a < 0)) &&
+         (g_heroHotSpotWater == '\x01')) && ((param_5 + -0xb8) * 0xf + (param_4 + -299) * -0x3a < 0)) &&
        ((((param_5 + -0xed) * 0x35 + (param_4 + -0x130) * 0x22 < 0 &&
          ((param_5 + -0xdc) * -0x26 + (param_4 + -0x161) * 0x2c < 0)) &&
         ((param_5 + -0xa8) * -0x3d + (param_4 + -0x156) * -0x29 < 0)))) {
@@ -2508,7 +2508,7 @@ Map_RegionVisible_e56d8
   undefined8 uVar2;
   
   bVar1 = false;
-  if ((g_heroStateType == 0x11 || g_heroStateType == 0x12) || (DAT_0096afc4 == '\x01'))
+  if ((g_heroStateType == 0x11 || g_heroStateType == 0x12) || (g_heroHotSpotWater == '\x01'))
   {
     bVar1 = true;
   }
@@ -2577,7 +2577,7 @@ Map_RegionVisible_e5a68
   if (param_5 < 0xbb) {
     uVar1 = 0;
     if (((g_heroStateType != 0x11 && g_heroStateType != 0x12) &&
-        (DAT_0096afc4 != '\x01')) && (DAT_00a2083c != 0)) {
+        (g_heroHotSpotWater != '\x01')) && (DAT_00a2083c != 0)) {
       uVar1 = 1;
     }
   }
@@ -2647,7 +2647,7 @@ Map_RegionVisible_e5c68
   undefined8 uVar1;
   
   uVar1 = 0;
-  if ((g_heroStateType == 0x11 || g_heroStateType == 0x12) || (DAT_0096afc4 == '\x01'))
+  if ((g_heroStateType == 0x11 || g_heroStateType == 0x12) || (g_heroHotSpotWater == '\x01'))
   {
     uVar1 = 1;
   }
@@ -2672,7 +2672,7 @@ Map_RegionVisible_e5d30
           (undefined8 param_1,undefined8 param_2,double param_3,int param_4,int param_5)
 
 {
-  if ((((g_heroStateType != 0x11 && g_heroStateType != 0x12) && (DAT_0096afc4 != '\x01')
+  if ((((g_heroStateType != 0x11 && g_heroStateType != 0x12) && (g_heroHotSpotWater != '\x01')
        ) && (71.5 <= param_3)) &&
      ((-1 < (param_5 + -0xe2) * -0x6b + (param_4 + -0x131) * 0x4f &&
       (-1 < (param_5 + -0x89) * -0xbf + (param_4 + -400) * -0x72)))) {
@@ -2956,7 +2956,7 @@ bool Map_RegionVisible_e6258(undefined8 param_1,undefined8 param_2,double param_
   
   bVar1 = false;
   bVar2 = false;
-  if ((g_heroStateType == 0x11 || g_heroStateType == 0x12) || (DAT_0096afc4 == '\x01'))
+  if ((g_heroStateType == 0x11 || g_heroStateType == 0x12) || (g_heroHotSpotWater == '\x01'))
   {
     bVar1 = true;
   }

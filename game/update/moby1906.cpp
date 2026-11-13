@@ -359,7 +359,7 @@ void M1906_002d5f48(MobyInstance *param_1)
                  Splines[*(int *)((int)pvVar3 + 0x1e0)]->cnt);
       if (*(int *)((int)pvVar3 + 0x1c4) == 2) {
         if (g_heroStateType == 0xf) {
-          piVar11 = DAT_0096a240 + *DAT_0096a240 * 4;
+          piVar11 = g_heroGrindPath + *g_heroGrindPath * 4;
           *(int *)((int)pvVar3 + 0x180) = *piVar11;
           *(int *)((int)pvVar3 + 0x184) = piVar11[1];
           *(int *)((int)pvVar3 + 0x188) = piVar11[2];

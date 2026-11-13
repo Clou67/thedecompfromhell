@@ -49,3 +49,23 @@ static inline float FastAtan2Inline(float y, float x)
     }
     return angle;
 }
+
+/* acos(x), x already in [-1, 1]: sqrt(1 - |x|) times a cubic in |x| (the coefficients
+   @0x7358c0), reflected for negative x */
+static inline float FastAcosInline(float x)
+{
+    float a = fabsf(x);
+    float sign = (x - 0.0f >= 0.0f) ? 1.0f : -1.0f;
+    float rest = 1.0f - a;
+
+    if (!(rest - 0.0f >= 0.0f)) {
+        rest = 0.0f;
+    }
+
+    float poly = 1.5707288f + a * -0.2121144f;
+    poly = poly + a * a * 0.074261f;
+    poly = poly + a * a * a * -0.0187293f;
+
+    float half = FAST_HALF_PI - poly * sqrtf(rest);
+    return FAST_HALF_PI - half * sign;
+}

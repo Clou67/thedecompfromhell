@@ -750,6 +750,69 @@ typedef enum MOBY_OCLASSES {
     CAVE_ROOF=2106
 } MOBY_OCLASSES;
 
+/* An extra animation playing on part of a moby's skeleton (MB_AllocAnimLayer; a pool of 6 at
+   0xa2c440, linked from MobyInstance.pAnimationLayers). The frame fields mirror the moby's own. */
+typedef struct AnimLayer {
+    s16 joint;               /* 0x00  the joint the layer starts at */
+    u16 jointCount;          /* 0x02 */
+    u8 inUse;                /* 0x04 */
+    u8 stepped;              /* 0x05  set by MB_UpdateAnimLayer: 1 moved a frame, 3 also wrapped */
+    u8 prevFromBuffer;       /* 0x06  build the previous frame into prevFrameData */
+    u8 curFromBuffer;        /* 0x07  build the current frame into curFrameData */
+    u8 _pad08[4];
+    u8 *jointMap;            /* 0x0c */
+    void *jointBuf;          /* 0x10  0x1500 bytes */
+    struct MobyClass *pClass;     /* 0x14  the moby's class */
+    struct MobyClass *animClass;  /* 0x18  the class the animation comes from (set by the caller) */
+    struct AnimLayer *next;  /* 0x1c */
+    u8 prevFrame;            /* 0x20 */
+    u8 curFrame;             /* 0x21 */
+    u8 prevSeq;              /* 0x22 */
+    u8 curSeq;               /* 0x23 */
+    float blend;             /* 0x24  0..1 from prevFrame to curFrame */
+    float speed;             /* 0x28 */
+    float frameScale;        /* 0x2c  blend per unit of speed */
+    u8 _pad30[8];
+    void *prevFrameData;     /* 0x38 */
+    void *curFrameData;      /* 0x3c */
+} AnimLayer;
+typedef char AnimLayer_size_check[sizeof(AnimLayer) == 0x40 ? 1 : -1];
+
+/* a moby class (MobyClasses[mClass]); DL's MobyClass with RC1's sequence table at 0x48. Field
+   names are Ghidra's / DL's. */
+typedef struct MobyClass {
+    void *packets;           /* 0x00 */
+    u8 pakcet_cnt_0;         /* 0x04  (sic) */
+    u8 packet_cnt_1;         /* 0x05 */
+    u8 metal_cnt;            /* 0x06 */
+    u8 metal_ofs;            /* 0x07 */
+    u8 joint_cnt;            /* 0x08 */
+    u8 pad;                  /* 0x09 */
+    u8 packet_cnt_2;         /* 0x0a */
+    u8 team_texs;            /* 0x0b */
+    u8 seq_cnt;              /* 0x0c */
+    u8 sound_cnt;            /* 0x0d */
+    u8 lod_trans;            /* 0x0e */
+    u8 shadow;               /* 0x0f */
+    u16 *collision;          /* 0x10 */
+    void *skeleton;          /* 0x14 */
+    void *common_trans;      /* 0x18 */
+    void *anim_joints;       /* 0x1c  read as a table of joint data pointers (index joint + 1)
+                                    and, for an AnimLayer's animClass, as a byte map at +4 */
+    void *gif_usage;         /* 0x20 */
+    float gScale;            /* 0x24 */
+    void *SoundDefs;         /* 0x28 */
+    char bangles;            /* 0x2c */
+    char mip_dist;           /* 0x2d */
+    s16 corncob;             /* 0x2e */
+    BSphere bSphere;         /* 0x30 */
+    u32 glow_rgba;           /* 0x40 */
+    u16 mode_bits;           /* 0x44  MobyModeBit flags every instance starts with */
+    char type;               /* 0x46 */
+    char mode_bits2;         /* 0x47 */
+    MobySeq *seqs[];         /* 0x48  seq_cnt of them */
+} MobyClass;
+
 /* a moby (game object) instance, 0x100 bytes; Ghidra's struct with the two 16-bit enum fields
    (modeBits, oClass) as u16 so the layout matches the binary */
 struct MobyInstance {
@@ -862,40 +925,16 @@ typedef struct MobySeq {
     MobyFrame *frames[];     /* 0x1c  frameCnt of them */
 } MobySeq;
 
-/* a moby class (MobyClasses[mClass]); DL's MobyClass with RC1's sequence table at 0x48. Field
-   names are Ghidra's / DL's. */
-typedef struct MobyClass {
-    void *packets;           /* 0x00 */
-    u8 pakcet_cnt_0;         /* 0x04  (sic) */
-    u8 packet_cnt_1;         /* 0x05 */
-    u8 metal_cnt;            /* 0x06 */
-    u8 metal_ofs;            /* 0x07 */
-    u8 joint_cnt;            /* 0x08 */
-    u8 pad;                  /* 0x09 */
-    u8 packet_cnt_2;         /* 0x0a */
-    u8 team_texs;            /* 0x0b */
-    u8 seq_cnt;              /* 0x0c */
-    u8 sound_cnt;            /* 0x0d */
-    u8 lod_trans;            /* 0x0e */
-    u8 shadow;               /* 0x0f */
-    u16 *collision;          /* 0x10 */
-    void *skeleton;          /* 0x14 */
-    void *common_trans;      /* 0x18 */
-    void *anim_joints;       /* 0x1c  read as a table of joint data pointers (index joint + 1)
-                                    and, for an AnimLayer's animClass, as a byte map at +4 */
-    void *gif_usage;         /* 0x20 */
-    float gScale;            /* 0x24 */
-    void *SoundDefs;         /* 0x28 */
-    char bangles;            /* 0x2c */
-    char mip_dist;           /* 0x2d */
-    s16 corncob;             /* 0x2e */
-    BSphere bSphere;         /* 0x30 */
-    u32 glow_rgba;           /* 0x40 */
-    u16 mode_bits;           /* 0x44  MobyModeBit flags every instance starts with */
-    char type;               /* 0x46 */
-    char mode_bits2;         /* 0x47 */
-    MobySeq *seqs[];         /* 0x48  seq_cnt of them */
-} MobyClass;
+struct Moby {
+};
+
+struct MobyCollHeader { /* MobyInstance.collision (+0x94). +0x10: CollPrim[primBytes/32] (spheres/pills attached to joints); then at (this+primBytes+0x10): verts float[4][vertBytes/16] (x1024 local), then CollTri[triBytes/4]. primSetA/B = joint counts selecting prim set (COLL_ALT_PRIMSET picks A). Moby collision is in x1024 space like env. */
+    short primSetA;
+    short primSetB;
+    int primBytes;
+    int triBytes;
+    int vertBytes;
+};
 
 /* a moby collision primitive (32 bytes, after the 16-byte MobyCollHeader), in 1/1024 units of
    the moby's scale */
@@ -939,9 +978,6 @@ struct IceSheet {
     float *vertexData;
     int32_t meshParamB;
     int32_t vertexCount;
-};
-
-struct Moby {
 };
 
 struct Moby1267Vars { /* pVars of oClass 1267 (mounted turret used by UpdateMoby_1267). Offsets from PS3 code; no DL equivalent. */
@@ -1062,14 +1098,6 @@ struct MobyAnimLayer {
     float blendFade;
 };
 
-struct MobyCollHeader { /* MobyInstance.collision (+0x94). +0x10: CollPrim[primBytes/32] (spheres/pills attached to joints); then at (this+primBytes+0x10): verts float[4][vertBytes/16] (x1024 local), then CollTri[triBytes/4]. primSetA/B = joint counts selecting prim set (COLL_ALT_PRIMSET picks A). Moby collision is in x1024 space like env. */
-    short primSetA;
-    short primSetB;
-    int primBytes;
-    int triBytes;
-    int vertBytes;
-};
-
 struct MobyGridCell { /* Moby broadphase grid cell (64x64, XY, 16 world units). listStart in 32-byte blocks of g_MobyGridLists (16 moby indices per block). */
     short listStart;
     char count;
@@ -1083,34 +1111,6 @@ struct MobyVTable {
 };
 
 typedef long long s64;
-
-/* An extra animation playing on part of a moby's skeleton (MB_AllocAnimLayer; a pool of 6 at
-   0xa2c440, linked from MobyInstance.pAnimationLayers). The frame fields mirror the moby's own. */
-typedef struct AnimLayer {
-    s16 joint;               /* 0x00  the joint the layer starts at */
-    u16 jointCount;          /* 0x02 */
-    u8 inUse;                /* 0x04 */
-    u8 stepped;              /* 0x05  set by MB_UpdateAnimLayer: 1 moved a frame, 3 also wrapped */
-    u8 prevFromBuffer;       /* 0x06  build the previous frame into prevFrameData */
-    u8 curFromBuffer;        /* 0x07  build the current frame into curFrameData */
-    u8 _pad08[4];
-    u8 *jointMap;            /* 0x0c */
-    void *jointBuf;          /* 0x10  0x1500 bytes */
-    struct MobyClass *pClass;     /* 0x14  the moby's class */
-    struct MobyClass *animClass;  /* 0x18  the class the animation comes from (set by the caller) */
-    struct AnimLayer *next;  /* 0x1c */
-    u8 prevFrame;            /* 0x20 */
-    u8 curFrame;             /* 0x21 */
-    u8 prevSeq;              /* 0x22 */
-    u8 curSeq;               /* 0x23 */
-    float blend;             /* 0x24  0..1 from prevFrame to curFrame */
-    float speed;             /* 0x28 */
-    float frameScale;        /* 0x2c  blend per unit of speed */
-    u8 _pad30[8];
-    void *prevFrameData;     /* 0x38 */
-    void *curFrameData;      /* 0x3c */
-} AnimLayer;
-typedef char AnimLayer_size_check[sizeof(AnimLayer) == 0x40 ? 1 : -1];
 
 /* a level's environment sample point (the nearest one within 8 units lights a moby) */
 typedef struct EnvSample {

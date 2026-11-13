@@ -1923,10 +1923,10 @@ void Vendor_PreUpdate(void)
             GameCamera.rot.azimuth = DAT_00e5a6c0;
             GameCamera.rot.elevation = DAT_00e5a6c4;
             GameCamera.rot.radius = DAT_00e5a6c8;
-            GameCamera.field10_0x15c[0] = DAT_00e5a6cc[0];
-            GameCamera.field10_0x15c[1] = DAT_00e5a6cc[1];
-            GameCamera.field10_0x15c[2] = DAT_00e5a6cc[2];
-            GameCamera.field10_0x15c[3] = DAT_00e5a6cc[3];
+            ((u8 *)&GameCamera.rotW)[0] = DAT_00e5a6cc[0];
+            ((u8 *)&GameCamera.rotW)[1] = DAT_00e5a6cc[1];
+            ((u8 *)&GameCamera.rotW)[2] = DAT_00e5a6cc[2];
+            ((u8 *)&GameCamera.rotW)[3] = DAT_00e5a6cc[3];
           }
           DAT_00e5a658 = 0;
           DAT_00e5a654 = 0;
@@ -2079,7 +2079,7 @@ void Vendor_PreUpdate(void)
       fVar4 = *pfVar27;
       fVar2 = pfVar27[1];
       fVar3 = pfVar27[2];
-      GameCamera.field8_0x14c =
+      GameCamera.posW =
            (char  [4])
            (DAT_00e5a6dc * fVar4 + DAT_00e5a6ec * fVar2 + DAT_00e5a6fc * fVar3 + pfVar27[3]);
       GameCamera.posX =
@@ -4006,10 +4006,10 @@ void Vendor_PostUpdate(void)
       DAT_00e5a6c0 = GameCamera.rot.azimuth;
       DAT_00e5a6c4 = GameCamera.rot.elevation;
       DAT_00e5a6c8 = GameCamera.rot.radius;
-      DAT_00e5a6cc[0] = GameCamera.field10_0x15c[0];
-      DAT_00e5a6cc[1] = GameCamera.field10_0x15c[1];
-      DAT_00e5a6cc[2] = GameCamera.field10_0x15c[2];
-      DAT_00e5a6cc[3] = GameCamera.field10_0x15c[3];
+      DAT_00e5a6cc[0] = ((u8 *)&GameCamera.rotW)[0];
+      DAT_00e5a6cc[1] = ((u8 *)&GameCamera.rotW)[1];
+      DAT_00e5a6cc[2] = ((u8 *)&GameCamera.rotW)[2];
+      DAT_00e5a6cc[3] = ((u8 *)&GameCamera.rotW)[3];
       fRam00e5a96c = GameCamera.orientMtx.forward.w;
       fRam00e5a968 = GameCamera.orientMtx.forward.z;
       fRam00e5a964 = GameCamera.orientMtx.forward.y;

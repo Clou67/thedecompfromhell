@@ -652,7 +652,7 @@ void DebugCamera(void)
         cam[12] = GameCamera.posX;
         cam[13] = GameCamera.posY;
         cam[14] = GameCamera.posZ;
-        *(u32 *)&cam[15] = *(u32 *)GameCamera.field8_0x14c;
+        *(u32 *)&cam[15] = *(u32 *)&GameCamera.posW;
         *(Vec4 *)&cam[0] = GameCamera.orientMtx.forward;
         *(Vec4 *)&cam[4] = GameCamera.orientMtx.right;
         *(Vec4 *)&cam[8] = GameCamera.orientMtx.up;

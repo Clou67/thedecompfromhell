@@ -1,6 +1,7 @@
 #pragma once
 // game/loaders.h
 #include "types.h"
+#include "game/camera.h"
 
 // ---- types
 struct EffectTexHeader { /* Pre-baked RSX texture registers; words 0-6 go to methods 0x1A00+unit*0x20 (OFFSET,FORMAT,ADDRESS,CONTROL0,CONTROL1,FILTER,IMAGE_RECT), word 7 to 0x1840+unit*4 (CONTROL3) */
@@ -22,6 +23,39 @@ typedef struct ByteGridHeader {
     float min;               /* 0x08  value of byte 0 */
     float max;               /* 0x0c  value of byte 255 */
 } ByteGridHeader;
+
+/* the pvars every imported camera starts with (the rest depend on its type) */
+struct CameraImportVars {
+    u8 _pad00[4];
+    struct UpdateCam *pCam;           /* 0x04  set by InitCameras */
+    u8 _pad08[4];
+    int cuboid;                       /* 0x0c  activation volume (activationType 4) */
+    u8 _pad10[0x0c];
+    u8 priority;                      /* 0x1c */
+    char blendMode;                   /* 0x1d  how the switch to it blends (CAM_BLEND_*) */
+    u8 _pad1e;
+    u8 activationType;                /* 0x1f */
+    u8 _pad20[4];
+    int grindPath;                    /* 0x24  the grind path it is for (type 3), or -1 */
+};
+
+/* a camera placed in the level (ImportCameras, 0x20 each) */
+struct ImportCamera {
+    struct Vec3 pos;                  /* 0x00 */
+    int type;                         /* 0x0c */
+    struct Vec3 rot;                  /* 0x10 */
+    struct CameraImportVars *pVar;    /* 0x1c */
+};
+
+/* a capsule volume (collision prim type 7), 0x90 bytes in g_Pills */
+struct Pill {
+    struct Mtx3 matrix;               /* 0x00  v2: from the center to an end */
+    struct Vec4 pos;                  /* 0x30 */
+    struct Mtx3 imatrix;              /* 0x40 */
+    struct Vec4 rot;                  /* 0x70 */
+    float radius;                     /* 0x80  of the ends */
+    int pad[3];
+};
 
 /* Ratchet's animation fix-ups for widescreen: add `add` to the frames [startFrame, endFrame)
    of sequence seq (table at 0x724864) */
@@ -47,7 +81,6 @@ extern undefined4 DAT_00a15c7c; /* 0xa15c7c */
 extern undefined4 DAT_00a15f50; /* 0xa15f50 */
 extern undefined4 DAT_00a15f70; /* 0xa15f70 */
 extern undefined4 DAT_00a15f74; /* 0xa15f74 */
-extern undefined4 DAT_00a1a860; /* 0xa1a860 */
 extern undefined4 DAT_00a1c900; /* 0xa1c900 */
 extern undefined4 DAT_00a204ac; /* 0xa204ac */
 extern undefined4 DAT_00a561c4; /* 0xa561c4 */
@@ -75,6 +108,7 @@ extern int g_GadgetModelSizes[24]; /* 0xa4d600 */ /* type set in global_types.ts
 extern int g_GadgetModels[24]; /* 0xa4d5a0: the gadget classes in the engine file */ /* type set in global_types.tsv */
 extern int g_GadgetOClasses[24]; /* 0xa4d540 */ /* type set in global_types.tsv */
 extern short g_GadgetSoundIds[][16]; /* 0xa4d7e0: sound ids of gadgets whose class is loaded later */ /* type set in global_types.tsv */
+extern u32 g_GrindPathCnt; /* 0xa1a860 */ /* type set in global_types.tsv */
 extern int g_GsRamAlloc; /* 0x966ad0: next free GS memory, bytes */ /* type set in global_types.tsv */
 extern HeroCollHeader * g_HeroCollision; /* 0xa15c00 */
 extern u32 g_IopGameplay; /* 0x964568: where the gameplay file goes in IOP memory */ /* type set in global_types.tsv */

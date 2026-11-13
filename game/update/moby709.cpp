@@ -3,7 +3,6 @@
 // 8 functions, 0x42a688-0x42b610
 // shared update function UpdateMoby_{709_710_711}; registered for oClasses 709, 710, 711
 #include "game/update/moby709.h"
-#include "game/camera.h"
 #include "game/collproc.h"
 #include "game/draw.h"
 #include "game/hero.h"

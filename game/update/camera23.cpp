@@ -123,14 +123,14 @@ void Cam23_ModifyFollowCam(UpdateCam *pCam)
         fVar2 = *pfVar9;
         fVar3 = pfVar9[2];
         fVar10 = fVar3 - g_heroPosition.z;
-        fVar5 = (fVar2 - g_heroPosition.x) * g_heroGravityDir +
-                (fVar1 - g_heroPosition.y) * DAT_00969f74;
-        fVar4 = fVar10 * DAT_00969f78 + fVar5;
-        fVar11 = -(DAT_00969f74 * fVar4 - (fVar1 - g_heroPosition.y));
-        fVar12 = -(g_heroGravityDir * fVar4 - (fVar2 - g_heroPosition.x));
-        fVar13 = -(DAT_00969f78 * fVar4 - fVar10);
+        fVar5 = (fVar2 - g_heroPosition.x) * g_heroGravityDir.x +
+                (fVar1 - g_heroPosition.y) * g_heroGravityDir.y;
+        fVar4 = fVar10 * g_heroGravityDir.z + fVar5;
+        fVar11 = -(g_heroGravityDir.y * fVar4 - (fVar1 - g_heroPosition.y));
+        fVar12 = -(g_heroGravityDir.x * fVar4 - (fVar2 - g_heroPosition.x));
+        fVar13 = -(g_heroGravityDir.z * fVar4 - fVar10);
         fVar4 = *(float *)(uVar7 + 0x2c);
-        fVar17 = -(fVar10 * DAT_00969f78 + fVar5);
+        fVar17 = -(fVar10 * g_heroGravityDir.z + fVar5);
         fVar10 = SQRT(fVar13 * fVar13 + fVar12 * fVar12 + fVar11 * fVar11);
         *(float *)(uVar7 + 0x3c) = fVar17;
         *(float *)(uVar7 + 0x38) = fVar10;
@@ -180,12 +180,12 @@ void Cam23_ModifyFollowCam(UpdateCam *pCam)
         fVar5 = *(float *)(uVar7 + 0x40);
         puVar8[0x3c] = fVar5;
         fVar15 = g_heroPosition.x;
-        fVar10 = fVar4 * DAT_00969f74;
-        fVar11 = fVar4 * DAT_00969f78;
-        fVar12 = fVar5 * DAT_00969f78;
-        fVar13 = fVar5 * DAT_00969f74;
-        fVar17 = g_heroPosition.x + -(fVar4 * g_heroGravityDir);
-        fVar14 = g_heroPosition.x + -(fVar5 * g_heroGravityDir);
+        fVar10 = fVar4 * g_heroGravityDir.y;
+        fVar11 = fVar4 * g_heroGravityDir.z;
+        fVar12 = fVar5 * g_heroGravityDir.z;
+        fVar13 = fVar5 * g_heroGravityDir.y;
+        fVar17 = g_heroPosition.x + -(fVar4 * g_heroGravityDir.x);
+        fVar14 = g_heroPosition.x + -(fVar5 * g_heroGravityDir.x);
         puVar8[0x24] = fVar17;
         fVar16 = g_heroPosition.y;
         fVar2 = fVar2 - fVar17;

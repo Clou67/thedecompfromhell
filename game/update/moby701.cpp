@@ -172,7 +172,7 @@ undefined4 * UpdateMoby_701(MobyInstance *moby)
         auVar30 = ZEXT416(0xffffffff);
         auVar30 = auVar30 | auVar30 << 0x20 | auVar30 << 0x40 | auVar30 << 0x60;
         auVar29 = vectorShiftLeftIntegerWord(auVar30,auVar30);
-        GameCamera.offset0.amp = 0.1;
+        GameCamera.shake.strength = 0.1;
         auVar30 = loadVectorLeftIndexed(0x5c,0x428638);
         auVar30 = auVar30 >> 0x60 & (GPiece<16>)0xffffffff;
         auVar31 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
@@ -181,7 +181,7 @@ undefined4 * UpdateMoby_701(MobyInstance *moby)
                              auVar29);
         auVar30 = vectorConvertToSignedFixedPointWordSaturate(auVar30,0);
         auVar30 = auVar30 >> 0x60 & (GPiece<16>)0xffffffff;
-        GameCamera.offset0.total =
+        GameCamera.shake.time =
              storeVectorElementWordIndexed
                        (auVar30 | auVar30 << 0x20 | auVar30 << 0x40 | auVar30 << 0x60,0x168,0x9513c0
                        );
@@ -277,7 +277,7 @@ undefined4 * UpdateMoby_701(MobyInstance *moby)
             uVar15 = storeVectorElementHalfWordIndexed(auVar30,0x8a,uVar16);
             *(undefined2 *)((int)pvVar5 + 0x8a) = uVar15;
             moby->state = '\x02';
-            GameCamera.offset0.amp = 0.4;
+            GameCamera.shake.strength = 0.4;
             auVar30 = loadVectorLeftIndexed(0x4c,0x428638);
             auVar29 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
             auVar30 = auVar30 >> 0x60 & (GPiece<16>)0xffffffff;
@@ -286,7 +286,7 @@ undefined4 * UpdateMoby_701(MobyInstance *moby)
                                          auVar30 << 0x60,auVar31);
             auVar30 = vectorConvertToSignedFixedPointWordSaturate(auVar30,0);
             auVar30 = auVar30 >> 0x60 & (GPiece<16>)0xffffffff;
-            GameCamera.offset0.total =
+            GameCamera.shake.time =
                  storeVectorElementWordIndexed
                            (auVar30 | auVar30 << 0x20 | auVar30 << 0x40 | auVar30 << 0x60,0x168,
                             0x9513c0);

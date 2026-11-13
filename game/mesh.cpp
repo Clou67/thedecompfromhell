@@ -11,6 +11,7 @@
 #include "game/mesh.h"
 #include "game/camera.h"
 #include "game/draw.h"
+#include "game/mobyfunc.h"
 #include "game/water.h"
 #include "idol/fastfunc.h"
 
@@ -281,7 +282,7 @@ void NormalsToEnvUV(int count, Vec3 *positions, Vec3 *normals, Vec2 *outUV)
         view[0] = GameCamera.posX - positions->x;
         view[1] = GameCamera.posY - positions->y;
         view[2] = GameCamera.posZ - positions->z;
-        view[3] = *(float *)GameCamera.field8_0x14c;
+        view[3] = GameCamera.posW;
         float len = sqrtf(view[2] * view[2] + (view[0] * view[0] + view[1] * view[1]));
         float s = ENV_SCALE / len;
         for (int k = 0; k < 3; k++) view[k] = len == 0.0f ? 0.0f : view[k] * s;   /* guarded normalize */

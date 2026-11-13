@@ -34,7 +34,6 @@
 #include "game/update/moby112.h"
 #include "game/update/moby122.h"
 #include "game/update/moby1300.h"
-#include "game/update/moby1826.h"
 #include "game/update/moby639.h"
 #include "game/update/moby775.h"
 #include "game/vendor.h"
@@ -1858,7 +1857,7 @@ double MB_catmullRom
 
 
 // 0x00fecf0 (0xb4 bytes)
-double MB_CosineInterpolate(double param_1,double param_2,double param_3)
+float MB_CosineInterpolate(float param_1,float param_2,float param_3)
 
 {
   float fVar1;
@@ -10972,7 +10971,7 @@ void ____MB_ClampVecToPlanes(undefined8 param_1,undefined8 param_2,float *param_
 
 // 0x010c1e8 (0x618 bytes)
 // inlined: FastAtan2 @0x10c344, FastAtan2 @0x10c514, FastAtan2 @0x10c6d0
-void MB_MtxToEuler(int param_1,MobyInstance *param_2)
+void MB_MtxToEuler(Mtx4 *param_1,float *param_2)
 
 {
   float fVar1;
@@ -12712,7 +12711,7 @@ MB_SpawnExplosionSparks
     puVar6 = &DAT_0010faec;
     auVar16 = vectorShiftLeftIntegerWord(auVar15,auVar15);
     auVar17 = loadVectorLeftIndexed(0xfffffffffffff410,0x720000);
-    GameCamera.offset0.amp = (float)(param_1 * 0.10000000149011612);
+    GameCamera.shake.strength = (float)(param_1 * 0.10000000149011612);
     auVar15 = loadVectorLeftIndexed(0x10,0x10faec);
     auVar15 = auVar15 >> 0x60 & (GPiece<16>)0xffffffff;
     auVar15 = vectorMultiplyAddFloatingPoint
@@ -12720,7 +12719,7 @@ MB_SpawnExplosionSparks
                          auVar16);
     auVar15 = vectorConvertToSignedFixedPointWordSaturate(auVar15,0);
     auVar15 = auVar15 >> 0x60 & (GPiece<16>)0xffffffff;
-    GameCamera.offset0.total =
+    GameCamera.shake.time =
          storeVectorElementWordIndexed
                    (auVar15 | auVar15 << 0x20 | auVar15 << 0x40 | auVar15 << 0x60,0x168,0x9513c0);
   }
@@ -13525,7 +13524,7 @@ void MB_MtxFromDir(double param_1,Vec4 *param_2,float *param_3)
 
 
 // 0x0111324 (0xac bytes)
-void MB_QuatRotate(undefined8 param_1,undefined8 param_2,undefined4 param_3)
+void MB_QuatRotate(float *param_1,float *param_2,float *param_3)
 
 {
   GPiece<16> local_40;
@@ -15579,10 +15578,10 @@ void MB_CollideSplineWall
   dVar14 = (double)local_c0;
   dVar27 = (double)param_4[2];
   fVar5 = param_4[3];
-  dVar29 = (double)DAT_00969f74;
-  dVar28 = (double)g_heroGravityDir;
+  dVar29 = (double)g_heroGravityDir.y;
+  dVar28 = (double)g_heroGravityDir.x;
   dVar13 = dVar26 * dVar29;
-  dVar30 = (double)DAT_00969f78;
+  dVar30 = (double)g_heroGravityDir.z;
   piVar10 = *(int **)((int)Splines + (int)(param_2 << 2));
   iVar11 = 0;
   bVar9 = false;
@@ -18624,7 +18623,7 @@ void MB_DrawGlowFX(double param_1,double param_2,float *param_3)
   fVar2 = (float)((double)GameCamera.posX - (double)fVar5);
   fVar3 = (float)((double)GameCamera.posZ - (double)fVar6);
   fVar7 = param_3[3];
-  dVar13 = (double)(float)GameCamera.field8_0x14c;
+  dVar13 = (double)(float)GameCamera.posW;
   fVar9 = fVar3 * fVar3 + fVar2 * fVar2 + fVar1 * fVar1;
   dVar15 = dVar14;
   dVar16 = dVar14;

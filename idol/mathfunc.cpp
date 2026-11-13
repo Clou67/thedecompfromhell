@@ -5,9 +5,9 @@
 #include <string.h>
 #include "idol/mathfunc.h"
 #include "game/boot.h"
-#include "game/camera.h"
 #include "game/draw.h"
 #include "game/hero.h"
+#include "game/mobyutil.h"
 #include "game/space.h"
 #include "idol/tiefunc.h"
 #include "sdk/cell.h"

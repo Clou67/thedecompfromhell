@@ -22,19 +22,6 @@ typedef enum CONTROLLER_INPUT {
     LEFT=32768
 } CONTROLLER_INPUT;
 
-/* the platform pad driver (*g_pPadDriver): a table of function pointers, each called with the driver */
-typedef struct PadState PadState;
-typedef struct PadDriver PadDriver;
-typedef struct PadDriverFuncs {
-    void *unk00, *unk04;
-    void (*init)(PadDriver *drv);                            /* +0x08 */
-    void (*shutdown)(PadDriver *drv);                        /* +0x0c */
-    void (*update)(PadDriver *drv, int port, PadState *out); /* +0x10  PAD_PS_Update */
-} PadDriverFuncs;
-struct PadDriver {
-    PadDriverFuncs *funcs;
-};
-
 #define PAD_RING_LEN 30                 /* frames of input history kept per pad */
 
 /* one controller's state, 0x564 bytes: g_PadPorts[4] (@0x965540, filled by the pad driver)
@@ -76,6 +63,19 @@ typedef char PadState_size_check[sizeof(PadState) == 0x564 ? 1 : -1];
 typedef char PadState_ringBits_check[offsetof(PadState, ringBits) == 0xe0 ? 1 : -1];
 typedef char PadState_buttons_check[offsetof(PadState, downButtons) == 0xa0 ? 1 : -1];
 typedef char PadState_ring_check[offsetof(PadState, ringIndex) == 0x8e && offsetof(PadState, ringValid) == 0x90 ? 1 : -1];
+
+/* the platform pad driver (*g_pPadDriver): a table of function pointers, each called with the driver */
+typedef struct PadState PadState;
+typedef struct PadDriver PadDriver;
+typedef struct PadDriverFuncs {
+    void *unk00, *unk04;
+    void (*init)(PadDriver *drv);                            /* +0x08 */
+    void (*shutdown)(PadDriver *drv);                        /* +0x0c */
+    void (*update)(PadDriver *drv, int port, PadState *out); /* +0x10  PAD_PS_Update */
+} PadDriverFuncs;
+struct PadDriver {
+    PadDriverFuncs *funcs;
+};
 
 // ---- globals
 extern PadState g_Pad; /* 0x964a40 */ /* type set in global_types.tsv */

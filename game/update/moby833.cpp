@@ -2,7 +2,6 @@
 // STATUS: NOT STARTED (raw Ghidra output)
 // 3 functions, 0x4804b4-0x481324
 #include "game/update/moby833.h"
-#include "game/camera.h"
 #include "game/collproc.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"
@@ -327,12 +326,12 @@ void UpdateMoby_833(MobyInstance *moby)
       (moby->pos).x = fVar3 + *pfVar10;
       (moby->pos).y = fVar4 + pfVar10[1];
       (moby->pos).z = fVar5 + pfVar10[2];
-      fVar4 = DAT_00969e28;
-      uVar11 = DAT_00969e24;
-      fVar3 = DAT_00969e28 * DAT_008accb8;
-      *(undefined4 *)(puVar13 + 0x14) = DAT_00969e20;
+      fVar4 = g_heroFrameMove.z;
+      uVar11 = g_heroFrameMove.y;
+      fVar3 = g_heroFrameMove.z * DAT_008accb8;
+      *(undefined4 *)(puVar13 + 0x14) = g_heroFrameMove.x;
       *(undefined4 *)((int)puVar13 + 0xa4) = uVar11;
-      uVar11 = DAT_00969e2c;
+      uVar11 = g_heroFrameMove.w;
       *(float *)(puVar13 + 0x15) = fVar4;
       *(undefined4 *)((int)puVar13 + 0xac) = uVar11;
       *(float *)(puVar13 + 0x15) = fVar3;

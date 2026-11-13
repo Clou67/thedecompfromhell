@@ -420,3 +420,25 @@ g_WalkAnimState	int NAME[13] /* 0x73a8a4: the WALK_STATE_* for each anims[] inde
 g_CollJointCacheKeys	CollJointCacheKey NAME[8] /* 0xa109c0 */
 g_CollMobyJointCache	u8 NAME[8][0x7fc] /* 0xa10a00: joint matrices of 8 mobys, for their collision prims */
 g_CollMobyHits	MobyInstance *NAME[256] /* 0xa14a00: the mobys CollMobySphere/CollHeroSphere hit, NULL ended (the real length is unknown) */
+CamPostUpdRoutines	CamPostUpdFunc NAME[16] /* 0x954010 */
+CamControlCurrent	u8 NAME[0x280] /* 0x953860: the current camera's control state */
+CamControlLast	u8 NAME[0x280] /* 0x953ae0: the last camera's */
+g_BackupCamControl	u8 NAME[0x280] /* 0x953d60: BackupCam's */
+g_GrindPaths	u32 NAME /* 0xa1a85c: the level's grind paths, 0x20 each (+0x10 their data) */
+g_GrindPathCnt	u32 NAME /* 0xa1a860 */
+g_heroGrindPath	int NAME /* 0x96a240: the data of the grind path the hero is on */
+g_heroFrameMove	Vec4 NAME /* 0x969e20: how far the hero moved this frame */
+g_heroGravityDir	Vec4 NAME /* 0x969f70: the hero's gravity direction */
+g_heroHotSpotWater	u8 NAME /* 0x96afc4: the hero is in water */
+g_heroHotSpotLava	u8 NAME /* 0x96afc5 */
+g_heroHotSpotQuickSand	u8 NAME /* 0x96afc6 */
+g_heroHotSpotDeathSand	u8 NAME /* 0x96afcb */
+g_heroHotSpotIceWater	u8 NAME /* 0x96afcc */
+g_ReticuleActive	int NAME /* 0x951784 */
+g_ReticuleDraw	int NAME /* 0x951788: draw the reticule this frame (nonzero) */
+g_ReticuleAlpha	s16 NAME[16] /* 0x951790: the reticule's 16 sprites (sprite 0 is the target itself) */
+g_ReticuleTex	s16 NAME[16] /* 0x9517b0: effect texture - 6 */
+g_ReticuleColor	u32 NAME[16] /* 0x9517d0 */
+g_ReticuleDist	float NAME[16] /* 0x951810: how far along the line from the screen center through the target */
+g_ReticuleScale	float NAME[16] /* 0x951850 */
+g_Crosshairs	CamCrosshair NAME[3] /* 0x9518c0: g_Crosshair of them queued */

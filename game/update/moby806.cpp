@@ -202,10 +202,10 @@ void M806_00466468(int param_1)
   dVar2 = (double)MB_randRangeFloat
                             (g_FrameTime * DAT_00874cb4,
                              g_FrameTime * DAT_00874cb8);
-  local_50 = (float)((double)g_heroGravityDir * dVar2);
-  local_4c = (float)((double)DAT_00969f74 * dVar2);
-  local_48 = (float)((double)DAT_00969f78 * dVar2);
-  local_44 = DAT_00969f7c;
+  local_50 = (float)((double)g_heroGravityDir.x * dVar2);
+  local_4c = (float)((double)g_heroGravityDir.y * dVar2);
+  local_48 = (float)((double)g_heroGravityDir.z * dVar2);
+  local_44 = g_heroGravityDir.w;
   dVar2 = (double)MB_randRot();
   MB_RotateQuatAxisAngle((float)dVar2,afStack_40,&local_50);
   uVar1 = DAT_00874cc0;
@@ -587,9 +587,9 @@ void UpdateMoby_806(MobyInstance *moby)
       M806_00466c98();
     }
     if (*(short *)((int)pfVar4 + 0x56) != 0) {
-      fVar2 = DAT_00874c88 * DAT_00969f74;
-      fVar5 = DAT_00874c88 * DAT_00969f78;
-      (moby->pos).x = g_heroPosition.x + -(DAT_00874c88 * g_heroGravityDir);
+      fVar2 = DAT_00874c88 * g_heroGravityDir.y;
+      fVar5 = DAT_00874c88 * g_heroGravityDir.z;
+      (moby->pos).x = g_heroPosition.x + -(DAT_00874c88 * g_heroGravityDir.x);
       (moby->pos).y = g_heroPosition.y + -fVar2;
       (moby->pos).z = g_heroPosition.z + -fVar5;
       fVar2 = g_heroPosition.w;
@@ -600,17 +600,17 @@ void UpdateMoby_806(MobyInstance *moby)
         local_130 = GameCamera.posX - (moby->pos).x;
         local_12c = GameCamera.posY - (moby->pos).y;
         local_128 = GameCamera.posZ - (moby->pos).z;
-        local_124[0] = GameCamera.field8_0x14c[0];
-        local_124[1] = GameCamera.field8_0x14c[1];
-        local_124[2] = GameCamera.field8_0x14c[2];
-        local_124[3] = GameCamera.field8_0x14c[3];
+        local_124[0] = ((u8 *)&GameCamera.posW)[0];
+        local_124[1] = ((u8 *)&GameCamera.posW)[1];
+        local_124[2] = ((u8 *)&GameCamera.posW)[2];
+        local_124[3] = ((u8 *)&GameCamera.posW)[3];
         dVar21 = (double)MB_randRangeFloat
                                    (g_FrameTime * DAT_00874cb4,
                                     g_FrameTime * DAT_00874cb8);
-        local_120 = (float)((double)g_heroGravityDir * dVar21);
-        local_11c = (float)((double)DAT_00969f74 * dVar21);
-        local_118 = (float)((double)DAT_00969f78 * dVar21);
-        local_114 = DAT_00969f7c;
+        local_120 = (float)((double)g_heroGravityDir.x * dVar21);
+        local_11c = (float)((double)g_heroGravityDir.y * dVar21);
+        local_118 = (float)((double)g_heroGravityDir.z * dVar21);
+        local_114 = g_heroGravityDir.w;
         dVar21 = (double)MB_randRot();
         MB_RotateQuatAxisAngle((float)dVar21,afStack_110,&local_120);
         uVar10 = DAT_00874cc0;
@@ -659,9 +659,9 @@ void UpdateMoby_806(MobyInstance *moby)
       uVar37 = 0x3f847ae140000000;
       dVar22 = 20.5;
       dVar39 = 0.5;
-      dVar21 = -(double)(DAT_00874c88 * DAT_00969f78);
-      dVar25 = (double)(g_heroPosition.x + -(DAT_00874c88 * g_heroGravityDir));
-      dVar24 = (double)(g_heroPosition.y + -(DAT_00874c88 * DAT_00969f74));
+      dVar21 = -(double)(DAT_00874c88 * g_heroGravityDir.z);
+      dVar25 = (double)(g_heroPosition.x + -(DAT_00874c88 * g_heroGravityDir.x));
+      dVar24 = (double)(g_heroPosition.y + -(DAT_00874c88 * g_heroGravityDir.y));
       dVar38 = (double)(float)((double)g_heroPosition.z + dVar21);
       do {
         iVar12 = *(int *)((int)uVar20 + 0x30);
@@ -1226,20 +1226,20 @@ void UpdateMoby_806(MobyInstance *moby)
           auVar42 = vectorSplatHalfWord(auVar42,1);
           uVar16 = storeVectorElementHalfWordIndexed(auVar42,0x54,uVar20);
           *(undefined2 *)(pfVar4 + 0x15) = uVar16;
-          local_160 = (g_heroPosition.x + -(DAT_00874c88 * g_heroGravityDir)) - (moby->pos).x;
-          local_15c = (g_heroPosition.y + -(DAT_00874c88 * DAT_00969f74)) - (moby->pos).y;
+          local_160 = (g_heroPosition.x + -(DAT_00874c88 * g_heroGravityDir.x)) - (moby->pos).x;
+          local_15c = (g_heroPosition.y + -(DAT_00874c88 * g_heroGravityDir.y)) - (moby->pos).y;
           iVar13 = 0;
-          local_158 = (float)((double)((g_heroPosition.z + -(DAT_00874c88 * DAT_00969f78)) -
+          local_158 = (float)((double)((g_heroPosition.z + -(DAT_00874c88 * g_heroGravityDir.z)) -
                                       (moby->pos).z) - dVar21);
           local_154 = g_heroPosition.w;
           dVar23 = 0.0;
           local_174 = 0;
-          fVar5 = -(DAT_00874c84 * g_heroGravityDir * local_15c) -
-                  -(DAT_00874c84 * DAT_00969f74 * local_160);
-          fVar3 = -(DAT_00874c84 * DAT_00969f74 * local_158) -
-                  -(DAT_00874c84 * DAT_00969f78 * local_15c);
-          fVar2 = -(DAT_00874c84 * DAT_00969f78 * local_160) -
-                  -(DAT_00874c84 * g_heroGravityDir * local_158);
+          fVar5 = -(DAT_00874c84 * g_heroGravityDir.x * local_15c) -
+                  -(DAT_00874c84 * g_heroGravityDir.y * local_160);
+          fVar3 = -(DAT_00874c84 * g_heroGravityDir.y * local_158) -
+                  -(DAT_00874c84 * g_heroGravityDir.z * local_15c);
+          fVar2 = -(DAT_00874c84 * g_heroGravityDir.z * local_160) -
+                  -(DAT_00874c84 * g_heroGravityDir.x * local_158);
           local_17c = local_158 * fVar3 - local_160 * fVar5;
           local_178 = local_160 * fVar2 - local_15c * fVar3;
           local_180 = local_15c * fVar5 - local_158 * fVar2;

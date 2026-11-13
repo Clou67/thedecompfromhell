@@ -583,7 +583,7 @@ void M253_003196c0(int param_1)
   idol_draw::PackCmd(0,2,0,1,0x80);
   SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
   SCE_GS_SET_CLAMP(1,1,0,0,0,0);
-  acVar18 = GameCamera.field8_0x14c;
+  acVar18 = GameCamera.posW;
   fVar7 = 0.0;
   fVar1 = *(float *)(iVar6 + 0x224);
   fVar2 = *(float *)(iVar6 + 0x220);

@@ -39,7 +39,6 @@
 #include "game/space.h"
 #include "game/tieproc.h"
 #include "game/update.h"
-#include "game/update/moby1826.h"
 #include "game/vuchain.h"
 #include "idol/fastfunc.h"
 #include "idol/idol.h"
@@ -1441,11 +1440,11 @@ u8 *LoadGameplayFile(int reload)
         int dataOfs = section[1];
         int size = section[2];
 
-        DAT_00a1a860 = section[0];
-        DAT_00a1a85c = (u32)mem;
-        u8 *data = AlignUp64(mem + DAT_00a1a860 * 0x20);
-        for (int i = 0; i < (int)DAT_00a1a860; i++, src += 8) {
-            u8 *path = (u8 *)DAT_00a1a85c + i * 0x20;
+        g_GrindPathCnt = section[0];
+        g_GrindPaths = (u32)mem;
+        u8 *data = AlignUp64(mem + g_GrindPathCnt * 0x20);
+        for (int i = 0; i < (int)g_GrindPathCnt; i++, src += 8) {
+            u8 *path = (u8 *)g_GrindPaths + i * 0x20;
 
             memcpy(path, src, 0x10);
             *(int *)(path + 0x14) = src[4];
@@ -1455,8 +1454,8 @@ u8 *LoadGameplayFile(int reload)
         if (size != 0) {
             FastMemCopy(data, (u8 *)section + dataOfs, size);
         }
-        for (int i = 0; i < (int)DAT_00a1a860; i++, src++) {
-            *(int *)((u8 *)DAT_00a1a85c + i * 0x20 + 0x10) = src[0] + (int)data;
+        for (int i = 0; i < (int)g_GrindPathCnt; i++, src++) {
+            *(int *)((u8 *)g_GrindPaths + i * 0x20 + 0x10) = src[0] + (int)data;
         }
     }
 

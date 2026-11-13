@@ -198,9 +198,9 @@ void Cam17_ModifyFollowCam(UpdateCam *pCam)
             puVar9[0x51] = fVar11;
             puVar9[0x52] = fVar3;
             puVar9[0x53] = puVar9[0x4f];
-            fVar3 = fVar4 * DAT_00969f74;
-            fVar5 = fVar4 * DAT_00969f78;
-            fVar4 = g_heroPosition.x + -(fVar4 * g_heroGravityDir);
+            fVar3 = fVar4 * g_heroGravityDir.y;
+            fVar5 = fVar4 * g_heroGravityDir.z;
+            fVar4 = g_heroPosition.x + -(fVar4 * g_heroGravityDir.x);
             puVar9[0x24] = fVar4;
             puVar9[0x25] = g_heroPosition.y + -fVar3;
             puVar9[0x26] = g_heroPosition.z + -fVar5;
@@ -211,9 +211,9 @@ void Cam17_ModifyFollowCam(UpdateCam *pCam)
             *(undefined4 *)((int)pvVar15 + 0x3c) = puVar9[0x27];
             fVar12 = g_heroPosition.x;
             fVar3 = (float)puVar9[0x3c];
-            fVar4 = fVar3 * DAT_00969f74;
-            fVar5 = fVar3 * DAT_00969f78;
-            fVar6 = g_heroPosition.x + -(fVar3 * g_heroGravityDir);
+            fVar4 = fVar3 * g_heroGravityDir.y;
+            fVar5 = fVar3 * g_heroGravityDir.z;
+            fVar6 = g_heroPosition.x + -(fVar3 * g_heroGravityDir.x);
             puVar9[0x20] = fVar6;
             fVar13 = g_heroPosition.y;
             fVar4 = g_heroPosition.y + -fVar4;
@@ -313,7 +313,7 @@ void Cam17_ModifyFollowCam(UpdateCam *pCam)
             uVar17 = (uint)uVar7;
             bVar1 = false;
             if (((int)uVar2 <= (int)(short)uVar7) &&
-               (bVar1 = true, 0 < (int)GameCamera.field17_0x1b4.piece<128,4>())) {
+               (bVar1 = true, 0 < (int)GameCamera.camStatics.heroSpeed2D)) {
               auVar25 = vectorSplatHalfWord(auVar25,1);
               uVar10 = storeVectorElementHalfWordIndexed(auVar25,0x2e,uVar19);
               *(undefined2 *)((int)pfVar8 + 0x2e) = uVar10;

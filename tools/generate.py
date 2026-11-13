@@ -166,6 +166,13 @@ if os.path.exists(os.path.join(TOOLS, 'pieces.tsv')):
                 return '%s[%d].%s' % (n, off // st, f) if f else m[0]
             return lambda t: rx.sub(rep, t)
         PIECE_ARRAYS.append(_mk())
+# regex rewrites of raw text (field accesses of retyped structs):  regex <TAB> replacement
+REWRITES = []
+if os.path.exists(os.path.join(TOOLS, 'rewrites.tsv')):
+    for _l in open(os.path.join(TOOLS, 'rewrites.tsv')):
+        _l = _l.rstrip('\n')
+        if not _l or _l.startswith('#') or '\t' not in _l: continue
+        _k, _v = _l.split('\t', 1); REWRITES.append((re.compile(_k), _v))
 RENAME_RE = re.compile(r'\b(%s)\b' % '|'.join(map(re.escape, RENAMES))) if RENAMES else None
 # ---- build every function's text
 files = collections.defaultdict(list)
@@ -184,6 +191,7 @@ for a, sz, nm in rows:
         if m: txt = txt[:m.start(1)] + PROTOS[cn] + txt[m.end(1):]
     if RENAME_RE: txt = RENAME_RE.sub(lambda m: RENAMES[m[1]], txt)
     for _pr in PIECE_ARRAYS: txt = _pr(txt)
+    for _rx, _rp in REWRITES: txt = _rx.sub(_rp, txt)
     texts[a] = txt
 
 def prototype(txt):
@@ -323,7 +331,7 @@ for root, _, fs in os.walk(MANUAL):
 print('manual files', nman)
 shutil.copy(os.path.join(TOOLS, 'prelude.h'), os.path.join(out, 'prelude.h'))
 avoid = os.path.join(out, '.globals_names')
-open(avoid, 'w').write('\n'.join(re.search(r'(\w+)\s*(?:\[[^\]]*\])*\s*;', l)[1] for l in glob_lines))
+open(avoid, 'w').write('\n'.join((lambda m: m[1] or m[2])(re.search(r'\(\*\s*(\w+)\s*(?:\[[^\]]*\])*\)\s*\(|(\w+)\s*(?:\[[^\]]*\])*\s*;', l)) for l in glob_lines))
 subprocess.run(['python3', os.path.join(TOOLS, 'fixtypes.py'), os.path.join(DATA, 'rc1_types_full.h'), os.path.join(out, 'ghidra_types.h'), avoid], check=True)
 os.remove(avoid)
 open(os.path.join(out, 'types.h'), 'w').write('#pragma once\n#include "prelude.h"\n#include "ghidra_types.h"\n')

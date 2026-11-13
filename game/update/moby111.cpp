@@ -753,10 +753,10 @@ void UpdateMoby_111(MobyInstance *moby)
     local_d0 = GameCamera.posX - (moby->pos).x;
     local_cc = GameCamera.posY - (moby->pos).y;
     local_c8 = GameCamera.posZ - (moby->pos).z;
-    local_c4[0] = GameCamera.field8_0x14c[0];
-    local_c4[1] = GameCamera.field8_0x14c[1];
-    local_c4[2] = GameCamera.field8_0x14c[2];
-    local_c4[3] = GameCamera.field8_0x14c[3];
+    local_c4[0] = ((u8 *)&GameCamera.posW)[0];
+    local_c4[1] = ((u8 *)&GameCamera.posW)[1];
+    local_c4[2] = ((u8 *)&GameCamera.posW)[2];
+    local_c4[3] = ((u8 *)&GameCamera.posW)[3];
     dVar45 = 0.0;
     dVar43 = 4.0;
     MB_genericExplosion
@@ -1155,7 +1155,7 @@ void UpdateMoby_111(MobyInstance *moby)
         local_100.x = GameCamera.posX - local_100.x;
         local_100.y = GameCamera.posY - local_100.y;
         local_100.z = GameCamera.posZ - local_100.z;
-        local_100.w = (float)GameCamera.field8_0x14c;
+        local_100.w = (float)GameCamera.posW;
         iVar32 = PathFindClosestPnt(0.0,&local_100,spline);
         sVar33 = (short)iVar32;
         *(short *)((int)pvVar9 + 0xb4) = sVar33;

@@ -1204,7 +1204,7 @@ LAB_002a3c30:
   if (dVar42 - 20.0 < 0.0) {
     fVar46 = (float)(dVar42 * 0.017500000074505806);
   }
-  GameCamera.offset0.amp = 0.4 - fVar46;
+  GameCamera.shake.strength = 0.4 - fVar46;
   auVar45 = loadVectorLeftIndexed(0xc0,0x2a2374);
   auVar45 = auVar45 >> 0x60 & (GPiece<16>)0xffffffff;
   auVar43 = vectorMultiplyAddFloatingPoint
@@ -1212,7 +1212,7 @@ LAB_002a3c30:
                       );
   auVar43 = vectorConvertToSignedFixedPointWordSaturate(auVar43,0);
   auVar43 = auVar43 >> 0x60 & (GPiece<16>)0xffffffff;
-  GameCamera.offset0.total =
+  GameCamera.shake.time =
        storeVectorElementWordIndexed
                  (auVar43 | auVar43 << 0x20 | auVar43 << 0x40 | auVar43 << 0x60,0x168,0x9513c0);
   FUN_003fda38(&uStack_180,lVar19,0,0);

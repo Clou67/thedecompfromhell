@@ -176,14 +176,14 @@ void M327_00342950(int param_1)
     fVar8 = fVar11 * fVar10;
     fVar10 = fVar12 * fVar10;
   }
-  fVar15 = DAT_00969f78 * fVar9 - g_heroGravityDir * fVar10;
-  fVar3 = DAT_00969f74 * fVar10 - DAT_00969f78 * fVar8;
-  fVar4 = g_heroGravityDir * fVar8 - DAT_00969f74 * fVar9;
+  fVar15 = g_heroGravityDir.z * fVar9 - g_heroGravityDir.x * fVar10;
+  fVar3 = g_heroGravityDir.y * fVar10 - g_heroGravityDir.z * fVar8;
+  fVar4 = g_heroGravityDir.x * fVar8 - g_heroGravityDir.y * fVar9;
   pfVar18 = local_f0;
   lVar19 = 4;
   pfVar17 = local_130;
   fVar2 = SQRT(fVar4 * fVar4 + fVar3 * fVar3 + fVar15 * fVar15);
-  fVar12 = (float)GameCamera.field8_0x14c * 0.4;
+  fVar12 = (float)GameCamera.posW * 0.4;
   fVar16 = -1.0 / fVar2;
   fVar11 = fVar13;
   if (0.0 - fVar2 < 0.0) {

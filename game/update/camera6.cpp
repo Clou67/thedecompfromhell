@@ -29,7 +29,7 @@ void ____Cam6_ClampAndBuildMtx(Vec4 *param_1)
   Vec4 aVStack_60 [4];
   
   fVar2 = param_1[7].x;
-  Camera_ClampAngles(param_1 + 3,param_1 + 5,(int)fVar2 + 0xb0);
+  Camera_Polar2Pos(param_1 + 3,param_1 + 5,(int)fVar2 + 0xb0);
   dVar3 = (double)FastWrapRot(param_1[5].x,*(float *)((int)fVar2 + 200));
   param_1[5].x = (float)dVar3;
   fVar2 = param_1[5].y;
@@ -77,7 +77,7 @@ void Cam6_SetTarget(double param_1,Vec4 *param_2,float *param_3,float *param_4)
   pol[0x26] = 0.0;
   pol[0x25] = 0.0;
   pol[0x24] = 0.0;
-  Camera_ClampAngles(param_2 + 3,param_2 + 5,(int)fVar1 + 0xb0);
+  Camera_Polar2Pos(param_2 + 3,param_2 + 5,(int)fVar1 + 0xb0);
   dVar3 = (double)FastWrapRot(param_2[5].x,*(float *)((int)fVar1 + 200));
   param_2[5].x = (float)dVar3;
   fVar1 = param_2[5].y;
@@ -130,7 +130,7 @@ void Cam6_ResetParams(Vec4 *param_1)
   pol[0x26] = 0.0;
   pol[0x25] = 0.0;
   pol[0x24] = 0.0;
-  Camera_ClampAngles(param_1 + 3,param_1 + 5,(int)fVar2 + 0xb0);
+  Camera_Polar2Pos(param_1 + 3,param_1 + 5,(int)fVar2 + 0xb0);
   dVar3 = (double)FastWrapRot(param_1[5].x,*(float *)((int)fVar2 + 200));
   param_1[5].x = (float)dVar3;
   fVar2 = param_1[5].y;
@@ -209,7 +209,7 @@ void Cam6_Update(Vec4 *param_1)
     *(undefined4 *)((int)fVar2 + 0xbc) = *(undefined4 *)((int)fVar2 + 0x8c);
   }
   *(float *)((int)fVar2 + 0xb8) = fVar6;
-  Camera_ClampAngles(param_1 + 3,param_1 + 5,(int)fVar2 + 0xb0);
+  Camera_Polar2Pos(param_1 + 3,param_1 + 5,(int)fVar2 + 0xb0);
   fVar6 = param_1[5].y;
   fVar1 = param_1[5].w;
   param_1[4].x = *(float *)((int)fVar2 + 0xac);
@@ -583,8 +583,8 @@ void ____Cam6_RotMath(int param_1)
   else {
     GameCamera.blender.reqType = '\0';
     *(undefined2 *)(param_1 + 0x7e) = 2;
-    GameCamera.blender.reqPosInterpAdd = 0.018;
-    GameCamera.blender.reqQuatInterpAdd = 0.018;
+    GameCamera.blender.blendData.posData.reqPosInterpAdd = 0.018;
+    GameCamera.blender.blendData.posData.reqQuatInterpAdd = 0.018;
   }
   *(undefined1 *)(param_1 + 0x7d) = 0;
   return;

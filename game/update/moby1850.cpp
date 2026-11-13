@@ -60,7 +60,7 @@ void M1850_002c7fb8(int param_1)
   fVar3 = *(float *)(param_1 + 0xd8);
   fVar4 = SQRT(fVar3 * fVar3 + fVar2 * fVar2 + fVar1 * fVar1);
   dVar29 = (double)DAT_010a10cc;
-  dVar28 = (double)(float)GameCamera.field8_0x14c;
+  dVar28 = (double)(float)GameCamera.posW;
   fVar5 = DAT_007bd448 / fVar4;
   dVar21 = dVar26;
   if (0.0 - fVar4 < 0.0) {
@@ -102,11 +102,11 @@ void M1850_002c7fb8(int param_1)
     dVar22 = (double)(fVar5 * fVar1);
     dVar23 = (double)(fVar5 * fVar3);
   }
-  fVar1 = (float)((double)DAT_00969f78 * dVar21 -
-                 (double)(float)((double)g_heroGravityDir * dVar23));
-  fVar2 = (float)((double)DAT_00969f74 * dVar23 - (double)(float)((double)DAT_00969f78 * dVar22));
-  fVar3 = (float)((double)g_heroGravityDir * dVar22 -
-                 (double)(float)((double)DAT_00969f74 * dVar21));
+  fVar1 = (float)((double)g_heroGravityDir.z * dVar21 -
+                 (double)(float)((double)g_heroGravityDir.x * dVar23));
+  fVar2 = (float)((double)g_heroGravityDir.y * dVar23 - (double)(float)((double)g_heroGravityDir.z * dVar22));
+  fVar3 = (float)((double)g_heroGravityDir.x * dVar22 -
+                 (double)(float)((double)g_heroGravityDir.y * dVar21));
   pfVar9 = local_120;
   pfVar10 = (float *)&DAT_007bd400;
   lVar11 = 4;
@@ -236,11 +236,11 @@ void M1850_002c8468(void)
       dVar16 = (double)(float)(&DAT_010a2250)[iVar9 * 4];
       dVar18 = (double)(float)(&DAT_010a2258)[iVar9 * 4];
       dVar17 = (double)(float)(&DAT_010a2254)[iVar9 * 4];
-      fVar7 = -(float)((double)DAT_00969f78 * dVar16) -
-              -(float)((double)g_heroGravityDir * dVar18);
-      fVar8 = -(float)((double)g_heroGravityDir * dVar17) -
-              -(float)((double)DAT_00969f74 * dVar16);
-      fVar11 = -(float)((double)DAT_00969f74 * dVar18) - -(float)((double)DAT_00969f78 * dVar17);
+      fVar7 = -(float)((double)g_heroGravityDir.z * dVar16) -
+              -(float)((double)g_heroGravityDir.x * dVar18);
+      fVar8 = -(float)((double)g_heroGravityDir.x * dVar17) -
+              -(float)((double)g_heroGravityDir.y * dVar16);
+      fVar11 = -(float)((double)g_heroGravityDir.y * dVar18) - -(float)((double)g_heroGravityDir.z * dVar17);
       fVar2 = (float)(&DAT_010a2220)[iVar9 * 4];
       fVar3 = (float)(&DAT_010a2224)[iVar9 * 4];
       fVar4 = (float)(&DAT_010a2228)[iVar9 * 4];

@@ -92,7 +92,7 @@ MobyInstance * FUN_002c4728(longlong param_1)
   FastEulerToMtx(&local_f0,local_100);
   dVar16 = (double)FastWrapRot
                              (0.7853982,(float)(longlong)*(int *)((int)pvVar5 + 0x88) * 1.5707964);
-  acVar11 = GameCamera.field8_0x14c;
+  acVar11 = GameCamera.posW;
   fVar1 = (float)(dVar16 + 1.570796251296997);
   dVar29 = (double)(float)(3.141592502593994 - dVar16);
   if (dVar16 - (double)(float)(3.141592502593994 - dVar16) < 0.0) {

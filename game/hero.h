@@ -4,6 +4,13 @@
 #include "game/collproc.h"
 
 // ---- types
+struct HeroCollVert { /* u16 coords = world*64 */
+    short x;
+    short y;
+    short z;
+    short pad;
+};
+
 struct HeroCollCell { /* Hero-only collision cell (camera passes through). Coords are u16 = world*64. data -> HeroCollVert[vertCount] then HeroCollTri-style 4-byte index records[triCount]. data is relocated to an absolute pointer by ParseColl. */
     short bsphereX;
     short bsphereY;
@@ -18,13 +25,6 @@ struct HeroCollHeader { /* Hero collision block: cellCount, 12 bytes pad, then H
     int cellCount;
     int pad[3];
     struct HeroCollCell cells[1];
-};
-
-struct HeroCollVert { /* u16 coords = world*64 */
-    short x;
-    short y;
-    short z;
-    short pad;
 };
 
 typedef enum ITEM_ENUM {
@@ -425,9 +425,6 @@ extern undefined4 DAT_00969f54; /* 0x969f54 */
 extern undefined4 DAT_00969f58; /* 0x969f58 */
 extern undefined4 DAT_00969f5c; /* 0x969f5c */
 extern undefined4 DAT_00969f60; /* no defined data */
-extern undefined4 DAT_00969f74; /* 0x969f74 */
-extern undefined4 DAT_00969f78; /* 0x969f78 */
-extern undefined4 DAT_00969f7c; /* 0x969f7c */
 extern undefined4 DAT_00969f84; /* 0x969f84 */
 extern undefined4 DAT_00969f88; /* 0x969f88 */
 extern undefined4 DAT_00969f8c; /* 0x969f8c */
@@ -550,7 +547,6 @@ extern undefined4 DAT_0096a220; /* 0x96a220 */
 extern undefined4 DAT_0096a224; /* 0x96a224 */
 extern undefined4 DAT_0096a230; /* 0x96a230 */
 extern undefined4 DAT_0096a234; /* 0x96a234 */
-extern undefined4 DAT_0096a240; /* 0x96a240 */
 extern undefined4 DAT_0096a244; /* 0x96a244 */
 extern undefined4 DAT_0096a248; /* 0x96a248 */
 extern undefined4 DAT_0096a24c; /* 0x96a24c */
@@ -864,14 +860,10 @@ extern undefined2 DAT_0096af8c; /* 0x96af8c */
 extern undefined2 DAT_0096af8e; /* 0x96af8e */
 extern undefined1 DAT_0096afc2; /* 0x96afc2 */
 extern undefined1 DAT_0096afc3; /* 0x96afc3 */
-extern undefined1 DAT_0096afc5; /* 0x96afc5 */
-extern undefined1 DAT_0096afc6; /* 0x96afc6 */
 extern undefined1 DAT_0096afc7; /* 0x96afc7 */
 extern undefined1 DAT_0096afc8; /* 0x96afc8 */
 extern undefined1 DAT_0096afc9; /* 0x96afc9 */
 extern undefined1 DAT_0096afca; /* 0x96afca */
-extern undefined1 DAT_0096afcb; /* 0x96afcb */
-extern undefined1 DAT_0096afcc; /* 0x96afcc */
 extern undefined1 DAT_0096afcd; /* 0x96afcd */
 extern undefined1 DAT_0096afce; /* 0x96afce */
 extern undefined4 DAT_0096b2f4; /* 0x96b2f4 */
@@ -1008,7 +1000,6 @@ extern undefined4 DAT_00a1a84c; /* 0xa1a84c */
 extern undefined4 DAT_00a1a850; /* 0xa1a850 */
 extern undefined4 DAT_00a1a854; /* 0xa1a854 */
 extern undefined4 DAT_00a1a858; /* 0xa1a858 */
-extern undefined4 DAT_00a1a85c; /* 0xa1a85c */
 extern undefined4 DAT_00a1a864; /* 0xa1a864 */
 extern undefined4 DAT_00a1a880; /* no defined data */
 extern undefined4 DAT_00a1b880; /* no defined data */
@@ -1073,6 +1064,7 @@ extern float g_FrameTime; /* 0x71f414 */
 extern float g_FrameTimeSq; /* 0x71f418: g_FrameTime squared */ /* type set in global_types.tsv */
 extern int g_GameFrameCount; /* 0xa0f6d8 */
 extern undefined4 g_GiantClankHealth; /* 0x96b310 */
+extern u32 g_GrindPaths; /* 0xa1a85c: the level's grind paths, 0x20 each (+0x10 their data) */ /* type set in global_types.tsv */
 extern undefined1 g_HeroIsOutOfBounds; /* 0x96bd91 */
 extern undefined2 g_HeroNearSwingshot; /* 0x96a67e */
 extern undefined4 g_HeroRequestedCamType; /* 0x96bf64 */
@@ -1101,12 +1093,14 @@ extern undefined4 g_heroCollBottom; /* 0x969f04 */
 extern undefined4 g_heroCollRadius; /* 0x969f14 */
 extern undefined4 g_heroCollTop; /* 0x969f00 */
 extern undefined4 g_heroExternalMomentum; /* 0x969e30 */
+extern Vec4 g_heroFrameMove; /* 0x969e20: how far the hero moved this frame */ /* type set in global_types.tsv */
 extern undefined4 g_heroGhostFrames; /* 0x969eac */
 extern undefined2 g_heroGlowCount; /* 0x96bb90 */
 extern undefined g_heroGlowPos; /* 0x96bab0 */
-extern undefined4 g_heroGravityDir; /* 0x969f70 */
+extern Vec4 g_heroGravityDir; /* 0x969f70: the hero's gravity direction */ /* type set in global_types.tsv */
 extern undefined1 g_heroGravityMode; /* 0x96bd93 */
 extern undefined4 g_heroGravityMtx; /* 0x969d20 */
+extern int g_heroGrindPath; /* 0x96a240: the data of the grind path the hero is on */ /* type set in global_types.tsv */
 extern undefined4 g_heroGroundDist; /* 0x969fbc */
 extern undefined4 g_heroGroundNormal; /* 0x969f50 */
 extern undefined4 g_heroGroundPoint; /* 0x969f80 */
@@ -1114,6 +1108,11 @@ extern undefined4 g_heroGroundSlope; /* 0x969fc0 */
 extern undefined2 g_heroGroundType; /* 0x96afc0 */
 extern undefined4 g_heroGroundZ; /* 0x969fb8 */
 extern undefined4 g_heroHealth; /* 0x96bf88 */
+extern u8 g_heroHotSpotDeathSand; /* 0x96afcb */ /* type set in global_types.tsv */
+extern u8 g_heroHotSpotIceWater; /* 0x96afcc */ /* type set in global_types.tsv */
+extern u8 g_heroHotSpotLava; /* 0x96afc5 */ /* type set in global_types.tsv */
+extern u8 g_heroHotSpotQuickSand; /* 0x96afc6 */ /* type set in global_types.tsv */
+extern u8 g_heroHotSpotWater; /* 0x96afc4: the hero is in water */ /* type set in global_types.tsv */
 extern undefined4 g_heroIdealRotZ; /* 0x969e60 */
 extern undefined4 g_heroIdealSpeed; /* 0x969e70 */
 extern undefined1 g_heroInvisible; /* 0x96bd85 */

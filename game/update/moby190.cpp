@@ -1020,7 +1020,7 @@ void UpdateMoby_190(MobyInstance *moby)
         dVar50 = (double)GameCamera.posY;
         dVar54 = (double)GameCamera.posZ;
         *(float *)(puVar13 + 0x15) = fVar2;
-        acVar15 = GameCamera.field8_0x14c;
+        acVar15 = GameCamera.posW;
         fVar2 = (float)((double)(float)((double)(float)(dVar52 * dVar46) * dVar41 +
                                        (double)(float)(dVar46 * dVar42 +
                                                       (double)(float)(dVar47 * dVar43 +

@@ -2638,6 +2638,7 @@ struct Vec3 {
     float z;
 };
 
+extern undefined4 DAT_00052b40; /* 0x52b40 */
 extern undefined4 DAT_0011eec0; /* 0x11eec0 */
 extern undefined4 DAT_0015aa20; /* 0x15aa20 */
 extern undefined4 DAT_001766c4; /* 0x1766c4 */
@@ -2854,6 +2855,19 @@ extern undefined4 DAT_00931404; /* no defined data */
 extern undefined8 DAT_00931408; /* 0x931408 */
 extern undefined4 DAT_00931410; /* no defined data */
 extern undefined4 DAT_00931418; /* no defined data */
+extern undefined2 DAT_00951790; /* 0x951790 */
+extern undefined2 DAT_00951792; /* 0x951792 */
+extern undefined2 DAT_009517b0; /* 0x9517b0 */
+extern undefined2 DAT_009517b2; /* 0x9517b2 */
+extern undefined4 DAT_009517d0; /* 0x9517d0 */
+extern undefined4 DAT_009517d4; /* 0x9517d4 */
+extern undefined4 DAT_00951810; /* 0x951810 */
+extern undefined4 DAT_00951814; /* 0x951814 */
+extern undefined4 DAT_00951850; /* 0x951850 */
+extern undefined4 DAT_00951854; /* 0x951854 */
+extern undefined4 DAT_009518c0; /* no defined data */
+extern undefined4 DAT_009518e0; /* 0x9518e0 */
+extern undefined2 DAT_009518e4; /* 0x9518e4 */
 extern undefined4 DAT_0095d2d0; /* no defined data */
 extern undefined4 DAT_0095d2d2; /* no defined data */
 extern undefined4 DAT_0095d2d4; /* no defined data */

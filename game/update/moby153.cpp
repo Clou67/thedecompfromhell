@@ -148,7 +148,7 @@ FUN_00292d88(double param_1,double param_2,double param_3,double param_4,double 
       pfVar3[3] = fVar2;
       pfVar3[2] = (float)((double)fVar1 + param_3);
     }
-    if (SQRT(DAT_00969e28 * DAT_00969e28 + DAT_00969e20 * DAT_00969e20 + DAT_00969e24 * DAT_00969e24
+    if (SQRT(g_heroFrameMove.z * g_heroFrameMove.z + g_heroFrameMove.x * g_heroFrameMove.x + g_heroFrameMove.y * g_heroFrameMove.y
             ) <= fVar6 * 0.1) {
       auVar10 = ZEXT416(0xffffffff);
       auVar10 = auVar10 | auVar10 << 0x20 | auVar10 << 0x40 | auVar10 << 0x60;
@@ -880,7 +880,7 @@ void UpdateMoby_153(MobyInstance *moby)
   FastDecTimerS16(uVar20 + 0x3c);
   FastIntToDouble(*(undefined2 *)(pfVar2 + 0xf));
   FastIntToDouble(*(undefined2 *)((int)pfVar2 + 0x3e));
-  FastVecAdd(local_470,&DAT_00969e20,&DAT_00969de0);
+  FastVecAdd(local_470,&g_heroFrameMove.x,&DAT_00969de0);
   dVar21 = (double)FastIntToDouble(g_goldWeaponsArray.devastator);
   dVar32 = (double)(moby->rotation).z;
   dVar42 = (double)(float)(dVar21 + dVar37);
@@ -1363,7 +1363,7 @@ LAB_002941a8:
       if (dVar25 - 20.0 < 0.0) {
         fVar3 = (float)(dVar25 * 0.017500000074505806);
       }
-      GameCamera.offset0.amp = 0.4 - fVar3;
+      GameCamera.shake.strength = 0.4 - fVar3;
       auVar45 = loadVectorLeftIndexed(0x8c,0x293b88);
       auVar45 = auVar45 >> 0x60 & (GPiece<16>)0xffffffff;
       auVar43 = vectorMultiplyAddFloatingPoint
@@ -1371,7 +1371,7 @@ LAB_002941a8:
                            auVar44);
       auVar43 = vectorConvertToSignedFixedPointWordSaturate(auVar43,0);
       auVar43 = auVar43 >> 0x60 & (GPiece<16>)0xffffffff;
-      GameCamera.offset0.total =
+      GameCamera.shake.time =
            storeVectorElementWordIndexed
                      (auVar43 | auVar43 << 0x20 | auVar43 << 0x40 | auVar43 << 0x60,0x168,0x9513c0);
       PlayMobySound(0,0,moby);

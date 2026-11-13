@@ -140,7 +140,7 @@ void Cam3_InitSplinePos(int param_1)
   if ((*(int *)(iVar3 + 0x30) == 2) && (*(short *)(iVar3 + 0x34) == 0)) {
     pSVar8 = Splines[*(int *)(iVar3 + 0x28)];
     uVar21 = ZEXT48(pSVar8);
-    puVar6 = *(uint **)(DAT_00a1a85c + *(int *)(iVar3 + 0x24) * 0x20 + 0x10);
+    puVar6 = *(uint **)(g_GrindPaths + *(int *)(iVar3 + 0x24) * 0x20 + 0x10);
     pSVar9 = Splines[*(int *)(iVar3 + 0x20)];
     *(undefined2 *)(iVar3 + 0x34) = 1;
     uVar7 = pSVar8->cnt;
@@ -347,7 +347,7 @@ void UpdateCamera_3(UpdateCam *pCam)
     dVar25 = 0.0;
     fVar3 = SQRT(fVar2 * fVar2 + fVar1 * fVar1 + fVar29 * fVar29);
     dVar24 = 0.17499999701976776;
-    fVar28 = (speed[1].w * (fVar28 / *(float *)(DAT_0096a240 + iVar11 * 0x10 + 0x1c))) / fVar3;
+    fVar28 = (speed[1].w * (fVar28 / *(float *)(g_heroGrindPath + iVar11 * 0x10 + 0x1c))) / fVar3;
     dVar22 = dVar25;
     if (0.0 - fVar3 < 0.0) {
       dVar22 = (double)(fVar28 * fVar29);
@@ -386,7 +386,7 @@ void UpdateCamera_3(UpdateCam *pCam)
     uVar18 = 0;
     pSVar8 = Splines[(int)fVar29];
     pSVar9 = Splines[(int)pfVar6[0xb]];
-    piVar7 = *(int **)(DAT_00a1a85c + (int)pfVar6[9] * 0x20 + 0x10);
+    piVar7 = *(int **)(g_GrindPaths + (int)pfVar6[9] * 0x20 + 0x10);
     pSVar10 = Splines[(int)pfVar6[10]];
     uVar17 = (ulonglong)(uint)pSVar9->cnt - 1;
     uVar19 = uVar18;
@@ -486,7 +486,7 @@ joined_r0x00045a4c:
     }
     else {
       MB_PathMoveDist
-                ((double)pfVar6[0xe],DAT_0096a240,&local_110,local_b0,local_ac,DAT_0096a240,1);
+                ((double)pfVar6[0xe],g_heroGrindPath,&local_110,local_b0,local_ac,g_heroGrindPath,1);
       MB_PathFollowToPos
                 (0x4034000000000000,0x3ff0000000000000,0,pSVar8,&local_110,&local_120,local_c0,
                  local_bc,&DAT_000456fc,0);
@@ -521,33 +521,33 @@ joined_r0x00045a4c:
     local_f8 = g_heroPosition.z + (local_c8 - local_f8);
   }
   else {
-    MB_PathMoveDist(dVar26,DAT_0096a240,&local_100,local_a8,local_a4,&g_heroMtx,1);
+    MB_PathMoveDist(dVar26,g_heroGrindPath,&local_100,local_a8,local_a4,&g_heroMtx,1);
   }
   dVar22 = 0.0;
-  fVar29 = SQRT((float)GameCamera.field17_0x1b4.piece<4,4>() * (float)GameCamera.field17_0x1b4.piece<4,4>() +
-                GameCamera.field16_0x1b0 * GameCamera.field16_0x1b0 +
-                (float)GameCamera.field17_0x1b4.piece<0,4>() * (float)GameCamera.field17_0x1b4.piece<0,4>());
+  fVar29 = SQRT((float)GameCamera.camStatics.heroUp.z * (float)GameCamera.camStatics.heroUp.z +
+                GameCamera.camStatics.heroUp.x * GameCamera.camStatics.heroUp.x +
+                (float)GameCamera.camStatics.heroUp.y * (float)GameCamera.camStatics.heroUp.y);
   fVar28 = *(float *)((int)pvVar5 + 0xcc) / fVar29;
   dVar26 = dVar22;
   if (0.0 - fVar29 < 0.0) {
-    dVar26 = (double)((float)GameCamera.field17_0x1b4.piece<0,4>() * fVar28);
+    dVar26 = (double)((float)GameCamera.camStatics.heroUp.y * fVar28);
   }
   dVar24 = dVar22;
   if (0.0 - fVar29 < 0.0) {
-    dVar24 = (double)(GameCamera.field16_0x1b0 * fVar28);
+    dVar24 = (double)(GameCamera.camStatics.heroUp.x * fVar28);
   }
   dVar25 = dVar22;
   if (0.0 - fVar29 < 0.0) {
-    dVar25 = (double)((float)GameCamera.field17_0x1b4.piece<4,4>() * fVar28);
+    dVar25 = (double)((float)GameCamera.camStatics.heroUp.z * fVar28);
   }
   if (fVar29 - 0.0 < 0.0) {
-    dVar26 = (double)((float)GameCamera.field17_0x1b4.piece<0,4>() * fVar28);
+    dVar26 = (double)((float)GameCamera.camStatics.heroUp.y * fVar28);
   }
   if (fVar29 - 0.0 < 0.0) {
-    dVar24 = (double)(GameCamera.field16_0x1b0 * fVar28);
+    dVar24 = (double)(GameCamera.camStatics.heroUp.x * fVar28);
   }
   if (fVar29 - 0.0 < 0.0) {
-    dVar25 = (double)((float)GameCamera.field17_0x1b4.piece<4,4>() * fVar28);
+    dVar25 = (double)((float)GameCamera.camStatics.heroUp.z * fVar28);
   }
   fVar29 = (float)(dVar26 + (double)local_fc) - pCam->pos[1];
   fVar1 = (float)(dVar24 + (double)local_100) - pCam->pos[0];
@@ -592,9 +592,9 @@ joined_r0x00045a4c:
   fVar29 = pCam->mtx[1];
   fVar28 = pCam->mtx[0];
   fVar1 = pCam->mtx[2];
-  dVar26 = (double)(float)GameCamera.field17_0x1b4.piece<0,4>();
-  dVar27 = (double)(float)GameCamera.field17_0x1b4.piece<4,4>();
-  dVar24 = (double)GameCamera.field16_0x1b0;
+  dVar26 = (double)(float)GameCamera.camStatics.heroUp.y;
+  dVar27 = (double)(float)GameCamera.camStatics.heroUp.z;
+  dVar24 = (double)GameCamera.camStatics.heroUp.x;
   fVar2 = fVar1 * fVar1 + fVar28 * fVar28 + fVar29 * fVar29;
   if ((double)SQRT(fVar2) == dVar22) {
     fVar3 = pCam->mtx[1];
@@ -805,7 +805,7 @@ void ExitCamera_3(UpdateCam *pCam)
   iVar1 = *(int *)(ImportCameras + (int)((longlong)pCam->importCameraIdx << 5) + 0x1c);
   if ((g_HeroRequestedCamType != pCam->type) ||
      ((iVar2 = *(int *)(iVar1 + 0x24), -1 < iVar2 &&
-      ((DAT_0096a240 != *(int *)(DAT_00a1a85c + iVar2 * 0x20 + 0x10) || (DAT_0096a250 != 0)))))) {
+      ((g_heroGrindPath != *(int *)(g_GrindPaths + iVar2 * 0x20 + 0x10) || (DAT_0096a250 != 0)))))) {
     (pCam->activation).deactivate =
          ((ushort)(ZERO_MASK((3 - *(int *)(iVar1 + 0x30)))) & 2) + 3;
   }

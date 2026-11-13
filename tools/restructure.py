@@ -245,6 +245,18 @@ while changed:
             if owner[d] != 'types': owner[k] = owner[d]; changed = True; break
 hdr_types = collections.defaultdict(list)
 for k in range(len(blocks)): hdr_types[owner[k]].append(k)
+# inside a header, a type embedded by value comes before the type that embeds it
+def topo(ks):
+    ks = list(ks); inh = set(ks); done = []; seen = set()
+    def visit(k):
+        if k in seen: return
+        seen.add(k)
+        for d in sorted(deps(blocks[k]['text'], blocks[k]['alt'])[0]):
+            if d in inh: visit(d)
+        done.append(k)
+    for k in ks: visit(k)
+    return done
+for m in list(hdr_types): hdr_types[m] = topo(hdr_types[m])
 for m in hdr_text:
     parts = [blocks[k]['text'] for k in hdr_types.get(m, [])] + hdr_globals.get(m, []) + protos.get(m, [])
     hdr_text[m] = parts; hdr_inc[m] = header_includes(m, '\n'.join(parts))

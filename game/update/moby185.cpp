@@ -293,11 +293,11 @@ void M185_002c5f88(void *param_1)
     local_170 = local_170 - *pfVar19;
     local_16c = (&DAT_010a10c4)[iVar15 * 4] - *(float *)(iVar14 + 0x10a10b4);
     local_168 = (&DAT_010a10c8)[iVar15 * 4] - (float)(&DAT_010a10b8)[iVar15 * 4];
-    fVar2 = g_heroGravityDir * local_16c - DAT_00969f74 * local_170;
+    fVar2 = g_heroGravityDir.x * local_16c - g_heroGravityDir.y * local_170;
     iVar20 = 0;
-    fVar44 = DAT_00969f74 * local_168 - DAT_00969f78 * local_16c;
+    fVar44 = g_heroGravityDir.y * local_168 - g_heroGravityDir.z * local_16c;
     iVar14 = 0x10a1310;
-    fVar10 = DAT_00969f78 * local_170 - g_heroGravityDir * local_168;
+    fVar10 = g_heroGravityDir.z * local_170 - g_heroGravityDir.x * local_168;
     local_164 = (&DAT_010a10cc)[iVar15 * 4];
     local_154 = 0.0;
     fVar4 = SQRT(fVar2 * fVar2 + fVar44 * fVar44 + fVar10 * fVar10);
@@ -540,9 +540,9 @@ void M185_002c5f88(void *param_1)
     dVar32 = (double)MB_randRangeSigned(dVar22,(double)DAT_007bd38c);
     MB_RotateQuatAxisAngle((float)dVar32,afStack_140,&local_180);
     local_124 = 0;
-    local_130 = DAT_00969f74 * local_178 - DAT_00969f78 * local_17c;
-    local_128 = g_heroGravityDir * local_17c - DAT_00969f74 * local_180;
-    local_12c = DAT_00969f78 * local_180 - g_heroGravityDir * local_178;
+    local_130 = g_heroGravityDir.y * local_178 - g_heroGravityDir.z * local_17c;
+    local_128 = g_heroGravityDir.x * local_17c - g_heroGravityDir.y * local_180;
+    local_12c = g_heroGravityDir.z * local_180 - g_heroGravityDir.x * local_178;
     MB_RotateQuatAxisAngle((float)dVar25,afStack_140,afStack_140);
     lVar13 = FastDoubleToInt
                        ((double)((float)(dVar38 * 1.2000000476837158) /

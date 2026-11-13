@@ -563,7 +563,7 @@ undefined8 M1051_001a2fb0(int param_1)
     *(float *)(puVar11 + 0xe) = GameCamera.posX;
     fVar8 = GameCamera.posZ;
     *(float *)((int)puVar11 + 0x74) = fVar3;
-    acVar12 = GameCamera.field8_0x14c;
+    acVar12 = GameCamera.posW;
     *(float *)(puVar11 + 0xf) = fVar8;
     dVar28 = (double)*(float *)(param_1 + 0x14);
   }
@@ -898,7 +898,7 @@ undefined8 M1051_001a3680(int param_1)
     *(float *)(puVar11 + 0xe) = GameCamera.posX;
     fVar8 = GameCamera.posZ;
     *(float *)((int)puVar11 + 0x74) = fVar3;
-    acVar12 = GameCamera.field8_0x14c;
+    acVar12 = GameCamera.posW;
     *(float *)(puVar11 + 0xf) = fVar8;
     dVar28 = (double)*(float *)(param_1 + 0x14);
   }
@@ -1235,7 +1235,7 @@ undefined8 M1051_001a3d50(int param_1)
     *(float *)(puVar11 + 0xe) = GameCamera.posX;
     fVar8 = GameCamera.posZ;
     *(float *)((int)puVar11 + 0x74) = fVar3;
-    acVar12 = GameCamera.field8_0x14c;
+    acVar12 = GameCamera.posW;
     *(float *)(puVar11 + 0xf) = fVar8;
     dVar27 = (double)*(float *)(param_1 + 0x14);
   }

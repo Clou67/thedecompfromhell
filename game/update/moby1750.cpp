@@ -79,11 +79,11 @@ void M1750_002b1950(int param_1)
   do {
     if (*(short *)((int)&DAT_00fb019c + iVar8) != 0) {
       dVar25 = (double)*(float *)((int)&DAT_00fb0194 + iVar8);
-      fVar2 = -(float)((double)DAT_00969f78 * dVar30) -
-              -(float)((double)g_heroGravityDir * dVar28);
-      fVar3 = -(float)((double)g_heroGravityDir * dVar29) -
-              -(float)((double)DAT_00969f74 * dVar30);
-      fVar4 = -(float)((double)DAT_00969f74 * dVar28) - -(float)((double)DAT_00969f78 * dVar29);
+      fVar2 = -(float)((double)g_heroGravityDir.z * dVar30) -
+              -(float)((double)g_heroGravityDir.x * dVar28);
+      fVar3 = -(float)((double)g_heroGravityDir.x * dVar29) -
+              -(float)((double)g_heroGravityDir.y * dVar30);
+      fVar4 = -(float)((double)g_heroGravityDir.y * dVar28) - -(float)((double)g_heroGravityDir.z * dVar29);
       dVar24 = (double)DAT_00fb0220;
       dVar23 = (double)DAT_00fb0224;
       dVar22 = (double)DAT_00fb0228;

@@ -856,11 +856,11 @@ void UpdateMoby_326(MobyInstance *moby)
     *(undefined4 *)((int)pvVar10 + 0xb0) = 0xffffffff;
   }
   if (((Level == Hoven) && (DAT_00927118 != 0)) && (*(int *)((int)pvVar10 + 0xc0) == 0)) {
-    if ((MobyInstance *)GameCamera.field19_0x25c.piece<0,4>() == moby) {
-      GameCamera.field19_0x25c[0] = '\0';
-      GameCamera.field19_0x25c[1] = '\0';
-      GameCamera.field19_0x25c[2] = '\0';
-      GameCamera.field19_0x25c[3] = '\0';
+    if ((MobyInstance *)GameCamera.camStatics.fadeIdeal == moby) {
+      ((u8 *)&GameCamera.camStatics)[204 + 0] = '\0';
+      ((u8 *)&GameCamera.camStatics)[204 + 1] = '\0';
+      ((u8 *)&GameCamera.camStatics)[204 + 2] = '\0';
+      ((u8 *)&GameCamera.camStatics)[204 + 3] = '\0';
     }
     if (moby->enabled == '\0') {
       if (*(MobyInstance **)((int)pvVar10 + 0xac) != (MobyInstance *)0x0) {
@@ -892,11 +892,11 @@ void UpdateMoby_326(MobyInstance *moby)
   }
   uVar2 = moby->state;
   if (uVar2 == '\x06') {
-    if ((MobyInstance *)GameCamera.field19_0x25c.piece<0,4>() == moby) {
-      GameCamera.field19_0x25c[0] = '\0';
-      GameCamera.field19_0x25c[1] = '\0';
-      GameCamera.field19_0x25c[2] = '\0';
-      GameCamera.field19_0x25c[3] = '\0';
+    if ((MobyInstance *)GameCamera.camStatics.fadeIdeal == moby) {
+      ((u8 *)&GameCamera.camStatics)[204 + 0] = '\0';
+      ((u8 *)&GameCamera.camStatics)[204 + 1] = '\0';
+      ((u8 *)&GameCamera.camStatics)[204 + 2] = '\0';
+      ((u8 *)&GameCamera.camStatics)[204 + 3] = '\0';
     }
     if (*(int *)((int)pvVar10 + 0xac) != 0) {
       FUN_0025ce40(lVar20,*(int *)((int)pvVar10 + 0xac));
@@ -1166,19 +1166,19 @@ void UpdateMoby_326(MobyInstance *moby)
       if ((21.0 <= SQRT((fVar7 - g_heroPosition.x) * (fVar7 - g_heroPosition.x) +
                         (fVar1 - g_heroPosition.y) * (fVar1 - g_heroPosition.y))) ||
          ((moby->pos).z - g_heroPosition.z <= 1.0)) {
-        if ((MobyInstance *)GameCamera.field19_0x25c.piece<0,4>() == moby) {
-          GameCamera.field19_0x25c[0] = '\0';
-          GameCamera.field19_0x25c[1] = '\0';
-          GameCamera.field19_0x25c[2] = '\0';
-          GameCamera.field19_0x25c[3] = '\0';
+        if ((MobyInstance *)GameCamera.camStatics.fadeIdeal == moby) {
+          ((u8 *)&GameCamera.camStatics)[204 + 0] = '\0';
+          ((u8 *)&GameCamera.camStatics)[204 + 1] = '\0';
+          ((u8 *)&GameCamera.camStatics)[204 + 2] = '\0';
+          ((u8 *)&GameCamera.camStatics)[204 + 3] = '\0';
         }
       }
-      else if (GameCamera.field19_0x25c.piece<0,4>() == 0) {
-        GameCamera.field19_0x25c[4] = '\0';
-        GameCamera.field19_0x25c[5] = '\0';
-        GameCamera.field19_0x25c[6] = '\0';
-        GameCamera.field19_0x25c[7] = '\0';
-        GameCamera.field19_0x25c.piece<0,4>() = moby;
+      else if (GameCamera.camStatics.fadeIdeal == 0) {
+        ((u8 *)&GameCamera.camStatics)[204 + 4] = '\0';
+        ((u8 *)&GameCamera.camStatics)[204 + 5] = '\0';
+        ((u8 *)&GameCamera.camStatics)[204 + 6] = '\0';
+        ((u8 *)&GameCamera.camStatics)[204 + 7] = '\0';
+        GameCamera.camStatics.fadeIdeal = moby;
       }
     }
     fVar8 = fVar1 - *(float *)((int)puVar14 + 0xf4);
@@ -1375,7 +1375,7 @@ void UpdateMoby_326(MobyInstance *moby)
         if (*(int *)((int)pvVar10 + 0xc0) != 0) {
           dVar44 = (double)GameCamera.posY;
           dVar37 = (double)GameCamera.posX;
-          dVar42 = (double)(float)GameCamera.field8_0x14c;
+          dVar42 = (double)(float)GameCamera.posW;
           dVar46 = (double)GameCamera.posZ;
           dVar43 = (double)MB_randRangeFloat(-0.5,0.1);
           dVar43 = (double)(float)(dVar46 + dVar43);
@@ -1586,13 +1586,13 @@ void UpdateMoby_326(MobyInstance *moby)
     }
   }
   else if (uVar2 == '\x02') {
-    if ((iVar24 == 0) && (GameCamera.field19_0x25c.piece<0,4>() == 0)) {
-      GameCamera.field19_0x25c[4] = '\0';
-      GameCamera.field19_0x25c[5] = '\0';
-      GameCamera.field19_0x25c[6] = '\0';
-      GameCamera.field19_0x25c[7] = '\0';
+    if ((iVar24 == 0) && (GameCamera.camStatics.fadeIdeal == 0)) {
+      ((u8 *)&GameCamera.camStatics)[204 + 4] = '\0';
+      ((u8 *)&GameCamera.camStatics)[204 + 5] = '\0';
+      ((u8 *)&GameCamera.camStatics)[204 + 6] = '\0';
+      ((u8 *)&GameCamera.camStatics)[204 + 7] = '\0';
       iVar24 = *(int *)((int)pvVar10 + 0xc0);
-      GameCamera.field19_0x25c.piece<0,4>() = moby;
+      GameCamera.camStatics.fadeIdeal = moby;
     }
     if (iVar24 != 0) {
       auVar51 = ZEXT416(3);
