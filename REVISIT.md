@@ -10,6 +10,97 @@ fully traced against the asm, guessed signatures or unused parameters, invented 
 left as raw `DAT_`/`FUN_`/offsets, and other files made worse by the change. Files cleaned before
 this rule (everything before collproc.cpp) have no entries yet.
 
+## AltiVec / PS3-specific instructions across all cleaned files
+
+Scan of the asm of every function in a finished manual file (not MERGE) for vector ops and `lvlx`,
+`stvewx`, `dcbt`, `mftb`, `lwarx`, ... (prologue `stvx`/`lvx` register saves excluded). None of
+these files emit them yet (only crt0.cpp has any asm). Each function below needs checking:
+
+- Many hits are short patterns (`lvlx` + `vspltw` + `vctsxs`/`vcfsx`, or a lone `vspltisw`/`stvewx`)
+  that gcc for the PPU may produce by itself for scalar int/float conversion. Before converting
+  one, find out whether plain C gives the same code; if it does it is not a stand-in.
+- Longer runs (`vmaddfp`, `vperm`, `vnmsubfp`, `vsel`, `vrsqrtefp`) are real vector code and need
+  intrinsics.
+
+```
+## game/boot.cpp 2
+   FrontEnd_Update lvlx vspltw vspltisw vslw vmaddfp vctsxs
+   DrawSplashScreen vspltw lvlx vspltisw stvewx vsel vand
+## game/camera.cpp 1
+   Camera_InitBlender lvlx vspltw vspltisw stvewx vadduwm vcfsx
+## game/collproc.cpp 5
+   CollLineVsEnv vspltw stvewx
+   CollLine vspltw vspltb stvebx stvewx
+   CollSphere vspltw stvewx
+   CollPill vspltw stvewx
+   CollHeroSphere vspltw stvewx
+## game/debug.cpp 1
+   UpdateDebugSelections lvlx vctsxs vsraw vspltw stvewx vspltisw
+## game/draw.cpp 13
+   UploadViewMatricesToPasses vperm lvlx vspltw vmrghw vmrglw stvewx
+   RebuildSharedWaveTables lvlx vspltw vspltisw vslw vcfsx vmaddfp
+   UpdateViewContext vspltisw vslw vmaddfp vnmsubfp vspltw stvewx
+   FontPrintOptJapanese vspltisw vspltw lvlx vsraw vcfsx vmaddfp
+   FontPrintOptWestern vspltw lvlx vspltisw vsraw vcfsx vmaddfp
+   DrawTimedHelpMsg vspltisw lvlx vspltw vsubuwm vsraw vslw
+   FadeToBlack vspltisw vslw vmaddfp lvlx vspltw vnmsubfp
+   DrawTexturedQuadHud vcmpgtfp vsel lvlx vspltw vspltisw vslw
+   SetScreenResolution stvewx vslw vspltw vspltisw vmaddfp vcfux
+   FastDrawQuad vmrghw vmrglw
+   DrawTexturedStrips vcmpgtfp vsel vspltisw lvlx vspltw vslw
+   ImpactSprite_Draw vmaddfp vperm vspltw lvlx stvewx vnmsubfp
+   ???_Water_ComputeWaveGrid vspltisw vctsxs vsplth stvehx vsldoi vcfsx
+## game/freeze.cpp 3
+   DisplayPrompt vspltw lvlx stvewx vspltisw vslw vmaddfp
+   DrawDialogText lvlx vspltw vspltisw vcfsx vslw vmaddfp
+   UpdateFreeze lvlx vspltw vspltisw vslw vmaddfp vctsxs
+## game/help.cpp 1
+   Help_Suspend lvlx vspltw vspltisw vslw vmaddfp vctsxs
+## game/loaders.cpp 2
+   LoadSpaceshipModel lvlx vsraw vsplth stvehx vperm vspltisw
+   PrintMobyMemory lvlx vcfsx vspltw stvewx
+## game/mesh.cpp 2
+   ShadeVerts vperm vspltw vmaddfp lvlx stvewx vor
+   BuildVerts vspltisw vslw lvlx vspltw vand vcfux
+## game/mission.cpp 1
+   UpdateMissionDisplay lvlx vspltw vslw vspltisw vmaddfp vctsxs
+## game/mobyfunc.cpp 1
+   MB_StartAnimLayer vspltisw vslw vnmsubfp vmaddfp vcfsx lvlx
+## game/music.cpp 1
+   LoadMusic lvlx vspltw vspltisw vslw vmaddfp vctsxs
+## game/partproc.cpp 3
+   CreatePartEx vspltisw
+   UpdateParts vspltw vperm vmaddfp stvewx lvlx vmrghw
+   UpdatePart_22 vspltisw vmaddfp lvlx vslw vcfsx vsrw
+## game/skyfunc.cpp 14
+   SkyLevel_00 lvlx vspltw vspltisw vand vcfsx vnmsubfp
+   SkyLevel_01 lvlx vspltw vand vcfsx vnmsubfp vxor
+   SkyLevel_03 lvlx vspltw vand vcfsx vnmsubfp vxor
+   SkyLevel_04 lvlx vspltw vand vcfsx vnmsubfp vxor
+   SkyLevel_05 vspltisw
+   SkyLevel_07 lvlx vspltisw vspltw vslw vmaddfp vctuxs
+   SkyLevel_08 vspltisw
+   SkyLevel_10 vspltisw lvlx vspltw vand vcfsx vnmsubfp
+   SkyLevel_11 lvlx vspltw vand vcfsx vnmsubfp vxor
+   SkyLevel_12 lvlx vspltw vand vcfsx vnmsubfp vxor
+   SkyLevel_14 vspltisw
+   SkyLevel_15 lvlx vspltw vspltisw vslw vmaddfp vctuxs
+   SkyLevel_16 lvlx vspltw vand vcfsx vnmsubfp vxor
+   SkyLevel_18 vspltisw
+## game/skyproc.cpp 1
+   SkySpriteProc vspltw
+## game/space.cpp 4
+   StartLeaveLevelCutscene lvlx vspltw vcfsx vaddfp vspltisw vslw
+   ChooseLoadingScreen lvlx vmaddfp vspltisw vspltw vslw stvewx
+   Space_DrawShipEffects lvlx vspltw vspltisw vslw vmaddfp vctsxs
+   UpdateSpace lvlx vspltw vspltisw vslw vmaddfp vctsxs
+## game/water.cpp 4
+   WaterTile_DrawCellOvl vcmpgtfp vsel vspltisw vslw lvlx vspltw
+   WaterTile_CullAndDrawCell stvewx vmaddfp lvlx vspltw vspltisw vaddfp
+   SubmitOceanCell vaddfp vspltw lvlx vspltisw vperm vcmpgtfp
+   OceanPass lvlx vspltw vperm vmaddfp vspltisw stvewx
+```
+
 ## game/draw.cpp
 
 ### Draw-list renames (follow-up)
