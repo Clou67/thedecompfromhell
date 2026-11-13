@@ -37,17 +37,15 @@
 #include "idol/tiefunc.h"
 #include "sdk/fios.h"
 #include "sdk/libgcm_cmd/marker.h"
-#include "sdk/mUnk4.h"
 #include "idol/fastinline.h"
 #include <cell/gcm/gcm_macros.h>
 #include <cell/gcm/gcm_enum.h>
-// MERGE (135 of 165 functions cleaned; the rest are generated)
 // game/draw.cpp -- reconstructed from NPEA00385 EBOOT
 // 165 functions, 0x6565c-0x78140: the frame's drawing. The view context and camera matrices,
 // occlusion, the render passes, fonts and HUD sprites, screen effects, water, lava and the
 // textured strip drawers the level renderers share.
 
-/* the RSX command header for count words at a NV4097 register */
+/* one word into the pass's command buffer */
 static inline void Emit(RenderingStep *pass, u32 word)
 {
     *pass->command++ = (RsxCmd)word;
@@ -76,9 +74,9 @@ static inline void EmitVertexConstVec(RenderingStep *pass, int index, float *vec
 }
 
 /* out = in's transpose */
-static inline void Mtx4_Transpose(Mtx4 *out, Mtx4 *in)
+static inline void Mtx4_Transpose(Mtx4 *out, Mtx4 *source)
 {
-    float *src = &in->v0.x;
+    float *src = &source->v0.x;
     float *dst = &out->v0.x;
 
     for (int row = 0; row < 4; row++) {
@@ -102,14 +100,12 @@ void SECTION_HEADER_DRAW(void)
     DAT_0071eeac = 0x10000;
 }
 
-
 // 0x0065670 (0x48 bytes)
 void ResetFrameBufferInfo(void)
 {
     FlushCache(0);
     SetFrameBufferInfo(512, 416, 512, 448, 0, 0);
 }
-
 
 // 0x00656b8 (0x104 bytes)
 /* (the PS2 GS setup for a cutscene; the PS3 build has stubbed most of it) */
@@ -128,49 +124,47 @@ void ResetFrameBufferForCutscene(void)
     STUB_001754dc();
 }
 
-
 // 0x00657c8 (0x1b0 bytes)
 /* a bounding sphere (1/1024 units) against the view: -1 outside, 1 well inside, 0 crossing an
    edge */
 int CheckBSphere(float *bsphere)
 {
     float radius = bsphere[3];
-    float dx = bsphere[0] - GameCamera.posX * 1024.0f;
-    float dy = bsphere[1] - GameCamera.posY * 1024.0f;
-    float dz = bsphere[2] - GameCamera.posZ * 1024.0f;
+    float stepX = bsphere[0] - GameCamera.posX * 1024.0f;
+    float stepY = bsphere[1] - GameCamera.posY * 1024.0f;
+    float stepZ = bsphere[2] - GameCamera.posZ * 1024.0f;
     /* (the binary subtracts a register it never set from the radius for the w term) */
-    float w = radius - 0.0f;
+    float width = radius - 0.0f;
     Mtx4 *view = &GameCamera.mtx0;
-    float x = view->v0.x * dx + view->v1.x * dy + view->v2.x * dz + view->v3.x * w;
-    float y = view->v0.y * dx + view->v1.y * dy + view->v2.y * dz + view->v3.y * w;
-    float z = view->v0.z * dx + view->v1.z * dy + view->v2.z * dz + view->v3.z * w;
+    float posX = view->v0.x * stepX + view->v1.x * stepY + view->v2.x * stepZ + view->v3.x * width;
+    float posY = view->v0.y * stepX + view->v1.y * stepY + view->v2.y * stepZ + view->v3.y * width;
+    float posZ = view->v0.z * stepX + view->v1.z * stepY + view->v2.z * stepZ + view->v3.z * width;
 
-    if (z + radius < g_ViewContext.nearClip || z - radius > g_ViewContext.farClip) {
+    if (posZ + radius < g_ViewContext.nearClip || posZ - radius > g_ViewContext.farClip) {
         return -1;
     }
 
-    x = fabsf(x);
-    y = fabsf(y);
-    if (z * g_ViewContext.xratio < x - radius * g_ViewContext.xradpad) {
+    posX = fabsf(posX);
+    posY = fabsf(posY);
+    if (posZ * g_ViewContext.xratio < posX - radius * g_ViewContext.xradpad) {
         return -1;
     }
-    if (z * g_ViewContext.yratio < y - radius * g_ViewContext.yradpad) {
+    if (posZ * g_ViewContext.yratio < posY - radius * g_ViewContext.yradpad) {
         return -1;
     }
 
-    if (z - radius <= g_ViewContext.nearClip || z + radius >= g_ViewContext.farClip) {
+    if (posZ - radius <= g_ViewContext.nearClip || posZ + radius >= g_ViewContext.farClip) {
         return 0;
     }
-    if (z * g_ViewContext.xratio * 3.0f <= x + radius * g_ViewContext.xradpad) {
+    if (posZ * g_ViewContext.xratio * 3.0f <= posX + radius * g_ViewContext.xradpad) {
         return 0;
     }
-    if (z * g_ViewContext.yratio * 3.0f <= y + radius * g_ViewContext.yradpad) {
+    if (posZ * g_ViewContext.yratio * 3.0f <= posY + radius * g_ViewContext.yradpad) {
         return 0;
     }
 
     return 1;
 }
-
 
 // 0x0065a00 (0x684 bytes)
 // inlined: FastAtan2 @0x65adc
@@ -230,7 +224,6 @@ void UploadViewMatricesToPasses(void)
     g_FrustumExtra.y = idol->frustumOrigin.y;
     g_FrustumExtra.z = idol->frustumOrigin.z;
 }
-
 
 // 0x0066088 (0x504 bytes)
 /* GameCamera's matrices from its orientation (or its euler angles when the debug camera has
@@ -325,7 +318,6 @@ void ComposeCameraMatrix(void)
     UploadViewMatricesToPasses();
 }
 
-
 // 0x0066598 (0x278 bytes)
 /* the water's fog settings (in world units, intensities 0..1) into its shader constants and
    the forward passes' c19 and c20 */
@@ -373,7 +365,6 @@ static inline void ViewGifTag(u8 *tag, u8 nloop, u8 nregs)
     tag[2] = nregs;
     tag[3] = 0;
 }
-
 
 // 0x00668d0 (0x1008 bytes)
 // inlined: FastAtan2 @0x66a98, FastAtan2 @0x66c90, FastAtan2 @0x66e68, FastAtan2 @0x67010, FastAtan2 @0x6702c
@@ -513,7 +504,6 @@ void UpdateViewContext(void)
     RebuildSharedWaveTables();
 }
 
-
 // 0x00678d8 (0xec bytes)
 /* the level's fog, or the water's while the camera is under it, into the view */
 void UpdateFog(void)
@@ -565,77 +555,74 @@ struct OcclGridCells {
     u16 cells[1];
 };
 
-
 // 0x00679c4 (0xe4 bytes)
-/* the visibility bitmap of the 4-unit occlusion cell (x, y, z), or NULL where there is none */
-char *ParseOcclGrid(int x, int y, int z)
+/* the visibility bitmap of the 4-unit occlusion cell (posX, posY, posZ), or NULL where there is none */
+char *ParseOcclGrid(int posX, int posY, int posZ)
 {
     OcclGridHeader *grid = (OcclGridHeader *)OcclGrid;
-    int zi = z - grid->zMin;
+    int cellZ = posZ - grid->zMin;
 
-    if (zi < 0 || zi >= grid->zCnt || grid->zRows[zi] == 0) {
+    if (cellZ < 0 || cellZ >= grid->zCnt || grid->zRows[cellZ] == 0) {
         return NULL;
     }
 
-    OcclGridRow *zRow = (OcclGridRow *)((u8 *)grid + grid->zRows[zi]);
-    int yi = y - zRow->min;
-    if (yi < 0 || yi >= zRow->cnt || zRow->next[yi] == 0) {
+    OcclGridRow *zRow = (OcclGridRow *)((u8 *)grid + grid->zRows[cellZ]);
+    int cellY = posY - zRow->min;
+    if (cellY < 0 || cellY >= zRow->cnt || zRow->next[cellY] == 0) {
         return NULL;
     }
 
-    OcclGridCells *yRow = (OcclGridCells *)((u8 *)grid + zRow->next[yi]);
-    int xi = x - yRow->min;
-    if (xi < 0 || xi >= yRow->cnt || yRow->cells[xi] == 0xffff) {
+    OcclGridCells *yRow = (OcclGridCells *)((u8 *)grid + zRow->next[cellY]);
+    int cellX = posX - yRow->min;
+    if (cellX < 0 || cellX >= yRow->cnt || yRow->cells[cellX] == 0xffff) {
         return NULL;
     }
 
-    return (char *)grid + yRow->cells[xi] * 0x80 + grid->dataOfs;
+    return (char *)grid + yRow->cells[cellX] * 0x80 + grid->dataOfs;
 }
-
 
 // 0x0067ab0 (0xd0 bytes)
 /* the nearer of two cells' bitmaps (by interp), falling back to the other */
-char *GetOcclGridFromPair(int x0, int y0, int z0, int x1, int y1, int z1, float interp)
+char *GetOcclGridFromPair(int startX, int startY, int startZ, int endX, int endY, int endZ, float interp)
 {
     char *cell;
 
     if (interp >= 0.5f) {
-        cell = ParseOcclGrid(x1, y1, z1);
+        cell = ParseOcclGrid(endX, endY, endZ);
         if (cell == NULL) {
-            cell = ParseOcclGrid(x0, y0, z0);
+            cell = ParseOcclGrid(startX, startY, startZ);
         }
     }
     else {
-        cell = ParseOcclGrid(x0, y0, z0);
+        cell = ParseOcclGrid(startX, startY, startZ);
         if (cell == NULL) {
-            cell = ParseOcclGrid(x1, y1, z1);
+            cell = ParseOcclGrid(endX, endY, endZ);
         }
     }
 
     return cell;
 }
 
-/* the neighbour of (x, y, z) along one axis nearer the camera's fraction, or the other side */
-static inline char *OcclNeighbour(int x, int y, int z, int dx, int dy, int dz, float fraction)
+/* the neighbour of (posX, posY, posZ) along one axis nearer the camera's fraction, or the other side */
+static inline char *OcclNeighbour(int posX, int posY, int posZ, int stepX, int stepY, int stepZ, float fraction)
 {
     char *cell;
 
     if (fraction >= 0.5f) {
-        cell = ParseOcclGrid(x + dx, y + dy, z + dz);
+        cell = ParseOcclGrid(posX + stepX, posY + stepY, posZ + stepZ);
         if (cell == NULL) {
-            cell = ParseOcclGrid(x - dx, y - dy, z - dz);
+            cell = ParseOcclGrid(posX - stepX, posY - stepY, posZ - stepZ);
         }
     }
     else {
-        cell = ParseOcclGrid(x - dx, y - dy, z - dz);
+        cell = ParseOcclGrid(posX - stepX, posY - stepY, posZ - stepZ);
         if (cell == NULL) {
-            cell = ParseOcclGrid(x + dx, y + dy, z + dz);
+            cell = ParseOcclGrid(posX + stepX, posY + stepY, posZ + stepZ);
         }
     }
 
     return cell;
 }
-
 
 // 0x0067b90 (0x558 bytes)
 /* OcclVisibility from the camera's occlusion cell. Outside the grid: the neighbours merged
@@ -643,10 +630,10 @@ static inline char *OcclNeighbour(int x, int y, int z, int dx, int dy, int dz, f
 void BuildOcclVisibility(void)
 {
     float scale = 0.25f;
-    int x = FastDoubleToInt(GameCamera.posX * scale);
-    int y = FastDoubleToInt(GameCamera.posY * scale);
-    int z = FastDoubleToInt(GameCamera.posZ * scale);
-    char *cell = ParseOcclGrid(x, y, z);
+    int posX = FastDoubleToInt(GameCamera.posX * scale);
+    int posY = FastDoubleToInt(GameCamera.posY * scale);
+    int posZ = FastDoubleToInt(GameCamera.posZ * scale);
+    char *cell = ParseOcclGrid(posX, posY, posZ);
 
     if (cell != NULL) {
         OcclInvalidGridGp = 0;
@@ -660,9 +647,9 @@ void BuildOcclVisibility(void)
 
     char *merged = NULL;
     if (OcclMode == 0) {
-        char *nearX = OcclNeighbour(x, y, z, 1, 0, 0, GameCamera.posX * scale - (float)FastIntToDouble(x));
-        char *nearY = OcclNeighbour(x, y, z, 0, 1, 0, GameCamera.posY * scale - (float)FastIntToDouble(y));
-        char *nearZ = OcclNeighbour(x, y, z, 0, 0, 1, GameCamera.posZ * scale - (float)FastIntToDouble(z));
+        char *nearX = OcclNeighbour(posX, posY, posZ, 1, 0, 0, GameCamera.posX * scale - (float)FastIntToDouble(posX));
+        char *nearY = OcclNeighbour(posX, posY, posZ, 0, 1, 0, GameCamera.posY * scale - (float)FastIntToDouble(posY));
+        char *nearZ = OcclNeighbour(posX, posY, posZ, 0, 0, 1, GameCamera.posZ * scale - (float)FastIntToDouble(posZ));
 
         if (nearX != NULL || nearY != NULL || nearZ != NULL) {
             merged = (char *)OcclVisibilityMerged;
@@ -706,7 +693,6 @@ void BuildOcclVisibility(void)
     OcclVisibility[0x7f] = OcclVisibility[0x7f] | 0x80;
 }
 
-
 // 0x00680e8 (0x6c bytes)
 /* this frame's OcclVisibility (all on, or built from the grid), handed to the renderer */
 void Occlusion_Update(void)
@@ -720,7 +706,6 @@ void Occlusion_Update(void)
 
     *(void **)((u8 *)(uintptr_t)g_pIdolDrawBase + 0x41c) = OcclVisibility;
 }
-
 
 // 0x0068160 (0x15c bytes)
 /* the view for the game's own frame buffer */
@@ -748,7 +733,6 @@ void InitViewContext(void)
     g_ViewContext.yclip = g_ViewContext.ypix * 4.0f;
 }
 
-
 // 0x00682c8 (0x144 bytes)
 /* a view of the given size and fog (the menus and movies) */
 void SetUserViewContext(int width, int height, float xratio, float fogNearDist, float fogFarDist, float fogNearIntensity,
@@ -771,7 +755,6 @@ void SetUserViewContext(int width, int height, float xratio, float fogNearDist, 
     UpdateViewContext();
 }
 
-
 // 0x006840c (0x90 bytes)
 void ResetDrawGlobals(void)
 {
@@ -788,18 +771,15 @@ void ResetDrawGlobals(void)
     WaterPlaneActive = 0;
 }
 
-
 // 0x006849c (0x4 bytes)
 void STUB_0006849c(...)
 {
 }
 
-
 // 0x00684a0 (0x4 bytes)
 void STUB_000684a0(...)
 {
 }
-
 
 // 0x00684a4 (0xbc bytes)
 /* the frame's camera matrices and (when asked) occlusion, then the renderer's pass setup */
@@ -814,7 +794,6 @@ void UpdateOcclusion(int withOcclusion)
 
     idol->vtable->SetupPasses(idol);
 }
-
 
 // 0x0068560 (0x64 bytes)
 /* flushes the SPU job queue and has the renderer build and flip the frame */
@@ -834,24 +813,24 @@ void Render_DispatchJob(void)
 #define HUD_SET_BEGIN_END     CELL_GCM_METHOD(CELL_GCM_NV4097_SET_BEGIN_END, 1)
 #define HUD_SET_POSITION2F    CELL_GCM_METHOD(CELL_GCM_NV4097_SET_VERTEX_DATA2F_M, 2)
 
-/* a HUD vertex: its texture coordinate, then its position (16 bits each, y/v high) */
-static inline void HudVertex(RenderingStep *pass, int u, int v, int x, int y)
+/* a HUD vertex: its texture coordinate, then its position (16 bits each, posY/texV high) */
+static inline void HudVertex(RenderingStep *pass, int texU, int texV, int posX, int posY)
 {
     Emit(pass, HUD_SET_TEXCOORD2S);
-    Emit(pass, (v & 0xffff) << 16 | (u & 0xffff));
+    Emit(pass, (texV & 0xffff) << 16 | (texU & 0xffff));
     Emit(pass, HUD_SET_POSITION2S);
-    Emit(pass, (y & 0xffff) << 16 | (x & 0xffff));
+    Emit(pass, (posY & 0xffff) << 16 | (posX & 0xffff));
 }
 
 /* binds tex and starts a quad in color on the HUD pass */
 /* one HUD vertex at a float position */
-static inline void HudVertexF(RenderingStep *pass, int u, int v, float x, float y)
+static inline void HudVertexF(RenderingStep *pass, int texU, int texV, float posX, float posY)
 {
     Emit(pass, HUD_SET_TEXCOORD2S);
-    Emit(pass, (v & 0xffff) << 16 | (u & 0xffff));
+    Emit(pass, (texV & 0xffff) << 16 | (texU & 0xffff));
     Emit(pass, HUD_SET_POSITION2F);
-    Emit(pass, *(u32 *)&x);
-    Emit(pass, *(u32 *)&y);
+    Emit(pass, *(u32 *)&posX);
+    Emit(pass, *(u32 *)&posY);
 }
 
 static inline void HudBeginQuad(void *tex, u32 color)
@@ -876,14 +855,12 @@ static inline void HudEnd(void)
     Emit(HUD_Pass, 0);
 }
 
-
 // 0x00685c4 (0x1c bytes)
 /* effect texture idx's entry in TexInfo */
 int GetEffectTex(int idx)
 {
     return ((int *)(uintptr_t)TexInfo)[idx];
 }
-
 
 // 0x00685e0 (0x2bc bytes)
 /* tex over the whole 512x416 screen in the frame buffer's own viewport */
@@ -908,42 +885,46 @@ void DrawFullScreenQuad(int rgba, void *tex)
     FUN_004d86b0(idolDraw);
 }
 
-
 // 0x006889c (0x354 bytes)
-/* tex's (u, v, uw, vh) texels (in half-texel units) drawn at (x, y, w, h) on the HUD pass, in
+/* tex's (texU, texV, texW, texH) texels (in half-texel units) drawn at (posX, posY, width, height) on the HUD pass, in
    color; a full 512x416 rectangle goes through DrawFullScreenQuad */
-void Sprite_DrawShape(int x, int y, int w, int h, int u, int v, int uw, int vh, u32 color, void *tex)
+void Sprite_DrawShape(int posX, int posY, int width, int height, int texU, int texV, int texW, int texH, u32 color, void *tex)
 {
-    if (x == 0 && w == 512 && y == 0 && h == 416) {
+    if (posX == 0 && width == 512 && posY == 0 && height == 416) {
         DrawFullScreenQuad(color, tex);
         return;
     }
 
-    int left = u * 2;
-    int top = v * 2;
-    int right = (u + uw) * 2;
-    int bottom = (v + vh) * 2;
+    int left = texU * 2;
+    int top = texV * 2;
+    int right = (texU + texW) * 2;
+    int bottom = (texV + texH) * 2;
 
     HudBeginQuad(tex, color);
-    HudVertex(HUD_Pass, left, top, x, y);
-    HudVertex(HUD_Pass, left, bottom, x, y + h);
-    HudVertex(HUD_Pass, right, bottom, x + w, y + h);
-    HudVertex(HUD_Pass, right, top, x + w, y);
+    HudVertex(HUD_Pass, left, top, posX, posY);
+    HudVertex(HUD_Pass, left, bottom, posX, posY + height);
+    HudVertex(HUD_Pass, right, bottom, posX + width, posY + height);
+    HudVertex(HUD_Pass, right, top, posX + width, posY);
     HudEnd();
 }
 
-
 // 0x0068bf0 (0x78 bytes)
-void Sprite_DrawShapeF(float x, float y, float w, float h, int u, int v, int uw, int vh, u32 color, void *tex)
+void Sprite_DrawShapeF(float posX, float posY, float width, float height, int texU, int texV, int texW, int texH, u32 color, void *tex)
 {
-    Sprite_DrawShape((int)x, (int)y, (int)w, (int)h, u, v, uw, vh, color, tex);
+    Sprite_DrawShape((int)posX, (int)posY, (int)width, (int)height, texU, texV, texW, texH, color, tex);
 }
 
+// 0x006a5c4 (0x70 bytes)
+/* Sprite_DrawShape with an effect texture by its index in EffectTexHeaders */
+void Sprite_DrawShapeWrapper(int posX, int posY, int width, int height, int texU, int texV, int texW, int texH, u32 color, int tex)
+{
+    Sprite_DrawShape(posX, posY, width, height, texU, texV, texW, texH, color, (u8 *)(uintptr_t)EffectTexHeaders + tex * 0x24);
+}
 
 // 0x0068c70 (0x3e4 bytes)
 /* Draws len bytes of str with g_JapanFontTex. Bytes 8..15 pick a palette colour, bytes below 32
    are 24x16 grey glyphs, 0xbd/0xbe are diacritics placed against the previous character */
-void FontPrintScaledJapanese(float x, float y, float scale, u32 color, const u8 *str, int len, int unused, const FontGlyph *table)
+void FontPrintScaledJapanese(float posX, float posY, float scale, u32 color, const u8 *str, int len, int unused, const FontGlyph *table)
 {
     if (g_FontKeepPalette == 0) {
         g_FontPalette[0] = color;
@@ -953,57 +934,56 @@ void FontPrintScaledJapanese(float x, float y, float scale, u32 color, const u8 
     int size = (int)(scale * 16.0f);
 
     for (int i = 0; i != len; i++) {
-        u8 ch = str[i];
+        u8 code = str[i];
 
-        if (ch == 0) {
+        if (code == 0) {
             return;
         }
 
-        if (ch >= 8 && ch <= 15) {
+        if (code >= 8 && code <= 15) {
             if (g_FontColorsEnabled != 0) {
-                color = (color & 0xff000000) | (g_FontPalette[ch - 8] & 0xffffff);
+                color = (color & 0xff000000) | (g_FontPalette[code - 8] & 0xffffff);
             }
 
             continue;
         }
 
-        float yOff = (float)FastIntToDouble(table[ch].yOff);
+        float yOff = (float)FastIntToDouble(table[code].yOff);
 
-        ch = str[i];
+        code = str[i];
 
-        if (table[ch].width == 0) {
+        if (table[code].width == 0) {
             continue;
         }
 
-        const FontGlyph *glyph = &table[ch];
+        const FontGlyph *glyph = &table[code];
 
-        if (ch < 32) {
+        if (code < 32) {
             u32 sum = (color & 0xff) + ((color >> 8) & 0xff) + ((color >> 16) & 0xff) + 1;
             u32 grey = (sum * 341) >> 10;
             u32 greyColor = (color & 0xff000000) + (grey << 16) + (grey << 8) + grey;
 
-            Sprite_DrawShape((int)x, (int)(yOff * scale + y), wide, size, glyph->u, glyph->v, 24, 16, greyColor, &g_JapanFontTex);
+            Sprite_DrawShape((int)posX, (int)(yOff * scale + posY), wide, size, glyph->u, glyph->v, 24, 16, greyColor, &g_JapanFontTex);
         }
-        else if (ch == 0xbd || ch == 0xbe) {
+        else if (code == 0xbd || code == 0xbe) {
             u8 prev = str[i - 1];
             const FontGlyph *mark = &table[prev + 0x80];
             int shift = mark->width - table[prev].width;
 
-            Sprite_DrawShape((int)(shift * scale + x), (int)(mark->yOff * scale + y), size, size, glyph->u, glyph->v, 16, 16, color, &g_JapanFontTex);
+            Sprite_DrawShape((int)(shift * scale + posX), (int)(mark->yOff * scale + posY), size, size, glyph->u, glyph->v, 16, 16, color, &g_JapanFontTex);
 
             shift = mark->width - table[str[i - 1]].width;
-            x = (shift + (str[i] == 0xbe) + 4) * scale + x;
+            posX = (shift + (str[i] == 0xbe) + 4) * scale + posX;
 
             continue;
         }
-        else if (ch > 32) {
-            Sprite_DrawShape((int)x, (int)(yOff * scale + y), size, size, glyph->u, glyph->v, 16, 16, color, &g_JapanFontTex);
+        else if (code > 32) {
+            Sprite_DrawShape((int)posX, (int)(yOff * scale + posY), size, size, glyph->u, glyph->v, 16, 16, color, &g_JapanFontTex);
         }
 
-        x = (float)FastIntToDouble(table[str[i]].width) * scale + x;
+        posX = (float)FastIntToDouble(table[str[i]].width) * scale + posX;
     }
 }
-
 
 // 0x0069058 (0x7c bytes)
 /* Width of the first len characters of str (up to a 0 byte) in table, times scale */
@@ -1021,7 +1001,6 @@ int FontLenScaledWithTableNoKern(float scale, const u8 *str, int len, const Font
 
     return (int)width;
 }
-
 
 // 0x00690e0 (0x5ac bytes)
 /* Prints str into win with FontPrintScaledJapanese, breaking lines at spaces and control bytes so
@@ -1065,22 +1044,22 @@ void FontPrintOptJapanese(float scale, FontWindow *win, u32 color, const u8 *str
 
             if (width > 0) {
                 do {
-                    u8 ch = str[pos];
+                    u8 code = str[pos];
 
-                    if (ch == ' ' || ch < 16) {
+                    if (code == ' ' || code < 16) {
                         breakAt = pos;
                     }
 
-                    if (g_FontColorsEnabled != 0 && ch >= 8 && ch <= 15) {
-                        colorIdx = ch - 8;
+                    if (g_FontColorsEnabled != 0 && code >= 8 && code <= 15) {
+                        colorIdx = code - 8;
                     }
 
-                    if (ch == 0 || ch == 1) {
+                    if (code == 0 || code == 1) {
                         break;
                     }
 
                     pos++;
-                    lineWidth += table[ch].width;
+                    lineWidth += table[code].width;
                 } while (lineWidth < width);
             }
 
@@ -1092,15 +1071,15 @@ void FontPrintOptJapanese(float scale, FontWindow *win, u32 color, const u8 *str
 
             pos = lineEnd[lines];
 
-            u8 ch = str[pos];
+            u8 code = str[pos];
 
-            if (ch == ' ' || ch < 16) {
+            if (code == ' ' || code < 16) {
                 lineEnd[lines] = pos - 1;
             }
 
             lines++;
 
-            if (ch == 0) {
+            if (code == 0) {
                 break;
             }
 
@@ -1115,10 +1094,10 @@ void FontPrintOptJapanese(float scale, FontWindow *win, u32 color, const u8 *str
     win->max_width = 0;
     win->max_height = lines * spacing;
 
-    int y = textY;
+    int posY = textY;
 
     if (flags & 2) {
-        y = textY - ((short)spacing * lines >> 1);
+        posY = textY - ((short)spacing * lines >> 1);
     }
 
     for (int i = 0; i < lines; i++) {
@@ -1145,14 +1124,14 @@ void FontPrintOptJapanese(float scale, FontWindow *win, u32 color, const u8 *str
         if ((flags & 4) == 0) {
             g_FontPalette[0] = color;
 
-            int x = win->text_x;
+            int posX = win->text_x;
 
             if (flags & 1) {
-                x = win->text_x - (pixels >> 1);
+                posX = win->text_x - (pixels >> 1);
             }
 
-            float drawX = (float)x;
-            float drawY = (float)y;
+            float drawX = (float)posX;
+            float drawY = (float)posY;
 
             if (flags & 8) {
                 drawX = (float)win->sub_pixel_x * 0.0625f + drawX;
@@ -1162,7 +1141,7 @@ void FontPrintOptJapanese(float scale, FontWindow *win, u32 color, const u8 *str
             FontPrintScaledJapanese(drawX, drawY, scale, g_FontPalette[lineColor[i]], line, count, unused, table);
         }
 
-        y += win->line_spacing;
+        posY += win->line_spacing;
     }
 
     g_FontKeepPalette = 0;
@@ -1183,7 +1162,6 @@ static inline void HudBindEffectTex(int tex)
 
     FUN_004d6bb0(HUD_Pass, 0, (RsxCmd *)words);
 }
-
 
 // 0x006968c (0x378 bytes)
 /* DL's DrawSpriteFont without one_to_one: texels (tx_u, tx_v, tx_w, tx_h) of effect texture tex0
@@ -1217,18 +1195,16 @@ void DrawSpriteFont(float sc_x, float sc_y, float sc_w, float sc_h, int tx_u, in
     HudEnd();
 }
 
-
 // 0x0069a04 (0x40 bytes)
 void DrawSpriteFont_thunk(float sc_x, float sc_y, float sc_w, float sc_h, int tx_u, int tx_v, int tx_w, int tx_h, u64 rgba, u64 tex0)
 {
     DrawSpriteFont(sc_x, sc_y, sc_w, sc_h, tx_u, tx_v, tx_w, tx_h, rgba, tex0);
 }
 
-
 // 0x0069a50 (0x34c bytes)
 /* FontPrintScaledJapanese through DrawSpriteFont with effect texture tex: glyph rows start one
    texel down and are 15 high, and bytes 0x80..0xa7 also draw the mark at table[ch + 0x40] */
-void FontPrintScaledWestern(float x, float y, float scale, u32 color, const u8 *str, int len, u64 tex, const FontGlyph *table)
+void FontPrintScaledWestern(float posX, float posY, float scale, u32 color, const u8 *str, int len, u64 tex, const FontGlyph *table)
 {
     SetGSReg(3, idol_draw::PackCmd(0, 1, 0, 1, 0));
     SetGSReg(0x16, idol_draw::Blend(1, 5, 4, 0, 0, 0, 0, 1));
@@ -1246,56 +1222,55 @@ void FontPrintScaledWestern(float x, float y, float scale, u32 color, const u8 *
     float wide = scale * 24.0f;
 
     for (int i = 0; i != len; i++) {
-        u8 ch = str[i];
+        u8 code = str[i];
 
-        if (ch == 0) {
+        if (code == 0) {
             return;
         }
 
-        if (ch >= 8 && ch <= 15) {
+        if (code >= 8 && code <= 15) {
             if (g_FontColorsEnabled != 0) {
-                color = (color & 0xff000000) | (g_FontPalette[ch - 8] & 0xffffff);
+                color = (color & 0xff000000) | (g_FontPalette[code - 8] & 0xffffff);
             }
 
             continue;
         }
 
-        if (table[ch].width == 0) {
+        if (table[code].width == 0) {
             continue;
         }
 
-        float yOff = (float)FastIntToDouble(table[ch].yOff);
+        float yOff = (float)FastIntToDouble(table[code].yOff);
 
-        ch = str[i];
+        code = str[i];
 
-        if (ch >= 128 && ch < 168) {
-            const FontGlyph *mark = &table[ch + 0x40];
+        if (code >= 128 && code < 168) {
+            const FontGlyph *mark = &table[code + 0x40];
             float markX = (float)FastIntToDouble(mark->width);
             float markY = (float)FastIntToDouble(mark->yOff);
 
-            DrawSpriteFont(markX * scale + x, markY * scale + y, size, size, mark->u, mark->v + 1, 16, 15, color, tex);
+            DrawSpriteFont(markX * scale + posX, markY * scale + posY, size, size, mark->u, mark->v + 1, 16, 15, color, tex);
 
-            ch = str[i];
+            code = str[i];
         }
 
-        const FontGlyph *glyph = &table[ch];
-        float drawY = yOff * scale + y;
+        const FontGlyph *glyph = &table[code];
+        float drawY = yOff * scale + posY;
 
-        if (ch < 32) {
+        if (code < 32) {
             u32 sum = (color & 0xff) + ((color >> 8) & 0xff) + ((color >> 16) & 0xff) + 1;
             u32 grey = (sum * 341) >> 10;
             u32 greyColor = (color & 0xff000000) + (grey << 16) + (grey << 8) + grey;
 
-            DrawSpriteFont(x, drawY, wide, size, glyph->u, glyph->v + 1, 24, 15, greyColor, tex);
+            DrawSpriteFont(posX, drawY, wide, size, glyph->u, glyph->v + 1, 24, 15, greyColor, tex);
         }
-        else if (ch > 32) {
-            DrawSpriteFont(x, drawY, size, size, glyph->u, glyph->v + 1, 16, 15, color, tex);
+        else if (code > 32) {
+            DrawSpriteFont(posX, drawY, size, size, glyph->u, glyph->v + 1, 16, 15, color, tex);
         }
 
-        x = (float)FastIntToDouble(table[str[i]].width) * scale + x;
+        posX = (float)FastIntToDouble(table[str[i]].width) * scale + posX;
     }
 }
-
 
 // 0x0069db8 (0x750 bytes)
 /* FontPrintOptJapanese for the Western fonts through FontPrintScaledWestern. A scale of 1 becomes 0.9 in
@@ -1365,22 +1340,22 @@ void FontPrintOptWestern(float scale, FontWindow *win, u32 color, const char *te
 
                 if (width > 0) {
                     do {
-                        u8 ch = str[pos];
+                        u8 code = str[pos];
 
-                        if (ch == ' ' || ch < 16) {
+                        if (code == ' ' || code < 16) {
                             breakAt = pos;
                         }
 
-                        if (g_FontColorsEnabled != 0 && ch >= 8 && ch <= 15) {
-                            colorIdx = ch - 8;
+                        if (g_FontColorsEnabled != 0 && code >= 8 && code <= 15) {
+                            colorIdx = code - 8;
                         }
 
-                        if (ch == 0 || ch == 1) {
+                        if (code == 0 || code == 1) {
                             break;
                         }
 
                         pos++;
-                        lineWidth += (int)((float)table[ch].width * scale);
+                        lineWidth += (int)((float)table[code].width * scale);
                     } while (lineWidth < width);
                 }
 
@@ -1392,15 +1367,15 @@ void FontPrintOptWestern(float scale, FontWindow *win, u32 color, const char *te
 
                 pos = lineEnd[lines];
 
-                u8 ch = str[pos];
+                u8 code = str[pos];
 
-                if (ch == ' ' || ch < 16) {
+                if (code == ' ' || code < 16) {
                     lineEnd[lines] = pos - 1;
                 }
 
                 lines++;
 
-                if (ch == 0) {
+                if (code == 0) {
                     lastWidth = lineWidth;
                     break;
                 }
@@ -1436,10 +1411,10 @@ void FontPrintOptWestern(float scale, FontWindow *win, u32 color, const char *te
     win->max_width = 0;
     win->max_height = lines * spacing;
 
-    int y = textY;
+    int posY = textY;
 
     if (flags & 2) {
-        y = textY - ((short)spacing * lines >> 1);
+        posY = textY - ((short)spacing * lines >> 1);
     }
 
     for (int i = 0; i < lines; i++) {
@@ -1466,14 +1441,14 @@ void FontPrintOptWestern(float scale, FontWindow *win, u32 color, const char *te
         if ((flags & 4) == 0) {
             g_FontPalette[0] = color;
 
-            int x = win->text_x;
+            int posX = win->text_x;
 
             if (flags & 1) {
-                x = win->text_x - (pixels >> 1);
+                posX = win->text_x - (pixels >> 1);
             }
 
-            float drawX = (float)x;
-            float drawY = (float)y;
+            float drawX = (float)posX;
+            float drawY = (float)posY;
 
             if (flags & 8) {
                 drawX = (float)win->sub_pixel_x * 0.0625f + drawX;
@@ -1483,12 +1458,11 @@ void FontPrintOptWestern(float scale, FontWindow *win, u32 color, const char *te
             FontPrintScaledWestern(drawX, drawY, scale, g_FontPalette[lineColor[i]], line, count, tex, table);
         }
 
-        y += win->line_spacing;
+        posY += win->line_spacing;
     }
 
     g_FontKeepPalette = 0;
 }
-
 
 // 0x006a510 (0xb4 bytes)
 /* text in win at scale 1 with the medium font: JapaneseGlyphs in Japanese mode, else
@@ -1503,15 +1477,6 @@ void FontPrintMediumOpt(FontWindow *win, u32 color, const char *str, int len)
     }
 }
 
-
-// 0x006a5c4 (0x70 bytes)
-/* Sprite_DrawShape with an effect texture by its index in EffectTexHeaders */
-void Sprite_DrawShapeWrapper(int x, int y, int w, int h, int u, int v, int uw, int vh, u32 color, int tex)
-{
-    Sprite_DrawShape(x, y, w, h, u, v, uw, vh, color, (u8 *)(uintptr_t)EffectTexHeaders + tex * 0x24);
-}
-
-
 // 0x006a634 (0xe4 bytes)
 /* a flat rectangle in color with effect texture 22 (the whole screen through DrawFullScreenQuad) */
 void DrawRectOverlay(int top, int bot, int left, int right, int color)
@@ -1525,7 +1490,6 @@ void DrawRectOverlay(int top, int bot, int left, int right, int color)
 
     Sprite_DrawShape(left, top, right - left, bot - top, 0, 0, 16, 16, color, tex);
 }
-
 
 // 0x006a718 (0x578 bytes)
 /* a dark grey (0x040404) box with alpha whose left and right edges step in over two, three and
@@ -1545,7 +1509,6 @@ void DrawRoundedRect(short top, short bot, short left, short right, int alpha)
     DrawRectOverlay(top + 4, bot - 4, right + 3, right + 4, color);
 }
 
-
 // 0x006ac90 (0x3c bytes)
 void SetFontWindow(FontWindow *window, int win_top, int win_bot, int win_left, int win_right, int text_x, int text_y, int line_spacing, int flags)
 {
@@ -1562,7 +1525,6 @@ void SetFontWindow(FontWindow *window, int win_top, int win_bot, int win_left, i
     window->sub_pixel_x = 0;
     window->sub_pixel_y = 0;
 }
-
 
 // 0x006accc (0x74 bytes)
 /* subtitles are always on in languages 2..5, and in two English cutscenes (scene 4 on Novalis,
@@ -1594,7 +1556,6 @@ static inline void SubtitlePrint(FontWindow *window, const char *text)
         FontPrintOptWestern(1.0f, window, 0x80b0b0b0, text, -1, GetEffectTex(1), &MediumWesternGlyphs);
     }
 }
-
 
 // 0x006ad48 (0x460 bytes)
 /* Prints the first subtitle line covering g_SpaceSceneFrame over a rounded box at the bottom of
@@ -1684,7 +1645,6 @@ void DrawSubtitles(void)
     }
 }
 
-
 // 0x006b1a8 (0x44 bytes)
 /* slides the letterbox bars one pixel a frame towards 24 pixels while LetterBoxOn, else to 0 */
 void UpdateLetterBox(void)
@@ -1712,7 +1672,6 @@ static inline void SetEffectAlpha(u64 alpha)
         SetGSReg(3, alpha & 0xff000000ffULL);
     }
 }
-
 
 // 0x006b1f8 (0x3ac bytes)
 /* ScreenColorEffectNow over the frame buffer: the background colour over everything, then
@@ -1789,20 +1748,17 @@ void DrawScreenEffect(void)
     FUN_004d86b0(idolDraw);
 }
 
-
 // 0x006b5a4 (0x38 bytes)
-void DrawScreenOverlayTex(int r, int g, int b, int a, void *tex)
+void DrawScreenOverlayTex(int red, int green, int blue, int alpha, void *tex)
 {
-    DrawFullScreenQuad(a << 24 | (b & 0xff) << 16 | (g & 0xff) << 8 | (r & 0xff), tex);
+    DrawFullScreenQuad(alpha << 24 | (blue & 0xff) << 16 | (green & 0xff) << 8 | (red & 0xff), tex);
 }
-
 
 // 0x006b5dc (0x5c bytes)
-void DrawScreenOverlay(int r, int g, int b, int a)
+void DrawScreenOverlay(int red, int green, int blue, int alpha)
 {
-    DrawFullScreenQuad(a << 24 | (b & 0xff) << 16 | (g & 0xff) << 8 | (r & 0xff), FlatTex());
+    DrawFullScreenQuad(alpha << 24 | (blue & 0xff) << 16 | (green & 0xff) << 8 | (red & 0xff), FlatTex());
 }
-
 
 // 0x006b638 (0xdc bytes)
 void ExecutePostDraws(void)
@@ -1820,7 +1776,6 @@ void ExecutePostDraws(void)
     }
 }
 
-
 // 0x006b714 (0x94 bytes)
 void ExecuteRegisteredMobyFuncs(void)
 {
@@ -1828,7 +1783,6 @@ void ExecuteRegisteredMobyFuncs(void)
         g_MobyFuncList[i](g_MobyFuncListArgs[i]);
     }
 }
-
 
 // 0x006b7a8 (0xdc bytes)
 void ExecutePostPreDraws(void)
@@ -1845,7 +1799,6 @@ void ExecutePostPreDraws(void)
         idol_draw::RsxCmd_WritePass(ForwardPass);
     }
 }
-
 
 // 0x006b890 (0x200 bytes)
 /* effect's colour over the frame buffer with the depth test off */
@@ -1877,7 +1830,6 @@ void DrawScreenInsertEffect(ScreenInsertEffect *effect)
     FUN_004d86b0(idolDraw);
 }
 
-
 // 0x006ba90 (0xdc bytes)
 void ExecutePreDraws(void)
 {
@@ -1907,7 +1859,6 @@ static inline void DrawScreenFade(float *amount, u32 rgb)
         DrawFullScreenQuad(alpha << 24 | rgb, FlatTex());
     }
 }
-
 
 // 0x006bb78 (0x8a8 bytes)
 /* One frame of the world: sets up and draws tfrags, ties and shrubs, the sky, the registered
@@ -2056,7 +2007,6 @@ void DefaultDraw(void)
     LevelFogMode = 0;
 }
 
-
 // 0x006c424 (0x70 bytes)
 void SetupDefaultDraw(void)
 {
@@ -2073,7 +2023,6 @@ void SetupDefaultDraw(void)
     DefaultDraw();
 }
 
-
 // 0x006c494 (0x44 bytes)
 void SetupDefaultDrawMovie(void)
 {
@@ -2085,7 +2034,6 @@ void SetupDefaultDrawMovie(void)
     g_RenderFlags = (RENDER)0x7f;
     DefaultDraw();
 }
-
 
 // 0x006c4d8 (0x80 bytes)
 /* the world under the freeze overlay when it froze normal play, the pause menu when it froze the
@@ -2108,7 +2056,6 @@ void SetupDefaultDrawFreeze(void)
     DrawDialogText();
 }
 
-
 // 0x006c558 (0x84 bytes)
 void InitLevelRenderState(void)
 {
@@ -2121,7 +2068,6 @@ void InitLevelRenderState(void)
     DrawPauseMenu(0);
 }
 
-
 // 0x006c5dc (0x10 bytes)
 void EnableFontColors(void)
 {
@@ -2129,14 +2075,14 @@ void EnableFontColors(void)
 }
 
 /* a palette byte (8..15) changes color when font colours are on; true when ch was one */
-static inline bool FontPaletteCode(u8 ch, u32 *color)
+static inline bool FontPaletteCode(u8 code, u32 *color)
 {
-    if (ch < 8 || ch > 15) {
+    if (code < 8 || code > 15) {
         return false;
     }
 
     if (g_FontColorsEnabled != 0) {
-        *color = (*color & 0xff000000) | (g_FontPalette[ch - 8] & 0xffffff);
+        *color = (*color & 0xff000000) | (g_FontPalette[code - 8] & 0xffffff);
     }
 
     return true;
@@ -2151,10 +2097,9 @@ static inline u32 FontGrey(u32 color)
     return (color & 0xff000000) + (grey << 16) + (grey << 8) + grey;
 }
 
-
 // 0x006c5ec (0x2e4 bytes)
 /* FontPrintScaledJapanese at scale 1 in whole pixels */
-void FontPrintJapanese(int x, int y, u32 color, const char *text, int len, int unused, void *glyphs)
+void FontPrintJapanese(int posX, int posY, u32 color, const char *text, int len, int unused, void *glyphs)
 {
     const u8 *str = (const u8 *)text;
     const FontGlyph *table = (const FontGlyph *)glyphs;
@@ -2164,47 +2109,46 @@ void FontPrintJapanese(int x, int y, u32 color, const char *text, int len, int u
     }
 
     for (int i = 0; i != len; i++) {
-        u8 ch = str[i];
+        u8 code = str[i];
 
-        if (ch == 0) {
+        if (code == 0) {
             return;
         }
 
-        if (FontPaletteCode(ch, &color)) {
+        if (FontPaletteCode(code, &color)) {
             continue;
         }
 
-        const FontGlyph *glyph = &table[ch];
+        const FontGlyph *glyph = &table[code];
 
         if (glyph->width == 0) {
             continue;
         }
 
-        if (ch < 32) {
-            Sprite_DrawShape(x, y + glyph->yOff, 24, 16, glyph->u, glyph->v, 24, 16, FontGrey(color), &g_JapanFontTex);
+        if (code < 32) {
+            Sprite_DrawShape(posX, posY + glyph->yOff, 24, 16, glyph->u, glyph->v, 24, 16, FontGrey(color), &g_JapanFontTex);
         }
-        else if (ch == 0xbd || ch == 0xbe) {
+        else if (code == 0xbd || code == 0xbe) {
             u8 prev = str[i - 1];
             const FontGlyph *mark = &table[prev + 0x80];
 
-            Sprite_DrawShape(x - table[prev].width + mark->width, y + mark->yOff, 16, 16, glyph->u, glyph->v, 16, 16, color, &g_JapanFontTex);
+            Sprite_DrawShape(posX - table[prev].width + mark->width, posY + mark->yOff, 16, 16, glyph->u, glyph->v, 16, 16, color, &g_JapanFontTex);
 
-            x = (mark->width - table[str[i - 1]].width) + (str[i] == 0xbe) + x + 4;
+            posX = (mark->width - table[str[i - 1]].width) + (str[i] == 0xbe) + posX + 4;
 
             continue;
         }
-        else if (ch > 32) {
-            Sprite_DrawShape(x, y + glyph->yOff, 16, 16, glyph->u, glyph->v, 16, 16, color, &g_JapanFontTex);
+        else if (code > 32) {
+            Sprite_DrawShape(posX, posY + glyph->yOff, 16, 16, glyph->u, glyph->v, 16, 16, color, &g_JapanFontTex);
         }
 
-        x += table[str[i]].width;
+        posX += table[str[i]].width;
     }
 }
 
-
 // 0x006c8d0 (0x33c bytes)
 /* FontPrintScaledWestern at scale 1 in whole pixels through Sprite_DrawShape, glyphs a full 16 high */
-void FontPrint(int x, int y, u32 color, const char *text, int len, int tex, void *glyphs)
+void FontPrint(int posX, int posY, u32 color, const char *text, int len, int tex, void *glyphs)
 {
     const u8 *str = (const u8 *)text;
     const FontGlyph *table = (const FontGlyph *)glyphs;
@@ -2218,54 +2162,52 @@ void FontPrint(int x, int y, u32 color, const char *text, int len, int tex, void
     }
 
     for (int i = 0; i != len; i++) {
-        u8 ch = str[i];
+        u8 code = str[i];
 
-        if (ch == 0) {
+        if (code == 0) {
             return;
         }
 
-        if (FontPaletteCode(ch, &color)) {
+        if (FontPaletteCode(code, &color)) {
             continue;
         }
 
-        if (table[ch].width == 0) {
+        if (table[code].width == 0) {
             continue;
         }
 
-        if (ch >= 128 && ch < 168) {
-            const FontGlyph *mark = &table[ch + 0x40];
+        if (code >= 128 && code < 168) {
+            const FontGlyph *mark = &table[code + 0x40];
 
-            Sprite_DrawShape(x + mark->width, y + mark->yOff, 16, 16, mark->u, mark->v, 16, 16, color, texHeader);
+            Sprite_DrawShape(posX + mark->width, posY + mark->yOff, 16, 16, mark->u, mark->v, 16, 16, color, texHeader);
 
-            ch = str[i];
+            code = str[i];
         }
 
-        const FontGlyph *glyph = &table[ch];
+        const FontGlyph *glyph = &table[code];
 
-        if (ch < 32) {
-            Sprite_DrawShape(x, y + glyph->yOff, 24, 16, glyph->u, glyph->v, 24, 16, FontGrey(color), texHeader);
+        if (code < 32) {
+            Sprite_DrawShape(posX, posY + glyph->yOff, 24, 16, glyph->u, glyph->v, 24, 16, FontGrey(color), texHeader);
         }
-        else if (ch > 32) {
-            Sprite_DrawShape(x, y + glyph->yOff, 16, 16, glyph->u, glyph->v, 16, 16, color, texHeader);
+        else if (code > 32) {
+            Sprite_DrawShape(posX, posY + glyph->yOff, 16, 16, glyph->u, glyph->v, 16, 16, color, texHeader);
         }
 
-        x += table[str[i]].width;
+        posX += table[str[i]].width;
     }
 }
-
 
 // 0x006cc0c (0xa8 bytes)
-/* str at (x, y) in the medium font: JapaneseGlyphs in Japanese mode, else MediumWesternGlyphs */
-void FontPrintMediumLeft(int x, int y, u32 color, const char *str, int len)
+/* str at (posX, posY) in the medium font: JapaneseGlyphs in Japanese mode, else MediumWesternGlyphs */
+void FontPrintMediumLeft(int posX, int posY, u32 color, const char *str, int len)
 {
     if (g_JapaneseMode) {
-        FontPrintJapanese(x, y, color, str, len, GetEffectTex(1), &JapaneseGlyphs);
+        FontPrintJapanese(posX, posY, color, str, len, GetEffectTex(1), &JapaneseGlyphs);
     }
     else {
-        FontPrint(x, y, color, str, len, GetEffectTex(1), &MediumWesternGlyphs);
+        FontPrint(posX, posY, color, str, len, GetEffectTex(1), &MediumWesternGlyphs);
     }
 }
-
 
 // 0x006ccb4 (0x10 bytes)
 void DisableFontColors(void)
@@ -2273,113 +2215,108 @@ void DisableFontColors(void)
     g_FontColorsEnabled = 0;
 }
 
-
 // 0x006ccc4 (0xbc bytes)
 /* width of the first len characters of s (up to a 0 byte), the 0xbd/0xbe diacritics advancing
    as FontPrintJapanese does */
-int FontLenWithTable(char *s, int len, void *glyphs)
+int FontLenWithTable(char *text, int len, void *glyphs)
 {
     const FontGlyph *table = (const FontGlyph *)glyphs;
     int width = 0;
 
     for (int i = 0; i != len; i++) {
-        u8 ch = s[i];
+        u8 code = text[i];
 
-        if (ch == 0) {
+        if (code == 0) {
             return width;
         }
 
-        int advance = table[ch].width;
+        int advance = table[code].width;
 
         if (advance == 0) {
             continue;
         }
 
-        if (ch < 0xbd || ch > 0xbe) {
+        if (code < 0xbd || code > 0xbe) {
             width += advance;
         }
         else {
-            u8 prev = s[i - 1];
+            u8 prev = text[i - 1];
 
-            width = (table[prev + 0x80].width - table[prev].width) + (ch == 0xbe) + width + 4;
+            width = (table[prev + 0x80].width - table[prev].width) + (code == 0xbe) + width + 4;
         }
     }
 
     return width;
 }
 
-
 // 0x006cd80 (0x68 bytes)
-int FontLenWithTableNoKern(char *s, int len, void *glyphs)
+int FontLenWithTableNoKern(char *text, int len, void *glyphs)
 {
     const FontGlyph *table = (const FontGlyph *)glyphs;
     int width = 0;
 
     for (int i = 0; i != len; i++) {
-        u8 ch = s[i];
+        u8 code = text[i];
 
-        if (ch == 0) {
+        if (code == 0) {
             return width;
         }
 
-        width += table[ch].width;
+        width += table[code].width;
     }
 
     return width;
 }
 
-
 // 0x006cde8 (0xb0 bytes)
 /* width of s in the medium font */
-int FontLen(char *s, int len)
+int FontLen(char *text, int len)
 {
     if (g_JapaneseMode) {
-        return FontLenWithTable(s, len, &JapaneseGlyphs);
+        return FontLenWithTable(text, len, &JapaneseGlyphs);
     }
 
-    return FontLenWithTableNoKern(s, len, &MediumWesternGlyphs);
+    return FontLenWithTableNoKern(text, len, &MediumWesternGlyphs);
 }
 
-
 // 0x006cea0 (0x2dc bytes)
-/* str in a HUD text box at y: starting at x (align -1), centred on x (0) or ending at x (1);
+/* str in a HUD text box at posY: starting at posX (align -1), centred on posX (0) or ending at posX (1);
    the box is sized for the text at scale and has opacity scale; the text is drawn with a black
    shadow and its alpha is alpha * 128 */
-void DrawFancyTextWithBox(int x, int y, int align, float scale, float alpha, char *str)
+void DrawFancyTextWithBox(int posX, int posY, int align, float scale, float alpha, char *str)
 {
     int width = (int)((float)FontLen(str, -1) * scale);
-    int left = x;
-    int right = x;
+    int left = posX;
+    int right = posX;
 
     if (align == -1) {
-        right = width + x;
+        right = width + posX;
     }
     else if (align == 0) {
-        left = x - (width >> 1);
-        right = x + (width >> 1);
+        left = posX - (width >> 1);
+        right = posX + (width >> 1);
     }
     else if (align == 1) {
-        left = x - width;
+        left = posX - width;
     }
 
-    Hud_DrawTextBox(left - 32, y - 14, right - left + 64, 28, FastDoubleToInt(scale * 112.0f));
+    Hud_DrawTextBox(left - 32, posY - 14, right - left + 64, 28, FastDoubleToInt(scale * 112.0f));
 
     g_FontColorsEnabled = 0;
 
     int color = ((int)(alpha * 128.0f) << 24) + 0xe0e0e0;
 
     if (g_JapaneseMode) {
-        FontPrintJapanese(left + 1, y - 7, color & 0xff000000, str, -1, GetEffectTex(1), &JapaneseGlyphs);
-        FontPrintJapanese(left, y - 8, color, str, -1, GetEffectTex(1), &JapaneseGlyphs);
+        FontPrintJapanese(left + 1, posY - 7, color & 0xff000000, str, -1, GetEffectTex(1), &JapaneseGlyphs);
+        FontPrintJapanese(left, posY - 8, color, str, -1, GetEffectTex(1), &JapaneseGlyphs);
     }
     else {
-        FontPrint(left + 1, y - 7, color & 0xff000000, str, -1, GetEffectTex(1), &MediumWesternGlyphs);
-        FontPrint(left, y - 8, color, str, -1, GetEffectTex(1), &MediumWesternGlyphs);
+        FontPrint(left + 1, posY - 7, color & 0xff000000, str, -1, GetEffectTex(1), &MediumWesternGlyphs);
+        FontPrint(left, posY - 8, color, str, -1, GetEffectTex(1), &MediumWesternGlyphs);
     }
 
     g_FontColorsEnabled = 1;
 }
-
 
 // 0x006d190 (0x3f8 bytes)
 /* msg in text boxes while frame is in [start, start + duration]: the boxes grow in over 16
@@ -2422,13 +2359,13 @@ void DrawTimedHelpMsg(TimedHelpMsg *msg, int frame)
         }
     }
 
-    int id = msg->id;
+    int msgId = msg->id;
 
-    if (id < 20790) {
-        id--;
+    if (msgId < 20790) {
+        msgId--;
     }
 
-    char *text = help_msg_string_by_index((StringId)id);
+    char *text = help_msg_string_by_index((StringId)msgId);
     char *out = line;
 
     if (msg->oneLine == 1) {
@@ -2460,14 +2397,14 @@ void DrawTimedHelpMsg(TimedHelpMsg *msg, int frame)
         return;
     }
 
-    int y = msg->y;
+    int posY = msg->y;
 
     while (*text != 0) {
         if (*text == 1) {
             *out = 0;
-            DrawFancyTextWithBox(msg->x, y, msg->align, scale, alpha, line);
+            DrawFancyTextWithBox(msg->x, posY, msg->align, scale, alpha, line);
 
-            y += 26;
+            posY += 26;
             out = line;
 
             while (*text == 1) {
@@ -2485,10 +2422,9 @@ void DrawTimedHelpMsg(TimedHelpMsg *msg, int frame)
 
     if (out > line) {
         *out = 0;
-        DrawFancyTextWithBox(msg->x, y, msg->align, scale, alpha, line);
+        DrawFancyTextWithBox(msg->x, posY, msg->align, scale, alpha, line);
     }
 }
-
 
 // 0x006d590 (0x174 bytes)
 /* the credits screen: the current credits image over the whole screen, the scene fade, and the
@@ -2509,25 +2445,21 @@ void DrawCredits(void)
     }
 }
 
-
 // 0x006d704 (0x4 bytes)
 void STUB_0006d704(...)
 {
 }
-
 
 // 0x006d708 (0x4 bytes)
 void STUB_0006d708(...)
 {
 }
 
-
 // 0x006d70c (0x14 bytes)
 int GetEffectTexAddr(int index)
 {
     return g_PartTexBaseIndex + index;
 }
-
 
 // 0x006d720 (0x40 bytes)
 /* adds function(moby) to the list DefaultDraw runs after the mobys (64 at most) */
@@ -2540,7 +2472,6 @@ void RegisterFuncForMoby(void **function, MobyInstance *moby)
     }
 }
 
-
 // 0x006d760 (0x40 bytes)
 /* adds func(moby) to the pre-draws, run after the tfrags and ties (64 at most) */
 void RegisterOceanUpdate(undefined4 func, MobyInstance *moby)
@@ -2551,7 +2482,6 @@ void RegisterOceanUpdate(undefined4 func, MobyInstance *moby)
         g_PreDrawCount++;
     }
 }
-
 
 // 0x006d7a0 (0x40 bytes)
 /* adds func(arg) to the post-pre-draws, run after the shrubs (64 at most) */
@@ -2564,7 +2494,6 @@ void RegisterPostPreDraw(void *func, void *arg)
     }
 }
 
-
 // 0x006d7e0 (0x40 bytes)
 /* adds func(arg) to the post-draws, run after the particles (64 at most) */
 void RegisterPostDraw(void *func, void *arg)
@@ -2576,18 +2505,17 @@ void RegisterPostDraw(void *func, void *arg)
     }
 }
 
-
 // 0x006d830 (0x290 bytes)
 // inlined: FastRSqrt @0x6d984
-/* Each of the g_NumLameShadows queued blob shadows (DL: LameShadows, a position whose w is the
+/* Each of the g_NumLameShadows queued blob shadows (DL: LameShadows, a position whose width is the
    size and a surface normal) as a quad of effect texture TexInfo[0]: LameShadowTable's corner
-   offsets (x, y) taken into the surface plane and scaled by the size, its z, w the texture
+   offsets (posX, posY) taken into the surface plane and scaled by the size, its posZ, width the texture
    coordinates. */
 void DrawLameShadows(void)
 {
     Vec4 (*shadows)[2] = (Vec4 (*)[2])&g_LameShadows;
     QuadDef quad;
-    float *st = &quad.st[0][0];
+    float *coords = &quad.st[0][0];
 
     quad.tex0 = ((int *)(uintptr_t)TexInfo)[0];
     quad.tex1 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
@@ -2595,8 +2523,8 @@ void DrawLameShadows(void)
     quad.alpha = idol_draw::PackCmd(0, 1, 0, 1, 0x80);
 
     for (int i = 0; i < 4; i++) {
-        st[i * 2] = LameShadowTable[i].z;
-        st[i * 2 + 1] = LameShadowTable[i].w;
+        coords[i * 2] = LameShadowTable[i].z;
+        coords[i * 2 + 1] = LameShadowTable[i].w;
         quad.rgba[i] = 0x40808080;
     }
 
@@ -2675,7 +2603,6 @@ static inline void EmitSetSurface(RenderingStep *pass, IdolSurface *surface)
     Emit(pass, (surface->height - ((surface->height >> 12) & 1)) | 0x1000);
 }
 
-
 // 0x006dad0 (0x598 bytes)
 /* Flips frames more frames while the brightness at 0x8fa550 falls from (frames-1)/frames to 0,
    then sets the frame buffer up again on DepthPass, clears it to black and puts the brightness
@@ -2727,7 +2654,6 @@ void FadeToBlack(int frames)
     DAT_008fa550 = *(u32 *)&one;
 }
 
-
 // 0x006e068 (0x70 bytes)
 void Draw_FlushAndPresent(void)
 {
@@ -2761,7 +2687,6 @@ static inline void EmitSetTexture0(RenderingStep *pass, IdolTexture *texture)
     EmitMethod(pass, CELL_GCM_NV4097_SET_TEXTURE_CONTROL3, texture->pitch | texture->depth << 20);
     EmitMethod(pass, CELL_GCM_NV4097_SET_TEXTURE_CONTROL1, texture->remap);
 }
-
 
 // 0x006e0d8 (0x644 bytes)
 /* Copies the renderer's off-screen target over the whole ForwardPass viewport: depth, stencil
@@ -2824,31 +2749,29 @@ void DrawRenderTargetToScreen(void)
     EmitMethod(pass, CELL_GCM_NV4097_SET_BLEND_ENABLE, 1);
 }
 
-
 // 0x006e71c (0x4 bytes)
 void STUB_0006e71c(...)
 {
 }
 
-
 // 0x006e740 (0x598 bytes)
-/* Texels (0, 0, tw, th) of effect texture tex (flipped by flipU, flipV) as a w by h quad at
-   (x, y) turned by angle about the pivot (pivotX, pivotY), fractions of the quad's size. With
+/* Texels (0, 0, texWidth, texHeight) of effect texture tex (flipped by flipU, flipV) as a width by height quad at
+   (posX, posY) turned by angle about the pivot (pivotX, pivotY), fractions of the quad's size. With
    perEye set each vertex position is preceded by FUN_004e3178 (presumably the stereo offset).
    unused is never read. */
-void Sprite_DrawRotated(float x, float y, float w, float h, float angle, float pivotX, float pivotY, int tw, int th, int tex, int unused, u32 color, int flipU, int flipV, int perEye)
+void Sprite_DrawRotated(float posX, float posY, float width, float height, float angle, float pivotX, float pivotY, int texWidth, int texHeight, int tex, int unused, u32 color, int flipU, int flipV, int perEye)
 {
     float sinA = FastSinInline(angle);
     float cosA = FastCosInline(angle);
-    float hSin = h * sinA;
-    float wSin = w * sinA;
-    float hCos = h * cosA;
-    float wCos = w * cosA;
+    float hSin = height * sinA;
+    float wSin = width * sinA;
+    float hCos = height * cosA;
+    float wCos = width * cosA;
 
-    float topX = (1.0f - pivotY) * hSin + x;
-    float topY = (1.0f - pivotY) * hCos + y;
-    float bottomX = x - hSin * pivotY;
-    float bottomY = y - hCos * pivotY;
+    float topX = (1.0f - pivotY) * hSin + posX;
+    float topY = (1.0f - pivotY) * hCos + posY;
+    float bottomX = posX - hSin * pivotY;
+    float bottomY = posY - hCos * pivotY;
 
     float pos[4][2] = {
         { topX - (1.0f - pivotX) * wCos, topY + wSin * (1.0f - pivotX) },
@@ -2857,11 +2780,11 @@ void Sprite_DrawRotated(float x, float y, float w, float h, float angle, float p
         { pivotX * wCos + topX, topY - wSin * pivotX },
     };
 
-    int u0 = (u8)flipU ? tw * 2 : 0;
-    int u1 = (u8)flipU ? 0 : tw * 2;
-    int v0 = (u8)flipV ? th * 2 : 0;
-    int v1 = (u8)flipV ? 0 : th * 2;
-    int uv[4][2] = { { u0, v0 }, { u0, v1 }, { u1, v1 }, { u1, v0 } };
+    int texLeft = (u8)flipU ? texWidth * 2 : 0;
+    int texRight = (u8)flipU ? 0 : texWidth * 2;
+    int texTop = (u8)flipV ? texHeight * 2 : 0;
+    int texBottom = (u8)flipV ? 0 : texHeight * 2;
+    int texel[4][2] = { { texLeft, texTop }, { texLeft, texBottom }, { texRight, texBottom }, { texRight, texTop } };
 
     HudBindEffectTex(tex);
     idol_draw::ResetPassState(HUD_Pass);
@@ -2878,7 +2801,7 @@ void Sprite_DrawRotated(float x, float y, float w, float h, float angle, float p
 
     for (int i = 0; i < 4; i++) {
         Emit(HUD_Pass, HUD_SET_TEXCOORD2S);
-        Emit(HUD_Pass, (uv[i][1] & 0xffff) << 16 | (uv[i][0] & 0xffff));
+        Emit(HUD_Pass, (texel[i][1] & 0xffff) << 16 | (texel[i][0] & 0xffff));
 
         if ((u8)perEye != 0) {
             FUN_004e3178(g_pIdolDraw);
@@ -2910,12 +2833,11 @@ static inline u32 Ps2Channel(u32 value)
     return (int)doubled;
 }
 
-
 // 0x006ecf8 (0x3a8 bytes)
 /* DL's DrawScreenQuad: a quad of effect texture tex (clamped when clamp is set) on the HUD pass
    from PS2 GS data: xy in 12.4 fixed point with the SCREEN_PROJECTION_MAP offset, uv in 1/8
-   texels (u low, v high), PS2 colours; the vertices go in the order 0, 1, 3, 2 */
-void DrawScreenQuad(u64 *xy, int *uv, u32 *rgba, int tex, int clamp)
+   texels (texU low, texV high), PS2 colours; the vertices go in the order 0, 1, 3, 2 */
+void DrawScreenQuad(u64 *screenXY, int *uvs, u32 *rgba, int tex, int clamp)
 {
     static const int order[4] = { 0, 1, 3, 2 };
 
@@ -2937,24 +2859,23 @@ void DrawScreenQuad(u64 *xy, int *uv, u32 *rgba, int tex, int clamp)
         Emit(HUD_Pass, HUD_SET_COLOR4UB);
         Emit(HUD_Pass, Ps2Channel(color & 0xff) | Ps2Channel((color >> 8) & 0xff) << 8 | Ps2Channel((color >> 16) & 0xff) << 16 | Ps2Channel(color >> 24) << 24);
 
-        u32 texel = uv[vertex];
-        int u = (texel >> 3) & 0x1fff;
-        int v = ((texel >> 16) >> 3) & 0x1fff;
+        u32 texel = uvs[vertex];
+        int texU = (texel >> 3) & 0x1fff;
+        int texV = ((texel >> 16) >> 3) & 0x1fff;
 
         Emit(HUD_Pass, HUD_SET_TEXCOORD2S);
-        Emit(HUD_Pass, v << 16 | u);
+        Emit(HUD_Pass, texV << 16 | texU);
 
-        u64 pos = xy[vertex];
-        int x = (int)((float)(int)((pos & 0xffff) - SCREEN_PROJECTION_MAP_X) * 0.0625f);
-        int y = (int)((float)(int)(((pos >> 16) & 0xffff) - SCREEN_PROJECTION_MAP_Y) * 0.0625f);
+        u64 pos = screenXY[vertex];
+        int posX = (int)((float)(int)((pos & 0xffff) - SCREEN_PROJECTION_MAP_X) * 0.0625f);
+        int posY = (int)((float)(int)(((pos >> 16) & 0xffff) - SCREEN_PROJECTION_MAP_Y) * 0.0625f);
 
         Emit(HUD_Pass, HUD_SET_POSITION2S);
-        Emit(HUD_Pass, (y & 0xffff) << 16 | (x & 0xffff));
+        Emit(HUD_Pass, (posY & 0xffff) << 16 | (posX & 0xffff));
     }
 
     HudEnd();
 }
-
 
 // 0x006f0a0 (0x710 bytes)
 /* a box from (left, top) to (right, bot): filled with color's alpha over near-black (4), then
@@ -2981,56 +2902,53 @@ void DrawTextBox(int top, int bot, int left, int right, u32 color)
     DrawRectOverlay(top + 1, bot - 3, right + 3, right + 5, color);
 }
 
-
 // 0x006f7b0 (0xb0 bytes)
 /* width of s in the small font */
-int FontLenSmall(char *s, int len)
+int FontLenSmall(char *text, int len)
 {
     if (g_JapaneseMode) {
-        return FontLenWithTable(s, len, &JapaneseGlyphs);
+        return FontLenWithTable(text, len, &JapaneseGlyphs);
     }
 
-    return FontLenWithTableNoKern(s, len, &Glyphs);
+    return FontLenWithTableNoKern(text, len, &Glyphs);
 }
-
 
 // 0x006f860 (0xb0 bytes)
 /* width of s in the large font */
-int FontLenLarge(char *s, int len)
+int FontLenLarge(char *text, int len)
 {
     if (g_JapaneseMode) {
-        return FontLenWithTable(s, len, &JapaneseGlyphs);
+        return FontLenWithTable(text, len, &JapaneseGlyphs);
     }
 
-    return FontLenWithTableNoKern(s, len, &LargeWesternGlyphs);
+    return FontLenWithTableNoKern(text, len, &LargeWesternGlyphs);
 }
-
 
 // 0x006f918 (0xe4 bytes)
 /* FontLenWithTable at scale, summed in floats */
-int FontLenScaledWithTable(float scale, const char *s, int len, void *glyphs)
+int FontLenScaledWithTable(float scale, const char *text, int len, void *glyphs)
 {
-    const u8 *str = (const u8 *)s;
+    const u8 *str = (const u8 *)text;
     const FontGlyph *table = (const FontGlyph *)glyphs;
     float width = 0.0f;
 
     for (int i = 0; i != len; i++) {
-        u8 ch = str[i];
+        u8 code = str[i];
 
-        if (ch == 0) {
+        if (code == 0) {
             break;
         }
 
-        int advance = table[ch].width;
+        int advance = table[code].width;
 
         if (advance == 0) {
             continue;
         }
 
-        if (ch >= 0xbd && ch <= 0xbe) {
+        if (code >= 0xbd && code <= 0xbe) {
             u8 prev = str[i - 1];
 
-            advance = (table[prev + 0x80].width - table[prev].width) + (ch == 0xbe) + 4;
+            advance = (table[prev + 0x80].width - table[prev].width) + (code == 0xbe) + 4;
         }
 
         width = (float)advance * scale + width;
@@ -3040,204 +2958,184 @@ int FontLenScaledWithTable(float scale, const char *s, int len, void *glyphs)
 }
 
 /* FontLenScaledWithTableNoKern for a Western table, in Japanese mode FontLenScaledWithTable */
-static inline int FontLenScaledIn(float scale, const char *s, int len, void *western)
+static inline int FontLenScaledIn(float scale, const char *text, int len, void *western)
 {
     if (g_JapaneseMode) {
-        return FontLenScaledWithTable(scale, s, len, &JapaneseGlyphs);
+        return FontLenScaledWithTable(scale, text, len, &JapaneseGlyphs);
     }
 
-    return FontLenScaledWithTableNoKern(scale, (const u8 *)s, len, (const FontGlyph *)western);
+    return FontLenScaledWithTableNoKern(scale, (const u8 *)text, len, (const FontGlyph *)western);
 }
-
 
 // 0x006fa00 (0xc4 bytes)
-int FontLenScaled(float scale, const char *s, int len)
+int FontLenScaled(float scale, const char *text, int len)
 {
-    return FontLenScaledIn(scale, s, len, &MediumWesternGlyphs);
+    return FontLenScaledIn(scale, text, len, &MediumWesternGlyphs);
 }
-
 
 // 0x006fac8 (0xc4 bytes)
-int FontLenScaledSmall(float scale, const char *s, int len)
+int FontLenScaledSmall(float scale, const char *text, int len)
 {
-    return FontLenScaledIn(scale, s, len, &Glyphs);
+    return FontLenScaledIn(scale, text, len, &Glyphs);
 }
-
 
 // 0x006fb90 (0xc4 bytes)
-int FontLenScaledLarge(float scale, const char *s, int len)
+int FontLenScaledLarge(float scale, const char *text, int len)
 {
-    return FontLenScaledIn(scale, s, len, &LargeWesternGlyphs);
+    return FontLenScaledIn(scale, text, len, &LargeWesternGlyphs);
 }
-
 
 // 0x006fc54 (0xa8 bytes)
-/* str at (x, y) in the small font (effect texture 2) */
-void FontPrintSmallLeft(int x, int y, u32 color, const char *str, int len)
+/* str at (posX, posY) in the small font (effect texture 2) */
+void FontPrintSmallLeft(int posX, int posY, u32 color, const char *str, int len)
 {
     if (g_JapaneseMode) {
-        FontPrintJapanese(x, y, color, str, len, GetEffectTex(1), &JapaneseGlyphs);
+        FontPrintJapanese(posX, posY, color, str, len, GetEffectTex(1), &JapaneseGlyphs);
     }
     else {
-        FontPrint(x, y, color, str, len, GetEffectTex(2), &Glyphs);
+        FontPrint(posX, posY, color, str, len, GetEffectTex(2), &Glyphs);
     }
 }
 
-
 // 0x006fcfc (0xa8 bytes)
-/* str at (x, y) in the large font (effect texture 3) */
-void FontPrintLarge(int x, int y, u32 color, const char *str, int len)
+/* str at (posX, posY) in the large font (effect texture 3) */
+void FontPrintLarge(int posX, int posY, u32 color, const char *str, int len)
 {
     if (g_JapaneseMode) {
-        FontPrintJapanese(x, y, color, str, len, GetEffectTex(1), &JapaneseGlyphs);
+        FontPrintJapanese(posX, posY, color, str, len, GetEffectTex(1), &JapaneseGlyphs);
     }
     else {
-        FontPrint(x, y, color, str, len, GetEffectTex(3), &LargeWesternGlyphs);
+        FontPrint(posX, posY, color, str, len, GetEffectTex(3), &LargeWesternGlyphs);
     }
 }
 
 /* FontPrintScaledWestern with Western table western on effect texture tex, in Japanese mode
    FontPrintScaledJapanese */
-static inline void FontPrintScaledIn(float x, float y, float scale, u32 color, const char *str, int len, int tex, void *western)
+static inline void FontPrintScaledIn(float posX, float posY, float scale, u32 color, const char *str, int len, int tex, void *western)
 {
     if (g_JapaneseMode) {
-        FontPrintScaledJapanese(x, y, scale, color, (const u8 *)str, len, GetEffectTex(1), (const FontGlyph *)&JapaneseGlyphs);
+        FontPrintScaledJapanese(posX, posY, scale, color, (const u8 *)str, len, GetEffectTex(1), (const FontGlyph *)&JapaneseGlyphs);
     }
     else {
-        FontPrintScaledWestern(x, y, scale, color, (const u8 *)str, len, GetEffectTex(tex), (const FontGlyph *)western);
+        FontPrintScaledWestern(posX, posY, scale, color, (const u8 *)str, len, GetEffectTex(tex), (const FontGlyph *)western);
     }
 }
 
-
 // 0x006fda4 (0xa0 bytes)
-void FontPrintScaledMedium(float x, float y, float scale, u32 color, const char *str, int len)
+void FontPrintScaledMedium(float posX, float posY, float scale, u32 color, const char *str, int len)
 {
-    FontPrintScaledIn(x, y, scale, color, str, len, 1, &MediumWesternGlyphs);
+    FontPrintScaledIn(posX, posY, scale, color, str, len, 1, &MediumWesternGlyphs);
 }
-
 
 // 0x006fe44 (0xa0 bytes)
-void FontPrintScaledSmall(float x, float y, float scale, u32 color, const char *str, int len)
+void FontPrintScaledSmall(float posX, float posY, float scale, u32 color, const char *str, int len)
 {
-    FontPrintScaledIn(x, y, scale, color, str, len, 2, &Glyphs);
+    FontPrintScaledIn(posX, posY, scale, color, str, len, 2, &Glyphs);
 }
-
 
 // 0x006fee4 (0xa0 bytes)
-void FontPrintScaledLarge(float x, float y, float scale, u32 color, const char *str, int len)
+void FontPrintScaledLarge(float posX, float posY, float scale, u32 color, const char *str, int len)
 {
-    FontPrintScaledIn(x, y, scale, color, str, len, 3, &LargeWesternGlyphs);
+    FontPrintScaledIn(posX, posY, scale, color, str, len, 3, &LargeWesternGlyphs);
 }
 
-
 // 0x006ff88 (0x1a8 bytes)
-/* str in the medium font at scale, ending at x */
-void FontPrintRightWithScale(float scale, int x, int y, u32 color, const char *str, int len)
+/* str in the medium font at scale, ending at posX */
+void FontPrintRightWithScale(float scale, int posX, int posY, u32 color, const char *str, int len)
 {
     int width = FontLenScaled(scale, str, len);
 
-    FontPrintScaledMedium((float)(x - width), (float)y, scale, color, str, len);
+    FontPrintScaledMedium((float)(posX - width), (float)posY, scale, color, str, len);
 }
-
 
 // 0x0070130 (0x14c bytes)
-/* str in the medium font ending at x */
-void FontPrintMediumRight(int x, int y, u32 color, char *str, int len)
+/* str in the medium font ending at posX */
+void FontPrintMediumRight(int posX, int posY, u32 color, char *str, int len)
 {
-    FontPrintMediumLeft(x - FontLen(str, len), y, color, str, len);
+    FontPrintMediumLeft(posX - FontLen(str, len), posY, color, str, len);
 }
-
 
 // 0x007027c (0x14c bytes)
-/* str in the small font ending at x */
-void FontPrintSmallRight(int x, int y, u32 color, char *str, int len)
+/* str in the small font ending at posX */
+void FontPrintSmallRight(int posX, int posY, u32 color, char *str, int len)
 {
-    FontPrintSmallLeft(x - FontLenSmall(str, len), y, color, str, len);
+    FontPrintSmallLeft(posX - FontLenSmall(str, len), posY, color, str, len);
 }
-
 
 // 0x00703c8 (0x14c bytes)
-/* str in the large font ending at x */
-void FontPrintLargeRight(int x, int y, u32 color, char *str, int len)
+/* str in the large font ending at posX */
+void FontPrintLargeRight(int posX, int posY, u32 color, char *str, int len)
 {
-    FontPrintLarge(x - FontLenLarge(str, len), y, color, str, len);
+    FontPrintLarge(posX - FontLenLarge(str, len), posY, color, str, len);
 }
-
 
 // 0x0070514 (0x164 bytes)
-/* str in the medium font centred on x; returns its left edge */
-int FontPrintMediumCenter(int x, int y, u32 color, const char *str, int len)
+/* str in the medium font centred on posX; returns its left edge */
+int FontPrintMediumCenter(int posX, int posY, u32 color, const char *str, int len)
 {
-    x -= FontLen((char *)str, len) >> 1;
+    posX -= FontLen((char *)str, len) >> 1;
 
-    FontPrintMediumLeft(x, y, color, str, len);
+    FontPrintMediumLeft(posX, posY, color, str, len);
 
-    return x;
+    return posX;
 }
-
 
 // 0x0070680 (0x1b4 bytes)
-/* str in the medium font at scale centred on x; returns its left edge */
-int FontPrintCenterScaled(float scale, int x, int y, u32 color, const char *str, int len)
+/* str in the medium font at scale centred on posX; returns its left edge */
+int FontPrintCenterScaled(float scale, int posX, int posY, u32 color, const char *str, int len)
 {
-    x -= FontLenScaled(scale, str, len) >> 1;
+    posX -= FontLenScaled(scale, str, len) >> 1;
 
-    FontPrintScaledMedium((float)x, (float)y, scale, color, str, len);
+    FontPrintScaledMedium((float)posX, (float)posY, scale, color, str, len);
 
-    return x;
+    return posX;
 }
-
 
 // 0x0070834 (0x164 bytes)
-/* str in the small font centred on x; returns its left edge */
-int FontPrintSmallCenter(int x, int y, u32 color, char *str, int len)
+/* str in the small font centred on posX; returns its left edge */
+int FontPrintSmallCenter(int posX, int posY, u32 color, char *str, int len)
 {
-    x -= FontLenSmall(str, len) >> 1;
+    posX -= FontLenSmall(str, len) >> 1;
 
-    FontPrintSmallLeft(x, y, color, str, len);
+    FontPrintSmallLeft(posX, posY, color, str, len);
 
-    return x;
+    return posX;
 }
-
 
 // 0x0070998 (0x164 bytes)
-/* str in the large font centred on x; returns its left edge */
-int FontPrintLargeCenter(int x, int y, u32 color, char *str, int len)
+/* str in the large font centred on posX; returns its left edge */
+int FontPrintLargeCenter(int posX, int posY, u32 color, char *str, int len)
 {
-    x -= FontLenLarge(str, len) >> 1;
+    posX -= FontLenLarge(str, len) >> 1;
 
-    FontPrintLarge(x, y, color, str, len);
+    FontPrintLarge(posX, posY, color, str, len);
 
-    return x;
+    return posX;
 }
-
 
 // 0x0070b00 (0x1ac bytes)
-void FontPrintCenterScaledMedium(float scale, int x, int y, u32 color, const char *str, int len)
+void FontPrintCenterScaledMedium(float scale, int posX, int posY, u32 color, const char *str, int len)
 {
-    x -= FontLenScaled(scale, str, len) >> 1;
+    posX -= FontLenScaled(scale, str, len) >> 1;
 
-    FontPrintScaledMedium((float)x, (float)y, scale, color, str, len);
+    FontPrintScaledMedium((float)posX, (float)posY, scale, color, str, len);
 }
-
 
 // 0x0070cb0 (0x1ac bytes)
-void FontPrintCenterScaledSmall(float scale, int x, int y, u32 color, const char *str, int len)
+void FontPrintCenterScaledSmall(float scale, int posX, int posY, u32 color, const char *str, int len)
 {
-    x -= FontLenScaledSmall(scale, str, len) >> 1;
+    posX -= FontLenScaledSmall(scale, str, len) >> 1;
 
-    FontPrintScaledSmall((float)x, (float)y, scale, color, str, len);
+    FontPrintScaledSmall((float)posX, (float)posY, scale, color, str, len);
 }
-
 
 // 0x0070e60 (0x1ac bytes)
-void FontPrintCenterScaledLarge(float scale, int x, int y, u32 color, const char *str, int len)
+void FontPrintCenterScaledLarge(float scale, int posX, int posY, u32 color, const char *str, int len)
 {
-    x -= FontLenScaledLarge(scale, str, len) >> 1;
+    posX -= FontLenScaledLarge(scale, str, len) >> 1;
 
-    FontPrintScaledLarge((float)x, (float)y, scale, color, str, len);
+    FontPrintScaledLarge((float)posX, (float)posY, scale, color, str, len);
 }
-
 
 // 0x007100c (0xa8 bytes)
 /* text in win at scale with the small font (Glyphs on effect texture 2) */
@@ -3251,7 +3149,6 @@ void FontPrintOpt(float scale, FontWindow *win, u32 color, const char *str, int 
     }
 }
 
-
 // 0x00710b8 (0xb4 bytes)
 /* text in win at scale 1 with the large font (LargeWesternGlyphs on effect texture 3) */
 void FontPrintOptLarge(FontWindow *win, u32 color, const char *str, int len)
@@ -3264,18 +3161,15 @@ void FontPrintOptLarge(FontWindow *win, u32 color, const char *str, int len)
     }
 }
 
-
 // 0x007116c (0x4 bytes)
 void STUB_0007116c(...)
 {
 }
 
-
 // 0x0071170 (0x4 bytes)
 void STUB_00071170(...)
 {
 }
-
 
 // 0x0071180 (0x940 bytes)
 /* DL's BeginAuxDrawMode: points the HUD pass at the aux buffer, a (1 << log2Width) by
@@ -3400,7 +3294,6 @@ void BeginAuxDrawMode(float xratio, int log2Width, int log2Height, int flag, u32
     SetGSReg(3, idol_draw::PackCmd(0, 1, 0, 1, 0x80));
 }
 
-
 // 0x0071ac0 (0x4b0 bytes)
 /* DL's EndAuxDrawMode: the view context and the HUD pass back on the frame buffer with the HUD's
    programs and states (no depth, alpha blending), and the HUD pass's cached texture and state
@@ -3444,7 +3337,6 @@ void EndAuxDrawMode(void)
     ComposeCameraMatrix();
 }
 
-
 // 0x0071f70 (0x130 bytes)
 /* when there are effects in g_EffectTableCnt: the clamp, filtering and blend GS registers for
    them, and the two (empty) effect passes, the second with DAT_0095cd40 at -0.04 */
@@ -3470,7 +3362,6 @@ void ____Draw_FogBlendPass(void)
     SetGSReg(8, FUN_0050302c(0));
 }
 
-
 // 0x00720a0 (0x88 bytes)
 /* the PS2 alpha palette: entry i (stored at i with bits 3 and 4 swapped, the GS CLUT order)
    has alpha i / 2 */
@@ -3491,7 +3382,6 @@ void InitAlphaPal(void)
     }
 }
 
-
 // 0x0072128 (0xd4 bytes)
 /* the alpha GS words of the two screen colour effects (DL: ScreenColorEffect @0x71eed0 and
    ScreenColorEffectLight @0x71ef00); the level's effect is the current one */
@@ -3508,19 +3398,16 @@ void InitScreenEffects(void)
     ScreenColorEffectLevel = (u32)(uintptr_t)ScreenColorEffectNow;
 }
 
-
 // 0x0072200 (0x8 bytes)
 undefined8 STUB_00072200_RET_0(...)
 {
     return 0;
 }
 
-
 // 0x0072208 (0x4 bytes)
 void STUB_00072208(...)
 {
 }
-
 
 // 0x007220c (0x8 bytes)
 undefined8 STUB_0007220c_RET_0(...)
@@ -3528,26 +3415,22 @@ undefined8 STUB_0007220c_RET_0(...)
     return 0;
 }
 
-
 // 0x0072214 (0x8 bytes)
 undefined8 STUB_00072214_RET_0(...)
 {
     return 0;
 }
 
-
 // 0x007221c (0x4 bytes)
 void STUB_0007221c(...)
 {
 }
-
 
 // 0x0072220 (0x8 bytes)
 undefined8 STUB_00072220_RET_0(...)
 {
     return 0;
 }
-
 
 // 0x0072230 (0x10 bytes)
 undefined8 STUB_00072230_RET_0(...)
@@ -3577,10 +3460,9 @@ struct FastQuadVertex {
     u32 color;
 };
 
-
 // 0x0072280 (0x508 bytes)
 /* DL's FastDrawQuad: quad as a 4-vertex strip on pass passIndex with programs 5/6, transformed by
-   mtx (whose w column is set to 0, 0, 0, 1 first) or the identity; texHeaders + quad->tex0 * 0x24
+   mtx (whose width column is set to 0, 0, 0, 1 first) or the identity; texHeaders + quad->tex0 * 0x24
    is the texture, quad->clamp its sampler, quad->alpha (when set) the depth state. unused is not
    read. */
 void FastDrawQuad(QuadDef *quad, Mtx4 *mtx, int unused, void *texHeaders, int passIndex)
@@ -3599,7 +3481,7 @@ void FastDrawQuad(QuadDef *quad, Mtx4 *mtx, int unused, void *texHeaders, int pa
     idol_draw::BindFragmentProgram((uintptr_t)idol, (int)(uintptr_t)pass, 6);
 
     FastQuadVertex *vertices = (FastQuadVertex *)(uintptr_t)idol::AllocateMemAlign(FrameHeap, 0x60, 0x10);
-    float *st = &quad->st[0][0];
+    float *coords = &quad->st[0][0];
 
     for (int i = 0; i < 4; i++) {
         u32 color = quad->rgba[i];
@@ -3607,8 +3489,8 @@ void FastDrawQuad(QuadDef *quad, Mtx4 *mtx, int unused, void *texHeaders, int pa
         vertices[i].x = quad->xyzw[i].x;
         vertices[i].y = quad->xyzw[i].y;
         vertices[i].z = quad->xyzw[i].z;
-        vertices[i].s = st[i * 2];
-        vertices[i].t = st[i * 2 + 1];
+        vertices[i].s = coords[i * 2];
+        vertices[i].t = coords[i * 2 + 1];
         vertices[i].color = SwapColor(color);
     }
 
@@ -3661,7 +3543,6 @@ void FastDrawQuad(QuadDef *quad, Mtx4 *mtx, int unused, void *texHeaders, int pa
     EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 1 * 4, CELL_GCM_VERTEX_F);
     EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 3 * 4, CELL_GCM_VERTEX_F);
 }
-
 
 // 0x0072788 (0x4 bytes)
 void STUB_00072788(...)
@@ -3732,7 +3613,6 @@ static inline void DisableArray(RenderingStep *pass, int attribute)
     EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + attribute * 4, CELL_GCM_VERTEX_F);
 }
 
-
 // 0x007278c (0x390 bytes)
 /* count strip vertices at vertices on DL_Pass with programs 10/11, both texture coordinate
    sets */
@@ -3763,7 +3643,6 @@ void FastDrawStrip_DL(int count, void *vertices)
     DisableArray(pass, 3);
 }
 
-
 // 0x0072b1c (0x2c0 bytes)
 /* FastDrawStrip_DL with the programs already bound, the second coordinate set only */
 void FastDrawStrip_DLNoState(int count, void *vertices)
@@ -3785,7 +3664,6 @@ void FastDrawStrip_DLNoState(int count, void *vertices)
     DisableArray(pass, 1);
     DisableArray(pass, 3);
 }
-
 
 // 0x0072ddc (0x394 bytes)
 /* count strip vertices on pass passIndex (programs 4/6 bound on passes 2 and 9), the first
@@ -3833,7 +3711,6 @@ struct StripVertex {
     float t1;
     u32 color;
 };
-
 
 // 0x00731c8 (0x4b0 bytes)
 /* count strip vertices from separate arrays drawn three times: with effect texture baseTex and
@@ -3891,7 +3768,6 @@ static inline void EmitStrip2UVArrays(RenderingStep *pass, u32 offset, u32 secon
     EmitStripOffset(pass, 3, offset + 0x24);
 }
 
-
 // 0x0073678 (0x390 bytes)
 /* count vertices of 0x28 bytes on pass passIndex with programs 7/7, the triple at 0x18 as the
    coordinates */
@@ -3911,7 +3787,6 @@ void FastDrawStrip2UV_Pass(int count, void *vertices, int passIndex)
     DisableArray(pass, 1);
     DisableArray(pass, 3);
 }
-
 
 // 0x0073a08 (0x390 bytes)
 /* FastDrawStrip2UV_Pass with the triple at 0xc as the coordinates, the programs bound only on
@@ -3949,12 +3824,11 @@ struct Strip2UVVertex {
     u32 color;
 };
 
-
 // 0x0073de0 (0x330 bytes)
 /* count strip vertices from separate arrays on pass passIndex: effect texture tex0 on unit 0
-   (and tex1 on unit 1 on passes 2 and 9), the identity at c[4], both coordinate sets with q as
+   (and tex1 on unit 1 on passes 2 and 9), the identity at c[4], both coordinate sets with texQ as
    their third value; drawn with depth state depth, then on passes 2 and 9 again with depth2 */
-void DrawLavaStrips(float q, int count, Vec3 *pos, u32 *colors, Vec2 *uv0, Vec2 *uv1, int tex0, int tex1, u64 depth, u64 depth2, int passIndex)
+void DrawLavaStrips(float texQ, int count, Vec3 *pos, u32 *colors, Vec2 *uv0, Vec2 *uv1, int tex0, int tex1, u64 depth, u64 depth2, int passIndex)
 {
     static const Mtx4 identity = {
         { 1.0f, 0.0f, 0.0f, 0.0f },
@@ -3981,10 +3855,10 @@ void DrawLavaStrips(float q, int count, Vec3 *pos, u32 *colors, Vec2 *uv0, Vec2 
         vertices[i].z = pos[i].z;
         vertices[i].s0 = uv0[i].x;
         vertices[i].t0 = uv0[i].y;
-        vertices[i].q0 = q;
+        vertices[i].q0 = texQ;
         vertices[i].s1 = uv1[i].x;
         vertices[i].t1 = uv1[i].y;
-        vertices[i].q1 = q;
+        vertices[i].q1 = texQ;
         vertices[i].color = SwapColor(colors[i]);
     }
 
@@ -3996,7 +3870,6 @@ void DrawLavaStrips(float q, int count, Vec3 *pos, u32 *colors, Vec2 *uv0, Vec2 
         FastDrawStrip2UV_Pass(count, vertices, passIndex);
     }
 }
-
 
 // 0x0074150 (0x450 bytes)
 /* count FastDrawQuad-layout vertices (position, coordinates, colour; 0x18 apart) as a strip on
@@ -4041,14 +3914,12 @@ void FastDrawStripColor(int count, void *vertices, int passIndex)
     DisableArray(pass, 3);
 }
 
-
 // 0x00745a0 (0x1c bytes)
 /* bits 4-5 of a GS ALPHA word are 2 */
 bool ____Draw_IsFlagMode2(u64 alpha)
 {
     return (alpha & 0x30) == 0x20;
 }
-
 
 // 0x00745bc (0x48 bytes)
 /* a GS ALPHA word of the (Cs - Cd) * As + Cd or (Cs - Cd) * Fix + Cd form: A = 0, B = 1, D = 1,
@@ -4070,7 +3941,6 @@ int ____Draw_IsBlendModeMatch(u64 alpha)
     return ((alpha >> 4) & 3) == 0 || ((alpha >> 4) & 3) == 2;
 }
 
-
 // 0x0074604 (0x13c bytes)
 /* count vertices from separate arrays drawn by FastDrawStripColor on the pass in passes' low
    nibble and on the one in its next nibble (when not 0) */
@@ -4078,15 +3948,15 @@ void DrawMeshSet(int count, void *positions, void *colorArray, void *uvs, u32 pa
 {
     Vec3 *pos = (Vec3 *)positions;
     u32 *colors = (u32 *)colorArray;
-    Vec2 *uv = (Vec2 *)uvs;
+    Vec2 *texel = (Vec2 *)uvs;
     FastQuadVertex *vertices = (FastQuadVertex *)(uintptr_t)idol::AllocateMemAlign(FrameHeap, count * 0x18, 0x10);
 
     for (u32 i = 0; i < (u32)count; i++) {
         vertices[i].x = pos[i].x;
         vertices[i].y = pos[i].y;
         vertices[i].z = pos[i].z;
-        vertices[i].s = uv[i].x;
-        vertices[i].t = uv[i].y;
+        vertices[i].s = texel[i].x;
+        vertices[i].t = texel[i].y;
         vertices[i].color = SwapColor(colors[i]);
     }
 
@@ -4101,7 +3971,6 @@ void DrawMeshSet(int count, void *positions, void *colorArray, void *uvs, u32 pa
         FastDrawStripColor(count, vertices, second);
     }
 }
-
 
 // 0x0074780 (0x460 bytes)
 /* count vertices of position, a coordinate triple and colour (0x1c apart) as a strip on pass
@@ -4153,11 +4022,10 @@ struct FogStripVertex {
     u32 color;
 };
 
-
 // 0x0074be0 (0x108 bytes)
-/* count vertices from separate arrays, q the coordinates' third value, through FastDrawStripFog
+/* count vertices from separate arrays, texQ the coordinates' third value, through FastDrawStripFog
    on pass 9 */
-void DrawOceanStrip(float q, int count, Vec3 *pos, u32 *colors, Vec2 *uv)
+void DrawOceanStrip(float texQ, int count, Vec3 *pos, u32 *colors, Vec2 *texel)
 {
     FogStripVertex *vertices = (FogStripVertex *)(uintptr_t)idol::AllocateMemAlign(FrameHeap, count * 0x1c, 0x10);
 
@@ -4165,27 +4033,24 @@ void DrawOceanStrip(float q, int count, Vec3 *pos, u32 *colors, Vec2 *uv)
         vertices[i].x = pos[i].x;
         vertices[i].y = pos[i].y;
         vertices[i].z = pos[i].z;
-        vertices[i].s = uv[i].x;
-        vertices[i].t = uv[i].y;
-        vertices[i].q = q;
+        vertices[i].s = texel[i].x;
+        vertices[i].t = texel[i].y;
+        vertices[i].q = texQ;
         vertices[i].color = SwapColor(colors[i]);
     }
 
     FastDrawStripFog(count, vertices, 9);
 }
 
-
 // 0x0074ce8 (0x4 bytes)
 void STUB_00074ce8(...)
 {
 }
 
-
 // 0x0074cec (0x4 bytes)
 void STUB_00074cec(...)
 {
 }
-
 
 // 0x0074cf0 (0xc8 bytes)
 /* a free impact sprite at pos with effect texture tex at scale, turned at random; its index, or
@@ -4210,7 +4075,6 @@ int ImpactSprite_Add(float scale, Vec4 pos, short tex)
 
     return -1;
 }
-
 
 // 0x0074dc0 (0xec bytes)
 /* spins each live impact sprite at 5/3 pi a second, fades it in and (over its last 12 frames)
@@ -4241,1809 +4105,720 @@ void ImpactSprite_Update(void)
     }
 }
 
+/* texV's first three components scaled to length 1 (FastRSqrt) */
+static inline Vec4 Normalize3(Vec4 texV)
+{
+    float inv = 1.0f / sqrtf(texV.x * texV.x + texV.y * texV.y + texV.z * texV.z);
+    Vec4 out = { texV.x * inv, texV.y * inv, texV.z * inv, texV.w * inv };
+
+    return out;
+}
+
+/* texV turned by angle radians about the unit axis (the asm builds a quaternion of the half angle
+   and rotates with it) */
+static inline Vec4 RotateAbout(Vec4 texV, Vec4 axis, float angle)
+{
+    float cosA = cosf(angle);
+    float sinA = sinf(angle);
+    float along = (axis.x * texV.x + axis.y * texV.y + axis.z * texV.z) * (1.0f - cosA);
+    Vec4 out;
+
+    out.x = texV.x * cosA + (axis.y * texV.z - axis.z * texV.y) * sinA + axis.x * along;
+    out.y = texV.y * cosA + (axis.z * texV.x - axis.x * texV.z) * sinA + axis.y * along;
+    out.z = texV.z * cosA + (axis.x * texV.y - axis.y * texV.x) * sinA + axis.z * along;
+    out.w = 0.0f;
+
+    return out;
+}
 
 // 0x0074fa0 (0x92c bytes)
-/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
-
+/* Each live impact sprite as a camera-facing quad of effect texture 19 on DL_Pass (additive):
+   one unit towards the camera, (fade + 16) / 64 * scale * 0.48 across, turned by rot degrees
+   about the view axis, alpha fade over grey 0x808080. The camera's right, up and view axes are
+   the view matrix's normalised columns. The asm turns them with a vectorised quaternion of the
+   half angle; the direction of the turn here is the standard right-handed one and was not
+   traced through its permutes. */
 void ImpactSprite_Draw(void)
-
 {
-  longlong lVar1;
-  ushort uVar2;
-  ulonglong *puVar3;
-  RenderingStep *pRVar4;
-  int iVar5;
-  longlong lVar6;
-  undefined4 *puVar7;
-  ulonglong uVar8;
-  undefined8 uVar9;
-  int iVar11;
-  ulonglong uVar10;
-  ulonglong unaff_r20;
-  ulonglong unaff_r21;
-  ulonglong unaff_r22;
-  ulonglong uVar12;
-  ulonglong unaff_r23;
-  ulonglong uVar13;
-  ulonglong unaff_r24;
-  ulonglong uVar14;
-  ulonglong unaff_r25;
-  ulonglong unaff_r26;
-  ulonglong uVar15;
-  ulonglong unaff_r27;
-  short *psVar16;
-  ulonglong unaff_r28;
-  ulonglong unaff_r29;
-  ulonglong unaff_r30;
-  undefined *puVar17;
-  ulonglong unaff_r31;
-  int iVar18;
-  ulonglong in_LR;
-  double dVar19;
-  ulonglong in_f28;
-  double dVar20;
-  ulonglong in_f29;
-  double dVar21;
-  ulonglong in_f30;
-  double dVar22;
-  ulonglong in_f31;
-  undefined4 uVar23;
-  undefined4 uVar25;
-  undefined4 uVar26;
-  GPiece<16> auVar24;
-  GPiece<16> auVar27;
-  GPiece<16> auVar28;
-  GPiece<16> auVar29;
-  GPiece<16> auVar30;
-  GPiece<16> auVar31;
-  GPiece<16> auVar32;
-  GPiece<16> auVar33;
-  GPiece<16> auVar34;
-  GPiece<16> auVar35;
-  GPiece<16> auVar36;
-  GPiece<16> auVar37;
-  GPiece<16> auVar38;
-  GPiece<16> auVar39;
-  GPiece<16> auVar40;
-  GPiece<16> auVar41;
-  GPiece<16> auVar42;
-  GPiece<16> auVar43;
-  GPiece<16> auVar44;
-  GPiece<16> auVar45;
-  GPiece<16> auVar46;
-  GPiece<16> auVar47;
-  GPiece<16> auVar48;
-  GPiece<16> auVar49;
-  undefined4 in_vr31_32_0;
-  undefined4 in_vr31_32_1;
-  undefined4 in_vr31_32_2;
-  undefined4 in_vr31_32_3;
-  
-  uVar8 = ZEXT48(&stack0x00000000);
-  lVar1 = uVar8 - 0x390;
-  puVar3 = (ulonglong *)lVar1;
-  *puVar3 = uVar8;
-  puVar3[0x74] = in_LR;
-  puVar3[0x6e] = in_f28;
-  puVar3[0x6f] = in_f29;
-  puVar3[0x70] = in_f30;
-  puVar3[0x71] = in_f31;
-  lVar6 = uVar8 - 0x90;
-  puVar7 = (undefined4 *)lVar6;
-  puVar7[3] = in_vr31_32_3;
-  puVar7[2] = in_vr31_32_2;
-  puVar7[1] = in_vr31_32_1;
-  *puVar7 = in_vr31_32_0;
-  puVar3[0x6b] = unaff_r29;
-  puVar3[0x6c] = unaff_r30;
-  puVar3[0x6d] = unaff_r31;
-  iVar5 = g_pIdolDrawBase;
-  puVar3[0x6a] = unaff_r28;
-  pRVar4 = DL_Pass;
-  puVar3[0x69] = unaff_r27;
-  puVar3[0x68] = unaff_r26;
-  puVar3[0x67] = unaff_r25;
-  puVar3[0x66] = unaff_r24;
-  puVar3[0x65] = unaff_r23;
-  puVar3[100] = unaff_r22;
-  puVar3[99] = unaff_r21;
-  puVar3[0x62] = unaff_r20;
-  uVar9 = idol_draw::PackCmd(0,2,0,1,0x80);
-  idol_draw::DrawDepth(pRVar4,uVar9);
-  iVar18 = EffectTexHeaders;
-  pRVar4 = DL_Pass;
-  iVar11 = GetEffectTex(0x13);
-  FUN_004d676c(pRVar4,0,iVar18 + iVar11 * 0x24,3,3);
-  auVar49 = _DAT_00074ee0;
-  auVar45 = _DAT_00074ed0;
-  auVar46 = _DAT_00074ec0;
-  auVar24 = *(undefined1 (*) [16])(iVar5 + 0xa0U & 0xfffffff0);
-  auVar27 = *(undefined1 (*) [16])(iVar5 + 0xb0U & 0xfffffff0);
-  auVar28 = *(undefined1 (*) [16])(iVar5 + 0xc0U & 0xfffffff0);
-  auVar29 = *(undefined1 (*) [16])(iVar5 + 0xd0U & 0xfffffff0);
-  auVar30 = vectorPermute(auVar24,auVar28,_DAT_00074eb0);
-  auVar32 = vectorPermute(auVar27,auVar29,_DAT_00074eb0);
-  auVar33 = vectorPermute(auVar27,auVar28,_DAT_00074eb0);
-  auVar35 = vectorPermute(auVar29,auVar24,_DAT_00074eb0);
-  auVar47 = vectorMergeHighWord(auVar30,auVar32);
-  auVar30 = ZEXT416(0);
-  auVar31 = auVar30 | auVar30 << 0x20 | auVar30 << 0x40 | auVar30 << 0x60;
-  auVar35 = vectorPermute(auVar33,auVar35,_DAT_00074ed0);
-  auVar33 = vectorPermute(auVar24,auVar28,_DAT_00074f00);
-  auVar36 = vectorMultiplyAddFloatingPoint(auVar47,auVar47,auVar31);
-  auVar38 = vectorPermute(auVar27,auVar29,_DAT_00074f00);
-  auVar30 = vectorPermute(auVar28,auVar29,_DAT_00074eb0);
-  auVar32 = vectorPermute(auVar24,auVar28,_DAT_00074f10);
-  auVar48 = vectorMergeHighWord(auVar33,auVar38);
-  auVar38 = vectorPermute(auVar27,auVar29,_DAT_00074f10);
-  auVar33 = vectorPermute(auVar24,auVar27,_DAT_00074eb0);
-  auVar44 = vectorPermute(auVar29,auVar24,_DAT_00074f10);
-  auVar39 = vectorPermute(auVar27,auVar28,_DAT_00074f00);
-  auVar38 = vectorMergeHighWord(auVar32,auVar38);
-  auVar33 = vectorPermute(auVar30,auVar33,_DAT_00074ed0);
-  auVar35 = vectorMultiplyAddFloatingPoint(auVar35,auVar35,auVar36);
-  auVar32 = vectorPermute(auVar27,auVar28,_DAT_00074f10);
-  auVar36 = vectorMultiplyAddFloatingPoint(auVar48,auVar48,auVar31);
-  auVar43 = vectorMultiplyAddFloatingPoint(auVar38,auVar38,auVar31);
-  auVar30 = vectorPermute(auVar29,auVar24,_DAT_00074f00);
-  auVar32 = vectorPermute(auVar32,auVar44,_DAT_00074ed0);
-  auVar39 = vectorPermute(auVar39,auVar30,_DAT_00074ed0);
-  auVar30 = vectorPermute(auVar28,auVar29,_DAT_00074f00);
-  auVar28 = vectorPermute(auVar28,auVar29,_DAT_00074f10);
-  auVar29 = vectorPermute(auVar24,auVar27,_DAT_00074f00);
-  auVar24 = vectorPermute(auVar24,auVar27,_DAT_00074f10);
-  auVar33 = vectorMultiplyAddFloatingPoint(auVar33,auVar33,auVar35);
-  auVar35 = vectorMultiplyAddFloatingPoint(auVar39,auVar39,auVar36);
-  auVar27 = vectorMultiplyAddFloatingPoint(auVar32,auVar32,auVar43);
-  auVar24 = vectorPermute(auVar28,auVar24,_DAT_00074ed0);
-  auVar28 = vectorPermute(auVar30,auVar29,_DAT_00074ed0);
-  auVar30 = loadVectorLeftIndexed(0x40,0x74eb0);
-  auVar32 = loadVectorLeftIndexed(0x44,0x74eb0);
-  auVar30 = auVar30 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar44 = auVar30 | auVar30 << 0x20 | auVar30 << 0x40 | auVar30 << 0x60;
-  auVar30 = auVar32 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar43 = auVar30 | auVar30 << 0x20 | auVar30 << 0x40 | auVar30 << 0x60;
-  auVar30 = auVar33 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar32 = auVar30 | auVar30 << 0x20 | auVar30 << 0x40 | auVar30 << 0x60;
-  auVar30 = vectorMultiplyAddFloatingPoint(auVar28,auVar28,auVar35);
-  auVar33 = vectorMultiplyAddFloatingPoint(auVar24,auVar24,auVar27);
-  auVar27 = vectorReciprocalSquareRootEstimateFloatingPoint(auVar32);
-  auVar30 = auVar30 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar24 = auVar30 | auVar30 << 0x20 | auVar30 << 0x40 | auVar30 << 0x60;
-  auVar30 = auVar33 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar33 = auVar30 | auVar30 << 0x20 | auVar30 << 0x40 | auVar30 << 0x60;
-  auVar28 = vectorReciprocalSquareRootEstimateFloatingPoint(auVar24);
-  auVar30 = vectorMultiplyAddFloatingPoint(auVar27,auVar32,auVar31);
-  auVar35 = vectorReciprocalSquareRootEstimateFloatingPoint(auVar33);
-  auVar29 = vectorMultiplyAddFloatingPoint(auVar27,auVar44,auVar31);
-  iVar18 = 0;
-  uVar15 = ZEXT48(&g_ImpactSprites);
-  psVar16 = &DAT_0095ee50;
-  auVar30 = vectorNegativeMultiplySubtractFloatingPoint(auVar27,auVar30,auVar43);
-  auVar24 = vectorMultiplyAddFloatingPoint(auVar28,auVar24,auVar31);
-  auVar36 = vectorMultiplyAddFloatingPoint(auVar28,auVar44,auVar31);
-  auVar32 = vectorMultiplyAddFloatingPoint(auVar35,auVar33,auVar31);
-  auVar39 = vectorMultiplyAddFloatingPoint(auVar35,auVar44,auVar31);
-  uVar14 = ZEXT48(&DAT_0095ee44);
-  uVar13 = ZEXT48(&DAT_0095ee48);
-  uVar12 = ZEXT48(&DAT_0095ee58);
-  auVar30 = vectorMultiplyAddFloatingPoint(auVar30,auVar29,auVar27);
-  auVar33 = vectorNegativeMultiplySubtractFloatingPoint(auVar28,auVar24,auVar43);
-  auVar32 = vectorNegativeMultiplySubtractFloatingPoint(auVar35,auVar32,auVar43);
-  auVar24 = vectorCompareEqualToFloatingPoint(auVar30,auVar30);
-  auVar33 = vectorMultiplyAddFloatingPoint(auVar33,auVar36,auVar28);
-  auVar30 = vectorConditionalSelect(auVar27,auVar30,auVar24);
-  auVar36 = vectorMultiplyAddFloatingPoint(auVar47,auVar30,auVar31);
-  auVar30 = vectorMultiplyAddFloatingPoint(auVar32,auVar39,auVar35);
-  puVar7 = (undefined4 *)(iVar5 + 0x20U & 0xfffffff0);
-  uVar26 = puVar7[2];
-  uVar25 = puVar7[1];
-  uVar23 = *puVar7;
-  *(undefined4 *)((int)puVar3 + 0x23c) = puVar7[3];
-  *(undefined4 *)(puVar3 + 0x47) = uVar26;
-  *(undefined4 *)((int)puVar3 + 0x234) = uVar25;
-  *(undefined4 *)(puVar3 + 0x46) = uVar23;
-  auVar32 = vectorCompareEqualToFloatingPoint(auVar33,auVar33);
-  auVar33 = vectorConditionalSelect(auVar28,auVar33,auVar32);
-  auVar32 = vectorCompareEqualToFloatingPoint(auVar30,auVar30);
-  auVar39 = vectorMultiplyAddFloatingPoint(auVar48,auVar33,auVar31);
-  auVar30 = vectorConditionalSelect(auVar35,auVar30,auVar32);
-  auVar32 = loadVectorLeftIndexed(0x78,0x74eb0);
-  auVar33 = loadVectorLeftIndexed(0x84,0x74eb0);
-  auVar27 = vectorMultiplyAddFloatingPoint(auVar38,auVar30,auVar31);
-  auVar24 = loadVectorLeftIndexed(0x80,0x74eb0);
-  auVar30 = auVar32 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar28 = loadVectorLeftIndexed(0x88,0x74eb0);
-  auVar32 = auVar24 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar33 = auVar33 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar24 = auVar28 >> 0x60 & (GPiece<16>)0xffffffff;
-  *(undefined1 (*) [16])(puVar3 + 0x48) = auVar27;
-  auVar27 = loadVectorLeftIndexed(0x8c,0x74eb0);
-  dVar22 = 0.015625;
-  dVar21 = 0.47999998927116394;
-  *(undefined1 (*) [16])(puVar3 + 0x24) =
-       auVar30 | auVar30 << 0x20 | auVar30 << 0x40 | auVar30 << 0x60;
-  auVar28 = loadVectorLeftIndexed(0x90,0x74eb0);
-  dVar20 = 0.0;
-  *(undefined1 (*) [16])(puVar3 + 0x44) =
-       auVar32 | auVar32 << 0x20 | auVar32 << 0x40 | auVar32 << 0x60;
-  auVar29 = loadVectorLeftIndexed(0x94,0x74eb0);
-  auVar30 = auVar27 >> 0x60 & (GPiece<16>)0xffffffff;
-  *(undefined1 (*) [16])(puVar3 + 0x42) =
-       auVar33 | auVar33 << 0x20 | auVar33 << 0x40 | auVar33 << 0x60;
-  auVar32 = auVar28 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar33 = auVar29 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar35 = loadVectorLeftIndexed(0x7c,0x74eb0);
-  auVar27 = loadVectorLeftIndexed(0x98,0x74eb0);
-  auVar28 = loadVectorLeftIndexed(0x9c,0x74eb0);
-  auVar27 = auVar27 >> 0x60 & (GPiece<16>)0xffffffff;
-  *(undefined1 (*) [16])(puVar3 + 0x40) =
-       auVar24 | auVar24 << 0x20 | auVar24 << 0x40 | auVar24 << 0x60;
-  auVar24 = auVar28 >> 0x60 & (GPiece<16>)0xffffffff;
-  *(undefined1 (*) [16])(puVar3 + 0x3e) =
-       auVar30 | auVar30 << 0x20 | auVar30 << 0x40 | auVar30 << 0x60;
-  *(undefined1 (*) [16])(puVar3 + 0x3c) =
-       auVar32 | auVar32 << 0x20 | auVar32 << 0x40 | auVar32 << 0x60;
-  *(undefined1 (*) [16])(puVar3 + 0x3a) =
-       auVar33 | auVar33 << 0x20 | auVar33 << 0x40 | auVar33 << 0x60;
-  auVar30 = loadVectorLeftIndexed(0xa0,0x74eb0);
-  *(undefined1 (*) [16])(puVar3 + 0x38) =
-       auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60;
-  auVar32 = _DAT_00074f70;
-  auVar30 = auVar30 >> 0x60 & (GPiece<16>)0xffffffff;
-  *(undefined1 (*) [16])(puVar3 + 0x36) =
-       auVar24 | auVar24 << 0x20 | auVar24 << 0x40 | auVar24 << 0x60;
-  auVar33 = _DAT_00074f80;
-  auVar24 = vectorPermute(auVar36,auVar36,_DAT_00074f80);
-  auVar28 = vectorPermute(auVar36,auVar36,auVar32);
-  auVar29 = vectorPermute(auVar36,auVar36,auVar46);
-  *(undefined1 (*) [16])(puVar3 + 0x34) =
-       auVar30 | auVar30 << 0x20 | auVar30 << 0x40 | auVar30 << 0x60;
-  auVar38 = *(undefined1 (*) [16])(puVar3 + 0xe);
-  auVar30 = vectorPermute(auVar39,auVar39,auVar33);
-  *(undefined4 *)((int)puVar3 + 0x19c) = 0xffffffff;
-  *(undefined4 *)(puVar3 + 0x33) = 0;
-  *(undefined4 *)((int)puVar3 + 0x194) = 0;
-  *(undefined4 *)(puVar3 + 0x32) = 0;
-  auVar27 = vectorPermute(auVar39,auVar39,auVar32);
-  auVar31 = vectorPermute(auVar39,auVar39,auVar46);
-  *(undefined1 (*) [16])(puVar3 + 0x30) = auVar24;
-  *(undefined1 (*) [16])(puVar3 + 0x2e) = auVar28;
-  *(undefined1 (*) [16])(puVar3 + 0x2c) = auVar29;
-  auVar24 = _DAT_00074f90;
-  *(undefined1 (*) [16])(puVar3 + 0x2a) = auVar30;
-  *(undefined1 (*) [16])(puVar3 + 0x28) = auVar27;
-  auVar30 = auVar35 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar30 = auVar30 | auVar30 << 0x20 | auVar30 << 0x40 | auVar30 << 0x60;
-  *(undefined1 (*) [16])(puVar3 + 0x26) = auVar31;
-  do {
-    if (0 < *psVar16) {
-      auVar29 = loadVectorLeftIndexed(lVar6,uVar15);
-      auVar28 = loadVectorLeftIndexed(lVar6,uVar14);
-      auVar31 = loadVectorLeftIndexed(lVar6,uVar13);
-      auVar27 = vectorPermute(auVar29,auVar28,auVar24);
-      auVar35 = vectorPermute(auVar31,auVar38,auVar24);
-      auVar47 = vectorPermute(auVar27,auVar35,auVar45);
-      auVar27 = ZEXT416(0);
-      auVar35 = auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60;
-      auVar38 = vectorSubtractFloatingPoint(*(undefined1 (*) [16])(puVar3 + 0x46),auVar47);
-      auVar27 = auVar31 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar28 = auVar28 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar29 = auVar29 >> 0x60 & (GPiece<16>)0xffffffff;
-      uVar23 = storeVectorElementWordIndexed
-                         (auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60,0x78,lVar1);
-      *(undefined4 *)(puVar3 + 0xf) = uVar23;
-      uVar23 = storeVectorElementWordIndexed
-                         (auVar28 | auVar28 << 0x20 | auVar28 << 0x40 | auVar28 << 0x60,0x74,lVar1);
-      *(undefined4 *)((int)puVar3 + 0x74) = uVar23;
-      uVar23 = storeVectorElementWordIndexed
-                         (auVar29 | auVar29 << 0x20 | auVar29 << 0x40 | auVar29 << 0x60,0x70,lVar1);
-      *(undefined4 *)(puVar3 + 0xe) = uVar23;
-      auVar27 = vectorMultiplyAddFloatingPoint(auVar38,auVar38,auVar35);
-      auVar28 = vectorPermute(auVar38,auVar38,auVar46);
-      auVar29 = vectorPermute(auVar38,auVar38,auVar49);
-      auVar27 = vectorMultiplyAddFloatingPoint(auVar28,auVar28,auVar27);
-      auVar27 = vectorMultiplyAddFloatingPoint(auVar29,auVar29,auVar27);
-      auVar27 = auVar27 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar27 = auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60;
-      auVar29 = vectorReciprocalSquareRootEstimateFloatingPoint(auVar27);
-      auVar27 = vectorMultiplyAddFloatingPoint(auVar29,auVar27,auVar35);
-      auVar28 = vectorMultiplyAddFloatingPoint(auVar29,auVar44,auVar35);
-      auVar27 = vectorNegativeMultiplySubtractFloatingPoint(auVar29,auVar27,auVar43);
-      auVar28 = vectorMultiplyAddFloatingPoint(auVar27,auVar28,auVar29);
-      auVar27 = vectorCompareEqualToFloatingPoint(auVar28,auVar28);
-      auVar27 = vectorConditionalSelect(auVar29,auVar28,auVar27);
-      auVar27 = vectorMultiplyAddFloatingPoint(auVar38,auVar27,auVar35);
-      auVar27 = vectorMultiplyAddFloatingPoint(auVar27,auVar43,auVar35);
-      auVar38 = vectorAddFloatingPoint(auVar47,auVar27);
-      *(undefined1 (*) [16])(puVar3 + 0xe) = auVar38;
-      uVar2 = *(ushort *)((int)uVar15 + 0x12);
-      puVar17 = &DAT_00808080 + (uint)uVar2 * 0x1000000;
-      dVar19 = (double)FastIntToDouble((longlong)(short)uVar2 + 0x10);
-      dVar19 = (double)(float)((double)((float)(dVar19 * dVar22) * *(float *)((int)uVar15 + 0x1c)) *
-                              dVar21);
-      if (dVar20 < dVar19) {
-        puVar3[0x1e] = 1;
-        *(undefined **)((int)puVar3 + 0xcc) = puVar17;
-        *(undefined **)(puVar3 + 0x19) = puVar17;
-        *(undefined **)((int)puVar3 + 0xc4) = puVar17;
-        *(undefined **)(puVar3 + 0x18) = puVar17;
-        uVar10 = GetEffectTex(0x13);
-        puVar3[0x1f] = uVar10;
-        *(undefined4 *)(puVar3 + 0x1a) = 0;
-        *(undefined4 *)(puVar3 + 0x1c) = 0;
-        *(undefined4 *)((int)puVar3 + 0xd4) = 0;
-        *(undefined4 *)(puVar3 + 0x1b) = 0x3f800000;
-        *(undefined4 *)(puVar3 + 0x1d) = 0x3f800000;
-        auVar27 = ZEXT416(0xffffffff);
-        auVar27 = auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60;
-        *(undefined4 *)((int)puVar3 + 0xdc) = 0;
-        *(undefined4 *)((int)puVar3 + 0xe4) = 0x3f800000;
-        *(undefined4 *)((int)puVar3 + 0xec) = 0x3f800000;
-        auVar28 = vectorShiftLeftIntegerWord(auVar27,auVar27);
-        puVar3[0x21] = 0;
-        auVar29 = loadVectorLeftIndexed(lVar6,uVar12);
-        auVar27 = ZEXT416(0);
-        auVar47 = auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60;
-        auVar28 = vectorMultiplyAddFloatingPoint
-                            (auVar29,*(undefined1 (*) [16])(puVar3 + 0x24),auVar28);
-        auVar27 = ZEXT416(3);
-        auVar28 = auVar28 >> 0x60 & (GPiece<16>)0xffffffff;
-        auVar29 = vectorMultiplyAddFloatingPoint
-                            (auVar28 | auVar28 << 0x20 | auVar28 << 0x40 | auVar28 << 0x60,auVar44,
-                             auVar47);
-        auVar28 = ZEXT416(2);
-        auVar28 = auVar28 | auVar28 << 0x20 | auVar28 << 0x40 | auVar28 << 0x60;
-        auVar31 = vectorMultiplyAddFloatingPoint
-                            (auVar29,*(undefined1 (*) [16])(puVar3 + 0x44),auVar47);
-        auVar35 = vectorConditionalSelect(auVar44,auVar31,auVar30);
-        auVar31 = vectorAddFloatingPoint(auVar31,auVar35);
-        auVar31 = vectorConvertToSignedFixedPointWordSaturate(auVar31,0);
-        auVar35 = vectorConvertFromSignedFixedPointWord(auVar31,0);
-        auVar31 = vectorLogicalAnd(auVar31,auVar27 | auVar27 << 0x20 | auVar27 << 0x40 |
-                                           auVar27 << 0x60);
-        auVar27 = ZEXT416(1);
-        auVar40 = auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60;
-        auVar27 = vectorNegativeMultiplySubtractFloatingPoint
-                            (auVar35,*(undefined1 (*) [16])(puVar3 + 0x42),auVar29);
-        auVar29 = vectorNegativeMultiplySubtractFloatingPoint
-                            (auVar35,*(undefined1 (*) [16])(puVar3 + 0x40),auVar27);
-        auVar27.piece<0,4>() = auVar40.piece<0,4>() + auVar31.piece<0,4>();
-        auVar27.piece<8,8>() = SUB168(*(undefined1 (*) [16])(puVar3 + 0x40),0);
-        auVar27.piece<4,4>() = auVar40.piece<4,4>() + auVar31.piece<4,4>();
-        auVar35.piece<0,8>() = auVar27.piece<0,8>();
-        auVar35.piece<8,4>() = auVar40.piece<8,4>() + auVar31.piece<8,4>();
-        auVar35.piece<12,4>() = auVar40.piece<12,4>() + auVar31.piece<12,4>();
-        auVar48 = vectorLogicalAnd(auVar31,auVar40);
-        auVar27 = vectorLogicalAnd(auVar31,auVar28);
-        auVar41 = vectorLogicalAnd(auVar35,auVar40);
-        auVar34 = vectorCompareEqualToUnsignedWord(auVar48,auVar47);
-        auVar31 = vectorCompareEqualToUnsignedWord(auVar27,auVar47);
-        auVar28 = vectorLogicalAnd(auVar35,auVar28);
-        auVar27 = vectorMultiplyAddFloatingPoint(auVar29,auVar29,auVar47);
-        auVar35 = vectorCompareEqualToUnsignedWord(auVar28,auVar47);
-        auVar28 = vectorMultiplyAddFloatingPoint
-                            (*(undefined1 (*) [16])(puVar3 + 0x3e),auVar27,
-                             *(undefined1 (*) [16])(puVar3 + 0x3c));
-        auVar48 = vectorMultiplyAddFloatingPoint
-                            (*(undefined1 (*) [16])(puVar3 + 0x3a),auVar27,
-                             *(undefined1 (*) [16])(puVar3 + 0x38));
-        auVar40 = vectorMultiplyAddFloatingPoint(auVar27,auVar29,auVar47);
-        auVar41 = vectorCompareEqualToUnsignedWord(auVar41,auVar47);
-        auVar28 = vectorMultiplyAddFloatingPoint
-                            (auVar28,auVar27,*(undefined1 (*) [16])(puVar3 + 0x36));
-        auVar48 = vectorMultiplyAddFloatingPoint
-                            (auVar48,auVar27,*(undefined1 (*) [16])(puVar3 + 0x34));
-        auVar28 = vectorMultiplyAddFloatingPoint(auVar28,auVar27,auVar43);
-        auVar27 = vectorMultiplyAddFloatingPoint(auVar48,auVar40,auVar29);
-        auVar29 = vectorConditionalSelect(auVar28,auVar27,auVar34);
-        auVar27 = vectorConditionalSelect(auVar28,auVar27,auVar41);
-        auVar28 = vectorConditionalSelect(auVar30 ^ auVar29,auVar29,auVar31);
-        auVar27 = vectorConditionalSelect(auVar30 ^ auVar27,auVar27,auVar35);
-        auVar28 = vectorMultiplyAddFloatingPoint
-                            (*(undefined1 (*) [16])(puVar3 + 0x48),auVar28,auVar47);
-        lVar6 = 0x110;
-        auVar29 = vectorConditionalSelect(auVar28,auVar27,*(undefined1 (*) [16])(puVar3 + 0x32));
-        auVar28 = vectorMultiplyAddFloatingPoint(auVar29,auVar36,auVar47);
-        auVar31 = vectorPermute(auVar29,auVar29,auVar46);
-        auVar27 = auVar29 & (GPiece<16>)0xffffffff;
-        auVar48 = auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60;
-        auVar42 = vectorMultiplyAddFloatingPoint(auVar29,auVar39,auVar47);
-        auVar41 = vectorPermute(auVar29,auVar29,auVar32);
-        auVar37 = vectorPermute(auVar29,auVar29,auVar33);
-        auVar40 = vectorMultiplyAddFloatingPoint(auVar48,auVar36,auVar47);
-        auVar27 = vectorMultiplyAddFloatingPoint(auVar48,auVar39,auVar47);
-        auVar35 = vectorMultiplyAddFloatingPoint
-                            (auVar31,*(undefined1 (*) [16])(puVar3 + 0x2c),auVar28);
-        auVar28 = vectorPermute(auVar28,auVar28,auVar49);
-        auVar34 = vectorMultiplyAddFloatingPoint
-                            (auVar31,*(undefined1 (*) [16])(puVar3 + 0x26),auVar42);
-        auVar42 = vectorPermute(auVar42,auVar42,auVar49);
-        auVar31 = vectorMultiplyAddFloatingPoint
-                            (auVar41,*(undefined1 (*) [16])(puVar3 + 0x30),auVar40);
-        *(float *)(puVar3 + 0x22) = (float)dVar19;
-        auVar28 = vectorAddFloatingPoint(auVar28,auVar35);
-        auVar40 = vectorMultiplyAddFloatingPoint
-                            (auVar41,*(undefined1 (*) [16])(puVar3 + 0x2a),auVar27);
-        auVar34 = vectorAddFloatingPoint(auVar42,auVar34);
-        auVar35 = vectorNegativeMultiplySubtractFloatingPoint
-                            (auVar37,*(undefined1 (*) [16])(puVar3 + 0x2e),auVar31);
-        *(float *)((int)puVar3 + 0x114) = (float)dVar19;
-        *(float *)(puVar3 + 0x23) = (float)dVar19;
-        *(float *)((int)puVar3 + 0x11c) = (float)dVar19;
-        auVar27 = auVar28 >> 0x60 & (GPiece<16>)0xffffffff;
-        auVar40 = vectorNegativeMultiplySubtractFloatingPoint
-                            (auVar37,*(undefined1 (*) [16])(puVar3 + 0x28),auVar40);
-        auVar28 = auVar34 >> 0x60 & (GPiece<16>)0xffffffff;
-        auVar31 = vectorMultiplyAddFloatingPoint
-                            (auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60,auVar29,
-                             auVar47);
-        auVar42 = vectorPermute(auVar35,auVar35,auVar33);
-        auVar27 = vectorMultiplyAddFloatingPoint
-                            (auVar28 | auVar28 << 0x20 | auVar28 << 0x40 | auVar28 << 0x60,auVar29,
-                             auVar47);
-        auVar34 = vectorPermute(auVar35,auVar35,auVar32);
-        auVar28 = vectorMultiplyAddFloatingPoint(auVar48,auVar35,auVar31);
-        auVar29 = vectorPermute(auVar40,auVar40,auVar33);
-        auVar27 = vectorMultiplyAddFloatingPoint(auVar48,auVar40,auVar27);
-        auVar31 = vectorPermute(auVar40,auVar40,auVar32);
-        auVar28 = vectorMultiplyAddFloatingPoint(auVar41,auVar42,auVar28);
-        auVar27 = vectorMultiplyAddFloatingPoint(auVar41,auVar29,auVar27);
-        auVar28 = vectorNegativeMultiplySubtractFloatingPoint(auVar37,auVar34,auVar28);
-        auVar27 = vectorNegativeMultiplySubtractFloatingPoint(auVar37,auVar31,auVar27);
-        auVar35 = vectorMultiplyAddFloatingPoint
-                            (auVar28,*(undefined1 (*) [16])(puVar3 + 0x22),auVar47);
-        auVar31 = vectorMultiplyAddFloatingPoint
-                            (auVar27,*(undefined1 (*) [16])(puVar3 + 0x22),auVar47);
-        auVar27 = vectorMultiplyAddFloatingPoint(auVar35,auVar44,auVar47);
-        auVar28 = vectorMultiplyAddFloatingPoint(auVar31,auVar44,auVar47);
-        auVar27 = vectorSubtractFloatingPoint(auVar38,auVar27);
-        auVar29 = vectorSubtractFloatingPoint(auVar27,auVar28);
-        auVar38 = vectorAddFloatingPoint(auVar29,auVar35);
-        auVar27 = auVar29 >> 0x60 & (GPiece<16>)0xffffffff;
-        auVar28 = auVar29 >> 0x40 & (GPiece<16>)0xffffffff;
-        auVar29 = auVar29 >> 0x20 & (GPiece<16>)0xffffffff;
-        uVar23 = storeVectorElementWordIndexed
-                           (auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60,0x80,lVar1
-                           );
-        *(undefined4 *)(puVar3 + 0x10) = uVar23;
-        uVar23 = storeVectorElementWordIndexed
-                           (auVar28 | auVar28 << 0x20 | auVar28 << 0x40 | auVar28 << 0x60,0x84,lVar1
-                           );
-        *(undefined4 *)((int)puVar3 + 0x84) = uVar23;
-        uVar23 = storeVectorElementWordIndexed
-                           (auVar29 | auVar29 << 0x20 | auVar29 << 0x40 | auVar29 << 0x60,0x88,lVar1
-                           );
-        *(undefined4 *)(puVar3 + 0x11) = uVar23;
-        auVar31 = vectorAddFloatingPoint(auVar38,auVar31);
-        auVar27 = auVar38 >> 0x60 & (GPiece<16>)0xffffffff;
-        auVar28 = auVar38 >> 0x40 & (GPiece<16>)0xffffffff;
-        auVar29 = auVar38 >> 0x20 & (GPiece<16>)0xffffffff;
-        uVar23 = storeVectorElementWordIndexed
-                           (auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60,0x90,lVar1
-                           );
-        *(undefined4 *)(puVar3 + 0x12) = uVar23;
-        uVar23 = storeVectorElementWordIndexed
-                           (auVar28 | auVar28 << 0x20 | auVar28 << 0x40 | auVar28 << 0x60,0x94,lVar1
-                           );
-        *(undefined4 *)((int)puVar3 + 0x94) = uVar23;
-        uVar23 = storeVectorElementWordIndexed
-                           (auVar29 | auVar29 << 0x20 | auVar29 << 0x40 | auVar29 << 0x60,0x98,lVar1
-                           );
-        *(undefined4 *)(puVar3 + 0x13) = uVar23;
-        iVar5 = EffectTexHeaders;
-        auVar29 = vectorSubtractFloatingPoint(auVar31,auVar35);
-        auVar38 = vectorAddFloatingPoint(auVar29,auVar35);
-        auVar27 = auVar29 >> 0x60 & (GPiece<16>)0xffffffff;
-        auVar28 = auVar29 >> 0x40 & (GPiece<16>)0xffffffff;
-        auVar29 = auVar29 >> 0x20 & (GPiece<16>)0xffffffff;
-        uVar23 = storeVectorElementWordIndexed
-                           (auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60,0xa0,lVar1
-                           );
-        *(undefined4 *)(puVar3 + 0x14) = uVar23;
-        uVar23 = storeVectorElementWordIndexed
-                           (auVar28 | auVar28 << 0x20 | auVar28 << 0x40 | auVar28 << 0x60,0xa4,lVar1
-                           );
-        *(undefined4 *)((int)puVar3 + 0xa4) = uVar23;
-        uVar23 = storeVectorElementWordIndexed
-                           (auVar29 | auVar29 << 0x20 | auVar29 << 0x40 | auVar29 << 0x60,0xa8,lVar1
-                           );
-        *(undefined4 *)(puVar3 + 0x15) = uVar23;
-        auVar27 = auVar38 >> 0x60 & (GPiece<16>)0xffffffff;
-        auVar28 = auVar38 >> 0x40 & (GPiece<16>)0xffffffff;
-        auVar29 = auVar38 >> 0x20 & (GPiece<16>)0xffffffff;
-        *(undefined1 (*) [16])(puVar3 + 0xe) = auVar38;
-        uVar23 = storeVectorElementWordIndexed
-                           (auVar27 | auVar27 << 0x20 | auVar27 << 0x40 | auVar27 << 0x60,0xb0,lVar1
-                           );
-        *(undefined4 *)(puVar3 + 0x16) = uVar23;
-        uVar23 = storeVectorElementWordIndexed
-                           (auVar28 | auVar28 << 0x20 | auVar28 << 0x40 | auVar28 << 0x60,0xb4,lVar1
-                           );
-        *(undefined4 *)((int)puVar3 + 0xb4) = uVar23;
-        uVar23 = storeVectorElementWordIndexed
-                           (auVar29 | auVar29 << 0x20 | auVar29 << 0x40 | auVar29 << 0x60,0xb8,lVar1
-                           );
-        *(undefined4 *)(puVar3 + 0x17) = uVar23;
-        *(undefined4 *)((int)puVar3 + 0xbc) = 0x3f800000;
-        *(undefined4 *)((int)puVar3 + 0xac) = 0x3f800000;
-        *(undefined4 *)((int)puVar3 + 0x9c) = 0x3f800000;
-        *(undefined4 *)((int)puVar3 + 0x8c) = 0x3f800000;
-        FastDrawQuad(uVar8 - 0x310,0,1,iVar5,9);
-      }
+    IdolDraw *idol = (IdolDraw *)(uintptr_t)g_pIdolDrawBase;
+
+    idol_draw::DrawDepth(DL_Pass, idol_draw::PackCmd(0, 2, 0, 1, 0x80));
+    FUN_004d676c(DL_Pass, 0, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(19) * 0x24, 3, 3);
+
+    Mtx4 *view = &idol->viewMtx;
+    Vec4 right = { view->v0.x, view->v1.x, view->v2.x, view->v3.x };
+    Vec4 upAxis = { view->v0.y, view->v1.y, view->v2.y, view->v3.y };
+    Vec4 axis = { view->v0.z, view->v1.z, view->v2.z, view->v3.z };
+
+    right = Normalize3(right);
+    upAxis = Normalize3(upAxis);
+    axis = Normalize3(axis);
+
+    Vec4 camPos = idol->camPos;
+
+    for (int i = 0; i < 32; i++) {
+        ImpactSprite *sprite = &g_ImpactSprites[i];
+
+        if (sprite->timer <= 0) {
+            continue;
+        }
+
+        Vec4 pos = { sprite->pos.x, sprite->pos.y, sprite->pos.z, 1.0f };
+        Vec4 toCamera = { camPos.x - pos.x, camPos.y - pos.y, camPos.z - pos.z, camPos.w - pos.w };
+
+        toCamera = Normalize3(toCamera);
+        pos.x += toCamera.x;
+        pos.y += toCamera.y;
+        pos.z += toCamera.z;
+        pos.w += toCamera.w;
+
+        u32 color = (sprite->fade << 24) + 0x808080;
+        float size = (float)FastIntToDouble(sprite->fade + 16) * 0.015625f * sprite->scale * 0.48f;
+
+        if (size <= 0.0f) {
+            continue;
+        }
+
+        float angle = sprite->rot * 0.017453292f;
+        Vec4 across = RotateAbout(right, axis, angle);
+        Vec4 down = RotateAbout(upAxis, axis, angle);
+
+        QuadDef quad;
+
+        quad.clamp = 1;
+        quad.tex0 = GetEffectTex(19);
+        quad.alpha = 0;
+
+        float *coords = &quad.st[0][0];
+        static const float corners[4][2] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f } };
+
+        for (int j = 0; j < 4; j++) {
+            float texU = corners[j][0] - 0.5f;
+            float texV = corners[j][1] - 0.5f;
+
+            quad.xyzw[j].x = pos.x + across.x * size * texU + down.x * size * texV;
+            quad.xyzw[j].y = pos.y + across.y * size * texU + down.y * size * texV;
+            quad.xyzw[j].z = pos.z + across.z * size * texU + down.z * size * texV;
+            quad.xyzw[j].w = 1.0f;
+            quad.rgba[j] = color;
+            coords[j * 2] = corners[j][0];
+            coords[j * 2 + 1] = corners[j][1];
+        }
+
+        FastDrawQuad(&quad, NULL, 1, (void *)(uintptr_t)EffectTexHeaders, 9);
     }
-    pRVar4 = DL_Pass;
-    iVar18 = iVar18 + 1;
-    psVar16 = psVar16 + 0x10;
-    uVar14 = uVar14 + 0x20;
-    uVar13 = uVar13 + 0x20;
-    uVar12 = uVar12 + 0x20;
-    uVar15 = uVar15 + 0x20;
-  } while (iVar18 < 0x20);
-  uVar9 = idol_draw::PackCmd(0,1,0,1,0x80);
-  idol_draw::DrawDepth(pRVar4,uVar9);
-  return;
+
+    idol_draw::DrawDepth(DL_Pass, idol_draw::PackCmd(0, 1, 0, 1, 0x80));
 }
 
+void STUB_00077c60(...);
+void STUB_00077c64(...);
+void STUB_00077c68(...);
+void STUB_00077c6c(...);
 
-// 0x00758cc (0x1e0 bytes)
-void DrawWaterPatch_A(int *param_1)
-
+/* DrawWaterPatch_A/_B: the PS2 scratchpad double-buffered walk over a patch's chunks, every
+   transfer and VU call now an empty stub */
+static inline void WaterPatchWalk(WaterPatchList *list, int modeB)
 {
-  short sVar1;
-  short sVar2;
-  short sVar3;
-  int iVar4;
-  ulonglong uVar5;
-  int iVar6;
-  int iVar7;
-  int iVar8;
-  
-  if (*(short *)(param_1 + 1) != 0) {
-    uVar5 = (ulonglong)DAT_0071f070;
-    DAT_0071f070 = (uint)(1 - uVar5);
-    STUB_000e9130(*(undefined4 *)*param_1,*(short *)(*param_1 + 0xe) >> 4,
-                        *(undefined4 *)(&DAT_0071f074 + (int)((1 - uVar5 & 0xffffffff) << 2)));
-    iVar7 = 0;
-    if (0 < *(short *)(param_1 + 1)) {
-      iVar8 = 0;
-      do {
-        iVar6 = *param_1 + iVar8;
-        iVar4 = *(int *)(&DAT_0071f074 + DAT_0071f070 * 4);
-        sVar1 = *(short *)(iVar6 + 0xc);
-        sVar2 = *(short *)(iVar6 + 8);
-        sVar3 = *(short *)(iVar6 + 10);
+    if (list->count == 0) {
+        return;
+    }
+
+    g_WaterSpadIndex = 1 - g_WaterSpadIndex;
+    STUB_000e9130(list->chunks[0].data, list->chunks[0].size >> 4, g_WaterSpadBufs[g_WaterSpadIndex]);
+
+    for (int i = 0; i < list->count; i++) {
+        WaterPatchChunk *chunk = &list->chunks[i];
+        u32 buf = g_WaterSpadBufs[g_WaterSpadIndex];
+        short ofsC = chunk->ofsC;
+        short ofs8 = chunk->ofs8;
+        short uvOfs = chunk->uvOfs;
+
         STUB_000e9134();
-        uVar5 = (ulonglong)DAT_0071f070;
-        iVar7 = iVar7 + 1;
-        DAT_0071f070 = (uint)(1 - uVar5);
-        if (iVar7 < *(short *)(param_1 + 1)) {
-          STUB_000e9130(*(undefined4 *)(*param_1 + iVar8 + 0x10),
-                              *(short *)(*param_1 + iVar8 + 0x1e) >> 4,
-                              *(undefined4 *)(&DAT_0071f074 + (int)((1 - uVar5 & 0xffffffff) << 2)))
-          ;
+        g_WaterSpadIndex = 1 - g_WaterSpadIndex;
+
+        if (i + 1 < list->count) {
+            STUB_000e9130(list->chunks[i + 1].data, list->chunks[i + 1].size >> 4, g_WaterSpadBufs[g_WaterSpadIndex]);
         }
-        STUB_00077c60(iVar4 + sVar2,&DAT_70002000,*(undefined2 *)(*param_1 + iVar8 + 4));
-        STUB_00077c68(*(undefined2 *)(*param_1 + iVar8 + 6),iVar4 + sVar1,iVar4 + sVar3,
-                            &DAT_70002000);
-        iVar8 = iVar8 + 0x10;
-      } while (iVar7 < *(short *)(param_1 + 1));
-    }
-  }
-  return;
-}
 
-
-// 0x0075aac (0x1f0 bytes)
-void DrawWaterPatch_B(int *param_1)
-
-{
-  short sVar1;
-  short sVar2;
-  short sVar3;
-  int iVar4;
-  ulonglong uVar5;
-  int iVar6;
-  int iVar7;
-  int iVar8;
-  
-  if (*(short *)(param_1 + 1) != 0) {
-    uVar5 = (ulonglong)DAT_0071f070;
-    DAT_0071f070 = (uint)(1 - uVar5);
-    STUB_000e9130(*(undefined4 *)*param_1,*(short *)(*param_1 + 0xe) >> 4,
-                        *(undefined4 *)(&DAT_0071f074 + (int)((1 - uVar5 & 0xffffffff) << 2)));
-    iVar7 = 0;
-    if (0 < *(short *)(param_1 + 1)) {
-      iVar8 = 0;
-      do {
-        iVar6 = *param_1 + iVar8;
-        iVar4 = *(int *)(&DAT_0071f074 + DAT_0071f070 * 4);
-        sVar1 = *(short *)(iVar6 + 0xc);
-        sVar2 = *(short *)(iVar6 + 8);
-        sVar3 = *(short *)(iVar6 + 10);
-        STUB_000e9134();
-        uVar5 = (ulonglong)DAT_0071f070;
-        iVar7 = iVar7 + 1;
-        DAT_0071f070 = (uint)(1 - uVar5);
-        if (iVar7 < *(short *)(param_1 + 1)) {
-          STUB_000e9130(*(undefined4 *)(*param_1 + iVar8 + 0x10),
-                              *(short *)(*param_1 + iVar8 + 0x1e) >> 4,
-                              *(undefined4 *)(&DAT_0071f074 + (int)((1 - uVar5 & 0xffffffff) << 2)))
-          ;
-        }
-        STUB_00077c64(iVar4 + sVar2,&DAT_70002000,iVar4 + sVar3,0x70003000,
-                            *(undefined2 *)(*param_1 + iVar8 + 4));
-        STUB_00077c6c(*(undefined2 *)(*param_1 + iVar8 + 6),iVar4 + sVar1,0x70003000,
-                            &DAT_70002000);
-        iVar8 = iVar8 + 0x10;
-      } while (iVar7 < *(short *)(param_1 + 1));
-    }
-  }
-  return;
-}
-
-
-// 0x0075cc8 (0x208 bytes)
-void AnimateWaveUVs(int *param_1)
-
-{
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  float fVar7;
-  float fVar8;
-  int iVar9;
-  int iVar10;
-  int iVar11;
-  short *psVar12;
-  short sVar14;
-  short *psVar13;
-  short *psVar15;
-  int iVar16;
-  
-  sVar14 = *(short *)(param_1 + 1);
-  iVar10 = *param_1;
-  if (sVar14 != 0) {
-    iVar11 = 0;
-    psVar12 = &DAT_0095f240;
-    fVar1 = (float)(longlong)(int)(worldUpdateTime & 0x3fff) * 6.28 * 6.1035156e-05 - 3.14;
-    fVar2 = fVar1 + 1.5707963;
-    fVar3 = 3.1415925 - fVar1;
-    if (fVar1 - (3.1415925 - fVar1) < 0.0) {
-      fVar3 = fVar1;
-    }
-    fVar5 = 3.1415925 - fVar2;
-    if (fVar2 - (3.1415925 - fVar2) < 0.0) {
-      fVar5 = fVar2;
-    }
-    fVar4 = -3.1415925 - fVar1;
-    if ((-3.1415925 - fVar1) - fVar3 < 0.0) {
-      fVar4 = fVar3;
-    }
-    fVar1 = -3.1415925 - fVar2;
-    if ((-3.1415925 - fVar2) - fVar5 < 0.0) {
-      fVar1 = fVar5;
-    }
-    fVar2 = fVar4 * fVar4;
-    fVar3 = fVar1 * fVar1;
-    fVar7 = fVar2 * fVar2 * fVar4;
-    fVar5 = fVar3 * fVar3 * fVar1;
-    fVar8 = fVar2 * fVar7;
-    fVar6 = fVar3 * fVar5;
-    if (0 < sVar14) {
-      iVar9 = 0;
-      do {
-        iVar16 = 0;
-        psVar15 = (short *)(*(int *)(iVar10 + iVar9) + (int)*(short *)(iVar10 + iVar9 + 10));
-        psVar13 = psVar12;
-        if (0 < *(short *)(iVar10 + iVar9 + 4)) {
-          do {
-            iVar10 = *param_1;
-            psVar12 = psVar13 + 2;
-            iVar16 = iVar16 + 1;
-            *psVar15 = *psVar13 +
-                       (short)(int)((fVar3 * fVar6 * 2.601887e-06 +
-                                    fVar6 * -0.0001980741 +
-                                    fVar5 * 0.0083330255 + fVar3 * fVar1 * -0.16666657 + fVar1) *
-                                   4096.0) + 0x1000;
-            psVar15[1] = psVar13[1] +
-                         (short)(int)((fVar2 * fVar8 * 2.601887e-06 +
-                                      fVar8 * -0.0001980741 +
-                                      fVar7 * 0.0083330255 + fVar2 * fVar4 * -0.16666657 + fVar4) *
-                                     4096.0) + 0x1000;
-            psVar13 = psVar13 + 2;
-            psVar15 = psVar15 + 2;
-          } while (iVar16 < *(short *)(iVar10 + iVar9 + 4));
-          sVar14 = *(short *)(param_1 + 1);
-        }
-        iVar11 = iVar11 + 1;
-        iVar9 = iVar9 + 0x10;
-      } while (iVar11 < sVar14);
-    }
-  }
-  return;
-}
-
-
-// 0x0075ed0 (0xe0 bytes)
-void ____Water_CopyPatchUVs(int *param_1,undefined2 *param_2)
-
-{
-  int iVar1;
-  short sVar3;
-  undefined2 *puVar2;
-  int iVar4;
-  int iVar5;
-  undefined2 *puVar6;
-  int iVar7;
-  
-  sVar3 = *(short *)(param_1 + 1);
-  if ((sVar3 != 0) && (iVar7 = 0, 0 < sVar3)) {
-    iVar4 = *param_1;
-    iVar1 = 0;
-    do {
-      iVar5 = 0;
-      puVar6 = (undefined2 *)(*(int *)(iVar4 + iVar1) + (int)*(short *)(iVar4 + iVar1 + 10));
-      puVar2 = param_2;
-      if (0 < *(short *)(iVar4 + iVar1 + 4)) {
-        do {
-          iVar4 = *param_1;
-          iVar5 = iVar5 + 1;
-          *puVar2 = *puVar6;
-          puVar2[1] = puVar6[1];
-          param_2 = puVar2 + 2;
-          puVar6 = puVar6 + 2;
-          puVar2 = puVar2 + 2;
-        } while (iVar5 < *(short *)(iVar4 + iVar1 + 4));
-        sVar3 = *(short *)(param_1 + 1);
-      }
-      iVar7 = iVar7 + 1;
-      iVar1 = iVar1 + 0x10;
-    } while (iVar7 < sVar3);
-  }
-  return;
-}
-
-
-// 0x0075fb0 (0x34 bytes)
-void DrawWaterPatch(int param_1)
-
-{
-  if (*(short *)(param_1 + 6) == 0) {
-    DrawWaterPatch_A();
-  }
-  else {
-    DrawWaterPatch_B();
-  }
-  return;
-}
-
-
-// 0x0075ff0 (0x338 bytes)
-void ____Water_ComputeWaveGrid(double param_1,double param_2,double param_3)
-
-{
-  undefined2 uVar1;
-  short sVar2;
-  short sVar3;
-  int iVar4;
-  ulonglong uVar5;
-  short *psVar6;
-  int in_r6;
-  ulonglong in_r7;
-  ulonglong uVar7;
-  undefined4 *in_r8;
-  undefined4 *in_r9;
-  ulonglong uVar8;
-  longlong lVar9;
-  int iVar10;
-  int iVar11;
-  int iVar12;
-  ulonglong uVar13;
-  longlong lVar14;
-  longlong lVar15;
-  GPiece<16> auVar16;
-  GPiece<16> auVar17;
-  GPiece<16> auVar18;
-  GPiece<16> auVar19;
-  GPiece<16> auVar20;
-  GPiece<16> auVar21;
-  GPiece<16> auVar22;
-  GPiece<16> auVar24;
-  GPiece<16> auVar25;
-  GPiece<16> auVar26;
-  GPiece<16> auVar28;
-  GPiece<16> auVar29;
-  GPiece<16> auVar30;
-  GPiece<16> auVar31;
-  GPiece<16> auVar23;
-  GPiece<16> auVar27;
-  
-  auVar18 = ZEXT416(0);
-  auVar16 = auVar18 | auVar18 << 0x20 | auVar18 << 0x40 | auVar18 << 0x60;
-  iVar4 = 0;
-  auVar25.piece<0,4>() = (float)param_2;
-  auVar25.piece<4,4>() = (float)param_2;
-  auVar25.piece<8,4>() = (float)param_2;
-  auVar25.piece<12,4>() = (float)param_2;
-  uVar7 = 0;
-  auVar18 = ZEXT416(8);
-  auVar24 = auVar18 | auVar18 << 0x20 | auVar18 << 0x40 | auVar18 << 0x60;
-  auVar19.piece<0,4>() = (float)param_1;
-  auVar19.piece<4,4>() = (float)param_1;
-  auVar19.piece<8,4>() = (float)param_1;
-  auVar19.piece<12,4>() = (float)param_1;
-  *(short *)((int)in_r9 + 6) = (short)in_r6;
-  *(undefined2 *)(in_r9 + 1) = 1;
-  *in_r9 = in_r8;
-  *in_r8 = (int)in_r7;
-  *(undefined2 *)(in_r8 + 1) = 0x100;
-  *(undefined2 *)((int)in_r8 + 6) = 0xe1;
-  *(undefined2 *)(in_r8 + 2) = 0;
-  auVar29 = loadVectorLeftIndexed(0x30,0x75fe4);
-  auVar18.piece<0,4>() = (float)param_3;
-  auVar18.piece<4,4>() = (float)param_3;
-  auVar18.piece<8,4>() = (float)param_3;
-  auVar18.piece<12,4>() = (float)param_3;
-  auVar17 = vectorConvertToSignedFixedPointWordSaturate(auVar18,0);
-  auVar18 = auVar29 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar29 = auVar18 | auVar18 << 0x20 | auVar18 << 0x40 | auVar18 << 0x60;
-  auVar18 = vectorSplatHalfWord(auVar17,1);
-  uVar5 = in_r7;
-  auVar17 = auVar16;
-  do {
-    auVar20 = vectorSubtractUnsignedWordModulo(auVar17,auVar24);
-    auVar20 = vectorConvertFromSignedFixedPointWord(auVar20,0);
-    lVar9 = uVar5 + 2;
-    lVar14 = 0x10;
-    auVar20 = vectorMultiplyAddFloatingPoint(auVar20,auVar29,auVar25);
-    auVar20 = vectorConvertToSignedFixedPointWordSaturate(auVar20,0);
-    auVar21 = vectorSplatHalfWord(auVar20,1);
-    lVar15 = uVar5 + 4;
-    uVar13 = uVar5;
-    auVar20 = auVar16;
-    do {
-      auVar30 = vectorSubtractUnsignedWordModulo(auVar20,auVar24);
-      auVar28.piece<0,4>() = auVar20.piece<0,4>() + 1;
-      auVar28.piece<8,8>() = auVar20.piece<8,8>();
-      auVar28.piece<4,4>() = auVar20.piece<4,4>() + 1;
-      auVar31.piece<0,8>() = auVar28.piece<0,8>();
-      auVar31.piece<12,4>() = auVar20.piece<12,4>();
-      auVar31.piece<8,4>() = auVar20.piece<8,4>() + 1;
-      auVar20.piece<0,12>() = auVar31.piece<0,12>();
-      auVar20.piece<12,4>() = auVar31.piece<12,4>() + 1;
-      auVar31 = vectorConvertFromSignedFixedPointWord(auVar30,0);
-      auVar31 = vectorMultiplyAddFloatingPoint(auVar31,auVar29,auVar19);
-      auVar31 = vectorConvertToSignedFixedPointWordSaturate(auVar31,0);
-      auVar31 = vectorSplatHalfWord(auVar31,1);
-      uVar1 = storeVectorElementHalfWordIndexed(auVar31,0,uVar13);
-      *(undefined2 *)uVar13 = uVar1;
-      uVar1 = storeVectorElementHalfWordIndexed(auVar21,0,lVar9);
-      *(undefined2 *)lVar9 = uVar1;
-      uVar1 = storeVectorElementHalfWordIndexed(auVar18,0,lVar15);
-      *(undefined2 *)lVar15 = uVar1;
-      lVar9 = lVar9 + 6;
-      uVar5 = uVar13 + 6;
-      lVar14 = lVar14 + -1;
-      lVar15 = lVar15 + 6;
-      uVar13 = uVar13 + 6;
-    } while (lVar14 != 0);
-    iVar4 = iVar4 + 1;
-    auVar21.piece<0,4>() = auVar17.piece<0,4>() + 1;
-    auVar21.piece<8,8>() = auVar17.piece<8,8>();
-    auVar21.piece<4,4>() = auVar17.piece<4,4>() + 1;
-    auVar30.piece<0,8>() = auVar21.piece<0,8>();
-    auVar30.piece<12,4>() = auVar17.piece<12,4>();
-    auVar30.piece<8,4>() = auVar17.piece<8,4>() + 1;
-    auVar17.piece<0,12>() = auVar30.piece<0,12>();
-    auVar17.piece<12,4>() = auVar30.piece<12,4>() + 1;
-  } while (iVar4 < 0x10);
-  sVar2 = (short)in_r7;
-  iVar4 = 0;
-  *(short *)((int)in_r8 + 10) = (short)uVar5 - sVar2;
-  auVar18 = loadVectorLeftIndexed(4,0x75fe4);
-  iVar11 = 0;
-  auVar18 = auVar18 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar18 = auVar18 | auVar18 << 0x20 | auVar18 << 0x40 | auVar18 << 0x60;
-  auVar24 = auVar16;
-  do {
-    auVar19 = vectorConvertFromSignedFixedPointWord(auVar24,0);
-    auVar25 = ZEXT416(0xffffffff);
-    auVar25 = auVar25 | auVar25 << 0x20 | auVar25 << 0x40 | auVar25 << 0x60;
-    iVar12 = 0;
-    auVar25 = vectorShiftLeftIntegerWord(auVar25,auVar25);
-    auVar25 = vectorMultiplyAddFloatingPoint(auVar19,auVar18,auVar25);
-    auVar25 = vectorConvertToSignedFixedPointWordSaturate(auVar25,0);
-    auVar25 = vectorSplatHalfWord(auVar25,1);
-    uVar13 = uVar5;
-    auVar29 = auVar16;
-    iVar10 = iVar11;
-    do {
-      auVar17 = vectorConvertFromSignedFixedPointWord(auVar29,0);
-      auVar19 = ZEXT416(0xffffffff);
-      auVar19 = auVar19 | auVar19 << 0x20 | auVar19 << 0x40 | auVar19 << 0x60;
-      auVar19 = vectorShiftLeftIntegerWord(auVar19,auVar19);
-      auVar19 = vectorMultiplyAddFloatingPoint(auVar17,auVar18,auVar19);
-      auVar19 = vectorConvertToSignedFixedPointWordSaturate(auVar19,0);
-      psVar6 = (short *)uVar5;
-      if (in_r6 == 0) {
-        if ((((iVar12 == 0) || (iVar4 == 0)) || (iVar12 == 0xf)) || (iVar4 == 0xf)) {
-          *psVar6 = 0x6060;
-          *(undefined2 *)((int)uVar13 + 2) = 0x8060;
-          uVar5 = uVar13;
+        if (modeB) {
+            STUB_00077c64(buf + ofs8, &DAT_70002000, buf + uvOfs, 0x70003000, list->chunks[i].count);
+            STUB_00077c6c(list->chunks[i].unk6, buf + ofsC, 0x70003000, &DAT_70002000);
         }
         else {
-          sVar3 = (short)iVar10 + (short)(iVar10 / 0x50) * -0x50;
-          psVar6[1] = sVar3 + -0x7fd0;
-          *psVar6 = sVar3 * 0x101 + 0x3030;
+            STUB_00077c60(buf + ofs8, &DAT_70002000, list->chunks[i].count);
+            STUB_00077c68(list->chunks[i].unk6, buf + ofsC, buf + uvOfs, &DAT_70002000);
         }
-      }
-      else {
-        auVar19 = vectorSplatHalfWord(auVar19,1);
-        sVar3 = storeVectorElementHalfWordIndexed(auVar19,0,uVar5);
-        *psVar6 = sVar3;
-        sVar3 = storeVectorElementHalfWordIndexed(auVar25,2,uVar5);
-        psVar6[1] = sVar3;
-      }
-      iVar12 = iVar12 + 1;
-      auVar26.piece<0,4>() = auVar29.piece<0,4>() + 1;
-      auVar26.piece<8,8>() = auVar29.piece<8,8>();
-      auVar26.piece<4,4>() = auVar29.piece<4,4>() + 1;
-      auVar27.piece<0,8>() = auVar26.piece<0,8>();
-      auVar27.piece<12,4>() = auVar29.piece<12,4>();
-      auVar27.piece<8,4>() = auVar29.piece<8,4>() + 1;
-      auVar29.piece<0,12>() = auVar27.piece<0,12>();
-      auVar29.piece<12,4>() = auVar27.piece<12,4>() + 1;
-      uVar5 = uVar5 + 4;
-      iVar10 = iVar10 + 5;
-      uVar13 = uVar13 + 4;
-    } while (iVar12 < 0x10);
-    iVar4 = iVar4 + 1;
-    auVar22.piece<0,4>() = auVar24.piece<0,4>() + 1;
-    auVar22.piece<8,8>() = auVar24.piece<8,8>();
-    auVar22.piece<4,4>() = auVar24.piece<4,4>() + 1;
-    auVar23.piece<0,8>() = auVar22.piece<0,8>();
-    auVar23.piece<12,4>() = auVar24.piece<12,4>();
-    auVar23.piece<8,4>() = auVar24.piece<8,4>() + 1;
-    auVar24.piece<0,12>() = auVar23.piece<0,12>();
-    auVar24.piece<12,4>() = auVar23.piece<12,4>() + 1;
-    iVar11 = iVar11 + 0x17;
-  } while (iVar4 < 0x10);
-  iVar4 = 0;
-  *(short *)(in_r8 + 3) = (short)uVar5 - sVar2;
-  do {
-    lVar15 = 0xf;
-    uVar13 = uVar7;
-    uVar8 = uVar5;
-    do {
-      *(ushort *)uVar8 = (ushort)((uVar13 + 1 & 0xffffffff) << 8) | (ushort)uVar13 & 0xff;
-      uVar5 = uVar8 + 4;
-      ((ushort *)uVar8)[1] =
-           (ushort)((uVar13 + 0x11 & 0xffffffff) << 8) | (ushort)uVar13 + 0x10 & 0xff;
-      lVar15 = lVar15 + -1;
-      uVar13 = uVar13 + 1;
-      uVar8 = uVar8 + 4;
-    } while (lVar15 != 0);
-    iVar4 = iVar4 + 1;
-    uVar7 = uVar7 + 0x10;
-  } while (iVar4 < 0xf);
-  for (; (uVar5 & 0xf) != 0; uVar5 = uVar5 + 2) {
-  }
-  *(short *)((int)in_r8 + 0xe) = (short)uVar5 - sVar2;
-  return;
-}
-
-
-// 0x0076328 (0x128 bytes)
-void ____Water_SetPassTextures(undefined8 param_1,undefined8 param_2)
-
-{
-  RenderingStep *pRVar1;
-  int iVar2;
-  int iVar3;
-  
-  iVar2 = EffectTexHeaders;
-  pRVar1 = ForwardPass;
-  iVar3 = GetEffectTex();
-  FUN_004d676c(pRVar1,0,iVar2 + iVar3 * 0x24,1,1);
-  iVar2 = EffectTexHeaders;
-  pRVar1 = ForwardPass;
-  iVar3 = GetEffectTex(param_2);
-  FUN_004d676c(pRVar1,1,iVar2 + iVar3 * 0x24,1,1);
-  iVar2 = EffectTexHeaders;
-  pRVar1 = DepthPass;
-  iVar3 = GetEffectTex(param_1);
-  FUN_004d676c(pRVar1,0,iVar2 + iVar3 * 0x24,1,1);
-  return;
-}
-
-
-// 0x0076458 (0x128 bytes)
-void ____Water_InitPatches(void)
-
-{
-  undefined2 *puVar1;
-  int iVar2;
-  int iVar3;
-  undefined2 *puVar4;
-  int iVar5;
-  int *piVar6;
-  undefined2 *puVar7;
-  undefined2 *puVar8;
-  undefined8 uVar9;
-  
-  uVar9 = 0;
-  ____Water_ComputeWaveGrid(0,0,0xc028000000000000);
-  ____Water_ComputeWaveGrid(uVar9,uVar9,uVar9);
-  puVar4 = &DAT_0095f240;
-  if (DAT_0096366c != 0) {
-    iVar3 = 0;
-    iVar2 = (int)DAT_0096366c;
-    piVar6 = DAT_00963668;
-    if (0 < iVar2) {
-      do {
-        puVar8 = (undefined2 *)(*piVar6 + (int)*(short *)((int)piVar6 + 10));
-        iVar5 = (int)*(short *)(piVar6 + 1);
-        puVar7 = puVar4;
-        if (0 < *(short *)(piVar6 + 1)) {
-          do {
-            iVar5 = iVar5 + -1;
-            *puVar7 = *puVar8;
-            puVar1 = puVar8 + 1;
-            puVar8 = puVar8 + 2;
-            puVar4 = puVar7 + 2;
-            puVar7[1] = *puVar1;
-            puVar7 = puVar7 + 2;
-          } while (0 < iVar5);
-        }
-        iVar3 = iVar3 + 1;
-        piVar6 = piVar6 + 4;
-      } while (iVar3 < iVar2);
     }
-  }
-  return;
 }
 
-
-// 0x0076580 (0x344 bytes)
-void DrawWater(void)
-
+// 0x00758cc (0x1e0 bytes)
+void DrawWaterPatch_A(WaterPatchList *list)
 {
-  uint uVar1;
-  RenderingStep *pRVar2;
-  int iVar3;
-  undefined1 uVar6;
-  int iVar5;
-  undefined8 uVar4;
-  uint uVar7;
-  int iVar8;
-  double dVar9;
-  double dVar10;
-  double dVar11;
-  double dVar12;
-  
-  uVar1 = worldUpdateTime / 0x32;
-  uVar7 = uVar1 + 1;
-  iVar8 = uVar1 + (((int)uVar1 >> 2) + (uint)((int)uVar1 < 0 && (uVar1 & 3) != 0)) * -4 + 0x28;
-  AnimateWaveUVs(&DAT_00963668);
-  dVar9 = (double)g_ViewContext.fogNearDist;
-  dVar10 = (double)g_ViewContext.fogFarDist;
-  dVar11 = (double)g_ViewContext.fogNearIntensity;
-  dVar12 = (double)g_ViewContext.fogFarIntensity;
-  SetGSReg(10,FUN_00606060);
-  g_ViewContext.fogFarDist = 143360.0;
-  g_ViewContext.fogNearDist = 10000.0;
-  g_ViewContext.fogNearIntensity = 160.0;
-  g_ViewContext.fogFarIntensity = 0.0;
-  UpdateViewContext();
-  ComposeCameraMatrix();
-  *g_pPacket = 5;
-  g_pPacket[1] = 0x80;
-  g_pPacket[2] = 0;
-  uVar6 = Gs_DmaTagByte(5,0);
-  g_pPacket[3] = uVar6;
-  g_pPacket = g_pPacket + 0x10;
-  if (DAT_00961656 == 0) {
-    DrawWaterPatch_A();
-  }
-  else {
-    DrawWaterPatch_B();
-  }
-  iVar3 = EffectTexHeaders;
-  pRVar2 = ForwardPass;
-  iVar5 = GetEffectTex(iVar8);
-  FUN_004d676c(pRVar2,0,iVar3 + iVar5 * 0x24,1,1);
-  iVar3 = EffectTexHeaders;
-  pRVar2 = ForwardPass;
-  iVar5 = GetEffectTex(uVar1 + (((int)uVar7 >> 2) + (uint)((int)uVar7 < 0 && (uVar7 & 3) != 0)) * -4
-                       + 0x29);
-  FUN_004d676c(pRVar2,1,iVar3 + iVar5 * 0x24,1,1);
-  iVar3 = EffectTexHeaders;
-  pRVar2 = DepthPass;
-  iVar8 = GetEffectTex(iVar8);
-  FUN_004d676c(pRVar2,0,iVar3 + iVar8 * 0x24,1,1);
-  *g_pPacket = 5;
-  g_pPacket[1] = 0xd0;
-  g_pPacket[2] = 0;
-  uVar6 = Gs_DmaTagByte(5,0);
-  g_pPacket[3] = uVar6;
-  g_pPacket = g_pPacket + 0x10;
-  if (DAT_0096366e == 0) {
-    DrawWaterPatch_A(&DAT_00963668);
-  }
-  else {
-    DrawWaterPatch_B(&DAT_00963668);
-  }
-  g_ViewContext.fogNearDist = (float)dVar9;
-  g_ViewContext.fogFarDist = (float)dVar10;
-  g_ViewContext.fogNearIntensity = (float)dVar11;
-  g_ViewContext.fogFarIntensity = (float)dVar12;
-  uVar4 = FUN_00503024(g_ViewContext.fogR,g_ViewContext.fogG,g_ViewContext.fogB);
-  SetGSReg(10,uVar4);
-  UpdateViewContext();
-  ComposeCameraMatrix();
-  return;
+    WaterPatchWalk(list, 0);
 }
 
-
-// 0x00768e8 (0x748 bytes)
-void ____Draw_EffectStrip_M401(undefined8 param_1,undefined8 param_2)
-
+// 0x0075aac (0x1f0 bytes)
+void DrawWaterPatch_B(WaterPatchList *list)
 {
-  double dVar1;
-  double dVar2;
-  uint uVar3;
-  undefined1 *puVar4;
-  undefined8 uVar5;
-  undefined1 uVar6;
-  int iVar7;
-  int iVar8;
-  longlong lVar9;
-  int iVar10;
-  undefined8 *puVar11;
-  ulonglong uVar12;
-  double dVar13;
-  double dVar14;
-  double dVar15;
-  double dVar16;
-  double dVar17;
-  double dVar18;
-  double dVar19;
-  
-  dVar16 = 1.0;
-  dVar14 = (double)(GameCamera.mtx0.v2.z + GameCamera.mtx0.v3.z);
-  uVar5 = GetEffectTex(param_2);
-  SetGSReg(0x18,uVar5);
-  uVar5 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
-  SetGSReg(0x1a,uVar5);
-  uVar5 = SCE_GS_SET_CLAMP(0,1,0,0,0,0);
-  SetGSReg(6,uVar5);
-  uVar5 = idol_draw::PackCmd(0,1,0,1,0x80);
-  SetGSReg(3,uVar5);
-  iVar10 = 0;
-  *g_pPacket = 0x7d;
-  g_pPacket[1] = 0;
-  g_pPacket[2] = 0;
-  uVar6 = Gs_DmaTagByte(0x7d,0);
-  g_pPacket[3] = uVar6;
-  puVar4 = g_pPacket;
-  g_pPacket = g_pPacket + 0x10;
-  uVar5 = SCE_GIF_SET_TAG(1,0,0,0,0,3);
-  *(undefined8 *)(puVar4 + 0x10) = uVar5;
-  *(undefined8 *)(puVar4 + 0x18) = 0xeeee;
-  uVar5 = idol_draw::Blend(0,5,1,0,0,0,1,2);
-  *(undefined8 *)(puVar4 + 0x20) = uVar5;
-  *(undefined8 *)(puVar4 + 0x28) = 0x16;
-  uVar5 = VU1_addGSregister(GSmem.zbuf >> 0xd,1,1);
-  *(undefined8 *)(puVar4 + 0x30) = uVar5;
-  *(undefined8 *)(puVar4 + 0x38) = 0x21;
-  uVar5 = SCE_GS_SET_PRIM(0xf,0,1,0,1,0,0,0);
-  *(undefined8 *)(puVar4 + 0x40) = uVar5;
-  *(undefined8 *)(puVar4 + 0x48) = 0xe;
-  uVar5 = SCE_GIF_SET_TAG(0x30,1,0,0,1,5);
-  *(undefined8 *)(puVar4 + 0x50) = uVar5;
-  dVar19 = (double)(float)(dVar16 - dVar14);
-  uVar3 = worldUpdateTime >> 3;
-  *(undefined8 *)(puVar4 + 0x58) = 0x42421;
-  uVar12 = 10;
-  iVar7 = 0;
-  dVar17 = 0.00390625;
-  dVar18 = 0.0625;
-  puVar11 = (undefined8 *)(puVar4 + 0x60);
-  dVar15 = -(double)((GameCamera.rot.radius + 3.14) * 4.0 * 0.15923566 - 4.0);
-  dVar13 = (double)(float)((double)(longlong)(int)(uVar3 & 0xff) * 0.00390625 + dVar15);
-  iVar8 = 0x50;
-  do {
-    uVar5 = FUN_00502f74_RET_0(0x80,0x80,0x80,0x60,0x3a83126f);
-    *puVar11 = uVar5;
-    dVar2 = dVar19 * 0.0010000000474974513;
-    dVar1 = (double)(float)((double)(longlong)iVar7 + dVar16) * dVar18 + dVar13;
-    uVar5 = FUN_00503034((float)((double)(longlong)iVar7 * dVar18 + dVar13) * 0.001,
-                         -(float)(dVar14 * 0.0010000000474974513));
-    *(undefined8 *)(puVar4 + iVar8 + 0x18) = uVar5;
-    uVar5 = SCE_GS_SET_XYZ(iVar10 + 0x7000,0x7200,0);
-    *(undefined8 *)(puVar4 + iVar8 + 0x20) = uVar5;
-    uVar5 = FUN_00503034((float)dVar1 * 0.001,(float)dVar2);
-    *(undefined8 *)(puVar4 + iVar8 + 0x28) = uVar5;
-    uVar5 = SCE_GS_SET_XYZ(iVar10 + 0x7200,0x8df0,16000);
-    iVar7 = iVar7 + 1;
-    uVar12 = uVar12 + 5;
-    puVar11 = puVar11 + 5;
-    *(undefined8 *)(puVar4 + iVar8 + 0x30) = uVar5;
-    iVar10 = iVar10 + 0x200;
-    iVar8 = iVar8 + 0x28;
-  } while (iVar7 < 0x10);
-  iVar7 = 0;
-  lVar9 = (uVar12 & 0x1fffffff) << 3;
-  iVar8 = 0;
-  dVar13 = (double)(float)((double)(float)((double)(longlong)
-                                                   (int)((worldUpdateTime >> 4) + 0x5aU & 0xff) *
-                                           dVar17 + 1.5) + dVar15);
-  do {
-    uVar5 = FUN_00502f74_RET_0(0x80,0x80,0x80,0x60,0x3ada740e);
-    iVar10 = (int)lVar9;
-    *(undefined8 *)(puVar4 + iVar10 + 0x10) = uVar5;
-    dVar2 = dVar19 * 0.0016666667070239782;
-    dVar1 = (double)(float)((double)(longlong)iVar8 + dVar16) * dVar18 + dVar13;
-    uVar5 = FUN_00503034((float)((double)(longlong)iVar8 * dVar18 + dVar13) * 0.0016666667,
-                         -(float)(dVar14 * 0.0016666667070239782));
-    *(undefined8 *)(puVar4 + iVar10 + 0x18) = uVar5;
-    uVar5 = SCE_GS_SET_XYZ(iVar7 + 0x7000,0x7200,0);
-    *(undefined8 *)(puVar4 + iVar10 + 0x20) = uVar5;
-    uVar5 = FUN_00503034((float)dVar1 * 0.0016666667,(float)dVar2);
-    *(undefined8 *)(puVar4 + iVar10 + 0x28) = uVar5;
-    uVar5 = SCE_GS_SET_XYZ(iVar7 + 0x7200,0x8df0,0x2580);
-    iVar8 = iVar8 + 1;
-    uVar12 = uVar12 + 5;
-    lVar9 = lVar9 + 0x28;
-    iVar7 = iVar7 + 0x200;
-    *(undefined8 *)(puVar4 + iVar10 + 0x30) = uVar5;
-  } while (iVar8 < 0x10);
-  lVar9 = (uVar12 & 0x1fffffff) << 3;
-  iVar7 = 0;
-  iVar8 = 0;
-  dVar13 = (double)(float)((double)(float)((double)(longlong)
-                                                   (int)((worldUpdateTime >> 5) + 0xb4U & 0xff) *
-                                           dVar17 + 3.0) + dVar15);
-  do {
-    uVar5 = FUN_00502f74_RET_0(0x80,0x80,0x80,0x60,0x3b5a740e);
-    iVar10 = (int)lVar9;
-    *(undefined8 *)(puVar4 + iVar10 + 0x10) = uVar5;
-    dVar17 = dVar19 * 0.0033333334140479565;
-    dVar15 = (double)(float)((double)(longlong)iVar8 + dVar16) * dVar18 + dVar13;
-    uVar5 = FUN_00503034((float)((double)(longlong)iVar8 * dVar18 + dVar13) * 0.0033333334,
-                         -(float)(dVar14 * 0.0033333334140479565));
-    *(undefined8 *)(puVar4 + iVar10 + 0x18) = uVar5;
-    uVar5 = SCE_GS_SET_XYZ(iVar7 + 0x7000,0x7200,0);
-    *(undefined8 *)(puVar4 + iVar10 + 0x20) = uVar5;
-    uVar5 = FUN_00503034((float)dVar15 * 0.0033333334,(float)dVar17);
-    *(undefined8 *)(puVar4 + iVar10 + 0x28) = uVar5;
-    uVar5 = SCE_GS_SET_XYZ(iVar7 + 0x7200,0x8df0,0x12c0);
-    iVar8 = iVar8 + 1;
-    lVar9 = lVar9 + 0x28;
-    iVar7 = iVar7 + 0x200;
-    *(undefined8 *)(puVar4 + iVar10 + 0x30) = uVar5;
-  } while (iVar8 < 0x10);
-  g_pPacket = g_pPacket + 2000;
-  return;
+    WaterPatchWalk(list, 1);
 }
 
-
-// 0x0077048 (0x454 bytes)
-void DrawsFlowingLava
-               (undefined8 param_1,int param_2,int param_3,undefined8 param_4,undefined8 param_5)
-
+// 0x0075cc8 (0x208 bytes)
+/* every vertex's coordinates = its saved ones in g_WaterBaseUVs plus a circle of radius 1 (in
+   4.12) going round every 16384 ticks of worldUpdateTime, plus 1 */
+void AnimateWaveUVs(WaterPatchList *list)
 {
-  undefined4 uVar1;
-  uint *puVar2;
-  short *psVar3;
-  int *piVar4;
-  int iVar5;
-  RenderingStep *pRVar6;
-  ulonglong uVar7;
-  int iVar8;
-  undefined4 *puVar9;
-  int iVar10;
-  undefined4 *puVar11;
-  ulonglong uVar12;
-  undefined4 *puVar13;
-  int iVar14;
-  short sVar15;
-  int iVar16;
-  int iVar17;
-  uint uVar18;
-  longlong lVar19;
-  double dVar20;
-  double dVar21;
-  
-  STUB_00071170();
-  idol_draw::PackCmd(0,1,2,1,0x80);
-  idol_draw::PackCmd(0,1,2,1,0x60);
-  iVar10 = 0;
-  lVar19 = 0x100;
-  uVar7 = 0;
-  dVar21 = -(double)((float)(longlong)(int)(worldUpdateTime & 0x7ff) * 0.00048828125 - 1.0);
-  dVar20 = (double)(float)(dVar21 * 2.0 + 0.5);
-  do {
-    uVar12 = uVar7 & 0xf;
-    uVar7 = uVar7 + 0x89;
-    uVar12 = uVar12 * 0x20200 - 0x7f878f90;
-    puVar2 = (uint *)(g_ScratchBuf + iVar10);
-    iVar10 = iVar10 + 1;
-    *puVar2 = (uint)(byte)(uVar12 >> 0x18) | (uint)uVar12 >> 8 & 0xff00 |
-              (uint)((uVar12 & 0xffffffff) << 8) & 0xff0000 | (uint)((uVar12 & 0xffffffff) << 0x18);
-    pRVar6 = ForwardPass;
-    lVar19 = lVar19 + -1;
-  } while (lVar19 != 0);
-  *ForwardPass->command = NV4097_SET_ALPHA_TEST_ENABLE_x1;
-  pRVar6->command[1] = 0;
-  pRVar6->command = pRVar6->command + 2;
-  idol_draw::DrawDepth(ForwardPass,0);
-  pRVar6 = DepthPass;
-  *DepthPass->command = NV4097_SET_ALPHA_TEST_ENABLE_x1;
-  pRVar6->command[1] = 0;
-  pRVar6->command = pRVar6->command + 2;
-  idol_draw::DrawDepth(DepthPass,0);
-  uVar18 = 0;
-  iVar10 = param_2;
-  if (0 < param_3) {
-    do {
-      iVar8 = FastCheckBsphereInView(0x4070000000000000,iVar10);
-      if ((iVar8 != -1) && (iVar8 = 0, 0 < *(int *)(iVar10 + 0x1c))) {
-        iVar16 = 0;
-        do {
-          iVar5 = (int)(((ulonglong)uVar18 & 0x3ffffff) << 6);
-          psVar3 = (short *)(iVar5 + param_2 + 0x20 + iVar16);
-          sVar15 = *psVar3;
-          iVar17 = (int)*(short *)(iVar5 + param_2 + 0x22 + iVar16) - (int)sVar15;
-          puVar9 = (undefined4 *)(*(int *)(iVar5 + param_2 + 0x14) + sVar15 * 8);
-          puVar11 = (undefined4 *)(g_ScratchBuf + 0x1000);
-          puVar13 = (undefined4 *)(g_ScratchBuf + 0x2000);
-          iVar14 = iVar17;
-          if (0 < iVar17) {
-            do {
-              uVar1 = *puVar9;
-              *puVar13 = uVar1;
-              *puVar11 = uVar1;
-              iVar14 = iVar14 + -1;
-              puVar11[1] = (float)((double)(float)puVar9[1] + dVar21);
-              puVar13[1] = (float)((double)(float)puVar9[1] + dVar20);
-              puVar13 = puVar13 + 2;
-              puVar11 = puVar11 + 2;
-              puVar9 = puVar9 + 2;
-            } while (0 < iVar14);
-            sVar15 = *psVar3;
-          }
-          piVar4 = (int *)(iVar5 + param_2 + 0x10);
-          DrawLavaStrips(param_1,iVar17,*piVar4 + sVar15 * 0xc,g_ScratchBuf,g_ScratchBuf + 0x1000,
-                         g_ScratchBuf + 0x2000,param_4,param_5,0);
-          DrawLavaStrips(param_1,iVar17,*piVar4 + *psVar3 * 0xc,g_ScratchBuf,g_ScratchBuf + 0x1000,
-                         g_ScratchBuf + 0x2000,param_4,param_5,0);
-          iVar8 = iVar8 + 1;
-          iVar16 = iVar16 + 2;
-        } while (iVar8 < *(int *)(iVar5 + param_2 + 0x1c));
-      }
-      uVar18 = uVar18 + 1;
-      iVar10 = iVar10 + 0x40;
-    } while ((int)uVar18 < param_3);
-  }
-  pRVar6 = ForwardPass;
-  *ForwardPass->command = NV4097_SET_ALPHA_TEST_ENABLE_x1;
-  pRVar6->command[1] = 1;
-  pRVar6->command = pRVar6->command + 2;
-  pRVar6 = DepthPass;
-  *DepthPass->command = NV4097_SET_ALPHA_TEST_ENABLE_x1;
-  pRVar6->command[1] = 1;
-  pRVar6->command = pRVar6->command + 2;
-  return;
+    if (list->count == 0) {
+        return;
+    }
+
+    float angle = (float)(int)(worldUpdateTime & 0x3fff) * 6.28f * 6.1035156e-05f - 3.14f;
+    float sinA = FastSinInline(angle);
+    float cosA = FastCosInline(angle);
+    short *base = g_WaterBaseUVs;
+
+    for (int i = 0; i < list->count; i++) {
+        WaterPatchChunk *chunk = &list->chunks[i];
+        short *texel = (short *)((u8 *)(uintptr_t)chunk->data + chunk->uvOfs);
+
+        for (int j = 0; j < chunk->count; j++) {
+            texel[0] = base[0] + (short)(int)(cosA * 4096.0f) + 0x1000;
+            texel[1] = base[1] + (short)(int)(sinA * 4096.0f) + 0x1000;
+            texel += 2;
+            base += 2;
+        }
+    }
 }
 
-
-// 0x00774b8 (0x318 bytes)
-void ____Draw_ScrollingTexStrips
-               (int param_1,int param_2,undefined8 param_3,undefined8 param_4)
-
+// 0x0075ed0 (0xe0 bytes)
+/* every vertex's coordinates out to dst, two shorts each */
+void ____Water_CopyPatchUVs(WaterPatchList *list, short *dst)
 {
-  undefined8 uVar1;
-  int iVar2;
-  int iVar3;
-  float *pfVar4;
-  float *pfVar5;
-  float *pfVar6;
-  int iVar7;
-  short sVar8;
-  short *psVar9;
-  short *psVar10;
-  int *piVar11;
-  int *piVar12;
-  int *piVar13;
-  int *piVar14;
-  short *psVar15;
-  short *psVar16;
-  int iVar17;
-  undefined8 uVar18;
-  double dVar19;
-  double dVar20;
-  double dVar21;
-  
-  uVar1 = idol_draw::PackCmd(0,1,2,1,0x20);
-  idol_draw::PackCmd(0,1,2,1,0x20);
-  STUB_00071170();
-  iVar17 = 0;
-  dVar21 = -(double)((float)(longlong)(int)(worldUpdateTime & 0x1ff) * 0.001953125 - 1.0);
-  dVar20 = (double)(float)(dVar21 * 2.0 + 0.5);
-  dVar19 = -(double)((float)(longlong)(int)(worldUpdateTime & 0x7ff) * 0.00048828125 - 1.0);
-  if (0 < param_2) {
-    piVar14 = (int *)(param_1 + 0x14);
-    piVar13 = (int *)(param_1 + 0x10);
-    piVar12 = (int *)(param_1 + 0x18);
-    piVar11 = (int *)(param_1 + 0x1c);
-    psVar10 = (short *)(param_1 + 0x22);
-    uVar18 = 0x4070000000000000;
-    psVar9 = (short *)(param_1 + 0x20);
-    do {
-      iVar2 = FastCheckBsphereInView(uVar18,param_1);
-      if ((iVar2 != -1) &&
-         (iVar2 = 0, psVar15 = psVar9, psVar16 = psVar10, 0 < *(int *)(param_1 + 0x1c))) {
-        do {
-          sVar8 = *psVar15;
-          iVar3 = (int)*psVar16 - (int)sVar8;
-          pfVar4 = (float *)(*piVar14 + sVar8 * 8);
-          pfVar6 = (float *)&DAT_70002000;
-          pfVar5 = (float *)&DAT_70001000;
-          iVar7 = iVar3;
-          if (0 < iVar3) {
-            do {
-              iVar7 = iVar7 + -1;
-              *pfVar5 = (float)((double)*pfVar4 + dVar19);
-              *pfVar6 = (float)((double)*pfVar4 - dVar19);
-              pfVar5[1] = (float)((double)pfVar4[1] + dVar21);
-              pfVar6[1] = (float)((double)pfVar4[1] + dVar20);
-              pfVar5 = pfVar5 + 2;
-              pfVar6 = pfVar6 + 2;
-              pfVar4 = pfVar4 + 2;
-            } while (0 < iVar7);
-            sVar8 = *psVar15;
-          }
-          DrawTexturedStrips(iVar3,*piVar13 + sVar8 * 0xc,*piVar12 + sVar8 * 4,
-                             (ulonglong)g_ScratchBuf + 0x1000,(ulonglong)g_ScratchBuf + 0x2000,
-                             param_3,param_4,uVar1);
-          iVar2 = iVar2 + 1;
-          psVar15 = psVar15 + 1;
-          psVar16 = psVar16 + 1;
-        } while (iVar2 < *piVar11);
-      }
-      iVar17 = iVar17 + 1;
-      piVar14 = piVar14 + 0x10;
-      param_1 = param_1 + 0x40;
-      piVar13 = piVar13 + 0x10;
-      piVar12 = piVar12 + 0x10;
-      piVar11 = piVar11 + 0x10;
-      psVar10 = psVar10 + 0x20;
-      psVar9 = psVar9 + 0x20;
-    } while (iVar17 < param_2);
-  }
-  return;
+    for (int i = 0; i < list->count; i++) {
+        WaterPatchChunk *chunk = &list->chunks[i];
+        short *texel = (short *)((u8 *)(uintptr_t)chunk->data + chunk->uvOfs);
+
+        for (int j = 0; j < chunk->count; j++) {
+            dst[0] = texel[0];
+            dst[1] = texel[1];
+            dst += 2;
+            texel += 2;
+        }
+    }
 }
 
-
-// 0x00777d0 (0x48c bytes)
-void ____Draw_InitGsRegPresets_777d0(void)
-
+// 0x0075fb0 (0x34 bytes)
+void DrawWaterPatch(WaterPatchList *list)
 {
-  DAT_0071f28c = 0x10000;
-  DAT_0071f080 = SCE_GIF_SET_TAG(1,1,0,0,0,4);
-  DAT_0071f090 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
-  DAT_0071f0a0 = SCE_GS_SET_CLAMP(1,1,0,0,0,0);
-  DAT_0071f0b0 = idol_draw::Blend(1,5,0x60,3,0,0,1,2);
-  DAT_0071f0c0 = idol_draw::PackCmd(0,1,2,1,0x50);
-  DAT_0071f0d0 = SCE_GIF_SET_TAG(1,1,0,0,0,4);
-  DAT_0071f0e0 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
-  DAT_0071f0f0 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
-  DAT_0071f100 = idol_draw::Blend(0,5,1,0,0,0,1,2);
-  DAT_0071f110 = idol_draw::PackCmd(0,1,2,1,0x50);
-  DAT_0071f120 = SCE_GIF_SET_TAG(1,1,0,0,0,8);
-  DAT_0071f130 = FUN_00502f98(0,0,0,0,0,0,1,2);
-  DAT_0071f140 = FUN_00502f98(0,0,0,0,0,0,1,2);
-  DAT_0071f150 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
-  DAT_0071f160 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
-  DAT_0071f170 = idol_draw::PackCmd(0,1,2,1,0x80);
-  DAT_0071f180 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
-  DAT_0071f190 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
-  DAT_0071f1a0 = idol_draw::PackCmd(0,1,2,1,0x60);
-  DAT_0071f1b0 = SCE_GIF_SET_TAG(1,1,0,0,0,8);
-  DAT_0071f1c0 = FUN_00502f98(0,0,0,0,0,0,1,2);
-  DAT_0071f1d0 = FUN_00502f98(0,0,0,0,0,0,1,2);
-  DAT_0071f1e0 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
-  DAT_0071f1f0 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
-  DAT_0071f200 = idol_draw::PackCmd(0,1,2,1,0x20);
-  DAT_0071f210 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
-  DAT_0071f220 = SCE_GS_SET_CLAMP(0,0,0,0,0,0);
-  DAT_0071f230 = idol_draw::PackCmd(0,1,2,1,0x20);
-  return;
-}
-
-
-// 0x0077c60 (0x4 bytes)
-void STUB_00077c60(...)
-
-{
-  return;
-}
-
-
-// 0x0077c64 (0x4 bytes)
-void STUB_00077c64(...)
-
-{
-  return;
-}
-
-
-// 0x0077c68 (0x4 bytes)
-void STUB_00077c68(...)
-
-{
-  return;
-}
-
-
-// 0x0077c6c (0x4 bytes)
-void STUB_00077c6c(...)
-
-{
-  return;
-}
-
-
-// 0x0077c88 (0x410 bytes)
-void DrawColorGradientStrip(int *param_1,float *param_2)
-
-{
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  float fVar7;
-  float fVar8;
-  float fVar9;
-  float fVar10;
-  float fVar11;
-  float fVar12;
-  float fVar13;
-  float fVar14;
-  float fVar15;
-  float fVar16;
-  float fVar17;
-  int iVar18;
-  float *pfVar20;
-  ulonglong uVar19;
-  int iVar21;
-  float fVar22;
-  float *pfVar23;
-  float *pfVar24;
-  int iVar25;
-  int iVar26;
-  double dVar27;
-  double dVar28;
-  double dVar29;
-  double dVar30;
-  double dVar31;
-  double dVar32;
-  double dVar33;
-  
-  pfVar20 = (float *)idol::AllocateMemAlign
-                               (FrameHeap,
-                                (int)(((ulonglong)(uint)param_1[5] & 0x1fffffff) << 6) +
-                                (int)(((ulonglong)(uint)param_1[5] & 0x1fffffff) << 7),0x10);
-  iVar21 = param_1[1];
-  iVar25 = 0;
-  dVar29 = 1.0;
-  dVar28 = -0.05000000074505806;
-  dVar30 = 0.05000000074505806;
-  dVar31 = (double)(float)param_1[7];
-  iVar26 = 0;
-  dVar32 = (double)(float)(1.0 / (double)(longlong)(*param_1 - iVar21));
-  dVar33 = (double)(float)(1.0 / (double)(longlong)iVar21);
-  do {
-    iVar18 = *(int *)(param_1[2] + iVar26);
-    if (iVar21 < iVar18) {
-      dVar27 = (double)(float)((double)(longlong)(iVar18 - iVar21) * dVar32);
+    if (list->mode == 0) {
+        DrawWaterPatch_A(list);
     }
     else {
-      dVar27 = -(double)(float)((double)(longlong)iVar18 * dVar33 - dVar29);
+        DrawWaterPatch_B(list);
     }
-    uVar19 = FastLerpColor(dVar27,param_1[3],param_1[4]);
-    iVar21 = 0;
-    fVar1 = 255.0;
-    fVar3 = (float)(uVar19 & 0xff) * 2.0;
-    fVar22 = (float)((uVar19 << 0x20) >> 0x28 & 0xff) * 2.0;
-    if (255.0 - fVar3 < 0.0) {
-      fVar3 = fVar1;
-    }
-    fVar2 = (float)((uVar19 << 0x20) >> 0x30 & 0xff) * 2.0;
-    if (255.0 - fVar22 < 0.0) {
-      fVar22 = fVar1;
-    }
-    if (255.0 - fVar2 < 0.0) {
-      fVar2 = fVar1;
-    }
-    fVar5 = (float)((uVar19 << 0x20) >> 0x38) + 0.5;
-    fVar4 = fVar3 + 0.5;
-    if (255.0 - (fVar3 + 0.5) < 0.0) {
-      fVar4 = fVar1;
-    }
-    fVar3 = (float)param_1[8];
-    uVar19 = (ulonglong)(uint)param_1[5];
-    if (255.0 - fVar5 < 0.0) {
-      fVar5 = fVar1;
-    }
-    fVar6 = fVar22 + 0.5;
-    if (255.0 - (fVar22 + 0.5) < 0.0) {
-      fVar6 = fVar1;
-    }
-    fVar22 = fVar2 + 0.5;
-    if (255.0 - (fVar2 + 0.5) < 0.0) {
-      fVar22 = fVar1;
-    }
-    fVar22 = (float)((int)fVar5 | (int)fVar22 << 8 | (int)fVar6 << 0x10 | (int)fVar4 << 0x18);
-    pfVar23 = pfVar20;
-    pfVar24 = pfVar20;
-    if (0 < param_1[5]) {
-      do {
-        fVar4 = param_2[4];
-        fVar5 = param_2[5];
-        pfVar24 = (float *)(param_1[6] + ((int)uVar19 * iVar25 + iVar21) * 0x10);
-        fVar6 = *param_2;
-        fVar7 = param_2[6];
-        fVar3 = (float)((double)fVar3 + dVar31);
-        iVar21 = iVar21 + 1;
-        fVar8 = pfVar24[1];
-        fVar9 = *pfVar24;
-        fVar10 = param_2[0xc];
-        fVar11 = param_2[1];
-        fVar1 = (float)((double)pfVar24[2] + dVar28);
-        fVar12 = param_2[0xd];
-        fVar13 = param_2[2];
-        fVar2 = (float)((double)pfVar24[2] + dVar30);
-        fVar14 = param_2[8];
-        fVar15 = param_2[0xe];
-        fVar16 = param_2[9];
-        fVar17 = param_2[10];
-        pfVar23[3] = fVar3;
-        pfVar23[4] = 0.0;
-        pfVar23[5] = fVar22;
-        *pfVar23 = fVar4 * fVar8 + fVar14 * fVar1 + fVar6 * fVar9 + fVar10;
-        pfVar23[1] = fVar5 * fVar8 + fVar16 * fVar1 + fVar11 * fVar9 + fVar12;
-        pfVar23[2] = fVar7 * fVar8 + fVar17 * fVar1 + fVar13 * fVar9 + fVar15;
-        pfVar23[6] = fVar14 * fVar2 + fVar6 * fVar9 + fVar4 * fVar8 + fVar10;
-        pfVar24 = pfVar23 + 0xc;
-        pfVar23[7] = fVar16 * fVar2 + fVar11 * fVar9 + fVar5 * fVar8 + fVar12;
-        pfVar23[8] = fVar17 * fVar2 + fVar13 * fVar9 + fVar7 * fVar8 + fVar15;
-        pfVar23[9] = fVar3;
-        pfVar23[10] = 1.0;
-        pfVar23[0xb] = fVar22;
-        uVar19 = (ulonglong)(uint)param_1[5];
-        pfVar23 = pfVar24;
-      } while (iVar21 < param_1[5]);
-    }
-    FastDrawStripColor((int)(uVar19 << 1),pfVar20,9);
-    iVar25 = iVar25 + 1;
-    iVar21 = param_1[1];
-    iVar26 = iVar26 + 4;
-    pfVar20 = pfVar24;
-  } while (iVar25 < 4);
-  return;
 }
 
+// 0x0075ff0 (0x338 bytes)
+/* Builds a one-chunk patch list of a 16 by 16 grid 20 apart around (x0, y0) at height posZ into
+   data: the positions (three shorts), then per vertex either a colour (mode 0: a dim border and a
+   pattern inside) or texture coordinates 512 apart (mode 1), then the 15 by 15 quads as index
+   bytes, padded to 16 bytes. */
+void ____Water_ComputeWaveGrid(float startX, float startY, float posZ, int mode, u8 *data, WaterPatchChunk *chunk, WaterPatchList *list)
+{
+    list->mode = mode;
+    list->count = 1;
+    list->chunks = chunk;
+    chunk->data = (u32)(uintptr_t)data;
+    chunk->count = 256;
+    chunk->unk6 = 225;
+    chunk->ofs8 = 0;
+
+    short *out = (short *)data;
+
+    for (int row = 0; row < 16; row++) {
+        short posY = (int)((float)(row - 8) * 20.0f + startY);
+
+        for (int col = 0; col < 16; col++) {
+            out[0] = (int)((float)(col - 8) * 20.0f + startX);
+            out[1] = posY;
+            out[2] = (int)posZ;
+            out += 3;
+        }
+    }
+
+    chunk->uvOfs = (u8 *)out - data;
+
+    int pattern = 0;
+
+    for (int row = 0; row < 16; row++) {
+        int seed = pattern;
+
+        for (int col = 0; col < 16; col++) {
+            if (mode != 0) {
+                out[0] = (int)((float)col * 512.0f);
+                out[1] = (int)((float)row * 512.0f);
+            }
+            else if (col == 0 || row == 0 || col == 15 || row == 15) {
+                out[0] = 0x6060;
+                out[1] = (short)0x8060;
+            }
+            else {
+                short shade = seed % 80;
+
+                out[1] = shade - 0x7fd0;
+                out[0] = shade * 0x101 + 0x3030;
+            }
+
+            out += 2;
+            seed += 5;
+        }
+
+        pattern += 23;
+    }
+
+    chunk->ofsC = (u8 *)out - data;
+
+    u8 *index = (u8 *)out;
+
+    for (int row = 0; row < 15; row++) {
+        for (int col = 0; col < 15; col++) {
+            int vertex = row * 16 + col;
+
+            index[0] = vertex + 1;
+            index[1] = vertex;
+            index[2] = vertex + 0x11;
+            index[3] = vertex + 0x10;
+            index += 4;
+        }
+    }
+
+    while ((uintptr_t)index & 0xf) {
+        index += 2;
+    }
+
+    chunk->size = index - data;
+}
+
+// 0x0076328 (0x128 bytes)
+/* the water textures: tex0 and tex1 on ForwardPass's units 0 and 1, tex0 on DepthPass */
+void ____Water_SetPassTextures(int tex0, int tex1)
+{
+    FUN_004d676c(ForwardPass, 0, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(tex0) * 0x24, 1, 1);
+    FUN_004d676c(ForwardPass, 1, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(tex1) * 0x24, 1, 1);
+    FUN_004d676c(DepthPass, 0, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(tex0) * 0x24, 1, 1);
+}
+
+// 0x0076458 (0x128 bytes)
+/* the two water grids (a coloured one at height -12, the textured g_WaterPatches at 0) and the
+   textured grid's coordinates saved to g_WaterBaseUVs */
+void ____Water_InitPatches(void)
+{
+    ____Water_ComputeWaveGrid(0.0f, 0.0f, -12.0f, 0, g_WaterColorGridData, &g_WaterColorGridChunk, &g_WaterColorGrid);
+    ____Water_ComputeWaveGrid(0.0f, 0.0f, 0.0f, 1, g_WaterPatchData, &g_WaterPatchChunk, &g_WaterPatches);
+
+    ____Water_CopyPatchUVs(&g_WaterPatches, g_WaterBaseUVs);
+}
+
+/* a PS2 DMA tag for qwc quadwords of the given id into g_pPacket */
+static inline void WaterPacketTag(u8 qwc)
+{
+    g_pPacket[0] = 5;
+    g_pPacket[1] = qwc;
+    g_pPacket[2] = 0;
+    g_pPacket[3] = Gs_DmaTagByte(5, 0);
+    g_pPacket += 0x10;
+}
+
+// 0x0076580 (0x344 bytes)
+/* The water: its coordinates swirled, a grey fog from 10000 to 143360 (intensity 160 to 0) while
+   it draws, the coloured grid, then the textured one with effect textures 40..43 cycling every 50
+   ticks; the level's fog put back after. */
+void DrawWater(void)
+{
+    int frame = worldUpdateTime / 50;
+    int texA = frame % 4 + 40;
+    int texB = (frame + 1) % 4 + 40;
+
+    AnimateWaveUVs(&g_WaterPatches);
+
+    float nearDist = g_ViewContext.fogNearDist;
+    float farDist = g_ViewContext.fogFarDist;
+    float nearIntensity = g_ViewContext.fogNearIntensity;
+    float farIntensity = g_ViewContext.fogFarIntensity;
+
+    SetGSReg(10, 0x606060);
+    g_ViewContext.fogFarDist = 143360.0f;
+    g_ViewContext.fogNearDist = 10000.0f;
+    g_ViewContext.fogNearIntensity = 160.0f;
+    g_ViewContext.fogFarIntensity = 0.0f;
+    UpdateViewContext();
+    ComposeCameraMatrix();
+
+    WaterPacketTag(0x80);
+    DrawWaterPatch(&g_WaterColorGrid);
+
+    ____Water_SetPassTextures(texA, texB);
+
+    WaterPacketTag(0xd0);
+    DrawWaterPatch(&g_WaterPatches);
+
+    g_ViewContext.fogNearDist = nearDist;
+    g_ViewContext.fogFarDist = farDist;
+    g_ViewContext.fogNearIntensity = nearIntensity;
+    g_ViewContext.fogFarIntensity = farIntensity;
+    SetGSReg(10, FUN_00503024(g_ViewContext.fogR, g_ViewContext.fogG, g_ViewContext.fogB));
+    UpdateViewContext();
+    ComposeCameraMatrix();
+}
+
+/* one layer of ____Draw_EffectStrip_M401: 16 pairs of PS2 GS vertices across the screen with
+   coordinates scrolling from u0, all through the stubbed GS setters */
+static inline u64 *SkyStripLayer(u64 *out, u32 qBits, float texQ, float texLeft, float camZ, float camFar, int posZ)
+{
+    int posX = 0;
+
+    for (int i = 0; i < 16; i++) {
+        out[0] = FUN_00502f74_RET_0(0x80, 0x80, 0x80, 0x60, qBits);
+        out[1] = FUN_00503034(((float)i * 0.0625f + texLeft) * texQ, -(camZ * texQ));
+        out[2] = SCE_GS_SET_XYZ(posX + 0x7000, 0x7200, 0);
+        out[3] = FUN_00503034(((float)(i + 1) * 0.0625f + texLeft) * texQ, camFar * texQ);
+        out[4] = SCE_GS_SET_XYZ(posX + 0x7200, 0x8df0, posZ);
+        out += 5;
+        posX += 0x200;
+    }
+
+    return out;
+}
+
+// 0x00768e8 (0x748 bytes)
+/* A PS2 GS packet of three scrolling sky layers (effect texture tex), slower and nearer each,
+   offset by the camera's turn; every GS setter is a stub returning 0, so the packet is zeros
+   around its tags. unused is not read. */
+void ____Draw_EffectStrip_M401(int unused, int tex)
+{
+    float camZ = GameCamera.mtx0.v2.z + GameCamera.mtx0.v3.z;
+    float camFar = 1.0f - camZ;
+
+    SetGSReg(0x18, GetEffectTex(tex));
+    SetGSReg(0x1a, SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90));
+    SetGSReg(6, SCE_GS_SET_CLAMP(0, 1, 0, 0, 0, 0));
+    SetGSReg(3, idol_draw::PackCmd(0, 1, 0, 1, 0x80));
+
+    u8 *packet = g_pPacket;
+
+    packet[0] = 0x7d;
+    packet[1] = 0;
+    packet[2] = 0;
+    packet[3] = Gs_DmaTagByte(0x7d, 0);
+    g_pPacket += 0x10;
+
+    u64 *words = (u64 *)(packet + 0x10);
+
+    words[0] = SCE_GIF_SET_TAG(1, 0, 0, 0, 0, 3);
+    words[1] = 0xeeee;
+    words[2] = idol_draw::Blend(0, 5, 1, 0, 0, 0, 1, 2);
+    words[3] = 0x16;
+    words[4] = VU1_addGSregister(GSmem.zbuf >> 13, 1, 1);
+    words[5] = 0x21;
+    words[6] = SCE_GS_SET_PRIM(0xf, 0, 1, 0, 1, 0, 0, 0);
+    words[7] = 0xe;
+    words[8] = SCE_GIF_SET_TAG(0x30, 1, 0, 0, 1, 5);
+    words[9] = 0x42421;
+
+    float turn = -((GameCamera.rot.radius + 3.14f) * 4.0f * 0.15923566f - 4.0f);
+    u64 *out = &words[10];
+
+    out = SkyStripLayer(out, 0x3a83126f, 0.001f, (float)(int)((worldUpdateTime >> 3) & 0xff) * 0.00390625f + turn, camZ, camFar, 16000);
+    out = SkyStripLayer(out, 0x3ada740e, 0.0016666667f, ((float)(int)(((worldUpdateTime >> 4) + 0x5a) & 0xff) * 0.00390625f + 1.5f) + turn, camZ, camFar, 9600);
+    SkyStripLayer(out, 0x3b5a740e, 0.0033333334f, ((float)(int)(((worldUpdateTime >> 5) + 0xb4) & 0xff) * 0.00390625f + 3.0f) + turn, camZ, camFar, 4800);
+
+    g_pPacket += 2000;
+}
+
+// 0x0077048 (0x454 bytes)
+/* The count lava patches in view drawn with DrawLavaStrips on passes 0 and 2 (alpha test and depth
+   state off meanwhile): grey-orange colours, and both coordinate sets scrolled down over 2048
+   ticks (the second twice as fast and half a texture on). */
+void DrawsFlowingLava(float texQ, LavaPatch *patches, int count, int tex0, int tex1)
+{
+    STUB_00071170();
+    idol_draw::PackCmd(0, 1, 2, 1, 0x80);
+    idol_draw::PackCmd(0, 1, 2, 1, 0x60);
+
+    float scroll = -((float)(int)(worldUpdateTime & 0x7ff) * 0.00048828125f - 1.0f);
+    float scroll2 = scroll * 2.0f + 0.5f;
+    u32 *colors = (u32 *)g_ScratchBuf;
+    u32 seed = 0;
+
+    for (int i = 0; i < 256; i++) {
+        colors[i] = SwapColor((seed & 0xf) * 0x20200 + 0x80787070);
+        seed += 0x89;
+    }
+
+    EmitMethod(ForwardPass, CELL_GCM_NV4097_SET_ALPHA_TEST_ENABLE, 0);
+    idol_draw::DrawDepth(ForwardPass, 0);
+    EmitMethod(DepthPass, CELL_GCM_NV4097_SET_ALPHA_TEST_ENABLE, 0);
+    idol_draw::DrawDepth(DepthPass, 0);
+
+    for (int i = 0; i < count; i++) {
+        LavaPatch *patch = &patches[i];
+
+        if (FastCheckBsphereInView(256.0f, patch) == -1) {
+            continue;
+        }
+
+        for (int strip = 0; strip < patch->stripCount; strip++) {
+            int start = patch->bounds[strip];
+            int vertices = patch->bounds[strip + 1] - start;
+            Vec2 *texel = &patch->uv[start];
+            Vec2 *uv0 = (Vec2 *)(g_ScratchBuf + 0x1000);
+            Vec2 *uv1 = (Vec2 *)(g_ScratchBuf + 0x2000);
+
+            for (int j = 0; j < vertices; j++) {
+                uv1[j].x = texel[j].x;
+                uv0[j].x = texel[j].x;
+                uv0[j].y = texel[j].y + scroll;
+                uv1[j].y = texel[j].y + scroll2;
+            }
+
+            DrawLavaStrips(texQ, vertices, &patch->pos[patch->bounds[strip]], colors, uv0, uv1, tex0, tex1, 0, 0, 0);
+            DrawLavaStrips(texQ, vertices, &patch->pos[patch->bounds[strip]], colors, uv0, uv1, tex0, tex1, 0, 0, 2);
+        }
+    }
+
+    EmitMethod(ForwardPass, CELL_GCM_NV4097_SET_ALPHA_TEST_ENABLE, 1);
+    EmitMethod(DepthPass, CELL_GCM_NV4097_SET_ALPHA_TEST_ENABLE, 1);
+}
+
+// 0x00774b8 (0x318 bytes)
+/* The count patches in view through DrawTexturedStrips with their own colours, depth state
+   PackCmd(0, 1, 2, 1, 0x20): the coordinates scrolled sideways over 2048 ticks and down over 512.
+   The scrolled coordinates are written to the PS2 scratchpad addresses 0x70001000/0x70002000
+   while g_ScratchBuf + 0x1000/0x2000 are what gets drawn, as in the original. */
+void ____Draw_ScrollingTexStrips(LavaPatch *patches, int count, int tex0, int tex1)
+{
+    u64 depth = idol_draw::PackCmd(0, 1, 2, 1, 0x20);
+
+    idol_draw::PackCmd(0, 1, 2, 1, 0x20);
+    STUB_00071170();
+
+    float down = -((float)(int)(worldUpdateTime & 0x1ff) * 0.001953125f - 1.0f);
+    float down2 = down * 2.0f + 0.5f;
+    float across = -((float)(int)(worldUpdateTime & 0x7ff) * 0.00048828125f - 1.0f);
+
+    for (int i = 0; i < count; i++) {
+        LavaPatch *patch = &patches[i];
+
+        if (FastCheckBsphereInView(256.0f, patch) == -1) {
+            continue;
+        }
+
+        for (int strip = 0; strip < patch->stripCount; strip++) {
+            int start = patch->bounds[strip];
+            int vertices = patch->bounds[strip + 1] - start;
+            Vec2 *texel = &patch->uv[start];
+            Vec2 *spad0 = (Vec2 *)&DAT_70001000;
+            Vec2 *spad1 = (Vec2 *)&DAT_70002000;
+
+            for (int j = 0; j < vertices; j++) {
+                spad0[j].x = texel[j].x + across;
+                spad1[j].x = texel[j].x - across;
+                spad0[j].y = texel[j].y + down;
+                spad1[j].y = texel[j].y + down2;
+            }
+
+            DrawTexturedStrips(vertices, &patch->pos[patch->bounds[strip]], &patch->colors[patch->bounds[strip]], (Vec2 *)(g_ScratchBuf + 0x1000), (Vec2 *)(g_ScratchBuf + 0x2000), tex0, tex1, depth);
+        }
+    }
+}
+
+// 0x00777d0 (0x48c bytes)
+/* PS2 GIF packet templates at 0x71f080: tags and the GS register words (every setter a stub
+   returning 0) for the sky and lava effects */
+void ____Draw_InitGsRegPresets_777d0(void)
+{
+    DAT_0071f28c = 0x10000;
+    DAT_0071f080 = SCE_GIF_SET_TAG(1, 1, 0, 0, 0, 4);
+    DAT_0071f090 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
+    DAT_0071f0a0 = SCE_GS_SET_CLAMP(1, 1, 0, 0, 0, 0);
+    DAT_0071f0b0 = idol_draw::Blend(1, 5, 0x60, 3, 0, 0, 1, 2);
+    DAT_0071f0c0 = idol_draw::PackCmd(0, 1, 2, 1, 0x50);
+    DAT_0071f0d0 = SCE_GIF_SET_TAG(1, 1, 0, 0, 0, 4);
+    DAT_0071f0e0 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
+    DAT_0071f0f0 = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
+    DAT_0071f100 = idol_draw::Blend(0, 5, 1, 0, 0, 0, 1, 2);
+    DAT_0071f110 = idol_draw::PackCmd(0, 1, 2, 1, 0x50);
+    DAT_0071f120 = SCE_GIF_SET_TAG(1, 1, 0, 0, 0, 8);
+    DAT_0071f130 = FUN_00502f98(0, 0, 0, 0, 0, 0, 1, 2);
+    DAT_0071f140 = FUN_00502f98(0, 0, 0, 0, 0, 0, 1, 2);
+    DAT_0071f150 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
+    DAT_0071f160 = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
+    DAT_0071f170 = idol_draw::PackCmd(0, 1, 2, 1, 0x80);
+    DAT_0071f180 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
+    DAT_0071f190 = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
+    DAT_0071f1a0 = idol_draw::PackCmd(0, 1, 2, 1, 0x60);
+    DAT_0071f1b0 = SCE_GIF_SET_TAG(1, 1, 0, 0, 0, 8);
+    DAT_0071f1c0 = FUN_00502f98(0, 0, 0, 0, 0, 0, 1, 2);
+    DAT_0071f1d0 = FUN_00502f98(0, 0, 0, 0, 0, 0, 1, 2);
+    DAT_0071f1e0 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
+    DAT_0071f1f0 = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
+    DAT_0071f200 = idol_draw::PackCmd(0, 1, 2, 1, 0x20);
+    DAT_0071f210 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
+    DAT_0071f220 = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
+    DAT_0071f230 = idol_draw::PackCmd(0, 1, 2, 1, 0x20);
+}
+
+// 0x0077c60 (0x4 bytes)
+void STUB_0077c60(...)
+{
+}
+
+// 0x0077c64 (0x4 bytes)
+void STUB_0077c64(...)
+{
+}
+
+// 0x0077c68 (0x4 bytes)
+void STUB_0077c68(...)
+{
+}
+
+// 0x0077c6c (0x4 bytes)
+void STUB_0077c6c(...)
+{
+}
+// 0x0077c88 (0x410 bytes)
+/* Each of strip's four rows as a ribbon through FastDrawStripColor on pass 9: every point moved
+   0.05 down and up in posZ and transformed by mtx, texture texU stepping along and texV 0 / 1 across, in
+   the row's colour (colorA..colorB by FastLerpColor, the RGB doubled from PS2 range). */
+void DrawColorGradientStrip(GradientStrip *strip, Mtx4 *mtx)
+{
+    FastQuadVertex *vertices = (FastQuadVertex *)(uintptr_t)idol::AllocateMemAlign(FrameHeap, strip->columns * 0x30, 0x10);
+    float toEnd = 1.0f / (float)(strip->total - strip->mid);
+    float toMid = 1.0f / (float)strip->mid;
+
+    for (int row = 0; row < 4; row++) {
+        int place = strip->rowPos[row];
+        float lerp;
+
+        if (strip->mid < place) {
+            lerp = (float)(place - strip->mid) * toEnd;
+        }
+        else {
+            lerp = -((float)place * toMid - 1.0f);
+        }
+
+        u32 rgba = FastLerpColor(lerp, strip->colorA, strip->colorB);
+        u32 color = (int)Ps2Channel(rgba & 0xff) << 24 | (int)Ps2Channel((rgba >> 8) & 0xff) << 16 | (int)Ps2Channel((rgba >> 16) & 0xff) << 8;
+        float alpha = (float)(rgba >> 24) + 0.5f;
+
+        if (alpha > 255.0f) {
+            alpha = 255.0f;
+        }
+
+        color |= (int)alpha;
+
+        float texU = strip->uStart;
+        FastQuadVertex *out = vertices;
+
+        for (int col = 0; col < strip->columns; col++) {
+            Vec4 *point = &strip->points[strip->columns * row + col];
+            float zLow = point->z + -0.05f;
+            float zHigh = point->z + 0.05f;
+
+            texU += strip->uStep;
+
+            out[0].x = mtx->v0.x * point->x + mtx->v1.x * point->y + mtx->v2.x * zLow + mtx->v3.x;
+            out[0].y = mtx->v0.y * point->x + mtx->v1.y * point->y + mtx->v2.y * zLow + mtx->v3.y;
+            out[0].z = mtx->v0.z * point->x + mtx->v1.z * point->y + mtx->v2.z * zLow + mtx->v3.z;
+            out[0].s = texU;
+            out[0].t = 0.0f;
+            out[0].color = color;
+
+            out[1].x = mtx->v0.x * point->x + mtx->v1.x * point->y + mtx->v2.x * zHigh + mtx->v3.x;
+            out[1].y = mtx->v0.y * point->x + mtx->v1.y * point->y + mtx->v2.y * zHigh + mtx->v3.y;
+            out[1].z = mtx->v0.z * point->x + mtx->v1.z * point->y + mtx->v2.z * zHigh + mtx->v3.z;
+            out[1].s = texU;
+            out[1].t = 1.0f;
+            out[1].color = color;
+
+            out += 2;
+        }
+
+        FastDrawStripColor(strip->columns * 2, vertices, 9);
+        vertices = out;
+    }
+}
 
 // 0x0078098 (0x5c bytes)
-void SetFrameBufferInfo
-               (short param_1,short param_2,undefined2 param_3,undefined2 param_4,undefined2 param_5
-               ,undefined2 param_6)
-
+/* the frame buffer description at 0x966b40 (its own address at 0x966bc0) */
+void SetFrameBufferInfo(short width, short height, short alpha, short blue, short cosA, short infoD)
 {
-  DAT_00966b84 = param_3;
-  DAT_00966bc0 = &DAT_00966b40;
-  DAT_00966b9c = 0;
-  DAT_00966b86 = param_4;
-  DAT_00966b88 = 0x12;
-  DAT_00966b94 = param_5;
-  DAT_00966b96 = param_6;
-  g_FrameBufWidth = param_1;
-  g_FrameBufHeight = param_2;
-  DAT_00966b80 = 0x12;
-  DAT_00966b90 = 0x12;
-  DAT_00966b98 = 0x24;
-  return;
+    DAT_00966b84 = alpha;
+    DAT_00966bc0 = (u32)(uintptr_t)&DAT_00966b40;
+    DAT_00966b9c = 0;
+    DAT_00966b86 = blue;
+    DAT_00966b88 = 0x12;
+    DAT_00966b94 = cosA;
+    DAT_00966b96 = infoD;
+    g_FrameBufWidth = width;
+    g_FrameBufHeight = height;
+    DAT_00966b80 = 0x12;
+    DAT_00966b90 = 0x12;
+    DAT_00966b98 = 0x24;
 }
-
 
 // 0x00780f4 (0x4 bytes)
 void STUB_000780f4(...)
-
 {
-  return;
 }
-
 
 // 0x00780f8 (0x4 bytes)
 void STUB_000780f8(...)
-
 {
-  return;
 }
-
 
 // 0x00780fc (0x4 bytes)
 void STUB_000780fc(...)
-
 {
-  return;
 }
-
 
 // 0x0078100 (0x4 bytes)
 void STUB_00078100(...)
-
 {
-  return;
 }
-
 
 // 0x0078104 (0x4 bytes)
 void STUB_00078104(...)
-
 {
-  return;
 }
-
 
 // 0x0078108 (0x28 bytes)
-void SetFrameBufferTexLog2Size(int log2w,int log2h,int zbuf)
-
+/* the aux buffer's size (1 << log2w by 1 << log2h) and the PS2 depth buffer page */
+void SetFrameBufferTexLog2Size(int log2w, int log2h, int zbuf)
 {
-  DAT_00966b92 = (short)(zbuf >> 0xd);
-  g_AuxWidth = (short)(1 << (log2w & 0x3fU));
-  g_AuxHeight = (short)(1 << (log2h & 0x3fU));
-  return;
+    DAT_00966b92 = zbuf >> 13;
+    g_AuxWidth = 1 << log2w;
+    g_AuxHeight = 1 << log2h;
 }
-
 
 // 0x0078130 (0x4 bytes)
 void STUB_00078130(...)
-
 {
-  return;
 }
-
 
 // 0x0078134 (0x4 bytes)
 void STUB_00078134(...)
-
 {
-  return;
 }
-
 
 // 0x0078138 (0x4 bytes)
 void STUB_00078138(...)
-
 {
-  return;
 }
-
 
 // 0x007813c (0x4 bytes)
 void STUB_0007813c(...)
-
 {
-  return;
 }
-
-

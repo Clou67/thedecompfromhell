@@ -477,3 +477,12 @@ g_AuxWidth	short NAME /* 0x966b8c */
 g_AuxHeight	short NAME /* 0x966b8e */
 g_AlphaPal	u32 NAME[256] /* 0x95ea14 */
 g_ImpactSprites	ImpactSprite NAME[32] /* 0x95ee40 */
+g_WaterPatches	WaterPatchList NAME /* 0x963668 */
+g_WaterBaseUVs	short NAME[] /* 0x95f240 */
+g_WaterSpadIndex	u32 NAME /* 0x71f070 */
+g_WaterSpadBufs	u32 NAME[2] /* 0x71f074 */
+g_WaterColorGridData	u8 NAME[0x2000] /* 0x95f640 */
+g_WaterColorGridChunk	WaterPatchChunk NAME /* 0x961640 */
+g_WaterColorGrid	WaterPatchList NAME /* 0x961650 */
+g_WaterPatchData	u8 NAME[0x2000] /* 0x961658 */
+g_WaterPatchChunk	WaterPatchChunk NAME /* 0x963658 */

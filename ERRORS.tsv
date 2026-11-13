@@ -5,7 +5,7 @@ errors	file
 0	game/collproc.cpp
 0	game/crt0.cpp
 0	game/debug.cpp
-64	game/draw.cpp
+0	game/draw.cpp
 12	game/fUnk.cpp
 0	game/freeze.cpp
 0	game/help.cpp

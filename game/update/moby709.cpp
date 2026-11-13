@@ -14,6 +14,7 @@
 #include "game/respawn.h"
 #include "game/update/moby121.h"
 #include "game/update/moby200.h"
+#include "game/update/moby64.h"
 #include "idol/fastfunc.h"
 
 // 0x042a688 (0x14 bytes)

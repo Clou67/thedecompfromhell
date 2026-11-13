@@ -64,8 +64,8 @@ struct IdolDraw {
     u8 _pad12[6];
     int unk18;                        /* 0x018 */
     u8 _pad1c[4];
-    int frame;                        /* 0x020 */
-    u8 _pad24[0x7c];
+    struct Vec4 camPos;               /* 0x020  the camera position (ImpactSprite_Draw) */
+    u8 _pad30[0x70];
     struct Mtx4 viewMtx;              /* 0x0a0  set by SetView */
     struct Mtx4 viewProjMtx;          /* 0x0e0  set by SetView (guessed from use) */
     u8 _pad120[0x200];

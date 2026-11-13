@@ -3412,7 +3412,7 @@ undefined8 FUN_0050301c(void)
 
 
 // 0x0503024 (0x8 bytes)
-undefined8 FUN_00503024(void)
+undefined8 FUN_00503024(int param_1,int param_2,int param_3)
 
 {
   return 0;
@@ -3428,7 +3428,7 @@ undefined8 FUN_0050302c(int param_1)
 
 
 // 0x0503034 (0x8 bytes)
-undefined8 FUN_00503034(void)
+undefined8 FUN_00503034(float param_1,float param_2)
 
 {
   return 0;

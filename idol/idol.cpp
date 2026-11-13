@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "idol/idol.h"
-#include "game/draw.h"
+#include "game/pause.h"
 #include "idol/idol_draw.h"
 #include "idol/mUnk.h"
 #include "idol/sound.h"

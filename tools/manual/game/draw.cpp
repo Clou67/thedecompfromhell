@@ -2,13 +2,12 @@
 #include "idol/fastinline.h"
 #include <cell/gcm/gcm_macros.h>
 #include <cell/gcm/gcm_enum.h>
-// MERGE
 // game/draw.cpp -- reconstructed from NPEA00385 EBOOT
 // 165 functions, 0x6565c-0x78140: the frame's drawing. The view context and camera matrices,
 // occlusion, the render passes, fonts and HUD sprites, screen effects, water, lava and the
 // textured strip drawers the level renderers share.
 
-/* the RSX command header for count words at a NV4097 register */
+/* one word into the pass's command buffer */
 static inline void Emit(RenderingStep *pass, u32 word)
 {
     *pass->command++ = (RsxCmd)word;
@@ -37,9 +36,9 @@ static inline void EmitVertexConstVec(RenderingStep *pass, int index, float *vec
 }
 
 /* out = in's transpose */
-static inline void Mtx4_Transpose(Mtx4 *out, Mtx4 *in)
+static inline void Mtx4_Transpose(Mtx4 *out, Mtx4 *source)
 {
-    float *src = &in->v0.x;
+    float *src = &source->v0.x;
     float *dst = &out->v0.x;
 
     for (int row = 0; row < 4; row++) {
@@ -93,36 +92,36 @@ void ResetFrameBufferForCutscene(void)
 int CheckBSphere(float *bsphere)
 {
     float radius = bsphere[3];
-    float dx = bsphere[0] - GameCamera.posX * 1024.0f;
-    float dy = bsphere[1] - GameCamera.posY * 1024.0f;
-    float dz = bsphere[2] - GameCamera.posZ * 1024.0f;
+    float stepX = bsphere[0] - GameCamera.posX * 1024.0f;
+    float stepY = bsphere[1] - GameCamera.posY * 1024.0f;
+    float stepZ = bsphere[2] - GameCamera.posZ * 1024.0f;
     /* (the binary subtracts a register it never set from the radius for the w term) */
-    float w = radius - 0.0f;
+    float width = radius - 0.0f;
     Mtx4 *view = &GameCamera.mtx0;
-    float x = view->v0.x * dx + view->v1.x * dy + view->v2.x * dz + view->v3.x * w;
-    float y = view->v0.y * dx + view->v1.y * dy + view->v2.y * dz + view->v3.y * w;
-    float z = view->v0.z * dx + view->v1.z * dy + view->v2.z * dz + view->v3.z * w;
+    float posX = view->v0.x * stepX + view->v1.x * stepY + view->v2.x * stepZ + view->v3.x * width;
+    float posY = view->v0.y * stepX + view->v1.y * stepY + view->v2.y * stepZ + view->v3.y * width;
+    float posZ = view->v0.z * stepX + view->v1.z * stepY + view->v2.z * stepZ + view->v3.z * width;
 
-    if (z + radius < g_ViewContext.nearClip || z - radius > g_ViewContext.farClip) {
+    if (posZ + radius < g_ViewContext.nearClip || posZ - radius > g_ViewContext.farClip) {
         return -1;
     }
 
-    x = fabsf(x);
-    y = fabsf(y);
-    if (z * g_ViewContext.xratio < x - radius * g_ViewContext.xradpad) {
+    posX = fabsf(posX);
+    posY = fabsf(posY);
+    if (posZ * g_ViewContext.xratio < posX - radius * g_ViewContext.xradpad) {
         return -1;
     }
-    if (z * g_ViewContext.yratio < y - radius * g_ViewContext.yradpad) {
+    if (posZ * g_ViewContext.yratio < posY - radius * g_ViewContext.yradpad) {
         return -1;
     }
 
-    if (z - radius <= g_ViewContext.nearClip || z + radius >= g_ViewContext.farClip) {
+    if (posZ - radius <= g_ViewContext.nearClip || posZ + radius >= g_ViewContext.farClip) {
         return 0;
     }
-    if (z * g_ViewContext.xratio * 3.0f <= x + radius * g_ViewContext.xradpad) {
+    if (posZ * g_ViewContext.xratio * 3.0f <= posX + radius * g_ViewContext.xradpad) {
         return 0;
     }
-    if (z * g_ViewContext.yratio * 3.0f <= y + radius * g_ViewContext.yradpad) {
+    if (posZ * g_ViewContext.yratio * 3.0f <= posY + radius * g_ViewContext.yradpad) {
         return 0;
     }
 
@@ -517,68 +516,68 @@ struct OcclGridCells {
 };
 
 // 0x00679c4 (0xe4 bytes)
-/* the visibility bitmap of the 4-unit occlusion cell (x, y, z), or NULL where there is none */
-char *ParseOcclGrid(int x, int y, int z)
+/* the visibility bitmap of the 4-unit occlusion cell (posX, posY, posZ), or NULL where there is none */
+char *ParseOcclGrid(int posX, int posY, int posZ)
 {
     OcclGridHeader *grid = (OcclGridHeader *)OcclGrid;
-    int zi = z - grid->zMin;
+    int cellZ = posZ - grid->zMin;
 
-    if (zi < 0 || zi >= grid->zCnt || grid->zRows[zi] == 0) {
+    if (cellZ < 0 || cellZ >= grid->zCnt || grid->zRows[cellZ] == 0) {
         return NULL;
     }
 
-    OcclGridRow *zRow = (OcclGridRow *)((u8 *)grid + grid->zRows[zi]);
-    int yi = y - zRow->min;
-    if (yi < 0 || yi >= zRow->cnt || zRow->next[yi] == 0) {
+    OcclGridRow *zRow = (OcclGridRow *)((u8 *)grid + grid->zRows[cellZ]);
+    int cellY = posY - zRow->min;
+    if (cellY < 0 || cellY >= zRow->cnt || zRow->next[cellY] == 0) {
         return NULL;
     }
 
-    OcclGridCells *yRow = (OcclGridCells *)((u8 *)grid + zRow->next[yi]);
-    int xi = x - yRow->min;
-    if (xi < 0 || xi >= yRow->cnt || yRow->cells[xi] == 0xffff) {
+    OcclGridCells *yRow = (OcclGridCells *)((u8 *)grid + zRow->next[cellY]);
+    int cellX = posX - yRow->min;
+    if (cellX < 0 || cellX >= yRow->cnt || yRow->cells[cellX] == 0xffff) {
         return NULL;
     }
 
-    return (char *)grid + yRow->cells[xi] * 0x80 + grid->dataOfs;
+    return (char *)grid + yRow->cells[cellX] * 0x80 + grid->dataOfs;
 }
 
 // 0x0067ab0 (0xd0 bytes)
 /* the nearer of two cells' bitmaps (by interp), falling back to the other */
-char *GetOcclGridFromPair(int x0, int y0, int z0, int x1, int y1, int z1, float interp)
+char *GetOcclGridFromPair(int startX, int startY, int startZ, int endX, int endY, int endZ, float interp)
 {
     char *cell;
 
     if (interp >= 0.5f) {
-        cell = ParseOcclGrid(x1, y1, z1);
+        cell = ParseOcclGrid(endX, endY, endZ);
         if (cell == NULL) {
-            cell = ParseOcclGrid(x0, y0, z0);
+            cell = ParseOcclGrid(startX, startY, startZ);
         }
     }
     else {
-        cell = ParseOcclGrid(x0, y0, z0);
+        cell = ParseOcclGrid(startX, startY, startZ);
         if (cell == NULL) {
-            cell = ParseOcclGrid(x1, y1, z1);
+            cell = ParseOcclGrid(endX, endY, endZ);
         }
     }
 
     return cell;
 }
 
-/* the neighbour of (x, y, z) along one axis nearer the camera's fraction, or the other side */
-static inline char *OcclNeighbour(int x, int y, int z, int dx, int dy, int dz, float fraction)
+/* the neighbour of (posX, posY, posZ) along one axis nearer the camera's fraction, or the other side */
+static inline char *OcclNeighbour(int posX, int posY, int posZ, int stepX, int stepY, int stepZ, float fraction)
 {
     char *cell;
 
     if (fraction >= 0.5f) {
-        cell = ParseOcclGrid(x + dx, y + dy, z + dz);
+        cell = ParseOcclGrid(posX + stepX, posY + stepY, posZ + stepZ);
         if (cell == NULL) {
-            cell = ParseOcclGrid(x - dx, y - dy, z - dz);
+            cell = ParseOcclGrid(posX - stepX, posY - stepY, posZ - stepZ);
         }
     }
     else {
-        cell = ParseOcclGrid(x - dx, y - dy, z - dz);
+        cell = ParseOcclGrid(posX - stepX, posY - stepY, posZ - stepZ);
         if (cell == NULL) {
-            cell = ParseOcclGrid(x + dx, y + dy, z + dz);
+            cell = ParseOcclGrid(posX + stepX, posY + stepY, posZ + stepZ);
         }
     }
 
@@ -591,10 +590,10 @@ static inline char *OcclNeighbour(int x, int y, int z, int dx, int dy, int dz, f
 void BuildOcclVisibility(void)
 {
     float scale = 0.25f;
-    int x = FastDoubleToInt(GameCamera.posX * scale);
-    int y = FastDoubleToInt(GameCamera.posY * scale);
-    int z = FastDoubleToInt(GameCamera.posZ * scale);
-    char *cell = ParseOcclGrid(x, y, z);
+    int posX = FastDoubleToInt(GameCamera.posX * scale);
+    int posY = FastDoubleToInt(GameCamera.posY * scale);
+    int posZ = FastDoubleToInt(GameCamera.posZ * scale);
+    char *cell = ParseOcclGrid(posX, posY, posZ);
 
     if (cell != NULL) {
         OcclInvalidGridGp = 0;
@@ -608,9 +607,9 @@ void BuildOcclVisibility(void)
 
     char *merged = NULL;
     if (OcclMode == 0) {
-        char *nearX = OcclNeighbour(x, y, z, 1, 0, 0, GameCamera.posX * scale - (float)FastIntToDouble(x));
-        char *nearY = OcclNeighbour(x, y, z, 0, 1, 0, GameCamera.posY * scale - (float)FastIntToDouble(y));
-        char *nearZ = OcclNeighbour(x, y, z, 0, 0, 1, GameCamera.posZ * scale - (float)FastIntToDouble(z));
+        char *nearX = OcclNeighbour(posX, posY, posZ, 1, 0, 0, GameCamera.posX * scale - (float)FastIntToDouble(posX));
+        char *nearY = OcclNeighbour(posX, posY, posZ, 0, 1, 0, GameCamera.posY * scale - (float)FastIntToDouble(posY));
+        char *nearZ = OcclNeighbour(posX, posY, posZ, 0, 0, 1, GameCamera.posZ * scale - (float)FastIntToDouble(posZ));
 
         if (nearX != NULL || nearY != NULL || nearZ != NULL) {
             merged = (char *)OcclVisibilityMerged;
@@ -774,24 +773,24 @@ void Render_DispatchJob(void)
 #define HUD_SET_BEGIN_END     CELL_GCM_METHOD(CELL_GCM_NV4097_SET_BEGIN_END, 1)
 #define HUD_SET_POSITION2F    CELL_GCM_METHOD(CELL_GCM_NV4097_SET_VERTEX_DATA2F_M, 2)
 
-/* a HUD vertex: its texture coordinate, then its position (16 bits each, y/v high) */
-static inline void HudVertex(RenderingStep *pass, int u, int v, int x, int y)
+/* a HUD vertex: its texture coordinate, then its position (16 bits each, posY/texV high) */
+static inline void HudVertex(RenderingStep *pass, int texU, int texV, int posX, int posY)
 {
     Emit(pass, HUD_SET_TEXCOORD2S);
-    Emit(pass, (v & 0xffff) << 16 | (u & 0xffff));
+    Emit(pass, (texV & 0xffff) << 16 | (texU & 0xffff));
     Emit(pass, HUD_SET_POSITION2S);
-    Emit(pass, (y & 0xffff) << 16 | (x & 0xffff));
+    Emit(pass, (posY & 0xffff) << 16 | (posX & 0xffff));
 }
 
 /* binds tex and starts a quad in color on the HUD pass */
 /* one HUD vertex at a float position */
-static inline void HudVertexF(RenderingStep *pass, int u, int v, float x, float y)
+static inline void HudVertexF(RenderingStep *pass, int texU, int texV, float posX, float posY)
 {
     Emit(pass, HUD_SET_TEXCOORD2S);
-    Emit(pass, (v & 0xffff) << 16 | (u & 0xffff));
+    Emit(pass, (texV & 0xffff) << 16 | (texU & 0xffff));
     Emit(pass, HUD_SET_POSITION2F);
-    Emit(pass, *(u32 *)&x);
-    Emit(pass, *(u32 *)&y);
+    Emit(pass, *(u32 *)&posX);
+    Emit(pass, *(u32 *)&posY);
 }
 
 static inline void HudBeginQuad(void *tex, u32 color)
@@ -847,45 +846,45 @@ void DrawFullScreenQuad(int rgba, void *tex)
 }
 
 // 0x006889c (0x354 bytes)
-/* tex's (u, v, uw, vh) texels (in half-texel units) drawn at (x, y, w, h) on the HUD pass, in
+/* tex's (texU, texV, texW, texH) texels (in half-texel units) drawn at (posX, posY, width, height) on the HUD pass, in
    color; a full 512x416 rectangle goes through DrawFullScreenQuad */
-void Sprite_DrawShape(int x, int y, int w, int h, int u, int v, int uw, int vh, u32 color, void *tex)
+void Sprite_DrawShape(int posX, int posY, int width, int height, int texU, int texV, int texW, int texH, u32 color, void *tex)
 {
-    if (x == 0 && w == 512 && y == 0 && h == 416) {
+    if (posX == 0 && width == 512 && posY == 0 && height == 416) {
         DrawFullScreenQuad(color, tex);
         return;
     }
 
-    int left = u * 2;
-    int top = v * 2;
-    int right = (u + uw) * 2;
-    int bottom = (v + vh) * 2;
+    int left = texU * 2;
+    int top = texV * 2;
+    int right = (texU + texW) * 2;
+    int bottom = (texV + texH) * 2;
 
     HudBeginQuad(tex, color);
-    HudVertex(HUD_Pass, left, top, x, y);
-    HudVertex(HUD_Pass, left, bottom, x, y + h);
-    HudVertex(HUD_Pass, right, bottom, x + w, y + h);
-    HudVertex(HUD_Pass, right, top, x + w, y);
+    HudVertex(HUD_Pass, left, top, posX, posY);
+    HudVertex(HUD_Pass, left, bottom, posX, posY + height);
+    HudVertex(HUD_Pass, right, bottom, posX + width, posY + height);
+    HudVertex(HUD_Pass, right, top, posX + width, posY);
     HudEnd();
 }
 
 // 0x0068bf0 (0x78 bytes)
-void Sprite_DrawShapeF(float x, float y, float w, float h, int u, int v, int uw, int vh, u32 color, void *tex)
+void Sprite_DrawShapeF(float posX, float posY, float width, float height, int texU, int texV, int texW, int texH, u32 color, void *tex)
 {
-    Sprite_DrawShape((int)x, (int)y, (int)w, (int)h, u, v, uw, vh, color, tex);
+    Sprite_DrawShape((int)posX, (int)posY, (int)width, (int)height, texU, texV, texW, texH, color, tex);
 }
 
 // 0x006a5c4 (0x70 bytes)
 /* Sprite_DrawShape with an effect texture by its index in EffectTexHeaders */
-void Sprite_DrawShapeWrapper(int x, int y, int w, int h, int u, int v, int uw, int vh, u32 color, int tex)
+void Sprite_DrawShapeWrapper(int posX, int posY, int width, int height, int texU, int texV, int texW, int texH, u32 color, int tex)
 {
-    Sprite_DrawShape(x, y, w, h, u, v, uw, vh, color, (u8 *)(uintptr_t)EffectTexHeaders + tex * 0x24);
+    Sprite_DrawShape(posX, posY, width, height, texU, texV, texW, texH, color, (u8 *)(uintptr_t)EffectTexHeaders + tex * 0x24);
 }
 
 // 0x0068c70 (0x3e4 bytes)
 /* Draws len bytes of str with g_JapanFontTex. Bytes 8..15 pick a palette colour, bytes below 32
    are 24x16 grey glyphs, 0xbd/0xbe are diacritics placed against the previous character */
-void FontPrintScaledJapanese(float x, float y, float scale, u32 color, const u8 *str, int len, int unused, const FontGlyph *table)
+void FontPrintScaledJapanese(float posX, float posY, float scale, u32 color, const u8 *str, int len, int unused, const FontGlyph *table)
 {
     if (g_FontKeepPalette == 0) {
         g_FontPalette[0] = color;
@@ -895,54 +894,54 @@ void FontPrintScaledJapanese(float x, float y, float scale, u32 color, const u8 
     int size = (int)(scale * 16.0f);
 
     for (int i = 0; i != len; i++) {
-        u8 ch = str[i];
+        u8 code = str[i];
 
-        if (ch == 0) {
+        if (code == 0) {
             return;
         }
 
-        if (ch >= 8 && ch <= 15) {
+        if (code >= 8 && code <= 15) {
             if (g_FontColorsEnabled != 0) {
-                color = (color & 0xff000000) | (g_FontPalette[ch - 8] & 0xffffff);
+                color = (color & 0xff000000) | (g_FontPalette[code - 8] & 0xffffff);
             }
 
             continue;
         }
 
-        float yOff = (float)FastIntToDouble(table[ch].yOff);
+        float yOff = (float)FastIntToDouble(table[code].yOff);
 
-        ch = str[i];
+        code = str[i];
 
-        if (table[ch].width == 0) {
+        if (table[code].width == 0) {
             continue;
         }
 
-        const FontGlyph *glyph = &table[ch];
+        const FontGlyph *glyph = &table[code];
 
-        if (ch < 32) {
+        if (code < 32) {
             u32 sum = (color & 0xff) + ((color >> 8) & 0xff) + ((color >> 16) & 0xff) + 1;
             u32 grey = (sum * 341) >> 10;
             u32 greyColor = (color & 0xff000000) + (grey << 16) + (grey << 8) + grey;
 
-            Sprite_DrawShape((int)x, (int)(yOff * scale + y), wide, size, glyph->u, glyph->v, 24, 16, greyColor, &g_JapanFontTex);
+            Sprite_DrawShape((int)posX, (int)(yOff * scale + posY), wide, size, glyph->u, glyph->v, 24, 16, greyColor, &g_JapanFontTex);
         }
-        else if (ch == 0xbd || ch == 0xbe) {
+        else if (code == 0xbd || code == 0xbe) {
             u8 prev = str[i - 1];
             const FontGlyph *mark = &table[prev + 0x80];
             int shift = mark->width - table[prev].width;
 
-            Sprite_DrawShape((int)(shift * scale + x), (int)(mark->yOff * scale + y), size, size, glyph->u, glyph->v, 16, 16, color, &g_JapanFontTex);
+            Sprite_DrawShape((int)(shift * scale + posX), (int)(mark->yOff * scale + posY), size, size, glyph->u, glyph->v, 16, 16, color, &g_JapanFontTex);
 
             shift = mark->width - table[str[i - 1]].width;
-            x = (shift + (str[i] == 0xbe) + 4) * scale + x;
+            posX = (shift + (str[i] == 0xbe) + 4) * scale + posX;
 
             continue;
         }
-        else if (ch > 32) {
-            Sprite_DrawShape((int)x, (int)(yOff * scale + y), size, size, glyph->u, glyph->v, 16, 16, color, &g_JapanFontTex);
+        else if (code > 32) {
+            Sprite_DrawShape((int)posX, (int)(yOff * scale + posY), size, size, glyph->u, glyph->v, 16, 16, color, &g_JapanFontTex);
         }
 
-        x = (float)FastIntToDouble(table[str[i]].width) * scale + x;
+        posX = (float)FastIntToDouble(table[str[i]].width) * scale + posX;
     }
 }
 
@@ -1005,22 +1004,22 @@ void FontPrintOptJapanese(float scale, FontWindow *win, u32 color, const u8 *str
 
             if (width > 0) {
                 do {
-                    u8 ch = str[pos];
+                    u8 code = str[pos];
 
-                    if (ch == ' ' || ch < 16) {
+                    if (code == ' ' || code < 16) {
                         breakAt = pos;
                     }
 
-                    if (g_FontColorsEnabled != 0 && ch >= 8 && ch <= 15) {
-                        colorIdx = ch - 8;
+                    if (g_FontColorsEnabled != 0 && code >= 8 && code <= 15) {
+                        colorIdx = code - 8;
                     }
 
-                    if (ch == 0 || ch == 1) {
+                    if (code == 0 || code == 1) {
                         break;
                     }
 
                     pos++;
-                    lineWidth += table[ch].width;
+                    lineWidth += table[code].width;
                 } while (lineWidth < width);
             }
 
@@ -1032,15 +1031,15 @@ void FontPrintOptJapanese(float scale, FontWindow *win, u32 color, const u8 *str
 
             pos = lineEnd[lines];
 
-            u8 ch = str[pos];
+            u8 code = str[pos];
 
-            if (ch == ' ' || ch < 16) {
+            if (code == ' ' || code < 16) {
                 lineEnd[lines] = pos - 1;
             }
 
             lines++;
 
-            if (ch == 0) {
+            if (code == 0) {
                 break;
             }
 
@@ -1055,10 +1054,10 @@ void FontPrintOptJapanese(float scale, FontWindow *win, u32 color, const u8 *str
     win->max_width = 0;
     win->max_height = lines * spacing;
 
-    int y = textY;
+    int posY = textY;
 
     if (flags & 2) {
-        y = textY - ((short)spacing * lines >> 1);
+        posY = textY - ((short)spacing * lines >> 1);
     }
 
     for (int i = 0; i < lines; i++) {
@@ -1085,14 +1084,14 @@ void FontPrintOptJapanese(float scale, FontWindow *win, u32 color, const u8 *str
         if ((flags & 4) == 0) {
             g_FontPalette[0] = color;
 
-            int x = win->text_x;
+            int posX = win->text_x;
 
             if (flags & 1) {
-                x = win->text_x - (pixels >> 1);
+                posX = win->text_x - (pixels >> 1);
             }
 
-            float drawX = (float)x;
-            float drawY = (float)y;
+            float drawX = (float)posX;
+            float drawY = (float)posY;
 
             if (flags & 8) {
                 drawX = (float)win->sub_pixel_x * 0.0625f + drawX;
@@ -1102,7 +1101,7 @@ void FontPrintOptJapanese(float scale, FontWindow *win, u32 color, const u8 *str
             FontPrintScaledJapanese(drawX, drawY, scale, g_FontPalette[lineColor[i]], line, count, unused, table);
         }
 
-        y += win->line_spacing;
+        posY += win->line_spacing;
     }
 
     g_FontKeepPalette = 0;
@@ -1165,7 +1164,7 @@ void DrawSpriteFont_thunk(float sc_x, float sc_y, float sc_w, float sc_h, int tx
 // 0x0069a50 (0x34c bytes)
 /* FontPrintScaledJapanese through DrawSpriteFont with effect texture tex: glyph rows start one
    texel down and are 15 high, and bytes 0x80..0xa7 also draw the mark at table[ch + 0x40] */
-void FontPrintScaledWestern(float x, float y, float scale, u32 color, const u8 *str, int len, u64 tex, const FontGlyph *table)
+void FontPrintScaledWestern(float posX, float posY, float scale, u32 color, const u8 *str, int len, u64 tex, const FontGlyph *table)
 {
     SetGSReg(3, idol_draw::PackCmd(0, 1, 0, 1, 0));
     SetGSReg(0x16, idol_draw::Blend(1, 5, 4, 0, 0, 0, 0, 1));
@@ -1183,53 +1182,53 @@ void FontPrintScaledWestern(float x, float y, float scale, u32 color, const u8 *
     float wide = scale * 24.0f;
 
     for (int i = 0; i != len; i++) {
-        u8 ch = str[i];
+        u8 code = str[i];
 
-        if (ch == 0) {
+        if (code == 0) {
             return;
         }
 
-        if (ch >= 8 && ch <= 15) {
+        if (code >= 8 && code <= 15) {
             if (g_FontColorsEnabled != 0) {
-                color = (color & 0xff000000) | (g_FontPalette[ch - 8] & 0xffffff);
+                color = (color & 0xff000000) | (g_FontPalette[code - 8] & 0xffffff);
             }
 
             continue;
         }
 
-        if (table[ch].width == 0) {
+        if (table[code].width == 0) {
             continue;
         }
 
-        float yOff = (float)FastIntToDouble(table[ch].yOff);
+        float yOff = (float)FastIntToDouble(table[code].yOff);
 
-        ch = str[i];
+        code = str[i];
 
-        if (ch >= 128 && ch < 168) {
-            const FontGlyph *mark = &table[ch + 0x40];
+        if (code >= 128 && code < 168) {
+            const FontGlyph *mark = &table[code + 0x40];
             float markX = (float)FastIntToDouble(mark->width);
             float markY = (float)FastIntToDouble(mark->yOff);
 
-            DrawSpriteFont(markX * scale + x, markY * scale + y, size, size, mark->u, mark->v + 1, 16, 15, color, tex);
+            DrawSpriteFont(markX * scale + posX, markY * scale + posY, size, size, mark->u, mark->v + 1, 16, 15, color, tex);
 
-            ch = str[i];
+            code = str[i];
         }
 
-        const FontGlyph *glyph = &table[ch];
-        float drawY = yOff * scale + y;
+        const FontGlyph *glyph = &table[code];
+        float drawY = yOff * scale + posY;
 
-        if (ch < 32) {
+        if (code < 32) {
             u32 sum = (color & 0xff) + ((color >> 8) & 0xff) + ((color >> 16) & 0xff) + 1;
             u32 grey = (sum * 341) >> 10;
             u32 greyColor = (color & 0xff000000) + (grey << 16) + (grey << 8) + grey;
 
-            DrawSpriteFont(x, drawY, wide, size, glyph->u, glyph->v + 1, 24, 15, greyColor, tex);
+            DrawSpriteFont(posX, drawY, wide, size, glyph->u, glyph->v + 1, 24, 15, greyColor, tex);
         }
-        else if (ch > 32) {
-            DrawSpriteFont(x, drawY, size, size, glyph->u, glyph->v + 1, 16, 15, color, tex);
+        else if (code > 32) {
+            DrawSpriteFont(posX, drawY, size, size, glyph->u, glyph->v + 1, 16, 15, color, tex);
         }
 
-        x = (float)FastIntToDouble(table[str[i]].width) * scale + x;
+        posX = (float)FastIntToDouble(table[str[i]].width) * scale + posX;
     }
 }
 
@@ -1301,22 +1300,22 @@ void FontPrintOptWestern(float scale, FontWindow *win, u32 color, const char *te
 
                 if (width > 0) {
                     do {
-                        u8 ch = str[pos];
+                        u8 code = str[pos];
 
-                        if (ch == ' ' || ch < 16) {
+                        if (code == ' ' || code < 16) {
                             breakAt = pos;
                         }
 
-                        if (g_FontColorsEnabled != 0 && ch >= 8 && ch <= 15) {
-                            colorIdx = ch - 8;
+                        if (g_FontColorsEnabled != 0 && code >= 8 && code <= 15) {
+                            colorIdx = code - 8;
                         }
 
-                        if (ch == 0 || ch == 1) {
+                        if (code == 0 || code == 1) {
                             break;
                         }
 
                         pos++;
-                        lineWidth += (int)((float)table[ch].width * scale);
+                        lineWidth += (int)((float)table[code].width * scale);
                     } while (lineWidth < width);
                 }
 
@@ -1328,15 +1327,15 @@ void FontPrintOptWestern(float scale, FontWindow *win, u32 color, const char *te
 
                 pos = lineEnd[lines];
 
-                u8 ch = str[pos];
+                u8 code = str[pos];
 
-                if (ch == ' ' || ch < 16) {
+                if (code == ' ' || code < 16) {
                     lineEnd[lines] = pos - 1;
                 }
 
                 lines++;
 
-                if (ch == 0) {
+                if (code == 0) {
                     lastWidth = lineWidth;
                     break;
                 }
@@ -1372,10 +1371,10 @@ void FontPrintOptWestern(float scale, FontWindow *win, u32 color, const char *te
     win->max_width = 0;
     win->max_height = lines * spacing;
 
-    int y = textY;
+    int posY = textY;
 
     if (flags & 2) {
-        y = textY - ((short)spacing * lines >> 1);
+        posY = textY - ((short)spacing * lines >> 1);
     }
 
     for (int i = 0; i < lines; i++) {
@@ -1402,14 +1401,14 @@ void FontPrintOptWestern(float scale, FontWindow *win, u32 color, const char *te
         if ((flags & 4) == 0) {
             g_FontPalette[0] = color;
 
-            int x = win->text_x;
+            int posX = win->text_x;
 
             if (flags & 1) {
-                x = win->text_x - (pixels >> 1);
+                posX = win->text_x - (pixels >> 1);
             }
 
-            float drawX = (float)x;
-            float drawY = (float)y;
+            float drawX = (float)posX;
+            float drawY = (float)posY;
 
             if (flags & 8) {
                 drawX = (float)win->sub_pixel_x * 0.0625f + drawX;
@@ -1419,7 +1418,7 @@ void FontPrintOptWestern(float scale, FontWindow *win, u32 color, const char *te
             FontPrintScaledWestern(drawX, drawY, scale, g_FontPalette[lineColor[i]], line, count, tex, table);
         }
 
-        y += win->line_spacing;
+        posY += win->line_spacing;
     }
 
     g_FontKeepPalette = 0;
@@ -1710,15 +1709,15 @@ void DrawScreenEffect(void)
 }
 
 // 0x006b5a4 (0x38 bytes)
-void DrawScreenOverlayTex(int r, int g, int b, int a, void *tex)
+void DrawScreenOverlayTex(int red, int green, int blue, int alpha, void *tex)
 {
-    DrawFullScreenQuad(a << 24 | (b & 0xff) << 16 | (g & 0xff) << 8 | (r & 0xff), tex);
+    DrawFullScreenQuad(alpha << 24 | (blue & 0xff) << 16 | (green & 0xff) << 8 | (red & 0xff), tex);
 }
 
 // 0x006b5dc (0x5c bytes)
-void DrawScreenOverlay(int r, int g, int b, int a)
+void DrawScreenOverlay(int red, int green, int blue, int alpha)
 {
-    DrawFullScreenQuad(a << 24 | (b & 0xff) << 16 | (g & 0xff) << 8 | (r & 0xff), FlatTex());
+    DrawFullScreenQuad(alpha << 24 | (blue & 0xff) << 16 | (green & 0xff) << 8 | (red & 0xff), FlatTex());
 }
 
 // 0x006b638 (0xdc bytes)
@@ -2036,14 +2035,14 @@ void EnableFontColors(void)
 }
 
 /* a palette byte (8..15) changes color when font colours are on; true when ch was one */
-static inline bool FontPaletteCode(u8 ch, u32 *color)
+static inline bool FontPaletteCode(u8 code, u32 *color)
 {
-    if (ch < 8 || ch > 15) {
+    if (code < 8 || code > 15) {
         return false;
     }
 
     if (g_FontColorsEnabled != 0) {
-        *color = (*color & 0xff000000) | (g_FontPalette[ch - 8] & 0xffffff);
+        *color = (*color & 0xff000000) | (g_FontPalette[code - 8] & 0xffffff);
     }
 
     return true;
@@ -2060,7 +2059,7 @@ static inline u32 FontGrey(u32 color)
 
 // 0x006c5ec (0x2e4 bytes)
 /* FontPrintScaledJapanese at scale 1 in whole pixels */
-void FontPrintJapanese(int x, int y, u32 color, const char *text, int len, int unused, void *glyphs)
+void FontPrintJapanese(int posX, int posY, u32 color, const char *text, int len, int unused, void *glyphs)
 {
     const u8 *str = (const u8 *)text;
     const FontGlyph *table = (const FontGlyph *)glyphs;
@@ -2070,46 +2069,46 @@ void FontPrintJapanese(int x, int y, u32 color, const char *text, int len, int u
     }
 
     for (int i = 0; i != len; i++) {
-        u8 ch = str[i];
+        u8 code = str[i];
 
-        if (ch == 0) {
+        if (code == 0) {
             return;
         }
 
-        if (FontPaletteCode(ch, &color)) {
+        if (FontPaletteCode(code, &color)) {
             continue;
         }
 
-        const FontGlyph *glyph = &table[ch];
+        const FontGlyph *glyph = &table[code];
 
         if (glyph->width == 0) {
             continue;
         }
 
-        if (ch < 32) {
-            Sprite_DrawShape(x, y + glyph->yOff, 24, 16, glyph->u, glyph->v, 24, 16, FontGrey(color), &g_JapanFontTex);
+        if (code < 32) {
+            Sprite_DrawShape(posX, posY + glyph->yOff, 24, 16, glyph->u, glyph->v, 24, 16, FontGrey(color), &g_JapanFontTex);
         }
-        else if (ch == 0xbd || ch == 0xbe) {
+        else if (code == 0xbd || code == 0xbe) {
             u8 prev = str[i - 1];
             const FontGlyph *mark = &table[prev + 0x80];
 
-            Sprite_DrawShape(x - table[prev].width + mark->width, y + mark->yOff, 16, 16, glyph->u, glyph->v, 16, 16, color, &g_JapanFontTex);
+            Sprite_DrawShape(posX - table[prev].width + mark->width, posY + mark->yOff, 16, 16, glyph->u, glyph->v, 16, 16, color, &g_JapanFontTex);
 
-            x = (mark->width - table[str[i - 1]].width) + (str[i] == 0xbe) + x + 4;
+            posX = (mark->width - table[str[i - 1]].width) + (str[i] == 0xbe) + posX + 4;
 
             continue;
         }
-        else if (ch > 32) {
-            Sprite_DrawShape(x, y + glyph->yOff, 16, 16, glyph->u, glyph->v, 16, 16, color, &g_JapanFontTex);
+        else if (code > 32) {
+            Sprite_DrawShape(posX, posY + glyph->yOff, 16, 16, glyph->u, glyph->v, 16, 16, color, &g_JapanFontTex);
         }
 
-        x += table[str[i]].width;
+        posX += table[str[i]].width;
     }
 }
 
 // 0x006c8d0 (0x33c bytes)
 /* FontPrintScaledWestern at scale 1 in whole pixels through Sprite_DrawShape, glyphs a full 16 high */
-void FontPrint(int x, int y, u32 color, const char *text, int len, int tex, void *glyphs)
+void FontPrint(int posX, int posY, u32 color, const char *text, int len, int tex, void *glyphs)
 {
     const u8 *str = (const u8 *)text;
     const FontGlyph *table = (const FontGlyph *)glyphs;
@@ -2123,50 +2122,50 @@ void FontPrint(int x, int y, u32 color, const char *text, int len, int tex, void
     }
 
     for (int i = 0; i != len; i++) {
-        u8 ch = str[i];
+        u8 code = str[i];
 
-        if (ch == 0) {
+        if (code == 0) {
             return;
         }
 
-        if (FontPaletteCode(ch, &color)) {
+        if (FontPaletteCode(code, &color)) {
             continue;
         }
 
-        if (table[ch].width == 0) {
+        if (table[code].width == 0) {
             continue;
         }
 
-        if (ch >= 128 && ch < 168) {
-            const FontGlyph *mark = &table[ch + 0x40];
+        if (code >= 128 && code < 168) {
+            const FontGlyph *mark = &table[code + 0x40];
 
-            Sprite_DrawShape(x + mark->width, y + mark->yOff, 16, 16, mark->u, mark->v, 16, 16, color, texHeader);
+            Sprite_DrawShape(posX + mark->width, posY + mark->yOff, 16, 16, mark->u, mark->v, 16, 16, color, texHeader);
 
-            ch = str[i];
+            code = str[i];
         }
 
-        const FontGlyph *glyph = &table[ch];
+        const FontGlyph *glyph = &table[code];
 
-        if (ch < 32) {
-            Sprite_DrawShape(x, y + glyph->yOff, 24, 16, glyph->u, glyph->v, 24, 16, FontGrey(color), texHeader);
+        if (code < 32) {
+            Sprite_DrawShape(posX, posY + glyph->yOff, 24, 16, glyph->u, glyph->v, 24, 16, FontGrey(color), texHeader);
         }
-        else if (ch > 32) {
-            Sprite_DrawShape(x, y + glyph->yOff, 16, 16, glyph->u, glyph->v, 16, 16, color, texHeader);
+        else if (code > 32) {
+            Sprite_DrawShape(posX, posY + glyph->yOff, 16, 16, glyph->u, glyph->v, 16, 16, color, texHeader);
         }
 
-        x += table[str[i]].width;
+        posX += table[str[i]].width;
     }
 }
 
 // 0x006cc0c (0xa8 bytes)
-/* str at (x, y) in the medium font: JapaneseGlyphs in Japanese mode, else MediumWesternGlyphs */
-void FontPrintMediumLeft(int x, int y, u32 color, const char *str, int len)
+/* str at (posX, posY) in the medium font: JapaneseGlyphs in Japanese mode, else MediumWesternGlyphs */
+void FontPrintMediumLeft(int posX, int posY, u32 color, const char *str, int len)
 {
     if (g_JapaneseMode) {
-        FontPrintJapanese(x, y, color, str, len, GetEffectTex(1), &JapaneseGlyphs);
+        FontPrintJapanese(posX, posY, color, str, len, GetEffectTex(1), &JapaneseGlyphs);
     }
     else {
-        FontPrint(x, y, color, str, len, GetEffectTex(1), &MediumWesternGlyphs);
+        FontPrint(posX, posY, color, str, len, GetEffectTex(1), &MediumWesternGlyphs);
     }
 }
 
@@ -2179,31 +2178,31 @@ void DisableFontColors(void)
 // 0x006ccc4 (0xbc bytes)
 /* width of the first len characters of s (up to a 0 byte), the 0xbd/0xbe diacritics advancing
    as FontPrintJapanese does */
-int FontLenWithTable(char *s, int len, void *glyphs)
+int FontLenWithTable(char *text, int len, void *glyphs)
 {
     const FontGlyph *table = (const FontGlyph *)glyphs;
     int width = 0;
 
     for (int i = 0; i != len; i++) {
-        u8 ch = s[i];
+        u8 code = text[i];
 
-        if (ch == 0) {
+        if (code == 0) {
             return width;
         }
 
-        int advance = table[ch].width;
+        int advance = table[code].width;
 
         if (advance == 0) {
             continue;
         }
 
-        if (ch < 0xbd || ch > 0xbe) {
+        if (code < 0xbd || code > 0xbe) {
             width += advance;
         }
         else {
-            u8 prev = s[i - 1];
+            u8 prev = text[i - 1];
 
-            width = (table[prev + 0x80].width - table[prev].width) + (ch == 0xbe) + width + 4;
+            width = (table[prev + 0x80].width - table[prev].width) + (code == 0xbe) + width + 4;
         }
     }
 
@@ -2211,19 +2210,19 @@ int FontLenWithTable(char *s, int len, void *glyphs)
 }
 
 // 0x006cd80 (0x68 bytes)
-int FontLenWithTableNoKern(char *s, int len, void *glyphs)
+int FontLenWithTableNoKern(char *text, int len, void *glyphs)
 {
     const FontGlyph *table = (const FontGlyph *)glyphs;
     int width = 0;
 
     for (int i = 0; i != len; i++) {
-        u8 ch = s[i];
+        u8 code = text[i];
 
-        if (ch == 0) {
+        if (code == 0) {
             return width;
         }
 
-        width += table[ch].width;
+        width += table[code].width;
     }
 
     return width;
@@ -2231,49 +2230,49 @@ int FontLenWithTableNoKern(char *s, int len, void *glyphs)
 
 // 0x006cde8 (0xb0 bytes)
 /* width of s in the medium font */
-int FontLen(char *s, int len)
+int FontLen(char *text, int len)
 {
     if (g_JapaneseMode) {
-        return FontLenWithTable(s, len, &JapaneseGlyphs);
+        return FontLenWithTable(text, len, &JapaneseGlyphs);
     }
 
-    return FontLenWithTableNoKern(s, len, &MediumWesternGlyphs);
+    return FontLenWithTableNoKern(text, len, &MediumWesternGlyphs);
 }
 
 // 0x006cea0 (0x2dc bytes)
-/* str in a HUD text box at y: starting at x (align -1), centred on x (0) or ending at x (1);
+/* str in a HUD text box at posY: starting at posX (align -1), centred on posX (0) or ending at posX (1);
    the box is sized for the text at scale and has opacity scale; the text is drawn with a black
    shadow and its alpha is alpha * 128 */
-void DrawFancyTextWithBox(int x, int y, int align, float scale, float alpha, char *str)
+void DrawFancyTextWithBox(int posX, int posY, int align, float scale, float alpha, char *str)
 {
     int width = (int)((float)FontLen(str, -1) * scale);
-    int left = x;
-    int right = x;
+    int left = posX;
+    int right = posX;
 
     if (align == -1) {
-        right = width + x;
+        right = width + posX;
     }
     else if (align == 0) {
-        left = x - (width >> 1);
-        right = x + (width >> 1);
+        left = posX - (width >> 1);
+        right = posX + (width >> 1);
     }
     else if (align == 1) {
-        left = x - width;
+        left = posX - width;
     }
 
-    Hud_DrawTextBox(left - 32, y - 14, right - left + 64, 28, FastDoubleToInt(scale * 112.0f));
+    Hud_DrawTextBox(left - 32, posY - 14, right - left + 64, 28, FastDoubleToInt(scale * 112.0f));
 
     g_FontColorsEnabled = 0;
 
     int color = ((int)(alpha * 128.0f) << 24) + 0xe0e0e0;
 
     if (g_JapaneseMode) {
-        FontPrintJapanese(left + 1, y - 7, color & 0xff000000, str, -1, GetEffectTex(1), &JapaneseGlyphs);
-        FontPrintJapanese(left, y - 8, color, str, -1, GetEffectTex(1), &JapaneseGlyphs);
+        FontPrintJapanese(left + 1, posY - 7, color & 0xff000000, str, -1, GetEffectTex(1), &JapaneseGlyphs);
+        FontPrintJapanese(left, posY - 8, color, str, -1, GetEffectTex(1), &JapaneseGlyphs);
     }
     else {
-        FontPrint(left + 1, y - 7, color & 0xff000000, str, -1, GetEffectTex(1), &MediumWesternGlyphs);
-        FontPrint(left, y - 8, color, str, -1, GetEffectTex(1), &MediumWesternGlyphs);
+        FontPrint(left + 1, posY - 7, color & 0xff000000, str, -1, GetEffectTex(1), &MediumWesternGlyphs);
+        FontPrint(left, posY - 8, color, str, -1, GetEffectTex(1), &MediumWesternGlyphs);
     }
 
     g_FontColorsEnabled = 1;
@@ -2320,13 +2319,13 @@ void DrawTimedHelpMsg(TimedHelpMsg *msg, int frame)
         }
     }
 
-    int id = msg->id;
+    int msgId = msg->id;
 
-    if (id < 20790) {
-        id--;
+    if (msgId < 20790) {
+        msgId--;
     }
 
-    char *text = help_msg_string_by_index((StringId)id);
+    char *text = help_msg_string_by_index((StringId)msgId);
     char *out = line;
 
     if (msg->oneLine == 1) {
@@ -2358,14 +2357,14 @@ void DrawTimedHelpMsg(TimedHelpMsg *msg, int frame)
         return;
     }
 
-    int y = msg->y;
+    int posY = msg->y;
 
     while (*text != 0) {
         if (*text == 1) {
             *out = 0;
-            DrawFancyTextWithBox(msg->x, y, msg->align, scale, alpha, line);
+            DrawFancyTextWithBox(msg->x, posY, msg->align, scale, alpha, line);
 
-            y += 26;
+            posY += 26;
             out = line;
 
             while (*text == 1) {
@@ -2383,7 +2382,7 @@ void DrawTimedHelpMsg(TimedHelpMsg *msg, int frame)
 
     if (out > line) {
         *out = 0;
-        DrawFancyTextWithBox(msg->x, y, msg->align, scale, alpha, line);
+        DrawFancyTextWithBox(msg->x, posY, msg->align, scale, alpha, line);
     }
 }
 
@@ -2467,15 +2466,15 @@ void RegisterPostDraw(void *func, void *arg)
 }
 
 // 0x006d830 (0x290 bytes)
-/* Each of the g_NumLameShadows queued blob shadows (DL: LameShadows, a position whose w is the
+/* Each of the g_NumLameShadows queued blob shadows (DL: LameShadows, a position whose width is the
    size and a surface normal) as a quad of effect texture TexInfo[0]: LameShadowTable's corner
-   offsets (x, y) taken into the surface plane and scaled by the size, its z, w the texture
+   offsets (posX, posY) taken into the surface plane and scaled by the size, its posZ, width the texture
    coordinates. */
 void DrawLameShadows(void)
 {
     Vec4 (*shadows)[2] = (Vec4 (*)[2])&g_LameShadows;
     QuadDef quad;
-    float *st = &quad.st[0][0];
+    float *coords = &quad.st[0][0];
 
     quad.tex0 = ((int *)(uintptr_t)TexInfo)[0];
     quad.tex1 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
@@ -2483,8 +2482,8 @@ void DrawLameShadows(void)
     quad.alpha = idol_draw::PackCmd(0, 1, 0, 1, 0x80);
 
     for (int i = 0; i < 4; i++) {
-        st[i * 2] = LameShadowTable[i].z;
-        st[i * 2 + 1] = LameShadowTable[i].w;
+        coords[i * 2] = LameShadowTable[i].z;
+        coords[i * 2 + 1] = LameShadowTable[i].w;
         quad.rgba[i] = 0x40808080;
     }
 
@@ -2715,23 +2714,23 @@ void STUB_0006e71c(...)
 }
 
 // 0x006e740 (0x598 bytes)
-/* Texels (0, 0, tw, th) of effect texture tex (flipped by flipU, flipV) as a w by h quad at
-   (x, y) turned by angle about the pivot (pivotX, pivotY), fractions of the quad's size. With
+/* Texels (0, 0, texWidth, texHeight) of effect texture tex (flipped by flipU, flipV) as a width by height quad at
+   (posX, posY) turned by angle about the pivot (pivotX, pivotY), fractions of the quad's size. With
    perEye set each vertex position is preceded by FUN_004e3178 (presumably the stereo offset).
    unused is never read. */
-void Sprite_DrawRotated(float x, float y, float w, float h, float angle, float pivotX, float pivotY, int tw, int th, int tex, int unused, u32 color, int flipU, int flipV, int perEye)
+void Sprite_DrawRotated(float posX, float posY, float width, float height, float angle, float pivotX, float pivotY, int texWidth, int texHeight, int tex, int unused, u32 color, int flipU, int flipV, int perEye)
 {
     float sinA = FastSinInline(angle);
     float cosA = FastCosInline(angle);
-    float hSin = h * sinA;
-    float wSin = w * sinA;
-    float hCos = h * cosA;
-    float wCos = w * cosA;
+    float hSin = height * sinA;
+    float wSin = width * sinA;
+    float hCos = height * cosA;
+    float wCos = width * cosA;
 
-    float topX = (1.0f - pivotY) * hSin + x;
-    float topY = (1.0f - pivotY) * hCos + y;
-    float bottomX = x - hSin * pivotY;
-    float bottomY = y - hCos * pivotY;
+    float topX = (1.0f - pivotY) * hSin + posX;
+    float topY = (1.0f - pivotY) * hCos + posY;
+    float bottomX = posX - hSin * pivotY;
+    float bottomY = posY - hCos * pivotY;
 
     float pos[4][2] = {
         { topX - (1.0f - pivotX) * wCos, topY + wSin * (1.0f - pivotX) },
@@ -2740,11 +2739,11 @@ void Sprite_DrawRotated(float x, float y, float w, float h, float angle, float p
         { pivotX * wCos + topX, topY - wSin * pivotX },
     };
 
-    int u0 = (u8)flipU ? tw * 2 : 0;
-    int u1 = (u8)flipU ? 0 : tw * 2;
-    int v0 = (u8)flipV ? th * 2 : 0;
-    int v1 = (u8)flipV ? 0 : th * 2;
-    int uv[4][2] = { { u0, v0 }, { u0, v1 }, { u1, v1 }, { u1, v0 } };
+    int texLeft = (u8)flipU ? texWidth * 2 : 0;
+    int texRight = (u8)flipU ? 0 : texWidth * 2;
+    int texTop = (u8)flipV ? texHeight * 2 : 0;
+    int texBottom = (u8)flipV ? 0 : texHeight * 2;
+    int texel[4][2] = { { texLeft, texTop }, { texLeft, texBottom }, { texRight, texBottom }, { texRight, texTop } };
 
     HudBindEffectTex(tex);
     idol_draw::ResetPassState(HUD_Pass);
@@ -2761,7 +2760,7 @@ void Sprite_DrawRotated(float x, float y, float w, float h, float angle, float p
 
     for (int i = 0; i < 4; i++) {
         Emit(HUD_Pass, HUD_SET_TEXCOORD2S);
-        Emit(HUD_Pass, (uv[i][1] & 0xffff) << 16 | (uv[i][0] & 0xffff));
+        Emit(HUD_Pass, (texel[i][1] & 0xffff) << 16 | (texel[i][0] & 0xffff));
 
         if ((u8)perEye != 0) {
             FUN_004e3178(g_pIdolDraw);
@@ -2796,8 +2795,8 @@ static inline u32 Ps2Channel(u32 value)
 // 0x006ecf8 (0x3a8 bytes)
 /* DL's DrawScreenQuad: a quad of effect texture tex (clamped when clamp is set) on the HUD pass
    from PS2 GS data: xy in 12.4 fixed point with the SCREEN_PROJECTION_MAP offset, uv in 1/8
-   texels (u low, v high), PS2 colours; the vertices go in the order 0, 1, 3, 2 */
-void DrawScreenQuad(u64 *xy, int *uv, u32 *rgba, int tex, int clamp)
+   texels (texU low, texV high), PS2 colours; the vertices go in the order 0, 1, 3, 2 */
+void DrawScreenQuad(u64 *screenXY, int *uvs, u32 *rgba, int tex, int clamp)
 {
     static const int order[4] = { 0, 1, 3, 2 };
 
@@ -2819,19 +2818,19 @@ void DrawScreenQuad(u64 *xy, int *uv, u32 *rgba, int tex, int clamp)
         Emit(HUD_Pass, HUD_SET_COLOR4UB);
         Emit(HUD_Pass, Ps2Channel(color & 0xff) | Ps2Channel((color >> 8) & 0xff) << 8 | Ps2Channel((color >> 16) & 0xff) << 16 | Ps2Channel(color >> 24) << 24);
 
-        u32 texel = uv[vertex];
-        int u = (texel >> 3) & 0x1fff;
-        int v = ((texel >> 16) >> 3) & 0x1fff;
+        u32 texel = uvs[vertex];
+        int texU = (texel >> 3) & 0x1fff;
+        int texV = ((texel >> 16) >> 3) & 0x1fff;
 
         Emit(HUD_Pass, HUD_SET_TEXCOORD2S);
-        Emit(HUD_Pass, v << 16 | u);
+        Emit(HUD_Pass, texV << 16 | texU);
 
-        u64 pos = xy[vertex];
-        int x = (int)((float)(int)((pos & 0xffff) - SCREEN_PROJECTION_MAP_X) * 0.0625f);
-        int y = (int)((float)(int)(((pos >> 16) & 0xffff) - SCREEN_PROJECTION_MAP_Y) * 0.0625f);
+        u64 pos = screenXY[vertex];
+        int posX = (int)((float)(int)((pos & 0xffff) - SCREEN_PROJECTION_MAP_X) * 0.0625f);
+        int posY = (int)((float)(int)(((pos >> 16) & 0xffff) - SCREEN_PROJECTION_MAP_Y) * 0.0625f);
 
         Emit(HUD_Pass, HUD_SET_POSITION2S);
-        Emit(HUD_Pass, (y & 0xffff) << 16 | (x & 0xffff));
+        Emit(HUD_Pass, (posY & 0xffff) << 16 | (posX & 0xffff));
     }
 
     HudEnd();
@@ -2864,51 +2863,51 @@ void DrawTextBox(int top, int bot, int left, int right, u32 color)
 
 // 0x006f7b0 (0xb0 bytes)
 /* width of s in the small font */
-int FontLenSmall(char *s, int len)
+int FontLenSmall(char *text, int len)
 {
     if (g_JapaneseMode) {
-        return FontLenWithTable(s, len, &JapaneseGlyphs);
+        return FontLenWithTable(text, len, &JapaneseGlyphs);
     }
 
-    return FontLenWithTableNoKern(s, len, &Glyphs);
+    return FontLenWithTableNoKern(text, len, &Glyphs);
 }
 
 // 0x006f860 (0xb0 bytes)
 /* width of s in the large font */
-int FontLenLarge(char *s, int len)
+int FontLenLarge(char *text, int len)
 {
     if (g_JapaneseMode) {
-        return FontLenWithTable(s, len, &JapaneseGlyphs);
+        return FontLenWithTable(text, len, &JapaneseGlyphs);
     }
 
-    return FontLenWithTableNoKern(s, len, &LargeWesternGlyphs);
+    return FontLenWithTableNoKern(text, len, &LargeWesternGlyphs);
 }
 
 // 0x006f918 (0xe4 bytes)
 /* FontLenWithTable at scale, summed in floats */
-int FontLenScaledWithTable(float scale, const char *s, int len, void *glyphs)
+int FontLenScaledWithTable(float scale, const char *text, int len, void *glyphs)
 {
-    const u8 *str = (const u8 *)s;
+    const u8 *str = (const u8 *)text;
     const FontGlyph *table = (const FontGlyph *)glyphs;
     float width = 0.0f;
 
     for (int i = 0; i != len; i++) {
-        u8 ch = str[i];
+        u8 code = str[i];
 
-        if (ch == 0) {
+        if (code == 0) {
             break;
         }
 
-        int advance = table[ch].width;
+        int advance = table[code].width;
 
         if (advance == 0) {
             continue;
         }
 
-        if (ch >= 0xbd && ch <= 0xbe) {
+        if (code >= 0xbd && code <= 0xbe) {
             u8 prev = str[i - 1];
 
-            advance = (table[prev + 0x80].width - table[prev].width) + (ch == 0xbe) + 4;
+            advance = (table[prev + 0x80].width - table[prev].width) + (code == 0xbe) + 4;
         }
 
         width = (float)advance * scale + width;
@@ -2918,183 +2917,183 @@ int FontLenScaledWithTable(float scale, const char *s, int len, void *glyphs)
 }
 
 /* FontLenScaledWithTableNoKern for a Western table, in Japanese mode FontLenScaledWithTable */
-static inline int FontLenScaledIn(float scale, const char *s, int len, void *western)
+static inline int FontLenScaledIn(float scale, const char *text, int len, void *western)
 {
     if (g_JapaneseMode) {
-        return FontLenScaledWithTable(scale, s, len, &JapaneseGlyphs);
+        return FontLenScaledWithTable(scale, text, len, &JapaneseGlyphs);
     }
 
-    return FontLenScaledWithTableNoKern(scale, (const u8 *)s, len, (const FontGlyph *)western);
+    return FontLenScaledWithTableNoKern(scale, (const u8 *)text, len, (const FontGlyph *)western);
 }
 
 // 0x006fa00 (0xc4 bytes)
-int FontLenScaled(float scale, const char *s, int len)
+int FontLenScaled(float scale, const char *text, int len)
 {
-    return FontLenScaledIn(scale, s, len, &MediumWesternGlyphs);
+    return FontLenScaledIn(scale, text, len, &MediumWesternGlyphs);
 }
 
 // 0x006fac8 (0xc4 bytes)
-int FontLenScaledSmall(float scale, const char *s, int len)
+int FontLenScaledSmall(float scale, const char *text, int len)
 {
-    return FontLenScaledIn(scale, s, len, &Glyphs);
+    return FontLenScaledIn(scale, text, len, &Glyphs);
 }
 
 // 0x006fb90 (0xc4 bytes)
-int FontLenScaledLarge(float scale, const char *s, int len)
+int FontLenScaledLarge(float scale, const char *text, int len)
 {
-    return FontLenScaledIn(scale, s, len, &LargeWesternGlyphs);
+    return FontLenScaledIn(scale, text, len, &LargeWesternGlyphs);
 }
 
 // 0x006fc54 (0xa8 bytes)
-/* str at (x, y) in the small font (effect texture 2) */
-void FontPrintSmallLeft(int x, int y, u32 color, const char *str, int len)
+/* str at (posX, posY) in the small font (effect texture 2) */
+void FontPrintSmallLeft(int posX, int posY, u32 color, const char *str, int len)
 {
     if (g_JapaneseMode) {
-        FontPrintJapanese(x, y, color, str, len, GetEffectTex(1), &JapaneseGlyphs);
+        FontPrintJapanese(posX, posY, color, str, len, GetEffectTex(1), &JapaneseGlyphs);
     }
     else {
-        FontPrint(x, y, color, str, len, GetEffectTex(2), &Glyphs);
+        FontPrint(posX, posY, color, str, len, GetEffectTex(2), &Glyphs);
     }
 }
 
 // 0x006fcfc (0xa8 bytes)
-/* str at (x, y) in the large font (effect texture 3) */
-void FontPrintLarge(int x, int y, u32 color, const char *str, int len)
+/* str at (posX, posY) in the large font (effect texture 3) */
+void FontPrintLarge(int posX, int posY, u32 color, const char *str, int len)
 {
     if (g_JapaneseMode) {
-        FontPrintJapanese(x, y, color, str, len, GetEffectTex(1), &JapaneseGlyphs);
+        FontPrintJapanese(posX, posY, color, str, len, GetEffectTex(1), &JapaneseGlyphs);
     }
     else {
-        FontPrint(x, y, color, str, len, GetEffectTex(3), &LargeWesternGlyphs);
+        FontPrint(posX, posY, color, str, len, GetEffectTex(3), &LargeWesternGlyphs);
     }
 }
 
 /* FontPrintScaledWestern with Western table western on effect texture tex, in Japanese mode
    FontPrintScaledJapanese */
-static inline void FontPrintScaledIn(float x, float y, float scale, u32 color, const char *str, int len, int tex, void *western)
+static inline void FontPrintScaledIn(float posX, float posY, float scale, u32 color, const char *str, int len, int tex, void *western)
 {
     if (g_JapaneseMode) {
-        FontPrintScaledJapanese(x, y, scale, color, (const u8 *)str, len, GetEffectTex(1), (const FontGlyph *)&JapaneseGlyphs);
+        FontPrintScaledJapanese(posX, posY, scale, color, (const u8 *)str, len, GetEffectTex(1), (const FontGlyph *)&JapaneseGlyphs);
     }
     else {
-        FontPrintScaledWestern(x, y, scale, color, (const u8 *)str, len, GetEffectTex(tex), (const FontGlyph *)western);
+        FontPrintScaledWestern(posX, posY, scale, color, (const u8 *)str, len, GetEffectTex(tex), (const FontGlyph *)western);
     }
 }
 
 // 0x006fda4 (0xa0 bytes)
-void FontPrintScaledMedium(float x, float y, float scale, u32 color, const char *str, int len)
+void FontPrintScaledMedium(float posX, float posY, float scale, u32 color, const char *str, int len)
 {
-    FontPrintScaledIn(x, y, scale, color, str, len, 1, &MediumWesternGlyphs);
+    FontPrintScaledIn(posX, posY, scale, color, str, len, 1, &MediumWesternGlyphs);
 }
 
 // 0x006fe44 (0xa0 bytes)
-void FontPrintScaledSmall(float x, float y, float scale, u32 color, const char *str, int len)
+void FontPrintScaledSmall(float posX, float posY, float scale, u32 color, const char *str, int len)
 {
-    FontPrintScaledIn(x, y, scale, color, str, len, 2, &Glyphs);
+    FontPrintScaledIn(posX, posY, scale, color, str, len, 2, &Glyphs);
 }
 
 // 0x006fee4 (0xa0 bytes)
-void FontPrintScaledLarge(float x, float y, float scale, u32 color, const char *str, int len)
+void FontPrintScaledLarge(float posX, float posY, float scale, u32 color, const char *str, int len)
 {
-    FontPrintScaledIn(x, y, scale, color, str, len, 3, &LargeWesternGlyphs);
+    FontPrintScaledIn(posX, posY, scale, color, str, len, 3, &LargeWesternGlyphs);
 }
 
 // 0x006ff88 (0x1a8 bytes)
-/* str in the medium font at scale, ending at x */
-void FontPrintRightWithScale(float scale, int x, int y, u32 color, const char *str, int len)
+/* str in the medium font at scale, ending at posX */
+void FontPrintRightWithScale(float scale, int posX, int posY, u32 color, const char *str, int len)
 {
     int width = FontLenScaled(scale, str, len);
 
-    FontPrintScaledMedium((float)(x - width), (float)y, scale, color, str, len);
+    FontPrintScaledMedium((float)(posX - width), (float)posY, scale, color, str, len);
 }
 
 // 0x0070130 (0x14c bytes)
-/* str in the medium font ending at x */
-void FontPrintMediumRight(int x, int y, u32 color, char *str, int len)
+/* str in the medium font ending at posX */
+void FontPrintMediumRight(int posX, int posY, u32 color, char *str, int len)
 {
-    FontPrintMediumLeft(x - FontLen(str, len), y, color, str, len);
+    FontPrintMediumLeft(posX - FontLen(str, len), posY, color, str, len);
 }
 
 // 0x007027c (0x14c bytes)
-/* str in the small font ending at x */
-void FontPrintSmallRight(int x, int y, u32 color, char *str, int len)
+/* str in the small font ending at posX */
+void FontPrintSmallRight(int posX, int posY, u32 color, char *str, int len)
 {
-    FontPrintSmallLeft(x - FontLenSmall(str, len), y, color, str, len);
+    FontPrintSmallLeft(posX - FontLenSmall(str, len), posY, color, str, len);
 }
 
 // 0x00703c8 (0x14c bytes)
-/* str in the large font ending at x */
-void FontPrintLargeRight(int x, int y, u32 color, char *str, int len)
+/* str in the large font ending at posX */
+void FontPrintLargeRight(int posX, int posY, u32 color, char *str, int len)
 {
-    FontPrintLarge(x - FontLenLarge(str, len), y, color, str, len);
+    FontPrintLarge(posX - FontLenLarge(str, len), posY, color, str, len);
 }
 
 // 0x0070514 (0x164 bytes)
-/* str in the medium font centred on x; returns its left edge */
-int FontPrintMediumCenter(int x, int y, u32 color, const char *str, int len)
+/* str in the medium font centred on posX; returns its left edge */
+int FontPrintMediumCenter(int posX, int posY, u32 color, const char *str, int len)
 {
-    x -= FontLen((char *)str, len) >> 1;
+    posX -= FontLen((char *)str, len) >> 1;
 
-    FontPrintMediumLeft(x, y, color, str, len);
+    FontPrintMediumLeft(posX, posY, color, str, len);
 
-    return x;
+    return posX;
 }
 
 // 0x0070680 (0x1b4 bytes)
-/* str in the medium font at scale centred on x; returns its left edge */
-int FontPrintCenterScaled(float scale, int x, int y, u32 color, const char *str, int len)
+/* str in the medium font at scale centred on posX; returns its left edge */
+int FontPrintCenterScaled(float scale, int posX, int posY, u32 color, const char *str, int len)
 {
-    x -= FontLenScaled(scale, str, len) >> 1;
+    posX -= FontLenScaled(scale, str, len) >> 1;
 
-    FontPrintScaledMedium((float)x, (float)y, scale, color, str, len);
+    FontPrintScaledMedium((float)posX, (float)posY, scale, color, str, len);
 
-    return x;
+    return posX;
 }
 
 // 0x0070834 (0x164 bytes)
-/* str in the small font centred on x; returns its left edge */
-int FontPrintSmallCenter(int x, int y, u32 color, char *str, int len)
+/* str in the small font centred on posX; returns its left edge */
+int FontPrintSmallCenter(int posX, int posY, u32 color, char *str, int len)
 {
-    x -= FontLenSmall(str, len) >> 1;
+    posX -= FontLenSmall(str, len) >> 1;
 
-    FontPrintSmallLeft(x, y, color, str, len);
+    FontPrintSmallLeft(posX, posY, color, str, len);
 
-    return x;
+    return posX;
 }
 
 // 0x0070998 (0x164 bytes)
-/* str in the large font centred on x; returns its left edge */
-int FontPrintLargeCenter(int x, int y, u32 color, char *str, int len)
+/* str in the large font centred on posX; returns its left edge */
+int FontPrintLargeCenter(int posX, int posY, u32 color, char *str, int len)
 {
-    x -= FontLenLarge(str, len) >> 1;
+    posX -= FontLenLarge(str, len) >> 1;
 
-    FontPrintLarge(x, y, color, str, len);
+    FontPrintLarge(posX, posY, color, str, len);
 
-    return x;
+    return posX;
 }
 
 // 0x0070b00 (0x1ac bytes)
-void FontPrintCenterScaledMedium(float scale, int x, int y, u32 color, const char *str, int len)
+void FontPrintCenterScaledMedium(float scale, int posX, int posY, u32 color, const char *str, int len)
 {
-    x -= FontLenScaled(scale, str, len) >> 1;
+    posX -= FontLenScaled(scale, str, len) >> 1;
 
-    FontPrintScaledMedium((float)x, (float)y, scale, color, str, len);
+    FontPrintScaledMedium((float)posX, (float)posY, scale, color, str, len);
 }
 
 // 0x0070cb0 (0x1ac bytes)
-void FontPrintCenterScaledSmall(float scale, int x, int y, u32 color, const char *str, int len)
+void FontPrintCenterScaledSmall(float scale, int posX, int posY, u32 color, const char *str, int len)
 {
-    x -= FontLenScaledSmall(scale, str, len) >> 1;
+    posX -= FontLenScaledSmall(scale, str, len) >> 1;
 
-    FontPrintScaledSmall((float)x, (float)y, scale, color, str, len);
+    FontPrintScaledSmall((float)posX, (float)posY, scale, color, str, len);
 }
 
 // 0x0070e60 (0x1ac bytes)
-void FontPrintCenterScaledLarge(float scale, int x, int y, u32 color, const char *str, int len)
+void FontPrintCenterScaledLarge(float scale, int posX, int posY, u32 color, const char *str, int len)
 {
-    x -= FontLenScaledLarge(scale, str, len) >> 1;
+    posX -= FontLenScaledLarge(scale, str, len) >> 1;
 
-    FontPrintScaledLarge((float)x, (float)y, scale, color, str, len);
+    FontPrintScaledLarge((float)posX, (float)posY, scale, color, str, len);
 }
 
 // 0x007100c (0xa8 bytes)
@@ -3422,7 +3421,7 @@ struct FastQuadVertex {
 
 // 0x0072280 (0x508 bytes)
 /* DL's FastDrawQuad: quad as a 4-vertex strip on pass passIndex with programs 5/6, transformed by
-   mtx (whose w column is set to 0, 0, 0, 1 first) or the identity; texHeaders + quad->tex0 * 0x24
+   mtx (whose width column is set to 0, 0, 0, 1 first) or the identity; texHeaders + quad->tex0 * 0x24
    is the texture, quad->clamp its sampler, quad->alpha (when set) the depth state. unused is not
    read. */
 void FastDrawQuad(QuadDef *quad, Mtx4 *mtx, int unused, void *texHeaders, int passIndex)
@@ -3441,7 +3440,7 @@ void FastDrawQuad(QuadDef *quad, Mtx4 *mtx, int unused, void *texHeaders, int pa
     idol_draw::BindFragmentProgram((uintptr_t)idol, (int)(uintptr_t)pass, 6);
 
     FastQuadVertex *vertices = (FastQuadVertex *)(uintptr_t)idol::AllocateMemAlign(FrameHeap, 0x60, 0x10);
-    float *st = &quad->st[0][0];
+    float *coords = &quad->st[0][0];
 
     for (int i = 0; i < 4; i++) {
         u32 color = quad->rgba[i];
@@ -3449,8 +3448,8 @@ void FastDrawQuad(QuadDef *quad, Mtx4 *mtx, int unused, void *texHeaders, int pa
         vertices[i].x = quad->xyzw[i].x;
         vertices[i].y = quad->xyzw[i].y;
         vertices[i].z = quad->xyzw[i].z;
-        vertices[i].s = st[i * 2];
-        vertices[i].t = st[i * 2 + 1];
+        vertices[i].s = coords[i * 2];
+        vertices[i].t = coords[i * 2 + 1];
         vertices[i].color = SwapColor(color);
     }
 
@@ -3786,9 +3785,9 @@ struct Strip2UVVertex {
 
 // 0x0073de0 (0x330 bytes)
 /* count strip vertices from separate arrays on pass passIndex: effect texture tex0 on unit 0
-   (and tex1 on unit 1 on passes 2 and 9), the identity at c[4], both coordinate sets with q as
+   (and tex1 on unit 1 on passes 2 and 9), the identity at c[4], both coordinate sets with texQ as
    their third value; drawn with depth state depth, then on passes 2 and 9 again with depth2 */
-void DrawLavaStrips(float q, int count, Vec3 *pos, u32 *colors, Vec2 *uv0, Vec2 *uv1, int tex0, int tex1, u64 depth, u64 depth2, int passIndex)
+void DrawLavaStrips(float texQ, int count, Vec3 *pos, u32 *colors, Vec2 *uv0, Vec2 *uv1, int tex0, int tex1, u64 depth, u64 depth2, int passIndex)
 {
     static const Mtx4 identity = {
         { 1.0f, 0.0f, 0.0f, 0.0f },
@@ -3815,10 +3814,10 @@ void DrawLavaStrips(float q, int count, Vec3 *pos, u32 *colors, Vec2 *uv0, Vec2 
         vertices[i].z = pos[i].z;
         vertices[i].s0 = uv0[i].x;
         vertices[i].t0 = uv0[i].y;
-        vertices[i].q0 = q;
+        vertices[i].q0 = texQ;
         vertices[i].s1 = uv1[i].x;
         vertices[i].t1 = uv1[i].y;
-        vertices[i].q1 = q;
+        vertices[i].q1 = texQ;
         vertices[i].color = SwapColor(colors[i]);
     }
 
@@ -3908,15 +3907,15 @@ void DrawMeshSet(int count, void *positions, void *colorArray, void *uvs, u32 pa
 {
     Vec3 *pos = (Vec3 *)positions;
     u32 *colors = (u32 *)colorArray;
-    Vec2 *uv = (Vec2 *)uvs;
+    Vec2 *texel = (Vec2 *)uvs;
     FastQuadVertex *vertices = (FastQuadVertex *)(uintptr_t)idol::AllocateMemAlign(FrameHeap, count * 0x18, 0x10);
 
     for (u32 i = 0; i < (u32)count; i++) {
         vertices[i].x = pos[i].x;
         vertices[i].y = pos[i].y;
         vertices[i].z = pos[i].z;
-        vertices[i].s = uv[i].x;
-        vertices[i].t = uv[i].y;
+        vertices[i].s = texel[i].x;
+        vertices[i].t = texel[i].y;
         vertices[i].color = SwapColor(colors[i]);
     }
 
@@ -3983,9 +3982,9 @@ struct FogStripVertex {
 };
 
 // 0x0074be0 (0x108 bytes)
-/* count vertices from separate arrays, q the coordinates' third value, through FastDrawStripFog
+/* count vertices from separate arrays, texQ the coordinates' third value, through FastDrawStripFog
    on pass 9 */
-void DrawOceanStrip(float q, int count, Vec3 *pos, u32 *colors, Vec2 *uv)
+void DrawOceanStrip(float texQ, int count, Vec3 *pos, u32 *colors, Vec2 *texel)
 {
     FogStripVertex *vertices = (FogStripVertex *)(uintptr_t)idol::AllocateMemAlign(FrameHeap, count * 0x1c, 0x10);
 
@@ -3993,9 +3992,9 @@ void DrawOceanStrip(float q, int count, Vec3 *pos, u32 *colors, Vec2 *uv)
         vertices[i].x = pos[i].x;
         vertices[i].y = pos[i].y;
         vertices[i].z = pos[i].z;
-        vertices[i].s = uv[i].x;
-        vertices[i].t = uv[i].y;
-        vertices[i].q = q;
+        vertices[i].s = texel[i].x;
+        vertices[i].t = texel[i].y;
+        vertices[i].q = texQ;
         vertices[i].color = SwapColor(colors[i]);
     }
 
@@ -4063,4 +4062,722 @@ void ImpactSprite_Update(void)
             FastMemSet(sprite, 0, 0x20);
         }
     }
+}
+
+/* texV's first three components scaled to length 1 (FastRSqrt) */
+static inline Vec4 Normalize3(Vec4 texV)
+{
+    float inv = 1.0f / sqrtf(texV.x * texV.x + texV.y * texV.y + texV.z * texV.z);
+    Vec4 out = { texV.x * inv, texV.y * inv, texV.z * inv, texV.w * inv };
+
+    return out;
+}
+
+/* texV turned by angle radians about the unit axis (the asm builds a quaternion of the half angle
+   and rotates with it) */
+static inline Vec4 RotateAbout(Vec4 texV, Vec4 axis, float angle)
+{
+    float cosA = cosf(angle);
+    float sinA = sinf(angle);
+    float along = (axis.x * texV.x + axis.y * texV.y + axis.z * texV.z) * (1.0f - cosA);
+    Vec4 out;
+
+    out.x = texV.x * cosA + (axis.y * texV.z - axis.z * texV.y) * sinA + axis.x * along;
+    out.y = texV.y * cosA + (axis.z * texV.x - axis.x * texV.z) * sinA + axis.y * along;
+    out.z = texV.z * cosA + (axis.x * texV.y - axis.y * texV.x) * sinA + axis.z * along;
+    out.w = 0.0f;
+
+    return out;
+}
+
+// 0x0074fa0 (0x92c bytes)
+/* Each live impact sprite as a camera-facing quad of effect texture 19 on DL_Pass (additive):
+   one unit towards the camera, (fade + 16) / 64 * scale * 0.48 across, turned by rot degrees
+   about the view axis, alpha fade over grey 0x808080. The camera's right, up and view axes are
+   the view matrix's normalised columns. The asm turns them with a vectorised quaternion of the
+   half angle; the direction of the turn here is the standard right-handed one and was not
+   traced through its permutes. */
+void ImpactSprite_Draw(void)
+{
+    IdolDraw *idol = (IdolDraw *)(uintptr_t)g_pIdolDrawBase;
+
+    idol_draw::DrawDepth(DL_Pass, idol_draw::PackCmd(0, 2, 0, 1, 0x80));
+    FUN_004d676c(DL_Pass, 0, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(19) * 0x24, 3, 3);
+
+    Mtx4 *view = &idol->viewMtx;
+    Vec4 right = { view->v0.x, view->v1.x, view->v2.x, view->v3.x };
+    Vec4 upAxis = { view->v0.y, view->v1.y, view->v2.y, view->v3.y };
+    Vec4 axis = { view->v0.z, view->v1.z, view->v2.z, view->v3.z };
+
+    right = Normalize3(right);
+    upAxis = Normalize3(upAxis);
+    axis = Normalize3(axis);
+
+    Vec4 camPos = idol->camPos;
+
+    for (int i = 0; i < 32; i++) {
+        ImpactSprite *sprite = &g_ImpactSprites[i];
+
+        if (sprite->timer <= 0) {
+            continue;
+        }
+
+        Vec4 pos = { sprite->pos.x, sprite->pos.y, sprite->pos.z, 1.0f };
+        Vec4 toCamera = { camPos.x - pos.x, camPos.y - pos.y, camPos.z - pos.z, camPos.w - pos.w };
+
+        toCamera = Normalize3(toCamera);
+        pos.x += toCamera.x;
+        pos.y += toCamera.y;
+        pos.z += toCamera.z;
+        pos.w += toCamera.w;
+
+        u32 color = (sprite->fade << 24) + 0x808080;
+        float size = (float)FastIntToDouble(sprite->fade + 16) * 0.015625f * sprite->scale * 0.48f;
+
+        if (size <= 0.0f) {
+            continue;
+        }
+
+        float angle = sprite->rot * 0.017453292f;
+        Vec4 across = RotateAbout(right, axis, angle);
+        Vec4 down = RotateAbout(upAxis, axis, angle);
+
+        QuadDef quad;
+
+        quad.clamp = 1;
+        quad.tex0 = GetEffectTex(19);
+        quad.alpha = 0;
+
+        float *coords = &quad.st[0][0];
+        static const float corners[4][2] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f } };
+
+        for (int j = 0; j < 4; j++) {
+            float texU = corners[j][0] - 0.5f;
+            float texV = corners[j][1] - 0.5f;
+
+            quad.xyzw[j].x = pos.x + across.x * size * texU + down.x * size * texV;
+            quad.xyzw[j].y = pos.y + across.y * size * texU + down.y * size * texV;
+            quad.xyzw[j].z = pos.z + across.z * size * texU + down.z * size * texV;
+            quad.xyzw[j].w = 1.0f;
+            quad.rgba[j] = color;
+            coords[j * 2] = corners[j][0];
+            coords[j * 2 + 1] = corners[j][1];
+        }
+
+        FastDrawQuad(&quad, NULL, 1, (void *)(uintptr_t)EffectTexHeaders, 9);
+    }
+
+    idol_draw::DrawDepth(DL_Pass, idol_draw::PackCmd(0, 1, 0, 1, 0x80));
+}
+
+void STUB_00077c60(...);
+void STUB_00077c64(...);
+void STUB_00077c68(...);
+void STUB_00077c6c(...);
+
+/* DrawWaterPatch_A/_B: the PS2 scratchpad double-buffered walk over a patch's chunks, every
+   transfer and VU call now an empty stub */
+static inline void WaterPatchWalk(WaterPatchList *list, int modeB)
+{
+    if (list->count == 0) {
+        return;
+    }
+
+    g_WaterSpadIndex = 1 - g_WaterSpadIndex;
+    STUB_000e9130(list->chunks[0].data, list->chunks[0].size >> 4, g_WaterSpadBufs[g_WaterSpadIndex]);
+
+    for (int i = 0; i < list->count; i++) {
+        WaterPatchChunk *chunk = &list->chunks[i];
+        u32 buf = g_WaterSpadBufs[g_WaterSpadIndex];
+        short ofsC = chunk->ofsC;
+        short ofs8 = chunk->ofs8;
+        short uvOfs = chunk->uvOfs;
+
+        STUB_000e9134();
+        g_WaterSpadIndex = 1 - g_WaterSpadIndex;
+
+        if (i + 1 < list->count) {
+            STUB_000e9130(list->chunks[i + 1].data, list->chunks[i + 1].size >> 4, g_WaterSpadBufs[g_WaterSpadIndex]);
+        }
+
+        if (modeB) {
+            STUB_00077c64(buf + ofs8, &DAT_70002000, buf + uvOfs, 0x70003000, list->chunks[i].count);
+            STUB_00077c6c(list->chunks[i].unk6, buf + ofsC, 0x70003000, &DAT_70002000);
+        }
+        else {
+            STUB_00077c60(buf + ofs8, &DAT_70002000, list->chunks[i].count);
+            STUB_00077c68(list->chunks[i].unk6, buf + ofsC, buf + uvOfs, &DAT_70002000);
+        }
+    }
+}
+
+// 0x00758cc (0x1e0 bytes)
+void DrawWaterPatch_A(WaterPatchList *list)
+{
+    WaterPatchWalk(list, 0);
+}
+
+// 0x0075aac (0x1f0 bytes)
+void DrawWaterPatch_B(WaterPatchList *list)
+{
+    WaterPatchWalk(list, 1);
+}
+
+// 0x0075cc8 (0x208 bytes)
+/* every vertex's coordinates = its saved ones in g_WaterBaseUVs plus a circle of radius 1 (in
+   4.12) going round every 16384 ticks of worldUpdateTime, plus 1 */
+void AnimateWaveUVs(WaterPatchList *list)
+{
+    if (list->count == 0) {
+        return;
+    }
+
+    float angle = (float)(int)(worldUpdateTime & 0x3fff) * 6.28f * 6.1035156e-05f - 3.14f;
+    float sinA = FastSinInline(angle);
+    float cosA = FastCosInline(angle);
+    short *base = g_WaterBaseUVs;
+
+    for (int i = 0; i < list->count; i++) {
+        WaterPatchChunk *chunk = &list->chunks[i];
+        short *texel = (short *)((u8 *)(uintptr_t)chunk->data + chunk->uvOfs);
+
+        for (int j = 0; j < chunk->count; j++) {
+            texel[0] = base[0] + (short)(int)(cosA * 4096.0f) + 0x1000;
+            texel[1] = base[1] + (short)(int)(sinA * 4096.0f) + 0x1000;
+            texel += 2;
+            base += 2;
+        }
+    }
+}
+
+// 0x0075ed0 (0xe0 bytes)
+/* every vertex's coordinates out to dst, two shorts each */
+void ____Water_CopyPatchUVs(WaterPatchList *list, short *dst)
+{
+    for (int i = 0; i < list->count; i++) {
+        WaterPatchChunk *chunk = &list->chunks[i];
+        short *texel = (short *)((u8 *)(uintptr_t)chunk->data + chunk->uvOfs);
+
+        for (int j = 0; j < chunk->count; j++) {
+            dst[0] = texel[0];
+            dst[1] = texel[1];
+            dst += 2;
+            texel += 2;
+        }
+    }
+}
+
+// 0x0075fb0 (0x34 bytes)
+void DrawWaterPatch(WaterPatchList *list)
+{
+    if (list->mode == 0) {
+        DrawWaterPatch_A(list);
+    }
+    else {
+        DrawWaterPatch_B(list);
+    }
+}
+
+// 0x0075ff0 (0x338 bytes)
+/* Builds a one-chunk patch list of a 16 by 16 grid 20 apart around (x0, y0) at height posZ into
+   data: the positions (three shorts), then per vertex either a colour (mode 0: a dim border and a
+   pattern inside) or texture coordinates 512 apart (mode 1), then the 15 by 15 quads as index
+   bytes, padded to 16 bytes. */
+void ____Water_ComputeWaveGrid(float startX, float startY, float posZ, int mode, u8 *data, WaterPatchChunk *chunk, WaterPatchList *list)
+{
+    list->mode = mode;
+    list->count = 1;
+    list->chunks = chunk;
+    chunk->data = (u32)(uintptr_t)data;
+    chunk->count = 256;
+    chunk->unk6 = 225;
+    chunk->ofs8 = 0;
+
+    short *out = (short *)data;
+
+    for (int row = 0; row < 16; row++) {
+        short posY = (int)((float)(row - 8) * 20.0f + startY);
+
+        for (int col = 0; col < 16; col++) {
+            out[0] = (int)((float)(col - 8) * 20.0f + startX);
+            out[1] = posY;
+            out[2] = (int)posZ;
+            out += 3;
+        }
+    }
+
+    chunk->uvOfs = (u8 *)out - data;
+
+    int pattern = 0;
+
+    for (int row = 0; row < 16; row++) {
+        int seed = pattern;
+
+        for (int col = 0; col < 16; col++) {
+            if (mode != 0) {
+                out[0] = (int)((float)col * 512.0f);
+                out[1] = (int)((float)row * 512.0f);
+            }
+            else if (col == 0 || row == 0 || col == 15 || row == 15) {
+                out[0] = 0x6060;
+                out[1] = (short)0x8060;
+            }
+            else {
+                short shade = seed % 80;
+
+                out[1] = shade - 0x7fd0;
+                out[0] = shade * 0x101 + 0x3030;
+            }
+
+            out += 2;
+            seed += 5;
+        }
+
+        pattern += 23;
+    }
+
+    chunk->ofsC = (u8 *)out - data;
+
+    u8 *index = (u8 *)out;
+
+    for (int row = 0; row < 15; row++) {
+        for (int col = 0; col < 15; col++) {
+            int vertex = row * 16 + col;
+
+            index[0] = vertex + 1;
+            index[1] = vertex;
+            index[2] = vertex + 0x11;
+            index[3] = vertex + 0x10;
+            index += 4;
+        }
+    }
+
+    while ((uintptr_t)index & 0xf) {
+        index += 2;
+    }
+
+    chunk->size = index - data;
+}
+
+// 0x0076328 (0x128 bytes)
+/* the water textures: tex0 and tex1 on ForwardPass's units 0 and 1, tex0 on DepthPass */
+void ____Water_SetPassTextures(int tex0, int tex1)
+{
+    FUN_004d676c(ForwardPass, 0, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(tex0) * 0x24, 1, 1);
+    FUN_004d676c(ForwardPass, 1, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(tex1) * 0x24, 1, 1);
+    FUN_004d676c(DepthPass, 0, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(tex0) * 0x24, 1, 1);
+}
+
+// 0x0076458 (0x128 bytes)
+/* the two water grids (a coloured one at height -12, the textured g_WaterPatches at 0) and the
+   textured grid's coordinates saved to g_WaterBaseUVs */
+void ____Water_InitPatches(void)
+{
+    ____Water_ComputeWaveGrid(0.0f, 0.0f, -12.0f, 0, g_WaterColorGridData, &g_WaterColorGridChunk, &g_WaterColorGrid);
+    ____Water_ComputeWaveGrid(0.0f, 0.0f, 0.0f, 1, g_WaterPatchData, &g_WaterPatchChunk, &g_WaterPatches);
+
+    ____Water_CopyPatchUVs(&g_WaterPatches, g_WaterBaseUVs);
+}
+
+/* a PS2 DMA tag for qwc quadwords of the given id into g_pPacket */
+static inline void WaterPacketTag(u8 qwc)
+{
+    g_pPacket[0] = 5;
+    g_pPacket[1] = qwc;
+    g_pPacket[2] = 0;
+    g_pPacket[3] = Gs_DmaTagByte(5, 0);
+    g_pPacket += 0x10;
+}
+
+// 0x0076580 (0x344 bytes)
+/* The water: its coordinates swirled, a grey fog from 10000 to 143360 (intensity 160 to 0) while
+   it draws, the coloured grid, then the textured one with effect textures 40..43 cycling every 50
+   ticks; the level's fog put back after. */
+void DrawWater(void)
+{
+    int frame = worldUpdateTime / 50;
+    int texA = frame % 4 + 40;
+    int texB = (frame + 1) % 4 + 40;
+
+    AnimateWaveUVs(&g_WaterPatches);
+
+    float nearDist = g_ViewContext.fogNearDist;
+    float farDist = g_ViewContext.fogFarDist;
+    float nearIntensity = g_ViewContext.fogNearIntensity;
+    float farIntensity = g_ViewContext.fogFarIntensity;
+
+    SetGSReg(10, 0x606060);
+    g_ViewContext.fogFarDist = 143360.0f;
+    g_ViewContext.fogNearDist = 10000.0f;
+    g_ViewContext.fogNearIntensity = 160.0f;
+    g_ViewContext.fogFarIntensity = 0.0f;
+    UpdateViewContext();
+    ComposeCameraMatrix();
+
+    WaterPacketTag(0x80);
+    DrawWaterPatch(&g_WaterColorGrid);
+
+    ____Water_SetPassTextures(texA, texB);
+
+    WaterPacketTag(0xd0);
+    DrawWaterPatch(&g_WaterPatches);
+
+    g_ViewContext.fogNearDist = nearDist;
+    g_ViewContext.fogFarDist = farDist;
+    g_ViewContext.fogNearIntensity = nearIntensity;
+    g_ViewContext.fogFarIntensity = farIntensity;
+    SetGSReg(10, FUN_00503024(g_ViewContext.fogR, g_ViewContext.fogG, g_ViewContext.fogB));
+    UpdateViewContext();
+    ComposeCameraMatrix();
+}
+
+/* one layer of ____Draw_EffectStrip_M401: 16 pairs of PS2 GS vertices across the screen with
+   coordinates scrolling from u0, all through the stubbed GS setters */
+static inline u64 *SkyStripLayer(u64 *out, u32 qBits, float texQ, float texLeft, float camZ, float camFar, int posZ)
+{
+    int posX = 0;
+
+    for (int i = 0; i < 16; i++) {
+        out[0] = FUN_00502f74_RET_0(0x80, 0x80, 0x80, 0x60, qBits);
+        out[1] = FUN_00503034(((float)i * 0.0625f + texLeft) * texQ, -(camZ * texQ));
+        out[2] = SCE_GS_SET_XYZ(posX + 0x7000, 0x7200, 0);
+        out[3] = FUN_00503034(((float)(i + 1) * 0.0625f + texLeft) * texQ, camFar * texQ);
+        out[4] = SCE_GS_SET_XYZ(posX + 0x7200, 0x8df0, posZ);
+        out += 5;
+        posX += 0x200;
+    }
+
+    return out;
+}
+
+// 0x00768e8 (0x748 bytes)
+/* A PS2 GS packet of three scrolling sky layers (effect texture tex), slower and nearer each,
+   offset by the camera's turn; every GS setter is a stub returning 0, so the packet is zeros
+   around its tags. unused is not read. */
+void ____Draw_EffectStrip_M401(int unused, int tex)
+{
+    float camZ = GameCamera.mtx0.v2.z + GameCamera.mtx0.v3.z;
+    float camFar = 1.0f - camZ;
+
+    SetGSReg(0x18, GetEffectTex(tex));
+    SetGSReg(0x1a, SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90));
+    SetGSReg(6, SCE_GS_SET_CLAMP(0, 1, 0, 0, 0, 0));
+    SetGSReg(3, idol_draw::PackCmd(0, 1, 0, 1, 0x80));
+
+    u8 *packet = g_pPacket;
+
+    packet[0] = 0x7d;
+    packet[1] = 0;
+    packet[2] = 0;
+    packet[3] = Gs_DmaTagByte(0x7d, 0);
+    g_pPacket += 0x10;
+
+    u64 *words = (u64 *)(packet + 0x10);
+
+    words[0] = SCE_GIF_SET_TAG(1, 0, 0, 0, 0, 3);
+    words[1] = 0xeeee;
+    words[2] = idol_draw::Blend(0, 5, 1, 0, 0, 0, 1, 2);
+    words[3] = 0x16;
+    words[4] = VU1_addGSregister(GSmem.zbuf >> 13, 1, 1);
+    words[5] = 0x21;
+    words[6] = SCE_GS_SET_PRIM(0xf, 0, 1, 0, 1, 0, 0, 0);
+    words[7] = 0xe;
+    words[8] = SCE_GIF_SET_TAG(0x30, 1, 0, 0, 1, 5);
+    words[9] = 0x42421;
+
+    float turn = -((GameCamera.rot.radius + 3.14f) * 4.0f * 0.15923566f - 4.0f);
+    u64 *out = &words[10];
+
+    out = SkyStripLayer(out, 0x3a83126f, 0.001f, (float)(int)((worldUpdateTime >> 3) & 0xff) * 0.00390625f + turn, camZ, camFar, 16000);
+    out = SkyStripLayer(out, 0x3ada740e, 0.0016666667f, ((float)(int)(((worldUpdateTime >> 4) + 0x5a) & 0xff) * 0.00390625f + 1.5f) + turn, camZ, camFar, 9600);
+    SkyStripLayer(out, 0x3b5a740e, 0.0033333334f, ((float)(int)(((worldUpdateTime >> 5) + 0xb4) & 0xff) * 0.00390625f + 3.0f) + turn, camZ, camFar, 4800);
+
+    g_pPacket += 2000;
+}
+
+// 0x0077048 (0x454 bytes)
+/* The count lava patches in view drawn with DrawLavaStrips on passes 0 and 2 (alpha test and depth
+   state off meanwhile): grey-orange colours, and both coordinate sets scrolled down over 2048
+   ticks (the second twice as fast and half a texture on). */
+void DrawsFlowingLava(float texQ, LavaPatch *patches, int count, int tex0, int tex1)
+{
+    STUB_00071170();
+    idol_draw::PackCmd(0, 1, 2, 1, 0x80);
+    idol_draw::PackCmd(0, 1, 2, 1, 0x60);
+
+    float scroll = -((float)(int)(worldUpdateTime & 0x7ff) * 0.00048828125f - 1.0f);
+    float scroll2 = scroll * 2.0f + 0.5f;
+    u32 *colors = (u32 *)g_ScratchBuf;
+    u32 seed = 0;
+
+    for (int i = 0; i < 256; i++) {
+        colors[i] = SwapColor((seed & 0xf) * 0x20200 + 0x80787070);
+        seed += 0x89;
+    }
+
+    EmitMethod(ForwardPass, CELL_GCM_NV4097_SET_ALPHA_TEST_ENABLE, 0);
+    idol_draw::DrawDepth(ForwardPass, 0);
+    EmitMethod(DepthPass, CELL_GCM_NV4097_SET_ALPHA_TEST_ENABLE, 0);
+    idol_draw::DrawDepth(DepthPass, 0);
+
+    for (int i = 0; i < count; i++) {
+        LavaPatch *patch = &patches[i];
+
+        if (FastCheckBsphereInView(256.0f, patch) == -1) {
+            continue;
+        }
+
+        for (int strip = 0; strip < patch->stripCount; strip++) {
+            int start = patch->bounds[strip];
+            int vertices = patch->bounds[strip + 1] - start;
+            Vec2 *texel = &patch->uv[start];
+            Vec2 *uv0 = (Vec2 *)(g_ScratchBuf + 0x1000);
+            Vec2 *uv1 = (Vec2 *)(g_ScratchBuf + 0x2000);
+
+            for (int j = 0; j < vertices; j++) {
+                uv1[j].x = texel[j].x;
+                uv0[j].x = texel[j].x;
+                uv0[j].y = texel[j].y + scroll;
+                uv1[j].y = texel[j].y + scroll2;
+            }
+
+            DrawLavaStrips(texQ, vertices, &patch->pos[patch->bounds[strip]], colors, uv0, uv1, tex0, tex1, 0, 0, 0);
+            DrawLavaStrips(texQ, vertices, &patch->pos[patch->bounds[strip]], colors, uv0, uv1, tex0, tex1, 0, 0, 2);
+        }
+    }
+
+    EmitMethod(ForwardPass, CELL_GCM_NV4097_SET_ALPHA_TEST_ENABLE, 1);
+    EmitMethod(DepthPass, CELL_GCM_NV4097_SET_ALPHA_TEST_ENABLE, 1);
+}
+
+// 0x00774b8 (0x318 bytes)
+/* The count patches in view through DrawTexturedStrips with their own colours, depth state
+   PackCmd(0, 1, 2, 1, 0x20): the coordinates scrolled sideways over 2048 ticks and down over 512.
+   The scrolled coordinates are written to the PS2 scratchpad addresses 0x70001000/0x70002000
+   while g_ScratchBuf + 0x1000/0x2000 are what gets drawn, as in the original. */
+void ____Draw_ScrollingTexStrips(LavaPatch *patches, int count, int tex0, int tex1)
+{
+    u64 depth = idol_draw::PackCmd(0, 1, 2, 1, 0x20);
+
+    idol_draw::PackCmd(0, 1, 2, 1, 0x20);
+    STUB_00071170();
+
+    float down = -((float)(int)(worldUpdateTime & 0x1ff) * 0.001953125f - 1.0f);
+    float down2 = down * 2.0f + 0.5f;
+    float across = -((float)(int)(worldUpdateTime & 0x7ff) * 0.00048828125f - 1.0f);
+
+    for (int i = 0; i < count; i++) {
+        LavaPatch *patch = &patches[i];
+
+        if (FastCheckBsphereInView(256.0f, patch) == -1) {
+            continue;
+        }
+
+        for (int strip = 0; strip < patch->stripCount; strip++) {
+            int start = patch->bounds[strip];
+            int vertices = patch->bounds[strip + 1] - start;
+            Vec2 *texel = &patch->uv[start];
+            Vec2 *spad0 = (Vec2 *)&DAT_70001000;
+            Vec2 *spad1 = (Vec2 *)&DAT_70002000;
+
+            for (int j = 0; j < vertices; j++) {
+                spad0[j].x = texel[j].x + across;
+                spad1[j].x = texel[j].x - across;
+                spad0[j].y = texel[j].y + down;
+                spad1[j].y = texel[j].y + down2;
+            }
+
+            DrawTexturedStrips(vertices, &patch->pos[patch->bounds[strip]], &patch->colors[patch->bounds[strip]], (Vec2 *)(g_ScratchBuf + 0x1000), (Vec2 *)(g_ScratchBuf + 0x2000), tex0, tex1, depth);
+        }
+    }
+}
+
+// 0x00777d0 (0x48c bytes)
+/* PS2 GIF packet templates at 0x71f080: tags and the GS register words (every setter a stub
+   returning 0) for the sky and lava effects */
+void ____Draw_InitGsRegPresets_777d0(void)
+{
+    DAT_0071f28c = 0x10000;
+    DAT_0071f080 = SCE_GIF_SET_TAG(1, 1, 0, 0, 0, 4);
+    DAT_0071f090 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
+    DAT_0071f0a0 = SCE_GS_SET_CLAMP(1, 1, 0, 0, 0, 0);
+    DAT_0071f0b0 = idol_draw::Blend(1, 5, 0x60, 3, 0, 0, 1, 2);
+    DAT_0071f0c0 = idol_draw::PackCmd(0, 1, 2, 1, 0x50);
+    DAT_0071f0d0 = SCE_GIF_SET_TAG(1, 1, 0, 0, 0, 4);
+    DAT_0071f0e0 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
+    DAT_0071f0f0 = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
+    DAT_0071f100 = idol_draw::Blend(0, 5, 1, 0, 0, 0, 1, 2);
+    DAT_0071f110 = idol_draw::PackCmd(0, 1, 2, 1, 0x50);
+    DAT_0071f120 = SCE_GIF_SET_TAG(1, 1, 0, 0, 0, 8);
+    DAT_0071f130 = FUN_00502f98(0, 0, 0, 0, 0, 0, 1, 2);
+    DAT_0071f140 = FUN_00502f98(0, 0, 0, 0, 0, 0, 1, 2);
+    DAT_0071f150 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
+    DAT_0071f160 = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
+    DAT_0071f170 = idol_draw::PackCmd(0, 1, 2, 1, 0x80);
+    DAT_0071f180 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
+    DAT_0071f190 = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
+    DAT_0071f1a0 = idol_draw::PackCmd(0, 1, 2, 1, 0x60);
+    DAT_0071f1b0 = SCE_GIF_SET_TAG(1, 1, 0, 0, 0, 8);
+    DAT_0071f1c0 = FUN_00502f98(0, 0, 0, 0, 0, 0, 1, 2);
+    DAT_0071f1d0 = FUN_00502f98(0, 0, 0, 0, 0, 0, 1, 2);
+    DAT_0071f1e0 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
+    DAT_0071f1f0 = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
+    DAT_0071f200 = idol_draw::PackCmd(0, 1, 2, 1, 0x20);
+    DAT_0071f210 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
+    DAT_0071f220 = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
+    DAT_0071f230 = idol_draw::PackCmd(0, 1, 2, 1, 0x20);
+}
+
+// 0x0077c60 (0x4 bytes)
+void STUB_0077c60(...)
+{
+}
+
+// 0x0077c64 (0x4 bytes)
+void STUB_0077c64(...)
+{
+}
+
+// 0x0077c68 (0x4 bytes)
+void STUB_0077c68(...)
+{
+}
+
+// 0x0077c6c (0x4 bytes)
+void STUB_0077c6c(...)
+{
+}
+// 0x0077c88 (0x410 bytes)
+/* Each of strip's four rows as a ribbon through FastDrawStripColor on pass 9: every point moved
+   0.05 down and up in posZ and transformed by mtx, texture texU stepping along and texV 0 / 1 across, in
+   the row's colour (colorA..colorB by FastLerpColor, the RGB doubled from PS2 range). */
+void DrawColorGradientStrip(GradientStrip *strip, Mtx4 *mtx)
+{
+    FastQuadVertex *vertices = (FastQuadVertex *)(uintptr_t)idol::AllocateMemAlign(FrameHeap, strip->columns * 0x30, 0x10);
+    float toEnd = 1.0f / (float)(strip->total - strip->mid);
+    float toMid = 1.0f / (float)strip->mid;
+
+    for (int row = 0; row < 4; row++) {
+        int place = strip->rowPos[row];
+        float lerp;
+
+        if (strip->mid < place) {
+            lerp = (float)(place - strip->mid) * toEnd;
+        }
+        else {
+            lerp = -((float)place * toMid - 1.0f);
+        }
+
+        u32 rgba = FastLerpColor(lerp, strip->colorA, strip->colorB);
+        u32 color = (int)Ps2Channel(rgba & 0xff) << 24 | (int)Ps2Channel((rgba >> 8) & 0xff) << 16 | (int)Ps2Channel((rgba >> 16) & 0xff) << 8;
+        float alpha = (float)(rgba >> 24) + 0.5f;
+
+        if (alpha > 255.0f) {
+            alpha = 255.0f;
+        }
+
+        color |= (int)alpha;
+
+        float texU = strip->uStart;
+        FastQuadVertex *out = vertices;
+
+        for (int col = 0; col < strip->columns; col++) {
+            Vec4 *point = &strip->points[strip->columns * row + col];
+            float zLow = point->z + -0.05f;
+            float zHigh = point->z + 0.05f;
+
+            texU += strip->uStep;
+
+            out[0].x = mtx->v0.x * point->x + mtx->v1.x * point->y + mtx->v2.x * zLow + mtx->v3.x;
+            out[0].y = mtx->v0.y * point->x + mtx->v1.y * point->y + mtx->v2.y * zLow + mtx->v3.y;
+            out[0].z = mtx->v0.z * point->x + mtx->v1.z * point->y + mtx->v2.z * zLow + mtx->v3.z;
+            out[0].s = texU;
+            out[0].t = 0.0f;
+            out[0].color = color;
+
+            out[1].x = mtx->v0.x * point->x + mtx->v1.x * point->y + mtx->v2.x * zHigh + mtx->v3.x;
+            out[1].y = mtx->v0.y * point->x + mtx->v1.y * point->y + mtx->v2.y * zHigh + mtx->v3.y;
+            out[1].z = mtx->v0.z * point->x + mtx->v1.z * point->y + mtx->v2.z * zHigh + mtx->v3.z;
+            out[1].s = texU;
+            out[1].t = 1.0f;
+            out[1].color = color;
+
+            out += 2;
+        }
+
+        FastDrawStripColor(strip->columns * 2, vertices, 9);
+        vertices = out;
+    }
+}
+
+// 0x0078098 (0x5c bytes)
+/* the frame buffer description at 0x966b40 (its own address at 0x966bc0) */
+void SetFrameBufferInfo(short width, short height, short alpha, short blue, short cosA, short infoD)
+{
+    DAT_00966b84 = alpha;
+    DAT_00966bc0 = (u32)(uintptr_t)&DAT_00966b40;
+    DAT_00966b9c = 0;
+    DAT_00966b86 = blue;
+    DAT_00966b88 = 0x12;
+    DAT_00966b94 = cosA;
+    DAT_00966b96 = infoD;
+    g_FrameBufWidth = width;
+    g_FrameBufHeight = height;
+    DAT_00966b80 = 0x12;
+    DAT_00966b90 = 0x12;
+    DAT_00966b98 = 0x24;
+}
+
+// 0x00780f4 (0x4 bytes)
+void STUB_000780f4(...)
+{
+}
+
+// 0x00780f8 (0x4 bytes)
+void STUB_000780f8(...)
+{
+}
+
+// 0x00780fc (0x4 bytes)
+void STUB_000780fc(...)
+{
+}
+
+// 0x0078100 (0x4 bytes)
+void STUB_00078100(...)
+{
+}
+
+// 0x0078104 (0x4 bytes)
+void STUB_00078104(...)
+{
+}
+
+// 0x0078108 (0x28 bytes)
+/* the aux buffer's size (1 << log2w by 1 << log2h) and the PS2 depth buffer page */
+void SetFrameBufferTexLog2Size(int log2w, int log2h, int zbuf)
+{
+    DAT_00966b92 = zbuf >> 13;
+    g_AuxWidth = 1 << log2w;
+    g_AuxHeight = 1 << log2h;
+}
+
+// 0x0078130 (0x4 bytes)
+void STUB_00078130(...)
+{
+}
+
+// 0x0078134 (0x4 bytes)
+void STUB_00078134(...)
+{
+}
+
+// 0x0078138 (0x4 bytes)
+void STUB_00078138(...)
+{
+}
+
+// 0x007813c (0x4 bytes)
+void STUB_0007813c(...)
+{
 }

@@ -127,6 +127,20 @@ struct FontGlyph {
     s8 width;
 };
 
+/* four rows of points drawn by DrawColorGradientStrip as coloured ribbons (name and layout from
+   its use) */
+struct GradientStrip {
+    int total;          /* 0x00  the gradient's length */
+    int mid;            /* 0x04  where it is colorB (colorA at 0 and at total) */
+    int *rowPos;        /* 0x08  each row's place on the gradient */
+    u32 colorA;         /* 0x0c */
+    u32 colorB;         /* 0x10 */
+    int columns;        /* 0x14 */
+    struct Vec4 *points;/* 0x18  rows * columns */
+    float uStep;        /* 0x1c */
+    float uStart;       /* 0x20 */
+};
+
 /* a short-lived spinning sprite at a hit (g_ImpactSprites, 32 of them; name invented) */
 struct ImpactSprite {
     struct Vec4 pos;    /* 0x00 */
@@ -136,6 +150,16 @@ struct ImpactSprite {
     short _pad16;
     float rot;          /* 0x18 */
     float scale;        /* 0x1c */
+};
+
+/* a flowing-lava mesh drawn by DrawsFlowingLava (name and layout from its use) */
+struct LavaPatch {
+    struct BSphere sphere;  /* 0x00 */
+    struct Vec3 *pos;       /* 0x10 */
+    struct Vec2 *uv;        /* 0x14 */
+    u32 *colors;            /* 0x18  (DrawsFlowingLava makes its own) */
+    int stripCount;         /* 0x1c */
+    short bounds[16];       /* 0x20  strip i is vertices bounds[i] to bounds[i + 1] */
 };
 
 /* a function in one of draw's registered-draw lists, called with the moby it was registered
@@ -202,13 +226,29 @@ struct ViewFogConsts {
     float fogNearIntensity;           /* 0x0c */
 };
 
+/* one chunk of a water patch: PS2 VU data copied through the scratchpad (names invented) */
+struct WaterPatchChunk {
+    u32 data;           /* 0x0  the chunk's data */
+    short count;        /* 0x4  vertices */
+    short unk6;         /* 0x6 */
+    short ofs8;         /* 0x8  offsets into the scratchpad copy */
+    short uvOfs;        /* 0xa  the vertices' texture coordinates, two shorts each */
+    short ofsC;         /* 0xc */
+    short size;         /* 0xe  bytes * 16 */
+};
+
+/* a water patch: its chunks (g_WaterPatches @0x963668) */
+struct WaterPatchList {
+    struct WaterPatchChunk *chunks;   /* 0x0 */
+    short count;                      /* 0x4 */
+    short mode;                       /* 0x6  0: DrawWaterPatch_A, else _B */
+};
+
 // ---- globals
 extern undefined4 DAT_0071eeac; /* 0x71eeac */
 extern undefined1 DAT_0071eed0; /* 0x71eed0 */
 extern undefined4 DAT_0071ef00; /* no defined data */
 extern undefined4 DAT_0071f004; /* 0x71f004 */
-extern undefined4 DAT_0071f070; /* 0x71f070 */
-extern undefined4 DAT_0071f074; /* no defined data */
 extern undefined8 DAT_0071f080; /* 0x71f080 */
 extern undefined8 DAT_0071f090; /* 0x71f090 */
 extern undefined8 DAT_0071f0a0; /* 0x71f0a0 */
@@ -238,20 +278,10 @@ extern undefined8 DAT_0071f210; /* 0x71f210 */
 extern undefined8 DAT_0071f220; /* 0x71f220 */
 extern undefined8 DAT_0071f230; /* 0x71f230 */
 extern undefined4 DAT_0071f28c; /* 0x71f28c */
-extern undefined4 DAT_00808080; /* no defined data */
 extern undefined4 DAT_0095cae0; /* 0x95cae0 */
 extern undefined4 DAT_0095ccf0; /* 0x95ccf0 */
 extern undefined4 DAT_0095cd40; /* 0x95cd40 */
 extern undefined1 DAT_0095cf20; /* 0x95cf20 */
-extern undefined4 DAT_0095ee44; /* 0x95ee44 */
-extern undefined4 DAT_0095ee48; /* 0x95ee48 */
-extern undefined2 DAT_0095ee50; /* 0x95ee50 */
-extern undefined4 DAT_0095ee58; /* 0x95ee58 */
-extern undefined2 DAT_0095f240; /* 0x95f240 */
-extern undefined2 DAT_00961656; /* 0x961656 */
-extern undefined4 DAT_00963668; /* 0x963668 */
-extern undefined2 DAT_0096366c; /* 0x96366c */
-extern undefined2 DAT_0096366e; /* 0x96366e */
 extern undefined4 DAT_00966b18; /* 0x966b18 */
 extern undefined4 DAT_00966b1c; /* 0x966b1c */
 extern undefined4 DAT_00966b20; /* 0x966b20 */
@@ -298,15 +328,6 @@ extern undefined4 WaterFogFarIntensity; /* 0x73a970 */
 extern undefined4 WaterFogNearDist; /* 0xe5aaa0 */
 extern undefined4 WaterFogNearIntensity; /* 0x73a96c */
 extern int WaterPlaneActive; /* 0xe5aa8c */
-extern undefined4 _DAT_00074eb0; /* direct read */
-extern undefined4 _DAT_00074ec0; /* direct read */
-extern undefined4 _DAT_00074ed0; /* direct read */
-extern undefined4 _DAT_00074ee0; /* direct read */
-extern undefined4 _DAT_00074f00; /* direct read */
-extern undefined4 _DAT_00074f10; /* direct read */
-extern undefined4 _DAT_00074f70; /* direct read */
-extern undefined4 _DAT_00074f80; /* direct read */
-extern undefined4 _DAT_00074f90; /* direct read */
 extern undefined4 fogNearDist; /* 0x95d198 */
 extern u32 g_AlphaPal[256]; /* 0x95ea14 */ /* type set in global_types.tsv */
 extern u32 g_AuxBufferTex[9]; /* 0x95ee1c */ /* type set in global_types.tsv */
@@ -337,7 +358,6 @@ extern int g_PreDrawCount; /* 0x95e1dc */
 extern MobyDrawFunc g_PreDrawFuncs[64]; /* 0x95dfdc */ /* type set in global_types.tsv */
 extern RENDER g_RenderFlags; /* 0x95cd44 */
 extern int g_SceneId; /* 0x95cd80 */
-extern u8 *g_ScratchBuf; /* 0x902ec8: scratch memory shared by the drawing code (water uses it as a WaterStage) */ /* type set in global_types.tsv */
 extern int g_ScreenHalfHeight; /* 0x966b0c */
 extern int g_ScreenHalfWidth; /* 0x966b08 */
 extern undefined1 g_ScreenInsertEffect; /* 0x95cf30 */
@@ -357,6 +377,15 @@ extern ViewFogConsts g_ViewFogC; /* 0x736028 */ /* type set in global_types.tsv 
 extern Vec4 g_ViewHvdfC; /* 0x736050 */ /* type set in global_types.tsv */
 extern Vec4 g_ViewIhmgScaleC; /* 0x736040 */ /* type set in global_types.tsv */
 extern Vec4 g_ViewPixelConsts; /* 0xe572d0: 2^-18, -2^-18, 0.5, xpix / (xratio * 210000) */ /* type set in global_types.tsv */
+extern short g_WaterBaseUVs[]; /* 0x95f240 */ /* type set in global_types.tsv */
+extern WaterPatchList g_WaterColorGrid; /* 0x961650 */ /* type set in global_types.tsv */
+extern WaterPatchChunk g_WaterColorGridChunk; /* 0x961640 */ /* type set in global_types.tsv */
+extern u8 g_WaterColorGridData[0x2000]; /* 0x95f640 */ /* type set in global_types.tsv */
+extern WaterPatchChunk g_WaterPatchChunk; /* 0x963658 */ /* type set in global_types.tsv */
+extern u8 g_WaterPatchData[0x2000]; /* 0x961658 */ /* type set in global_types.tsv */
+extern WaterPatchList g_WaterPatches; /* 0x963668 */ /* type set in global_types.tsv */
+extern u32 g_WaterSpadBufs[2]; /* 0x71f074 */ /* type set in global_types.tsv */
+extern u32 g_WaterSpadIndex; /* 0x71f070 */ /* type set in global_types.tsv */
 extern undefined4 g_pIdolDraw; /* 0x8fa564: the Idol renderer object (was g_viewMtxPtr); +0xc widescreen, +0x4a8 main memory base for RSX offsets, +0x4ac VRAM base */ /* type set in global_types.tsv */
 extern u32 g_pIdolDrawBase; /* 0x902e9c: the Idol renderer object as its base class (the same object as g_pIdolDraw) */ /* type set in global_types.tsv */
 
@@ -370,8 +399,8 @@ void ComposeCameraMatrix(void);
 void RebuildSharedWaveTables(void);
 void UpdateViewContext(void);
 void UpdateFog(void);
-char *ParseOcclGrid(int x, int y, int z);
-char *GetOcclGridFromPair(int x0, int y0, int z0, int x1, int y1, int z1, float interp);
+char *ParseOcclGrid(int posX, int posY, int posZ);
+char *GetOcclGridFromPair(int startX, int startY, int startZ, int endX, int endY, int endZ, float interp);
 void BuildOcclVisibility(void);
 void Occlusion_Update(void);
 void InitViewContext(void);
@@ -383,17 +412,17 @@ void UpdateOcclusion(int withOcclusion);
 void Render_DispatchJob(void);
 int GetEffectTex(int idx);
 void DrawFullScreenQuad(int rgba, void *tex);
-void Sprite_DrawShape(int x, int y, int w, int h, int u, int v, int uw, int vh, u32 color, void *tex);
-void Sprite_DrawShapeF(float x, float y, float w, float h, int u, int v, int uw, int vh, u32 color, void *tex);
-void FontPrintScaledJapanese(float x, float y, float scale, u32 color, const u8 *str, int len, int unused, const FontGlyph *table);
+void Sprite_DrawShape(int posX, int posY, int width, int height, int texU, int texV, int texW, int texH, u32 color, void *tex);
+void Sprite_DrawShapeF(float posX, float posY, float width, float height, int texU, int texV, int texW, int texH, u32 color, void *tex);
+void Sprite_DrawShapeWrapper(int posX, int posY, int width, int height, int texU, int texV, int texW, int texH, u32 color, int tex);
+void FontPrintScaledJapanese(float posX, float posY, float scale, u32 color, const u8 *str, int len, int unused, const FontGlyph *table);
 int FontLenScaledWithTableNoKern(float scale, const u8 *str, int len, const FontGlyph *table);
 void FontPrintOptJapanese(float scale, FontWindow *win, u32 color, const u8 *str, int len, int unused, const FontGlyph *table);
 void DrawSpriteFont(float sc_x, float sc_y, float sc_w, float sc_h, int tx_u, int tx_v, int tx_w, int tx_h, u64 rgba, u64 tex0);
 void DrawSpriteFont_thunk(float sc_x, float sc_y, float sc_w, float sc_h, int tx_u, int tx_v, int tx_w, int tx_h, u64 rgba, u64 tex0);
-void FontPrintScaledWestern(float x, float y, float scale, u32 color, const u8 *str, int len, u64 tex, const FontGlyph *table);
+void FontPrintScaledWestern(float posX, float posY, float scale, u32 color, const u8 *str, int len, u64 tex, const FontGlyph *table);
 void FontPrintOptWestern(float scale, FontWindow *win, u32 color, const char *text, int len, int tex, void *glyphs);
 void FontPrintMediumOpt(FontWindow *win, u32 color, const char *str, int len);
-void Sprite_DrawShapeWrapper(int x, int y, int w, int h, int u, int v, int uw, int vh, u32 color, int tex);
 void DrawRectOverlay(int top, int bot, int left, int right, int color);
 void DrawRoundedRect(short top, short bot, short left, short right, int alpha);
 void SetFontWindow(FontWindow *window, int win_top, int win_bot, int win_left, int win_right, int text_x, int text_y, int line_spacing, int flags);
@@ -401,8 +430,8 @@ int ShouldForceSubtitles(void);
 void DrawSubtitles(void);
 void UpdateLetterBox(void);
 void DrawScreenEffect(void);
-void DrawScreenOverlayTex(int r, int g, int b, int a, void *tex);
-void DrawScreenOverlay(int r, int g, int b, int a);
+void DrawScreenOverlayTex(int red, int green, int blue, int alpha, void *tex);
+void DrawScreenOverlay(int red, int green, int blue, int alpha);
 void ExecutePostDraws(void);
 void ExecuteRegisteredMobyFuncs(void);
 void ExecutePostPreDraws(void);
@@ -414,14 +443,14 @@ void SetupDefaultDrawMovie(void);
 void SetupDefaultDrawFreeze(void);
 void InitLevelRenderState(void);
 void EnableFontColors(void);
-void FontPrintJapanese(int x, int y, u32 color, const char *text, int len, int unused, void *glyphs);
-void FontPrint(int x, int y, u32 color, const char *text, int len, int tex, void *glyphs);
-void FontPrintMediumLeft(int x, int y, u32 color, const char *str, int len);
+void FontPrintJapanese(int posX, int posY, u32 color, const char *text, int len, int unused, void *glyphs);
+void FontPrint(int posX, int posY, u32 color, const char *text, int len, int tex, void *glyphs);
+void FontPrintMediumLeft(int posX, int posY, u32 color, const char *str, int len);
 void DisableFontColors(void);
-int FontLenWithTable(char *s, int len, void *glyphs);
-int FontLenWithTableNoKern(char *s, int len, void *glyphs);
-int FontLen(char *s, int len);
-void DrawFancyTextWithBox(int x, int y, int align, float scale, float alpha, char *str);
+int FontLenWithTable(char *text, int len, void *glyphs);
+int FontLenWithTableNoKern(char *text, int len, void *glyphs);
+int FontLen(char *text, int len);
+void DrawFancyTextWithBox(int posX, int posY, int align, float scale, float alpha, char *str);
 void DrawTimedHelpMsg(TimedHelpMsg *msg, int frame);
 void DrawCredits(void);
 void STUB_0006d704(...);
@@ -436,31 +465,31 @@ void FadeToBlack(int frames);
 void Draw_FlushAndPresent(void);
 void DrawRenderTargetToScreen(void);
 void STUB_0006e71c(...);
-void Sprite_DrawRotated(float x, float y, float w, float h, float angle, float pivotX, float pivotY, int tw, int th, int tex, int unused, u32 color, int flipU, int flipV, int perEye);
-void DrawScreenQuad(u64 *xy, int *uv, u32 *rgba, int tex, int clamp);
+void Sprite_DrawRotated(float posX, float posY, float width, float height, float angle, float pivotX, float pivotY, int texWidth, int texHeight, int tex, int unused, u32 color, int flipU, int flipV, int perEye);
+void DrawScreenQuad(u64 *screenXY, int *uvs, u32 *rgba, int tex, int clamp);
 void DrawTextBox(int top, int bot, int left, int right, u32 color);
-int FontLenSmall(char *s, int len);
-int FontLenLarge(char *s, int len);
-int FontLenScaledWithTable(float scale, const char *s, int len, void *glyphs);
-int FontLenScaled(float scale, const char *s, int len);
-int FontLenScaledSmall(float scale, const char *s, int len);
-int FontLenScaledLarge(float scale, const char *s, int len);
-void FontPrintSmallLeft(int x, int y, u32 color, const char *str, int len);
-void FontPrintLarge(int x, int y, u32 color, const char *str, int len);
-void FontPrintScaledMedium(float x, float y, float scale, u32 color, const char *str, int len);
-void FontPrintScaledSmall(float x, float y, float scale, u32 color, const char *str, int len);
-void FontPrintScaledLarge(float x, float y, float scale, u32 color, const char *str, int len);
-void FontPrintRightWithScale(float scale, int x, int y, u32 color, const char *str, int len);
-void FontPrintMediumRight(int x, int y, u32 color, char *str, int len);
-void FontPrintSmallRight(int x, int y, u32 color, char *str, int len);
-void FontPrintLargeRight(int x, int y, u32 color, char *str, int len);
-int FontPrintMediumCenter(int x, int y, u32 color, const char *str, int len);
-int FontPrintCenterScaled(float scale, int x, int y, u32 color, const char *str, int len);
-int FontPrintSmallCenter(int x, int y, u32 color, char *str, int len);
-int FontPrintLargeCenter(int x, int y, u32 color, char *str, int len);
-void FontPrintCenterScaledMedium(float scale, int x, int y, u32 color, const char *str, int len);
-void FontPrintCenterScaledSmall(float scale, int x, int y, u32 color, const char *str, int len);
-void FontPrintCenterScaledLarge(float scale, int x, int y, u32 color, const char *str, int len);
+int FontLenSmall(char *text, int len);
+int FontLenLarge(char *text, int len);
+int FontLenScaledWithTable(float scale, const char *text, int len, void *glyphs);
+int FontLenScaled(float scale, const char *text, int len);
+int FontLenScaledSmall(float scale, const char *text, int len);
+int FontLenScaledLarge(float scale, const char *text, int len);
+void FontPrintSmallLeft(int posX, int posY, u32 color, const char *str, int len);
+void FontPrintLarge(int posX, int posY, u32 color, const char *str, int len);
+void FontPrintScaledMedium(float posX, float posY, float scale, u32 color, const char *str, int len);
+void FontPrintScaledSmall(float posX, float posY, float scale, u32 color, const char *str, int len);
+void FontPrintScaledLarge(float posX, float posY, float scale, u32 color, const char *str, int len);
+void FontPrintRightWithScale(float scale, int posX, int posY, u32 color, const char *str, int len);
+void FontPrintMediumRight(int posX, int posY, u32 color, char *str, int len);
+void FontPrintSmallRight(int posX, int posY, u32 color, char *str, int len);
+void FontPrintLargeRight(int posX, int posY, u32 color, char *str, int len);
+int FontPrintMediumCenter(int posX, int posY, u32 color, const char *str, int len);
+int FontPrintCenterScaled(float scale, int posX, int posY, u32 color, const char *str, int len);
+int FontPrintSmallCenter(int posX, int posY, u32 color, char *str, int len);
+int FontPrintLargeCenter(int posX, int posY, u32 color, char *str, int len);
+void FontPrintCenterScaledMedium(float scale, int posX, int posY, u32 color, const char *str, int len);
+void FontPrintCenterScaledSmall(float scale, int posX, int posY, u32 color, const char *str, int len);
+void FontPrintCenterScaledLarge(float scale, int posX, int posY, u32 color, const char *str, int len);
 void FontPrintOpt(float scale, FontWindow *win, u32 color, const char *str, int len);
 void FontPrintOptLarge(FontWindow *win, u32 color, const char *str, int len);
 void STUB_0007116c(...);
@@ -485,43 +514,43 @@ void FastDrawStrip_Pass(int count, void *vertices, int passIndex);
 void DrawTexturedStrips(int count, Vec3 *pos, u32 *colors, Vec2 *uv0, Vec2 *uv1, int baseTex, int detailTex, u64 depth);
 void FastDrawStrip2UV_Pass(int count, void *vertices, int passIndex);
 void FastDrawStrip2UV_PassNoState(int count, void *vertices, int passIndex);
-void DrawLavaStrips(float q, int count, Vec3 *pos, u32 *colors, Vec2 *uv0, Vec2 *uv1, int tex0, int tex1, u64 depth, u64 depth2, int passIndex);
+void DrawLavaStrips(float texQ, int count, Vec3 *pos, u32 *colors, Vec2 *uv0, Vec2 *uv1, int tex0, int tex1, u64 depth, u64 depth2, int passIndex);
 void FastDrawStripColor(int count, void *vertices, int passIndex);
 bool ____Draw_IsFlagMode2(u64 alpha);
 int ____Draw_IsBlendModeMatch(u64 alpha);
 void DrawMeshSet(int count, void *positions, void *colorArray, void *uvs, u32 passes);
 void FastDrawStripFog(int count, void *vertices, int passIndex);
-void DrawOceanStrip(float q, int count, Vec3 *pos, u32 *colors, Vec2 *uv);
+void DrawOceanStrip(float texQ, int count, Vec3 *pos, u32 *colors, Vec2 *texel);
 void STUB_00074ce8(...);
 void STUB_00074cec(...);
 int ImpactSprite_Add(float scale, Vec4 pos, short tex);
 void ImpactSprite_Update(void);
 void ImpactSprite_Draw(void);
-void DrawWaterPatch_A(int *param_1);
-void DrawWaterPatch_B(int *param_1);
-void AnimateWaveUVs(int *param_1);
-void ____Water_CopyPatchUVs(int *param_1,undefined2 *param_2);
-void DrawWaterPatch(int param_1);
-void ____Water_ComputeWaveGrid(double param_1,double param_2,double param_3);
-void ____Water_SetPassTextures(undefined8 param_1,undefined8 param_2);
+void DrawWaterPatch_A(WaterPatchList *list);
+void DrawWaterPatch_B(WaterPatchList *list);
+void AnimateWaveUVs(WaterPatchList *list);
+void ____Water_CopyPatchUVs(WaterPatchList *list, short *dst);
+void DrawWaterPatch(WaterPatchList *list);
+void ____Water_ComputeWaveGrid(float startX, float startY, float posZ, int mode, u8 *data, WaterPatchChunk *chunk, WaterPatchList *list);
+void ____Water_SetPassTextures(int tex0, int tex1);
 void ____Water_InitPatches(void);
 void DrawWater(void);
-void ____Draw_EffectStrip_M401(undefined8 param_1,undefined8 param_2);
-void DrawsFlowingLava (undefined8 param_1,int param_2,int param_3,undefined8 param_4,undefined8 param_5);
-void ____Draw_ScrollingTexStrips (int param_1,int param_2,undefined8 param_3,undefined8 param_4);
+void ____Draw_EffectStrip_M401(int unused, int tex);
+void DrawsFlowingLava(float texQ, LavaPatch *patches, int count, int tex0, int tex1);
+void ____Draw_ScrollingTexStrips(LavaPatch *patches, int count, int tex0, int tex1);
 void ____Draw_InitGsRegPresets_777d0(void);
-void STUB_00077c60(...);
-void STUB_00077c64(...);
-void STUB_00077c68(...);
-void STUB_00077c6c(...);
-void DrawColorGradientStrip(int *param_1,float *param_2);
-void SetFrameBufferInfo (short param_1,short param_2,undefined2 param_3,undefined2 param_4,undefined2 param_5 ,undefined2 param_6);
+void STUB_0077c60(...);
+void STUB_0077c64(...);
+void STUB_0077c68(...);
+void STUB_0077c6c(...);
+void DrawColorGradientStrip(GradientStrip *strip, Mtx4 *mtx);
+void SetFrameBufferInfo(short width, short height, short alpha, short blue, short cosA, short infoD);
 void STUB_000780f4(...);
 void STUB_000780f8(...);
 void STUB_000780fc(...);
 void STUB_00078100(...);
 void STUB_00078104(...);
-void SetFrameBufferTexLog2Size(int log2w,int log2h,int zbuf);
+void SetFrameBufferTexLog2Size(int log2w, int log2h, int zbuf);
 void STUB_00078130(...);
 void STUB_00078134(...);
 void STUB_00078138(...);

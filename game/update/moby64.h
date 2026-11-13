@@ -4,6 +4,7 @@
 
 // ---- globals
 extern undefined4 DAT_004482e0; /* 0x4482e0 */
+extern undefined4 DAT_00808080; /* no defined data */
 extern undefined4 DAT_0085a788; /* 0x85a788 */
 extern undefined4 DAT_0085a7f8; /* 0x85a7f8 */
 

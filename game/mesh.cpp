@@ -12,6 +12,7 @@
 #include "game/camera.h"
 #include "game/draw.h"
 #include "game/mobyfunc.h"
+#include "game/pause.h"
 #include "game/water.h"
 #include "idol/fastfunc.h"
 

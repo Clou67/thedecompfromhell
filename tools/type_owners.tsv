@@ -121,3 +121,6 @@ ScreenVBEffect	game/draw
 ScreenInsertEffect	game/draw
 TimedHelpMsg	game/draw
 ImpactSprite	game/draw
+WaterPatchList	game/draw
+LavaPatch	game/draw
+GradientStrip	game/draw

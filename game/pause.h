@@ -439,6 +439,7 @@ extern undefined4 g_MenuScreen; /* 0xa52bb0 */
 extern int g_MoviePlayState; /* 0x969cd4 */
 extern undefined4 g_NpcBuffer; /* 0xa10918 */
 extern int g_SaveCurFile; /* 0x71fa38: the save list entry selected */ /* type set in global_types.tsv */
+extern u8 *g_ScratchBuf; /* 0x902ec8: scratch memory shared by the drawing code (water uses it as a WaterStage) */ /* type set in global_types.tsv */
 extern undefined4 g_SelectedLevel; /* 0xa206e4 */
 extern char g_SkillPoints[32]; /* 0x96c08c */
 extern undefined4 g_currentMenuPage; /* 0xa52bb4 */
