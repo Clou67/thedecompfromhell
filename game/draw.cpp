@@ -27,6 +27,7 @@
 #include "game/skyfunc.h"
 #include "game/space.h"
 #include "game/update.h"
+#include "game/vendor.h"
 #include "game/vuchain.h"
 #include "game/water.h"
 #include "idol/fastfunc.h"

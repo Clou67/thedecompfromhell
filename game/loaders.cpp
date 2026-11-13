@@ -38,6 +38,7 @@
 #include "game/space.h"
 #include "game/tieproc.h"
 #include "game/update.h"
+#include "game/vendor.h"
 #include "game/vuchain.h"
 #include "idol/fastfunc.h"
 #include "idol/idol.h"

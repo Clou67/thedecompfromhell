@@ -1019,7 +1019,7 @@ errors	file
 4	game/update/sound4.cpp
 1	game/update/sound5.cpp
 0	game/update/sound6.cpp
-497	game/vendor.cpp
+348	game/vendor.cpp
 53	game/vuchain.cpp
 0	game/walk.cpp
 0	game/water.cpp

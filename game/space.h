@@ -25,6 +25,7 @@ extern undefined4 DAT_00a1be80; /* no defined data */
 extern undefined4 DAT_00a1bec0; /* no defined data */
 extern undefined8 DAT_00a561c8; /* 0xa561c8 */
 extern undefined8 DAT_00a561d0; /* 0xa561d0 */
+extern undefined4 DAT_00e5aa64; /* 0xe5aa64 */
 extern pointer32 PTR_UpdateMoby_Spaceship_00707c58; /* 0x707c58 */
 extern float SceneScreenFade; /* 0x95cf10 */
 extern Planets VisitedPlanets; /* 0x96ca20 */

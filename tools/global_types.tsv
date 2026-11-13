@@ -487,3 +487,27 @@ g_WaterColorGrid	WaterPatchList NAME /* 0x961650 */
 g_WaterPatchData	u8 NAME[0x2000] /* 0x961658 */
 g_WaterPatchChunk	WaterPatchChunk NAME /* 0x963658 */
 g_MobyDrawCount	int NAME /* 0x95dfd8 */
+g_VendorItems	VendorItem NAME[16] /* 0xe5a720 */
+g_VendorItemsCnt	int NAME /* 0xe5a820 */
+g_VendorMoby	MobyInstance *NAME /* 0xe5a66c */
+g_VendorBuf	u8 *NAME /* 0xe5a660: the vendor's load buffer (g_NpcBuffer) */
+g_VendorBufEnd	u8 *NAME /* 0xe5a664 */
+g_VendorLanguage	int NAME /* 0xe5a688 */
+g_VendorAmmoHud	int NAME /* 0xe5a6a0: HUD entry of the selected item's ammo, -1 = none */
+g_VendorBoltHud	int NAME /* 0xe5a6a4 */
+g_VendorSelected	int NAME /* 0xe5a6a8: index in g_VendorItems */
+g_VendorCamPos	Vec4 NAME /* 0xe5a6b0 */
+g_VendorCamRot	Vec4 NAME /* 0xe5a6c0 */
+g_VendorManips	Manipulator NAME[4] /* 0xe5a840: on joints 20..23 of the vendor moby */
+g_VendorSavedIdol1a78	int NAME /* 0xe5a830: IdolDraw.unk1a78, zeroed while the vendor is open */
+g_VendorCamOffset	Vec4 NAME /* 0x738840: the camera's place in the vendor moby's space */
+g_VendorLightDir	Vec4 NAME /* 0x7388b0 */
+g_VendorLightColor	Vec4 NAME /* 0x7388c0 */
+DirectionalLights	DirectionalLight NAME[16] /* 0xa1db00 */
+g_VendorHeroOffset	Vec4 NAME /* 0x738850: where the hero is put back, in the vendor moby's space */
+g_VendorCutsceneOffset	Vec4 NAME /* 0x73a2e0: where the weapon cutscene plays, in the vendor moby's space */
+g_VendorCutscenePos	Vec4 NAME /* 0xe5a710 */
+g_VendorCutsceneRot	Vec4 NAME /* 0xe5a700 */
+g_VendorCutsceneMtx	float NAME[12] /* 0xe5a6d0: from g_VendorCutsceneRot */
+g_VendorBoughtItem	int NAME /* 0xe5a698: the item whose cutscene plays, -1 = none */
+g_WeaponCutscenes	int NAME[] /* 0x73a240: the weapon cutscene of each item */

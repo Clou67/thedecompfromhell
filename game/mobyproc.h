@@ -1,9 +1,9 @@
 #pragma once
 // game/mobyproc.h
 #include "types.h"
-#include "game/camera.h"
 #include "game/mobyfunc.h"
 #include "game/path.h"
+#include "game/vendor.h"
 
 // ---- types
 struct Blender {
@@ -40,7 +40,7 @@ extern undefined4 DAT_00a4fb80; /* 0xa4fb80 */
 extern undefined4 DAT_00a4fb84; /* 0xa4fb84 */
 extern undefined4 DAT_00a4fb88; /* 0xa4fb88 */
 extern undefined4 DAT_00a4fb8c; /* 0xa4fb8c */
-extern DirectionalLight DirectionalLights[12]; /* 0xa1db00 */
+extern DirectionalLight DirectionalLights[16]; /* 0xa1db00 */ /* type set in global_types.tsv */
 extern undefined4 MobyGridAlloc; /* 0xa49120 */
 extern undefined4 _DAT_000f3fc0; /* direct read */
 extern undefined4 _DAT_000f5ad0; /* direct read */

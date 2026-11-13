@@ -123,13 +123,6 @@ struct Cylinder {
     struct Vec4 rot;
 };
 
-struct DirectionalLight {
-    struct Vec4 color1;
-    struct Vec4 direction1;
-    struct Vec4 color2;
-    struct Vec4 direction2;
-};
-
 /* GameCamera's per-frame hero tracking and screen fade state (DL's CameraStatics up to fadeTimer;
    RC1 then tracks the moby the hero stands on) */
 struct CameraStatics {
