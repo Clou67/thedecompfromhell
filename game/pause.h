@@ -184,8 +184,6 @@ extern undefined4 DAT_007381a4; /* no defined data */
 extern undefined4 DAT_00902ed8; /* 0x902ed8 */
 extern undefined2 DAT_0096459a; /* 0x96459a */
 extern undefined4 DAT_00966af0; /* 0x966af0 */
-extern undefined2 DAT_00966b8c; /* 0x966b8c */
-extern undefined2 DAT_00966b8e; /* 0x966b8e */
 extern undefined1 DAT_0096bcd6; /* 0x96bcd6 */
 extern undefined1 DAT_0096bcd7; /* 0x96bcd7 */
 extern undefined1 DAT_0096c080; /* 0x96c080 */
@@ -424,6 +422,8 @@ extern pointer PTR_UpdateMoby_1138_00708f30; /* 0x708f30 */
 extern pointer32 PTR_WeaponView_MobyUpdate_00707708; /* 0x707708 */
 extern PlanetsPage g_PlanetsPage[19]; /* 0x7352b0 */
 extern uint UINT_ARRAY_0096c1dc[2]; /* 0x96c1dc */
+extern short g_AuxHeight; /* 0x966b8e */ /* type set in global_types.tsv */
+extern short g_AuxWidth; /* 0x966b8c */ /* type set in global_types.tsv */
 extern undefined4 g_BackpackMobyClass; /* 0x72105c */
 extern int g_CardErrorSeen; /* 0xa20884 */ /* type set in global_types.tsv */
 extern undefined4 g_ChallengeMode; /* 0x96c9fc */

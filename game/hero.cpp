@@ -16,7 +16,6 @@
 #include "game/loaders.h"
 #include "game/main.h"
 #include "game/map.h"
-#include "game/mesh.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"

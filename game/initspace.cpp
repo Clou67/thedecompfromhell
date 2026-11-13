@@ -88,25 +88,25 @@ void DrawSceneShipEffect(MobyInstance *moby)
     SetVert(&q.xyzw[1], 1.0f, y0, z0 - TRAIL_HALFWIDTH);
     SetVert(&q.xyzw[2], 0.0f, 0.0f, 0.0f);
     SetVert(&q.xyzw[3], 1.0f, y0, z0 + TRAIL_HALFWIDTH);
-    FastDrawQuad((undefined4 *)&q, (uint)&m, 1, EffectTexHeaders, 9);
+    FastDrawQuad(&q, &m, 1, (void *)(uintptr_t)EffectTexHeaders, 9);
     Spread(&q, 1, 2, 2);
-    FastDrawQuad((undefined4 *)&q, (uint)&m, 1, EffectTexHeaders, 9);
+    FastDrawQuad(&q, &m, 1, (void *)(uintptr_t)EffectTexHeaders, 9);
 
     SetVert(&q.xyzw[0], 1.0f, y0, z0 - TRAIL_HALFWIDTH);
     SetVert(&q.xyzw[1], 2.0f, y2, z2 - TRAIL_HALFWIDTH);
     SetVert(&q.xyzw[2], 1.0f, y0, z0 + TRAIL_HALFWIDTH);
     SetVert(&q.xyzw[3], 2.0f, y2, z2 + TRAIL_HALFWIDTH);
-    FastDrawQuad((undefined4 *)&q, (uint)&m, 1, EffectTexHeaders, 9);
+    FastDrawQuad(&q, &m, 1, (void *)(uintptr_t)EffectTexHeaders, 9);
     Spread(&q, 0, 1, 2);
-    FastDrawQuad((undefined4 *)&q, (uint)&m, 1, EffectTexHeaders, 9);
+    FastDrawQuad(&q, &m, 1, (void *)(uintptr_t)EffectTexHeaders, 9);
 
     SetVert(&q.xyzw[0], 2.0f, y2, z2 - TRAIL_HALFWIDTH);
     SetVert(&q.xyzw[1], 3.0f, 0.0f, 0.0f);
     SetVert(&q.xyzw[2], 2.0f, y2, z2 + TRAIL_HALFWIDTH);
     SetVert(&q.xyzw[3], 3.0f, 0.0f, 0.0f);
-    FastDrawQuad((undefined4 *)&q, (uint)&m, 1, EffectTexHeaders, 9);
+    FastDrawQuad(&q, &m, 1, (void *)(uintptr_t)EffectTexHeaders, 9);
     Spread(&q, 0, 2, 2);
-    FastDrawQuad((undefined4 *)&q, (uint)&m, 1, EffectTexHeaders, 9);
+    FastDrawQuad(&q, &m, 1, (void *)(uintptr_t)EffectTexHeaders, 9);
 }
 
 // 0x00d9bf8 (0x2d0 bytes)

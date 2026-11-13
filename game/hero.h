@@ -78,7 +78,6 @@ extern undefined4 DAT_0009b8b0; /* 0x9b8b0 */
 extern undefined4 DAT_0009ba80; /* 0x9ba80 */
 extern undefined4 DAT_0009bee8; /* 0x9bee8 */
 extern undefined4 DAT_000a52dc; /* 0xa52dc */
-extern undefined1 DAT_0071eed0; /* 0x71eed0 */
 extern undefined4 DAT_0071f40c; /* 0x71f40c */
 extern undefined4 DAT_0071fb24; /* 0x71fb24 */
 extern undefined4 DAT_00720000; /* no defined data */

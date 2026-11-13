@@ -4,6 +4,7 @@
 #include "game/debug.h"
 
 // ---- globals
+extern undefined4 DAT_00080a00; /* 0x80a00 */
 extern undefined4 DAT_00101010; /* 0x101010 */
 extern undefined4 DAT_0016fc04; /* 0x16fc04 */
 extern undefined4 DAT_00172c20; /* 0x172c20 */

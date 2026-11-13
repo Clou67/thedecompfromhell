@@ -32,6 +32,7 @@
 #include "idol/fastfunc.h"
 #include "idol/idol.h"
 #include "idol/mUnk.h"
+#include "idol/tiefunc.h"
 #include "sdk/libc/abort.h"
 #include "sdk/mUnk4.h"
 #include "sdk/sce.h"
@@ -3124,8 +3125,8 @@ void Vendor_SetupScreenRender(double param_1,uint param_2,uint param_3)
     *pRVar21->command = *pRVar33;
     pRVar21->command = pRVar21->command + 1;
   } while (iVar32 != 0);
-  DAT_00966b8c = (short)width;
-  DAT_00966b8e = (short)height;
+  g_AuxWidth = (short)width;
+  g_AuxHeight = (short)height;
   piVar22[0x8b6] = piVar22[0x8b6] + 1;
   memset(uVar27 - 0xb8,0,0x3c);
   *(undefined1 *)((int)puVar15 + 0x23a) = 8;
@@ -3384,7 +3385,7 @@ void Vendor_SetupScreenRender(double param_1,uint param_2,uint param_3)
 void Vendor_ResetHUDPass(void)
 
 {
-  ResetHUDPass();
+  EndAuxDrawMode();
   return;
 }
 
@@ -3648,7 +3649,7 @@ void Vendor_HudUpdate(MobyInstance *moby)
       STUB_0007813c(0xe2,0,0xe6,0x40,0x200,0x80,0);
     }
     Vendor_DrawFlickerText((double)local_e0,(double)local_dc,uVar11);
-    ResetHUDPass();
+    EndAuxDrawMode();
     uVar25 = idol_draw::PackCmd(0,1,2,1,0xff);
     SetGSReg(3,uVar25);
     uVar25 = SCE_GS_SET_CLAMP(1,1,0,0,0,0);
@@ -3883,7 +3884,7 @@ void Vendor_DrawScreen(undefined8 param_1)
   idol_draw::DrawDepth(pRVar15,uVar16);
   Vendor_DrawItemInfo(param_1,local_80,local_7c);
   Vendor_DrawFlickerText((double)(longlong)(int)local_80,(double)(longlong)(int)local_7c,6);
-  ResetHUDPass();
+  EndAuxDrawMode();
   STUB_00078138(0x200,0x200);
   pRVar15 = HUD_Pass;
   uVar16 = idol_draw::PackCmd(0,1,2,1,0xff);

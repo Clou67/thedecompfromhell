@@ -1,7 +1,7 @@
 #pragma once
 // game/water.h
 #include "types.h"
-#include "game/mesh.h"
+#include "game/draw.h"
 
 // ---- types
 struct OceanPlane {

@@ -4,7 +4,6 @@
 #include "game/update/moby1418.h"
 #include "game/collproc.h"
 #include "game/draw.h"
-#include "game/mesh.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/water.h"

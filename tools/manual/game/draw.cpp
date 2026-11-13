@@ -2518,7 +2518,7 @@ void DrawLameShadows(void)
             quad.xyzw[i].y = (offsetY - along * normalY) * size + quad.xyzw[i].y;
         }
 
-        FastDrawQuad((undefined4 *)&quad, 0, 0, (longlong)EffectTexHeaders, 9);
+        FastDrawQuad(&quad, NULL, 0, (void *)(uintptr_t)EffectTexHeaders, 9);
     }
 }
 
@@ -3129,4 +3129,938 @@ void STUB_0007116c(...)
 // 0x0071170 (0x4 bytes)
 void STUB_00071170(...)
 {
+}
+
+// 0x0071180 (0x940 bytes)
+/* DL's BeginAuxDrawMode: points the HUD pass at the aux buffer, a (1 << log2Width) by
+   (1 << log2Height) surface at the renderer's auxBuffer with its depth after it, and sets the
+   screen globals, the view context (xratio, near 32, far and fog 524288) and viewport to match;
+   clears it to clearColor. g_AuxBufferTex describes the result as a texture. flag is not read. */
+void BeginAuxDrawMode(float xratio, int log2Width, int log2Height, int flag, u32 clearColor)
+{
+    int width = 1 << log2Width;
+    int height = 1 << log2Height;
+
+    g_ScreenWidth = width;
+    g_ScreenHeight = height;
+    g_ScreenHalfWidth = width >> 1;
+    g_ScreenHalfHeight = height >> 1;
+    SCREEN_PROJECTION_MAP_X = (2048 - g_ScreenHalfWidth) << 4;
+    SCREEN_PROJECTION_MAP_Y = (2048 - g_ScreenHalfHeight) << 4;
+    DAT_00966b18 = (g_ScreenHalfWidth << 4) + 0x8000;
+    DAT_00966b1c = (g_ScreenHalfHeight << 4) + 0x8000;
+
+    g_ViewContext.fovScale = 1.0f;
+    g_ViewContext.nearClip = 32.0f;
+    g_ViewContext.farClip = 524288.0f;
+    g_ViewContext.xratio = xratio;
+    g_ViewContext.xpix = (float)FastIntToDouble(width) * 0.5f;
+    g_ViewContext.ypix = (float)FastIntToDouble(height) * 0.5f;
+    g_ViewContext.fogNearDist = 0.0f;
+    g_ViewContext.fogFarDist = 524288.0f;
+    g_ViewContext.fogNearIntensity = 255.0f;
+    g_ViewContext.fogFarIntensity = 0.0f;
+    g_ViewContext.xclip = g_ViewContext.xpix * 4.0f;
+    g_ViewContext.yclip = g_ViewContext.ypix * 4.0f;
+
+    UpdateViewContext();
+    UploadViewMatricesToPasses();
+
+    IdolDraw *idol = Idol();
+
+    g_AuxWidth = width;
+    g_AuxHeight = height;
+    idol->auxDepth++;
+
+    IdolSurface surface;
+
+    memset(&surface, 0, sizeof(surface));
+    surface.type = CELL_GCM_SURFACE_PITCH;
+    surface.colorFormat = CELL_GCM_SURFACE_A8R8G8B8;
+    surface.colorTarget = CELL_GCM_SURFACE_TARGET_0;
+    surface.colorOffset[0] = idol->auxBuffer - idol->vramBase;
+    surface.colorPitch[0] = width * 4;
+
+    for (int i = 1; i < 4; i++) {
+        surface.colorLocation[i] = 0;
+        surface.colorOffset[i] = 0;
+        surface.colorPitch[i] = 64;
+    }
+
+    surface.depthFormat = CELL_GCM_SURFACE_Z24S8;
+    surface.depthOffset = idol->auxBuffer + height * width * 4 - idol->vramBase;
+    surface.depthPitch = width * 4;
+    surface.width = width;
+    surface.height = height;
+
+    /* the buffer as an effect texture header */
+    g_AuxBufferTex[0] = surface.colorOffset[0];
+    g_AuxBufferTex[1] = 0x1a529;
+    g_AuxBufferTex[2] = 0x30303;
+    g_AuxBufferTex[3] = 0x80010000;
+    g_AuxBufferTex[4] = 0xaae4;
+    g_AuxBufferTex[5] = 0x2062000;
+    g_AuxBufferTex[6] = width << 16 | height;
+    g_AuxBufferTex[7] = (width * 4) | 1 << 20;
+    ((u8 *)g_AuxBufferTex)[32] = 0;
+    ((u8 *)g_AuxBufferTex)[33] = 0xff;
+
+    EmitSetSurface(HUD_Pass, &surface);
+
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_SET_COLOR_CLEAR_VALUE, clearColor);
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_SET_ZSTENCIL_CLEAR_VALUE, 0xffffff00);
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_SET_DEPTH_MASK, 1);
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_SET_DEPTH_TEST_ENABLE, 1);
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_SET_BLEND_ENABLE, 1);
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_INVALIDATE_L2, 1);
+
+    float halfWidth = (float)width * 0.5f;
+    float halfHeight = (float)height * 0.5f;
+    float screen[4] = { halfWidth, halfHeight, halfWidth, -halfHeight };
+
+    EmitVertexConstVec(HUD_Pass, 18, screen);
+
+    Emit(HUD_Pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_VIEWPORT_HORIZONTAL, 2));
+    Emit(HUD_Pass, width << 16);
+    Emit(HUD_Pass, height << 16);
+    Emit(HUD_Pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_CLIP_MIN, 2));
+    EmitF(HUD_Pass, 0.0f);
+    EmitF(HUD_Pass, 1.0f);
+
+    /* the viewport offset and scale, written twice */
+    for (int i = 0; i < 2; i++) {
+        Emit(HUD_Pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_VIEWPORT_OFFSET, 8));
+        EmitF(HUD_Pass, halfWidth);
+        EmitF(HUD_Pass, halfHeight);
+        EmitF(HUD_Pass, 0.5f);
+        EmitF(HUD_Pass, 0.0f);
+        EmitF(HUD_Pass, halfWidth);
+        EmitF(HUD_Pass, -halfHeight);
+        EmitF(HUD_Pass, 0.5f);
+        EmitF(HUD_Pass, 0.0f);
+    }
+
+    Emit(HUD_Pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_SCISSOR_HORIZONTAL, 2));
+    Emit(HUD_Pass, width << 16);
+    Emit(HUD_Pass, height << 16);
+
+    idol_draw::BindVertexProgram((uintptr_t)idol, (int)(uintptr_t)HUD_Pass, 12);
+    idol_draw::BindFragmentProgram((uintptr_t)idol, (int)(uintptr_t)HUD_Pass, 12);
+
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_CLEAR_SURFACE, CELL_GCM_CLEAR_Z | CELL_GCM_CLEAR_S | CELL_GCM_CLEAR_R | CELL_GCM_CLEAR_G | CELL_GCM_CLEAR_B | CELL_GCM_CLEAR_A);
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_NO_OPERATION, 0);
+
+    SetGSReg(0x16, FUN_00502f98(0, 0, 0, 0, 0, 0, 1, 1));
+    SetGSReg(3, idol_draw::PackCmd(0, 1, 0, 1, 0x80));
+}
+
+// 0x0071ac0 (0x4b0 bytes)
+/* DL's EndAuxDrawMode: the view context and the HUD pass back on the frame buffer with the HUD's
+   programs and states (no depth, alpha blending), and the HUD pass's cached texture and state
+   words forgotten */
+void EndAuxDrawMode(void)
+{
+    STUB_000780fc();
+    InitViewContext();
+    UpdateViewContext();
+
+    IdolDraw *idol = Idol();
+
+    idol->auxDepth--;
+
+    EmitSetSurface(HUD_Pass, &idol->surface);
+
+    FUN_004d86b0((int)(uintptr_t)idol);
+    idol_draw::BindVertexProgram((uintptr_t)idol, (int)(uintptr_t)HUD_Pass, 12);
+    idol_draw::BindFragmentProgram((uintptr_t)idol, (int)(uintptr_t)HUD_Pass, 12);
+
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_SET_DEPTH_MASK, 0);
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_SET_DEPTH_TEST_ENABLE, 0);
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_SET_BLEND_ENABLE, 1);
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_SET_BLEND_EQUATION, CELL_GCM_FUNC_ADD << 16 | CELL_GCM_FUNC_ADD);
+    Emit(HUD_Pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_BLEND_FUNC_SFACTOR, 2));
+    Emit(HUD_Pass, CELL_GCM_SRC_ALPHA << 16 | CELL_GCM_SRC_ALPHA);
+    Emit(HUD_Pass, CELL_GCM_ONE_MINUS_SRC_ALPHA << 16 | CELL_GCM_ONE_MINUS_SRC_ALPHA);
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_SET_ALPHA_TEST_ENABLE, 0);
+
+    idol->vtable->unk10(idol, (int)(uintptr_t)HUD_Pass, idol->unk04, idol->unk08);
+
+    /* the pass's caches past its 0x14-byte header: four bound texture headers (FUN_004d6bb0),
+       state words at 0xa8, and the words at 0xc0 and 0xc4 */
+    u8 *pass = (u8 *)HUD_Pass;
+
+    memset(pass + 0x14, 0, 0x90);
+    memset(pass + 0xa8, 0xff, 0x48);
+    *(u32 *)(pass + 0xc4) = 0;
+    *(u32 *)(pass + 0xc0) = 0;
+
+    ComposeCameraMatrix();
+}
+
+// 0x0071f70 (0x130 bytes)
+/* when there are effects in g_EffectTableCnt: the clamp, filtering and blend GS registers for
+   them, and the two (empty) effect passes, the second with DAT_0095cd40 at -0.04 */
+void ____Draw_FogBlendPass(void)
+{
+    if (g_EffectTableCnt == 0) {
+        return;
+    }
+
+    SetGSReg(6, SCE_GS_SET_CLAMP(1, 1, 0, 0, 0, 0));
+    SetGSReg(0x1a, SCE_GS_SET_TEX1(1, 0, 1, 1, 0, 0, 0));
+    SetGSReg(0x16, idol_draw::Blend(1, 0, 0x3f, 1, 0, 0, 1, 2));
+    SetGSReg(8, FUN_0050302c(1));
+
+    STUB_00074cec();
+
+    float offset = -0.04f;
+
+    DAT_0095cd40 = *(u32 *)&offset;
+    STUB_00074ce8();
+    DAT_0095cd40 = 0;
+
+    SetGSReg(8, FUN_0050302c(0));
+}
+
+// 0x00720a0 (0x88 bytes)
+/* the PS2 alpha palette: entry i (stored at i with bits 3 and 4 swapped, the GS CLUT order)
+   has alpha i / 2 */
+void InitAlphaPal(void)
+{
+    for (int i = 0; i < 256; i++) {
+        int slot = i & 0xe7;
+
+        if (i & 8) {
+            slot |= 0x10;
+        }
+
+        if (i & 0x10) {
+            slot |= 8;
+        }
+
+        g_AlphaPal[slot] = (i >> 1) << 24;
+    }
+}
+
+// 0x0072128 (0xd4 bytes)
+/* the alpha GS words of the two screen colour effects (DL: ScreenColorEffect @0x71eed0 and
+   ScreenColorEffectLight @0x71ef00); the level's effect is the current one */
+void InitScreenEffects(void)
+{
+    ScreenVBEffect *normal = (ScreenVBEffect *)&DAT_0071eed0;
+    ScreenVBEffect *light = (ScreenVBEffect *)&DAT_0071ef00;
+
+    DAT_0071f004 = 0x10000;
+    normal->BKG_alpha = idol_draw::PackCmd(2, 0, 0, 1, 0x1f);
+    normal->A_alpha = idol_draw::PackCmd(2, 0, 0, 1, 0x1f);
+    light->BKG_alpha = idol_draw::PackCmd(2, 0, 0, 1, 0x1f);
+    light->A_alpha = idol_draw::PackCmd(2, 0, 0, 1, 0x1f);
+    ScreenColorEffectLevel = (u32)(uintptr_t)ScreenColorEffectNow;
+}
+
+// 0x0072200 (0x8 bytes)
+undefined8 STUB_00072200_RET_0(...)
+{
+    return 0;
+}
+
+// 0x0072208 (0x4 bytes)
+void STUB_00072208(...)
+{
+}
+
+// 0x007220c (0x8 bytes)
+undefined8 STUB_0007220c_RET_0(...)
+{
+    return 0;
+}
+
+// 0x0072214 (0x8 bytes)
+undefined8 STUB_00072214_RET_0(...)
+{
+    return 0;
+}
+
+// 0x007221c (0x4 bytes)
+void STUB_0007221c(...)
+{
+}
+
+// 0x0072220 (0x8 bytes)
+undefined8 STUB_00072220_RET_0(...)
+{
+    return 0;
+}
+
+// 0x0072230 (0x10 bytes)
+undefined8 STUB_00072230_RET_0(...)
+{
+    return 0;
+}
+
+/* colour bytes reversed */
+static inline u32 SwapColor(u32 color)
+{
+    return color >> 24 | (color >> 8 & 0xff00) | color << 24 | (color & 0xff00) << 8;
+}
+
+/* pass index of the passes array that starts at DepthPass (0x8fa414) */
+static inline RenderingStep *PassByIndex(int index)
+{
+    return ((RenderingStep **)&DepthPass)[index & 0xf];
+}
+
+/* a vertex of FastDrawQuad's buffer */
+struct FastQuadVertex {
+    float x;
+    float y;
+    float z;
+    float s;
+    float t;
+    u32 color;
+};
+
+// 0x0072280 (0x508 bytes)
+/* DL's FastDrawQuad: quad as a 4-vertex strip on pass passIndex with programs 5/6, transformed by
+   mtx (whose w column is set to 0, 0, 0, 1 first) or the identity; texHeaders + quad->tex0 * 0x24
+   is the texture, quad->clamp its sampler, quad->alpha (when set) the depth state. unused is not
+   read. */
+void FastDrawQuad(QuadDef *quad, Mtx4 *mtx, int unused, void *texHeaders, int passIndex)
+{
+    static const Mtx4 identity = {
+        { 1.0f, 0.0f, 0.0f, 0.0f },
+        { 0.0f, 1.0f, 0.0f, 0.0f },
+        { 0.0f, 0.0f, 1.0f, 0.0f },
+        { 0.0f, 0.0f, 0.0f, 1.0f },
+    };
+
+    IdolDraw *idol = Idol();
+    RenderingStep *pass = PassByIndex(passIndex);
+
+    idol_draw::BindVertexProgram((uintptr_t)idol, (int)(uintptr_t)pass, 5);
+    idol_draw::BindFragmentProgram((uintptr_t)idol, (int)(uintptr_t)pass, 6);
+
+    FastQuadVertex *vertices = (FastQuadVertex *)(uintptr_t)idol::AllocateMemAlign(FrameHeap, 0x60, 0x10);
+    float *st = &quad->st[0][0];
+
+    for (int i = 0; i < 4; i++) {
+        u32 color = quad->rgba[i];
+
+        vertices[i].x = quad->xyzw[i].x;
+        vertices[i].y = quad->xyzw[i].y;
+        vertices[i].z = quad->xyzw[i].z;
+        vertices[i].s = st[i * 2];
+        vertices[i].t = st[i * 2 + 1];
+        vertices[i].color = SwapColor(color);
+    }
+
+    if (quad->alpha != 0) {
+        idol_draw::DrawDepth(pass, quad->alpha);
+    }
+
+    int samplerA;
+    int samplerB;
+
+    FUN_004d6704(quad->clamp, &samplerA, &samplerB);
+    FUN_004d676c(pass, 0, (u8 *)texHeaders + (int)quad->tex0 * 0x24, samplerA, samplerB);
+    idol_draw::ResetPassState(pass);
+
+    u32 offset = (u32)(uintptr_t)vertices - idol->memBase;
+
+    /* position: 3 floats, coordinates: 2 floats, colour: 4 bytes; stride 24 */
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 0 * 4, 24 << 8 | 3 << 4 | CELL_GCM_VERTEX_F);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 1 * 4, 24 << 8 | 2 << 4 | CELL_GCM_VERTEX_F);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 3 * 4, 24 << 8 | 4 << 4 | CELL_GCM_VERTEX_UB);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_OFFSET + 0 * 4, offset | CELL_GCM_LOCATION_MAIN << 31);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_OFFSET + 1 * 4, (offset + 12) | CELL_GCM_LOCATION_MAIN << 31);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_OFFSET + 3 * 4, (offset + 20) | CELL_GCM_LOCATION_MAIN << 31);
+
+    Mtx4 transposed;
+
+    if (mtx == NULL) {
+        transposed = identity;
+    }
+    else {
+        mtx->v0.w = 0.0f;
+        mtx->v1.w = 0.0f;
+        mtx->v2.w = 0.0f;
+        mtx->v3.w = 1.0f;
+        Mtx4_Transpose(&transposed, mtx);
+    }
+
+    EmitVertexConstMtx(pass, 4, &transposed);
+
+    /* (three words to method 0x1714, all zero) */
+    Emit(pass, 0x400c1714);
+    Emit(pass, 0);
+    Emit(pass, 0);
+    Emit(pass, 0);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_BEGIN_END, CELL_GCM_PRIMITIVE_TRIANGLE_STRIP);
+    EmitMethod(pass, CELL_GCM_NV4097_DRAW_ARRAYS, (4 - 1) << 24 | 0);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_BEGIN_END, 0);
+
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 0 * 4, CELL_GCM_VERTEX_F);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 1 * 4, CELL_GCM_VERTEX_F);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 3 * 4, CELL_GCM_VERTEX_F);
+}
+
+// 0x0072788 (0x4 bytes)
+void STUB_00072788(...)
+{
+}
+
+/* libgcm's cellGcmSetDrawArrays from vertex 0: one DRAW_ARRAYS method with a word per batch of
+   at most 256 vertices (the first batch, then whole batches, then the rest) */
+static inline void EmitDrawArrays(RenderingStep *pass, int count)
+{
+    int first = count < 256 ? count : 256;
+    int rest = count - first;
+
+    if (rest < 0) {
+        rest = 0;
+    }
+
+    int batches = rest >> 8;
+    int remainder = rest & 0xff;
+    int words = batches + (remainder != 0) + (first != 0);
+
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_DRAW_ARRAYS, words));
+
+    int start = 0;
+
+    if (first != 0) {
+        Emit(pass, (first - 1) << 24);
+        start = first;
+    }
+
+    for (int i = 0; i < batches; i++) {
+        Emit(pass, start | 0xff000000);
+        start += 256;
+    }
+
+    if (remainder != 0) {
+        Emit(pass, start | (remainder - 1) << 24);
+    }
+}
+
+/* the strip vertex layout of the FastDrawStrip family: position at 0, texture coordinates at
+   0xc and 0x14, colour at 0x1c, 0x20 bytes apart */
+static inline void EmitStripFormat(RenderingStep *pass, int attribute, int size, int type)
+{
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + attribute * 4, 0x20 << 8 | size << 4 | type);
+}
+
+static inline void EmitStripOffset(RenderingStep *pass, int attribute, u32 offset)
+{
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_OFFSET + attribute * 4, offset | CELL_GCM_LOCATION_MAIN << 31);
+}
+
+/* a strip of count vertices, then the given vertex arrays off again */
+static inline void EmitStrip(RenderingStep *pass, int count)
+{
+    /* (three words to method 0x1714, all zero) */
+    Emit(pass, 0x400c1714);
+    Emit(pass, 0);
+    Emit(pass, 0);
+    Emit(pass, 0);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_BEGIN_END, CELL_GCM_PRIMITIVE_TRIANGLE_STRIP);
+    EmitDrawArrays(pass, count);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_BEGIN_END, 0);
+}
+
+static inline void DisableArray(RenderingStep *pass, int attribute)
+{
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + attribute * 4, CELL_GCM_VERTEX_F);
+}
+
+// 0x007278c (0x390 bytes)
+/* count strip vertices at vertices on DL_Pass with programs 10/11, both texture coordinate
+   sets */
+void FastDrawStrip_DL(int count, void *vertices)
+{
+    IdolDraw *idol = Idol();
+    RenderingStep *pass = DL_Pass;
+
+    idol_draw::BindVertexProgram((uintptr_t)idol, (int)(uintptr_t)pass, 10);
+    idol_draw::BindFragmentProgram((uintptr_t)idol, (int)(uintptr_t)pass, 11);
+
+    u32 offset = (u32)(uintptr_t)vertices - idol->memBase;
+
+    EmitStripFormat(pass, 0, 3, CELL_GCM_VERTEX_F);
+    EmitStripFormat(pass, 1, 2, CELL_GCM_VERTEX_F);
+    EmitStripFormat(pass, 2, 2, CELL_GCM_VERTEX_F);
+    EmitStripFormat(pass, 3, 4, CELL_GCM_VERTEX_UB);
+    EmitStripOffset(pass, 0, offset);
+    EmitStripOffset(pass, 1, offset + 0xc);
+    EmitStripOffset(pass, 2, offset + 0x14);
+    EmitStripOffset(pass, 3, offset + 0x1c);
+
+    EmitStrip(pass, count);
+
+    DisableArray(pass, 0);
+    DisableArray(pass, 1);
+    DisableArray(pass, 2);
+    DisableArray(pass, 3);
+}
+
+// 0x0072b1c (0x2c0 bytes)
+/* FastDrawStrip_DL with the programs already bound, the second coordinate set only */
+void FastDrawStrip_DLNoState(int count, void *vertices)
+{
+    IdolDraw *idol = Idol();
+    RenderingStep *pass = DL_Pass;
+    u32 offset = (u32)(uintptr_t)vertices - idol->memBase;
+
+    EmitStripFormat(pass, 0, 3, CELL_GCM_VERTEX_F);
+    EmitStripFormat(pass, 1, 2, CELL_GCM_VERTEX_F);
+    EmitStripFormat(pass, 3, 4, CELL_GCM_VERTEX_UB);
+    EmitStripOffset(pass, 0, offset);
+    EmitStripOffset(pass, 1, offset + 0x14);
+    EmitStripOffset(pass, 3, offset + 0x1c);
+
+    EmitStrip(pass, count);
+
+    DisableArray(pass, 0);
+    DisableArray(pass, 1);
+    DisableArray(pass, 3);
+}
+
+// 0x0072ddc (0x394 bytes)
+/* count strip vertices on pass passIndex (programs 4/6 bound on passes 2 and 9), the first
+   coordinate set */
+void FastDrawStrip_Pass(int count, void *vertices, int passIndex)
+{
+    IdolDraw *idol = Idol();
+
+    if (passIndex == 2 || passIndex == 9) {
+        idol_draw::BindVertexProgram((uintptr_t)idol, (int)(uintptr_t)PassByIndex(passIndex), 4);
+        idol_draw::BindFragmentProgram((uintptr_t)idol, (int)(uintptr_t)PassByIndex(passIndex), 6);
+    }
+
+    RenderingStep *pass = PassByIndex(passIndex);
+    u32 offset = (u32)(uintptr_t)vertices - idol->memBase;
+
+    EmitStripFormat(pass, 0, 3, CELL_GCM_VERTEX_F);
+    EmitStripFormat(pass, 1, 2, CELL_GCM_VERTEX_F);
+    EmitStripFormat(pass, 3, 4, CELL_GCM_VERTEX_UB);
+    EmitStripOffset(pass, 0, offset);
+    EmitStripOffset(pass, 1, offset + 0xc);
+    EmitStripOffset(pass, 3, offset + 0x1c);
+
+    EmitStrip(pass, count);
+
+    DisableArray(pass, 0);
+    DisableArray(pass, 1);
+    DisableArray(pass, 3);
+}
+
+/* a PS2 colour (0x80 = full) as an RSX one, channel by channel */
+static inline u32 Ps2Color(u32 color)
+{
+    return Ps2Channel(color & 0xff) | Ps2Channel((color >> 8) & 0xff) << 8 | Ps2Channel((color >> 16) & 0xff) << 16 | Ps2Channel(color >> 24) << 24;
+}
+
+/* a vertex of the FastDrawStrip family */
+struct StripVertex {
+    float x;
+    float y;
+    float z;
+    float s0;
+    float t0;
+    float s1;
+    float t1;
+    u32 color;
+};
+
+// 0x00731c8 (0x4b0 bytes)
+/* count strip vertices from separate arrays drawn three times: with effect texture baseTex and
+   the first coordinates on passes 9 and 8 (no depth state, alpha test off), then with effect
+   texture detailTex, the second coordinates and depth state on DL_Pass. Both DL passes get the
+   identity at c[4]. */
+void DrawTexturedStrips(int count, Vec3 *pos, u32 *colors, Vec2 *uv0, Vec2 *uv1, int baseTex, int detailTex, u64 depth)
+{
+    static const Mtx4 identity = {
+        { 1.0f, 0.0f, 0.0f, 0.0f },
+        { 0.0f, 1.0f, 0.0f, 0.0f },
+        { 0.0f, 0.0f, 1.0f, 0.0f },
+        { 0.0f, 0.0f, 0.0f, 1.0f },
+    };
+
+    StripVertex *vertices = (StripVertex *)(uintptr_t)idol::AllocateMemAlign(FrameHeap, count << 5, 0x10);
+    Mtx4 mtx = identity;
+
+    EmitVertexConstMtx(DL_Pass, 4, &mtx);
+    EmitVertexConstMtx(DL_DepthPass, 4, &mtx);
+
+    for (int i = 0; i < count; i++) {
+        vertices[i].x = pos[i].x;
+        vertices[i].y = pos[i].y;
+        vertices[i].z = pos[i].z;
+        vertices[i].s0 = uv0[i].x;
+        vertices[i].t0 = uv0[i].y;
+        vertices[i].s1 = uv1[i].x;
+        vertices[i].t1 = uv1[i].y;
+        vertices[i].color = Ps2Color(colors[i]);
+    }
+
+    idol_draw::DrawDepth(DL_DepthPass, 0);
+    EmitMethod(DL_DepthPass, CELL_GCM_NV4097_SET_ALPHA_TEST_ENABLE, 0);
+    idol_draw::DrawDepth(DL_Pass, 0);
+    EmitMethod(DL_Pass, CELL_GCM_NV4097_SET_ALPHA_TEST_ENABLE, 0);
+
+    FUN_004d676c(DL_Pass, 0, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(baseTex) * 0x24, 1, 1);
+    FastDrawStrip_Pass(count, vertices, 9);
+    FastDrawStrip_Pass(count, vertices, 8);
+
+    idol_draw::DrawDepth(DL_Pass, depth);
+    FUN_004d676c(DL_Pass, 0, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(detailTex) * 0x24, 1, 1);
+    FastDrawStrip_DLNoState(count, vertices);
+}
+
+/* FastDrawStrip2UV's layout: 3 floats at 0, 3 floats at second, colour at 0x24; 0x28 apart */
+static inline void EmitStrip2UVArrays(RenderingStep *pass, u32 offset, u32 second)
+{
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 0 * 4, 0x28 << 8 | 3 << 4 | CELL_GCM_VERTEX_F);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 1 * 4, 0x28 << 8 | 3 << 4 | CELL_GCM_VERTEX_F);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 3 * 4, 0x28 << 8 | 4 << 4 | CELL_GCM_VERTEX_UB);
+    EmitStripOffset(pass, 0, offset);
+    EmitStripOffset(pass, 1, offset + second);
+    EmitStripOffset(pass, 3, offset + 0x24);
+}
+
+// 0x0073678 (0x390 bytes)
+/* count vertices of 0x28 bytes on pass passIndex with programs 7/7, the triple at 0x18 as the
+   coordinates */
+void FastDrawStrip2UV_Pass(int count, void *vertices, int passIndex)
+{
+    IdolDraw *idol = Idol();
+
+    idol_draw::BindVertexProgram((uintptr_t)idol, (int)(uintptr_t)PassByIndex(passIndex), 7);
+    idol_draw::BindFragmentProgram((uintptr_t)idol, (int)(uintptr_t)PassByIndex(passIndex), 7);
+
+    RenderingStep *pass = PassByIndex(passIndex);
+
+    EmitStrip2UVArrays(pass, (u32)(uintptr_t)vertices - idol->memBase, 0x18);
+    EmitStrip(pass, count);
+
+    DisableArray(pass, 0);
+    DisableArray(pass, 1);
+    DisableArray(pass, 3);
+}
+
+// 0x0073a08 (0x390 bytes)
+/* FastDrawStrip2UV_Pass with the triple at 0xc as the coordinates, the programs bound only on
+   passes 2 and 9 */
+void FastDrawStrip2UV_PassNoState(int count, void *vertices, int passIndex)
+{
+    IdolDraw *idol = Idol();
+
+    if (passIndex == 2 || passIndex == 9) {
+        idol_draw::BindVertexProgram((uintptr_t)idol, (int)(uintptr_t)PassByIndex(passIndex), 7);
+        idol_draw::BindFragmentProgram((uintptr_t)idol, (int)(uintptr_t)PassByIndex(passIndex), 7);
+    }
+
+    RenderingStep *pass = PassByIndex(passIndex);
+
+    EmitStrip2UVArrays(pass, (u32)(uintptr_t)vertices - idol->memBase, 0xc);
+    EmitStrip(pass, count);
+
+    DisableArray(pass, 0);
+    DisableArray(pass, 1);
+    DisableArray(pass, 3);
+}
+
+/* a vertex of FastDrawStrip2UV: two coordinate triples whose third value is shared */
+struct Strip2UVVertex {
+    float x;
+    float y;
+    float z;
+    float s0;
+    float t0;
+    float q0;
+    float s1;
+    float t1;
+    float q1;
+    u32 color;
+};
+
+// 0x0073de0 (0x330 bytes)
+/* count strip vertices from separate arrays on pass passIndex: effect texture tex0 on unit 0
+   (and tex1 on unit 1 on passes 2 and 9), the identity at c[4], both coordinate sets with q as
+   their third value; drawn with depth state depth, then on passes 2 and 9 again with depth2 */
+void DrawLavaStrips(float q, int count, Vec3 *pos, u32 *colors, Vec2 *uv0, Vec2 *uv1, int tex0, int tex1, u64 depth, u64 depth2, int passIndex)
+{
+    static const Mtx4 identity = {
+        { 1.0f, 0.0f, 0.0f, 0.0f },
+        { 0.0f, 1.0f, 0.0f, 0.0f },
+        { 0.0f, 0.0f, 1.0f, 0.0f },
+        { 0.0f, 0.0f, 0.0f, 1.0f },
+    };
+
+    Strip2UVVertex *vertices = (Strip2UVVertex *)(uintptr_t)idol::AllocateMemAlign(FrameHeap, count * 0x28, 0x10);
+
+    FUN_004d676c(PassByIndex(passIndex), 0, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(tex0) * 0x24, 1, 1);
+
+    if (passIndex == 2 || passIndex == 9) {
+        FUN_004d676c(PassByIndex(passIndex), 1, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(tex1) * 0x24, 1, 1);
+    }
+
+    Mtx4 mtx = identity;
+
+    EmitVertexConstMtx(PassByIndex(passIndex), 4, &mtx);
+
+    for (int i = 0; i < count; i++) {
+        vertices[i].x = pos[i].x;
+        vertices[i].y = pos[i].y;
+        vertices[i].z = pos[i].z;
+        vertices[i].s0 = uv0[i].x;
+        vertices[i].t0 = uv0[i].y;
+        vertices[i].q0 = q;
+        vertices[i].s1 = uv1[i].x;
+        vertices[i].t1 = uv1[i].y;
+        vertices[i].q1 = q;
+        vertices[i].color = SwapColor(colors[i]);
+    }
+
+    idol_draw::DrawDepth(PassByIndex(passIndex), depth);
+    FastDrawStrip2UV_PassNoState(count, vertices, passIndex);
+
+    if (passIndex == 2 || passIndex == 9) {
+        idol_draw::DrawDepth(PassByIndex(passIndex), depth2);
+        FastDrawStrip2UV_Pass(count, vertices, passIndex);
+    }
+}
+
+// 0x0074150 (0x450 bytes)
+/* count FastDrawQuad-layout vertices (position, coordinates, colour; 0x18 apart) as a strip on
+   pass passIndex: programs 4/6 on passes 2 and 9, the identity at c[4] on passes 0 and 8 */
+void FastDrawStripColor(int count, void *vertices, int passIndex)
+{
+    static const Mtx4 identity = {
+        { 1.0f, 0.0f, 0.0f, 0.0f },
+        { 0.0f, 1.0f, 0.0f, 0.0f },
+        { 0.0f, 0.0f, 1.0f, 0.0f },
+        { 0.0f, 0.0f, 0.0f, 1.0f },
+    };
+
+    IdolDraw *idol = Idol();
+
+    idol_draw::ResetPassState(PassByIndex(passIndex));
+
+    if (passIndex == 2 || passIndex == 9) {
+        idol_draw::BindVertexProgram((uintptr_t)idol, (int)(uintptr_t)PassByIndex(passIndex), 4);
+        idol_draw::BindFragmentProgram((uintptr_t)idol, (int)(uintptr_t)PassByIndex(passIndex), 6);
+    }
+    else if (passIndex == 0 || passIndex == 8) {
+        Mtx4 mtx = identity;
+
+        EmitVertexConstMtx(PassByIndex(passIndex), 4, &mtx);
+    }
+
+    RenderingStep *pass = PassByIndex(passIndex);
+    u32 offset = (u32)(uintptr_t)vertices - idol->memBase;
+
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 0 * 4, 0x18 << 8 | 3 << 4 | CELL_GCM_VERTEX_F);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 1 * 4, 0x18 << 8 | 2 << 4 | CELL_GCM_VERTEX_F);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 3 * 4, 0x18 << 8 | 4 << 4 | CELL_GCM_VERTEX_UB);
+    EmitStripOffset(pass, 0, offset);
+    EmitStripOffset(pass, 1, offset + 0xc);
+    EmitStripOffset(pass, 3, offset + 0x14);
+
+    EmitStrip(pass, count);
+
+    DisableArray(pass, 0);
+    DisableArray(pass, 1);
+    DisableArray(pass, 3);
+}
+
+// 0x00745a0 (0x1c bytes)
+/* bits 4-5 of a GS ALPHA word are 2 */
+bool ____Draw_IsFlagMode2(u64 alpha)
+{
+    return (alpha & 0x30) == 0x20;
+}
+
+// 0x00745bc (0x48 bytes)
+/* a GS ALPHA word of the (Cs - Cd) * As + Cd or (Cs - Cd) * Fix + Cd form: A = 0, B = 1, D = 1,
+   C = 0 or 2 */
+int ____Draw_IsBlendModeMatch(u64 alpha)
+{
+    if ((alpha & 3) != 0) {
+        return 0;
+    }
+
+    if (((alpha >> 2) & 3) != 1) {
+        return 0;
+    }
+
+    if (((alpha >> 6) & 3) != 1) {
+        return 0;
+    }
+
+    return ((alpha >> 4) & 3) == 0 || ((alpha >> 4) & 3) == 2;
+}
+
+// 0x0074604 (0x13c bytes)
+/* count vertices from separate arrays drawn by FastDrawStripColor on the pass in passes' low
+   nibble and on the one in its next nibble (when not 0) */
+void DrawMeshSet(int count, void *positions, void *colorArray, void *uvs, u32 passes)
+{
+    Vec3 *pos = (Vec3 *)positions;
+    u32 *colors = (u32 *)colorArray;
+    Vec2 *uv = (Vec2 *)uvs;
+    FastQuadVertex *vertices = (FastQuadVertex *)(uintptr_t)idol::AllocateMemAlign(FrameHeap, count * 0x18, 0x10);
+
+    for (u32 i = 0; i < (u32)count; i++) {
+        vertices[i].x = pos[i].x;
+        vertices[i].y = pos[i].y;
+        vertices[i].z = pos[i].z;
+        vertices[i].s = uv[i].x;
+        vertices[i].t = uv[i].y;
+        vertices[i].color = SwapColor(colors[i]);
+    }
+
+    int first = passes & 0xf;
+    int second = (passes >> 4) & 0xf;
+
+    if (first != 0) {
+        FastDrawStripColor(count, vertices, first);
+    }
+
+    if (second != 0) {
+        FastDrawStripColor(count, vertices, second);
+    }
+}
+
+// 0x0074780 (0x460 bytes)
+/* count vertices of position, a coordinate triple and colour (0x1c apart) as a strip on pass
+   passIndex with the identity at c[4]; programs 7/7 on passes 1, 2 and 9 */
+void FastDrawStripFog(int count, void *vertices, int passIndex)
+{
+    static const Mtx4 identity = {
+        { 1.0f, 0.0f, 0.0f, 0.0f },
+        { 0.0f, 1.0f, 0.0f, 0.0f },
+        { 0.0f, 0.0f, 1.0f, 0.0f },
+        { 0.0f, 0.0f, 0.0f, 1.0f },
+    };
+
+    IdolDraw *idol = Idol();
+    Mtx4 mtx = identity;
+
+    EmitVertexConstMtx(PassByIndex(passIndex), 4, &mtx);
+
+    if (passIndex == 1 || passIndex == 2 || passIndex == 9) {
+        idol_draw::BindVertexProgram((uintptr_t)idol, (int)(uintptr_t)PassByIndex(passIndex), 7);
+        idol_draw::BindFragmentProgram((uintptr_t)idol, (int)(uintptr_t)PassByIndex(passIndex), 7);
+    }
+
+    RenderingStep *pass = PassByIndex(passIndex);
+    u32 offset = (u32)(uintptr_t)vertices - idol->memBase;
+
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 0 * 4, 0x1c << 8 | 3 << 4 | CELL_GCM_VERTEX_F);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 1 * 4, 0x1c << 8 | 3 << 4 | CELL_GCM_VERTEX_F);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 3 * 4, 0x1c << 8 | 4 << 4 | CELL_GCM_VERTEX_UB);
+    EmitStripOffset(pass, 0, offset);
+    EmitStripOffset(pass, 1, offset + 0xc);
+    EmitStripOffset(pass, 3, offset + 0x18);
+
+    EmitStrip(pass, count);
+
+    DisableArray(pass, 0);
+    DisableArray(pass, 1);
+    DisableArray(pass, 3);
+}
+
+/* a vertex of FastDrawStripFog */
+struct FogStripVertex {
+    float x;
+    float y;
+    float z;
+    float s;
+    float t;
+    float q;
+    u32 color;
+};
+
+// 0x0074be0 (0x108 bytes)
+/* count vertices from separate arrays, q the coordinates' third value, through FastDrawStripFog
+   on pass 9 */
+void DrawOceanStrip(float q, int count, Vec3 *pos, u32 *colors, Vec2 *uv)
+{
+    FogStripVertex *vertices = (FogStripVertex *)(uintptr_t)idol::AllocateMemAlign(FrameHeap, count * 0x1c, 0x10);
+
+    for (u32 i = 0; i < (u32)count; i++) {
+        vertices[i].x = pos[i].x;
+        vertices[i].y = pos[i].y;
+        vertices[i].z = pos[i].z;
+        vertices[i].s = uv[i].x;
+        vertices[i].t = uv[i].y;
+        vertices[i].q = q;
+        vertices[i].color = SwapColor(colors[i]);
+    }
+
+    FastDrawStripFog(count, vertices, 9);
+}
+
+// 0x0074ce8 (0x4 bytes)
+void STUB_00074ce8(...)
+{
+}
+
+// 0x0074cec (0x4 bytes)
+void STUB_00074cec(...)
+{
+}
+
+// 0x0074cf0 (0xc8 bytes)
+/* a free impact sprite at pos with effect texture tex at scale, turned at random; its index, or
+   -1 when all 32 are in use */
+int ImpactSprite_Add(float scale, Vec4 pos, short tex)
+{
+    for (int i = 0; i < 32; i++) {
+        ImpactSprite *sprite = &g_ImpactSprites[i];
+
+        if (sprite->timer > 0) {
+            continue;
+        }
+
+        sprite->timer = 24;
+        sprite->tex = tex;
+        sprite->pos = pos;
+        sprite->scale = scale;
+        sprite->rot = (float)MB_randRot();
+
+        return i;
+    }
+
+    return -1;
+}
+
+// 0x0074dc0 (0xec bytes)
+/* spins each live impact sprite at 5/3 pi a second, fades it in and (over its last 12 frames)
+   out, and frees it when its time runs out */
+void ImpactSprite_Update(void)
+{
+    for (int i = 0; i < 32; i++) {
+        ImpactSprite *sprite = &g_ImpactSprites[i];
+
+        if (sprite->timer <= 0) {
+            continue;
+        }
+
+        sprite->rot = FastDiffRots(sprite->rot, g_FrameTime * 5.2359877f);
+
+        if (sprite->timer < 13) {
+            sprite->fade -= 5;
+        }
+        else {
+            sprite->fade += 5;
+        }
+
+        sprite->timer--;
+
+        if (sprite->timer < 1) {
+            FastMemSet(sprite, 0, 0x20);
+        }
+    }
 }

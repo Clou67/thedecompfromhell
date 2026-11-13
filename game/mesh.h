@@ -2,12 +2,6 @@
 // game/mesh.h
 #include "types.h"
 
-// ---- types
-struct Vec2 {
-    float x;
-    float y;
-};
-
 // ---- globals
 extern undefined4 DAT_00726aac; /* 0x726aac */
 extern undefined4 minHeight; /* 0x73aa1c */

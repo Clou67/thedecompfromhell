@@ -320,3 +320,4 @@ FontPrint	void FontPrint(int param_1,int param_2,u32 param_3,const char *param_4
 DrawFancyTextWithBox	void DrawFancyTextWithBox(int param_1,int param_2,int param_3,float param_4,float param_5,char *param_6)
 DrawTimedHelpMsg	void DrawTimedHelpMsg(TimedHelpMsg *param_1,int param_2)
 DrawScreenQuad	void DrawScreenQuad(u64 *param_1,int *param_2,u32 *param_3,int param_4,int param_5)
+FUN_0050302c	undefined8 FUN_0050302c(int param_1)

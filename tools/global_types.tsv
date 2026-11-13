@@ -472,3 +472,8 @@ g_SubtitlesOn	bool NAME /* 0x969c78 */
 g_UnderwaterTint	RGBA NAME /* 0x73a960 */
 g_CreditsHelpMsgs	TimedHelpMsg NAME[] /* 0x71fbdc */
 LameShadowTable	Vec4 NAME[4] /* 0x71ef40 */
+g_AuxBufferTex	u32 NAME[9] /* 0x95ee1c */
+g_AuxWidth	short NAME /* 0x966b8c */
+g_AuxHeight	short NAME /* 0x966b8e */
+g_AlphaPal	u32 NAME[256] /* 0x95ea14 */
+g_ImpactSprites	ImpactSprite NAME[32] /* 0x95ee40 */

@@ -566,7 +566,7 @@ void UpdateMoby_13(MobyInstance *moby)
         fVar15 = (moby->transform).v2.z;
         fVar16 = (moby->transform).v2.w;
         fVar17 = *(float *)(s_ICON0_PNG_0078dff8 + iVar24 + 4);
-        *(float *)((int)&DAT_0095ee40 + iVar21) =
+        *(float *)((int)&g_ImpactSprites + iVar21) =
              (moby->transform).v2.x * fVar8 +
              (moby->transform).v0.x * fVar6 + (moby->transform).v1.x * fVar5 + (moby->pos).x;
         *(float *)((int)&DAT_0095ee44 + iVar21) =

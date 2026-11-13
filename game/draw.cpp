@@ -41,7 +41,7 @@
 #include "idol/fastinline.h"
 #include <cell/gcm/gcm_macros.h>
 #include <cell/gcm/gcm_enum.h>
-// MERGE (104 of 165 functions cleaned; the rest are generated)
+// MERGE (135 of 165 functions cleaned; the rest are generated)
 // game/draw.cpp -- reconstructed from NPEA00385 EBOOT
 // 165 functions, 0x6565c-0x78140: the frame's drawing. The view context and camera matrices,
 // occlusion, the render passes, fonts and HUD sprites, screen effects, water, lava and the
@@ -2630,7 +2630,7 @@ void DrawLameShadows(void)
             quad.xyzw[i].y = (offsetY - along * normalY) * size + quad.xyzw[i].y;
         }
 
-        FastDrawQuad((undefined4 *)&quad, 0, 0, (longlong)EffectTexHeaders, 9);
+        FastDrawQuad(&quad, NULL, 0, (void *)(uintptr_t)EffectTexHeaders, 9);
     }
 }
 
@@ -3278,2122 +3278,967 @@ void STUB_00071170(...)
 
 
 // 0x0071180 (0x940 bytes)
-void SetScreenResolution
-               (double param_1,uint param_2,uint param_3,undefined8 param_4,undefined8 param_5,
-               RsxCmd param_6)
-
+/* DL's BeginAuxDrawMode: points the HUD pass at the aux buffer, a (1 << log2Width) by
+   (1 << log2Height) surface at the renderer's auxBuffer with its depth after it, and sets the
+   screen globals, the view context (xratio, near 32, far and fog 524288) and viewport to match;
+   clears it to clearColor. g_AuxBufferTex describes the result as a texture. flag is not read. */
+void BeginAuxDrawMode(float xratio, int log2Width, int log2Height, int flag, u32 clearColor)
 {
-  longlong lVar1;
-  int iVar2;
-  RsxCmd RVar3;
-  RsxCmd RVar4;
-  uint uVar5;
-  undefined4 uVar6;
-  ulonglong *puVar7;
-  RsxCmd RVar8;
-  int iVar9;
-  RenderingStep *pRVar10;
-  RenderingStep *pRVar11;
-  int iVar12;
-  undefined8 uVar13;
-  ulonglong uVar14;
-  RsxCmd RVar15;
-  longlong lVar16;
-  RsxCmd *pRVar17;
-  ulonglong unaff_r23;
-  ulonglong unaff_r24;
-  ulonglong unaff_r25;
-  ulonglong unaff_r26;
-  ulonglong unaff_r27;
-  ulonglong unaff_r28;
-  ulonglong unaff_r29;
-  RsxCmd *pRVar18;
-  ulonglong unaff_r30;
-  ulonglong unaff_r31;
-  ulonglong in_LR;
-  longlong lVar19;
-  longlong lVar20;
-  double dVar21;
-  double dVar22;
-  ulonglong in_f31;
-  GPiece<16> auVar23;
-  GPiece<16> auVar24;
-  GPiece<16> auVar25;
-  GPiece<16> auVar26;
-  GPiece<16> auVar27;
-  
-  uVar14 = ZEXT48(&stack0x00000000);
-  lVar1 = uVar14 - 0x140;
-  puVar7 = (ulonglong *)lVar1;
-  *puVar7 = uVar14;
-  puVar7[0x2a] = in_LR;
-  puVar7[0x27] = in_f31;
-  *(uint *)(puVar7 + 0x18) = param_3;
-  *(uint *)((int)puVar7 + 0xc4) = param_3;
-  puVar7[0x26] = unaff_r31;
-  *(uint *)(puVar7 + 0x19) = param_3;
-  puVar7[0x25] = unaff_r30;
-  *(uint *)((int)puVar7 + 0xcc) = param_3;
-  puVar7[0x22] = unaff_r27;
-  RVar4 = 1 << (param_3 & 0x3f);
-  puVar7[0x24] = unaff_r29;
-  auVar26 = ZEXT416(1);
-  auVar26 = auVar26 | auVar26 << 0x20 | auVar26 << 0x40 | auVar26 << 0x60;
-  puVar7[0x21] = unaff_r26;
-  puVar7[0x20] = unaff_r25;
-  uVar5 = 1 << (param_2 & 0x3f);
-  puVar7[0x23] = unaff_r28;
-  auVar27 = *(undefined1 (*) [16])(puVar7 + 0x18);
-  g_ScreenHalfHeight = (int)RVar4 >> 1;
-  *(uint *)(puVar7 + 0x18) = param_2;
-  uVar13 = 0xc0;
-  *(uint *)((int)puVar7 + 0xc4) = param_2;
-  *(uint *)(puVar7 + 0x19) = param_2;
-  *(uint *)((int)puVar7 + 0xcc) = param_2;
-  iVar9 = g_ScreenHalfHeight * 0x10;
-  auVar27 = vectorShiftLeftIntegerWord(auVar26,auVar27);
-  SCREEN_PROJECTION_MAP_Y = (undefined4)((0x800U - (longlong)g_ScreenHalfHeight & 0xffffffff) << 4);
-  g_ScreenHalfWidth = (int)uVar5 >> 1;
-  g_ViewContext.fovScale = 1.0;
-  auVar26 = vectorShiftLeftIntegerWord(auVar26,*(undefined1 (*) [16])(puVar7 + 0x18));
-  puVar7[0x1f] = unaff_r24;
-  SCREEN_PROJECTION_MAP_X = (undefined4)((0x800U - (longlong)g_ScreenHalfWidth & 0xffffffff) << 4);
-  DAT_00966b18 = g_ScreenHalfWidth * 0x10 + 0x8000;
-  g_ScreenWidth = uVar5;
-  g_ScreenHeight = RVar4;
-  puVar7[0x1e] = unaff_r23;
-  DAT_00966b1c = iVar9 + 0x8000;
-  g_ViewContext.nearClip = 32.0;
-  g_ViewContext.farClip = 524288.0;
-  g_ViewContext.xratio = (float)param_1;
-  dVar21 = (double)FastIntToDouble();
-  dVar22 = 0.5;
-  g_ViewContext.xpix = (float)(dVar21 * 0.5);
-  dVar21 = (double)FastIntToDouble(RVar4);
-  g_ViewContext.ypix = (float)(dVar21 * dVar22);
-  g_ViewContext.fogNearDist = 0.0;
-  g_ViewContext.xclip = g_ViewContext.xpix * 4.0;
-  g_ViewContext.yclip = g_ViewContext.ypix * 4.0;
-  g_ViewContext.fogFarDist = 524288.0;
-  g_ViewContext.fogNearIntensity = 255.0;
-  g_ViewContext.fogFarIntensity = 0.0;
-  UpdateViewContext();
-  UploadViewMatricesToPasses();
-  iVar12 = g_pIdolDraw;
-  DAT_00966b8c = (undefined2)uVar5;
-  DAT_00966b8e = (undefined2)RVar4;
-  lVar19 = 3;
-  *(int *)(g_pIdolDraw + 0x22d8) = *(int *)(g_pIdolDraw + 0x22d8) + 1;
-  *(undefined4 *)(puVar7 + 0x10) = 0;
-  *(undefined4 *)((int)puVar7 + 0x84) = 0;
-  *(undefined4 *)((int)puVar7 + 0x8c) = 0;
-  *(undefined4 *)(puVar7 + 0x12) = 0;
-  *(undefined4 *)((int)puVar7 + 0x94) = 0;
-  *(undefined4 *)((int)puVar7 + 0x9c) = 0;
-  *(undefined4 *)(puVar7 + 0x14) = 0;
-  *(undefined4 *)((int)puVar7 + 0xa4) = 0;
-  *(undefined4 *)(puVar7 + 0x15) = 0;
-  *(undefined4 *)((int)puVar7 + 0xac) = 0;
-  *(undefined4 *)(puVar7 + 0x16) = 0;
-  *(undefined4 *)((int)puVar7 + 0xb4) = 0;
-  *(undefined4 *)(puVar7 + 0x17) = 0;
-  *(undefined1 *)((int)puVar7 + 0x82) = 8;
-  *(undefined1 *)((int)puVar7 + 0x83) = 1;
-  *(undefined1 *)((int)puVar7 + 0x84) = 0;
-  iVar9 = *(int *)(iVar12 + 0x2288);
-  iVar2 = *(int *)(iVar12 + 0x4ac);
-  RVar15 = (RsxCmd)(((ulonglong)uVar5 & 0x3fffffff) << 2);
-  *(RsxCmd *)(puVar7 + 0x13) = RVar15;
-  *(int *)(puVar7 + 0x11) = iVar9 - iVar2;
-  lVar16 = lVar1;
-  lVar20 = lVar1;
-  do {
-    *(undefined1 *)((int)lVar20 + 0x85) = 0;
-    *(undefined4 *)((int)lVar16 + 0x8c) = 0;
-    *(undefined4 *)((int)lVar16 + 0x9c) = 0x40;
-    pRVar10 = HUD_Pass;
-    lVar19 = lVar19 + -1;
-    lVar16 = lVar16 + 4;
-    lVar20 = lVar20 + 1;
-  } while (lVar19 != 0);
-  RVar3 = *(RsxCmd *)(puVar7 + 0x11);
-  DAT_0095ee24 = 0x30303;
-  DAT_0095ee20 = 0x1a529;
-  DAT_0095ee38 = RVar15 | NV4097_SET_OBJECT_x4;
-  DAT_0095ee28 = 0x80010000;
-  RVar8 = uVar5 << 0x10;
-  DAT_0095ee2c = 0xaae4;
-  DAT_0095ee3c = 0;
-  DAT_0095ee34 = RVar8 | RVar4;
-  DAT_0095ee30 = 0x2062000;
-  DAT_0095ee3d = 0xff;
-  DAT_0095ee1c = RVar3;
-  *HUD_Pass->command = NV4097_SET_CONTEXT_DMA_COLOR_A_x1;
-  pRVar10->command[1] = *(byte *)((int)puVar7 + 0x84) + 0xfeed0000;
-  pRVar18 = pRVar10->command;
-  pRVar10->command = pRVar18 + 2;
-  pRVar18[2] = NV4097_SET_CONTEXT_DMA_COLOR_B_x1;
-  pRVar10->command[1] = *(byte *)((int)puVar7 + 0x85) + 0xfeed0000;
-  pRVar18 = pRVar10->command;
-  pRVar10->command = pRVar18 + 2;
-  pRVar18[2] = NV4097_SET_CONTEXT_DMA_COLOR_C_x2;
-  pRVar10->command[1] = *(byte *)((int)puVar7 + 0x86) + 0xfeed0000;
-  pRVar10->command[2] = *(byte *)((int)puVar7 + 0x87) + 0xfeed0000;
-  pRVar18 = pRVar10->command;
-  pRVar10->command = pRVar18 + 3;
-  pRVar18[3] = NV4097_SET_CONTEXT_DMA_ZETA_x1;
-  pRVar10->command[1] = 0xfeed0000;
-  pRVar18 = pRVar10->command;
-  pRVar10->command = pRVar18 + 2;
-  pRVar18[2] = (RsxCmd)&DAT_00180208;
-  pRVar10->command[1] =
-       (RsxCmd)((0x1fU - LZCOUNT(uVar5 & 0xffff) & 0xffffffff) << 0x10) |
-       *(byte *)((int)puVar7 + 0x82) | 0x140 |
-       (RsxCmd)((0x1fU - LZCOUNT(RVar4 & 0xffff) & 0xffffffff) << 0x18);
-  pRVar10->command[2] = *(RsxCmd *)(puVar7 + 0x13);
-  pRVar10->command[3] = RVar3;
-  pRVar10->command[4] = (iVar9 + RVar4 * uVar5 * 4) - iVar2;
-  pRVar10->command[5] = *(RsxCmd *)((int)puVar7 + 0x8c);
-  pRVar10->command[6] = *(RsxCmd *)((int)puVar7 + 0x9c);
-  pRVar18 = pRVar10->command;
-  pRVar10->command = pRVar18 + 7;
-  pRVar18[7] = NV4097_SET_SURFACE_PITCH_Z_x1;
-  pRVar10->command[1] = RVar15;
-  pRVar18 = pRVar10->command;
-  pRVar10->command = pRVar18 + 2;
-  pRVar18[2] = NV4097_SET_SURFACE_PITCH_C_x4;
-  pRVar10->command[1] = *(RsxCmd *)(puVar7 + 0x14);
-  pRVar10->command[2] = *(RsxCmd *)((int)puVar7 + 0xa4);
-  pRVar10->command[3] = *(RsxCmd *)(puVar7 + 0x12);
-  pRVar10->command[4] = *(RsxCmd *)((int)puVar7 + 0x94);
-  pRVar18 = pRVar10->command;
-  pRVar10->command = pRVar18 + 5;
-  pRVar18[5] = NV4097_SET_SURFACE_COLOR_TARGET_x1;
-  pRVar10->command[1] = (uint)*(byte *)((int)puVar7 + 0x83);
-  pRVar18 = pRVar10->command;
-  pRVar10->command = pRVar18 + 2;
-  pRVar18[2] = NV4097_SET_WINDOW_OFFSET_x1;
-  pRVar10->command[1] = 0;
-  pRVar18 = pRVar10->command;
-  pRVar10->command = pRVar18 + 2;
-  pRVar18[2] = NV4097_SET_SURFACE_CLIP_HORIZONTAL_x2;
-  pRVar10->command[1] = uVar5 << 0x10;
-  pRVar10->command[2] = RVar4 << 0x10;
-  pRVar18 = pRVar10->command;
-  pRVar10->command = pRVar18 + 3;
-  pRVar18[3] = NV4097_SET_SHADER_WINDOW_x1;
-  pRVar10->command[1] = (RVar4 & 0xffff) - (RVar4 >> 0xc & 1) | 0x1000;
-  pRVar10->command = pRVar10->command + 2;
-  pRVar10 = HUD_Pass;
-  *HUD_Pass->command = NV4097_SET_COLOR_CLEAR_VALUE_x1;
-  pRVar10->command[1] = param_6;
-  pRVar10->command = pRVar10->command + 2;
-  pRVar10 = HUD_Pass;
-  auVar23 = vectorConvertFromUnsignedFixedPointWord(auVar26,0);
-  auVar26 = ZEXT416(0xffffffff);
-  auVar24 = auVar26 | auVar26 << 0x20 | auVar26 << 0x40 | auVar26 << 0x60;
-  auVar25 = vectorConvertFromUnsignedFixedPointWord(auVar27,0);
-  *HUD_Pass->command = NV4097_SET_ZSTENCIL_CLEAR_VALUE_x1;
-  pRVar10->command[1] = 0xffffff00;
-  pRVar10->command = pRVar10->command + 2;
-  pRVar10 = HUD_Pass;
-  auVar26 = ZEXT416(0xffffffff);
-  auVar26 = auVar26 | auVar26 << 0x20 | auVar26 << 0x40 | auVar26 << 0x60;
-  auVar27 = vectorShiftLeftIntegerWord(auVar24,auVar24);
-  auVar24 = vectorShiftLeftIntegerWord(auVar26,auVar26);
-  *HUD_Pass->command = NV4097_SET_DEPTH_MASK_x1;
-  pRVar10->command[1] = 1;
-  pRVar10->command = pRVar10->command + 2;
-  pRVar10 = HUD_Pass;
-  *HUD_Pass->command = NV4097_SET_DEPTH_TEST_ENABLE_x1;
-  pRVar10->command[1] = 1;
-  pRVar10->command = pRVar10->command + 2;
-  pRVar10 = HUD_Pass;
-  *HUD_Pass->command = NV4097_SET_BLEND_ENABLE_x1;
-  pRVar10->command[1] = 1;
-  pRVar10->command = pRVar10->command + 2;
-  pRVar10 = HUD_Pass;
-  *HUD_Pass->command = NV4097_INVALIDATE_L2_x1;
-  pRVar10->command[1] = 1;
-  pRVar10->command = pRVar10->command + 2;
-  auVar26 = loadVectorLeftIndexed(uVar13,0x71174);
-  auVar26 = auVar26 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar26 = auVar26 | auVar26 << 0x20 | auVar26 << 0x40 | auVar26 << 0x60;
-  auVar23 = vectorMultiplyAddFloatingPoint(auVar23,auVar26,auVar27);
-  auVar27 = vectorMultiplyAddFloatingPoint(auVar25,auVar26,auVar24);
-  auVar26 = ZEXT416(0xffffffff);
-  auVar26 = auVar26 | auVar26 << 0x20 | auVar26 << 0x40 | auVar26 << 0x60;
-  auVar24 = vectorShiftLeftIntegerWord(auVar26,auVar26);
-  auVar26 = auVar23 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar23 = auVar26 | auVar26 << 0x20 | auVar26 << 0x40 | auVar26 << 0x60;
-  auVar26 = auVar27 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar27 = auVar26 | auVar26 << 0x20 | auVar26 << 0x40 | auVar26 << 0x60;
-  uVar6 = storeVectorElementWordIndexed(auVar23,0x70,lVar1);
-  *(undefined4 *)(puVar7 + 0xe) = uVar6;
-  uVar6 = storeVectorElementWordIndexed(auVar27,0x74,lVar1);
-  *(undefined4 *)((int)puVar7 + 0x74) = uVar6;
-  uVar6 = storeVectorElementWordIndexed(auVar23,0x78,lVar1);
-  *(undefined4 *)(puVar7 + 0xf) = uVar6;
-  pRVar10 = HUD_Pass;
-  auVar26 = loadVectorLeftIndexed(8,0x71174);
-  auVar26 = auVar26 >> 0x60 & (GPiece<16>)0xffffffff;
-  lVar20 = 2;
-  auVar26 = vectorMultiplyAddFloatingPoint
-                      (auVar25,auVar26 | auVar26 << 0x20 | auVar26 << 0x40 | auVar26 << 0x60,auVar24
-                      );
-  lVar16 = uVar14 - 0xd0;
-  auVar26 = auVar26 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar26 = auVar26 | auVar26 << 0x20 | auVar26 << 0x40 | auVar26 << 0x60;
-  uVar6 = storeVectorElementWordIndexed(auVar26,0x7c,lVar1);
-  *(undefined4 *)((int)puVar7 + 0x7c) = uVar6;
-  *pRVar10->command = NV4097_SET_TRANSFORM_CONSTANT_LOAD_x5;
-  pRVar10->command[1] = 0x12;
-  pRVar18 = pRVar10->command + 2;
-  pRVar10->command = pRVar18;
-  do {
-    pRVar17 = (RsxCmd *)lVar16;
-    *pRVar18 = *pRVar17;
-    pRVar18 = pRVar10->command;
-    pRVar10->command = pRVar18 + 1;
-    lVar16 = lVar16 + 8;
-    pRVar18[1] = pRVar17[1];
-    pRVar18 = pRVar10->command + 1;
-    pRVar10->command = pRVar18;
-    pRVar11 = HUD_Pass;
-    lVar20 = lVar20 + -1;
-  } while (lVar20 != 0);
-  *HUD_Pass->command = (RsxCmd)&DAT_00080a00;
-  pRVar11->command[1] = RVar8;
-  pRVar11->command[2] = RVar4 << 0x10;
-  pRVar18 = pRVar11->command;
-  pRVar11->command = pRVar18 + 3;
-  pRVar18[3] = NV4097_SET_CLIP_MIN_x2;
-  pRVar11->command[1] = 0;
-  pRVar11->command[2] = 0x3f800000;
-  pRVar18 = pRVar11->command;
-  pRVar11->command = pRVar18 + 3;
-  pRVar18[3] = NV4097_SET_VIEWPORT_OFFSET_x8;
-  uVar6 = storeVectorElementWordIndexed(auVar23,4,ZEXT48(pRVar11->command));
-  *(undefined4 *)((uint)(pRVar11->command + 1) & 0xfffffffc) = uVar6;
-  uVar6 = storeVectorElementWordIndexed(auVar27,8,ZEXT48(pRVar11->command));
-  *(undefined4 *)((uint)(pRVar11->command + 2) & 0xfffffffc) = uVar6;
-  pRVar11->command[3] = 0x3f000000;
-  pRVar11->command[4] = 0;
-  uVar6 = storeVectorElementWordIndexed(auVar23,0x14,ZEXT48(pRVar11->command));
-  *(undefined4 *)((uint)(pRVar11->command + 5) & 0xfffffffc) = uVar6;
-  uVar6 = storeVectorElementWordIndexed(auVar26,0x18,ZEXT48(pRVar11->command));
-  *(undefined4 *)((uint)(pRVar11->command + 6) & 0xfffffffc) = uVar6;
-  pRVar11->command[7] = 0x3f000000;
-  pRVar11->command[8] = 0;
-  pRVar18 = pRVar11->command;
-  pRVar11->command = pRVar18 + 9;
-  pRVar18[9] = NV4097_SET_VIEWPORT_OFFSET_x8;
-  uVar6 = storeVectorElementWordIndexed(auVar23,4,ZEXT48(pRVar11->command));
-  *(undefined4 *)((uint)(pRVar11->command + 1) & 0xfffffffc) = uVar6;
-  uVar6 = storeVectorElementWordIndexed(auVar27,8,ZEXT48(pRVar11->command));
-  *(undefined4 *)((uint)(pRVar11->command + 2) & 0xfffffffc) = uVar6;
-  pRVar11->command[3] = 0x3f000000;
-  pRVar11->command[4] = 0;
-  uVar6 = storeVectorElementWordIndexed(auVar23,0x14,ZEXT48(pRVar11->command));
-  *(undefined4 *)((uint)(pRVar11->command + 5) & 0xfffffffc) = uVar6;
-  uVar6 = storeVectorElementWordIndexed(auVar26,0x18,ZEXT48(pRVar11->command));
-  *(undefined4 *)((uint)(pRVar11->command + 6) & 0xfffffffc) = uVar6;
-  pRVar11->command[7] = 0x3f000000;
-  pRVar11->command[8] = 0;
-  pRVar11->command = pRVar11->command + 9;
-  pRVar10 = HUD_Pass;
-  *HUD_Pass->command = NV4097_SET_SCISSOR_HORIZONTAL_x2;
-  pRVar10->command[1] = RVar8;
-  pRVar10->command[2] = RVar4 << 0x10;
-  pRVar10->command = pRVar10->command + 3;
-  idol_draw::BindVertexProgram(iVar12,HUD_Pass,0xc);
-  idol_draw::BindFragmentProgram(iVar12,HUD_Pass,0xc);
-  pRVar10 = HUD_Pass;
-  *HUD_Pass->command = NV4097_CLEAR_SURFACE_x1;
-  pRVar10->command[1] = 0xf3;
-  pRVar18 = pRVar10->command;
-  pRVar10->command = pRVar18 + 2;
-  pRVar18[2] = NV4097_NO_OPERATION_x1;
-  pRVar10->command[1] = 0;
-  pRVar10->command = pRVar10->command + 2;
-  uVar13 = FUN_00502f98(0,0,0,0,0,0,1,1);
-  SetGSReg(0x16,uVar13);
-  uVar13 = idol_draw::PackCmd(0,1,0,1,0x80);
-  SetGSReg(3,uVar13);
-  return;
+    int width = 1 << log2Width;
+    int height = 1 << log2Height;
+
+    g_ScreenWidth = width;
+    g_ScreenHeight = height;
+    g_ScreenHalfWidth = width >> 1;
+    g_ScreenHalfHeight = height >> 1;
+    SCREEN_PROJECTION_MAP_X = (2048 - g_ScreenHalfWidth) << 4;
+    SCREEN_PROJECTION_MAP_Y = (2048 - g_ScreenHalfHeight) << 4;
+    DAT_00966b18 = (g_ScreenHalfWidth << 4) + 0x8000;
+    DAT_00966b1c = (g_ScreenHalfHeight << 4) + 0x8000;
+
+    g_ViewContext.fovScale = 1.0f;
+    g_ViewContext.nearClip = 32.0f;
+    g_ViewContext.farClip = 524288.0f;
+    g_ViewContext.xratio = xratio;
+    g_ViewContext.xpix = (float)FastIntToDouble(width) * 0.5f;
+    g_ViewContext.ypix = (float)FastIntToDouble(height) * 0.5f;
+    g_ViewContext.fogNearDist = 0.0f;
+    g_ViewContext.fogFarDist = 524288.0f;
+    g_ViewContext.fogNearIntensity = 255.0f;
+    g_ViewContext.fogFarIntensity = 0.0f;
+    g_ViewContext.xclip = g_ViewContext.xpix * 4.0f;
+    g_ViewContext.yclip = g_ViewContext.ypix * 4.0f;
+
+    UpdateViewContext();
+    UploadViewMatricesToPasses();
+
+    IdolDraw *idol = Idol();
+
+    g_AuxWidth = width;
+    g_AuxHeight = height;
+    idol->auxDepth++;
+
+    IdolSurface surface;
+
+    memset(&surface, 0, sizeof(surface));
+    surface.type = CELL_GCM_SURFACE_PITCH;
+    surface.colorFormat = CELL_GCM_SURFACE_A8R8G8B8;
+    surface.colorTarget = CELL_GCM_SURFACE_TARGET_0;
+    surface.colorOffset[0] = idol->auxBuffer - idol->vramBase;
+    surface.colorPitch[0] = width * 4;
+
+    for (int i = 1; i < 4; i++) {
+        surface.colorLocation[i] = 0;
+        surface.colorOffset[i] = 0;
+        surface.colorPitch[i] = 64;
+    }
+
+    surface.depthFormat = CELL_GCM_SURFACE_Z24S8;
+    surface.depthOffset = idol->auxBuffer + height * width * 4 - idol->vramBase;
+    surface.depthPitch = width * 4;
+    surface.width = width;
+    surface.height = height;
+
+    /* the buffer as an effect texture header */
+    g_AuxBufferTex[0] = surface.colorOffset[0];
+    g_AuxBufferTex[1] = 0x1a529;
+    g_AuxBufferTex[2] = 0x30303;
+    g_AuxBufferTex[3] = 0x80010000;
+    g_AuxBufferTex[4] = 0xaae4;
+    g_AuxBufferTex[5] = 0x2062000;
+    g_AuxBufferTex[6] = width << 16 | height;
+    g_AuxBufferTex[7] = (width * 4) | 1 << 20;
+    ((u8 *)g_AuxBufferTex)[32] = 0;
+    ((u8 *)g_AuxBufferTex)[33] = 0xff;
+
+    EmitSetSurface(HUD_Pass, &surface);
+
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_SET_COLOR_CLEAR_VALUE, clearColor);
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_SET_ZSTENCIL_CLEAR_VALUE, 0xffffff00);
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_SET_DEPTH_MASK, 1);
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_SET_DEPTH_TEST_ENABLE, 1);
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_SET_BLEND_ENABLE, 1);
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_INVALIDATE_L2, 1);
+
+    float halfWidth = (float)width * 0.5f;
+    float halfHeight = (float)height * 0.5f;
+    float screen[4] = { halfWidth, halfHeight, halfWidth, -halfHeight };
+
+    EmitVertexConstVec(HUD_Pass, 18, screen);
+
+    Emit(HUD_Pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_VIEWPORT_HORIZONTAL, 2));
+    Emit(HUD_Pass, width << 16);
+    Emit(HUD_Pass, height << 16);
+    Emit(HUD_Pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_CLIP_MIN, 2));
+    EmitF(HUD_Pass, 0.0f);
+    EmitF(HUD_Pass, 1.0f);
+
+    /* the viewport offset and scale, written twice */
+    for (int i = 0; i < 2; i++) {
+        Emit(HUD_Pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_VIEWPORT_OFFSET, 8));
+        EmitF(HUD_Pass, halfWidth);
+        EmitF(HUD_Pass, halfHeight);
+        EmitF(HUD_Pass, 0.5f);
+        EmitF(HUD_Pass, 0.0f);
+        EmitF(HUD_Pass, halfWidth);
+        EmitF(HUD_Pass, -halfHeight);
+        EmitF(HUD_Pass, 0.5f);
+        EmitF(HUD_Pass, 0.0f);
+    }
+
+    Emit(HUD_Pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_SCISSOR_HORIZONTAL, 2));
+    Emit(HUD_Pass, width << 16);
+    Emit(HUD_Pass, height << 16);
+
+    idol_draw::BindVertexProgram((uintptr_t)idol, (int)(uintptr_t)HUD_Pass, 12);
+    idol_draw::BindFragmentProgram((uintptr_t)idol, (int)(uintptr_t)HUD_Pass, 12);
+
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_CLEAR_SURFACE, CELL_GCM_CLEAR_Z | CELL_GCM_CLEAR_S | CELL_GCM_CLEAR_R | CELL_GCM_CLEAR_G | CELL_GCM_CLEAR_B | CELL_GCM_CLEAR_A);
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_NO_OPERATION, 0);
+
+    SetGSReg(0x16, FUN_00502f98(0, 0, 0, 0, 0, 0, 1, 1));
+    SetGSReg(3, idol_draw::PackCmd(0, 1, 0, 1, 0x80));
 }
 
 
 // 0x0071ac0 (0x4b0 bytes)
-void ResetHUDPass(void)
-
+/* DL's EndAuxDrawMode: the view context and the HUD pass back on the frame buffer with the HUD's
+   programs and states (no depth, alpha blending), and the HUD pass's cached texture and state
+   words forgotten */
+void EndAuxDrawMode(void)
 {
-  ushort uVar1;
-  ushort uVar2;
-  RsxCmd *pRVar3;
-  int iVar4;
-  int iVar5;
-  RenderingStep *pRVar6;
-  int *piVar7;
-  
-  STUB_000780fc();
-  InitViewContext();
-  UpdateViewContext();
-  piVar7 = g_pIdolDraw;
-  pRVar6 = HUD_Pass;
-  pRVar3 = HUD_Pass->command;
-  g_pIdolDraw[0x8b6] = g_pIdolDraw[0x8b6] + -1;
-  *pRVar3 = NV4097_SET_CONTEXT_DMA_COLOR_A_x1;
-  pRVar6->command[1] = *(byte *)(piVar7 + 0x6fa) + 0xfeed0000;
-  pRVar3 = pRVar6->command;
-  pRVar6->command = pRVar3 + 2;
-  pRVar3[2] = NV4097_SET_CONTEXT_DMA_COLOR_B_x1;
-  pRVar6->command[1] = *(byte *)((int)piVar7 + 0x1be9) + 0xfeed0000;
-  pRVar3 = pRVar6->command;
-  pRVar6->command = pRVar3 + 2;
-  pRVar3[2] = NV4097_SET_CONTEXT_DMA_COLOR_C_x2;
-  pRVar6->command[1] = *(byte *)((int)piVar7 + 0x1bea) + 0xfeed0000;
-  pRVar6->command[2] = *(byte *)((int)piVar7 + 0x1beb) + 0xfeed0000;
-  pRVar3 = pRVar6->command;
-  pRVar6->command = pRVar3 + 3;
-  pRVar3[3] = NV4097_SET_CONTEXT_DMA_ZETA_x1;
-  pRVar6->command[1] = *(byte *)((int)piVar7 + 0x1c0d) + 0xfeed0000;
-  pRVar3 = pRVar6->command;
-  pRVar6->command = pRVar3 + 2;
-  uVar1 = *(ushort *)(piVar7 + 0x706);
-  uVar2 = *(ushort *)((int)piVar7 + 0x1c1a);
-  pRVar3[2] = (RsxCmd)&DAT_00180208;
-  pRVar6->command[1] =
-       (uint)*(byte *)((int)piVar7 + 0x1be6) | (uint)*(byte *)(piVar7 + 0x703) << 5 |
-       (uint)*(byte *)(piVar7 + 0x6f9) << 8 | (uint)*(byte *)((int)piVar7 + 0x1be5) << 0xc |
-       (RsxCmd)((0x1fU - LZCOUNT((uint)uVar1) & 0xffffffff) << 0x10) |
-       (RsxCmd)((0x1fU - LZCOUNT((uint)uVar2) & 0xffffffff) << 0x18);
-  pRVar6->command[2] = piVar7[0x6ff];
-  pRVar6->command[3] = piVar7[0x6fb];
-  pRVar6->command[4] = piVar7[0x704];
-  pRVar6->command[5] = piVar7[0x6fc];
-  pRVar6->command[6] = piVar7[0x700];
-  pRVar3 = pRVar6->command;
-  pRVar6->command = pRVar3 + 7;
-  pRVar3[7] = NV4097_SET_SURFACE_PITCH_Z_x1;
-  pRVar6->command[1] = piVar7[0x705];
-  pRVar3 = pRVar6->command;
-  pRVar6->command = pRVar3 + 2;
-  pRVar3[2] = NV4097_SET_SURFACE_PITCH_C_x4;
-  pRVar6->command[1] = piVar7[0x701];
-  pRVar6->command[2] = piVar7[0x702];
-  pRVar6->command[3] = piVar7[0x6fd];
-  pRVar6->command[4] = piVar7[0x6fe];
-  pRVar3 = pRVar6->command;
-  pRVar6->command = pRVar3 + 5;
-  pRVar3[5] = NV4097_SET_SURFACE_COLOR_TARGET_x1;
-  pRVar6->command[1] = (uint)*(byte *)((int)piVar7 + 0x1be7);
-  pRVar3 = pRVar6->command;
-  pRVar6->command = pRVar3 + 2;
-  pRVar3[2] = NV4097_SET_WINDOW_OFFSET_x1;
-  pRVar6->command[1] =
-       CONCAT22(*(undefined2 *)((int)piVar7 + 0x1c1e),*(undefined2 *)(piVar7 + 0x707));
-  pRVar3 = pRVar6->command;
-  pRVar6->command = pRVar3 + 2;
-  pRVar3[2] = NV4097_SET_SURFACE_CLIP_HORIZONTAL_x2;
-  pRVar6->command[1] = CONCAT22(*(undefined2 *)(piVar7 + 0x706),*(undefined2 *)(piVar7 + 0x707));
-  pRVar6->command[2] =
-       CONCAT22(*(undefined2 *)((int)piVar7 + 0x1c1a),*(undefined2 *)((int)piVar7 + 0x1c1e));
-  pRVar3 = pRVar6->command;
-  pRVar6->command = pRVar3 + 3;
-  pRVar3[3] = NV4097_SET_SHADER_WINDOW_x1;
-  pRVar6->command[1] =
-       (uint)*(ushort *)((int)piVar7 + 0x1c1a) - (*(ushort *)((int)piVar7 + 0x1c1a) >> 0xc & 1) |
-       0x1000;
-  pRVar6->command = pRVar6->command + 2;
-  FUN_004d86b0(piVar7);
-  idol_draw::BindVertexProgram(piVar7,HUD_Pass,0xc);
-  idol_draw::BindFragmentProgram(piVar7,HUD_Pass,0xc);
-  pRVar6 = HUD_Pass;
-  *HUD_Pass->command = NV4097_SET_DEPTH_MASK_x1;
-  pRVar6->command[1] = 0;
-  pRVar6->command = pRVar6->command + 2;
-  pRVar6 = HUD_Pass;
-  *HUD_Pass->command = NV4097_SET_DEPTH_TEST_ENABLE_x1;
-  pRVar6->command[1] = 0;
-  pRVar6->command = pRVar6->command + 2;
-  pRVar6 = HUD_Pass;
-  *HUD_Pass->command = NV4097_SET_BLEND_ENABLE_x1;
-  pRVar6->command[1] = 1;
-  pRVar6->command = pRVar6->command + 2;
-  pRVar6 = HUD_Pass;
-  *HUD_Pass->command = NV4097_SET_BLEND_EQUATION_x1;
-  pRVar6->command[1] = 0x80068006;
-  pRVar6->command = pRVar6->command + 2;
-  pRVar6 = HUD_Pass;
-  *HUD_Pass->command = NV4097_SET_BLEND_FUNC_SFACTOR_x2;
-  pRVar6->command[1] = 0x3020302;
-  pRVar6->command[2] = 0x3030303;
-  pRVar6->command = pRVar6->command + 3;
-  pRVar6 = HUD_Pass;
-  *HUD_Pass->command = NV4097_SET_ALPHA_TEST_ENABLE_x1;
-  pRVar6->command[1] = 0;
-  iVar4 = piVar7[1];
-  iVar5 = piVar7[2];
-  pRVar6->command = pRVar6->command + 2;
-  (*(code *)**(undefined4 **)(*piVar7 + 0x10))(piVar7,HUD_Pass,iVar4,iVar5);
-  pRVar6 = HUD_Pass;
-  memset(HUD_Pass + 1,0,0x90);
-  memset(&pRVar6[8].command,0xff,0x48);
-  pRVar6[9].field7_0x10 = 0;
-  pRVar6[9].callback = (undefined *)0x0;
-  ComposeCameraMatrix();
-  return;
+    STUB_000780fc();
+    InitViewContext();
+    UpdateViewContext();
+
+    IdolDraw *idol = Idol();
+
+    idol->auxDepth--;
+
+    EmitSetSurface(HUD_Pass, &idol->surface);
+
+    FUN_004d86b0((int)(uintptr_t)idol);
+    idol_draw::BindVertexProgram((uintptr_t)idol, (int)(uintptr_t)HUD_Pass, 12);
+    idol_draw::BindFragmentProgram((uintptr_t)idol, (int)(uintptr_t)HUD_Pass, 12);
+
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_SET_DEPTH_MASK, 0);
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_SET_DEPTH_TEST_ENABLE, 0);
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_SET_BLEND_ENABLE, 1);
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_SET_BLEND_EQUATION, CELL_GCM_FUNC_ADD << 16 | CELL_GCM_FUNC_ADD);
+    Emit(HUD_Pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_BLEND_FUNC_SFACTOR, 2));
+    Emit(HUD_Pass, CELL_GCM_SRC_ALPHA << 16 | CELL_GCM_SRC_ALPHA);
+    Emit(HUD_Pass, CELL_GCM_ONE_MINUS_SRC_ALPHA << 16 | CELL_GCM_ONE_MINUS_SRC_ALPHA);
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_SET_ALPHA_TEST_ENABLE, 0);
+
+    idol->vtable->unk10(idol, (int)(uintptr_t)HUD_Pass, idol->unk04, idol->unk08);
+
+    /* the pass's caches past its 0x14-byte header: four bound texture headers (FUN_004d6bb0),
+       state words at 0xa8, and the words at 0xc0 and 0xc4 */
+    u8 *pass = (u8 *)HUD_Pass;
+
+    memset(pass + 0x14, 0, 0x90);
+    memset(pass + 0xa8, 0xff, 0x48);
+    *(u32 *)(pass + 0xc4) = 0;
+    *(u32 *)(pass + 0xc0) = 0;
+
+    ComposeCameraMatrix();
 }
 
 
 // 0x0071f70 (0x130 bytes)
+/* when there are effects in g_EffectTableCnt: the clamp, filtering and blend GS registers for
+   them, and the two (empty) effect passes, the second with DAT_0095cd40 at -0.04 */
 void ____Draw_FogBlendPass(void)
-
 {
-  undefined8 uVar1;
-  
-  if (g_EffectTableCnt != 0) {
-    uVar1 = SCE_GS_SET_CLAMP(1,1,0,0,0,0);
-    SetGSReg(6,uVar1);
-    uVar1 = SCE_GS_SET_TEX1(1,0,1,1,0,0,0);
-    SetGSReg(0x1a,uVar1);
-    uVar1 = idol_draw::Blend(1,0,0x3f,1,0,0,1,2);
-    SetGSReg(0x16,uVar1);
-    uVar1 = FUN_0050302c(1);
-    SetGSReg(8,uVar1);
+    if (g_EffectTableCnt == 0) {
+        return;
+    }
+
+    SetGSReg(6, SCE_GS_SET_CLAMP(1, 1, 0, 0, 0, 0));
+    SetGSReg(0x1a, SCE_GS_SET_TEX1(1, 0, 1, 1, 0, 0, 0));
+    SetGSReg(0x16, idol_draw::Blend(1, 0, 0x3f, 1, 0, 0, 1, 2));
+    SetGSReg(8, FUN_0050302c(1));
+
     STUB_00074cec();
-    DAT_0095cd40 = 0xbd23d70a;
+
+    float offset = -0.04f;
+
+    DAT_0095cd40 = *(u32 *)&offset;
     STUB_00074ce8();
     DAT_0095cd40 = 0;
-    uVar1 = FUN_0050302c(0);
-    SetGSReg(8,uVar1);
-  }
-  return;
+
+    SetGSReg(8, FUN_0050302c(0));
 }
 
 
 // 0x00720a0 (0x88 bytes)
+/* the PS2 alpha palette: entry i (stored at i with bits 3 and 4 swapped, the GS CLUT order)
+   has alpha i / 2 */
 void InitAlphaPal(void)
-
 {
-  uint uVar1;
-  ulonglong uVar2;
-  ulonglong uVar3;
-  ulonglong uVar4;
-  
-  uVar2 = 0;
-  do {
-    uVar1 = (uint)uVar2;
-    uVar3 = uVar2 & 0xe7 | 0x10;
-    uVar3 = uVar3 + (ZERO_MASK((uVar1 & 8)) & (uVar2 & 0xe7) - uVar3);
-    uVar4 = uVar3 | 8;
-    uVar2 = (ulonglong)(int)(uVar1 + 1);
-    *(int *)(&DAT_0095ea14 +
-            (int)((uVar4 + (ZERO_MASK((uVar1 & 0x10)) & uVar3 - uVar4) & 0xffffffff
-                  ) << 2)) = ((int)uVar1 >> 1) << 0x18;
-  } while ((int)(uVar1 + 1) < 0x100);
-  return;
+    for (int i = 0; i < 256; i++) {
+        int slot = i & 0xe7;
+
+        if (i & 8) {
+            slot |= 0x10;
+        }
+
+        if (i & 0x10) {
+            slot |= 8;
+        }
+
+        g_AlphaPal[slot] = (i >> 1) << 24;
+    }
 }
 
 
 // 0x0072128 (0xd4 bytes)
+/* the alpha GS words of the two screen colour effects (DL: ScreenColorEffect @0x71eed0 and
+   ScreenColorEffectLight @0x71ef00); the level's effect is the current one */
 void InitScreenEffects(void)
-
 {
-  DAT_0071f004 = 0x10000;
-  DAT_0071eed8 = idol_draw::PackCmd(2,0,0,1,0x1f);
-  DAT_0071eee8 = idol_draw::PackCmd(2,0,0,1,0x1f);
-  DAT_0071ef08 = idol_draw::PackCmd(2,0,0,1,0x1f);
-  DAT_0071ef18 = idol_draw::PackCmd(2,0,0,1,0x1f);
-  ScreenColorEffectLevel = ScreenColorEffectNow;
-  return;
+    ScreenVBEffect *normal = (ScreenVBEffect *)&DAT_0071eed0;
+    ScreenVBEffect *light = (ScreenVBEffect *)&DAT_0071ef00;
+
+    DAT_0071f004 = 0x10000;
+    normal->BKG_alpha = idol_draw::PackCmd(2, 0, 0, 1, 0x1f);
+    normal->A_alpha = idol_draw::PackCmd(2, 0, 0, 1, 0x1f);
+    light->BKG_alpha = idol_draw::PackCmd(2, 0, 0, 1, 0x1f);
+    light->A_alpha = idol_draw::PackCmd(2, 0, 0, 1, 0x1f);
+    ScreenColorEffectLevel = (u32)(uintptr_t)ScreenColorEffectNow;
 }
 
 
 // 0x0072200 (0x8 bytes)
 undefined8 STUB_00072200_RET_0(...)
-
 {
-  return 0;
+    return 0;
 }
 
 
 // 0x0072208 (0x4 bytes)
 void STUB_00072208(...)
-
 {
-  return;
 }
 
 
 // 0x007220c (0x8 bytes)
 undefined8 STUB_0007220c_RET_0(...)
-
 {
-  return 0;
+    return 0;
 }
 
 
 // 0x0072214 (0x8 bytes)
 undefined8 STUB_00072214_RET_0(...)
-
 {
-  return 0;
+    return 0;
 }
 
 
 // 0x007221c (0x4 bytes)
 void STUB_0007221c(...)
-
 {
-  return;
 }
 
 
 // 0x0072220 (0x8 bytes)
 undefined8 STUB_00072220_RET_0(...)
-
 {
-  return 0;
+    return 0;
 }
 
 
 // 0x0072230 (0x10 bytes)
 undefined8 STUB_00072230_RET_0(...)
-
 {
-  return 0;
+    return 0;
 }
+
+/* colour bytes reversed */
+static inline u32 SwapColor(u32 color)
+{
+    return color >> 24 | (color >> 8 & 0xff00) | color << 24 | (color & 0xff00) << 8;
+}
+
+/* pass index of the passes array that starts at DepthPass (0x8fa414) */
+static inline RenderingStep *PassByIndex(int index)
+{
+    return ((RenderingStep **)&DepthPass)[index & 0xf];
+}
+
+/* a vertex of FastDrawQuad's buffer */
+struct FastQuadVertex {
+    float x;
+    float y;
+    float z;
+    float s;
+    float t;
+    u32 color;
+};
 
 
 // 0x0072280 (0x508 bytes)
-void FastDrawQuad(undefined4 *param_1,uint param_2,undefined8 param_3,longlong param_4,
-                       ulonglong param_5)
-
+/* DL's FastDrawQuad: quad as a 4-vertex strip on pass passIndex with programs 5/6, transformed by
+   mtx (whose w column is set to 0, 0, 0, 1 first) or the identity; texHeaders + quad->tex0 * 0x24
+   is the texture, quad->clamp its sampler, quad->alpha (when set) the depth state. unused is not
+   read. */
+void FastDrawQuad(QuadDef *quad, Mtx4 *mtx, int unused, void *texHeaders, int passIndex)
 {
-  int iVar1;
-  RenderingStep *pRVar2;
-  undefined4 *puVar3;
-  RsxCmd RVar4;
-  RsxCmd *pRVar5;
-  undefined4 *puVar6;
-  undefined4 *puVar7;
-  uint uVar8;
-  undefined4 *puVar9;
-  undefined4 *puVar10;
-  RsxCmd *pRVar11;
-  undefined4 *puVar12;
-  RsxCmd *pRVar13;
-  longlong lVar14;
-  GPiece<16> auVar15;
-  GPiece<16> auVar16;
-  GPiece<16> auVar17;
-  GPiece<16> auVar18;
-  GPiece<16> auVar19;
-  RsxCmd local_d0 [16];
-  RsxCmd local_90 [16];
-  undefined4 local_50;
-  undefined4 local_4c [3];
-  
-  iVar1 = g_pIdolDraw;
-  pRVar2 = *(RenderingStep **)((int)&DepthPass + ((uint)((param_5 & 0xffffffff) << 2) & 0x3c));
-  idol_draw::BindVertexProgram(g_pIdolDraw,pRVar2,5);
-  idol_draw::BindFragmentProgram(iVar1,pRVar2,6);
-  puVar6 = (undefined4 *)idol::AllocateMemAlign(FrameHeap,0x60,0x10);
-  lVar14 = 4;
-  puVar12 = param_1;
-  puVar9 = param_1;
-  puVar10 = param_1;
-  puVar7 = puVar6;
-  do {
-    *puVar7 = *puVar12;
-    puVar7[1] = puVar12[1];
-    puVar3 = puVar12 + 2;
-    puVar12 = puVar12 + 4;
-    puVar7[2] = *puVar3;
-    puVar7[3] = puVar9[0x14];
-    puVar3 = puVar9 + 0x15;
-    puVar9 = puVar9 + 2;
-    puVar7[4] = *puVar3;
-    uVar8 = puVar10[0x10];
-    puVar10 = puVar10 + 1;
-    puVar7[5] = uVar8 >> 0x18 | uVar8 >> 8 & 0xff00 | uVar8 << 0x18 | (uVar8 & 0xff00) << 8;
-    puVar7 = puVar7 + 6;
-    lVar14 = lVar14 + -1;
-  } while (lVar14 != 0);
-  if (*(longlong *)(param_1 + 0x22) != 0) {
-    idol_draw::DrawDepth(pRVar2,*(longlong *)(param_1 + 0x22));
-  }
-  FUN_004d6704(*(undefined8 *)(param_1 + 0x1c),&local_50,local_4c);
-  FUN_004d676c(pRVar2,0,param_4 + *(longlong *)(param_1 + 0x1e) * 0x24 & 0xffffffff,local_50,
-               local_4c[0]);
-  idol_draw::ResetPassState(pRVar2);
-  *pRVar2->command = NV4097_SET_VERTEX_DATA_ARRAY_FORMAT_x1;
-  pRVar2->command[1] = 0x1832;
-  pRVar11 = pRVar2->command;
-  pRVar2->command = pRVar11 + 2;
-  pRVar11[2] = 0x41744;
-  pRVar2->command[1] = 0x1822;
-  pRVar11 = pRVar2->command;
-  pRVar2->command = pRVar11 + 2;
-  pRVar11[2] = 0x4174c;
-  pRVar2->command[1] = 0x1844;
-  pRVar11 = pRVar2->command;
-  pRVar2->command = pRVar11 + 2;
-  iVar1 = *(int *)(iVar1 + 0x4a8);
-  pRVar11[2] = NV4097_SET_VERTEX_DATA_ARRAY_OFFSET_x1;
-  RVar4 = (int)puVar6 - iVar1;
-  pRVar2->command[1] = RVar4 | 0x80000000;
-  pRVar11 = pRVar2->command;
-  pRVar2->command = pRVar11 + 2;
-  pRVar11[2] = 0x41684;
-  pRVar2->command[1] = RVar4 + 0xc | 0x80000000;
-  pRVar11 = pRVar2->command;
-  pRVar2->command = pRVar11 + 2;
-  pRVar11[2] = 0x4168c;
-  pRVar2->command[1] = RVar4 + 0x14 | 0x80000000;
-  pRVar11 = pRVar2->command;
-  pRVar2->command = pRVar11 + 2;
-  if (param_2 == 0) {
-    pRVar13 = local_90;
-    pRVar11[2] = 0x441efc;
-    lVar14 = 8;
-    pRVar2->command[1] = 4;
-    pRVar11 = pRVar2->command + 2;
-    pRVar2->command = pRVar11;
-    do {
-      *pRVar11 = *pRVar13;
-      pRVar11 = pRVar2->command;
-      pRVar2->command = pRVar11 + 1;
-      pRVar5 = pRVar13 + 1;
-      pRVar13 = pRVar13 + 2;
-      pRVar11[1] = *pRVar5;
-      pRVar11 = pRVar2->command + 1;
-      pRVar2->command = pRVar11;
-      lVar14 = lVar14 + -1;
-    } while (lVar14 != 0);
-  }
-  else {
-    *(undefined4 *)(param_2 + 0x2c) = 0;
-    *(undefined4 *)(param_2 + 0x1c) = 0;
-    *(undefined4 *)(param_2 + 0xc) = 0;
-    *(undefined4 *)(param_2 + 0x3c) = 0x3f800000;
-    auVar15 = *(undefined1 (*) [16])(param_2 + 0x20 & 0xfffffff0);
-    auVar17 = *(undefined1 (*) [16])(param_2 + 0x10 & 0xfffffff0);
-    auVar18 = vectorMergeHighWord(*(undefined1 (*) [16])(param_2 & 0xfffffff0),auVar15);
-    auVar19 = *(undefined1 (*) [16])(param_2 + 0x30 & 0xfffffff0);
-    pRVar13 = local_d0;
-    auVar15 = vectorMergeLowWord(*(undefined1 (*) [16])(param_2 & 0xfffffff0),auVar15);
-    auVar16 = vectorMergeHighWord(auVar17,auVar19);
-    auVar17 = vectorMergeLowWord(auVar17,auVar19);
-    vectorMergeHighWord(auVar18,auVar16);
-    vectorMergeLowWord(auVar18,auVar16);
-    vectorMergeHighWord(auVar15,auVar17);
-    vectorMergeLowWord(auVar15,auVar17);
-    uVar8 = 0;
-    pRVar11[2] = 0x441efc;
-    pRVar2->command[1] = 4;
-    pRVar11 = pRVar2->command + 2;
-    pRVar2->command = pRVar11;
-    do {
-      uVar8 = uVar8 + 1;
-      *pRVar11 = *pRVar13;
-      pRVar13 = pRVar13 + 1;
-      pRVar11 = pRVar2->command + 1;
-      pRVar2->command = pRVar11;
-    } while (uVar8 < 0x10);
-  }
-  *pRVar11 = 0x400c1714;
-  pRVar2->command[1] = 0;
-  pRVar2->command[2] = 0;
-  pRVar2->command[3] = 0;
-  pRVar2->command[4] = NV4097_SET_BEGIN_END_x1;
-  pRVar2->command[5] = 6;
-  pRVar11 = pRVar2->command;
-  pRVar2->command = pRVar11 + 7;
-  pRVar11[6] = 0x40041814;
-  pRVar11 = pRVar2->command;
-  pRVar2->command = pRVar11 + 1;
-  *pRVar11 = 0x3000000;
-  *pRVar2->command = NV4097_SET_BEGIN_END_x1;
-  pRVar2->command[1] = 0;
-  pRVar11 = pRVar2->command;
-  pRVar2->command = pRVar11 + 2;
-  pRVar11[2] = NV4097_SET_VERTEX_DATA_ARRAY_FORMAT_x1;
-  pRVar2->command[1] = 2;
-  pRVar11 = pRVar2->command;
-  pRVar2->command = pRVar11 + 2;
-  pRVar11[2] = 0x41744;
-  pRVar2->command[1] = 2;
-  pRVar11 = pRVar2->command;
-  pRVar2->command = pRVar11 + 2;
-  pRVar11[2] = 0x4174c;
-  pRVar2->command[1] = 2;
-  pRVar2->command = pRVar2->command + 2;
-  return;
+    static const Mtx4 identity = {
+        { 1.0f, 0.0f, 0.0f, 0.0f },
+        { 0.0f, 1.0f, 0.0f, 0.0f },
+        { 0.0f, 0.0f, 1.0f, 0.0f },
+        { 0.0f, 0.0f, 0.0f, 1.0f },
+    };
+
+    IdolDraw *idol = Idol();
+    RenderingStep *pass = PassByIndex(passIndex);
+
+    idol_draw::BindVertexProgram((uintptr_t)idol, (int)(uintptr_t)pass, 5);
+    idol_draw::BindFragmentProgram((uintptr_t)idol, (int)(uintptr_t)pass, 6);
+
+    FastQuadVertex *vertices = (FastQuadVertex *)(uintptr_t)idol::AllocateMemAlign(FrameHeap, 0x60, 0x10);
+    float *st = &quad->st[0][0];
+
+    for (int i = 0; i < 4; i++) {
+        u32 color = quad->rgba[i];
+
+        vertices[i].x = quad->xyzw[i].x;
+        vertices[i].y = quad->xyzw[i].y;
+        vertices[i].z = quad->xyzw[i].z;
+        vertices[i].s = st[i * 2];
+        vertices[i].t = st[i * 2 + 1];
+        vertices[i].color = SwapColor(color);
+    }
+
+    if (quad->alpha != 0) {
+        idol_draw::DrawDepth(pass, quad->alpha);
+    }
+
+    int samplerA;
+    int samplerB;
+
+    FUN_004d6704(quad->clamp, &samplerA, &samplerB);
+    FUN_004d676c(pass, 0, (u8 *)texHeaders + (int)quad->tex0 * 0x24, samplerA, samplerB);
+    idol_draw::ResetPassState(pass);
+
+    u32 offset = (u32)(uintptr_t)vertices - idol->memBase;
+
+    /* position: 3 floats, coordinates: 2 floats, colour: 4 bytes; stride 24 */
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 0 * 4, 24 << 8 | 3 << 4 | CELL_GCM_VERTEX_F);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 1 * 4, 24 << 8 | 2 << 4 | CELL_GCM_VERTEX_F);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 3 * 4, 24 << 8 | 4 << 4 | CELL_GCM_VERTEX_UB);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_OFFSET + 0 * 4, offset | CELL_GCM_LOCATION_MAIN << 31);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_OFFSET + 1 * 4, (offset + 12) | CELL_GCM_LOCATION_MAIN << 31);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_OFFSET + 3 * 4, (offset + 20) | CELL_GCM_LOCATION_MAIN << 31);
+
+    Mtx4 transposed;
+
+    if (mtx == NULL) {
+        transposed = identity;
+    }
+    else {
+        mtx->v0.w = 0.0f;
+        mtx->v1.w = 0.0f;
+        mtx->v2.w = 0.0f;
+        mtx->v3.w = 1.0f;
+        Mtx4_Transpose(&transposed, mtx);
+    }
+
+    EmitVertexConstMtx(pass, 4, &transposed);
+
+    /* (three words to method 0x1714, all zero) */
+    Emit(pass, 0x400c1714);
+    Emit(pass, 0);
+    Emit(pass, 0);
+    Emit(pass, 0);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_BEGIN_END, CELL_GCM_PRIMITIVE_TRIANGLE_STRIP);
+    EmitMethod(pass, CELL_GCM_NV4097_DRAW_ARRAYS, (4 - 1) << 24 | 0);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_BEGIN_END, 0);
+
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 0 * 4, CELL_GCM_VERTEX_F);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 1 * 4, CELL_GCM_VERTEX_F);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 3 * 4, CELL_GCM_VERTEX_F);
 }
 
 
 // 0x0072788 (0x4 bytes)
 void STUB_00072788(...)
-
 {
-  return;
+}
+
+/* libgcm's cellGcmSetDrawArrays from vertex 0: one DRAW_ARRAYS method with a word per batch of
+   at most 256 vertices (the first batch, then whole batches, then the rest) */
+static inline void EmitDrawArrays(RenderingStep *pass, int count)
+{
+    int first = count < 256 ? count : 256;
+    int rest = count - first;
+
+    if (rest < 0) {
+        rest = 0;
+    }
+
+    int batches = rest >> 8;
+    int remainder = rest & 0xff;
+    int words = batches + (remainder != 0) + (first != 0);
+
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_DRAW_ARRAYS, words));
+
+    int start = 0;
+
+    if (first != 0) {
+        Emit(pass, (first - 1) << 24);
+        start = first;
+    }
+
+    for (int i = 0; i < batches; i++) {
+        Emit(pass, start | 0xff000000);
+        start += 256;
+    }
+
+    if (remainder != 0) {
+        Emit(pass, start | (remainder - 1) << 24);
+    }
+}
+
+/* the strip vertex layout of the FastDrawStrip family: position at 0, texture coordinates at
+   0xc and 0x14, colour at 0x1c, 0x20 bytes apart */
+static inline void EmitStripFormat(RenderingStep *pass, int attribute, int size, int type)
+{
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + attribute * 4, 0x20 << 8 | size << 4 | type);
+}
+
+static inline void EmitStripOffset(RenderingStep *pass, int attribute, u32 offset)
+{
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_OFFSET + attribute * 4, offset | CELL_GCM_LOCATION_MAIN << 31);
+}
+
+/* a strip of count vertices, then the given vertex arrays off again */
+static inline void EmitStrip(RenderingStep *pass, int count)
+{
+    /* (three words to method 0x1714, all zero) */
+    Emit(pass, 0x400c1714);
+    Emit(pass, 0);
+    Emit(pass, 0);
+    Emit(pass, 0);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_BEGIN_END, CELL_GCM_PRIMITIVE_TRIANGLE_STRIP);
+    EmitDrawArrays(pass, count);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_BEGIN_END, 0);
+}
+
+static inline void DisableArray(RenderingStep *pass, int attribute)
+{
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + attribute * 4, CELL_GCM_VERTEX_F);
 }
 
 
 // 0x007278c (0x390 bytes)
-void FastDrawStrip_DL(longlong param_1,int param_2)
-
+/* count strip vertices at vertices on DL_Pass with programs 10/11, both texture coordinate
+   sets */
+void FastDrawStrip_DL(int count, void *vertices)
 {
-  RsxCmd *pRVar1;
-  RsxCmd RVar2;
-  RenderingStep *pRVar3;
-  ulonglong uVar4;
-  ulonglong uVar5;
-  int iVar6;
-  ulonglong uVar7;
-  RsxCmd RVar9;
-  ulonglong uVar8;
-  ulonglong uVar10;
-  
-  iVar6 = g_pIdolDraw;
-  pRVar3 = DL_Pass;
-  idol_draw::BindVertexProgram(g_pIdolDraw,DL_Pass,10);
-  idol_draw::BindFragmentProgram(iVar6,pRVar3,0xb);
-  *pRVar3->command = NV4097_SET_VERTEX_DATA_ARRAY_FORMAT_x1;
-  pRVar3->command[1] = 0x2032;
-  pRVar1 = pRVar3->command;
-  pRVar3->command = pRVar1 + 2;
-  pRVar1[2] = 0x41744;
-  pRVar3->command[1] = 0x2022;
-  pRVar1 = pRVar3->command;
-  pRVar3->command = pRVar1 + 2;
-  pRVar1[2] = 0x41748;
-  pRVar3->command[1] = 0x2022;
-  pRVar1 = pRVar3->command;
-  pRVar3->command = pRVar1 + 2;
-  pRVar1[2] = 0x4174c;
-  pRVar3->command[1] = 0x2044;
-  pRVar1 = pRVar3->command;
-  pRVar3->command = pRVar1 + 2;
-  iVar6 = *(int *)(iVar6 + 0x4a8);
-  pRVar1[2] = NV4097_SET_VERTEX_DATA_ARRAY_OFFSET_x1;
-  RVar9 = param_2 - iVar6;
-  pRVar3->command[1] = RVar9 | 0x80000000;
-  pRVar1 = pRVar3->command;
-  pRVar3->command = pRVar1 + 2;
-  pRVar1[2] = 0x41684;
-  pRVar3->command[1] = RVar9 + 0xc | 0x80000000;
-  pRVar1 = pRVar3->command;
-  pRVar3->command = pRVar1 + 2;
-  pRVar1[2] = 0x41688;
-  pRVar3->command[1] = RVar9 + 0x14 | 0x80000000;
-  pRVar1 = pRVar3->command;
-  pRVar3->command = pRVar1 + 2;
-  pRVar1[2] = 0x4168c;
-  pRVar3->command[1] = RVar9 + 0x1c | 0x80000000;
-  pRVar1 = pRVar3->command;
-  uVar10 = (param_1 - 0x100U & (longlong)((int)(param_1 - 0x100U) >> 0x1f)) + 0x100;
-  pRVar3->command = pRVar1 + 2;
-  pRVar1[2] = 0x400c1714;
-  uVar4 = param_1 - uVar10 & ~(longlong)((int)(param_1 - uVar10) >> 0x1f);
-  uVar7 = (uVar4 << 0x20) >> 0x28;
-  pRVar3->command[1] = 0;
-  uVar5 = uVar4 - (uVar4 & 0xffffff00);
-  iVar6 = (int)uVar5;
-  pRVar3->command[2] = 0;
-  pRVar3->command[3] = 0;
-  pRVar3->command[4] = NV4097_SET_BEGIN_END_x1;
-  pRVar3->command[5] = 6;
-  pRVar1 = pRVar3->command;
-  pRVar1[6] = (((uint)uVar4 >> 8) + ((iVar6 != 0)) +
-              (((int)uVar10 != 0))) * 0x40000 | 0x40001814;
-  pRVar3->command = pRVar1 + 7;
-  uVar8 = 0;
-  if ((int)uVar10 != 0) {
-    pRVar1 = pRVar3->command;
-    pRVar3->command = pRVar1 + 1;
-    *pRVar1 = (int)((uVar10 & 0xffffffff) << 0x18) - 0x1000000;
-    uVar8 = uVar10;
-  }
-  RVar9 = (RsxCmd)uVar8;
-  if ((uint)uVar4 >> 8 != 0) {
-    do {
-      pRVar1 = pRVar3->command;
-      RVar2 = (RsxCmd)uVar8;
-      uVar7 = uVar7 - 1;
-      uVar8 = uVar8 + 0x100;
-      RVar9 = (RsxCmd)uVar8;
-      pRVar3->command = pRVar1 + 1;
-      *pRVar1 = RVar2 | 0xff000000;
-    } while (0 < (int)uVar7);
-  }
-  if (iVar6 != 0) {
-    pRVar1 = pRVar3->command;
-    pRVar3->command = pRVar1 + 1;
-    *pRVar1 = RVar9 | (int)((uVar5 & 0xffffffff) << 0x18) - 0x1000000;
-  }
-  *pRVar3->command = NV4097_SET_BEGIN_END_x1;
-  pRVar3->command[1] = 0;
-  pRVar1 = pRVar3->command;
-  pRVar3->command = pRVar1 + 2;
-  pRVar1[2] = NV4097_SET_VERTEX_DATA_ARRAY_FORMAT_x1;
-  pRVar3->command[1] = 2;
-  pRVar1 = pRVar3->command;
-  pRVar3->command = pRVar1 + 2;
-  pRVar1[2] = 0x41744;
-  pRVar3->command[1] = 2;
-  pRVar1 = pRVar3->command;
-  pRVar3->command = pRVar1 + 2;
-  pRVar1[2] = 0x41748;
-  pRVar3->command[1] = 2;
-  pRVar1 = pRVar3->command;
-  pRVar3->command = pRVar1 + 2;
-  pRVar1[2] = 0x4174c;
-  pRVar3->command[1] = 2;
-  pRVar3->command = pRVar3->command + 2;
-  return;
+    IdolDraw *idol = Idol();
+    RenderingStep *pass = DL_Pass;
+
+    idol_draw::BindVertexProgram((uintptr_t)idol, (int)(uintptr_t)pass, 10);
+    idol_draw::BindFragmentProgram((uintptr_t)idol, (int)(uintptr_t)pass, 11);
+
+    u32 offset = (u32)(uintptr_t)vertices - idol->memBase;
+
+    EmitStripFormat(pass, 0, 3, CELL_GCM_VERTEX_F);
+    EmitStripFormat(pass, 1, 2, CELL_GCM_VERTEX_F);
+    EmitStripFormat(pass, 2, 2, CELL_GCM_VERTEX_F);
+    EmitStripFormat(pass, 3, 4, CELL_GCM_VERTEX_UB);
+    EmitStripOffset(pass, 0, offset);
+    EmitStripOffset(pass, 1, offset + 0xc);
+    EmitStripOffset(pass, 2, offset + 0x14);
+    EmitStripOffset(pass, 3, offset + 0x1c);
+
+    EmitStrip(pass, count);
+
+    DisableArray(pass, 0);
+    DisableArray(pass, 1);
+    DisableArray(pass, 2);
+    DisableArray(pass, 3);
 }
 
 
 // 0x0072b1c (0x2c0 bytes)
-void FastDrawStrip_DLNoState(int param_1,void *param_2)
-
+/* FastDrawStrip_DL with the programs already bound, the second coordinate set only */
+void FastDrawStrip_DLNoState(int count, void *vertices)
 {
-  RsxCmd *pRVar1;
-  RsxCmd RVar2;
-  RenderingStep *pRVar3;
-  ulonglong uVar4;
-  ulonglong uVar5;
-  int iVar6;
-  ulonglong uVar7;
-  RsxCmd RVar9;
-  ulonglong uVar8;
-  ulonglong uVar10;
-  
-  iVar6 = g_pIdolDraw;
-  pRVar3 = DL_Pass;
-  *DL_Pass->command = NV4097_SET_VERTEX_DATA_ARRAY_FORMAT_x1;
-  pRVar3->command[1] = 0x2032;
-  pRVar1 = pRVar3->command;
-  pRVar3->command = pRVar1 + 2;
-  pRVar1[2] = 0x41744;
-  pRVar3->command[1] = 0x2022;
-  pRVar1 = pRVar3->command;
-  pRVar3->command = pRVar1 + 2;
-  pRVar1[2] = 0x4174c;
-  pRVar3->command[1] = 0x2044;
-  pRVar1 = pRVar3->command;
-  pRVar3->command = pRVar1 + 2;
-  iVar6 = *(int *)(iVar6 + 0x4a8);
-  pRVar1[2] = NV4097_SET_VERTEX_DATA_ARRAY_OFFSET_x1;
-  RVar9 = param_2 - iVar6;
-  pRVar3->command[1] = RVar9 | 0x80000000;
-  pRVar1 = pRVar3->command;
-  pRVar3->command = pRVar1 + 2;
-  pRVar1[2] = 0x41684;
-  pRVar3->command[1] = RVar9 + 0x14 | 0x80000000;
-  pRVar1 = pRVar3->command;
-  pRVar3->command = pRVar1 + 2;
-  pRVar1[2] = 0x4168c;
-  uVar10 = (param_1 - 0x100U & (longlong)((int)(param_1 - 0x100U) >> 0x1f)) + 0x100;
-  pRVar3->command[1] = RVar9 + 0x1c | 0x80000000;
-  pRVar1 = pRVar3->command;
-  uVar4 = param_1 - uVar10 & ~(longlong)((int)(param_1 - uVar10) >> 0x1f);
-  pRVar3->command = pRVar1 + 2;
-  pRVar1[2] = 0x400c1714;
-  uVar7 = (uVar4 << 0x20) >> 0x28;
-  uVar5 = uVar4 - (uVar4 & 0xffffff00);
-  iVar6 = (int)uVar5;
-  pRVar3->command[1] = 0;
-  pRVar3->command[2] = 0;
-  pRVar3->command[3] = 0;
-  pRVar3->command[4] = NV4097_SET_BEGIN_END_x1;
-  pRVar3->command[5] = 6;
-  pRVar1 = pRVar3->command;
-  pRVar1[6] = (((uint)uVar4 >> 8) + ((iVar6 != 0)) +
-              (((int)uVar10 != 0))) * 0x40000 | 0x40001814;
-  pRVar3->command = pRVar1 + 7;
-  uVar8 = 0;
-  if ((int)uVar10 != 0) {
-    pRVar1 = pRVar3->command;
-    pRVar3->command = pRVar1 + 1;
-    *pRVar1 = (int)((uVar10 & 0xffffffff) << 0x18) - 0x1000000;
-    uVar8 = uVar10;
-  }
-  RVar9 = (RsxCmd)uVar8;
-  if ((uint)uVar4 >> 8 != 0) {
-    do {
-      pRVar1 = pRVar3->command;
-      RVar2 = (RsxCmd)uVar8;
-      uVar7 = uVar7 - 1;
-      uVar8 = uVar8 + 0x100;
-      RVar9 = (RsxCmd)uVar8;
-      pRVar3->command = pRVar1 + 1;
-      *pRVar1 = RVar2 | 0xff000000;
-    } while (0 < (int)uVar7);
-  }
-  if (iVar6 != 0) {
-    pRVar1 = pRVar3->command;
-    pRVar3->command = pRVar1 + 1;
-    *pRVar1 = RVar9 | (int)((uVar5 & 0xffffffff) << 0x18) - 0x1000000;
-  }
-  *pRVar3->command = NV4097_SET_BEGIN_END_x1;
-  pRVar3->command[1] = 0;
-  pRVar1 = pRVar3->command;
-  pRVar3->command = pRVar1 + 2;
-  pRVar1[2] = NV4097_SET_VERTEX_DATA_ARRAY_FORMAT_x1;
-  pRVar3->command[1] = 2;
-  pRVar1 = pRVar3->command;
-  pRVar3->command = pRVar1 + 2;
-  pRVar1[2] = 0x41744;
-  pRVar3->command[1] = 2;
-  pRVar1 = pRVar3->command;
-  pRVar3->command = pRVar1 + 2;
-  pRVar1[2] = 0x4174c;
-  pRVar3->command[1] = 2;
-  pRVar3->command = pRVar3->command + 2;
-  return;
+    IdolDraw *idol = Idol();
+    RenderingStep *pass = DL_Pass;
+    u32 offset = (u32)(uintptr_t)vertices - idol->memBase;
+
+    EmitStripFormat(pass, 0, 3, CELL_GCM_VERTEX_F);
+    EmitStripFormat(pass, 1, 2, CELL_GCM_VERTEX_F);
+    EmitStripFormat(pass, 3, 4, CELL_GCM_VERTEX_UB);
+    EmitStripOffset(pass, 0, offset);
+    EmitStripOffset(pass, 1, offset + 0x14);
+    EmitStripOffset(pass, 3, offset + 0x1c);
+
+    EmitStrip(pass, count);
+
+    DisableArray(pass, 0);
+    DisableArray(pass, 1);
+    DisableArray(pass, 3);
 }
 
 
 // 0x0072ddc (0x394 bytes)
-void FastDrawStrip_Pass(int param_1,void *param_2,int param_3)
-
+/* count strip vertices on pass passIndex (programs 4/6 bound on passes 2 and 9), the first
+   coordinate set */
+void FastDrawStrip_Pass(int count, void *vertices, int passIndex)
 {
-  int iVar1;
-  int iVar2;
-  uint *puVar3;
-  int *piVar4;
-  int iVar5;
-  uint uVar6;
-  ulonglong uVar7;
-  uint uVar9;
-  ulonglong uVar8;
-  ulonglong uVar10;
-  ulonglong uVar11;
-  ulonglong uVar12;
-  int iVar13;
-  
-  iVar2 = g_pIdolDraw;
-  if (((int)param_3 == 2) || ((int)param_3 == 9)) {
-    iVar1 = (int)(param_3 << 2);
-    idol_draw::BindVertexProgram(g_pIdolDraw,*(undefined4 *)((int)&DepthPass + iVar1),4);
-    idol_draw::BindFragmentProgram(iVar2,*(undefined4 *)((int)&DepthPass + iVar1),6);
-  }
-  iVar5 = (int)(param_3 << 2);
-  iVar13 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar13 + 8) = 0x41740;
-  iVar1 = *(int *)(iVar13 + 8);
-  *(undefined4 *)(iVar1 + 4) = 0x2032;
-  *(int *)(iVar13 + 8) = iVar1 + 8;
-  iVar13 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar13 + 8) = 0x41744;
-  iVar1 = *(int *)(iVar13 + 8);
-  *(undefined4 *)(iVar1 + 4) = 0x2022;
-  *(int *)(iVar13 + 8) = iVar1 + 8;
-  iVar13 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar13 + 8) = 0x4174c;
-  iVar1 = *(int *)(iVar13 + 8);
-  *(undefined4 *)(iVar1 + 4) = 0x2044;
-  *(int *)(iVar13 + 8) = iVar1 + 8;
-  iVar1 = *(int *)((int)&DepthPass + iVar5);
-  uVar9 = param_2 - *(int *)(iVar2 + 0x4a8);
-  **(undefined4 **)(iVar1 + 8) = 0x41680;
-  iVar2 = *(int *)(iVar1 + 8);
-  *(uint *)(iVar2 + 4) = uVar9 | 0x80000000;
-  *(int *)(iVar1 + 8) = iVar2 + 8;
-  iVar1 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar1 + 8) = 0x41684;
-  iVar2 = *(int *)(iVar1 + 8);
-  *(uint *)(iVar2 + 4) = uVar9 + 0xc | 0x80000000;
-  *(int *)(iVar1 + 8) = iVar2 + 8;
-  iVar1 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar1 + 8) = 0x4168c;
-  iVar2 = *(int *)(iVar1 + 8);
-  *(uint *)(iVar2 + 4) = uVar9 + 0x1c | 0x80000000;
-  *(int *)(iVar1 + 8) = iVar2 + 8;
-  iVar1 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar1 + 8) = 0x400c1714;
-  *(undefined4 *)(*(int *)(iVar1 + 8) + 4) = 0;
-  uVar10 = (param_1 - 0x100U & (longlong)((int)(param_1 - 0x100U) >> 0x1f)) + 0x100;
-  *(undefined4 *)(*(int *)(iVar1 + 8) + 8) = 0;
-  *(undefined4 *)(*(int *)(iVar1 + 8) + 0xc) = 0;
-  uVar11 = param_1 - uVar10 & ~(longlong)((int)(param_1 - uVar10) >> 0x1f);
-  *(undefined4 *)(*(int *)(iVar1 + 8) + 0x10) = 0x41808;
-  iVar2 = *(int *)(iVar1 + 8);
-  uVar7 = (uVar11 << 0x20) >> 0x28;
-  uVar12 = uVar11 - (uVar11 & 0xffffff00);
-  iVar13 = (int)uVar12;
-  *(undefined4 *)(iVar2 + 0x14) = 6;
-  *(int *)(iVar1 + 8) = iVar2 + 0x18;
-  iVar2 = *(int *)((int)&DepthPass + iVar5);
-  puVar3 = *(uint **)(iVar2 + 8);
-  *(uint **)(iVar2 + 8) = puVar3 + 1;
-  *puVar3 = (((uint)uVar11 >> 8) + ((iVar13 != 0)) +
-            (((int)uVar10 != 0))) * 0x40000 | 0x40001814;
-  uVar8 = 0;
-  if ((int)uVar10 != 0) {
-    piVar4 = *(int **)(iVar2 + 8);
-    *piVar4 = (int)((uVar10 & 0xffffffff) << 0x18) + -0x1000000;
-    *(int **)(iVar2 + 8) = piVar4 + 1;
-    uVar8 = uVar10;
-  }
-  uVar9 = (uint)uVar8;
-  if ((uint)uVar11 >> 8 != 0) {
-    do {
-      puVar3 = *(uint **)(iVar2 + 8);
-      uVar6 = (uint)uVar8;
-      uVar7 = uVar7 - 1;
-      uVar8 = uVar8 + 0x100;
-      uVar9 = (uint)uVar8;
-      *puVar3 = uVar6 | 0xff000000;
-      *(uint **)(iVar2 + 8) = puVar3 + 1;
-    } while (0 < (int)uVar7);
-  }
-  if (iVar13 != 0) {
-    puVar3 = *(uint **)(iVar2 + 8);
-    *puVar3 = uVar9 | (int)((uVar12 & 0xffffffff) << 0x18) - 0x1000000U;
-    *(uint **)(iVar2 + 8) = puVar3 + 1;
-  }
-  iVar1 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar1 + 8) = 0x41808;
-  iVar2 = *(int *)(iVar1 + 8);
-  *(undefined4 *)(iVar2 + 4) = 0;
-  *(int *)(iVar1 + 8) = iVar2 + 8;
-  iVar1 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar1 + 8) = 0x41740;
-  iVar2 = *(int *)(iVar1 + 8);
-  *(undefined4 *)(iVar2 + 4) = 2;
-  *(int *)(iVar1 + 8) = iVar2 + 8;
-  iVar1 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar1 + 8) = 0x41744;
-  iVar2 = *(int *)(iVar1 + 8);
-  *(undefined4 *)(iVar2 + 4) = 2;
-  *(int *)(iVar1 + 8) = iVar2 + 8;
-  iVar1 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar1 + 8) = 0x4174c;
-  iVar2 = *(int *)(iVar1 + 8);
-  *(undefined4 *)(iVar2 + 4) = 2;
-  *(int *)(iVar1 + 8) = iVar2 + 8;
-  return;
+    IdolDraw *idol = Idol();
+
+    if (passIndex == 2 || passIndex == 9) {
+        idol_draw::BindVertexProgram((uintptr_t)idol, (int)(uintptr_t)PassByIndex(passIndex), 4);
+        idol_draw::BindFragmentProgram((uintptr_t)idol, (int)(uintptr_t)PassByIndex(passIndex), 6);
+    }
+
+    RenderingStep *pass = PassByIndex(passIndex);
+    u32 offset = (u32)(uintptr_t)vertices - idol->memBase;
+
+    EmitStripFormat(pass, 0, 3, CELL_GCM_VERTEX_F);
+    EmitStripFormat(pass, 1, 2, CELL_GCM_VERTEX_F);
+    EmitStripFormat(pass, 3, 4, CELL_GCM_VERTEX_UB);
+    EmitStripOffset(pass, 0, offset);
+    EmitStripOffset(pass, 1, offset + 0xc);
+    EmitStripOffset(pass, 3, offset + 0x1c);
+
+    EmitStrip(pass, count);
+
+    DisableArray(pass, 0);
+    DisableArray(pass, 1);
+    DisableArray(pass, 3);
 }
+
+/* a PS2 colour (0x80 = full) as an RSX one, channel by channel */
+static inline u32 Ps2Color(u32 color)
+{
+    return Ps2Channel(color & 0xff) | Ps2Channel((color >> 8) & 0xff) << 8 | Ps2Channel((color >> 16) & 0xff) << 16 | Ps2Channel(color >> 24) << 24;
+}
+
+/* a vertex of the FastDrawStrip family */
+struct StripVertex {
+    float x;
+    float y;
+    float z;
+    float s0;
+    float t0;
+    float s1;
+    float t1;
+    u32 color;
+};
 
 
 // 0x00731c8 (0x4b0 bytes)
-void DrawTexturedStrips(int param_1,Vec3 *param_2,u32 *param_3,Vec2 *param_4,Vec2 *param_5,int param_6,int param_7,u64 param_8)
-
+/* count strip vertices from separate arrays drawn three times: with effect texture baseTex and
+   the first coordinates on passes 9 and 8 (no depth state, alpha test off), then with effect
+   texture detailTex, the second coordinates and depth state on DL_Pass. Both DL passes get the
+   identity at c[4]. */
+void DrawTexturedStrips(int count, Vec3 *pos, u32 *colors, Vec2 *uv0, Vec2 *uv1, int baseTex, int detailTex, u64 depth)
 {
-  undefined4 uVar1;
-  GPiece<16> auVar2;
-  GPiece<16> auVar3;
-  GPiece<16> auVar4;
-  RsxCmd *pRVar5;
-  RenderingStep *pRVar6;
-  RenderingStep *pRVar7;
-  int iVar8;
-  longlong lVar9;
-  undefined4 *puVar10;
-  int iVar11;
-  RsxCmd *pRVar13;
-  longlong lVar12;
-  RsxCmd *pRVar15;
-  ulonglong uVar14;
-  RsxCmd *pRVar16;
-  undefined8 in_LR;
-  longlong lVar17;
-  GPiece<16> auVar18;
-  GPiece<16> auVar19;
-  GPiece<16> auVar20;
-  GPiece<16> auVar21;
-  GPiece<16> auVar22;
-  GPiece<16> auVar23;
-  GPiece<16> auVar24;
-  GPiece<16> auVar25;
-  GPiece<16> auVar26;
-  GPiece<16> auVar27;
-  GPiece<16> auVar28;
-  GPiece<16> auVar29;
-  GPiece<16> auVar30;
-  GPiece<16> auVar31;
-  GPiece<16> auVar32;
-  undefined8 in_stack_00000070;
-  RsxCmd local_a0 [18];
-  
-  lVar9 = idol::AllocateMemAlign(FrameHeap,(int)((param_1 & 0xffffffff) << 5),0x10);
-  pRVar7 = DL_Pass;
-  pRVar15 = local_a0;
-  lVar17 = 8;
-  *DL_Pass->command = 0x441efc;
-  pRVar7->command[1] = 4;
-  pRVar16 = pRVar7->command + 2;
-  pRVar7->command = pRVar16;
-  pRVar13 = pRVar15;
-  do {
-    *pRVar16 = *pRVar13;
-    pRVar16 = pRVar7->command;
-    pRVar7->command = pRVar16 + 1;
-    pRVar5 = pRVar13 + 1;
-    pRVar13 = pRVar13 + 2;
-    pRVar16[1] = *pRVar5;
-    pRVar16 = pRVar7->command + 1;
-    pRVar7->command = pRVar16;
-    pRVar6 = DL_DepthPass;
-    lVar17 = lVar17 + -1;
-  } while (lVar17 != 0);
-  lVar17 = 8;
-  *DL_DepthPass->command = 0x441efc;
-  pRVar6->command[1] = 4;
-  pRVar13 = pRVar6->command + 2;
-  pRVar6->command = pRVar13;
-  do {
-    *pRVar13 = *pRVar15;
-    pRVar13 = pRVar6->command;
-    pRVar6->command = pRVar13 + 1;
-    pRVar16 = pRVar15 + 1;
-    pRVar15 = pRVar15 + 2;
-    pRVar13[1] = *pRVar16;
-    pRVar13 = pRVar6->command + 1;
-    pRVar6->command = pRVar13;
-    lVar17 = lVar17 + -1;
-  } while (lVar17 != 0);
-  if (0 < (int)param_1) {
-    auVar2 = ZEXT416(0xfffffff8);
-    auVar3 = ZEXT416(0xfffffff0);
-    auVar4 = ZEXT416(8);
-    auVar20 = loadVectorLeftIndexed(0x40,0x73170);
-    auVar23 = loadVectorLeftIndexed(0x48,0x73170);
-    auVar22 = loadVectorLeftIndexed(0x44,0x73170);
-    auVar24 = loadVectorLeftIndexed(0x4c,0x73170);
-    auVar25 = loadVectorLeftIndexed(0x50,0x73170);
-    auVar20 = auVar20 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar21 = auVar20 | auVar20 << 0x20 | auVar20 << 0x40 | auVar20 << 0x60;
-    lVar12 = lVar9 + 0x1c;
-    auVar26 = loadVectorLeftIndexed(0x54,0x73170);
-    auVar20 = auVar22 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar22 = auVar20 | auVar20 << 0x20 | auVar20 << 0x40 | auVar20 << 0x60;
-    auVar20 = auVar23 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar23 = auVar20 | auVar20 << 0x20 | auVar20 << 0x40 | auVar20 << 0x60;
-    auVar20 = auVar24 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar24 = auVar20 | auVar20 << 0x20 | auVar20 << 0x40 | auVar20 << 0x60;
-    auVar20 = auVar25 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar25 = auVar20 | auVar20 << 0x20 | auVar20 << 0x40 | auVar20 << 0x60;
-    auVar20 = auVar26 >> 0x60 & (GPiece<16>)0xffffffff;
-    lVar17 = lVar9;
-    uVar14 = param_1;
-    do {
-      puVar10 = (undefined4 *)lVar17;
-      *puVar10 = *param_2;
-      puVar10[1] = param_2[1];
-      auVar26 = ZEXT416(0xffffffff);
-      auVar18 = auVar26 | auVar26 << 0x20 | auVar26 << 0x40 | auVar26 << 0x60;
-      puVar10[2] = param_2[2];
-      auVar26 = ZEXT416(0xffffffff);
-      auVar29 = auVar26 | auVar26 << 0x20 | auVar26 << 0x40 | auVar26 << 0x60;
-      puVar10[3] = *param_4;
-      auVar26 = ZEXT416(0xffffffff);
-      auVar26 = auVar26 | auVar26 << 0x20 | auVar26 << 0x40 | auVar26 << 0x60;
-      puVar10[4] = param_4[1];
-      auVar19 = vectorShiftLeftIntegerWord(auVar18,auVar18);
-      puVar10[5] = *param_5;
-      auVar30 = vectorShiftLeftIntegerWord(auVar29,auVar29);
-      puVar10[6] = param_5[1];
-      auVar18 = loadVectorLeftIndexed(in_LR,param_3);
-      auVar31 = vectorShiftLeftIntegerWord(auVar26,auVar26);
-      auVar27 = vectorRotateLeftIntegerWord
-                          (auVar18,auVar2 | auVar2 << 0x20 | auVar2 << 0x40 | auVar2 << 0x60);
-      auVar28 = vectorRotateLeftIntegerWord
-                          (auVar18,auVar3 | auVar3 << 0x20 | auVar3 << 0x40 | auVar3 << 0x60);
-      auVar26 = vectorLogicalAnd(auVar18,auVar24);
-      auVar29 = vectorShiftRightWord(auVar18,auVar25);
-      auVar27 = vectorLogicalAnd(auVar27,auVar24);
-      auVar28 = vectorLogicalAnd(auVar28,auVar24);
-      auVar18 = vectorConvertFromUnsignedFixedPointWord(auVar26,0);
-      auVar29 = vectorConvertFromUnsignedFixedPointWord(auVar29,0);
-      auVar26 = ZEXT416(0xffffffff);
-      auVar32 = auVar26 | auVar26 << 0x20 | auVar26 << 0x40 | auVar26 << 0x60;
-      auVar27 = vectorConvertFromUnsignedFixedPointWord(auVar27,0);
-      auVar28 = vectorConvertFromUnsignedFixedPointWord(auVar28,0);
-      uVar14 = uVar14 - 1;
-      lVar17 = lVar17 + 0x20;
-      param_2 = param_2 + 3;
-      param_3 = param_3 + 4;
-      param_4 = param_4 + 2;
-      auVar26 = vectorMultiplyAddFloatingPoint(auVar18,auVar21,auVar30);
-      auVar27 = vectorMultiplyAddFloatingPoint(auVar27,auVar21,auVar19);
-      auVar28 = vectorMultiplyAddFloatingPoint(auVar28,auVar21,auVar31);
-      auVar18 = vectorShiftLeftIntegerWord(auVar32,auVar32);
-      param_5 = param_5 + 2;
-      auVar19 = vectorMultiplyAddFloatingPoint(auVar29,auVar21,auVar18);
-      auVar18 = vectorCompareGreaterThanFloatingPoint(auVar26,auVar22);
-      auVar29 = vectorCompareGreaterThanFloatingPoint(auVar27,auVar22);
-      auVar30 = vectorCompareGreaterThanFloatingPoint(auVar28,auVar22);
-      auVar26 = vectorConditionalSelect(auVar26,auVar22,auVar18);
-      auVar29 = vectorConditionalSelect(auVar27,auVar22,auVar29);
-      auVar27 = vectorConditionalSelect(auVar28,auVar22,auVar30);
-      auVar18 = vectorCompareGreaterThanFloatingPoint(auVar19,auVar22);
-      auVar26 = vectorAddFloatingPoint(auVar26,auVar23);
-      auVar29 = vectorAddFloatingPoint(auVar29,auVar23);
-      auVar18 = vectorConditionalSelect(auVar19,auVar22,auVar18);
-      auVar27 = vectorAddFloatingPoint(auVar27,auVar23);
-      auVar19 = vectorAddFloatingPoint(auVar18,auVar23);
-      auVar18 = vectorCompareGreaterThanFloatingPoint(auVar29,auVar22);
-      auVar29 = vectorConditionalSelect(auVar29,auVar22,auVar18);
-      auVar18 = vectorCompareGreaterThanFloatingPoint(auVar26,auVar22);
-      auVar28 = vectorCompareGreaterThanFloatingPoint(auVar27,auVar22);
-      auVar26 = vectorConditionalSelect(auVar26,auVar22,auVar18);
-      auVar27 = vectorConditionalSelect(auVar27,auVar22,auVar28);
-      auVar29 = vectorConvertToSignedFixedPointWordSaturate(auVar29,0);
-      auVar18 = vectorCompareGreaterThanFloatingPoint(auVar19,auVar22);
-      auVar18 = vectorConditionalSelect(auVar19,auVar22,auVar18);
-      auVar26 = vectorConvertToSignedFixedPointWordSaturate(auVar26,0);
-      auVar27 = vectorConvertToSignedFixedPointWordSaturate(auVar27,0);
-      auVar18 = vectorConvertToSignedFixedPointWordSaturate(auVar18,0);
-      auVar19 = vectorShiftLeftIntegerWord
-                          (auVar29,auVar4 | auVar4 << 0x20 | auVar4 << 0x40 | auVar4 << 0x60);
-      auVar29 = vectorShiftLeftIntegerWord
-                          (auVar27,auVar20 | auVar20 << 0x20 | auVar20 << 0x40 | auVar20 << 0x60);
-      auVar18 = vectorShiftLeftIntegerWord(auVar18,auVar25);
-      auVar26 = (auVar26 | auVar19 | auVar29 | auVar18) >> 0x60 & (GPiece<16>)0xffffffff;
-      uVar1 = storeVectorElementWordIndexed
-                        (auVar26 | auVar26 << 0x20 | auVar26 << 0x40 | auVar26 << 0x60,0,lVar12);
-      *(undefined4 *)((uint)lVar12 & 0xfffffffc) = uVar1;
-      lVar12 = lVar12 + 0x20;
-    } while (0 < (int)uVar14);
-  }
-  idol_draw::DrawDepth(DL_DepthPass,0);
-  pRVar7 = DL_DepthPass;
-  *DL_DepthPass->command = NV4097_SET_ALPHA_TEST_ENABLE_x1;
-  pRVar7->command[1] = 0;
-  pRVar7->command = pRVar7->command + 2;
-  idol_draw::DrawDepth(DL_Pass,0);
-  pRVar7 = DL_Pass;
-  *DL_Pass->command = NV4097_SET_ALPHA_TEST_ENABLE_x1;
-  pRVar7->command[1] = 0;
-  pRVar7->command = pRVar7->command + 2;
-  iVar8 = EffectTexHeaders;
-  pRVar7 = DL_Pass;
-  iVar11 = GetEffectTex(param_6);
-  FUN_004d676c(pRVar7,0,iVar8 + iVar11 * 0x24,1,1);
-  FastDrawStrip_Pass(param_1,lVar9,9);
-  FastDrawStrip_Pass(param_1,lVar9,8);
-  idol_draw::DrawDepth(DL_Pass,in_stack_00000070);
-  iVar8 = EffectTexHeaders;
-  pRVar7 = DL_Pass;
-  iVar11 = GetEffectTex(param_7);
-  FUN_004d676c(pRVar7,0,iVar8 + iVar11 * 0x24,1,1);
-  FastDrawStrip_DLNoState(param_1,lVar9);
-  return;
+    static const Mtx4 identity = {
+        { 1.0f, 0.0f, 0.0f, 0.0f },
+        { 0.0f, 1.0f, 0.0f, 0.0f },
+        { 0.0f, 0.0f, 1.0f, 0.0f },
+        { 0.0f, 0.0f, 0.0f, 1.0f },
+    };
+
+    StripVertex *vertices = (StripVertex *)(uintptr_t)idol::AllocateMemAlign(FrameHeap, count << 5, 0x10);
+    Mtx4 mtx = identity;
+
+    EmitVertexConstMtx(DL_Pass, 4, &mtx);
+    EmitVertexConstMtx(DL_DepthPass, 4, &mtx);
+
+    for (int i = 0; i < count; i++) {
+        vertices[i].x = pos[i].x;
+        vertices[i].y = pos[i].y;
+        vertices[i].z = pos[i].z;
+        vertices[i].s0 = uv0[i].x;
+        vertices[i].t0 = uv0[i].y;
+        vertices[i].s1 = uv1[i].x;
+        vertices[i].t1 = uv1[i].y;
+        vertices[i].color = Ps2Color(colors[i]);
+    }
+
+    idol_draw::DrawDepth(DL_DepthPass, 0);
+    EmitMethod(DL_DepthPass, CELL_GCM_NV4097_SET_ALPHA_TEST_ENABLE, 0);
+    idol_draw::DrawDepth(DL_Pass, 0);
+    EmitMethod(DL_Pass, CELL_GCM_NV4097_SET_ALPHA_TEST_ENABLE, 0);
+
+    FUN_004d676c(DL_Pass, 0, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(baseTex) * 0x24, 1, 1);
+    FastDrawStrip_Pass(count, vertices, 9);
+    FastDrawStrip_Pass(count, vertices, 8);
+
+    idol_draw::DrawDepth(DL_Pass, depth);
+    FUN_004d676c(DL_Pass, 0, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(detailTex) * 0x24, 1, 1);
+    FastDrawStrip_DLNoState(count, vertices);
+}
+
+/* FastDrawStrip2UV's layout: 3 floats at 0, 3 floats at second, colour at 0x24; 0x28 apart */
+static inline void EmitStrip2UVArrays(RenderingStep *pass, u32 offset, u32 second)
+{
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 0 * 4, 0x28 << 8 | 3 << 4 | CELL_GCM_VERTEX_F);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 1 * 4, 0x28 << 8 | 3 << 4 | CELL_GCM_VERTEX_F);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 3 * 4, 0x28 << 8 | 4 << 4 | CELL_GCM_VERTEX_UB);
+    EmitStripOffset(pass, 0, offset);
+    EmitStripOffset(pass, 1, offset + second);
+    EmitStripOffset(pass, 3, offset + 0x24);
 }
 
 
 // 0x0073678 (0x390 bytes)
-void FastDrawStrip2UV_Pass(longlong param_1,int param_2,longlong param_3)
-
+/* count vertices of 0x28 bytes on pass passIndex with programs 7/7, the triple at 0x18 as the
+   coordinates */
+void FastDrawStrip2UV_Pass(int count, void *vertices, int passIndex)
 {
-  uint *puVar1;
-  int *piVar2;
-  int iVar3;
-  int iVar4;
-  uint uVar5;
-  ulonglong uVar6;
-  ulonglong uVar7;
-  int iVar8;
-  ulonglong uVar9;
-  uint uVar11;
-  ulonglong uVar10;
-  ulonglong uVar12;
-  
-  iVar8 = g_pIdolDraw;
-  iVar4 = (int)(param_3 << 2);
-  idol_draw::BindVertexProgram(g_pIdolDraw,*(undefined4 *)((int)&DepthPass + iVar4),7);
-  idol_draw::BindFragmentProgram(iVar8,*(undefined4 *)((int)&DepthPass + iVar4),7);
-  iVar3 = *(int *)((int)&DepthPass + iVar4);
-  **(undefined4 **)(iVar3 + 8) = 0x41740;
-  *(undefined4 *)(*(int *)(iVar3 + 8) + 4) = 0x2832;
-  *(int *)(iVar3 + 8) = *(int *)(iVar3 + 8) + 8;
-  iVar3 = *(int *)((int)&DepthPass + iVar4);
-  **(undefined4 **)(iVar3 + 8) = 0x41744;
-  *(undefined4 *)(*(int *)(iVar3 + 8) + 4) = 0x2832;
-  *(int *)(iVar3 + 8) = *(int *)(iVar3 + 8) + 8;
-  iVar3 = *(int *)((int)&DepthPass + iVar4);
-  **(undefined4 **)(iVar3 + 8) = 0x4174c;
-  *(undefined4 *)(*(int *)(iVar3 + 8) + 4) = 0x2844;
-  *(int *)(iVar3 + 8) = *(int *)(iVar3 + 8) + 8;
-  iVar3 = *(int *)((int)&DepthPass + iVar4);
-  uVar11 = param_2 - *(int *)(iVar8 + 0x4a8);
-  **(undefined4 **)(iVar3 + 8) = 0x41680;
-  *(uint *)(*(int *)(iVar3 + 8) + 4) = uVar11 | 0x80000000;
-  *(int *)(iVar3 + 8) = *(int *)(iVar3 + 8) + 8;
-  iVar3 = *(int *)((int)&DepthPass + iVar4);
-  **(undefined4 **)(iVar3 + 8) = 0x41684;
-  *(uint *)(*(int *)(iVar3 + 8) + 4) = uVar11 + 0x18 | 0x80000000;
-  *(int *)(iVar3 + 8) = *(int *)(iVar3 + 8) + 8;
-  iVar3 = *(int *)((int)&DepthPass + iVar4);
-  **(undefined4 **)(iVar3 + 8) = 0x4168c;
-  *(uint *)(*(int *)(iVar3 + 8) + 4) = uVar11 + 0x24 | 0x80000000;
-  *(int *)(iVar3 + 8) = *(int *)(iVar3 + 8) + 8;
-  iVar3 = *(int *)((int)&DepthPass + iVar4);
-  **(undefined4 **)(iVar3 + 8) = 0x400c1714;
-  uVar12 = (param_1 - 0x100U & (longlong)((int)(param_1 - 0x100U) >> 0x1f)) + 0x100;
-  *(undefined4 *)(*(int *)(iVar3 + 8) + 4) = 0;
-  *(undefined4 *)(*(int *)(iVar3 + 8) + 8) = 0;
-  *(undefined4 *)(*(int *)(iVar3 + 8) + 0xc) = 0;
-  *(undefined4 *)(*(int *)(iVar3 + 8) + 0x10) = 0x41808;
-  uVar6 = param_1 - uVar12 & ~(longlong)((int)(param_1 - uVar12) >> 0x1f);
-  uVar9 = (uVar6 << 0x20) >> 0x28;
-  uVar7 = uVar6 - (uVar6 & 0xffffff00);
-  *(undefined4 *)(*(int *)(iVar3 + 8) + 0x14) = 6;
-  iVar8 = (int)uVar7;
-  *(int *)(iVar3 + 8) = *(int *)(iVar3 + 8) + 0x18;
-  iVar3 = *(int *)((int)&DepthPass + iVar4);
-  puVar1 = *(uint **)(iVar3 + 8);
-  *(uint **)(iVar3 + 8) = puVar1 + 1;
-  *puVar1 = (((uint)uVar6 >> 8) + ((iVar8 != 0)) +
-            (((int)uVar12 != 0))) * 0x40000 | 0x40001814;
-  uVar10 = 0;
-  if ((int)uVar12 != 0) {
-    piVar2 = *(int **)(iVar3 + 8);
-    *(int **)(iVar3 + 8) = piVar2 + 1;
-    *piVar2 = (int)((uVar12 & 0xffffffff) << 0x18) + -0x1000000;
-    uVar10 = uVar12;
-  }
-  uVar11 = (uint)uVar10;
-  if ((uint)uVar6 >> 8 != 0) {
-    do {
-      puVar1 = *(uint **)(iVar3 + 8);
-      uVar5 = (uint)uVar10;
-      uVar9 = uVar9 - 1;
-      uVar10 = uVar10 + 0x100;
-      uVar11 = (uint)uVar10;
-      *(uint **)(iVar3 + 8) = puVar1 + 1;
-      *puVar1 = uVar5 | 0xff000000;
-    } while (0 < (int)uVar9);
-  }
-  if (iVar8 != 0) {
-    puVar1 = *(uint **)(iVar3 + 8);
-    *(uint **)(iVar3 + 8) = puVar1 + 1;
-    *puVar1 = uVar11 | (int)((uVar7 & 0xffffffff) << 0x18) - 0x1000000U;
-  }
-  iVar3 = *(int *)((int)&DepthPass + iVar4);
-  **(undefined4 **)(iVar3 + 8) = 0x41808;
-  *(undefined4 *)(*(int *)(iVar3 + 8) + 4) = 0;
-  *(int *)(iVar3 + 8) = *(int *)(iVar3 + 8) + 8;
-  iVar3 = *(int *)((int)&DepthPass + iVar4);
-  **(undefined4 **)(iVar3 + 8) = 0x41740;
-  *(undefined4 *)(*(int *)(iVar3 + 8) + 4) = 2;
-  *(int *)(iVar3 + 8) = *(int *)(iVar3 + 8) + 8;
-  iVar3 = *(int *)((int)&DepthPass + iVar4);
-  **(undefined4 **)(iVar3 + 8) = 0x41744;
-  *(undefined4 *)(*(int *)(iVar3 + 8) + 4) = 2;
-  *(int *)(iVar3 + 8) = *(int *)(iVar3 + 8) + 8;
-  iVar3 = *(int *)((int)&DepthPass + iVar4);
-  **(undefined4 **)(iVar3 + 8) = 0x4174c;
-  *(undefined4 *)(*(int *)(iVar3 + 8) + 4) = 2;
-  *(int *)(iVar3 + 8) = *(int *)(iVar3 + 8) + 8;
-  return;
+    IdolDraw *idol = Idol();
+
+    idol_draw::BindVertexProgram((uintptr_t)idol, (int)(uintptr_t)PassByIndex(passIndex), 7);
+    idol_draw::BindFragmentProgram((uintptr_t)idol, (int)(uintptr_t)PassByIndex(passIndex), 7);
+
+    RenderingStep *pass = PassByIndex(passIndex);
+
+    EmitStrip2UVArrays(pass, (u32)(uintptr_t)vertices - idol->memBase, 0x18);
+    EmitStrip(pass, count);
+
+    DisableArray(pass, 0);
+    DisableArray(pass, 1);
+    DisableArray(pass, 3);
 }
 
 
 // 0x0073a08 (0x390 bytes)
-void FastDrawStrip2UV_PassNoState(longlong param_1,int param_2,longlong param_3)
-
+/* FastDrawStrip2UV_Pass with the triple at 0xc as the coordinates, the programs bound only on
+   passes 2 and 9 */
+void FastDrawStrip2UV_PassNoState(int count, void *vertices, int passIndex)
 {
-  int iVar1;
-  int iVar2;
-  uint *puVar3;
-  int *piVar4;
-  int iVar5;
-  uint uVar6;
-  ulonglong uVar7;
-  uint uVar9;
-  ulonglong uVar8;
-  ulonglong uVar10;
-  ulonglong uVar11;
-  ulonglong uVar12;
-  int iVar13;
-  
-  iVar2 = g_pIdolDraw;
-  if (((int)param_3 == 2) || ((int)param_3 == 9)) {
-    iVar1 = (int)(param_3 << 2);
-    idol_draw::BindVertexProgram(g_pIdolDraw,*(undefined4 *)((int)&DepthPass + iVar1),7);
-    idol_draw::BindFragmentProgram(iVar2,*(undefined4 *)((int)&DepthPass + iVar1),7);
-  }
-  iVar5 = (int)(param_3 << 2);
-  iVar13 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar13 + 8) = 0x41740;
-  iVar1 = *(int *)(iVar13 + 8);
-  *(undefined4 *)(iVar1 + 4) = 0x2832;
-  *(int *)(iVar13 + 8) = iVar1 + 8;
-  iVar13 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar13 + 8) = 0x41744;
-  iVar1 = *(int *)(iVar13 + 8);
-  *(undefined4 *)(iVar1 + 4) = 0x2832;
-  *(int *)(iVar13 + 8) = iVar1 + 8;
-  iVar13 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar13 + 8) = 0x4174c;
-  iVar1 = *(int *)(iVar13 + 8);
-  *(undefined4 *)(iVar1 + 4) = 0x2844;
-  *(int *)(iVar13 + 8) = iVar1 + 8;
-  iVar1 = *(int *)((int)&DepthPass + iVar5);
-  uVar9 = param_2 - *(int *)(iVar2 + 0x4a8);
-  **(undefined4 **)(iVar1 + 8) = 0x41680;
-  iVar2 = *(int *)(iVar1 + 8);
-  *(uint *)(iVar2 + 4) = uVar9 | 0x80000000;
-  *(int *)(iVar1 + 8) = iVar2 + 8;
-  iVar1 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar1 + 8) = 0x41684;
-  iVar2 = *(int *)(iVar1 + 8);
-  *(uint *)(iVar2 + 4) = uVar9 + 0xc | 0x80000000;
-  *(int *)(iVar1 + 8) = iVar2 + 8;
-  iVar1 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar1 + 8) = 0x4168c;
-  iVar2 = *(int *)(iVar1 + 8);
-  *(uint *)(iVar2 + 4) = uVar9 + 0x24 | 0x80000000;
-  *(int *)(iVar1 + 8) = iVar2 + 8;
-  iVar1 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar1 + 8) = 0x400c1714;
-  *(undefined4 *)(*(int *)(iVar1 + 8) + 4) = 0;
-  uVar10 = (param_1 - 0x100U & (longlong)((int)(param_1 - 0x100U) >> 0x1f)) + 0x100;
-  *(undefined4 *)(*(int *)(iVar1 + 8) + 8) = 0;
-  *(undefined4 *)(*(int *)(iVar1 + 8) + 0xc) = 0;
-  uVar11 = param_1 - uVar10 & ~(longlong)((int)(param_1 - uVar10) >> 0x1f);
-  uVar7 = (uVar11 << 0x20) >> 0x28;
-  *(undefined4 *)(*(int *)(iVar1 + 8) + 0x10) = 0x41808;
-  iVar2 = *(int *)(iVar1 + 8);
-  uVar12 = uVar11 - (uVar11 & 0xffffff00);
-  iVar13 = (int)uVar12;
-  *(undefined4 *)(iVar2 + 0x14) = 6;
-  *(int *)(iVar1 + 8) = iVar2 + 0x18;
-  iVar2 = *(int *)((int)&DepthPass + iVar5);
-  puVar3 = *(uint **)(iVar2 + 8);
-  *puVar3 = (((uint)uVar11 >> 8) + ((iVar13 != 0)) +
-            (((int)uVar10 != 0))) * 0x40000 | 0x40001814;
-  *(uint **)(iVar2 + 8) = puVar3 + 1;
-  uVar8 = 0;
-  if ((int)uVar10 != 0) {
-    piVar4 = *(int **)(iVar2 + 8);
-    *piVar4 = (int)((uVar10 & 0xffffffff) << 0x18) + -0x1000000;
-    *(int **)(iVar2 + 8) = piVar4 + 1;
-    uVar8 = uVar10;
-  }
-  uVar9 = (uint)uVar8;
-  if ((uint)uVar11 >> 8 != 0) {
-    do {
-      puVar3 = *(uint **)(iVar2 + 8);
-      uVar6 = (uint)uVar8;
-      uVar7 = uVar7 - 1;
-      uVar8 = uVar8 + 0x100;
-      uVar9 = (uint)uVar8;
-      *puVar3 = uVar6 | 0xff000000;
-      *(uint **)(iVar2 + 8) = puVar3 + 1;
-    } while (0 < (int)uVar7);
-  }
-  if (iVar13 != 0) {
-    puVar3 = *(uint **)(iVar2 + 8);
-    *puVar3 = uVar9 | (int)((uVar12 & 0xffffffff) << 0x18) - 0x1000000U;
-    *(uint **)(iVar2 + 8) = puVar3 + 1;
-  }
-  iVar1 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar1 + 8) = 0x41808;
-  iVar2 = *(int *)(iVar1 + 8);
-  *(undefined4 *)(iVar2 + 4) = 0;
-  *(int *)(iVar1 + 8) = iVar2 + 8;
-  iVar1 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar1 + 8) = 0x41740;
-  iVar2 = *(int *)(iVar1 + 8);
-  *(undefined4 *)(iVar2 + 4) = 2;
-  *(int *)(iVar1 + 8) = iVar2 + 8;
-  iVar1 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar1 + 8) = 0x41744;
-  iVar2 = *(int *)(iVar1 + 8);
-  *(undefined4 *)(iVar2 + 4) = 2;
-  *(int *)(iVar1 + 8) = iVar2 + 8;
-  iVar1 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar1 + 8) = 0x4174c;
-  iVar2 = *(int *)(iVar1 + 8);
-  *(undefined4 *)(iVar2 + 4) = 2;
-  *(int *)(iVar1 + 8) = iVar2 + 8;
-  return;
+    IdolDraw *idol = Idol();
+
+    if (passIndex == 2 || passIndex == 9) {
+        idol_draw::BindVertexProgram((uintptr_t)idol, (int)(uintptr_t)PassByIndex(passIndex), 7);
+        idol_draw::BindFragmentProgram((uintptr_t)idol, (int)(uintptr_t)PassByIndex(passIndex), 7);
+    }
+
+    RenderingStep *pass = PassByIndex(passIndex);
+
+    EmitStrip2UVArrays(pass, (u32)(uintptr_t)vertices - idol->memBase, 0xc);
+    EmitStrip(pass, count);
+
+    DisableArray(pass, 0);
+    DisableArray(pass, 1);
+    DisableArray(pass, 3);
 }
+
+/* a vertex of FastDrawStrip2UV: two coordinate triples whose third value is shared */
+struct Strip2UVVertex {
+    float x;
+    float y;
+    float z;
+    float s0;
+    float t0;
+    float q0;
+    float s1;
+    float t1;
+    float q1;
+    u32 color;
+};
 
 
 // 0x0073de0 (0x330 bytes)
-void DrawLavaStrips
-               (double param_1,longlong param_2,undefined4 *param_3,uint *param_4,
-               undefined4 *param_5,undefined4 *param_6,undefined4 param_7,undefined4 param_8,
-               undefined8 param_9)
-
+/* count strip vertices from separate arrays on pass passIndex: effect texture tex0 on unit 0
+   (and tex1 on unit 1 on passes 2 and 9), the identity at c[4], both coordinate sets with q as
+   their third value; drawn with depth state depth, then on passes 2 and 9 again with depth2 */
+void DrawLavaStrips(float q, int count, Vec3 *pos, u32 *colors, Vec2 *uv0, Vec2 *uv1, int tex0, int tex1, u64 depth, u64 depth2, int passIndex)
 {
-  uint uVar1;
-  RenderingStep *pRVar2;
-  RsxCmd *pRVar3;
-  undefined4 *puVar4;
-  undefined4 *puVar5;
-  int iVar6;
-  RsxCmd *pRVar7;
-  int iVar8;
-  undefined4 *puVar9;
-  RsxCmd *pRVar10;
-  longlong lVar11;
-  undefined8 in_stack_00000070;
-  int in_stack_00000084;
-  RsxCmd local_c0 [16];
-  
-  puVar5 = (undefined4 *)
-           idol::AllocateMemAlign(FrameHeap,(int)(param_2 << 5) + (int)(param_2 << 3),0x10);
-  iVar8 = EffectTexHeaders;
-  pRVar2 = (&DepthPass)[in_stack_00000084];
-  iVar6 = GetEffectTex(param_7);
-  FUN_004d676c(pRVar2,0,iVar8 + iVar6 * 0x24,1,1);
-  iVar8 = EffectTexHeaders;
-  if ((in_stack_00000084 == 2) || (in_stack_00000084 == 9)) {
-    pRVar2 = (&DepthPass)[in_stack_00000084];
-    iVar6 = GetEffectTex(param_8);
-    FUN_004d676c(pRVar2,1,iVar8 + iVar6 * 0x24,1,1);
-  }
-  pRVar2 = (&DepthPass)[in_stack_00000084];
-  *pRVar2->command = 0x441efc;
-  pRVar10 = local_c0;
-  lVar11 = 8;
-  pRVar2->command[1] = 4;
-  pRVar7 = pRVar2->command + 2;
-  pRVar2->command = pRVar7;
-  do {
-    *pRVar7 = *pRVar10;
-    pRVar7 = pRVar2->command;
-    pRVar2->command = pRVar7 + 1;
-    pRVar3 = pRVar10 + 1;
-    pRVar10 = pRVar10 + 2;
-    pRVar7[1] = *pRVar3;
-    pRVar7 = pRVar2->command + 1;
-    pRVar2->command = pRVar7;
-    lVar11 = lVar11 + -1;
-  } while (lVar11 != 0);
-  iVar8 = (int)param_2;
-  lVar11 = param_2;
-  puVar9 = puVar5;
-  while (0 < iVar8) {
-    lVar11 = lVar11 + -1;
-    *puVar9 = *param_3;
-    puVar9[1] = param_3[1];
-    puVar4 = param_3 + 2;
-    param_3 = param_3 + 3;
-    puVar9[2] = *puVar4;
-    uVar1 = *param_4;
-    puVar9[3] = *param_5;
-    param_4 = param_4 + 4;
-    puVar9[4] = param_5[1];
-    param_5 = param_5 + 2;
-    puVar9[6] = *param_6;
-    puVar4 = param_6 + 1;
-    param_6 = param_6 + 2;
-    puVar9[7] = *puVar4;
-    puVar9[8] = (float)param_1;
-    puVar9[5] = (float)param_1;
-    puVar9[9] = uVar1 >> 0x18 | uVar1 >> 8 & 0xff00 | uVar1 << 0x18 | (uVar1 & 0xff00) << 8;
-    puVar9 = puVar9 + 10;
-    iVar8 = (int)lVar11;
-  }
-  idol_draw::DrawDepth((&DepthPass)[in_stack_00000084],param_9);
-  FastDrawStrip2UV_PassNoState(param_2,puVar5,in_stack_00000084);
-  if ((in_stack_00000084 == 2) || (in_stack_00000084 == 9)) {
-    idol_draw::DrawDepth((&DepthPass)[in_stack_00000084],in_stack_00000070);
-    FastDrawStrip2UV_Pass(param_2,puVar5,in_stack_00000084);
-  }
-  return;
+    static const Mtx4 identity = {
+        { 1.0f, 0.0f, 0.0f, 0.0f },
+        { 0.0f, 1.0f, 0.0f, 0.0f },
+        { 0.0f, 0.0f, 1.0f, 0.0f },
+        { 0.0f, 0.0f, 0.0f, 1.0f },
+    };
+
+    Strip2UVVertex *vertices = (Strip2UVVertex *)(uintptr_t)idol::AllocateMemAlign(FrameHeap, count * 0x28, 0x10);
+
+    FUN_004d676c(PassByIndex(passIndex), 0, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(tex0) * 0x24, 1, 1);
+
+    if (passIndex == 2 || passIndex == 9) {
+        FUN_004d676c(PassByIndex(passIndex), 1, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(tex1) * 0x24, 1, 1);
+    }
+
+    Mtx4 mtx = identity;
+
+    EmitVertexConstMtx(PassByIndex(passIndex), 4, &mtx);
+
+    for (int i = 0; i < count; i++) {
+        vertices[i].x = pos[i].x;
+        vertices[i].y = pos[i].y;
+        vertices[i].z = pos[i].z;
+        vertices[i].s0 = uv0[i].x;
+        vertices[i].t0 = uv0[i].y;
+        vertices[i].q0 = q;
+        vertices[i].s1 = uv1[i].x;
+        vertices[i].t1 = uv1[i].y;
+        vertices[i].q1 = q;
+        vertices[i].color = SwapColor(colors[i]);
+    }
+
+    idol_draw::DrawDepth(PassByIndex(passIndex), depth);
+    FastDrawStrip2UV_PassNoState(count, vertices, passIndex);
+
+    if (passIndex == 2 || passIndex == 9) {
+        idol_draw::DrawDepth(PassByIndex(passIndex), depth2);
+        FastDrawStrip2UV_Pass(count, vertices, passIndex);
+    }
 }
 
 
 // 0x0074150 (0x450 bytes)
-void FastDrawStripColor(int param_1,void *param_2,int param_3)
-
+/* count FastDrawQuad-layout vertices (position, coordinates, colour; 0x18 apart) as a strip on
+   pass passIndex: programs 4/6 on passes 2 and 9, the identity at c[4] on passes 0 and 8 */
+void FastDrawStripColor(int count, void *vertices, int passIndex)
 {
-  undefined4 uVar1;
-  int iVar2;
-  uint *puVar3;
-  int *piVar4;
-  int iVar5;
-  uint uVar6;
-  undefined4 *puVar8;
-  ulonglong uVar7;
-  uint uVar10;
-  ulonglong uVar9;
-  undefined4 *puVar12;
-  ulonglong uVar11;
-  int iVar13;
-  ulonglong uVar14;
-  ulonglong uVar15;
-  int iVar16;
-  longlong lVar17;
-  undefined4 local_70 [16];
-  
-  iVar2 = g_pIdolDraw;
-  iVar5 = (int)(param_3 << 2);
-  idol_draw::ResetPassState(*(undefined4 *)((int)&DepthPass + iVar5));
-  iVar13 = (int)param_3;
-  if ((iVar13 == 2) || (iVar13 == 9)) {
-    idol_draw::BindVertexProgram(iVar2,*(undefined4 *)((int)&DepthPass + iVar5),4);
-    idol_draw::BindFragmentProgram(iVar2,*(undefined4 *)((int)&DepthPass + iVar5),6);
-  }
-  else if ((iVar13 == 0) || (iVar13 == 8)) {
-    iVar13 = *(int *)((int)&DepthPass + iVar5);
-    **(undefined4 **)(iVar13 + 8) = 0x441efc;
-    puVar12 = local_70;
-    lVar17 = 8;
-    *(undefined4 *)(*(int *)(iVar13 + 8) + 4) = 4;
-    puVar8 = (undefined4 *)(*(int *)(iVar13 + 8) + 8);
-    *(undefined4 **)(iVar13 + 8) = puVar8;
-    do {
-      *puVar8 = *puVar12;
-      iVar16 = *(int *)(iVar13 + 8);
-      uVar1 = puVar12[1];
-      puVar12 = puVar12 + 2;
-      *(int *)(iVar13 + 8) = iVar16 + 4;
-      *(undefined4 *)(iVar16 + 4) = uVar1;
-      puVar8 = (undefined4 *)(*(int *)(iVar13 + 8) + 4);
-      *(undefined4 **)(iVar13 + 8) = puVar8;
-      lVar17 = lVar17 + -1;
-    } while (lVar17 != 0);
-  }
-  iVar16 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar16 + 8) = 0x41740;
-  iVar13 = *(int *)(iVar16 + 8);
-  *(undefined4 *)(iVar13 + 4) = 0x1832;
-  *(int *)(iVar16 + 8) = iVar13 + 8;
-  iVar16 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar16 + 8) = 0x41744;
-  iVar13 = *(int *)(iVar16 + 8);
-  *(undefined4 *)(iVar13 + 4) = 0x1822;
-  *(int *)(iVar16 + 8) = iVar13 + 8;
-  iVar16 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar16 + 8) = 0x4174c;
-  iVar13 = *(int *)(iVar16 + 8);
-  *(undefined4 *)(iVar13 + 4) = 0x1844;
-  *(int *)(iVar16 + 8) = iVar13 + 8;
-  iVar13 = *(int *)((int)&DepthPass + iVar5);
-  uVar10 = param_2 - *(int *)(iVar2 + 0x4a8);
-  **(undefined4 **)(iVar13 + 8) = 0x41680;
-  iVar2 = *(int *)(iVar13 + 8);
-  *(uint *)(iVar2 + 4) = uVar10 | 0x80000000;
-  *(int *)(iVar13 + 8) = iVar2 + 8;
-  iVar13 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar13 + 8) = 0x41684;
-  iVar2 = *(int *)(iVar13 + 8);
-  *(uint *)(iVar2 + 4) = uVar10 + 0xc | 0x80000000;
-  *(int *)(iVar13 + 8) = iVar2 + 8;
-  iVar13 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar13 + 8) = 0x4168c;
-  iVar2 = *(int *)(iVar13 + 8);
-  *(uint *)(iVar2 + 4) = uVar10 + 0x14 | 0x80000000;
-  *(int *)(iVar13 + 8) = iVar2 + 8;
-  iVar13 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar13 + 8) = 0x400c1714;
-  *(undefined4 *)(*(int *)(iVar13 + 8) + 4) = 0;
-  uVar11 = (param_1 - 0x100U & (longlong)((int)(param_1 - 0x100U) >> 0x1f)) + 0x100;
-  *(undefined4 *)(*(int *)(iVar13 + 8) + 8) = 0;
-  *(undefined4 *)(*(int *)(iVar13 + 8) + 0xc) = 0;
-  uVar14 = param_1 - uVar11 & ~(longlong)((int)(param_1 - uVar11) >> 0x1f);
-  uVar7 = (uVar14 << 0x20) >> 0x28;
-  *(undefined4 *)(*(int *)(iVar13 + 8) + 0x10) = 0x41808;
-  iVar2 = *(int *)(iVar13 + 8);
-  uVar15 = uVar14 - (uVar14 & 0xffffff00);
-  iVar16 = (int)uVar15;
-  *(undefined4 *)(iVar2 + 0x14) = 6;
-  *(int *)(iVar13 + 8) = iVar2 + 0x18;
-  iVar2 = *(int *)((int)&DepthPass + iVar5);
-  puVar3 = *(uint **)(iVar2 + 8);
-  *puVar3 = (((uint)uVar14 >> 8) + ((iVar16 != 0)) +
-            (((int)uVar11 != 0))) * 0x40000 | 0x40001814;
-  *(uint **)(iVar2 + 8) = puVar3 + 1;
-  uVar9 = 0;
-  if ((int)uVar11 != 0) {
-    piVar4 = *(int **)(iVar2 + 8);
-    *piVar4 = (int)((uVar11 & 0xffffffff) << 0x18) + -0x1000000;
-    *(int **)(iVar2 + 8) = piVar4 + 1;
-    uVar9 = uVar11;
-  }
-  uVar10 = (uint)uVar9;
-  if ((uint)uVar14 >> 8 != 0) {
-    do {
-      puVar3 = *(uint **)(iVar2 + 8);
-      uVar6 = (uint)uVar9;
-      uVar7 = uVar7 - 1;
-      uVar9 = uVar9 + 0x100;
-      uVar10 = (uint)uVar9;
-      *puVar3 = uVar6 | 0xff000000;
-      *(uint **)(iVar2 + 8) = puVar3 + 1;
-    } while (0 < (int)uVar7);
-  }
-  if (iVar16 != 0) {
-    puVar3 = *(uint **)(iVar2 + 8);
-    *puVar3 = uVar10 | (int)((uVar15 & 0xffffffff) << 0x18) - 0x1000000U;
-    *(uint **)(iVar2 + 8) = puVar3 + 1;
-  }
-  iVar13 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar13 + 8) = 0x41808;
-  iVar2 = *(int *)(iVar13 + 8);
-  *(undefined4 *)(iVar2 + 4) = 0;
-  *(int *)(iVar13 + 8) = iVar2 + 8;
-  iVar13 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar13 + 8) = 0x41740;
-  iVar2 = *(int *)(iVar13 + 8);
-  *(undefined4 *)(iVar2 + 4) = 2;
-  *(int *)(iVar13 + 8) = iVar2 + 8;
-  iVar13 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar13 + 8) = 0x41744;
-  iVar2 = *(int *)(iVar13 + 8);
-  *(undefined4 *)(iVar2 + 4) = 2;
-  *(int *)(iVar13 + 8) = iVar2 + 8;
-  iVar2 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar2 + 8) = 0x4174c;
-  iVar5 = *(int *)(iVar2 + 8);
-  *(undefined4 *)(iVar5 + 4) = 2;
-  *(int *)(iVar2 + 8) = iVar5 + 8;
-  return;
+    static const Mtx4 identity = {
+        { 1.0f, 0.0f, 0.0f, 0.0f },
+        { 0.0f, 1.0f, 0.0f, 0.0f },
+        { 0.0f, 0.0f, 1.0f, 0.0f },
+        { 0.0f, 0.0f, 0.0f, 1.0f },
+    };
+
+    IdolDraw *idol = Idol();
+
+    idol_draw::ResetPassState(PassByIndex(passIndex));
+
+    if (passIndex == 2 || passIndex == 9) {
+        idol_draw::BindVertexProgram((uintptr_t)idol, (int)(uintptr_t)PassByIndex(passIndex), 4);
+        idol_draw::BindFragmentProgram((uintptr_t)idol, (int)(uintptr_t)PassByIndex(passIndex), 6);
+    }
+    else if (passIndex == 0 || passIndex == 8) {
+        Mtx4 mtx = identity;
+
+        EmitVertexConstMtx(PassByIndex(passIndex), 4, &mtx);
+    }
+
+    RenderingStep *pass = PassByIndex(passIndex);
+    u32 offset = (u32)(uintptr_t)vertices - idol->memBase;
+
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 0 * 4, 0x18 << 8 | 3 << 4 | CELL_GCM_VERTEX_F);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 1 * 4, 0x18 << 8 | 2 << 4 | CELL_GCM_VERTEX_F);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 3 * 4, 0x18 << 8 | 4 << 4 | CELL_GCM_VERTEX_UB);
+    EmitStripOffset(pass, 0, offset);
+    EmitStripOffset(pass, 1, offset + 0xc);
+    EmitStripOffset(pass, 3, offset + 0x14);
+
+    EmitStrip(pass, count);
+
+    DisableArray(pass, 0);
+    DisableArray(pass, 1);
+    DisableArray(pass, 3);
 }
 
 
 // 0x00745a0 (0x1c bytes)
-bool ____Draw_IsFlagMode2(ulonglong param_1)
-
+/* bits 4-5 of a GS ALPHA word are 2 */
+bool ____Draw_IsFlagMode2(u64 alpha)
 {
-  return (param_1 & 0x30) == 0x20;
+    return (alpha & 0x30) == 0x20;
 }
 
 
 // 0x00745bc (0x48 bytes)
-undefined8 ____Draw_IsBlendModeMatch(ulonglong param_1)
-
+/* a GS ALPHA word of the (Cs - Cd) * As + Cd or (Cs - Cd) * Fix + Cd form: A = 0, B = 1, D = 1,
+   C = 0 or 2 */
+int ____Draw_IsBlendModeMatch(u64 alpha)
 {
-  undefined8 uVar1;
-  
-  uVar1 = 0;
-  if (((((param_1 & 3) == 0) && (((uint)(param_1 >> 2) & 3) == 1)) &&
-      (((uint)(param_1 >> 6) & 3) == 1)) &&
-     (((param_1 >> 4 & 3) == 0 || (((uint)(param_1 >> 4) & 3) == 2)))) {
-    uVar1 = 1;
-  }
-  return uVar1;
+    if ((alpha & 3) != 0) {
+        return 0;
+    }
+
+    if (((alpha >> 2) & 3) != 1) {
+        return 0;
+    }
+
+    if (((alpha >> 6) & 3) != 1) {
+        return 0;
+    }
+
+    return ((alpha >> 4) & 3) == 0 || ((alpha >> 4) & 3) == 2;
 }
 
 
 // 0x0074604 (0x13c bytes)
-void DrawMeshSet(ulonglong param_1,undefined4 *param_2,uint *param_3,undefined4 *param_4,
-                      ulonglong param_5)
-
+/* count vertices from separate arrays drawn by FastDrawStripColor on the pass in passes' low
+   nibble and on the one in its next nibble (when not 0) */
+void DrawMeshSet(int count, void *positions, void *colorArray, void *uvs, u32 passes)
 {
-  undefined4 uVar1;
-  uint uVar2;
-  undefined4 *puVar3;
-  undefined4 *puVar5;
-  ulonglong uVar4;
-  undefined4 *puVar6;
-  ulonglong uVar7;
-  
-  uVar7 = (param_5 << 0x20) >> 0x24 & 0xf;
-  puVar5 = (undefined4 *)idol::AllocateMemAlign(FrameHeap,(int)(param_1 << 3) * 3,0x10);
-  uVar4 = 0;
-  puVar6 = puVar5;
-  if ((int)param_1 != 0) {
-    do {
-      uVar4 = uVar4 + 1;
-      uVar2 = *param_3;
-      *puVar6 = *param_2;
-      puVar6[1] = param_2[1];
-      param_3 = param_3 + 1;
-      puVar3 = param_2 + 2;
-      param_2 = param_2 + 3;
-      puVar6[2] = *puVar3;
-      puVar6[3] = *param_4;
-      uVar1 = param_4[1];
-      puVar6[5] = uVar2 >> 0x18 | uVar2 >> 8 & 0xff00 | uVar2 << 0x18 | (uVar2 & 0xff00) << 8;
-      param_4 = param_4 + 2;
-      puVar6[4] = uVar1;
-      puVar6 = puVar6 + 6;
-    } while ((uVar4 & 0xffffffff) < (param_1 & 0xffffffff));
-  }
-  if ((int)(param_5 & 0xf) != 0) {
-    FastDrawStripColor(param_1,puVar5,param_5 & 0xf);
-  }
-  if ((int)uVar7 != 0) {
-    FastDrawStripColor(param_1,puVar5,uVar7);
-  }
-  return;
+    Vec3 *pos = (Vec3 *)positions;
+    u32 *colors = (u32 *)colorArray;
+    Vec2 *uv = (Vec2 *)uvs;
+    FastQuadVertex *vertices = (FastQuadVertex *)(uintptr_t)idol::AllocateMemAlign(FrameHeap, count * 0x18, 0x10);
+
+    for (u32 i = 0; i < (u32)count; i++) {
+        vertices[i].x = pos[i].x;
+        vertices[i].y = pos[i].y;
+        vertices[i].z = pos[i].z;
+        vertices[i].s = uv[i].x;
+        vertices[i].t = uv[i].y;
+        vertices[i].color = SwapColor(colors[i]);
+    }
+
+    int first = passes & 0xf;
+    int second = (passes >> 4) & 0xf;
+
+    if (first != 0) {
+        FastDrawStripColor(count, vertices, first);
+    }
+
+    if (second != 0) {
+        FastDrawStripColor(count, vertices, second);
+    }
 }
 
 
 // 0x0074780 (0x460 bytes)
-void FastDrawStripFog(int param_1,void *param_2,int param_3)
-
+/* count vertices of position, a coordinate triple and colour (0x1c apart) as a strip on pass
+   passIndex with the identity at c[4]; programs 7/7 on passes 1, 2 and 9 */
+void FastDrawStripFog(int count, void *vertices, int passIndex)
 {
-  int iVar1;
-  uint *puVar2;
-  int *piVar3;
-  int iVar4;
-  int iVar5;
-  uint uVar6;
-  undefined4 *puVar8;
-  ulonglong uVar7;
-  uint uVar10;
-  ulonglong uVar9;
-  undefined4 *puVar12;
-  ulonglong uVar11;
-  int iVar13;
-  ulonglong uVar14;
-  ulonglong uVar15;
-  int iVar16;
-  longlong lVar17;
-  undefined4 local_70 [16];
-  
-  iVar16 = g_pIdolDraw;
-  iVar5 = (int)(param_3 << 2);
-  iVar4 = *(int *)((int)&DepthPass + iVar5);
-  puVar12 = local_70;
-  iVar13 = (int)param_3;
-  **(undefined4 **)(iVar4 + 8) = 0x441efc;
-  lVar17 = 8;
-  *(undefined4 *)(*(int *)(iVar4 + 8) + 4) = 4;
-  puVar8 = (undefined4 *)(*(int *)(iVar4 + 8) + 8);
-  *(undefined4 **)(iVar4 + 8) = puVar8;
-  do {
-    *puVar8 = *puVar12;
-    iVar1 = *(int *)(iVar4 + 8);
-    *(int *)(iVar4 + 8) = iVar1 + 4;
-    puVar8 = puVar12 + 1;
-    puVar12 = puVar12 + 2;
-    *(undefined4 *)(iVar1 + 4) = *puVar8;
-    puVar8 = (undefined4 *)(*(int *)(iVar4 + 8) + 4);
-    *(undefined4 **)(iVar4 + 8) = puVar8;
-    lVar17 = lVar17 + -1;
-  } while (lVar17 != 0);
-  if (((iVar13 == 1) || (iVar13 == 2)) || (iVar13 == 9)) {
-    idol_draw::BindVertexProgram(iVar16,*(undefined4 *)((int)&DepthPass + iVar5),7);
-    idol_draw::BindFragmentProgram(iVar16,*(undefined4 *)((int)&DepthPass + iVar5),7);
-  }
-  iVar4 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar4 + 8) = 0x41740;
-  *(undefined4 *)(*(int *)(iVar4 + 8) + 4) = 0x1c32;
-  *(int *)(iVar4 + 8) = *(int *)(iVar4 + 8) + 8;
-  iVar4 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar4 + 8) = 0x41744;
-  *(undefined4 *)(*(int *)(iVar4 + 8) + 4) = 0x1c32;
-  *(int *)(iVar4 + 8) = *(int *)(iVar4 + 8) + 8;
-  iVar4 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar4 + 8) = 0x4174c;
-  *(undefined4 *)(*(int *)(iVar4 + 8) + 4) = 0x1c44;
-  *(int *)(iVar4 + 8) = *(int *)(iVar4 + 8) + 8;
-  iVar4 = *(int *)((int)&DepthPass + iVar5);
-  uVar10 = param_2 - *(int *)(iVar16 + 0x4a8);
-  **(undefined4 **)(iVar4 + 8) = 0x41680;
-  *(uint *)(*(int *)(iVar4 + 8) + 4) = uVar10 | 0x80000000;
-  *(int *)(iVar4 + 8) = *(int *)(iVar4 + 8) + 8;
-  iVar4 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar4 + 8) = 0x41684;
-  *(uint *)(*(int *)(iVar4 + 8) + 4) = uVar10 + 0xc | 0x80000000;
-  *(int *)(iVar4 + 8) = *(int *)(iVar4 + 8) + 8;
-  iVar4 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar4 + 8) = 0x4168c;
-  *(uint *)(*(int *)(iVar4 + 8) + 4) = uVar10 + 0x18 | 0x80000000;
-  *(int *)(iVar4 + 8) = *(int *)(iVar4 + 8) + 8;
-  iVar4 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar4 + 8) = 0x400c1714;
-  *(undefined4 *)(*(int *)(iVar4 + 8) + 4) = 0;
-  *(undefined4 *)(*(int *)(iVar4 + 8) + 8) = 0;
-  uVar11 = (param_1 - 0x100U & (longlong)((int)(param_1 - 0x100U) >> 0x1f)) + 0x100;
-  *(undefined4 *)(*(int *)(iVar4 + 8) + 0xc) = 0;
-  uVar14 = param_1 - uVar11 & ~(longlong)((int)(param_1 - uVar11) >> 0x1f);
-  *(undefined4 *)(*(int *)(iVar4 + 8) + 0x10) = 0x41808;
-  uVar7 = (uVar14 << 0x20) >> 0x28;
-  uVar15 = uVar14 - (uVar14 & 0xffffff00);
-  iVar16 = (int)uVar15;
-  *(undefined4 *)(*(int *)(iVar4 + 8) + 0x14) = 6;
-  *(int *)(iVar4 + 8) = *(int *)(iVar4 + 8) + 0x18;
-  iVar4 = *(int *)((int)&DepthPass + iVar5);
-  puVar2 = *(uint **)(iVar4 + 8);
-  *(uint **)(iVar4 + 8) = puVar2 + 1;
-  *puVar2 = (((uint)uVar14 >> 8) + ((iVar16 != 0)) +
-            (((int)uVar11 != 0))) * 0x40000 | 0x40001814;
-  uVar9 = 0;
-  if ((int)uVar11 != 0) {
-    piVar3 = *(int **)(iVar4 + 8);
-    *(int **)(iVar4 + 8) = piVar3 + 1;
-    *piVar3 = (int)((uVar11 & 0xffffffff) << 0x18) + -0x1000000;
-    uVar9 = uVar11;
-  }
-  uVar10 = (uint)uVar9;
-  if ((uint)uVar14 >> 8 != 0) {
-    do {
-      puVar2 = *(uint **)(iVar4 + 8);
-      uVar6 = (uint)uVar9;
-      uVar7 = uVar7 - 1;
-      uVar9 = uVar9 + 0x100;
-      uVar10 = (uint)uVar9;
-      *(uint **)(iVar4 + 8) = puVar2 + 1;
-      *puVar2 = uVar6 | 0xff000000;
-    } while (0 < (int)uVar7);
-  }
-  if (iVar16 != 0) {
-    puVar2 = *(uint **)(iVar4 + 8);
-    *(uint **)(iVar4 + 8) = puVar2 + 1;
-    *puVar2 = uVar10 | (int)((uVar15 & 0xffffffff) << 0x18) - 0x1000000U;
-  }
-  iVar4 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar4 + 8) = 0x41808;
-  *(undefined4 *)(*(int *)(iVar4 + 8) + 4) = 0;
-  *(int *)(iVar4 + 8) = *(int *)(iVar4 + 8) + 8;
-  iVar4 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar4 + 8) = 0x41740;
-  *(undefined4 *)(*(int *)(iVar4 + 8) + 4) = 2;
-  *(int *)(iVar4 + 8) = *(int *)(iVar4 + 8) + 8;
-  iVar4 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar4 + 8) = 0x41744;
-  *(undefined4 *)(*(int *)(iVar4 + 8) + 4) = 2;
-  *(int *)(iVar4 + 8) = *(int *)(iVar4 + 8) + 8;
-  iVar4 = *(int *)((int)&DepthPass + iVar5);
-  **(undefined4 **)(iVar4 + 8) = 0x4174c;
-  *(undefined4 *)(*(int *)(iVar4 + 8) + 4) = 2;
-  *(int *)(iVar4 + 8) = *(int *)(iVar4 + 8) + 8;
-  return;
+    static const Mtx4 identity = {
+        { 1.0f, 0.0f, 0.0f, 0.0f },
+        { 0.0f, 1.0f, 0.0f, 0.0f },
+        { 0.0f, 0.0f, 1.0f, 0.0f },
+        { 0.0f, 0.0f, 0.0f, 1.0f },
+    };
+
+    IdolDraw *idol = Idol();
+    Mtx4 mtx = identity;
+
+    EmitVertexConstMtx(PassByIndex(passIndex), 4, &mtx);
+
+    if (passIndex == 1 || passIndex == 2 || passIndex == 9) {
+        idol_draw::BindVertexProgram((uintptr_t)idol, (int)(uintptr_t)PassByIndex(passIndex), 7);
+        idol_draw::BindFragmentProgram((uintptr_t)idol, (int)(uintptr_t)PassByIndex(passIndex), 7);
+    }
+
+    RenderingStep *pass = PassByIndex(passIndex);
+    u32 offset = (u32)(uintptr_t)vertices - idol->memBase;
+
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 0 * 4, 0x1c << 8 | 3 << 4 | CELL_GCM_VERTEX_F);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 1 * 4, 0x1c << 8 | 3 << 4 | CELL_GCM_VERTEX_F);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 3 * 4, 0x1c << 8 | 4 << 4 | CELL_GCM_VERTEX_UB);
+    EmitStripOffset(pass, 0, offset);
+    EmitStripOffset(pass, 1, offset + 0xc);
+    EmitStripOffset(pass, 3, offset + 0x18);
+
+    EmitStrip(pass, count);
+
+    DisableArray(pass, 0);
+    DisableArray(pass, 1);
+    DisableArray(pass, 3);
 }
+
+/* a vertex of FastDrawStripFog */
+struct FogStripVertex {
+    float x;
+    float y;
+    float z;
+    float s;
+    float t;
+    float q;
+    u32 color;
+};
 
 
 // 0x0074be0 (0x108 bytes)
-void DrawOceanStrip(float param_1,int param_2,Vec3 *param_3,u32 *param_4,Vec2 *param_5)
-
+/* count vertices from separate arrays, q the coordinates' third value, through FastDrawStripFog
+   on pass 9 */
+void DrawOceanStrip(float q, int count, Vec3 *pos, u32 *colors, Vec2 *uv)
 {
-  undefined4 uVar1;
-  uint uVar2;
-  undefined4 *puVar3;
-  undefined4 *puVar5;
-  ulonglong uVar4;
-  undefined4 *puVar6;
-  
-  puVar5 = (undefined4 *)
-           idol::AllocateMemAlign(FrameHeap,(int)(param_2 << 5) - (int)(param_2 << 2),0x10);
-  uVar4 = 0;
-  puVar6 = puVar5;
-  if ((int)param_2 != 0) {
-    do {
-      uVar4 = uVar4 + 1;
-      *puVar6 = *param_3;
-      uVar2 = *param_4;
-      puVar6[1] = param_3[1];
-      param_4 = param_4 + 1;
-      puVar3 = param_3 + 2;
-      param_3 = param_3 + 3;
-      puVar6[2] = *puVar3;
-      puVar6[3] = *param_5;
-      uVar1 = param_5[1];
-      puVar6[5] = (float)param_1;
-      param_5 = param_5 + 2;
-      puVar6[4] = uVar1;
-      puVar6[6] = uVar2 >> 0x18 | uVar2 >> 8 & 0xff00 | uVar2 << 0x18 | (uVar2 & 0xff00) << 8;
-      puVar6 = puVar6 + 7;
-    } while ((uVar4 & 0xffffffff) < (param_2 & 0xffffffff));
-  }
-  FastDrawStripFog(param_2,puVar5,9);
-  return;
+    FogStripVertex *vertices = (FogStripVertex *)(uintptr_t)idol::AllocateMemAlign(FrameHeap, count * 0x1c, 0x10);
+
+    for (u32 i = 0; i < (u32)count; i++) {
+        vertices[i].x = pos[i].x;
+        vertices[i].y = pos[i].y;
+        vertices[i].z = pos[i].z;
+        vertices[i].s = uv[i].x;
+        vertices[i].t = uv[i].y;
+        vertices[i].q = q;
+        vertices[i].color = SwapColor(colors[i]);
+    }
+
+    FastDrawStripFog(count, vertices, 9);
 }
 
 
 // 0x0074ce8 (0x4 bytes)
 void STUB_00074ce8(...)
-
 {
-  return;
 }
 
 
 // 0x0074cec (0x4 bytes)
 void STUB_00074cec(...)
-
 {
-  return;
 }
 
 
 // 0x0074cf0 (0xc8 bytes)
-int ImpactSprite_Add
-              (double param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-              undefined2 param_5)
-
+/* a free impact sprite at pos with effect texture tex at scale, turned at random; its index, or
+   -1 when all 32 are in use */
+int ImpactSprite_Add(float scale, Vec4 pos, short tex)
 {
-  int iVar1;
-  double dVar2;
-  undefined4 uStack00000030;
-  undefined4 uStack00000034;
-  undefined4 uStack00000038;
-  undefined4 uStack0000003c;
-  
-  iVar1 = 0;
-  uStack00000034 = (undefined4)param_2;
-  uStack0000003c = (undefined4)param_3;
-  uStack00000030 = (undefined4)((ulonglong)param_2 >> 0x20);
-  uStack00000038 = (undefined4)((ulonglong)param_3 >> 0x20);
-  do {
-    if ((short)(&DAT_0095ee50)[iVar1 * 0x10] < 1) {
-      (&DAT_0095ee50)[iVar1 * 0x10] = 0x18;
-      *(undefined2 *)(&DAT_0095ee54 + iVar1 * 0x20) = param_5;
-      (&DAT_0095ee40)[iVar1 * 8] = uStack00000030;
-      (&DAT_0095ee44)[iVar1 * 8] = uStack00000034;
-      (&DAT_0095ee48)[iVar1 * 8] = uStack00000038;
-      (&DAT_0095ee4c)[iVar1 * 8] = uStack0000003c;
-      (&DAT_0095ee5c)[iVar1 * 8] = (float)param_1;
-      _uStack00000030 = param_2;
-      _uStack00000038 = param_3;
-      dVar2 = (double)MB_randRot();
-      (&DAT_0095ee58)[iVar1 * 8] = (float)dVar2;
-      return iVar1;
+    for (int i = 0; i < 32; i++) {
+        ImpactSprite *sprite = &g_ImpactSprites[i];
+
+        if (sprite->timer > 0) {
+            continue;
+        }
+
+        sprite->timer = 24;
+        sprite->tex = tex;
+        sprite->pos = pos;
+        sprite->scale = scale;
+        sprite->rot = (float)MB_randRot();
+
+        return i;
     }
-    iVar1 = iVar1 + 1;
-  } while (iVar1 < 0x20);
-  return -1;
+
+    return -1;
 }
 
 
 // 0x0074dc0 (0xec bytes)
+/* spins each live impact sprite at 5/3 pi a second, fades it in and (over its last 12 frames)
+   out, and frees it when its time runs out */
 void ImpactSprite_Update(void)
-
 {
-  short sVar1;
-  short sVar2;
-  int iVar3;
-  short *psVar4;
-  undefined4 *puVar5;
-  double dVar6;
-  double dVar7;
-  
-  psVar4 = &DAT_0095ee50;
-  iVar3 = 0;
-  puVar5 = &DAT_0095ee40;
-  dVar7 = 5.235987663269043;
-  do {
-    if (0 < *psVar4) {
-      dVar6 = (double)FastDiffRots
-                                ((double)(float)puVar5[6],
-                                 (double)(float)((double)g_FrameTime * dVar7));
-      puVar5[6] = (float)dVar6;
-      if (*(short *)(puVar5 + 4) < 0xd) {
-        sVar2 = *(short *)((int)puVar5 + 0x12) + -5;
-      }
-      else {
-        sVar2 = *(short *)((int)puVar5 + 0x12) + 5;
-      }
-      sVar1 = *(short *)(puVar5 + 4) + -1;
-      *(short *)((int)puVar5 + 0x12) = sVar2;
-      *(short *)(puVar5 + 4) = sVar1;
-      if (sVar1 < 1) {
-        FastMemSet(puVar5,0,0x20);
-      }
+    for (int i = 0; i < 32; i++) {
+        ImpactSprite *sprite = &g_ImpactSprites[i];
+
+        if (sprite->timer <= 0) {
+            continue;
+        }
+
+        sprite->rot = FastDiffRots(sprite->rot, g_FrameTime * 5.2359877f);
+
+        if (sprite->timer < 13) {
+            sprite->fade -= 5;
+        }
+        else {
+            sprite->fade += 5;
+        }
+
+        sprite->timer--;
+
+        if (sprite->timer < 1) {
+            FastMemSet(sprite, 0, 0x20);
+        }
     }
-    iVar3 = iVar3 + 1;
-    psVar4 = psVar4 + 0x10;
-    puVar5 = puVar5 + 8;
-  } while (iVar3 < 0x20);
-  return;
 }
 
 
@@ -5572,7 +4417,7 @@ void ImpactSprite_Draw(void)
   auVar35 = vectorReciprocalSquareRootEstimateFloatingPoint(auVar33);
   auVar29 = vectorMultiplyAddFloatingPoint(auVar27,auVar44,auVar31);
   iVar18 = 0;
-  uVar15 = ZEXT48(&DAT_0095ee40);
+  uVar15 = ZEXT48(&g_ImpactSprites);
   psVar16 = &DAT_0095ee50;
   auVar30 = vectorNegativeMultiplySubtractFloatingPoint(auVar27,auVar30,auVar43);
   auVar24 = vectorMultiplyAddFloatingPoint(auVar28,auVar24,auVar31);
@@ -7164,8 +6009,8 @@ void SetFrameBufferTexLog2Size(int log2w,int log2h,int zbuf)
 
 {
   DAT_00966b92 = (short)(zbuf >> 0xd);
-  DAT_00966b8c = (short)(1 << (log2w & 0x3fU));
-  DAT_00966b8e = (short)(1 << (log2h & 0x3fU));
+  g_AuxWidth = (short)(1 << (log2w & 0x3fU));
+  g_AuxHeight = (short)(1 << (log2h & 0x3fU));
   return;
 }
 

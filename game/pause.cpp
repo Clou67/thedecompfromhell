@@ -37,6 +37,7 @@
 #include "idol/fastfunc.h"
 #include "idol/idol.h"
 #include "idol/mUnk.h"
+#include "idol/tiefunc.h"
 #include "sdk/libc/abort.h"
 #include "sdk/libgcm_cmd/marker.h"
 #include "sdk/mUnk4.h"
@@ -1178,11 +1179,11 @@ void DrawPauseMenu(char param_1)
                 uVar19 = uVar19 + 1;
               } while (1 << (uVar19 & 0x3f) < (int)uVar6);
             }
-            SetScreenResolution
+            BeginAuxDrawMode
                       (0x3ff0000000000000,uVar20,uVar19,&DAT_0013ca64,
                        (ulonglong)(LZCOUNT(iVar21) << 0x20) >> 0x25 ^ 1,DAT_00729844);
             uVar10 = (*(code *)**(undefined4 **)(*(int *)(iVar22 + iVar18) + 4))();
-            ResetHUDPass();
+            EndAuxDrawMode();
             uVar9 = idol_draw::PackCmd(0,1,2,1,0x80);
             SetGSReg(3,uVar9);
             uVar9 = FUN_00502f98(1,1,4,0,0,0,0,0);
@@ -1801,11 +1802,11 @@ void FrontEnd_DrawMenu(void)
           }
           snprintf(acStack_d0,"monitor %d",uVar16);
           idol_draw::RsxCmd_DebugStr_Marker(HUD_Pass,acStack_d0);
-          SetScreenResolution
+          BeginAuxDrawMode
                     (uVar7,uVar20,uVar21,&DAT_00730000,
                      (ulonglong)(LZCOUNT(iVar14) << 0x20) >> 0x25 ^ 1,DAT_00729844);
           uVar8 = (*(code *)**(undefined4 **)(*(int *)(iVar19 + iVar17) + 4))();
-          ResetHUDPass();
+          EndAuxDrawMode();
           idol_draw::RsxCmd_WritePass(HUD_Pass);
           if ((uVar8 & 1) == 0) {
             uVar21 = 1 << (uVar21 & 0x3f);
@@ -6491,7 +6492,7 @@ undefined8 ImageWidget_Draw(int param_1)
   }
   else {
     Sprite_DrawShape
-              (0,0,DAT_00966b8c,DAT_00966b8e,0,0,*(undefined4 *)(param_1 + 0x38),
+              (0,0,g_AuxWidth,g_AuxHeight,0,0,*(undefined4 *)(param_1 + 0x38),
                *(undefined4 *)(param_1 + 0x3c));
     uVar1 = 0x10;
   }
@@ -7002,7 +7003,7 @@ LAB_00149608:
         uVar1 = *(uint *)(param_1 + 0x38);
         uVar2 = *(uint *)(param_1 + 0x3c);
         Sprite_DrawShape
-                  (0,0,DAT_00966b8c,DAT_00966b8e,0,0,
+                  (0,0,g_AuxWidth,g_AuxHeight,0,0,
                    ((int)uVar1 >> 1) + (uint)((int)uVar1 < 0 && (uVar1 & 1) != 0),
                    ((int)uVar2 >> 1) + (uint)((int)uVar2 < 0 && (uVar2 & 1) != 0));
         goto LAB_00149670;
@@ -7013,14 +7014,14 @@ LAB_00149608:
   else {
     if (iVar4 < 0xc) {
       Sprite_DrawShape
-                (0,0,(longlong)DAT_00966b8c << 1,DAT_00966b8e,0,0,*(int *)(param_1 + 0x38) << 1,
+                (0,0,(longlong)g_AuxWidth << 1,g_AuxHeight,0,0,*(int *)(param_1 + 0x38) << 1,
                  *(undefined4 *)(param_1 + 0x3c));
       goto LAB_00149670;
     }
     if (0xf < iVar4) goto LAB_00149608;
   }
   Sprite_DrawShape
-            (0,0,DAT_00966b8c,DAT_00966b8e,0,0,*(undefined4 *)(param_1 + 0x38),
+            (0,0,g_AuxWidth,g_AuxHeight,0,0,*(undefined4 *)(param_1 + 0x38),
              *(undefined4 *)(param_1 + 0x3c));
 LAB_00149670:
   STUB_0006d708();
@@ -7177,8 +7178,8 @@ undefined8 MapPage_DrawOverlay(void)
       uVar2 = SCE_GS_SET_CLAMP(1,1,0,0,0,0);
       SetGSReg(6,uVar2);
       uVar6 = 0;
-      dVar8 = (double)(longlong)(int)DAT_00966b8c;
-      dVar7 = (double)(longlong)(int)DAT_00966b8e;
+      dVar8 = (double)(longlong)(int)g_AuxWidth;
+      dVar7 = (double)(longlong)(int)g_AuxHeight;
       Hud_DrawTexQuadF_v2(0,0,dVar8,dVar7,0,0,&DAT_00a20718);
       uVar2 = idol_draw::Blend(1,5,0x60,3,0,0,0,0);
       SetGSReg(0x16,uVar2);
@@ -7191,9 +7192,9 @@ undefined8 MapPage_DrawOverlay(void)
     }
     else {
       uVar1 = *(uint *)(&DAT_007354d4 + g_MapCurIndex * 4) & 0x7fffffff;
-      lVar4 = (longlong)((int)((int)((longlong)DAT_00966b8e << 4) + uVar1 * -2) >> 4);
+      lVar4 = (longlong)((int)((int)((longlong)g_AuxHeight << 4) + uVar1 * -2) >> 4);
       uVar3 = g_MainLoopFrames + g_MapCurIndex * 0x2ab;
-      dVar8 = (double)(longlong)((int)((int)((longlong)DAT_00966b8c << 4) + uVar1 * -2) >> 4);
+      dVar8 = (double)(longlong)((int)((int)((longlong)g_AuxWidth << 4) + uVar1 * -2) >> 4);
       lVar5 = (longlong)
               (int)(uVar3 + (((int)uVar3 >> 0xb) + (uint)((int)uVar3 < 0 && (uVar3 & 0x7ff) != 0)) *
                             -0x800);

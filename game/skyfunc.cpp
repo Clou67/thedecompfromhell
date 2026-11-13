@@ -18,7 +18,6 @@
 #include <time.h>
 #include "game/skyfunc.h"
 #include "game/boot.h"
-#include "game/draw.h"
 #include "game/loaders.h"
 #include "game/mesh.h"
 #include "game/mobyproc.h"
@@ -30,6 +29,7 @@
 #include "game/vuchain.h"
 #include "idol/fastfunc.h"
 #include "idol/shrubfunc.h"
+#include "idol/tiefunc.h"
 #include "sdk/rUnk.h"
 #include "idol/fastinline.h"
 #include <cell/gcm/gcm_macros.h>

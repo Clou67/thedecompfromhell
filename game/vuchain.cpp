@@ -3,7 +3,6 @@
 // 29 functions, 0x174b0c-0x175558
 #include <stdio.h>
 #include "game/vuchain.h"
-#include "game/draw.h"
 #include "game/hero.h"
 #include "game/hud.h"
 #include "game/pause.h"

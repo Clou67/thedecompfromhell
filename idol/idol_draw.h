@@ -91,6 +91,10 @@ struct IdolDraw {
     int presentInfo;                  /* 0x1fe0  its address goes to idol_draw::Gfx_Present */
     u8 _pad1fe4[0x74];
     struct IdolTexture renderTarget;  /* 0x2058  the off-screen target DrawRenderTargetToScreen copies */
+    u8 _pad2070[0x218];
+    u32 auxBuffer;                    /* 0x2288  main-memory address of the aux draw buffer */
+    u8 _pad228c[0x4c];
+    int auxDepth;                     /* 0x22d8  BeginAuxDrawMode/EndAuxDrawMode nesting */
 };
 
 /* the Idol renderer's virtual functions (the vtable @0x661840; its base class @0x661710 has

@@ -70,7 +70,6 @@ typedef struct SeqFrameFix {
 extern undefined4 BlenderCnt; /* 0xa1c8c4 */
 extern int CuboidCnt; /* 0xa51bdc */
 extern int CylinderCnt; /* 0xa51bd4 */
-extern undefined4 DAT_0071ef00; /* no defined data */
 extern undefined4 DAT_0072479c; /* 0x72479c */
 extern undefined4 DAT_00731c90; /* 0x731c90 */
 extern undefined4 DAT_00731c94; /* 0x731c94 */

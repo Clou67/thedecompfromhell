@@ -120,3 +120,4 @@ MobyDrawFunc	game/draw
 ScreenVBEffect	game/draw
 ScreenInsertEffect	game/draw
 TimedHelpMsg	game/draw
+ImpactSprite	game/draw

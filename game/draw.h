@@ -54,6 +54,11 @@ struct ScreenVBEffect {
     u64 B_alpha;        /* 0x28 */
 };
 
+struct Vec2 {
+    float x;
+    float y;
+};
+
 /* the view set up for a frame (g_ViewContext @0x95cf80): clip planes, screen ratios, the
    projection matrices and the fog. DL's ViewContext without its scissor and split-screen
    fields; the GIF-tag headers at the start are PS2 leftovers the PS3 build still fills. */
@@ -122,6 +127,17 @@ struct FontGlyph {
     s8 width;
 };
 
+/* a short-lived spinning sprite at a hit (g_ImpactSprites, 32 of them; name invented) */
+struct ImpactSprite {
+    struct Vec4 pos;    /* 0x00 */
+    short timer;        /* 0x10  frames left, from 24; 0 = free */
+    short fade;         /* 0x12  rises by 5 a frame, falls by 5 over the last 12 */
+    short tex;          /* 0x14  effect texture */
+    short _pad16;
+    float rot;          /* 0x18 */
+    float scale;        /* 0x1c */
+};
+
 /* a function in one of draw's registered-draw lists, called with the moby it was registered
    with (DL: RegisterDrawFunction's void (*)(MobyInstance *)) */
 typedef void (*MobyDrawFunc)(struct MobyInstance *);
@@ -187,12 +203,9 @@ struct ViewFogConsts {
 };
 
 // ---- globals
-extern undefined4 DAT_00080a00; /* 0x80a00 */
 extern undefined4 DAT_0071eeac; /* 0x71eeac */
-extern undefined8 DAT_0071eed8; /* 0x71eed8 */
-extern undefined8 DAT_0071eee8; /* 0x71eee8 */
-extern undefined8 DAT_0071ef08; /* 0x71ef08 */
-extern undefined8 DAT_0071ef18; /* 0x71ef18 */
+extern undefined1 DAT_0071eed0; /* 0x71eed0 */
+extern undefined4 DAT_0071ef00; /* no defined data */
 extern undefined4 DAT_0071f004; /* 0x71f004 */
 extern undefined4 DAT_0071f070; /* 0x71f070 */
 extern undefined4 DAT_0071f074; /* no defined data */
@@ -230,25 +243,10 @@ extern undefined4 DAT_0095cae0; /* 0x95cae0 */
 extern undefined4 DAT_0095ccf0; /* 0x95ccf0 */
 extern undefined4 DAT_0095cd40; /* 0x95cd40 */
 extern undefined1 DAT_0095cf20; /* 0x95cf20 */
-extern undefined4 DAT_0095ea14; /* no defined data */
-extern undefined4 DAT_0095ee1c; /* 0x95ee1c */
-extern undefined4 DAT_0095ee20; /* 0x95ee20 */
-extern undefined4 DAT_0095ee24; /* 0x95ee24 */
-extern undefined4 DAT_0095ee28; /* 0x95ee28 */
-extern undefined4 DAT_0095ee2c; /* 0x95ee2c */
-extern undefined4 DAT_0095ee30; /* 0x95ee30 */
-extern undefined4 DAT_0095ee34; /* 0x95ee34 */
-extern undefined4 DAT_0095ee38; /* 0x95ee38 */
-extern undefined1 DAT_0095ee3c; /* 0x95ee3c */
-extern undefined1 DAT_0095ee3d; /* 0x95ee3d */
-extern undefined4 DAT_0095ee40; /* 0x95ee40 */
 extern undefined4 DAT_0095ee44; /* 0x95ee44 */
 extern undefined4 DAT_0095ee48; /* 0x95ee48 */
-extern undefined4 DAT_0095ee4c; /* 0x95ee4c */
 extern undefined2 DAT_0095ee50; /* 0x95ee50 */
-extern undefined4 DAT_0095ee54; /* no defined data */
 extern undefined4 DAT_0095ee58; /* 0x95ee58 */
-extern undefined4 DAT_0095ee5c; /* 0x95ee5c */
 extern undefined2 DAT_0095f240; /* 0x95f240 */
 extern undefined2 DAT_00961656; /* 0x961656 */
 extern undefined4 DAT_00963668; /* 0x963668 */
@@ -273,7 +271,6 @@ extern undefined4 DAT_00966bc0; /* 0x966bc0 */
 extern undefined4 DAT_01111700; /* no defined data */
 extern undefined4 DAT_70001000; /* no defined data */
 extern undefined4 DAT_70002000; /* no defined data */
-extern RenderingStep * DepthPass; /* 0x8fa414 */
 extern undefined4 FrameHeap; /* 0x8fa440 */
 extern undefined Glyphs; /* 0x736c50 */
 extern undefined JapaneseGlyphs; /* 0x737390 */
@@ -311,6 +308,8 @@ extern undefined4 _DAT_00074f70; /* direct read */
 extern undefined4 _DAT_00074f80; /* direct read */
 extern undefined4 _DAT_00074f90; /* direct read */
 extern undefined4 fogNearDist; /* 0x95d198 */
+extern u32 g_AlphaPal[256]; /* 0x95ea14 */ /* type set in global_types.tsv */
+extern u32 g_AuxBufferTex[9]; /* 0x95ee1c */ /* type set in global_types.tsv */
 extern Mtx4 g_CameraEulerBase; /* 0x71f028: zeros but for v3.w = 1, the debug camera's matrix starts from it */ /* type set in global_types.tsv */
 extern TimedHelpMsg g_CreditsHelpMsgs[]; /* 0x71fbdc */ /* type set in global_types.tsv */
 extern CullView g_CullView; /* 0x95d200: the view as the SPU culling jobs read it */ /* type set in global_types.tsv */
@@ -320,6 +319,7 @@ extern int g_FontKeepPalette; /* 0x95ee18 */ /* type set in global_types.tsv */
 extern u32 g_FontPalette[8]; /* 0x71ef98 */ /* type set in global_types.tsv */
 extern short g_FrameBufHeight; /* 0x966b7e */
 extern short g_FrameBufWidth; /* 0x966b7c */
+extern ImpactSprite g_ImpactSprites[32]; /* 0x95ee40 */ /* type set in global_types.tsv */
 extern undefined4 g_JapanFontTex; /* 0x90d724 */
 extern undefined4 g_LameShadows; /* 0x95e5f0 */
 extern MobyDrawFunc g_MobyFuncList[64]; /* 0x95ddd8 */ /* type set in global_types.tsv */
@@ -465,8 +465,8 @@ void FontPrintOpt(float scale, FontWindow *win, u32 color, const char *str, int 
 void FontPrintOptLarge(FontWindow *win, u32 color, const char *str, int len);
 void STUB_0007116c(...);
 void STUB_00071170(...);
-void SetScreenResolution (double param_1,uint param_2,uint param_3,undefined8 param_4,undefined8 param_5, RsxCmd param_6);
-void ResetHUDPass(void);
+void BeginAuxDrawMode(float xratio, int log2Width, int log2Height, int flag, u32 clearColor);
+void EndAuxDrawMode(void);
 void ____Draw_FogBlendPass(void);
 void InitAlphaPal(void);
 void InitScreenEffects(void);
@@ -477,24 +477,24 @@ undefined8 STUB_00072214_RET_0(...);
 void STUB_0007221c(...);
 undefined8 STUB_00072220_RET_0(...);
 undefined8 STUB_00072230_RET_0(...);
-void FastDrawQuad(undefined4 *param_1,uint param_2,undefined8 param_3,longlong param_4, ulonglong param_5);
+void FastDrawQuad(QuadDef *quad, Mtx4 *mtx, int unused, void *texHeaders, int passIndex);
 void STUB_00072788(...);
-void FastDrawStrip_DL(longlong param_1,int param_2);
-void FastDrawStrip_DLNoState(int param_1,void *param_2);
-void FastDrawStrip_Pass(int param_1,void *param_2,int param_3);
-void DrawTexturedStrips(int param_1,Vec3 *param_2,u32 *param_3,Vec2 *param_4,Vec2 *param_5,int param_6,int param_7,u64 param_8);
-void FastDrawStrip2UV_Pass(longlong param_1,int param_2,longlong param_3);
-void FastDrawStrip2UV_PassNoState(longlong param_1,int param_2,longlong param_3);
-void DrawLavaStrips (double param_1,longlong param_2,undefined4 *param_3,uint *param_4, undefined4 *param_5,undefined4 *param_6,undefined4 param_7,undefined4 param_8, undefined8 param_9);
-void FastDrawStripColor(int param_1,void *param_2,int param_3);
-bool ____Draw_IsFlagMode2(ulonglong param_1);
-undefined8 ____Draw_IsBlendModeMatch(ulonglong param_1);
-void DrawMeshSet(ulonglong param_1,undefined4 *param_2,uint *param_3,undefined4 *param_4, ulonglong param_5);
-void FastDrawStripFog(int param_1,void *param_2,int param_3);
-void DrawOceanStrip(float param_1,int param_2,Vec3 *param_3,u32 *param_4,Vec2 *param_5);
+void FastDrawStrip_DL(int count, void *vertices);
+void FastDrawStrip_DLNoState(int count, void *vertices);
+void FastDrawStrip_Pass(int count, void *vertices, int passIndex);
+void DrawTexturedStrips(int count, Vec3 *pos, u32 *colors, Vec2 *uv0, Vec2 *uv1, int baseTex, int detailTex, u64 depth);
+void FastDrawStrip2UV_Pass(int count, void *vertices, int passIndex);
+void FastDrawStrip2UV_PassNoState(int count, void *vertices, int passIndex);
+void DrawLavaStrips(float q, int count, Vec3 *pos, u32 *colors, Vec2 *uv0, Vec2 *uv1, int tex0, int tex1, u64 depth, u64 depth2, int passIndex);
+void FastDrawStripColor(int count, void *vertices, int passIndex);
+bool ____Draw_IsFlagMode2(u64 alpha);
+int ____Draw_IsBlendModeMatch(u64 alpha);
+void DrawMeshSet(int count, void *positions, void *colorArray, void *uvs, u32 passes);
+void FastDrawStripFog(int count, void *vertices, int passIndex);
+void DrawOceanStrip(float q, int count, Vec3 *pos, u32 *colors, Vec2 *uv);
 void STUB_00074ce8(...);
 void STUB_00074cec(...);
-int ImpactSprite_Add (double param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4, undefined2 param_5);
+int ImpactSprite_Add(float scale, Vec4 pos, short tex);
 void ImpactSprite_Update(void);
 void ImpactSprite_Draw(void);
 void DrawWaterPatch_A(int *param_1);

@@ -177,7 +177,7 @@ u8 Gs_DmaTagByte(int param_1,int param_2);
 undefined8 FUN_00503014(void);
 undefined8 FUN_0050301c(void);
 undefined8 FUN_00503024(void);
-undefined8 FUN_0050302c(void);
+undefined8 FUN_0050302c(int param_1);
 undefined8 FUN_00503034(void);
 undefined8 FUN_0050303c(void);
 u64 SCE_GS_SET_BITBLTBUF(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6);

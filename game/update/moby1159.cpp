@@ -3,9 +3,9 @@
 // 3 functions, 0x1e40d8-0x1e43d8
 #include "game/update/moby1159.h"
 #include "game/collproc.h"
+#include "game/draw.h"
 #include "game/hero.h"
 #include "game/map.h"
-#include "game/mesh.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"

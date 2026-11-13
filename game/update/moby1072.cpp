@@ -7,7 +7,6 @@
 #include "game/collproc.h"
 #include "game/draw.h"
 #include "game/hero.h"
-#include "game/mesh.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"

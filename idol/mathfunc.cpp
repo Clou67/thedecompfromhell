@@ -5,7 +5,6 @@
 #include <string.h>
 #include "idol/mathfunc.h"
 #include "game/boot.h"
-#include "game/draw.h"
 #include "game/hero.h"
 #include "game/mission.h"
 #include "game/mobyutil.h"

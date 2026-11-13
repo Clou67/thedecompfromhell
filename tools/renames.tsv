@@ -572,3 +572,10 @@ FontPrintJapanese_unk2	FontPrintScaledJapanese
 FontPrint_unk	FontPrintScaledMedium
 FontPrintScaled	FontPrintScaledSmall
 FontPrintScaled_v2	FontPrintScaledLarge
+SetScreenResolution	BeginAuxDrawMode
+ResetHUDPass	EndAuxDrawMode
+DAT_0095ee1c	g_AuxBufferTex
+DAT_00966b8c	g_AuxWidth
+DAT_00966b8e	g_AuxHeight
+DAT_0095ea14	g_AlphaPal
+DAT_0095ee40	g_ImpactSprites

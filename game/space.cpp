@@ -533,7 +533,7 @@ void Space_DrawShipEngineGlow(MobyInstance *moby)
             q.xyzw[j].w = m->v1.w * cy + m->v2.w * cz + m->v0.w * cx + corner->w;
         }
 
-        FastDrawQuad((undefined4 *)&q, 0, 0, (longlong)EffectTexHeaders, 9);
+        FastDrawQuad(&q, NULL, 0, (void *)(uintptr_t)EffectTexHeaders, 9);
     }
 }
 
@@ -641,9 +641,9 @@ void Space_DrawTransitionOverlay(void)
             }
 
             ShipTrailQuad(&q, pts, cur, seg, normals);
-            FastDrawQuad((undefined4 *)&q, 0, 0, (longlong)texHeaders, 9);
+            FastDrawQuad(&q, NULL, 0, (void *)(uintptr_t)texHeaders, 9);
             ShipTrailQuad(&q, pts, cur, seg, sides);
-            FastDrawQuad((undefined4 *)&q, 0, 0, (longlong)texHeaders, 9);
+            FastDrawQuad(&q, NULL, 0, (void *)(uintptr_t)texHeaders, 9);
         }
     }
 }
@@ -1142,7 +1142,7 @@ void Space_DrawShipEffects(MobyInstance *moby)
             (&q.st[0][0])[j * 2 + 1] = g_ShipEnvUv[vert][1];
         }
 
-        FastDrawQuad((undefined4 *)&q, 0, 0, (longlong)texHeaders, 9);
+        FastDrawQuad(&q, NULL, 0, (void *)(uintptr_t)texHeaders, 9);
     }
 }
 
