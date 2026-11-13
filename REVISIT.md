@@ -24,7 +24,9 @@ this rule (everything before collproc.cpp) have no entries yet.
   Normalize3 (`1.0f / sqrtf` for vrsqrtefp + Newton), FadeToBlack (vrefp + Newton), DrawScreenQuad,
   DrawTexturedStrips and DrawColorGradientStrip (Ps2Channel for the splat colour maths),
   FontPrintOptJapanese/Western and DrawTimedHelpMsg (vector width/fade sums), BeginAuxDrawMode
-  (viewport constants), FastDrawQuad (vmrghw transpose).
+  (viewport constants), FastDrawQuad (vmrghw transpose). Also the `lvlx` unaligned loads in FontPrintOptJapanese/
+  Western, DrawTimedHelpMsg and DrawSpriteRotated's callers, and the `stvewx`/`stvehx` stores
+  (max_width in the font printers), all written as plain loads/stores.
 
 ### Not fully traced against the asm
 - **ImpactSprite_Draw (0x74fa0).** The game turns each sprite's right/up axes with a vectorised

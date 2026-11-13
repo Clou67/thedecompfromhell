@@ -78,7 +78,7 @@ written in `.cpp` files, Idol's PS3 layer may use C++ features. Examples: `game/
   quad += 4;
   ```
 
-## Vector (AltiVec) code
+## Vector (AltiVec) and other PS3-specific instructions
 
 - Where the asm uses AltiVec (`vmaddfp`, `vperm`, `vrsqrtefp`, `vrefp`, `vcfsx`, ...), the source
   must emit the same instructions: do not replace it with scalar maths (`1.0f / sqrtf`, plain
@@ -89,3 +89,10 @@ written in `.cpp` files, Idol's PS3 layer may use C++ features. Examples: `game/
   `vec_rsqrte`, ...): they map one-to-one to the instructions and clang can check them. Use
   inline asm only for what has no intrinsic (e.g. `lvlx`/`lvrx`), still inside a helper.
 - Keep the asm's Newton steps, constants and operation order.
+- The same goes for the other Cell PPU instructions plain C would not produce: `lvlx`/`lvrx`,
+  `stvlx`/`stvrx`, `stvewx`/`stvehx`, `lvsl`/`lvsr`, cache control (`dcbt`, `dcbz`, `dcbf`),
+  `mftb`, `lwarx`/`stwcx.`, `sync`/`eieio`/`lwsync`. Emit them through the SDK's intrinsics
+  (`<ppu_intrinsics.h>`: `__dcbt`, `__mftb`, `__lwarx`, ...; `<altivec.h>` / `<vec_types.h>`
+  for vector loads and stores) or inline asm, always inside a small inline helper.
+- Compiler idioms are not in this list: `fsel`, `cntlzw` masks, `mulhw` division and the like are
+  what gcc makes from ordinary C (see CONTRIBUTING.md), so write the C.
