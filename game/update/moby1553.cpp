@@ -3,9 +3,9 @@
 // 1 functions, 0x2989a0-0x298aa4
 #include "game/update/moby1553.h"
 #include "game/collproc.h"
+#include "game/draw.h"
 #include "game/freeze.h"
 #include "game/hero.h"
-#include "game/initspace.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/space.h"

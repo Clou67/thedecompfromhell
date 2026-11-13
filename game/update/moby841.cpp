@@ -10,8 +10,8 @@
 #include "game/hud.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
-#include "game/partproc.h"
 #include "game/update.h"
+#include "game/update/moby751.h"
 #include "idol/fastfunc.h"
 
 // 0x0481ca8 (0x444 bytes)
@@ -241,7 +241,7 @@ void UpdateMoby_841(MobyInstance *moby)
     puVar2[6] = 0x47040000;
     puVar2[5] = 0x437f0000;
     puVar2[7] = 0;
-    uVar5 = CONCAT13(DAT_0073a963,CONCAT12(DAT_0073a962,CONCAT11(DAT_0073a961,DAT_0073a960)));
+    uVar5 = CONCAT13(DAT_0073a963,CONCAT12(DAT_0073a962,CONCAT11(DAT_0073a961,g_UnderwaterTint)));
     puVar2[0xd] = 0x40408070;
     puVar2[0xc] = uVar5;
     moby->state = '\x01';
@@ -282,7 +282,7 @@ void UpdateMoby_841(MobyInstance *moby)
                                  Cuboids[iVar4].imatrix.v1.x *
                                  (g_heroPosition.y - Cuboids[iVar4].pos.y) + 1.0) * 0.5),puVar2[0xc]
                        ,puVar2[0xd]);
-    DAT_0073a960 = (undefined1)uVar5;
+    g_UnderwaterTint = (undefined1)uVar5;
     DAT_0073a963 = (undefined1)((uint)uVar5 >> 0x18);
     DAT_0073a961 = (undefined1)((uint)uVar5 >> 8);
     DAT_0073a962 = (undefined1)((uint)uVar5 >> 0x10);

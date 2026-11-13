@@ -1048,7 +1048,7 @@ extern pointer32 PTR_UpdateSound_6_00708280; /* 0x708280 */
 
 // ---- functions
 void MapVTables(void);
-void ____Draw_SetupFogTable(void);
+void Draw_SetupFogTable(void);
 void STUB_0002ba0c(...);
 void ____Unused_PatchTexIndices14(void);
 void STUB_0002babc(...);

@@ -442,3 +442,33 @@ g_ReticuleColor	u32 NAME[16] /* 0x9517d0 */
 g_ReticuleDist	float NAME[16] /* 0x951810: how far along the line from the screen center through the target */
 g_ReticuleScale	float NAME[16] /* 0x951850 */
 g_Crosshairs	CamCrosshair NAME[3] /* 0x9518c0: g_Crosshair of them queued */
+g_pIdolDrawBase	u32 NAME /* 0x902e9c: the Idol renderer object as its base class (the same object as g_pIdolDraw) */
+g_CullView	CullView NAME /* 0x95d200: the view as the SPU culling jobs read it */
+g_ViewConstsA	ViewConstsA NAME /* 0x735cd0: view constants for the VU1 programs, kept up by UpdateViewContext */
+g_ViewFogA	Vec4 NAME /* 0x735d50: x perspScale (fog0), y fogFarIntensity, z fogNearIntensity */
+g_ViewConstsB	ViewConstsB NAME /* 0x735da0 */
+g_ViewFogB	ViewFogConsts NAME /* 0x735fd8 */
+g_ViewFogC	ViewFogConsts NAME /* 0x736028 */
+g_ViewIhmgScaleC	Vec4 NAME /* 0x736040 */
+g_ViewHvdfC	Vec4 NAME /* 0x736050 */
+g_ViewFog0D	float NAME /* 0x737c70 */
+g_ViewFog0E	float NAME /* 0x73adf0 */
+g_ViewFog0F	float NAME /* 0xe574e0 */
+g_ViewPixelConsts	Vec4 NAME /* 0xe572d0: 2^-18, -2^-18, 0.5, xpix / (xratio * 210000) */
+g_ViewCamPos	Vec4 NAME /* 0x159c340: the camera position for the SPU jobs */
+g_FrustumExtra	Vec3 NAME /* 0xa24608: the renderer vector after the six frustum planes (IdolDraw+0x380) */
+g_CameraEulerBase	Mtx4 NAME /* 0x71f028: zeros but for v3.w = 1, the debug camera's matrix starts from it */
+g_FontKeepPalette	int NAME /* 0x95ee18 */
+g_FontPalette	u32 NAME[8] /* 0x71ef98 */
+g_PreDrawFuncs	MobyDrawFunc NAME[64] /* 0x95dfdc */
+g_PreDrawArgs	MobyInstance *NAME[64] /* 0x95e0dc */
+g_PostPreDrawFuncs	MobyDrawFunc NAME[64] /* 0x95e1e0 */
+g_PostPreDrawArgs	MobyInstance *NAME[64] /* 0x95e2e0 */
+g_PostDrawFuncs	MobyDrawFunc NAME[64] /* 0x95e3e4 */
+g_PostDrawArgs	MobyInstance *NAME[64] /* 0x95e4e4 */
+g_MobyFuncList	MobyDrawFunc NAME[64] /* 0x95ddd8 */
+g_MobyFuncListArgs	MobyInstance *NAME[64] /* 0x95ded8 */
+g_SubtitlesOn	bool NAME /* 0x969c78 */
+g_UnderwaterTint	RGBA NAME /* 0x73a960 */
+g_CreditsHelpMsgs	TimedHelpMsg NAME[] /* 0x71fbdc */
+LameShadowTable	Vec4 NAME[4] /* 0x71ef40 */

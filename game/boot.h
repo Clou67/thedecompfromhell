@@ -29,6 +29,7 @@ extern undefined4 DAT_00731f4c; /* 0x731f4c */
 extern undefined4 DAT_00731f50; /* 0x731f50 */
 extern undefined4 DAT_00731f54; /* 0x731f54 */
 extern void *DAT_008fa630; /* 0x8fa630 */ /* type set in global_types.tsv */
+extern undefined4 DAT_00902e9c; /* 0x902e9c */
 extern void *DAT_009030e4; /* 0x9030e4: the object at 0x90d98c */ /* type set in global_types.tsv */
 extern u8 *DAT_0090d714; /* 0x90d714 */ /* type set in global_types.tsv */
 extern undefined4 DAT_0090d718; /* 0x90d718 */
@@ -162,7 +163,6 @@ extern u8 *g_FontVram; /* 0xa10930: 0x100000 bytes, the Japanese font texture */
 extern int g_FrontEndLogoAlpha; /* 0x90d708 */
 extern int g_FrontEndPressStartAlpha; /* 0x90d70c */
 extern int g_FrontEndTimer; /* 0x90d710 */
-extern undefined4 g_JapanFontTex; /* 0x90d724 */
 extern undefined4 g_JapanLogoTex; /* 0x90d748 */
 extern int g_LogoMovieDone; /* 0x969cd8 */
 extern void *g_MobyClassUpdates[240]; /* 0xa34f80: update function per mClass (follows MobyClasses) */ /* type set in global_types.tsv */

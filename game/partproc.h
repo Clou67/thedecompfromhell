@@ -4,13 +4,6 @@
 #include "game/partupd.h"
 
 // ---- types
-struct RGBA {
-    u8 r;
-    u8 g;
-    u8 b;
-    u8 a;
-};
-
 /* the camera basis particles are drawn with, set each frame by UpdateParts */
 struct PartView {
     struct Vec4 right;       /* 0x00 */

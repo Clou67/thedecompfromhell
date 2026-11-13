@@ -2304,7 +2304,7 @@ void Vendor_DrawScrollText(void)
     DrawVendorHintFrame(0x4000000000000000,DAT_00e5a67c,-DAT_00e5a694,8);
   }
   else {
-    FontPrint_unk((double)(longlong)-DAT_00e5a694,0x401c000000000000,0x3ff4000000000000,
+    FontPrintScaledMedium((double)(longlong)-DAT_00e5a694,0x401c000000000000,0x3ff4000000000000,
                         &DAT_0016fc04,0x740000,DAT_0073a578,DAT_00e5a67c,0xffffffffffffffff);
   }
   STUB_0007813c(0,0,4,0x40,0x200,0x80,0);
@@ -2533,7 +2533,7 @@ void DrawWeaponStrings(void)
     uVar7 = 0x4020000000000000;
     help_msg_string_by_index
               (*(StringId *)(&DAT_00721000 + *(int *)(&g_VendorItems + iVar3) * 0x4c));
-    FontPrintScaled(uVar6,uVar7,dVar8);
+    FontPrintScaledSmall(uVar6,uVar7,dVar8);
     uVar6 = help_msg_string_by_index(STR_AMMO);
     FontPrintSmallLeft(0x18,0x18,0x80f0f0f0,uVar6,0xffffffffffffffff);
     uVar2 = (&DAT_00737d38)[*(int *)(&g_VendorItems + DAT_00e5a6a8 * 0x10) * 0xc];
@@ -2574,7 +2574,7 @@ void DrawWeaponStrings(void)
     uVar7 = 0x4020000000000000;
     help_msg_string_by_index
               (*(StringId *)(&DAT_00721000 + *(int *)(&g_VendorItems + iVar3) * 0x4c));
-    FontPrintScaled(uVar6,uVar7,dVar8);
+    FontPrintScaledSmall(uVar6,uVar7,dVar8);
     iVar3 = *(int *)(&DAT_00737d30 + *(int *)(&g_VendorItems + DAT_00e5a6a8 * 0x10) * 0x18);
     if (iVar3 < 1000) {
       snprintf(acStack_170,"%d",iVar3);
@@ -2786,14 +2786,14 @@ void Vendor_DrawItemInfo(void)
     else {
       uVar2 = 0x4018000000000000;
       help_msg_string_by_index(STR_PURCHASE);
-      FontPrintScaled(uVar2,uVar2,uVar5);
+      FontPrintScaledSmall(uVar2,uVar2,uVar5);
       uVar2 = 0x4000000000000000;
       uVar4 = 0x4040000000000000;
       help_msg_string_by_index(STR_BUY);
-      FontPrintScaled(uVar2,uVar4,uVar5);
+      FontPrintScaledSmall(uVar2,uVar4,uVar5);
       uVar4 = 0x404f000000000000;
       help_msg_string_by_index(STR_NO);
-      FontPrintScaled(uVar2,uVar4,uVar5);
+      FontPrintScaledSmall(uVar2,uVar4,uVar5);
     }
   }
   return;
@@ -2965,7 +2965,7 @@ void Vendor_SetupScreenRender(double param_1,uint param_2,uint param_3)
   puVar15[0x57] = unaff_r27;
   dVar40 = 1.0;
   puVar15[0x55] = unaff_r25;
-  FLOAT_0095d1c8 = 1.0;
+  g_ViewContext.fovScale = 1.0;
   width = 1 << (param_2 & 0x3f);
   puVar15[0x56] = unaff_r26;
   dVar41 = 0.0;
@@ -3035,7 +3035,7 @@ void Vendor_SetupScreenRender(double param_1,uint param_2,uint param_3)
     } while (iVar32 != 0);
     dVar37 = (double)((float)(dVar36 + 0.7853981852531433) * fVar2 + fVar1);
   }
-  fVar1 = FLOAT_0095d1c8;
+  fVar1 = g_ViewContext.fovScale;
   puVar5 = *(undefined4 **)(*piVar22 + 0x20);
   puVar15[5] = ZEXT48(&TOC_BASE);
   (*(code *)*puVar5)((double)((float)(dVar37 * 57.2957763671875) * fVar1),0x3fb99999a0000000,
@@ -3641,7 +3641,7 @@ void Vendor_HudUpdate(MobyInstance *moby)
         DrawVendorHintFrame(uVar25,DAT_00e5a67c,-DAT_00e5a694,8);
       }
       else {
-        FontPrint_unk((double)(longlong)-DAT_00e5a694,0x401c000000000000,0x3ff4000000000000,
+        FontPrintScaledMedium((double)(longlong)-DAT_00e5a694,0x401c000000000000,0x3ff4000000000000,
                             &DAT_00172c20,0x740000,DAT_0073a578,DAT_00e5a67c,0xffffffffffffffff);
       }
       STUB_0007813c(0,0,4,0x40,0x200,0x80,0);

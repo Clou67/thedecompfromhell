@@ -21,7 +21,6 @@
 #include "game/hero.h"
 #include "game/hud.h"
 #include "game/initonce.h"
-#include "game/initspace.h"
 #include "game/lights.h"
 #include "game/map.h"
 #include "game/mesh.h"
@@ -2071,7 +2070,7 @@ int LoadAllMobys(int reload, int restoreCheckpoint)
         int vramSize = LoadAssetFromFile(vramPath, vram, -1);
         FUN_004fe6ec(DAT_00a15f50, vramSize);
 
-        int vramBase = *(int *)(DAT_00902e9c + 0x4ac);
+        int vramBase = *(int *)(g_pIdolDrawBase + 0x4ac);
         for (int i = 0; i < texCnt; i++) {
             *(int *)(texHeaders + i * RSX_TEX_SIZE) += (int)vram - vramBase;
         }

@@ -2691,7 +2691,7 @@ void FUN_004d7088(u8 *param_1)
   param_1[7] = 0;
   param_1[0x107] = param_1 + 0x108;
   memset(param_1 + 0x108,0xff,0x80);
-  DAT_00902e9c = param_1;
+  g_pIdolDrawBase = param_1;
   *param_1 = &PTR_PTR_00661840;
   lVar2 = 3;
   puVar1 = param_1;
@@ -6441,7 +6441,7 @@ void FUN_004defb0(undefined8 param_1,undefined1 *param_2,undefined4 param_3,unde
 // 0x04df1c0 (0x2d0 bytes)
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void FUN_004df1c0(double param_1,double param_2,double param_3,int param_4)
+void IdolDraw_SetPerspective(double param_1,double param_2,double param_3,int param_4)
 
 {
   float fVar1;
@@ -6617,7 +6617,7 @@ void FUN_004df1c0(double param_1,double param_2,double param_3,int param_4)
 // 0x04df600 (0x62c bytes)
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void FUN_004df600(longlong param_1,uint param_2,undefined8 param_3,undefined8 param_4,uint param_5)
+void IdolDraw_SetView(longlong param_1,uint param_2,undefined8 param_3,undefined8 param_4,uint param_5)
 
 {
   GPiece<32> auVar1;
@@ -10692,7 +10692,7 @@ void FUN_004e5f40(int param_1)
   undefined4 local_20;
   undefined4 local_1c [3];
   
-  *(undefined4 *)(param_1 + 0xc4) = DAT_00902e9c;
+  *(undefined4 *)(param_1 + 0xc4) = g_pIdolDrawBase;
                     /* WARNING: Load size is inaccurate */
   (*(code *)**(undefined4 **)(*g_pHWSystem + 0x14))(g_pHWSystem,local_1c,&local_20);
   param_1 = param_1 + 0x58;
@@ -14451,8 +14451,8 @@ void * idol_draw::InitFrameRenderState
   puVar1[2] = 0;
   puVar1[1] = 0;
   *puVar1 = 0;
-  iVar3 = DAT_00902e9c;
-  puVar1 = (undefined4 *)(DAT_00902e9c + 0x20U & 0xfffffff0);
+  iVar3 = g_pIdolDrawBase;
+  puVar1 = (undefined4 *)(g_pIdolDrawBase + 0x20U & 0xfffffff0);
   uVar7 = puVar1[2];
   uVar6 = puVar1[1];
   uVar5 = *puVar1;

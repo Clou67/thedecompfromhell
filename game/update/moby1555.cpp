@@ -3,8 +3,8 @@
 // 1 functions, 0x298aac-0x298b80
 #include "game/update/moby1555.h"
 #include "game/collproc.h"
+#include "game/draw.h"
 #include "game/freeze.h"
-#include "game/initspace.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 

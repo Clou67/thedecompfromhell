@@ -3577,13 +3577,13 @@ undefined8 DrawPauseStrings(int param_1)
           dVar16 = (double)(longlong)(DAT_0072984c + iVar8);
           dVar15 = (double)(longlong)(DAT_00729850 + iVar13);
           GetEffectTex((double)(longlong)(DAT_00729850 + iVar13),uVar12);
-          FontPrint_unk3(dVar16,dVar15,uVar18);
+          FontPrintScaledWestern(dVar16,dVar15,uVar18);
         }
         else {
           dVar16 = (double)(longlong)(DAT_0072984c + iVar8);
           dVar15 = (double)(longlong)(DAT_00729850 + iVar13);
           GetEffectTex((double)(longlong)(DAT_00729850 + iVar13),uVar12);
-          FontPrintJapanese_unk2(dVar16,dVar15,uVar18);
+          FontPrintScaledJapanese(dVar16,dVar15,uVar18);
         }
         EnableFontColors();
         if ((*(uint *)(param_1 + 0x30) & 0x80) != 0) {
@@ -3593,11 +3593,11 @@ undefined8 DrawPauseStrings(int param_1)
         dVar15 = (double)(longlong)iVar8;
         if (g_JapaneseMode == false) {
           GetEffectTex(uVar12);
-          FontPrint_unk3(dVar15,dVar16,uVar18);
+          FontPrintScaledWestern(dVar15,dVar16,uVar18);
         }
         else {
           GetEffectTex((longlong)iVar8,uVar12);
-          FontPrintJapanese_unk2(dVar15,dVar16,uVar18);
+          FontPrintScaledJapanese(dVar15,dVar16,uVar18);
         }
         iVar13 = iVar13 + iVar10;
         if (*(short *)(*(int *)(param_1 + 0x34) + 8 + iVar7) != 0) {
@@ -3607,14 +3607,14 @@ undefined8 DrawPauseStrings(int param_1)
             dVar16 = (double)(longlong)(DAT_00729850 + iVar13);
             help_msg_string_by_index((int)*(short *)(*(int *)(param_1 + 0x34) + 8 + iVar7));
             GetEffectTex(uVar12);
-            FontPrint_unk3(dVar17,dVar16,uVar18);
+            FontPrintScaledWestern(dVar17,dVar16,uVar18);
           }
           else {
             dVar17 = (double)(longlong)(DAT_0072984c + iVar8);
             dVar16 = (double)(longlong)(DAT_00729850 + iVar13);
             help_msg_string_by_index((int)*(short *)(*(int *)(param_1 + 0x34) + 8 + iVar7));
             GetEffectTex(uVar12);
-            FontPrintJapanese_unk2(dVar17,dVar16,uVar18);
+            FontPrintScaledJapanese(dVar17,dVar16,uVar18);
           }
           if ((*(uint *)(param_1 + 0x30) & 0x80) == 0) {
             EnableFontColors();
@@ -3623,12 +3623,12 @@ undefined8 DrawPauseStrings(int param_1)
           if (g_JapaneseMode == false) {
             help_msg_string_by_index((int)*(short *)(*(int *)(param_1 + 0x34) + 8 + iVar7));
             GetEffectTex(uVar12);
-            FontPrint_unk3(dVar15,dVar16,uVar18);
+            FontPrintScaledWestern(dVar15,dVar16,uVar18);
           }
           else {
             help_msg_string_by_index((int)*(short *)(*(int *)(param_1 + 0x34) + 8 + iVar7));
             GetEffectTex(uVar12);
-            FontPrintJapanese_unk2(dVar15,dVar16,uVar18);
+            FontPrintScaledJapanese(dVar15,dVar16,uVar18);
           }
           iVar13 = iVar13 + iVar10;
         }
@@ -4020,11 +4020,11 @@ undefined8 MapPage_Update(int param_1)
       snprintf(acStack_8080,"rc1/ps3data/global/maps/maps_mm[%d].vram",g_SelectedLevel);
     }
     LoadAssetFromFile(acStack_8080,DAT_00a20810,0x300000);
-    iVar3 = DAT_00902e9c;
+    iVar3 = g_pIdolDrawBase;
     iVar8 = iVar7 + *(int *)(iVar7 + 8);
     iVar11 = 0;
     iVar12 = 5;
-    iVar14 = DAT_00a20810 - *(int *)(DAT_00902e9c + 0x4ac);
+    iVar14 = DAT_00a20810 - *(int *)(g_pIdolDrawBase + 0x4ac);
     do {
       iVar12 = iVar12 + -1;
       *(int *)(iVar8 + iVar11) = *(int *)(iVar8 + iVar11) + iVar14;
@@ -6166,32 +6166,32 @@ undefined8 MapMenu_DrawOptions(int param_1)
   dVar7 = (double)(longlong)iVar3;
   dVar5 = (double)(longlong)iVar4;
   help_msg_string_by_index(STR_VIEW_MISSIONS);
-  FontPrintScaled(dVar7,dVar5,dVar6);
+  FontPrintScaledSmall(dVar7,dVar5,dVar6);
   if (Level != Veldin) {
     iVar4 = iVar4 + iVar2;
     dVar5 = (double)(longlong)iVar4;
     help_msg_string_by_index(STR_PLAY_INFOBOT);
-    FontPrintScaled(dVar7,dVar5,dVar6);
+    FontPrintScaledSmall(dVar7,dVar5,dVar6);
   }
   dVar5 = (double)(longlong)(iVar4 + iVar2);
   help_msg_string_by_index(STR_PREVIOUS_MAP);
-  FontPrintScaled(dVar7,dVar5,dVar6);
+  FontPrintScaledSmall(dVar7,dVar5,dVar6);
   iVar3 = iVar4 + iVar2 + iVar2;
   dVar5 = (double)(longlong)iVar3;
   help_msg_string_by_index(STR_NEXT_MAP);
-  FontPrintScaled(dVar7,dVar5,dVar6);
+  FontPrintScaledSmall(dVar7,dVar5,dVar6);
   iVar3 = iVar3 + iVar2;
   uVar1 = help_msg_string_by_index(STR_TRACK_ZOOM);
   dVar5 = dVar6;
   if (g_Language == 2) {
     dVar5 = (double)(float)(dVar6 - 0.05000000074505806);
   }
-  FontPrintScaled
+  FontPrintScaledSmall
             (dVar7,(double)(longlong)iVar3,dVar5,uVar1,(longlong)iVar3,0x80ffa888,uVar1,
              0xffffffffffffffff);
   dVar5 = (double)(longlong)(iVar3 + iVar2);
   help_msg_string_by_index(STR_EXIT);
-  FontPrintScaled(dVar7,dVar5,dVar6);
+  FontPrintScaledSmall(dVar7,dVar5,dVar6);
   EnableFontColors();
   STUB_0006d708();
   return 2;
@@ -6400,7 +6400,7 @@ undefined8 ImageWidget_Update(int param_1)
       return 0;
     }
   }
-  iVar2 = DAT_00902e9c;
+  iVar2 = g_pIdolDrawBase;
   iVar6 = *(int *)(param_1 + 0x44);
   if (iVar6 < 2) {
     if (iVar6 < 0) {
@@ -6742,7 +6742,7 @@ undefined8 UpdateOptionsMenus(int param_1)
       return 0;
     }
   }
-  iVar7 = DAT_00902e9c;
+  iVar7 = g_pIdolDrawBase;
   uVar1 = *(uint *)(param_1 + 0x34);
   if (((uVar1 & 0x2000) != 0) && (g_SkillPoints[(int)lVar10] == '\0')) {
     lVar10 = 0x1e;
@@ -6772,7 +6772,7 @@ LAB_00148e14:
           uVar6 = 0;
         }
         snprintf(acStack_250,"%s[%d]",uVar6,lVar10);
-        iVar2 = DAT_00902e9c;
+        iVar2 = g_pIdolDrawBase;
         snprintf(acStack_1d0,"%s.ps3",acStack_250);
         LoadAssetFromFile(acStack_1d0,g_NpcBuffer,0x100000);
         piVar5 = g_NpcBuffer;
@@ -6842,7 +6842,7 @@ LAB_00148e14:
           uVar6 = 0;
         }
         snprintf(acStack_150,"%s[%d]",uVar6,lVar10);
-        iVar2 = DAT_00902e9c;
+        iVar2 = g_pIdolDrawBase;
         snprintf(acStack_d0,"%s.ps3",acStack_150);
         LoadAssetFromFile(acStack_d0,g_NpcBuffer,0x100000);
         piVar5 = g_NpcBuffer;
@@ -7048,7 +7048,7 @@ undefined8 HelpControls_Update(int param_1)
   char acStack_130 [128];
   char acStack_b0 [128];
   
-  iVar2 = DAT_00902e9c;
+  iVar2 = g_pIdolDrawBase;
   iVar1 = *(int *)(param_1 + 0x44);
   if (iVar1 < 2) {
     if (-1 < iVar1) {
@@ -7623,7 +7623,7 @@ undefined8 DrawCameraSettingsFrame(undefined **param_1)
           uVar6 = 0x8020ffff;
         }
         uVar5 = help_msg_string_by_index(STR_D_LEVEL);
-        FontPrint_unk(uVar4,(double)(longlong)iVar9,uVar15,uVar5,(longlong)iVar9,uVar6,uVar5,
+        FontPrintScaledMedium(uVar4,(double)(longlong)iVar9,uVar15,uVar5,(longlong)iVar9,uVar6,uVar5,
                             0xffffffffffffffff);
         DrawFlatOverlay(iVar3 + 0x57,iVar9,iRam0072d380 + -10,iVar13 + 0x12,0x80696969,0);
         DrawFlatOverlay(iVar3 + 0x59,iVar13 + 5,iRam0072d380 + -0xc,iVar13 + 0xf,0x80383838,0);
@@ -7637,7 +7637,7 @@ undefined8 DrawCameraSettingsFrame(undefined **param_1)
         uVar4 = 0x4028000000000000;
         dVar14 = (double)(longlong)iVar13;
         help_msg_string_by_index(*pSVar10);
-        FontPrint_unk(uVar4,dVar14,uVar15);
+        FontPrintScaledMedium(uVar4,dVar14,uVar15);
         puVar2 = param_1[8];
         uVar4 = help_msg_string_by_index(pSVar10[*(int *)pSVar10[1] + 2]);
         FontPrintRightWithScale

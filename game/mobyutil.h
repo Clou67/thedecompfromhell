@@ -1847,7 +1847,12 @@ extern undefined4 DAT_007358c4; /* 0x7358c4 */
 extern undefined4 DAT_007358c8; /* 0x7358c8 */
 extern undefined4 DAT_007358cc; /* 0x7358cc */
 extern undefined4 DAT_00737d42; /* no defined data */
+extern undefined4 DAT_0095e5f4; /* 0x95e5f4 */
 extern undefined4 DAT_0095e5f8; /* 0x95e5f8 */
+extern undefined4 DAT_0095e5fc; /* 0x95e5fc */
+extern undefined4 DAT_0095e600; /* 0x95e600 */
+extern undefined4 DAT_0095e604; /* 0x95e604 */
+extern undefined4 DAT_0095e608; /* 0x95e608 */
 extern undefined4 DAT_0095e60c; /* no defined data */
 extern undefined4 DAT_0096bda0; /* 0x96bda0 */
 extern undefined4 DAT_0096bda4; /* 0x96bda4 */

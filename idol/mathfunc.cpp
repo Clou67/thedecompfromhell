@@ -7,8 +7,10 @@
 #include "game/boot.h"
 #include "game/draw.h"
 #include "game/hero.h"
+#include "game/mission.h"
 #include "game/mobyutil.h"
 #include "game/space.h"
+#include "idol/idol_draw.h"
 #include "idol/tiefunc.h"
 #include "sdk/cell.h"
 #include "sdk/libc/fs_posix_api.h"
@@ -407,9 +409,9 @@ bool FUN_005e86d8(double param_1,double param_2,undefined8 param_3,undefined8 pa
     }
     iVar2 = iVar2 + 1;
   } while (iVar2 < 5);
-  fVar1 = fVar1 - DAT_00a24610;
-  return (fStack00000030 - DAT_00a24608) * (fStack00000030 - DAT_00a24608) +
-         (fStack00000034 - DAT_00a2460c) * (fStack00000034 - DAT_00a2460c) + fVar1 * fVar1 <=
+  fVar1 = fVar1 - g_FrustumExtra.z;
+  return (fStack00000030 - g_FrustumExtra.x) * (fStack00000030 - g_FrustumExtra.x) +
+         (fStack00000034 - g_FrustumExtra.y) * (fStack00000034 - g_FrustumExtra.y) + fVar1 * fVar1 <=
          (float)(param_2 + param_1) * (float)(param_2 + param_1);
 }
 

@@ -107,3 +107,16 @@ CamBlenderData	game/camera
 CamCrosshair	game/camera
 Pill	game/loaders
 CamCollGridPrim	game/camera
+ViewContext	game/draw
+IdolDrawVTable	idol/idol_draw
+IdolDraw	idol/idol_draw
+CullView	game/draw
+ViewConstsA	game/draw
+ViewConstsB	game/draw
+ViewFogConsts	game/draw
+FontGlyph	game/draw
+Subtitle	game/draw
+MobyDrawFunc	game/draw
+ScreenVBEffect	game/draw
+ScreenInsertEffect	game/draw
+TimedHelpMsg	game/draw

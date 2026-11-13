@@ -11,7 +11,6 @@
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
-#include "game/partproc.h"
 #include "game/partupd.h"
 #include "game/path.h"
 #include "game/pause.h"

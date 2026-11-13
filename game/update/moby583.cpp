@@ -3,9 +3,9 @@
 // 2 functions, 0x3d14d8-0x3d1d08
 #include "game/update/moby583.h"
 #include "game/collproc.h"
+#include "game/draw.h"
 #include "game/freeze.h"
 #include "game/hero.h"
-#include "game/initspace.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"

@@ -22,7 +22,6 @@
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/pad.h"
-#include "game/partproc.h"
 #include "game/pause.h"
 #include "game/sound.h"
 #include "game/space.h"

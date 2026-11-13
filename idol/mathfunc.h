@@ -1,6 +1,7 @@
 #pragma once
 // idol/mathfunc.h
 #include "types.h"
+#include "idol/idol_draw.h"
 
 // ---- globals
 extern undefined4 DAT_0071a3c0; /* 0x71a3c0 */
@@ -18,8 +19,6 @@ extern undefined4 DAT_0071a5d0; /* 0x71a5d0 */
 extern undefined4 DAT_0071a5d4; /* 0x71a5d4 */
 extern undefined4 DAT_0071a5d8; /* 0x71a5d8 */
 extern undefined4 DAT_00989680; /* no defined data */
-extern undefined4 DAT_00a24608; /* 0xa24608 */
-extern undefined4 DAT_00a2460c; /* 0xa2460c */
 extern undefined1 DAT_01593350; /* 0x1593350 */
 extern pointer PTR_DAT_0071a3c4; /* 0x71a3c4 */
 extern pointer PTR_DAT_0071a3e8; /* 0x71a3e8 */
@@ -89,6 +88,7 @@ extern undefined4 _DAT_005e8fb0; /* direct read */
 extern undefined4 _DAT_005e8fd0; /* direct read */
 extern undefined4 _DAT_005e8fe0; /* direct read */
 extern undefined4 _DAT_005e8ff0; /* direct read */
+extern Vec3 g_FrustumExtra; /* 0xa24608: the renderer vector after the six frustum planes (IdolDraw+0x380) */ /* type set in global_types.tsv */
 extern undefined1 stack0xffffffa0[16]; /* stack slot, not a real global */
 extern undefined1 stack0xffffffb0[16]; /* stack slot, not a real global */
 

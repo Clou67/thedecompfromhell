@@ -14,7 +14,6 @@
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
 #include "game/pad.h"
-#include "game/partproc.h"
 #include "game/partupd.h"
 #include "game/sound.h"
 #include "game/update/camera6.h"

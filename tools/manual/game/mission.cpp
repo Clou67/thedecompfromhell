@@ -47,9 +47,9 @@ void ResetMissionState(void)
         g_FrustumPlanes[i].z = 0.0f;
         g_FrustumPlanes[i].w = 0.0f;
     }
-    DAT_00a24608 = 0;
-    DAT_00a2460c = 0;
-    DAT_00a24610 = 0;
+    g_FrustumExtra.x = 0.0f;
+    g_FrustumExtra.y = 0.0f;
+    g_FrustumExtra.z = 0.0f;
 }
 
 // 0x00ea3d0 (0x1e0 bytes)

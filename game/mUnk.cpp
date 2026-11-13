@@ -6301,7 +6301,7 @@ void MapVTables(void)
 
 
 // 0x002b898 (0x174 bytes)
-void ____Draw_SetupFogTable(void)
+void Draw_SetupFogTable(void)
 
 {
   double dVar1;

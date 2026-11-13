@@ -11,7 +11,7 @@
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
-#include "game/partproc.h"
+#include "game/update/moby751.h"
 #include "game/water.h"
 
 // 0x01e348c (0x14 bytes)
@@ -202,7 +202,7 @@ void UpdateMoby_1158(MobyInstance *moby)
   puVar10[0x15] = unaff_r27;
   puVar10[0x14] = unaff_r26;
   if ((int)(uVar11 - uVar9) < 0x43340001) {
-    DAT_0073a960 = 0;
+    g_UnderwaterTint = 0;
     DAT_0073a961 = 0x28;
     DAT_0073a963 = 0x40;
     DAT_0073a962 = 0x30;

@@ -131,7 +131,7 @@ void M617_003deb50
     FastDoubleToInt((double)(float)(dVar5 * dVar16));
     FastDoubleToInt((double)(float)(dVar3 * dVar17));
     FastDoubleToInt((double)(float)(dVar5 * dVar17));
-    DrawTexturedQuadHud(local_100,local_d0,local_e0,in_r7,1);
+    DrawScreenQuad(local_100,local_d0,local_e0,in_r7,1);
   } while (iVar1 < 5);
   return;
 }
@@ -222,8 +222,8 @@ void M617_003def78(double param_1,double param_2)
   FastDoubleToInt((double)(float)((double)local_c0 * dVar8));
   FastDoubleToInt((double)(float)((double)local_bc * dVar8));
   uVar5 = GetEffectTex(DAT_00853b70 + 0x29);
-  DrawTexturedQuadHud(local_b0,local_80,local_90,uVar5,1);
-  DrawTexturedQuadHud(local_b0,local_80,local_90,uVar5,1);
+  DrawScreenQuad(local_b0,local_80,local_90,uVar5,1);
+  DrawScreenQuad(local_b0,local_80,local_90,uVar5,1);
   return;
 }
 
@@ -301,7 +301,7 @@ void M617_003df398(double param_1,double param_2,double param_3)
   FastDoubleToInt(dVar11);
   FastDoubleToInt(dVar6);
   uVar5 = GetEffectTex(DAT_00853bb8);
-  DrawTexturedQuadHud(local_f0,local_c0,local_d0,uVar5,0);
+  DrawScreenQuad(local_f0,local_c0,local_d0,uVar5,0);
   dVar7 = (double)(float)(dVar14 * 5.0);
   dVar6 = (double)(float)(dVar15 * 5.0);
   dVar10 = (double)(float)(dVar15 * param_2 + dVar7);
@@ -319,7 +319,7 @@ void M617_003df398(double param_1,double param_2,double param_3)
   FastDoubleToInt(dVar8);
   FastDoubleToInt(dVar13);
   FastDoubleToInt(dVar12);
-  DrawTexturedQuadHud(local_f0,local_c0,local_d0,uVar5,0);
+  DrawScreenQuad(local_f0,local_c0,local_d0,uVar5,0);
   return;
 }
 
@@ -337,7 +337,7 @@ void M617_003df8dc(void)
   iVar2 = 0;
   do {
     uVar1 = GetEffectTex(DAT_00853b70 + 0x28);
-    DrawTexturedQuadHud(local_70,local_40,local_50,uVar1,1);
+    DrawScreenQuad(local_70,local_40,local_50,uVar1,1);
     iVar2 = iVar2 + 1;
   } while (iVar2 < 4);
   return;
@@ -404,7 +404,7 @@ void M617_003dfa30(int param_1)
   iVar18 = 0;
   do {
     uVar7 = GetEffectTex(DAT_00853b70 + 0x28);
-    DrawTexturedQuadHud(local_140,local_110,local_120,uVar7,1);
+    DrawScreenQuad(local_140,local_110,local_120,uVar7,1);
     iVar9 = iVar9 + 1;
   } while (iVar9 < 4);
   iVar8 = 0;
@@ -931,7 +931,7 @@ void M617_003e12b0(double param_1,double param_2,double param_3)
                                                   float)(dVar15 * dVar16) * dVar11 + dVar16)))) *
                                             param_3) * dVar9));
   uVar5 = GetEffectTex(DAT_00853b70 + 0x28);
-  DrawTexturedQuadHud(local_c0,local_90,local_a0,uVar5,1);
+  DrawScreenQuad(local_c0,local_90,local_a0,uVar5,1);
   return;
 }
 
@@ -1043,7 +1043,7 @@ void M617_003e15f0(double param_1,double param_2,double param_3)
   FastDoubleToInt((double)(float)((double)(float)(dVar9 * param_2) * dVar7));
   FastDoubleToInt((double)(float)((double)(float)(dVar17 * param_3) * dVar7));
   FastDoubleToInt((double)(float)((double)(float)(dVar9 * param_3) * dVar7));
-  DrawTexturedQuadHud(local_d0,local_a0,local_b0,in_r6,1);
+  DrawScreenQuad(local_d0,local_a0,local_b0,in_r6,1);
   return;
 }
 
@@ -1140,7 +1140,7 @@ void M617_003e19a0(double param_1,double param_2)
   FastDoubleToInt(dVar13);
   FastDoubleToInt(dVar16);
   FastDoubleToInt(dVar11);
-  DrawTexturedQuadHud(local_100,local_d0,local_e0,uVar7,0);
+  DrawScreenQuad(local_100,local_d0,local_e0,uVar7,0);
   uVar6 = DAT_00853ca4;
   uVar5 = DAT_00853ca0;
   MB_randRangeFloat((float)dVar22,(float)dVar21);
@@ -1163,7 +1163,7 @@ void M617_003e19a0(double param_1,double param_2)
   FastDoubleToInt(dVar13);
   FastDoubleToInt(dVar10);
   FastDoubleToInt(dVar16);
-  DrawTexturedQuadHud(local_100,local_d0,local_e0,uVar7,0);
+  DrawScreenQuad(local_100,local_d0,local_e0,uVar7,0);
   return;
 }
 

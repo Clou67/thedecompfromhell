@@ -105,7 +105,7 @@ void M1898_002d1540(int param_1)
   FastLerpColor(dVar3,pfVar1[2],pfVar1[3]);
   FastDoubleToInt((double)(float)((double)(longlong)(DAT_007bd68c << 4) * dVar5));
   uVar2 = GetEffectTex(DAT_007bd688);
-  DrawTexturedQuadHud(local_80,local_50,local_60,uVar2,1);
+  DrawScreenQuad(local_80,local_50,local_60,uVar2,1);
   uVar2 = idol_draw::Blend(1,5,0x60,3,0,0,1,2);
   SetGSReg(0x16,uVar2);
   return;

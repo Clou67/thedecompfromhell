@@ -3437,11 +3437,11 @@ u8 *MB_BuildDrawEntry(MobyInstance *param_1,u8 *param_2,int param_3,int param_4)
           }
           puVar5[0x3c] = (ulonglong)*(byte *)((int)param_1 + 0x23);
           *(undefined4 *)(puVar5 + 6) = *(undefined4 *)((int)puVar5 + 0x1c4);
-          uVar16 = DAT_00a24608;
+          uVar16 = g_FrustumExtra.x;
           *(undefined4 *)(puVar5 + 7) = *(undefined4 *)((int)puVar5 + 0x1cc);
           *(undefined4 *)(puVar5 + 8) = uVar16;
-          *(undefined4 *)(puVar5 + 9) = DAT_00a24610;
-          uVar16 = DAT_00a2460c;
+          *(undefined4 *)(puVar5 + 9) = g_FrustumExtra.z;
+          uVar16 = g_FrustumExtra.y;
           *(undefined4 *)((int)puVar5 + 0x34) = *(undefined4 *)(puVar5 + 0x39);
           *(undefined4 *)((int)puVar5 + 0x44) = uVar16;
           dVar34 = (double)(longlong)puVar5[0x3c];

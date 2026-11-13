@@ -10,8 +10,8 @@
 #include "game/hud.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
-#include "game/partproc.h"
 #include "game/update.h"
+#include "game/update/moby751.h"
 #include "idol/fastfunc.h"
 #include "idol/mUnk.h"
 
@@ -632,7 +632,7 @@ void UpdateMoby_1111(MobyInstance *moby)
     iVar8 = ((uint)((int)GameCamera.posZ >> 0x1f) >> 1 ^ (uint)GameCamera.posZ) -
             ((int)GameCamera.posZ >> 0x1f);
     if (0x43340000 < iVar8) {
-      DAT_0073a960 = 0x28;
+      g_UnderwaterTint = 0x28;
       DAT_0073a961 = 0x40;
       DAT_0073a962 = 0x90;
       DAT_0073a963 = 0x40;

@@ -1232,9 +1232,9 @@ void DrawMapFrame(void)
                ,(double)(longlong)((float)(longlong)uVar60 - 1024.0),
                (double)(longlong)((float)(longlong)puVar19[0x2f] + 1024.0),
                (double)(longlong)((float)(longlong)puVar19[0x2f] + 1024.0),uVar46 - 0x2b8);
-    uVar10 = DAT_00902e9c;
+    uVar10 = g_pIdolDrawBase;
     iVar30 = g_NpcBuffer + *(int *)(g_NpcBuffer + 8);
-    idol_draw::BindFragmentProgram(DAT_00902e9c,HUD_Pass,0xe);
+    idol_draw::BindFragmentProgram(g_pIdolDrawBase,HUD_Pass,0xe);
     idol_draw::SetTextureUnitRegs(HUD_Pass,0,&DAT_00a207e8);
     idol_draw::SetTextureUnitRegs(HUD_Pass,1,iVar30 + 0x6c);
     idol_draw::SetTextureUnitRegs(HUD_Pass,2,iVar30 + 0x90);

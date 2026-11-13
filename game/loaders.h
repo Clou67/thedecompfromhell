@@ -88,11 +88,13 @@ extern undefined4 DAT_010bb478; /* 0x10bb478 */
 extern undefined4 DAT_010ea114; /* no defined data */
 extern int OCLASSES_COCKPIT[3]; /* 0x731c4c */
 extern int OCLASSES_SPACESHIP[3]; /* 0x731c40 */
+extern void * OcclGrid; /* 0xa108c0 */
 extern pointer32 PTR_AdvanceLoadingStage_00705ad0; /* 0x705ad0 */
 extern undefined4 ScreenColorEffectLevel; /* 0x95cf1c */
 extern int SphereCnt; /* 0xa51bcc */
 extern undefined4 SplineCnt; /* 0xa51ea0 */
 extern void * SplineOfs; /* 0xa51ea4 */
+extern undefined4 TEX_BASE; /* 0xa15f4c */
 extern Tfrag * Tfrags; /* 0x92d440 */
 extern undefined4 TfragsCnt; /* 0x92d444 */
 extern TieInstance * g_TieInstance; /* 0xe583f4 */

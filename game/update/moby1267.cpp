@@ -1130,7 +1130,7 @@ void Moby1267_DrawHud(MobyInstance *moby)
     FastDoubleToInt((double)DAT_0071cd44);
     FastDoubleToInt((double)(float)((double)DAT_0071cd48 * dVar26));
     FastDoubleToInt((double)DAT_0071cd44);
-    DrawTexturedQuadHud(local_150,local_130,local_120,uVar3,1);
+    DrawScreenQuad(local_150,local_130,local_120,uVar3,1);
     lVar9 = lVar9 + 1;
   } while ((int)lVar9 < 4);
   uVar3 = GetEffectTex(6);
@@ -1239,7 +1239,7 @@ void Moby1267_DrawHud(MobyInstance *moby)
     FastDoubleToInt((double)(DAT_0071cd44 + (float)(longlong)iVar4));
     FastDoubleToInt((double)(float)((double)DAT_0071cd48 * dVar26));
     FastDoubleToInt((double)DAT_0071cd44);
-    DrawTexturedQuadHud(local_150,local_130,local_120,uVar3,1);
+    DrawScreenQuad(local_150,local_130,local_120,uVar3,1);
     iVar8 = iVar8 + 1;
   } while (iVar8 < 0x20);
   dVar22 = 15.5;
@@ -1418,7 +1418,7 @@ void Moby1267_DrawHud(MobyInstance *moby)
                                                   float)(dVar22 * dVar11) * dVar19 + dVar11)))) *
                                      DAT_0071cd70) * dVar26));
   uVar3 = GetEffectTex(DAT_0071cd68);
-  DrawTexturedQuadHud(local_150,local_130,local_120,uVar3,1);
+  DrawScreenQuad(local_150,local_130,local_120,uVar3,1);
   dVar11 = 8.0;
   dVar22 = (double)FastWrapRot(*(float *)((int)pvVar1 + 0x74) * 8.0,(float)dVar10);
   dVar12 = (double)FastAddRots((float)dVar22);
@@ -1583,7 +1583,7 @@ void Moby1267_DrawHud(MobyInstance *moby)
                                                   float)(dVar22 * dVar24) * dVar19 + dVar24)))) *
                                      DAT_0071cd70) * dVar26));
   uVar3 = GetEffectTex(DAT_0071cd6c);
-  DrawTexturedQuadHud(local_150,local_130,local_120,uVar3,1);
+  DrawScreenQuad(local_150,local_130,local_120,uVar3,1);
   return;
 }
 

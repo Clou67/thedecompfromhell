@@ -350,7 +350,7 @@ void M1382_003f5d90(int param_1)
     uVar16 = idol_draw::PackCmd(0,2,0,1,0x80);
     SetGSReg(3,uVar16);
     uVar16 = GetEffectTex(0x13);
-    DrawTexturedQuadHud(local_100,local_d0,local_e0,uVar16,1);
+    DrawScreenQuad(local_100,local_d0,local_e0,uVar16,1);
     uVar16 = idol_draw::PackCmd(0,1,0,1,0x80);
     SetGSReg(3,uVar16);
   }

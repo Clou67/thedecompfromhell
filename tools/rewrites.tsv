@@ -134,3 +134,52 @@ GameCamera\.field22_0x390 = \(char  \[4\]\)&PTR_CamZoomOfs_Update_00704158	GameC
 \bGameCamera\.offset([01])\.elapsed\b	GameCamera.offset\1.div
 \bGameCamera\.offset0\b	GameCamera.shake
 \bGameCamera\.offset1\b	GameCamera.shakeFwd
+\bg_ViewContext\.fontClipScale\b	g_ViewContext.ihmgScale
+\bg_ViewContext\.hvdf\[0\]	g_ViewContext.hvdf.x
+\bg_ViewContext\.pad_180\[0\]	g_ViewContext.hmgScale.x
+\bg_ViewContext\.pad_1B0\[0\]	g_ViewContext.unSquish.x
+\bg_ViewContext\.hvdf\[1\]	g_ViewContext.hvdf.y
+\bg_ViewContext\.pad_180\[1\]	g_ViewContext.hmgScale.y
+\bg_ViewContext\.pad_1B0\[1\]	g_ViewContext.unSquish.y
+\bg_ViewContext\.hvdf\[2\]	g_ViewContext.hvdf.z
+\bg_ViewContext\.pad_180\[2\]	g_ViewContext.hmgScale.z
+\bg_ViewContext\.pad_1B0\[2\]	g_ViewContext.unSquish.z
+\bg_ViewContext\.hvdf\[3\]	g_ViewContext.hvdf.w
+\bg_ViewContext\.pad_180\[3\]	g_ViewContext.hmgScale.w
+\bg_ViewContext\.pad_1B0\[3\]	g_ViewContext.unSquish.w
+\bg_ViewContext\.guardX\b	g_ViewContext.guard.x
+\bg_ViewContext\.pad_1C4\[0\]	g_ViewContext.guard.y
+\bg_ViewContext\.pad_1C4\[1\]	g_ViewContext.guard.z
+\bg_ViewContext\.pad_1C4\[2\]	g_ViewContext.guard.w
+\bg_ViewContext\.pad_1C4\[3\]	g_ViewContext.iguard.x
+\bg_ViewContext\.pad_1C4\[4\]	g_ViewContext.iguard.y
+\bg_ViewContext\.pad_1C4\[5\]	g_ViewContext.iguard.z
+\bg_ViewContext\.pad_1C4\[6\]	g_ViewContext.iguard.w
+\bg_ViewContext\.pad_1C4\[7\]	g_ViewContext.sphereCheckA.x
+\bg_ViewContext\.pad_1C4\[8\]	g_ViewContext.sphereCheckA.y
+\bg_ViewContext\.pad_1C4\[9\]	g_ViewContext.sphereCheckA.z
+\bg_ViewContext\.pad_1C4\[10\]	g_ViewContext.sphereCheckA.w
+\bg_ViewContext\.pad_1C4\[0xa\]	g_ViewContext.sphereCheckA.w
+\bg_ViewContext\.pad_1C4\[11\]	g_ViewContext.sphereCheckB.x
+\bg_ViewContext\.pad_1C4\[0xb\]	g_ViewContext.sphereCheckB.x
+\bg_ViewContext\.pad_1C4\[12\]	g_ViewContext.sphereCheckB.y
+\bg_ViewContext\.pad_1C4\[0xc\]	g_ViewContext.sphereCheckB.y
+\bg_ViewContext\.pad_1C4\[13\]	g_ViewContext.sphereCheckB.z
+\bg_ViewContext\.pad_1C4\[0xd\]	g_ViewContext.sphereCheckB.z
+\bg_ViewContext\.pad_1C4\[14\]	g_ViewContext.sphereCheckB.w
+\bg_ViewContext\.pad_1C4\[0xe\]	g_ViewContext.sphereCheckB.w
+\bFLOAT_0095d1c8\b	g_ViewContext.fovScale
+\bCameraCollPos\b	g_CullView.pos
+\bDAT_0095d2([0-2])([048c])\b	((float *)&g_CullView.rot)[0x\1\2 / 4]
+\b_?[fD]AT_0095d24([048c])\b	((float *)&g_CullView.ratio)[0x\1 / 4]
+\bfRam0095d24([048c])\b	((float *)&g_CullView.ratio)[0x\1 / 4]
+\bDAT_0095d25([048c])\b	((float *)&g_CullView.iguard)[0x\1 / 4]
+\bDAT_0095d26([048c])\b	((float *)&g_CullView.sphereCheckA)[0x\1 / 4]
+\bDAT_0095d27([048c])\b	((float *)&g_CullView.sphereCheckB)[0x\1 / 4]
+\bDAT_0159c340\b	g_ViewCamPos.x
+\bDAT_0159c344\b	g_ViewCamPos.y
+\bDAT_0159c348\b	g_ViewCamPos.z
+\bDAT_0159c34c\b	((u8 *)&g_ViewCamPos.w)
+\bDAT_00a24608\b	g_FrustumExtra.x
+\bDAT_00a2460c\b	g_FrustumExtra.y
+\bDAT_00a24610\b	g_FrustumExtra.z

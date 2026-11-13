@@ -8,7 +8,6 @@
 #include "game/draw.h"
 #include "game/help.h"
 #include "game/hero.h"
-#include "game/initspace.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/path.h"

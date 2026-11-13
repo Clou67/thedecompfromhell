@@ -991,7 +991,7 @@ void UpdateCinematic(void)
 /* starts the credits: loads the first two images */
 void mode_creditsInit(void)
 {
-    u32 vramBase = *(u32 *)(DAT_00902e9c + 0x4ac);
+    u32 vramBase = *(u32 *)(g_pIdolDrawBase + 0x4ac);
 
     music_Sync(0);
     FadeToBlack(8);
@@ -1075,7 +1075,7 @@ void UpdateCredits(void)
         STUB_00174cf4(1);
 
         if (g_Credits.loadTimer >= 36) {
-            u32 vramBase = *(u32 *)(DAT_00902e9c + 0x4ac);
+            u32 vramBase = *(u32 *)(g_pIdolDrawBase + 0x4ac);
 
             /* the images only in one language's credits */
             if (!g_JapaneseMode) {

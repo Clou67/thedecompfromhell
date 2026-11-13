@@ -12,6 +12,7 @@
 #include <math.h>
 #include <string.h>
 #include "game/water.h"
+#include "game/boot.h"
 #include "game/camera.h"
 #include "game/draw.h"
 #include "game/hero.h"
@@ -19,7 +20,6 @@
 #include "game/mesh.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
-#include "game/pause.h"
 #include "game/update.h"
 #include "game/vuchain.h"
 #include "idol/fastfunc.h"

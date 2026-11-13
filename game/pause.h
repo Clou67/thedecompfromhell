@@ -181,7 +181,6 @@ extern undefined4 DAT_00738198; /* no defined data */
 extern undefined4 DAT_0073819c; /* no defined data */
 extern undefined4 DAT_007381a0; /* no defined data */
 extern undefined4 DAT_007381a4; /* no defined data */
-extern undefined4 DAT_00902e9c; /* 0x902e9c */
 extern undefined4 DAT_00902ed8; /* 0x902ed8 */
 extern undefined2 DAT_0096459a; /* 0x96459a */
 extern undefined4 DAT_00966af0; /* 0x966af0 */
@@ -433,6 +432,7 @@ extern undefined4 g_FrameCount; /* 0x96ca00 */
 extern int g_GadgetBufferSlot; /* 0xa4daec: the gadget class buffer used last */ /* type set in global_types.tsv */
 extern GameSettings g_GameSettings; /* 0x71fb38 */
 extern int g_GsRamBase; /* 0x966ad4: where g_GsRamAlloc starts each frame */ /* type set in global_types.tsv */
+extern bool g_JapaneseMode; /* 0x159c351 */
 extern undefined4 g_Language; /* 0x969c74 */
 extern Planets32 g_MaxBoltsPerLevel; /* 0x738608 */
 extern undefined4 g_MenuScreen; /* 0xa52bb0 */

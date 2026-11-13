@@ -305,64 +305,11 @@ struct Spline {
     struct Vec4 points[30];
 };
 
-struct ScreenVBEffect {
-    u32 enabled;
-    u32 bkgColor;
-    u64 bkgAlpha;
-    s32 aLines;
-    u32 aColor;
-    u64 aAlpha;
-    s32 bLines;
-    u32 bColor;
-    u64 bAlpha;
-};
-
 struct Sphere {
     struct Mtx3 matrix;
     struct Vec4 pos;
     struct Mtx3 imatrix;
     struct Vec4 rot;
-};
-
-struct ViewContext {
-    u32 pad_00[16];
-    struct CameraMatrix field_40;
-    u32 pad_80[8];
-    float nearClip;
-    float farClip;
-    float xclipratio;
-    float yclipratio;
-    float xratio;
-    float yratio;
-    float xradpad;
-    float yradpad;
-    struct CameraMatrix fMtx;
-    struct CameraMatrix nfMtx;
-    struct CameraMatrix hMtx;
-    u32 pad_180[4];
-    struct Vec4 fontClipScale;
-    float hvdf[4];
-    u32 pad_1B0[4];
-    float guardX;
-    u32 pad_1C4[15];
-    float xpix;
-    float ypix;
-    float xclip;
-    float yclip;
-    float perspScale;
-    float fog1;
-    float fogNearDist;
-    float fogFarDist;
-    float fogMult;
-    float fogAdd;
-    float fogNearIntensity;
-    float fogFarIntensity;
-    int fogR;
-    int fogG;
-    int fogB;
-    int occlColor0;
-    int occlColor1;
-    int occlColor2;
 };
 
 /* a level volume the cameras test against (DL's CamCollGridPrim) */

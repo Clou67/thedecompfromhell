@@ -13,10 +13,10 @@
 #include "game/draw.h"
 #include "game/hud.h"
 #include "game/main.h"
+#include "game/mission.h"
 #include "game/mobyproc.h"
 #include "game/pad.h"
 #include "game/partupd.h"
-#include "game/pause.h"
 #include "idol/idol_draw.h"
 #include "idol/mUnk.h"
 #include <cell/gcm/gcm_macros.h>

@@ -43,6 +43,7 @@ typedef char SaveCardInfo_size_check[sizeof(SaveCardInfo) == 0xc0 ? 1 : -1];
 
 // ---- globals
 extern undefined4 DAT_0072666c; /* 0x72666c */
+extern undefined1 DAT_00969c78; /* 0x969c78 */
 extern undefined4 DAT_00969ca4; /* 0x969ca4 */
 extern undefined4 DAT_0096ca08; /* 0x96ca08 */
 extern char *SaveDataPtr; /* 0xa10928: the save buffer; the save data is built 1MB in */ /* type set in global_types.tsv */

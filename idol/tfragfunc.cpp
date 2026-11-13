@@ -6,6 +6,7 @@
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/main.h"
+#include "game/mission.h"
 #include "idol/fastfunc.h"
 #include "idol/idol_draw.h"
 #include "idol/mUnk.h"
@@ -724,7 +725,7 @@ void FUN_0050c020(int param_1,undefined4 *param_2)
           *(undefined4 *)((int)puVar4 + 0xb4) = uVar43;
           *(undefined4 *)(puVar4 + 0x16) = uVar40;
           if ((*(ushort *)(iVar3 + 0x2a) & 6) != 0) {
-            FastVecSub(uVar11 - 0x110,uVar20 + 0x40,&DAT_0159c340);
+            FastVecSub(uVar11 - 0x110,uVar20 + 0x40,&g_ViewCamPos.x);
             auVar26 = ZEXT416(0xffffffff);
             auVar26 = auVar26 | auVar26 << 0x20 | auVar26 << 0x40 | auVar26 << 0x60;
             auVar26 = vectorShiftLeftIntegerWord(auVar26,auVar26);

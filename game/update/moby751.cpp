@@ -10,7 +10,6 @@
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
-#include "game/partproc.h"
 #include "game/partupd.h"
 #include "game/update.h"
 #include "game/update/moby750.h"
@@ -395,7 +394,7 @@ void UpdateMoby_751(MobyInstance *moby)
     } while (iVar21 < 7);
     if (-1 < iVar12) {
       if (iVar12 < 4 && 0 < iVar12) {
-        DAT_0073a960 = 0;
+        g_UnderwaterTint = 0;
         DAT_0073a961 = 0x28;
         WaterFog.r = '\0';
         DAT_0073a962 = 0x30;
@@ -404,7 +403,7 @@ void UpdateMoby_751(MobyInstance *moby)
         WaterFog.g = '(';
       }
       else {
-        DAT_0073a960 = 0x18;
+        g_UnderwaterTint = 0x18;
         DAT_0073a961 = 0x30;
         DAT_0073a963 = 0x30;
         DAT_0073a962 = 0x90;

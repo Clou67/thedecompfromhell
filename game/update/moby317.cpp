@@ -2,7 +2,6 @@
 // STATUS: NOT STARTED (raw Ghidra output)
 // 3 functions, 0x340168-0x340610
 #include "game/update/moby317.h"
-#include "game/camera.h"
 #include "game/collproc.h"
 #include "game/draw.h"
 #include "game/mobyfunc.h"

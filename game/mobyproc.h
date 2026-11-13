@@ -28,6 +28,7 @@ struct Blender {
 
 // ---- globals
 extern undefined4 DAT_0072910c; /* 0x72910c */
+extern undefined4 DAT_00a15f64; /* 0xa15f64 */
 extern undefined1 DAT_00a34700; /* 0xa34700 */
 extern undefined1 DAT_00a3477f; /* 0xa3477f */
 extern undefined1 DAT_00a34780; /* 0xa34780 */

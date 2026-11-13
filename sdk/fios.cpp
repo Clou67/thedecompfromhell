@@ -5,7 +5,7 @@
 #include "sdk/fios.h"
 #include "game/draw.h"
 #include "game/hero.h"
-#include "game/pause.h"
+#include "game/mission.h"
 #include "idol/idol.h"
 #include "idol/idol_draw.h"
 #include "idol/mathfunc.h"
@@ -134,7 +134,7 @@ void load_engine_vram_pair(u8 *param_1,const char *param_2,const char *param_3)
   FUN_004fe6ec(param_1[1],uVar6);
   piVar7 = (int *)param_1[8];
   *piVar7 = (int)uVar4 - *(int *)(iVar3 + 0x4ac);
-  *(int **)(DAT_00902e9c + 0x228c) = piVar7;
+  *(int **)(g_pIdolDrawBase + 0x228c) = piVar7;
   iVar1 = param_1[5];
   param_1[6] = *(int *)(iVar1 + 100) + iVar5;
   param_1[9] = *(int *)(iVar1 + 0x5c) + iVar5;
@@ -376,9 +376,9 @@ void FUN_00508738(int param_1,undefined4 *param_2)
           pfVar17 = pfVar17 + 4;
         } while (iVar19 < 5);
         fVar6 = *(float *)(uVar5 + 0x54) + 8.0 + *(float *)(uVar5 + 0x4c);
-        fVar10 = *(float *)(uVar5 + 0x40) - DAT_00a24608;
-        fVar11 = *(float *)(uVar5 + 0x44) - DAT_00a2460c;
-        fVar12 = *(float *)(uVar5 + 0x48) - DAT_00a24610;
+        fVar10 = *(float *)(uVar5 + 0x40) - g_FrustumExtra.x;
+        fVar11 = *(float *)(uVar5 + 0x44) - g_FrustumExtra.y;
+        fVar12 = *(float *)(uVar5 + 0x48) - g_FrustumExtra.z;
         if (fVar12 * fVar12 + fVar10 * fVar10 + fVar11 * fVar11 <= fVar6 * fVar6) {
           puVar7 = (undefined4 *)(uVar5 & 0xfffffff0);
           uVar28 = puVar7[2];

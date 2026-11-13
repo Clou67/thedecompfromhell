@@ -6,6 +6,7 @@
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/main.h"
+#include "game/mission.h"
 #include "game/skyfunc.h"
 #include "idol/fastfunc.h"
 #include "idol/idol_draw.h"
@@ -378,7 +379,7 @@ void DrawShrub(int param_1,ulonglong param_2)
           *(undefined1 (*) [16])(puVar7 + 0x14) = auVar35;
           *(undefined1 (*) [16])(puVar7 + 0x12) = auVar36;
           *(undefined1 (*) [16])(puVar7 + 0x10) = auVar34;
-          FastVecSub(uVar18 - 0x1a0,uVar32 + 0x40,&DAT_0159c340);
+          FastVecSub(uVar18 - 0x1a0,uVar32 + 0x40,&g_ViewCamPos.x);
           auVar11 = _DAT_00508bf0;
           auVar10 = _DAT_00508be0;
           auVar41 = _DAT_00508bd0;

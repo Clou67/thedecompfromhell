@@ -21,6 +21,7 @@
 #include "game/draw.h"
 #include "game/loaders.h"
 #include "game/mesh.h"
+#include "game/mobyproc.h"
 #include "game/mobyutil.h"
 #include "game/rUnk.h"
 #include "game/skyproc.h"

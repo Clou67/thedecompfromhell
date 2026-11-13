@@ -6,9 +6,9 @@
 // ...); RaC1's PS3 build keeps only SkySpriteProc, in C, and stubs for the rest.
 #include <math.h>
 #include "game/skyproc.h"
+#include "game/boot.h"
 #include "game/draw.h"
 #include "game/hud.h"
-#include "game/pause.h"
 #include "game/skyfunc.h"
 #include "idol/idol_draw.h"
 #include "idol/mUnk.h"

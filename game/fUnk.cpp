@@ -3,7 +3,7 @@
 // 5 functions, 0x7a338-0x7b0f4
 #include <stdio.h>
 #include "game/fUnk.h"
-#include "game/draw.h"
+#include "game/loaders.h"
 #include "game/pause.h"
 #include "idol/fastfunc.h"
 #include "idol/idol_draw.h"

@@ -1,7 +1,7 @@
 #pragma once
 // game/debug.h
 #include "types.h"
-#include "game/partproc.h"
+#include "game/draw.h"
 
 // ---- types
 typedef enum DEBUG_OPTION {
@@ -148,6 +148,7 @@ extern float LevelFogFarDist; /* 0x95ea04 */
 extern float LevelFogFarIntensity; /* 0x95ea0c */
 extern float LevelFogNearDist; /* 0x95ea00 */ /* type set in global_types.tsv */
 extern float LevelFogNearIntensity; /* 0x95ea08 */
+extern int OcclUpdate; /* 0x95c5dc */ /* type set in global_types.tsv */
 extern int Scene; /* 0x95c5f8 */ /* type set in global_types.tsv */
 extern int ScreenMode; /* 0x95c5f4 */ /* type set in global_types.tsv */
 extern int Segment; /* 0x95c5fc */ /* type set in global_types.tsv */

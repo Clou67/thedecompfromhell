@@ -650,16 +650,6 @@ typedef enum PlayerState {
     DEATH_WATER_LASER=130
 } PlayerState;
 
-typedef enum RENDER {
-    RENDER__Sky=1,
-    RENDER__Tfrags=2,
-    Ties=4,
-    Shrubs=8,
-    Ocean=32,
-    Screen_Overlays=64,
-    HUD=128
-} RENDER;
-
 typedef enum RsxCmd {
     NV4097_SET_OBJECT_x1=262144,
     NV4097_NO_OPERATION_x1=262400,
@@ -2669,11 +2659,15 @@ extern undefined4 DAT_0071cb60; /* 0x71cb60 */
 extern undefined4 DAT_0071cb64; /* 0x71cb64 */
 extern undefined4 DAT_0071cb68; /* 0x71cb68 */
 extern undefined4 DAT_0071cb6c; /* 0x71cb6c */
+extern undefined4 DAT_0071ef44; /* 0x71ef44 */
+extern undefined4 DAT_0071ef48; /* 0x71ef48 */
+extern undefined4 DAT_0071ef4c; /* 0x71ef4c */
 extern undefined4 DAT_0071fa60; /* 0x71fa60 */
 extern undefined4 DAT_0071fa7c; /* 0x71fa7c */
 extern undefined4 DAT_0071fa98; /* 0x71fa98 */
 extern undefined4 DAT_0071fab4; /* 0x71fab4 */
 extern undefined4 DAT_0071fad8; /* no defined data */
+extern undefined4 DAT_0071fbec; /* no defined data */
 extern undefined2 DAT_007247ca; /* 0x7247ca */
 extern undefined2 DAT_007247cc; /* 0x7247cc */
 extern undefined2 DAT_007247ce; /* 0x7247ce */
@@ -2750,6 +2744,11 @@ extern undefined8 DAT_00735bb0; /* 0x735bb0 */
 extern undefined8 DAT_00735bb8; /* 0x735bb8 */
 extern undefined8 DAT_00735bc0; /* 0x735bc0 */
 extern undefined8 DAT_00735bc8; /* 0x735bc8 */
+extern undefined4 DAT_00735d50; /* 0x735d50 */
+extern undefined4 DAT_00735d54; /* 0x735d54 */
+extern undefined4 DAT_00735d58; /* 0x735d58 */
+extern undefined4 DAT_00735de0; /* 0x735de0 */
+extern undefined4 DAT_00735de4; /* 0x735de4 */
 extern undefined4 DAT_00735ecc; /* 0x735ecc */
 extern undefined4 DAT_00735ed8; /* 0x735ed8 */
 extern undefined4 DAT_00735eec; /* 0x735eec */
@@ -2768,6 +2767,14 @@ extern undefined4 DAT_00735f94; /* 0x735f94 */
 extern undefined4 DAT_00735f98; /* 0x735f98 */
 extern undefined4 DAT_00735f9c; /* 0x735f9c */
 extern undefined4 DAT_00735fa8; /* 0x735fa8 */
+extern undefined4 DAT_00735fd8; /* 0x735fd8 */
+extern undefined4 DAT_00735fdc; /* 0x735fdc */
+extern undefined4 DAT_00735fe0; /* 0x735fe0 */
+extern undefined4 DAT_00735fe4; /* 0x735fe4 */
+extern undefined4 DAT_00736028; /* 0x736028 */
+extern undefined4 DAT_0073602c; /* 0x73602c */
+extern undefined4 DAT_00736030; /* 0x736030 */
+extern undefined4 DAT_00736034; /* 0x736034 */
 extern undefined4 DAT_0073608c; /* 0x73608c */
 extern undefined4 DAT_007360bc; /* 0x7360bc */
 extern undefined4 DAT_007360ec; /* 0x7360ec */
@@ -2819,6 +2826,10 @@ extern undefined8 DAT_00736870; /* 0x736870 */
 extern undefined4 DAT_00736888; /* 0x736888 */
 extern undefined4 DAT_0073688c; /* 0x73688c */
 extern undefined4 DAT_0073689c; /* 0x73689c */
+extern undefined4 DAT_007368b3; /* no defined data */
+extern undefined4 DAT_00736c53; /* no defined data */
+extern undefined4 DAT_00736ff3; /* no defined data */
+extern undefined4 DAT_00737c70; /* 0x737c70 */
 extern undefined4 DAT_00737c74; /* 0x737c74 */
 extern undefined4 DAT_00737c88; /* 0x737c88 */
 extern undefined4 DAT_00737ca0; /* 0x737ca0 */
@@ -2828,6 +2839,7 @@ extern undefined4 DAT_0073aac0; /* 0x73aac0 */
 extern undefined4 DAT_0073aac4; /* 0x73aac4 */
 extern undefined4 DAT_0073ac40; /* 0x73ac40 */
 extern undefined4 DAT_0073ac44; /* 0x73ac44 */
+extern undefined4 DAT_0073adf0; /* 0x73adf0 */
 extern undefined4 DAT_0073ae70; /* no defined data */
 extern undefined4 DAT_0073af50; /* 0x73af50 */
 extern undefined2 DAT_0073b330; /* 0x73b330 */
@@ -2950,6 +2962,11 @@ extern undefined4 DAT_00a561f8; /* 0xa561f8 */
 extern undefined4 DAT_00a561fc; /* 0xa561fc */
 extern undefined4 DAT_00a56854; /* 0xa56854 */
 extern undefined4 DAT_00a56b84; /* 0xa56b84 */
+extern undefined4 DAT_00e572d0; /* 0xe572d0 */
+extern undefined4 DAT_00e572d4; /* 0xe572d4 */
+extern undefined4 DAT_00e572d8; /* 0xe572d8 */
+extern undefined4 DAT_00e572dc; /* 0xe572dc */
+extern undefined4 DAT_00e574e0; /* 0xe574e0 */
 extern undefined4 DAT_00e574f4; /* 0xe574f4 */
 extern undefined4 DAT_00e5aad0; /* 0xe5aad0 */
 extern undefined4 DAT_00e5aad4; /* 0xe5aad4 */
@@ -2988,6 +3005,15 @@ extern pointer32 PTR_sound_BasicCB_00707c38; /* 0x707c38 */
 extern pointer32 PTR_sound_FreshenCB_00707c48; /* 0x707c48 */
 extern pointer32 PTR_sound_PlayCB_00707c40; /* 0x707c40 */
 extern pointer32 PTR_sysutil_gameexit_callback_00703618; /* 0x703618 */
+extern undefined4 _DAT_000659a0; /* direct read */
+extern undefined4 _DAT_000659b0; /* direct read */
+extern undefined4 _DAT_00066860; /* direct read */
+extern undefined4 _DAT_00066870; /* direct read */
+extern undefined4 _DAT_00066880; /* direct read */
+extern undefined4 _DAT_00066890; /* direct read */
+extern undefined4 _DAT_000668a0; /* direct read */
+extern undefined4 _DAT_000668b0; /* direct read */
+extern undefined4 _DAT_000668c0; /* direct read */
 extern undefined4 _DAT_000dc1e0; /* direct read */
 extern undefined4 _DAT_000dc1f0; /* direct read */
 extern undefined4 _DAT_000dc200; /* direct read */
@@ -3015,6 +3041,14 @@ extern undefined4 _DAT_0017dd00; /* direct read */
 extern undefined4 _DAT_0017dd10; /* direct read */
 extern undefined4 _DAT_007247c0; /* direct read */
 extern undefined4 _DAT_007247d0; /* direct read */
+extern undefined4 _DAT_00735cd0; /* direct read */
+extern undefined4 _DAT_00735ce0; /* direct read */
+extern undefined4 _DAT_00735cf0; /* direct read */
+extern undefined4 _DAT_00735da0; /* direct read */
+extern undefined4 _DAT_00735db0; /* direct read */
+extern undefined4 _DAT_00735dc0; /* direct read */
+extern undefined4 _DAT_00736040; /* direct read */
+extern undefined4 _DAT_00736050; /* direct read */
 extern undefined4 japanese_mode; /* 0xd9208 */
 extern char s_MESSAGE_DOES_NOT_EXIST_00720b94[23]; /* 0x720b94 */
 extern undefined4 skip_directionalLightCopy; /* 0x118a8 */

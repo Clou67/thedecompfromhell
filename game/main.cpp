@@ -220,7 +220,7 @@ void startLevel(void)
                 UpdatePad();
                 UpdateCredits();
                 UpdateOcclusion(1);
-                DrawSomeOverlay();
+                DrawCredits();
                 Render_DispatchJob();
                 break;
             default:

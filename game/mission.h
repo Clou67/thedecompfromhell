@@ -42,6 +42,7 @@ struct MissionTarget {
 
 // ---- globals
 extern char CHAR_ARRAY_0096c165[37]; /* 0x96c165 */
+extern Vec4 g_FrustumPlanes[6]; /* 0xa245a8: view frustum planes (x, y, z, d), points inside give >= 0 (DrawParts culls with them); cleared by ResetMissionState */ /* type set in global_types.tsv */
 extern MissionDef *g_LevelMissions; /* 0xa24624: g_MissionDefs[g_SelectedLevel] */ /* type set in global_types.tsv */
 extern MissionDef *g_MissionDefs[19]; /* 0x728d84: per level */ /* type set in global_types.tsv */
 extern MobyInstance *g_MissionMobys[121]; /* 0xa15d40: the mobys of the current level's mission targets */ /* type set in global_types.tsv */

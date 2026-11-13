@@ -6,11 +6,11 @@
 #include <string.h>
 #include "idol/fastfunc.h"
 #include "game/boot.h"
+#include "game/draw.h"
 #include "game/hero.h"
 #include "game/initonce.h"
 #include "game/main.h"
 #include "game/mobyutil.h"
-#include "game/pause.h"
 #include "idol/idol_draw.h"
 #include "sdk/sys.h"
 
@@ -2702,7 +2702,7 @@ int FastCheckBsphereInView(float param_1,void *param_2)
   auVar4 = vectorPermute(auVar5,auStack_10,_DAT_005028f0);
   vectorPermute(auVar3,auVar4,_DAT_00502900);
   iVar2 = FastCheckBsphere((double)*(float *)((int)param_2 + 0xc),param_1,
-                           (ulonglong)DAT_00902e9c + 800);
+                           (ulonglong)g_pIdolDrawBase + 800);
   if (iVar2 == 0) {
     uVar1 = 0xffffffffffffffff;
   }
@@ -2734,7 +2734,7 @@ undefined8 FUN_005029c0(undefined8 param_1,undefined8 param_2)
   auVar4 = vectorPermute(auVar5,auStack_10,_DAT_005029a0);
   vectorPermute(auVar3,auVar4,_DAT_005029b0);
   iVar2 = FastCheckBsphere
-                    ((double)*(float *)((int)param_2 + 0xc),param_1,(ulonglong)DAT_00902e9c + 800);
+                    ((double)*(float *)((int)param_2 + 0xc),param_1,(ulonglong)g_pIdolDrawBase + 800);
   if (iVar2 == 0) {
     uVar1 = 0xffffffffffffffff;
   }

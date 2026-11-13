@@ -1,8 +1,4 @@
-// game/draw.cpp -- reconstructed from NPEA00385 EBOOT
-// STATUS: NOT STARTED (raw Ghidra output)
-// 165 functions, 0x6565c-0x78140
 #include <math.h>
-#include <stdio.h>
 #include <string.h>
 #include "game/draw.h"
 #include "game/boot.h"
@@ -14,13 +10,13 @@
 #include "game/hero.h"
 #include "game/hud.h"
 #include "game/initsky.h"
-#include "game/initspace.h"
 #include "game/lights.h"
 #include "game/loaders.h"
 #include "game/mUnk.h"
 #include "game/main.h"
 #include "game/memcard.h"
 #include "game/mesh.h"
+#include "game/mission.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
@@ -42,6207 +38,3242 @@
 #include "sdk/fios.h"
 #include "sdk/libgcm_cmd/marker.h"
 #include "sdk/mUnk4.h"
-#include "sdk/sce.h"
+#include "idol/fastinline.h"
+#include <cell/gcm/gcm_macros.h>
+#include <cell/gcm/gcm_enum.h>
+// MERGE (104 of 165 functions cleaned; the rest are generated)
+// game/draw.cpp -- reconstructed from NPEA00385 EBOOT
+// 165 functions, 0x6565c-0x78140: the frame's drawing. The view context and camera matrices,
+// occlusion, the render passes, fonts and HUD sprites, screen effects, water, lava and the
+// textured strip drawers the level renderers share.
+
+/* the RSX command header for count words at a NV4097 register */
+static inline void Emit(RenderingStep *pass, u32 word)
+{
+    *pass->command++ = (RsxCmd)word;
+}
+
+/* one 4x4 matrix into the pass's vertex program constants c[index..index+3] */
+static inline void EmitVertexConstMtx(RenderingStep *pass, int index, Mtx4 *mtx)
+{
+    float *words = &mtx->v0.x;
+
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_TRANSFORM_CONSTANT_LOAD, 17));
+    Emit(pass, index);
+    for (int i = 0; i < 16; i++) {
+        Emit(pass, *(u32 *)&words[i]);
+    }
+}
+
+/* one 4-float vector into the pass's vertex program constant c[index] */
+static inline void EmitVertexConstVec(RenderingStep *pass, int index, float *vec)
+{
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_TRANSFORM_CONSTANT_LOAD, 5));
+    Emit(pass, index);
+    for (int i = 0; i < 4; i++) {
+        Emit(pass, *(u32 *)&vec[i]);
+    }
+}
+
+/* out = in's transpose */
+static inline void Mtx4_Transpose(Mtx4 *out, Mtx4 *in)
+{
+    float *src = &in->v0.x;
+    float *dst = &out->v0.x;
+
+    for (int row = 0; row < 4; row++) {
+        for (int col = 0; col < 4; col++) {
+            dst[row * 4 + col] = src[col * 4 + row];
+        }
+    }
+}
+
+static inline IdolDraw *Idol(void)
+{
+    return (IdolDraw *)(uintptr_t)g_pIdolDraw;
+}
+
+/* the render passes in the order UploadViewMatricesToPasses walks them (DepthPass..HUD_Pass) */
+#define DRAW_PASS_CNT 11
 
 // 0x006565c (0x14 bytes)
 void SECTION_HEADER_DRAW(void)
-
 {
-  DAT_0071eeac = 0x10000;
-  return;
+    DAT_0071eeac = 0x10000;
 }
 
 
 // 0x0065670 (0x48 bytes)
 void ResetFrameBufferInfo(void)
-
 {
-  FlushCache(0);
-  SetFrameBufferInfo(0x200,0x1a0,0x200,0x1c0,0,0);
-  return;
+    FlushCache(0);
+    SetFrameBufferInfo(512, 416, 512, 448, 0, 0);
 }
 
 
 // 0x00656b8 (0x104 bytes)
+/* (the PS2 GS setup for a cutscene; the PS3 build has stubbed most of it) */
 void ResetFrameBufferForCutscene(void)
-
 {
-  undefined4 uVar1;
-  
-  g_CutscenePlaying = 1;
-  DAT_00e5aa70 = 0;
-  STUB_001754e0();
-  STUB_00503070(1);
-  STUB_000e9138();
-  STUB_0050307c(0,0xb,(ZERO_MASK(Cutscene)) + 0xd,9);
-  STUB_00503080();
-  VU1_initChain();
-  uVar1 = g_GsRamBase;
-  g_pPacket = 0;
-  FlushCache(0);
-  SetFrameBufferInfo(0x200,0x1a0,0x200,0x1c0,0,0);
-  g_GsRamBase = uVar1;
-  VU1_initChain();
-  STUB_001754dc();
-  return;
+    DAT_00e5aa70 = 0;
+    STUB_001754e0();
+    STUB_00503070(1);
+    STUB_000e9138();
+    STUB_0050307c(0, 11, (Cutscene == 0) ? 14 : 13, 9);
+    STUB_00503080();
+    VU1_initChain();
+    FlushCache(0);
+    SetFrameBufferInfo(512, 416, 512, 448, 0, 0);
+    VU1_initChain();
+    STUB_001754dc();
 }
 
 
 // 0x00657c8 (0x1b0 bytes)
+/* a bounding sphere (1/1024 units) against the view: -1 outside, 1 well inside, 0 crossing an
+   edge */
 int CheckBSphere(float *bsphere)
-
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  double dVar7;
-  double dVar8;
-  double dVar9;
-  double dVar10;
-  double in_f9;
-  
-  dVar7 = (double)bsphere[3];
-  fVar2 = -(GameCamera.posY * 1024.0 - bsphere[1]);
-  fVar3 = -(GameCamera.posX * 1024.0 - *bsphere);
-  fVar4 = -(GameCamera.posZ * 1024.0 - bsphere[2]);
-  fVar1 = (float)(dVar7 - in_f9);
-  fVar6 = GameCamera.mtx0.v2.x * fVar4 + GameCamera.mtx0.v0.x * fVar3 + GameCamera.mtx0.v1.x * fVar2
-  ;
-  fVar5 = GameCamera.mtx0.v2.y * fVar4 + GameCamera.mtx0.v0.y * fVar3 + GameCamera.mtx0.v1.y * fVar2
-  ;
-  dVar8 = (double)(GameCamera.mtx0.v3.z * fVar1 +
-                  GameCamera.mtx0.v2.z * fVar4 +
-                  GameCamera.mtx0.v0.z * fVar3 + GameCamera.mtx0.v1.z * fVar2);
-  dVar9 = (double)(GameCamera.mtx0.v3.x * fVar1 + fVar6);
-  dVar10 = (double)(GameCamera.mtx0.v3.y * fVar1 + fVar5);
-  if (g_ViewContext.nearClip <= (float)(dVar8 + dVar7)) {
-    if ((float)(dVar8 - dVar7) <= g_ViewContext.farClip) {
-      if (dVar9 - 0.0 < 0.0) {
-        dVar9 = -(double)(GameCamera.mtx0.v3.x * fVar1 + fVar6);
-      }
-      if (dVar10 - 0.0 < 0.0) {
-        dVar10 = -(double)(GameCamera.mtx0.v3.y * fVar1 + fVar5);
-      }
-      if ((float)(dVar8 * (double)g_ViewContext.xratio) <
-          -(float)(dVar7 * (double)g_ViewContext.xradpad - dVar9)) {
+    float radius = bsphere[3];
+    float dx = bsphere[0] - GameCamera.posX * 1024.0f;
+    float dy = bsphere[1] - GameCamera.posY * 1024.0f;
+    float dz = bsphere[2] - GameCamera.posZ * 1024.0f;
+    /* (the binary subtracts a register it never set from the radius for the w term) */
+    float w = radius - 0.0f;
+    Mtx4 *view = &GameCamera.mtx0;
+    float x = view->v0.x * dx + view->v1.x * dy + view->v2.x * dz + view->v3.x * w;
+    float y = view->v0.y * dx + view->v1.y * dy + view->v2.y * dz + view->v3.y * w;
+    float z = view->v0.z * dx + view->v1.z * dy + view->v2.z * dz + view->v3.z * w;
+
+    if (z + radius < g_ViewContext.nearClip || z - radius > g_ViewContext.farClip) {
         return -1;
-      }
-      if ((float)(dVar8 * (double)g_ViewContext.yratio) <
-          -(float)(dVar7 * (double)g_ViewContext.yradpad - dVar10)) {
-        return -1;
-      }
-      if ((float)(dVar8 - dVar7) <= g_ViewContext.nearClip) {
-        return 0;
-      }
-      if (g_ViewContext.farClip <= (float)(dVar8 + dVar7)) {
-        return 0;
-      }
-      if ((float)(dVar8 * (double)g_ViewContext.xratio) * 3.0 <=
-          (float)(dVar7 * (double)g_ViewContext.xradpad + dVar9)) {
-        return 0;
-      }
-      if ((float)(dVar8 * (double)g_ViewContext.yratio) * 3.0 <=
-          (float)(dVar7 * (double)g_ViewContext.yradpad + dVar10)) {
-        return 0;
-      }
-      return 1;
     }
-  }
-  return -1;
+
+    x = fabsf(x);
+    y = fabsf(y);
+    if (z * g_ViewContext.xratio < x - radius * g_ViewContext.xradpad) {
+        return -1;
+    }
+    if (z * g_ViewContext.yratio < y - radius * g_ViewContext.yradpad) {
+        return -1;
+    }
+
+    if (z - radius <= g_ViewContext.nearClip || z + radius >= g_ViewContext.farClip) {
+        return 0;
+    }
+    if (z * g_ViewContext.xratio * 3.0f <= x + radius * g_ViewContext.xradpad) {
+        return 0;
+    }
+    if (z * g_ViewContext.yratio * 3.0f <= y + radius * g_ViewContext.yradpad) {
+        return 0;
+    }
+
+    return 1;
 }
 
 
 // 0x0065a00 (0x684 bytes)
 // inlined: FastAtan2 @0x65adc
-/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
-
+/* hands the renderer the camera and the view angle, then writes its projection (c0-3) and view
+   (c8-11) matrices into every pass's vertex constants, the depth pass's model matrix (c4-7)
+   as identity, and copies the frustum planes out */
 void UploadViewMatricesToPasses(void)
-
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  code *pcVar5;
-  RenderingStep *pRVar6;
-  undefined4 uVar7;
-  ulonglong *puVar8;
-  float fVar9;
-  int iVar10;
-  int *piVar11;
-  float fVar12;
-  longlong lVar13;
-  undefined4 *puVar14;
-  int iVar15;
-  int *piVar16;
-  longlong lVar17;
-  longlong lVar18;
-  RsxCmd *pRVar20;
-  ulonglong uVar19;
-  ulonglong uVar21;
-  longlong lVar22;
-  float *pfVar23;
-  longlong lVar24;
-  ulonglong uVar25;
-  RsxCmd *pRVar27;
-  ulonglong uVar26;
-  RenderingStep **ppRVar28;
-  int *piVar29;
-  ulonglong unaff_r28;
-  ulonglong unaff_r29;
-  ulonglong unaff_r30;
-  ulonglong unaff_r31;
-  ulonglong in_LR;
-  longlong lVar30;
-  GPiece<16> auVar31;
-  GPiece<16> auVar32;
-  GPiece<16> auVar33;
-  GPiece<16> auVar34;
-  GPiece<16> auVar35;
-  GPiece<16> auVar36;
-  GPiece<16> auVar37;
-  GPiece<16> auVar38;
-  GPiece<16> auVar39;
-  GPiece<16> auVar40;
-  GPiece<16> auVar41;
-  GPiece<16> auVar42;
-  GPiece<16> auVar43;
-  GPiece<16> auVar44;
-  GPiece<16> auVar45;
-  GPiece<16> auVar46;
-  GPiece<16> auVar47;
-  GPiece<16> auVar48;
-  GPiece<16> auVar49;
-  undefined4 in_vr31_32_0;
-  undefined4 in_vr31_32_1;
-  undefined4 in_vr31_32_2;
-  undefined4 in_vr31_32_3;
-  GPiece<16> auVar50;
-  
-  uVar19 = ZEXT48(&stack0x00000000);
-  lVar18 = uVar19 - 0x240;
-  puVar8 = (ulonglong *)lVar18;
-  *puVar8 = uVar19;
-  puVar8[0x4a] = in_LR;
-  lVar13 = uVar19 - 0x30;
-  puVar14 = (undefined4 *)lVar13;
-  puVar14[3] = in_vr31_32_3;
-  puVar14[2] = in_vr31_32_2;
-  puVar14[1] = in_vr31_32_1;
-  *puVar14 = in_vr31_32_0;
-  puVar8[0x47] = unaff_r31;
-  fVar4 = g_ViewContext.yratio;
-  *(undefined4 *)(puVar8 + 0x3c) = 0x3f800000;
-  piVar11 = g_pIdolDraw;
-  fVar2 = ABS(fVar4);
-  *(float *)((int)puVar8 + 0x1e4) = 1.0 - fVar2;
-  fVar12 = FLOAT_0095d1c8;
-  fVar9 = 0.0;
-  puVar14 = *(undefined4 **)(*piVar11 + 0x20);
-  uVar21 = (ulonglong)(*(uint *)((int)puVar8 + 0x1e4) >> 0x1e) & 2 |
-           (ulonglong)((uint)fVar4 >> 0x1d) & 4;
-  fVar4 = *(float *)(&g_atanQuadrantTable + (int)(uVar21 << 2));
-  fVar3 = ABS(*(float *)(puVar8 + 0x3c));
-  if (*(float *)((int)puVar8 + 0x1e4) - 0.0 < 0.0) {
-    fVar3 = fVar2;
-  }
-  fVar1 = *(float *)(((uint)(uVar21 << 2) | 0x735900) + 4);
-  if (*(float *)((int)puVar8 + 0x1e4) - 0.0 < 0.0) {
-    fVar2 = 1.0;
-  }
-  puVar8[0x46] = unaff_r30;
-  puVar8[0x45] = unaff_r29;
-  puVar8[0x44] = unaff_r28;
-  if (0.0 < fVar3) {
-    lVar17 = uVar19 - 0x230;
-    lVar22 = uVar19 - 0x58;
-    lVar24 = uVar19 - 0x48;
-    lVar30 = 2;
-    fVar2 = (fVar2 - fVar3) / (fVar2 + fVar3);
-    fVar3 = fVar2 * fVar2;
-    *(float *)((int)puVar8 + 500) = fVar2;
-    *(float *)((int)puVar8 + 0x1ec) = fVar2;
-    *(float *)(puVar8 + 0x3e) = fVar2;
-    *(float *)(puVar8 + 0x3d) = fVar2;
-    fVar2 = fVar3 * fVar3;
-    *(float *)((int)puVar8 + 0x1ec) = *(float *)((int)puVar8 + 0x1ec) * fVar3;
-    *(float *)(puVar8 + 0x3e) = *(float *)(puVar8 + 0x3e) * fVar2;
-    *(float *)((int)puVar8 + 500) = *(float *)((int)puVar8 + 500) * fVar2 * fVar3;
-    do {
-      *(float *)((int)lVar17 + 0x1e8) = *(float *)((int)lVar17 + 0x1d8) * fVar2 * fVar2;
-      iVar15 = (int)lVar22;
-      lVar17 = lVar17 + 8;
-      lVar22 = lVar22 + 8;
-      *(float *)((int)lVar24 + 4) = *(float *)(iVar15 + 4) * fVar2 * fVar2;
-      lVar24 = lVar24 + 8;
-      lVar30 = lVar30 + -1;
-    } while (lVar30 != 0);
-    lVar30 = 4;
-    lVar24 = uVar19 - 0x58;
-    pfVar23 = (float *)&DAT_007358e0;
-    lVar17 = lVar18;
-    lVar22 = lVar24;
-    do {
-      fVar2 = *pfVar23;
-      fVar3 = pfVar23[1];
-      pfVar23 = pfVar23 + 2;
-      *(float *)((int)lVar17 + 0x1e8) = *(float *)((int)lVar17 + 0x1e8) * fVar2;
-      lVar17 = lVar17 + 8;
-      *(float *)((int)lVar22 + 4) = *(float *)((int)lVar22 + 4) * fVar3;
-      lVar22 = lVar22 + 8;
-      lVar30 = lVar30 + -1;
-    } while (lVar30 != 0);
-    lVar17 = 2;
-    do {
-      iVar15 = (int)lVar18;
-      iVar10 = (int)lVar24;
-      lVar18 = lVar18 + 0x10;
-      lVar24 = lVar24 + 0x10;
-      fVar9 = fVar9 + *(float *)(iVar15 + 0x1e8) + *(float *)(iVar10 + 4) + *(float *)(iVar10 + 8) +
-              *(float *)(iVar10 + 0xc);
-      lVar17 = lVar17 + -1;
-    } while (lVar17 != 0);
-    fVar9 = (fVar9 + 0.7853982) * fVar4 + fVar1;
-  }
-  pcVar5 = (code *)*puVar14;
-  puVar8[5] = ZEXT48(&TOC_BASE);
-  (*pcVar5)((double)(fVar9 * 57.295776 * fVar12),0x3fb99999a0000000,0x4092c00000000000,piVar11);
-  auVar36 = _DAT_000659b0;
-  auVar34 = _DAT_000659a0;
-  auVar43 = ZEXT416(0);
-  auVar31 = auVar43 | auVar43 << 0x20 | auVar43 << 0x40 | auVar43 << 0x60;
-  auVar32 = loadVectorLeftIndexed(0x13c0,0x950000);
-  auVar33 = loadVectorLeftIndexed(0x20,0x9513c0);
-  auVar35 = loadVectorLeftIndexed(4,0x9513c0);
-  auVar37 = loadVectorLeftIndexed(0x10,0x9513c0);
-  auVar38 = loadVectorLeftIndexed(0x14,0x9513c0);
-  auVar39 = loadVectorLeftIndexed(0x24,0x9513c0);
-  auVar40 = loadVectorLeftIndexed(8,0x9513c0);
-  auVar41 = loadVectorLeftIndexed(0x18,0x9513c0);
-  auVar42 = loadVectorLeftIndexed(0x28,0x9513c0);
-  auVar43 = loadVectorLeftIndexed(0x140,0x9513c0);
-  auVar44 = loadVectorLeftIndexed(0x144,0x9513c0);
-  auVar45 = loadVectorLeftIndexed(0x148,0x9513c0);
-  auVar46 = loadVectorLeftIndexed(lVar13,0x65980);
-  auVar44 = vectorPermute(auVar43,auVar44,_DAT_000659a0);
-  auVar43 = auVar46 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar46 = vectorPermute(auVar32,auVar37,_DAT_000659a0);
-  auVar48 = vectorPermute(auVar35,auVar38,_DAT_000659a0);
-  auVar43 = vectorPermute(auVar45,auVar43 | auVar43 << 0x20 | auVar43 << 0x40 | auVar43 << 0x60,
-                          _DAT_000659a0);
-  auVar32 = vectorPermute(auVar32,auVar35,_DAT_000659a0);
-  auVar50 = vectorPermute(auVar40,auVar41,_DAT_000659a0);
-  auVar35 = vectorPermute(auVar44,auVar43,_DAT_000659b0);
-  auVar40 = vectorPermute(auVar40,*(undefined1 (*) [16])(puVar8 + 0xe),_DAT_000659a0);
-  auVar37 = vectorPermute(auVar37,auVar38,_DAT_000659a0);
-  auVar47 = vectorPermute(auVar33,auVar31,_DAT_000659a0);
-  auVar49 = vectorPermute(auVar39,auVar31,_DAT_000659a0);
-  auVar38 = vectorPermute(auVar41,*(undefined1 (*) [16])(puVar8 + 0x10),_DAT_000659a0);
-  auVar43 = vectorPermute(auVar42,auVar31,_DAT_000659a0);
-  auVar31 = vectorPermute(auVar32,auVar40,_DAT_000659b0);
-  auVar32 = vectorPermute(auVar33,auVar39,_DAT_000659a0);
-  auVar39 = vectorPermute(auVar42,*(undefined1 (*) [16])(puVar8 + 0x12),_DAT_000659a0);
-  auVar33 = vectorPermute(auVar37,auVar38,_DAT_000659b0);
-  auVar37 = vectorPermute(auVar46,auVar47,_DAT_000659b0);
-  auVar43 = vectorPermute(auVar50,auVar43,_DAT_000659b0);
-  auVar38 = vectorPermute(auVar48,auVar49,_DAT_000659b0);
-  auVar32 = vectorPermute(auVar32,auVar39,_DAT_000659b0);
-  *(undefined1 (*) [16])(puVar8 + 0x16) = auVar31;
-  *(undefined1 (*) [16])(puVar8 + 0x22) = auVar35;
-  *(undefined1 (*) [16])(puVar8 + 0x18) = auVar33;
-  *(undefined1 (*) [16])(puVar8 + 0x20) = auVar43;
-  *(undefined1 (*) [16])(puVar8 + 0x1e) = auVar38;
-  *(undefined1 (*) [16])(puVar8 + 0x1a) = auVar32;
-  *(undefined1 (*) [16])(puVar8 + 0x1c) = auVar37;
-  iVar15 = *piVar11;
-  puVar8[5] = puVar8[5];
-  auVar43 = vectorPermute(auVar45,*(undefined1 (*) [16])(puVar8 + 0x14),auVar34);
-  vectorPermute(auVar44,auVar43,auVar36);
-  pcVar5 = (code *)**(undefined4 **)(iVar15 + 0x24);
-  (*pcVar5)(piVar11,uVar19 - 0x160,*(undefined4 **)(iVar15 + 0x24),pcVar5,uVar19 - 400);
-  auVar31 = vectorMergeHighWord(*(undefined1 (*) [16])((uint)(piVar11 + 0x38) & 0xfffffff0),
-                                *(undefined1 (*) [16])((uint)(piVar11 + 0x40) & 0xfffffff0));
-  auVar32 = vectorMergeHighWord(*(undefined1 (*) [16])((uint)(piVar11 + 0x3c) & 0xfffffff0),
-                                *(undefined1 (*) [16])((uint)(piVar11 + 0x44) & 0xfffffff0));
-  auVar43 = vectorMergeLowWord(*(undefined1 (*) [16])((uint)(piVar11 + 0x38) & 0xfffffff0),
-                               *(undefined1 (*) [16])((uint)(piVar11 + 0x40) & 0xfffffff0));
-  auVar34 = vectorMergeLowWord(*(undefined1 (*) [16])((uint)(piVar11 + 0x3c) & 0xfffffff0),
-                               *(undefined1 (*) [16])((uint)(piVar11 + 0x44) & 0xfffffff0));
-  auVar36 = vectorMergeHighWord(auVar31,auVar32);
-  auVar31 = vectorMergeLowWord(auVar31,auVar32);
-  auVar32 = vectorMergeHighWord(auVar43,auVar34);
-  auVar43 = vectorMergeLowWord(auVar43,auVar34);
-  *(undefined1 (*) [16])(puVar8 + 0x24) = auVar36;
-  *(undefined1 (*) [16])(puVar8 + 0x26) = auVar31;
-  iVar15 = 0;
-  *(undefined1 (*) [16])(puVar8 + 0x28) = auVar32;
-  *(undefined1 (*) [16])(puVar8 + 0x2a) = auVar43;
-  auVar31 = vectorMergeHighWord(*(undefined1 (*) [16])((uint)(piVar11 + 0x28) & 0xfffffff0),
-                                *(undefined1 (*) [16])((uint)(piVar11 + 0x30) & 0xfffffff0));
-  ppRVar28 = &DepthPass;
-  auVar43 = vectorMergeLowWord(*(undefined1 (*) [16])((uint)(piVar11 + 0x28) & 0xfffffff0),
-                               *(undefined1 (*) [16])((uint)(piVar11 + 0x30) & 0xfffffff0));
-  auVar34 = vectorMergeHighWord(*(undefined1 (*) [16])((uint)(piVar11 + 0x2c) & 0xfffffff0),
-                                *(undefined1 (*) [16])((uint)(piVar11 + 0x34) & 0xfffffff0));
-  auVar36 = vectorMergeLowWord(*(undefined1 (*) [16])((uint)(piVar11 + 0x2c) & 0xfffffff0),
-                               *(undefined1 (*) [16])((uint)(piVar11 + 0x34) & 0xfffffff0));
-  auVar32 = vectorMergeHighWord(auVar31,auVar34);
-  auVar34 = vectorMergeLowWord(auVar31,auVar34);
-  auVar31 = vectorMergeHighWord(auVar43,auVar36);
-  auVar43 = vectorMergeLowWord(auVar43,auVar36);
-  *(undefined1 (*) [16])(puVar8 + 0x2c) = auVar32;
-  *(undefined1 (*) [16])(puVar8 + 0x2e) = auVar34;
-  *(undefined1 (*) [16])(puVar8 + 0x30) = auVar31;
-  *(undefined1 (*) [16])(puVar8 + 0x32) = auVar43;
-  do {
-    pRVar6 = *ppRVar28;
-    lVar18 = uVar19 - 0x120;
-    lVar13 = 8;
-    *pRVar6->command = 0x441efc;
-    pRVar6->command[1] = 0;
-    pRVar27 = pRVar6->command + 2;
-    pRVar6->command = pRVar27;
-    do {
-      pRVar20 = (RsxCmd *)lVar18;
-      *pRVar27 = *pRVar20;
-      pRVar27 = pRVar6->command;
-      pRVar6->command = pRVar27 + 1;
-      lVar18 = lVar18 + 8;
-      pRVar27[1] = pRVar20[1];
-      pRVar27 = pRVar6->command + 1;
-      pRVar6->command = pRVar27;
-      lVar13 = lVar13 + -1;
-    } while (lVar13 != 0);
-    pRVar6 = *ppRVar28;
-    lVar18 = uVar19 - 0xe0;
-    lVar13 = 8;
-    *pRVar6->command = 0x441efc;
-    pRVar6->command[1] = 8;
-    pRVar27 = pRVar6->command + 2;
-    pRVar6->command = pRVar27;
-    do {
-      pRVar20 = (RsxCmd *)lVar18;
-      *pRVar27 = *pRVar20;
-      pRVar27 = pRVar6->command;
-      pRVar6->command = pRVar27 + 1;
-      lVar18 = lVar18 + 8;
-      pRVar27[1] = pRVar20[1];
-      pRVar27 = pRVar6->command + 1;
-      pRVar6->command = pRVar27;
-      lVar13 = lVar13 + -1;
-    } while (lVar13 != 0);
-    iVar15 = iVar15 + 1;
-    ppRVar28 = ppRVar28 + 1;
-  } while (iVar15 < 0xb);
-  lVar13 = 8;
-  *(undefined4 *)((int)puVar8 + 0x1ac) = 0;
-  *(undefined4 *)(puVar8 + 0x35) = 0;
-  *(undefined4 *)((int)puVar8 + 0x1a4) = 0;
-  *(undefined4 *)(puVar8 + 0x34) = 0x3f800000;
-  *(undefined4 *)((int)puVar8 + 0x1bc) = 0;
-  *(undefined4 *)(puVar8 + 0x37) = 0;
-  *(undefined4 *)((int)puVar8 + 0x1b4) = 0x3f800000;
-  *(undefined4 *)(puVar8 + 0x36) = 0;
-  pRVar6 = DepthPass;
-  *(undefined4 *)((int)puVar8 + 0x1cc) = 0;
-  *(undefined4 *)(puVar8 + 0x39) = 0x3f800000;
-  *(undefined4 *)((int)puVar8 + 0x1c4) = 0;
-  *(undefined4 *)(puVar8 + 0x38) = 0;
-  *(undefined4 *)((int)puVar8 + 0x1dc) = 0x3f800000;
-  *(undefined4 *)(puVar8 + 0x3b) = 0;
-  *(undefined4 *)((int)puVar8 + 0x1d4) = 0;
-  *(undefined4 *)(puVar8 + 0x3a) = 0;
-  lVar18 = uVar19 - 0xa0;
-  *pRVar6->command = 0x441efc;
-  pRVar6->command[1] = 4;
-  pRVar27 = pRVar6->command + 2;
-  pRVar6->command = pRVar27;
-  do {
-    pRVar20 = (RsxCmd *)lVar18;
-    *pRVar27 = *pRVar20;
-    pRVar27 = pRVar6->command;
-    pRVar6->command = pRVar27 + 1;
-    lVar18 = lVar18 + 8;
-    pRVar27[1] = pRVar20[1];
-    pRVar27 = pRVar6->command + 1;
-    pRVar6->command = pRVar27;
-    lVar13 = lVar13 + -1;
-  } while (lVar13 != 0);
-  uVar19 = ZEXT48(&g_FrustumPlanes[0].x);
-  uVar21 = ZEXT48(&g_FrustumPlanes[0].y);
-  uVar25 = ZEXT48(&g_FrustumPlanes[0].z);
-  uVar26 = ZEXT48(&g_FrustumPlanes[0].w);
-  lVar18 = 6;
-  piVar16 = piVar11;
-  do {
-    piVar29 = piVar16 + 200;
-    piVar16 = piVar16 + 4;
-    auVar43 = auRam00000000 >> 0x60 & (GPiece<16>)0xffffffff;
-    uVar7 = storeVectorElementWordIndexed
-                      (auVar43 | auVar43 << 0x20 | auVar43 << 0x40 | auVar43 << 0x60,0,uVar19);
-    *(undefined4 *)uVar19 = uVar7;
-    uVar19 = uVar19 + 0x10;
-    auVar43 = auRam00000000 >> 0x40 & (GPiece<16>)0xffffffff;
-    uVar7 = storeVectorElementWordIndexed
-                      (auVar43 | auVar43 << 0x20 | auVar43 << 0x40 | auVar43 << 0x60,0,uVar21);
-    *(undefined4 *)uVar21 = uVar7;
-    uVar21 = uVar21 + 0x10;
-    auVar43 = *(undefined1 (*) [16])((uint)piVar29 & 0xfffffff0) >> 0x20 &
-              (GPiece<16>)0xffffffff;
-    uVar7 = storeVectorElementWordIndexed
-                      (auVar43 | auVar43 << 0x20 | auVar43 << 0x40 | auVar43 << 0x60,0,uVar25);
-    *(undefined4 *)uVar25 = uVar7;
-    uVar25 = uVar25 + 0x10;
-    auVar43 = *(undefined1 (*) [16])((uint)piVar29 & 0xfffffff0) & (GPiece<16>)0xffffffff;
-    uVar7 = storeVectorElementWordIndexed
-                      (auVar43 | auVar43 << 0x20 | auVar43 << 0x40 | auVar43 << 0x60,0,uVar26);
-    *(undefined4 *)uVar26 = uVar7;
-    uVar26 = uVar26 + 0x10;
-    lVar18 = lVar18 + -1;
-  } while (lVar18 != 0);
-  auVar36 = *(undefined1 (*) [16])((uint)(piVar11 + 0xe0) & 0xfffffff0);
-  auVar43 = auVar36 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar34 = auVar36 >> 0x40 & (GPiece<16>)0xffffffff;
-  auVar36 = auVar36 >> 0x20 & (GPiece<16>)0xffffffff;
-  DAT_00a24608 = storeVectorElementWordIndexed
-                           (auVar43 | auVar43 << 0x20 | auVar43 << 0x40 | auVar43 << 0x60,0x4608,
-                            0xa20000);
-  DAT_00a2460c = storeVectorElementWordIndexed
-                           (auVar34 | auVar34 << 0x20 | auVar34 << 0x40 | auVar34 << 0x60,4,0xa24608
-                           );
-  DAT_00a24610 = storeVectorElementWordIndexed
-                           (auVar36 | auVar36 << 0x20 | auVar36 << 0x40 | auVar36 << 0x60,8,0xa24608
-                           );
-  return;
+    IdolDraw *idol = Idol();
+    float fovDeg = FastAtan2Inline(g_ViewContext.yratio, 1.0f) * 57.295776f * g_ViewContext.fovScale;
+
+    idol->vtable->SetPerspective(fovDeg, 0.1f, 1200.0f, idol);
+
+    /* the camera as a 4x4 (its rotation rows across, its position below) */
+    Mtx4 camera;
+    camera.v0.x = GameCamera.mtx0.v0.x;
+    camera.v0.y = GameCamera.mtx0.v1.x;
+    camera.v0.z = GameCamera.mtx0.v2.x;
+    camera.v0.w = 0.0f;
+    camera.v1.x = GameCamera.mtx0.v0.y;
+    camera.v1.y = GameCamera.mtx0.v1.y;
+    camera.v1.z = GameCamera.mtx0.v2.y;
+    camera.v1.w = 0.0f;
+    camera.v2.x = GameCamera.mtx0.v0.z;
+    camera.v2.y = GameCamera.mtx0.v1.z;
+    camera.v2.z = GameCamera.mtx0.v2.z;
+    camera.v2.w = 0.0f;
+    camera.v3.x = GameCamera.posX;
+    camera.v3.y = GameCamera.posY;
+    camera.v3.z = GameCamera.posZ;
+    camera.v3.w = 1.0f;
+    idol->vtable->SetView(idol, &camera);
+
+    Mtx4 proj;
+    Mtx4 view;
+    Mtx4_Transpose(&proj, &idol->viewProjMtx);
+    Mtx4_Transpose(&view, &idol->viewMtx);
+
+    RenderingStep **passes = &DepthPass;
+    for (int i = 0; i < DRAW_PASS_CNT; i++) {
+        EmitVertexConstMtx(passes[i], 0, &proj);
+        EmitVertexConstMtx(passes[i], 8, &view);
+    }
+
+    Mtx4 identity;
+    FastMemSetZero(&identity, sizeof(identity));
+    identity.v0.x = 1.0f;
+    identity.v1.y = 1.0f;
+    identity.v2.z = 1.0f;
+    identity.v3.w = 1.0f;
+    EmitVertexConstMtx(DepthPass, 4, &identity);
+
+    for (int i = 0; i < 6; i++) {
+        g_FrustumPlanes[i] = idol->frustumPlanes[i];
+    }
+    g_FrustumExtra.x = idol->frustumOrigin.x;
+    g_FrustumExtra.y = idol->frustumOrigin.y;
+    g_FrustumExtra.z = idol->frustumOrigin.z;
 }
 
 
 // 0x0066088 (0x504 bytes)
+/* GameCamera's matrices from its orientation (or its euler angles when the debug camera has
+   control): mtx0 the view, matrix/mtx2 with the projections, mtx3 the non-perspective one, mtx4
+   the HUD one; then the SPU view and the passes */
 void ComposeCameraMatrix(void)
-
 {
-  undefined8 uVar1;
-  double extraout_f1;
-  double extraout_f1_00;
-  double extraout_f1_01;
-  double extraout_f1_02;
-  double extraout_f1_03;
-  double dVar2;
-  double dVar3;
-  double dVar4;
-  double dVar5;
-  double dVar6;
-  double dVar7;
-  double dVar8;
-  double dVar9;
-  float local_e0;
-  float local_dc;
-  float local_d8;
-  float local_d4;
-  float local_d0;
-  float local_cc;
-  float local_c8;
-  float local_c4;
-  float local_c0;
-  float local_bc;
-  float local_b8;
-  float local_b4;
-  float local_a0;
-  float local_9c;
-  float local_98;
-  float local_90;
-  float local_8c;
-  float local_88;
-  float local_80;
-  float local_7c;
-  float local_78;
-  
-  if (ControlMode == 0) {
-    local_e0 = GameCamera.orientMtx.forward.x;
-    local_dc = GameCamera.orientMtx.forward.y;
-    local_d8 = GameCamera.orientMtx.forward.z;
-    local_d4 = GameCamera.orientMtx.forward.w;
-    local_d0 = GameCamera.orientMtx.right.x;
-    local_cc = GameCamera.orientMtx.right.y;
-    local_c8 = GameCamera.orientMtx.right.z;
-    local_c4 = GameCamera.orientMtx.right.w;
-    local_c0 = GameCamera.orientMtx.up.x;
-    local_bc = GameCamera.orientMtx.up.y;
-    local_b8 = GameCamera.orientMtx.up.z;
-    local_b4 = GameCamera.orientMtx.up.w;
-  }
-  else {
-    uVar1 = _FSin((double)GameCamera.rot.azimuth,ControlMode,0);
-    dVar9 = extraout_f1;
-    uVar1 = _FSin((double)GameCamera.rot.azimuth,uVar1,1);
-    dVar8 = extraout_f1_00;
-    uVar1 = _FSin((double)GameCamera.rot.elevation,uVar1,0);
-    dVar7 = extraout_f1_01;
-    uVar1 = _FSin((double)GameCamera.rot.elevation,uVar1,1);
-    dVar6 = extraout_f1_02;
-    uVar1 = _FSin((double)GameCamera.rot.radius,uVar1,0);
-    dVar5 = extraout_f1_03;
-    dVar2 = (double)_FSin((double)GameCamera.rot.radius,uVar1,1);
-    dVar4 = (double)(float)(dVar7 * dVar5);
-    dVar3 = (double)(float)(dVar2 * dVar7);
-    memcpy(&local_a0,&DAT_0071f028,0x40);
-    local_a0 = (float)(dVar6 * dVar2);
-    local_9c = (float)(dVar6 * dVar5);
-    local_88 = (float)(dVar6 * dVar9);
-    local_78 = (float)(dVar8 * dVar6);
-    local_90 = (float)(dVar9 * dVar3 - (double)(float)(dVar8 * dVar5));
-    local_8c = (float)(dVar9 * dVar4 + (double)(float)(dVar8 * dVar2));
-    local_80 = (float)(dVar8 * dVar3 + (double)(float)(dVar9 * dVar5));
-    local_7c = (float)(dVar8 * dVar4 - (double)(float)(dVar2 * dVar9));
-    local_98 = (float)-dVar7;
-    memcpy(&local_e0,&local_a0,0x40);
-  }
-  GameCamera.mtx0.v0.x = -local_d0;
-  GameCamera.mtx0.v1.x = -local_cc;
-  GameCamera.mtx0.v2.x = -local_c8;
-  GameCamera.mtx0.v0.y = -local_c0;
-  GameCamera.mtx0.v1.y = -local_bc;
-  GameCamera.mtx0.v2.y = -local_b8;
-  GameCamera.mtx0.v3.x = 0.0;
-  GameCamera.mtx0.v0.z = local_e0;
-  GameCamera.mtx0.v3.y = 0.0;
-  GameCamera.mtx0.v1.z = local_dc;
-  GameCamera.mtx0.v2.z = local_d8;
-  GameCamera.mtx0.v3.z = 0.0;
-  GameCamera.mtx0.v0.w = 0.0;
-  GameCamera.mtx0.v1.w = 0.0;
-  GameCamera.mtx0.v2.w = 0.0;
-  GameCamera.mtx0.v3.w = 1.0;
-  FastVecMtx4Mul(0x951400,0x95d040,&GameCamera);
-  FastVecMtx4Mul(0x951440,0x95d080,&GameCamera);
-  GameCamera.mtx2.v0.x = GameCamera.mtx2.v0.w * g_ViewContext.hvdf[0] + GameCamera.mtx2.v0.x;
-  GameCamera.mtx2.v0.y = GameCamera.mtx2.v0.w * g_ViewContext.hvdf[1] + GameCamera.mtx2.v0.y;
-  GameCamera.mtx2.v0.z = GameCamera.mtx2.v0.w * g_ViewContext.hvdf[2] + GameCamera.mtx2.v0.z;
-  GameCamera.mtx2.v1.x = GameCamera.mtx2.v1.w * g_ViewContext.hvdf[0] + GameCamera.mtx2.v1.x;
-  GameCamera.mtx2.v1.y = GameCamera.mtx2.v1.w * g_ViewContext.hvdf[1] + GameCamera.mtx2.v1.y;
-  GameCamera.mtx2.v1.z = GameCamera.mtx2.v1.w * g_ViewContext.hvdf[2] + GameCamera.mtx2.v1.z;
-  GameCamera.mtx2.v2.x = GameCamera.mtx2.v2.w * g_ViewContext.hvdf[0] + GameCamera.mtx2.v2.x;
-  GameCamera.mtx2.v2.y = GameCamera.mtx2.v2.w * g_ViewContext.hvdf[1] + GameCamera.mtx2.v2.y;
-  GameCamera.mtx2.v2.z = GameCamera.mtx2.v2.w * g_ViewContext.hvdf[2] + GameCamera.mtx2.v2.z;
-  GameCamera.mtx2.v3.x = GameCamera.mtx2.v3.w * g_ViewContext.hvdf[0] + GameCamera.mtx2.v3.x;
-  GameCamera.mtx2.v3.y = GameCamera.mtx2.v3.w * g_ViewContext.hvdf[1] + GameCamera.mtx2.v3.y;
-  GameCamera.mtx2.v3.z = GameCamera.mtx2.v3.w * g_ViewContext.hvdf[2] + GameCamera.mtx2.v3.z;
-  FastVecMtx4Mul(0x951480,0x95d0c0,&GameCamera);
-  GameCamera.mtx4.v0.x = g_ViewContext.hMtx.forward.x * g_ViewContext.guardX;
-  GameCamera.mtx4.v0.y = g_ViewContext.hMtx.forward.y * g_ViewContext.guardX;
-  GameCamera.mtx4.v0.z = g_ViewContext.hMtx.forward.z * g_ViewContext.guardX;
-  GameCamera.mtx4.v0.w = g_ViewContext.hMtx.forward.w * g_ViewContext.guardX;
-  GameCamera.mtx4.v1.x = g_ViewContext.hMtx.right.x * g_ViewContext.guardX;
-  GameCamera.mtx4.v1.y = g_ViewContext.hMtx.right.y * g_ViewContext.guardX;
-  GameCamera.mtx4.v1.z = g_ViewContext.hMtx.right.z * g_ViewContext.guardX;
-  GameCamera.mtx4.v1.w = g_ViewContext.hMtx.right.w * g_ViewContext.guardX;
-  GameCamera.mtx4.v2.x = g_ViewContext.hMtx.up.x;
-  GameCamera.mtx4.v2.y = g_ViewContext.hMtx.up.y;
-  GameCamera.mtx4.v2.z = g_ViewContext.hMtx.up.z;
-  GameCamera.mtx4.v2.w = g_ViewContext.hMtx.up.w;
-  GameCamera.mtx4.v3.x = g_ViewContext.hMtx.position.x;
-  GameCamera.mtx4.v3.y = g_ViewContext.hMtx.position.y;
-  GameCamera.mtx4.v3.z = g_ViewContext.hMtx.position.z;
-  GameCamera.mtx4.v3.w = g_ViewContext.hMtx.position.w;
-  FastVecMtx4Mul(0x9514c0,0x9514c0,&GameCamera);
-  DAT_0095d200 = GameCamera.mtx0.v0.x;
-  DAT_0095d204 = GameCamera.mtx0.v0.y;
-  DAT_0095d208 = GameCamera.mtx0.v0.z;
-  DAT_0095d20c = GameCamera.mtx0.v0.w;
-  DAT_0095d210 = GameCamera.mtx0.v1.x;
-  DAT_0095d214 = GameCamera.mtx0.v1.y;
-  DAT_0095d218 = GameCamera.mtx0.v1.z;
-  DAT_0095d21c = GameCamera.mtx0.v1.w;
-  DAT_0095d220 = GameCamera.mtx0.v2.x;
-  DAT_0095d224 = GameCamera.mtx0.v2.y;
-  DAT_0095d228 = GameCamera.mtx0.v2.z;
-  DAT_0095d22c = GameCamera.mtx0.v2.w;
-  CameraCollPos.x = GameCamera.posX * 1024.0;
-  CameraCollPos.y = GameCamera.posY * 1024.0;
-  CameraCollPos.z = GameCamera.posZ * 1024.0;
-  CameraCollPos.w = 1024.0;
-  DAT_0159c340 = GameCamera.posX;
-  DAT_0159c344 = GameCamera.posY;
-  DAT_0159c348 = GameCamera.posZ;
-  DAT_0159c34c[0] = ((u8 *)&GameCamera.posW)[0];
-  DAT_0159c34c[1] = ((u8 *)&GameCamera.posW)[1];
-  DAT_0159c34c[2] = ((u8 *)&GameCamera.posW)[2];
-  DAT_0159c34c[3] = ((u8 *)&GameCamera.posW)[3];
-  UploadViewMatricesToPasses();
-  return;
+    Mtx4 orient;
+
+    if (ControlMode == 0) {
+        orient.v0 = GameCamera.orientMtx.forward;
+        orient.v1 = GameCamera.orientMtx.right;
+        orient.v2 = GameCamera.orientMtx.up;
+    }
+    else {
+        float sinAz = std::_FSin(GameCamera.rot.azimuth, 0);
+        float cosAz = std::_FSin(GameCamera.rot.azimuth, 1);
+        float sinEl = std::_FSin(GameCamera.rot.elevation, 0);
+        float cosEl = std::_FSin(GameCamera.rot.elevation, 1);
+        float sinRoll = std::_FSin(GameCamera.rot.radius, 0);
+        float cosRoll = std::_FSin(GameCamera.rot.radius, 1);
+        Mtx4 euler;
+
+        memcpy(&euler, &g_CameraEulerBase, sizeof(euler));
+        euler.v0.x = cosEl * cosRoll;
+        euler.v0.y = cosEl * sinRoll;
+        euler.v0.z = -sinEl;
+        euler.v1.x = sinAz * (cosRoll * sinEl) - cosAz * sinRoll;
+        euler.v1.y = sinAz * (sinEl * sinRoll) + cosAz * cosRoll;
+        euler.v1.z = cosEl * sinAz;
+        euler.v2.x = cosAz * (cosRoll * sinEl) + sinAz * sinRoll;
+        euler.v2.y = cosAz * (sinEl * sinRoll) - cosRoll * sinAz;
+        euler.v2.z = cosAz * cosEl;
+        memcpy(&orient, &euler, sizeof(orient));
+    }
+
+    /* the view: camera right across x (negated), up across y (negated), forward across z */
+    GameCamera.mtx0.v0.x = -orient.v1.x;
+    GameCamera.mtx0.v1.x = -orient.v1.y;
+    GameCamera.mtx0.v2.x = -orient.v1.z;
+    GameCamera.mtx0.v0.y = -orient.v2.x;
+    GameCamera.mtx0.v1.y = -orient.v2.y;
+    GameCamera.mtx0.v2.y = -orient.v2.z;
+    GameCamera.mtx0.v3.x = 0.0f;
+    GameCamera.mtx0.v0.z = orient.v0.x;
+    GameCamera.mtx0.v3.y = 0.0f;
+    GameCamera.mtx0.v1.z = orient.v0.y;
+    GameCamera.mtx0.v2.z = orient.v0.z;
+    GameCamera.mtx0.v3.z = 0.0f;
+    GameCamera.mtx0.v0.w = 0.0f;
+    GameCamera.mtx0.v1.w = 0.0f;
+    GameCamera.mtx0.v2.w = 0.0f;
+    GameCamera.mtx0.v3.w = 1.0f;
+
+    FastVecMtx4Mul(&GameCamera.matrix, &g_ViewContext.fMtx, &GameCamera.mtx0);
+    FastVecMtx4Mul(&GameCamera.mtx2, &g_ViewContext.nfMtx, &GameCamera.mtx0);
+
+    Vec4 *rows = &GameCamera.mtx2.v0;
+    for (int i = 0; i < 4; i++) {
+        rows[i].x = rows[i].w * g_ViewContext.hvdf.x + rows[i].x;
+        rows[i].y = rows[i].w * g_ViewContext.hvdf.y + rows[i].y;
+        rows[i].z = rows[i].w * g_ViewContext.hvdf.z + rows[i].z;
+    }
+
+    FastVecMtx4Mul(&GameCamera.mtx3, &g_ViewContext.hMtx, &GameCamera.mtx0);
+
+    float guard = g_ViewContext.guard.x;
+    GameCamera.mtx4.v0.x = g_ViewContext.hMtx.v0.x * guard;
+    GameCamera.mtx4.v0.y = g_ViewContext.hMtx.v0.y * guard;
+    GameCamera.mtx4.v0.z = g_ViewContext.hMtx.v0.z * guard;
+    GameCamera.mtx4.v0.w = g_ViewContext.hMtx.v0.w * guard;
+    GameCamera.mtx4.v1.x = g_ViewContext.hMtx.v1.x * guard;
+    GameCamera.mtx4.v1.y = g_ViewContext.hMtx.v1.y * guard;
+    GameCamera.mtx4.v1.z = g_ViewContext.hMtx.v1.z * guard;
+    GameCamera.mtx4.v1.w = g_ViewContext.hMtx.v1.w * guard;
+    GameCamera.mtx4.v2 = g_ViewContext.hMtx.v2;
+    GameCamera.mtx4.v3 = g_ViewContext.hMtx.v3;
+    FastVecMtx4Mul(&GameCamera.mtx4, &GameCamera.mtx4, &GameCamera.mtx0);
+
+    g_CullView.rot.v0 = GameCamera.mtx0.v0;
+    g_CullView.rot.v1 = GameCamera.mtx0.v1;
+    g_CullView.rot.v2 = GameCamera.mtx0.v2;
+    g_CullView.pos.x = GameCamera.posX * 1024.0f;
+    g_CullView.pos.y = GameCamera.posY * 1024.0f;
+    g_CullView.pos.z = GameCamera.posZ * 1024.0f;
+    g_CullView.pos.w = 1024.0f;
+    g_ViewCamPos.x = GameCamera.posX;
+    g_ViewCamPos.y = GameCamera.posY;
+    g_ViewCamPos.z = GameCamera.posZ;
+    g_ViewCamPos.w = GameCamera.posW;
+
+    UploadViewMatricesToPasses();
 }
 
 
 // 0x0066598 (0x278 bytes)
+/* the water's fog settings (in world units, intensities 0..1) into its shader constants and
+   the forward passes' c19 and c20 */
 void RebuildSharedWaveTables(void)
-
 {
-  RsxCmd RVar1;
-  undefined4 uVar2;
-  RenderingStep *pRVar3;
-  RenderingStep *pRVar4;
-  uint uVar5;
-  RsxCmd *pRVar6;
-  RsxCmd *pRVar7;
-  ulonglong uVar8;
-  RsxCmd *pRVar9;
-  RsxCmd *pRVar10;
-  longlong lVar11;
-  GPiece<16> auVar12;
-  GPiece<16> auVar13;
-  GPiece<16> auVar14;
-  GPiece<16> auVar15;
-  GPiece<16> auVar16;
-  GPiece<16> auVar17;
-  GPiece<16> auVar18;
-  GPiece<16> auVar19;
-  RsxCmd local_20 [6];
-  
-  uVar5 = DAT_00a15f64;
-  uVar8 = (ulonglong)DAT_00a15f64;
-  if (DAT_00a15f64 != 0) {
-    auVar18 = ZEXT416(0xffffffff);
-    auVar12 = auVar18 | auVar18 << 0x20 | auVar18 << 0x40 | auVar18 << 0x60;
-    auVar18 = ZEXT416(0xffffffff);
-    auVar16 = auVar18 | auVar18 << 0x20 | auVar18 << 0x40 | auVar18 << 0x60;
-    auVar18 = ZEXT416(0xffffffff);
-    auVar18 = auVar18 | auVar18 << 0x20 | auVar18 << 0x40 | auVar18 << 0x60;
-    auVar13 = vectorShiftLeftIntegerWord(auVar12,auVar12);
-    auVar17 = vectorShiftLeftIntegerWord(auVar16,auVar16);
-    auVar19 = vectorShiftLeftIntegerWord(auVar18,auVar18);
-    *(float *)(DAT_00a15f64 + 0x20) = g_ViewContext.fogNearDist * 0.0009765625;
-    auVar18 = loadVectorLeftIndexed(0x230,0x95cf80);
-    auVar16 = loadVectorLeftIndexed(0x234,0x95cf80);
-    auVar12 = vectorConvertFromSignedFixedPointWord(auVar18,0);
-    auVar16 = vectorConvertFromSignedFixedPointWord(auVar16,0);
-    *(float *)(uVar5 + 0x24) = g_ViewContext.fogFarDist * 0.0009765625;
-    auVar18 = loadVectorLeftIndexed(4,0x6658c);
-    auVar18 = auVar18 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar14 = auVar18 | auVar18 << 0x20 | auVar18 << 0x40 | auVar18 << 0x60;
-    auVar15 = loadVectorLeftIndexed(0x238,0x95cf80);
-    auVar18 = vectorMultiplyAddFloatingPoint(auVar12,auVar14,auVar13);
-    pRVar6 = local_20;
-    lVar11 = 2;
-    *(float *)(uVar5 + 0x28) = -(g_ViewContext.fogNearIntensity * 0.003921569 - 1.0);
-    auVar18 = auVar18 >> 0x60 & (GPiece<16>)0xffffffff;
-    auVar13 = vectorConvertFromSignedFixedPointWord(auVar15,0);
-    auVar12 = vectorMultiplyAddFloatingPoint(auVar16,auVar14,auVar17);
-    auVar16 = vectorMultiplyAddFloatingPoint(auVar13,auVar14,auVar19);
-    *(float *)(uVar5 + 0x2c) = -(g_ViewContext.fogFarIntensity * 0.003921569 - 1.0);
-    auVar12 = auVar12 >> 0x60 & (GPiece<16>)0xffffffff;
-    uVar2 = storeVectorElementWordIndexed
-                      (auVar18 | auVar18 << 0x20 | auVar18 << 0x40 | auVar18 << 0x60,0x10,uVar8);
-    *(undefined4 *)(uVar5 + 0x10 & 0xfffffffc) = uVar2;
-    uVar2 = storeVectorElementWordIndexed
-                      (auVar12 | auVar12 << 0x20 | auVar12 << 0x40 | auVar12 << 0x60,0x14,uVar8);
-    *(undefined4 *)(uVar5 + 0x14 & 0xfffffffc) = uVar2;
-    auVar18 = auVar16 >> 0x60 & (GPiece<16>)0xffffffff;
-    uVar2 = storeVectorElementWordIndexed
-                      (auVar18 | auVar18 << 0x20 | auVar18 << 0x40 | auVar18 << 0x60,0x18,uVar8);
-    *(undefined4 *)(uVar5 + 0x18 & 0xfffffffc) = uVar2;
-    pRVar3 = ForwardPass;
-    pRVar10 = ForwardPass->command;
-    pRVar7 = pRVar10 + 2;
-    *pRVar10 = NV4097_SET_TRANSFORM_CONSTANT_LOAD_x5;
-    pRVar10[1] = 0x13;
-    pRVar3->command = pRVar7;
-    pRVar10 = pRVar6;
-    do {
-      pRVar9 = pRVar3->command;
-      RVar1 = *pRVar10;
-      pRVar3->command = pRVar9 + 1;
-      *pRVar7 = RVar1;
-      pRVar7 = pRVar10 + 1;
-      pRVar10 = pRVar10 + 2;
-      pRVar9[1] = *pRVar7;
-      pRVar7 = pRVar3->command + 1;
-      pRVar3->command = pRVar7;
-      pRVar4 = ForwardPass;
-      lVar11 = lVar11 + -1;
-    } while (lVar11 != 0);
-    lVar11 = 2;
-    pRVar9 = (RsxCmd *)(DAT_00a15f64 + 0x10);
-    pRVar10 = ForwardPass->command;
-    pRVar7 = pRVar10 + 2;
-    *pRVar10 = NV4097_SET_TRANSFORM_CONSTANT_LOAD_x5;
-    pRVar10[1] = 0x14;
-    pRVar4->command = pRVar7;
-    do {
-      pRVar10 = pRVar4->command;
-      RVar1 = *pRVar9;
-      pRVar4->command = pRVar10 + 1;
-      *pRVar7 = RVar1;
-      pRVar7 = pRVar9 + 1;
-      pRVar9 = pRVar9 + 2;
-      pRVar10[1] = *pRVar7;
-      pRVar7 = pRVar4->command + 1;
-      pRVar4->command = pRVar7;
-      pRVar3 = OceanForwardPass;
-      lVar11 = lVar11 + -1;
-    } while (lVar11 != 0);
-    lVar11 = 2;
-    pRVar10 = OceanForwardPass->command;
-    pRVar7 = pRVar10 + 2;
-    *pRVar10 = NV4097_SET_TRANSFORM_CONSTANT_LOAD_x5;
-    pRVar10[1] = 0x13;
-    pRVar3->command = pRVar7;
-    do {
-      pRVar10 = pRVar3->command;
-      RVar1 = *pRVar6;
-      pRVar3->command = pRVar10 + 1;
-      *pRVar7 = RVar1;
-      pRVar7 = pRVar6 + 1;
-      pRVar6 = pRVar6 + 2;
-      pRVar10[1] = *pRVar7;
-      pRVar7 = pRVar3->command + 1;
-      pRVar3->command = pRVar7;
-      pRVar4 = OceanForwardPass;
-      lVar11 = lVar11 + -1;
-    } while (lVar11 != 0);
-    lVar11 = 2;
-    pRVar7 = (RsxCmd *)(DAT_00a15f64 + 0x10);
-    pRVar10 = OceanForwardPass->command;
-    *pRVar10 = NV4097_SET_TRANSFORM_CONSTANT_LOAD_x5;
-    pRVar6 = pRVar10 + 2;
-    pRVar10[1] = 0x14;
-    pRVar4->command = pRVar6;
-    do {
-      pRVar10 = pRVar4->command;
-      RVar1 = *pRVar7;
-      pRVar4->command = pRVar10 + 1;
-      *pRVar6 = RVar1;
-      pRVar6 = pRVar7 + 1;
-      pRVar7 = pRVar7 + 2;
-      pRVar10[1] = *pRVar6;
-      pRVar6 = pRVar4->command + 1;
-      pRVar4->command = pRVar6;
-      lVar11 = lVar11 + -1;
-    } while (lVar11 != 0);
-  }
-  return;
+    float *waterConsts = (float *)(uintptr_t)DAT_00a15f64;
+
+    if (waterConsts == NULL) {
+        return;
+    }
+
+    float fog[4];
+    fog[0] = g_ViewContext.fogNearDist * 0.0009765625f;
+    fog[1] = g_ViewContext.fogFarDist * 0.0009765625f;
+    fog[2] = 1.0f - g_ViewContext.fogNearIntensity * 0.003921569f;
+    fog[3] = 1.0f - g_ViewContext.fogFarIntensity * 0.003921569f;
+    waterConsts[8] = fog[0];
+    waterConsts[9] = fog[1];
+    waterConsts[10] = fog[2];
+    waterConsts[11] = fog[3];
+
+    /* the depth fog as 1 / (far - near) and -near / (far - near) */
+    float range = fog[1] - fog[0];
+    waterConsts[4] = 1.0f / range;
+    waterConsts[5] = -fog[0] / range;
+    waterConsts[6] = 1.0f / range;
+
+    EmitVertexConstVec(ForwardPass, 19, fog);
+    EmitVertexConstVec(ForwardPass, 20, &waterConsts[4]);
+    EmitVertexConstVec(OceanForwardPass, 19, fog);
+    EmitVertexConstVec(OceanForwardPass, 20, &waterConsts[4]);
+}
+
+/* 1 / cos(atan(ratio)): how much longer a radius gets at the view's edge */
+static inline float ViewRadPad(float ratio)
+{
+    return 1.0f / FastCosInline(FastAtan2Inline(ratio, 1.0f));
+}
+
+/* a PS2 GIF tag: NLOOP in byte 0, the register count in byte 2 */
+static inline void ViewGifTag(u8 *tag, u8 nloop, u8 nregs)
+{
+    tag[0] = nloop;
+    tag[1] = 0;
+    tag[2] = nregs;
+    tag[3] = 0;
 }
 
 
 // 0x00668d0 (0x1008 bytes)
 // inlined: FastAtan2 @0x66a98, FastAtan2 @0x66c90, FastAtan2 @0x66e68, FastAtan2 @0x67010, FastAtan2 @0x6702c
-/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
-
+/* everything in g_ViewContext that follows from the screen size, the view angle, the clip
+   planes and the fog: the ratios, the three projection matrices, the fixed-point scales the
+   PS2 renderers used, the fog line, and the copies the other renderers and SPU jobs read */
 void UpdateViewContext(void)
-
 {
-  bool bVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  float fVar7;
-  float fVar8;
-  float fVar9;
-  ulonglong *puVar10;
-  int iVar11;
-  int iVar12;
-  float fVar13;
-  float fVar14;
-  float fVar15;
-  ulonglong uVar16;
-  longlong lVar17;
-  longlong lVar18;
-  longlong lVar19;
-  ulonglong uVar20;
-  float *pfVar21;
-  longlong lVar22;
-  ulonglong unaff_r25;
-  ulonglong unaff_r26;
-  ulonglong unaff_r27;
-  ulonglong unaff_r28;
-  ulonglong unaff_r29;
-  ulonglong unaff_r30;
-  ulonglong unaff_r31;
-  ulonglong in_LR;
-  longlong lVar23;
-  double dVar24;
-  double dVar25;
-  double dVar26;
-  double dVar27;
-  ulonglong in_f14;
-  ulonglong in_f15;
-  ulonglong in_f16;
-  ulonglong in_f17;
-  ulonglong in_f18;
-  ulonglong in_f19;
-  ulonglong in_f20;
-  ulonglong in_f21;
-  ulonglong in_f22;
-  ulonglong in_f23;
-  ulonglong in_f24;
-  ulonglong in_f25;
-  double dVar28;
-  ulonglong in_f26;
-  ulonglong in_f27;
-  ulonglong in_f28;
-  ulonglong in_f29;
-  ulonglong in_f30;
-  ulonglong in_f31;
-  double dVar29;
-  GPiece<16> auVar30;
-  GPiece<16> auVar31;
-  GPiece<16> auVar32;
-  GPiece<16> auVar33;
-  GPiece<16> auVar34;
-  GPiece<16> auVar35;
-  GPiece<16> auVar36;
-  GPiece<16> auVar37;
-  GPiece<16> auVar38;
-  GPiece<16> auVar39;
-  GPiece<16> auVar40;
-  GPiece<16> auVar41;
-  GPiece<16> auVar42;
-  GPiece<16> auVar43;
-  GPiece<16> auVar44;
-  GPiece<16> auVar45;
-  GPiece<16> auVar46;
-  GPiece<16> auVar47;
-  GPiece<16> auVar48;
-  GPiece<16> auVar49;
-  GPiece<16> auVar50;
-  GPiece<16> auVar51;
-  GPiece<16> auVar52;
-  GPiece<16> auVar53;
-  GPiece<16> auVar54;
-  
-  uVar16 = ZEXT48(&stack0x00000000);
-  lVar18 = uVar16 - 0x220;
-  puVar10 = (ulonglong *)lVar18;
-  *puVar10 = uVar16;
-  puVar10[0x46] = in_LR;
-  puVar10[0x32] = in_f14;
-  puVar10[0x33] = in_f15;
-  puVar10[0x34] = in_f16;
-  puVar10[0x35] = in_f17;
-  puVar10[0x36] = in_f18;
-  puVar10[0x37] = in_f19;
-  puVar10[0x38] = in_f20;
-  puVar10[0x39] = in_f21;
-  puVar10[0x3a] = in_f22;
-  puVar10[0x3b] = in_f23;
-  puVar10[0x3c] = in_f24;
-  puVar10[0x3d] = in_f25;
-  puVar10[0x3e] = in_f26;
-  puVar10[0x3f] = in_f27;
-  puVar10[0x40] = in_f28;
-  puVar10[0x41] = in_f29;
-  puVar10[0x42] = in_f30;
-  puVar10[0x43] = in_f31;
-  puVar10[0x31] = unaff_r31;
-  DAT_00735fe0 = g_ViewContext.fogFarIntensity;
-  fVar15 = g_ViewContext.fogNearIntensity;
-  fVar13 = g_ViewContext.fogFarDist;
-  fVar14 = g_ViewContext.fogNearDist;
-  fVar5 = g_ViewContext.yclip;
-  fVar9 = g_ViewContext.xclip;
-  fVar4 = g_ViewContext.ypix;
-  fVar2 = g_ViewContext.xpix;
-  DAT_0095d27c = g_ViewContext.pad_1C4[0xe];
-  DAT_0095d278 = g_ViewContext.pad_1C4[0xd];
-  DAT_0095d26c = g_ViewContext.pad_1C4[10];
-  g_ViewContext.pad_1C4[0xb] = (u32)g_ViewContext.farClip;
-  g_ViewContext.pad_1C4[0xc] = (u32)g_ViewContext.nearClip;
-  bVar1 = Cutscene == 0;
-  puVar10[0x30] = unaff_r30;
-  puVar10[0x2f] = unaff_r29;
-  puVar10[0x2e] = unaff_r28;
-  puVar10[0x2d] = unaff_r27;
-  puVar10[0x2c] = unaff_r26;
-  puVar10[0x2b] = unaff_r25;
-  DAT_00735d58 = g_ViewContext.fogNearIntensity;
-  fVar8 = g_ViewContext.xratio;
-  if (bVar1) {
-    fVar3 = 0.775;
-  }
-  else {
-    fVar3 = 0.756;
-  }
-  dVar26 = (double)g_ViewContext.xratio;
-  g_ViewContext.pad_1C4[3] = (u32)(fVar9 / fVar2);
-  g_ViewContext.pad_1C4[4] = (u32)(fVar5 / fVar4);
-  fVar2 = (float)(dVar26 * (double)fVar3);
-  dVar29 = 1.0;
-  g_ViewContext.xclipratio = (float)g_ViewContext.pad_1C4[3];
-  g_ViewContext.yclipratio = (float)g_ViewContext.pad_1C4[4];
-  g_ViewContext.yratio = fVar2;
-  *(undefined4 *)((int)puVar10 + 0x94) = 0x3f800000;
-  *(float *)(puVar10 + 0x13) = fVar8;
-  *(float *)((int)puVar10 + 0x9c) = (float)(1.0 - ABS(dVar26));
-  dVar27 = 0.0;
-  uVar20 = (ulonglong)(*(uint *)((int)puVar10 + 0x9c) >> 0x1e) & 2 |
-           (ulonglong)(*(uint *)(puVar10 + 0x13) >> 0x1d) & 4;
-  fVar8 = *(float *)(&g_atanQuadrantTable + (int)(uVar20 << 2));
-  dVar28 = ABS((double)*(float *)((int)puVar10 + 0x94));
-  if (*(float *)((int)puVar10 + 0x9c) - 0.0 < 0.0) {
-    dVar28 = ABS(dVar26);
-  }
-  fVar4 = *(float *)(((uint)(uVar20 << 2) | 0x735900) + 4);
-  dVar24 = ABS((double)*(float *)(puVar10 + 0x13));
-  if (*(float *)((int)puVar10 + 0x9c) - 0.0 < 0.0) {
-    dVar24 = dVar29;
-  }
-  dVar25 = dVar27;
-  if (0.0 < dVar28) {
-    lVar17 = uVar16 - 0x210;
-    lVar19 = uVar16 - 0x120;
-    lVar22 = uVar16 - 0x110;
-    lVar23 = 2;
-    fVar9 = (float)(dVar24 - dVar28) / (float)(dVar24 + dVar28);
-    fVar5 = fVar9 * fVar9;
-    *(float *)(puVar10 + 0x20) = fVar9;
-    *(float *)((int)puVar10 + 0x104) = fVar9;
-    *(float *)(puVar10 + 0x21) = fVar9;
-    *(float *)((int)puVar10 + 0x10c) = fVar9;
-    fVar9 = fVar5 * fVar5;
-    *(float *)((int)puVar10 + 0x104) = *(float *)((int)puVar10 + 0x104) * fVar5;
-    *(float *)(puVar10 + 0x21) = *(float *)(puVar10 + 0x21) * fVar9;
-    *(float *)((int)puVar10 + 0x10c) = *(float *)((int)puVar10 + 0x10c) * fVar9 * fVar5;
-    do {
-      *(float *)((int)lVar17 + 0x100) = *(float *)((int)lVar17 + 0xf0) * fVar9 * fVar9;
-      iVar11 = (int)lVar19;
-      lVar17 = lVar17 + 8;
-      lVar19 = lVar19 + 8;
-      *(float *)((int)lVar22 + 4) = *(float *)(iVar11 + 4) * fVar9 * fVar9;
-      lVar22 = lVar22 + 8;
-      lVar23 = lVar23 + -1;
-    } while (lVar23 != 0);
-    lVar23 = 4;
-    lVar22 = uVar16 - 0x120;
-    pfVar21 = (float *)&DAT_007358e0;
-    lVar17 = lVar18;
-    lVar19 = lVar22;
-    do {
-      fVar9 = *pfVar21;
-      fVar5 = pfVar21[1];
-      pfVar21 = pfVar21 + 2;
-      *(float *)((int)lVar17 + 0x100) = *(float *)((int)lVar17 + 0x100) * fVar9;
-      lVar17 = lVar17 + 8;
-      *(float *)((int)lVar19 + 4) = *(float *)((int)lVar19 + 4) * fVar5;
-      lVar19 = lVar19 + 8;
-      lVar23 = lVar23 + -1;
-    } while (lVar23 != 0);
-    lVar19 = 2;
-    lVar17 = lVar18;
-    dVar28 = dVar27;
-    do {
-      iVar11 = (int)lVar17;
-      lVar17 = lVar17 + 0x10;
-      iVar12 = (int)lVar22;
-      lVar22 = lVar22 + 0x10;
-      dVar28 = (double)((float)(dVar28 + (double)*(float *)(iVar11 + 0x100)) +
-                        *(float *)(iVar12 + 4) + *(float *)(iVar12 + 8) + *(float *)(iVar12 + 0xc));
-      lVar19 = lVar19 + -1;
-    } while (lVar19 != 0);
-    dVar25 = (double)((float)(dVar28 + 0.7853981852531433) * fVar8 + fVar4);
-  }
-  dVar28 = ABS((double)fVar2);
-  fVar8 = (float)(dVar25 + 1.570796251296997);
-  *(undefined4 *)(puVar10 + 0x11) = 0x3f800000;
-  fVar4 = 3.1415925 - fVar8;
-  if (fVar8 - (3.1415925 - fVar8) < 0.0) {
-    fVar4 = fVar8;
-  }
-  fVar9 = -3.1415925 - fVar8;
-  if ((-3.1415925 - fVar8) - fVar4 < 0.0) {
-    fVar9 = fVar4;
-  }
-  fVar8 = fVar9 * fVar9;
-  fVar4 = fVar8 * fVar8 * fVar9;
-  fVar5 = fVar8 * fVar4;
-  *(float *)(puVar10 + 0x12) = (float)(1.0 - dVar28);
-  *(float *)((int)puVar10 + 0x8c) = fVar2;
-  g_ViewContext.pad_1C4[7] =
-       (u32)(1.0 / (fVar8 * fVar5 * 2.601887e-06 +
-                   fVar5 * -0.0001980741 +
-                   fVar4 * 0.0083330255 + fVar8 * fVar9 * -0.16666657 + fVar9));
-  uVar20 = (ulonglong)(*(uint *)(puVar10 + 0x12) >> 0x1e) & 2 |
-           (ulonglong)(*(uint *)((int)puVar10 + 0x8c) >> 0x1d) & 4;
-  dVar24 = ABS((double)*(float *)(puVar10 + 0x11));
-  if (*(float *)(puVar10 + 0x12) - 0.0 < 0.0) {
-    dVar24 = dVar28;
-  }
-  dVar28 = ABS((double)*(float *)((int)puVar10 + 0x8c));
-  if (*(float *)(puVar10 + 0x12) - 0.0 < 0.0) {
-    dVar28 = dVar29;
-  }
-  fVar4 = *(float *)(&g_atanQuadrantTable + (int)(uVar20 << 2));
-  fVar8 = *(float *)(((uint)(uVar20 << 2) | 0x735900) + 4);
-  dVar25 = dVar27;
-  g_ViewContext.xradpad = (float)g_ViewContext.pad_1C4[7];
-  if (0.0 < dVar24) {
-    lVar17 = uVar16 - 0x210;
-    lVar19 = uVar16 - 0x140;
-    lVar22 = uVar16 - 0x130;
-    lVar23 = 2;
-    fVar9 = (float)(dVar28 - dVar24) / (float)(dVar28 + dVar24);
-    fVar5 = fVar9 * fVar9;
-    *(float *)(puVar10 + 0x1c) = fVar9;
-    *(float *)((int)puVar10 + 0xe4) = fVar9;
-    *(float *)(puVar10 + 0x1d) = fVar9;
-    *(float *)((int)puVar10 + 0xec) = fVar9;
-    fVar9 = fVar5 * fVar5;
-    *(float *)((int)puVar10 + 0xe4) = *(float *)((int)puVar10 + 0xe4) * fVar5;
-    *(float *)(puVar10 + 0x1d) = *(float *)(puVar10 + 0x1d) * fVar9;
-    *(float *)((int)puVar10 + 0xec) = *(float *)((int)puVar10 + 0xec) * fVar9 * fVar5;
-    do {
-      *(float *)((int)lVar17 + 0xe0) = *(float *)((int)lVar17 + 0xd0) * fVar9 * fVar9;
-      iVar11 = (int)lVar19;
-      lVar17 = lVar17 + 8;
-      lVar19 = lVar19 + 8;
-      *(float *)((int)lVar22 + 4) = *(float *)(iVar11 + 4) * fVar9 * fVar9;
-      lVar22 = lVar22 + 8;
-      lVar23 = lVar23 + -1;
-    } while (lVar23 != 0);
-    lVar23 = 4;
-    lVar22 = uVar16 - 0x140;
-    pfVar21 = (float *)&DAT_007358e0;
-    lVar17 = lVar18;
-    lVar19 = lVar22;
-    do {
-      fVar9 = *pfVar21;
-      fVar5 = pfVar21[1];
-      pfVar21 = pfVar21 + 2;
-      *(float *)((int)lVar17 + 0xe0) = *(float *)((int)lVar17 + 0xe0) * fVar9;
-      lVar17 = lVar17 + 8;
-      *(float *)((int)lVar19 + 4) = *(float *)((int)lVar19 + 4) * fVar5;
-      lVar19 = lVar19 + 8;
-      lVar23 = lVar23 + -1;
-    } while (lVar23 != 0);
-    lVar19 = 2;
-    lVar17 = lVar18;
-    dVar28 = dVar27;
-    do {
-      iVar11 = (int)lVar17;
-      lVar17 = lVar17 + 0x10;
-      iVar12 = (int)lVar22;
-      lVar22 = lVar22 + 0x10;
-      dVar28 = (double)((float)(dVar28 + (double)*(float *)(iVar11 + 0xe0)) + *(float *)(iVar12 + 4)
-                        + *(float *)(iVar12 + 8) + *(float *)(iVar12 + 0xc));
-      lVar19 = lVar19 + -1;
-    } while (lVar19 != 0);
-    dVar25 = (double)((float)(dVar28 + 0.7853981852531433) * fVar4 + fVar8);
-  }
-  fVar8 = (float)(dVar25 + 1.570796251296997);
-  fVar4 = (float)(dVar26 * (double)(float)g_ViewContext.pad_1C4[3]);
-  *(undefined4 *)((int)puVar10 + 0x7c) = 0x3f800000;
-  dVar28 = ABS((double)fVar4);
-  fVar9 = 3.1415925 - fVar8;
-  if (fVar8 - (3.1415925 - fVar8) < 0.0) {
-    fVar9 = fVar8;
-  }
-  *(float *)((int)puVar10 + 0x84) = (float)(1.0 - dVar28);
-  *(float *)(puVar10 + 0x10) = fVar4;
-  fVar4 = -3.1415925 - fVar8;
-  if ((-3.1415925 - fVar8) - fVar9 < 0.0) {
-    fVar4 = fVar9;
-  }
-  fVar5 = fVar4 * fVar4;
-  fVar9 = fVar5 * fVar5 * fVar4;
-  fVar8 = fVar5 * fVar9;
-  g_ViewContext.pad_1C4[8] =
-       (u32)(1.0 / (fVar5 * fVar8 * 2.601887e-06 +
-                   fVar8 * -0.0001980741 +
-                   fVar9 * 0.0083330255 + fVar5 * fVar4 * -0.16666657 + fVar4));
-  uVar20 = (ulonglong)(*(uint *)((int)puVar10 + 0x84) >> 0x1e) & 2 |
-           (ulonglong)(*(uint *)(puVar10 + 0x10) >> 0x1d) & 4;
-  dVar26 = ABS((double)*(float *)((int)puVar10 + 0x7c));
-  if (*(float *)((int)puVar10 + 0x84) - 0.0 < 0.0) {
-    dVar26 = dVar28;
-  }
-  dVar28 = ABS((double)*(float *)(puVar10 + 0x10));
-  if (*(float *)((int)puVar10 + 0x84) - 0.0 < 0.0) {
-    dVar28 = dVar29;
-  }
-  fVar4 = *(float *)(&g_atanQuadrantTable + (int)(uVar20 << 2));
-  fVar8 = *(float *)(((uint)(uVar20 << 2) | 0x735900) + 4);
-  dVar24 = dVar27;
-  g_ViewContext.yradpad = (float)g_ViewContext.pad_1C4[8];
-  if (0.0 < dVar26) {
-    lVar17 = uVar16 - 0x210;
-    lVar19 = uVar16 - 0x160;
-    lVar22 = uVar16 - 0x150;
-    lVar23 = 2;
-    fVar9 = (float)(dVar28 - dVar26) / (float)(dVar28 + dVar26);
-    fVar5 = fVar9 * fVar9;
-    *(float *)(puVar10 + 0x18) = fVar9;
-    *(float *)((int)puVar10 + 0xc4) = fVar9;
-    *(float *)(puVar10 + 0x19) = fVar9;
-    *(float *)((int)puVar10 + 0xcc) = fVar9;
-    fVar9 = fVar5 * fVar5;
-    *(float *)((int)puVar10 + 0xc4) = *(float *)((int)puVar10 + 0xc4) * fVar5;
-    *(float *)(puVar10 + 0x19) = *(float *)(puVar10 + 0x19) * fVar9;
-    *(float *)((int)puVar10 + 0xcc) = *(float *)((int)puVar10 + 0xcc) * fVar9 * fVar5;
-    do {
-      *(float *)((int)lVar17 + 0xc0) = *(float *)((int)lVar17 + 0xb0) * fVar9 * fVar9;
-      iVar11 = (int)lVar19;
-      lVar17 = lVar17 + 8;
-      lVar19 = lVar19 + 8;
-      *(float *)((int)lVar22 + 4) = *(float *)(iVar11 + 4) * fVar9 * fVar9;
-      lVar22 = lVar22 + 8;
-      lVar23 = lVar23 + -1;
-    } while (lVar23 != 0);
-    lVar23 = 4;
-    lVar22 = uVar16 - 0x160;
-    pfVar21 = (float *)&DAT_007358e0;
-    lVar17 = lVar18;
-    lVar19 = lVar22;
-    do {
-      fVar9 = *pfVar21;
-      fVar5 = pfVar21[1];
-      pfVar21 = pfVar21 + 2;
-      *(float *)((int)lVar17 + 0xc0) = *(float *)((int)lVar17 + 0xc0) * fVar9;
-      lVar17 = lVar17 + 8;
-      *(float *)((int)lVar19 + 4) = *(float *)((int)lVar19 + 4) * fVar5;
-      lVar19 = lVar19 + 8;
-      lVar23 = lVar23 + -1;
-    } while (lVar23 != 0);
-    lVar19 = 2;
-    lVar17 = lVar18;
-    dVar28 = dVar27;
-    do {
-      iVar11 = (int)lVar17;
-      lVar17 = lVar17 + 0x10;
-      iVar12 = (int)lVar22;
-      lVar22 = lVar22 + 0x10;
-      dVar28 = (double)((float)(dVar28 + (double)*(float *)(iVar11 + 0xc0)) + *(float *)(iVar12 + 4)
-                        + *(float *)(iVar12 + 8) + *(float *)(iVar12 + 0xc));
-      lVar19 = lVar19 + -1;
-    } while (lVar19 != 0);
-    dVar24 = (double)((float)(dVar28 + 0.7853981852531433) * fVar4 + fVar8);
-  }
-  fVar8 = (float)(dVar24 + 1.570796251296997);
-  fVar2 = (float)((double)fVar2 * (double)(float)g_ViewContext.pad_1C4[4]);
-  *(undefined4 *)(puVar10 + 0xe) = 0x3f800000;
-  dVar28 = ABS((double)fVar2);
-  fVar4 = 3.1415925 - fVar8;
-  if (fVar8 - (3.1415925 - fVar8) < 0.0) {
-    fVar4 = fVar8;
-  }
-  *(float *)(puVar10 + 0xf) = (float)(1.0 - dVar28);
-  *(float *)((int)puVar10 + 0x74) = fVar2;
-  fVar2 = -3.1415925 - fVar8;
-  if ((-3.1415925 - fVar8) - fVar4 < 0.0) {
-    fVar2 = fVar4;
-  }
-  uVar20 = (ulonglong)(*(uint *)(puVar10 + 0xf) >> 0x1e) & 2 |
-           (ulonglong)(*(uint *)((int)puVar10 + 0x74) >> 0x1d) & 4;
-  fVar8 = fVar2 * fVar2;
-  dVar26 = ABS((double)*(float *)(puVar10 + 0xe));
-  if (*(float *)(puVar10 + 0xf) - 0.0 < 0.0) {
-    dVar26 = dVar28;
-  }
-  fVar9 = *(float *)(&g_atanQuadrantTable + (int)(uVar20 << 2));
-  fVar5 = fVar8 * fVar8 * fVar2;
-  fVar3 = fVar8 * fVar5;
-  fVar4 = *(float *)(((uint)(uVar20 << 2) | 0x735900) + 4);
-  dVar28 = ABS((double)*(float *)((int)puVar10 + 0x74));
-  if (*(float *)(puVar10 + 0xf) - 0.0 < 0.0) {
-    dVar28 = dVar29;
-  }
-  if (0.0 < dVar26) {
-    lVar23 = 2;
-    fVar6 = (float)(dVar28 - dVar26) / (float)(dVar28 + dVar26);
-    fVar7 = fVar6 * fVar6;
-    *(float *)(puVar10 + 0x14) = fVar6;
-    *(float *)((int)puVar10 + 0xa4) = fVar6;
-    *(float *)(puVar10 + 0x15) = fVar6;
-    *(float *)((int)puVar10 + 0xac) = fVar6;
-    lVar22 = uVar16 - 0x210;
-    fVar6 = fVar7 * fVar7;
-    lVar17 = uVar16 - 0x180;
-    lVar19 = uVar16 - 0x170;
-    *(float *)((int)puVar10 + 0xa4) = *(float *)((int)puVar10 + 0xa4) * fVar7;
-    *(float *)(puVar10 + 0x15) = *(float *)(puVar10 + 0x15) * fVar6;
-    *(float *)((int)puVar10 + 0xac) = *(float *)((int)puVar10 + 0xac) * fVar6 * fVar7;
-    do {
-      *(float *)((int)lVar22 + 0xa0) = *(float *)((int)lVar22 + 0x90) * fVar6 * fVar6;
-      iVar11 = (int)lVar17;
-      lVar22 = lVar22 + 8;
-      lVar17 = lVar17 + 8;
-      *(float *)((int)lVar19 + 4) = *(float *)(iVar11 + 4) * fVar6 * fVar6;
-      lVar19 = lVar19 + 8;
-      lVar23 = lVar23 + -1;
-    } while (lVar23 != 0);
-    lVar23 = 4;
-    lVar22 = uVar16 - 0x180;
-    pfVar21 = (float *)&DAT_007358e0;
-    lVar17 = lVar18;
-    lVar19 = lVar22;
-    do {
-      fVar6 = *pfVar21;
-      fVar7 = pfVar21[1];
-      pfVar21 = pfVar21 + 2;
-      *(float *)((int)lVar17 + 0xa0) = *(float *)((int)lVar17 + 0xa0) * fVar6;
-      lVar17 = lVar17 + 8;
-      *(float *)((int)lVar19 + 4) = *(float *)((int)lVar19 + 4) * fVar7;
-      lVar19 = lVar19 + 8;
-      lVar23 = lVar23 + -1;
-    } while (lVar23 != 0);
-    lVar17 = 2;
-    do {
-      iVar11 = (int)lVar18;
-      iVar12 = (int)lVar22;
-      lVar18 = lVar18 + 0x10;
-      lVar22 = lVar22 + 0x10;
-      dVar27 = (double)((float)(dVar27 + (double)*(float *)(iVar11 + 0xa0)) + *(float *)(iVar12 + 4)
-                        + *(float *)(iVar12 + 8) + *(float *)(iVar12 + 0xc));
-      lVar17 = lVar17 + -1;
-    } while (lVar17 != 0);
-    dVar27 = (double)((float)(dVar27 + 0.7853981852531433) * fVar9 + fVar4);
-  }
-  fVar4 = (float)(dVar27 + 1.570796251296997);
-  fVar6 = fVar13 - fVar14;
-  DAT_00735d50 = ((DAT_00735fe0 - fVar15) * (float)g_ViewContext.pad_1C4[0xc]) / fVar6;
-  fVar9 = 3.1415925 - fVar4;
-  if (fVar4 - (3.1415925 - fVar4) < 0.0) {
-    fVar9 = fVar4;
-  }
-  g_ViewContext.fog1 = (fVar15 * fVar13 - DAT_00735fe0 * fVar14) / fVar6;
-  fVar13 = -3.1415925 - fVar4;
-  if ((-3.1415925 - fVar4) - fVar9 < 0.0) {
-    fVar13 = fVar9;
-  }
-  fVar4 = fVar13 * fVar13;
-  fVar9 = fVar4 * fVar4 * fVar13;
-  fVar7 = fVar4 * fVar9;
-  g_ViewContext.pad_1C4[6] = (u32)(float)(1.0 / (double)(float)g_ViewContext.pad_1C4[4]);
-  g_ViewContext.pad_1C4[5] = (u32)(float)(1.0 / (double)(float)g_ViewContext.pad_1C4[3]);
-  g_ViewContext.pad_1C4[9] =
-       (u32)(((1.0 / (fVar8 * fVar3 * 2.601887e-06 +
-                     fVar3 * -0.0001980741 +
-                     fVar5 * 0.0083330255 + fVar8 * fVar2 * -0.16666657 + fVar2)) /
-              (float)g_ViewContext.pad_1C4[7] +
-             (1.0 / (fVar4 * fVar7 * 2.601887e-06 +
-                    fVar7 * -0.0001980741 +
-                    fVar9 * 0.0083330255 + fVar4 * fVar13 * -0.16666657 + fVar13)) /
-             (float)g_ViewContext.pad_1C4[8]) * 0.5);
-  fRam0095d24c = g_ViewContext.yradpad;
-  fRam0095d248 = g_ViewContext.xradpad;
-  fRam0095d244 = g_ViewContext.yratio;
-  _DAT_0095d240 = g_ViewContext.xratio;
-  DAT_0095d270 = (float)g_ViewContext.pad_1C4[0xb];
-  DAT_0095d274 = (float)g_ViewContext.pad_1C4[0xc];
-  g_ViewContext.fogMult = (DAT_00735fe0 - fVar15) / (fVar6 * 0.0009765625);
-  DAT_00735d54 = DAT_00735fe0;
-  DAT_00735fe4 = DAT_00735d58;
-  DAT_00736030 = DAT_00735fe0;
-  DAT_00736034 = DAT_00735d58;
-  DAT_00735fdc = 0x437effff;
-  DAT_0073602c = 0x437effff;
-  g_ViewContext.fogAdd = -(fVar14 * 0.0009765625 * g_ViewContext.fogMult - fVar15);
-  DAT_00735fd8 = DAT_00735d50;
-  DAT_00736028 = DAT_00735d50;
-  DAT_00737c70 = DAT_00735d50;
-  DAT_0073adf0 = DAT_00735d50;
-  g_ViewContext.perspScale = DAT_00735d50;
-  DAT_0095d250 = (float)g_ViewContext.pad_1C4[3];
-  DAT_0095d254 = (float)g_ViewContext.pad_1C4[4];
-  DAT_0095d258 = (float)g_ViewContext.pad_1C4[5];
-  DAT_0095d25c = (float)g_ViewContext.pad_1C4[6];
-  DAT_0095d260 = (float)g_ViewContext.pad_1C4[7];
-  DAT_0095d264 = (float)g_ViewContext.pad_1C4[8];
-  DAT_0095d268 = (float)g_ViewContext.pad_1C4[9];
-  DAT_00e574e0 = DAT_00735d50;
-  ____Draw_SetupFogTable();
-  DAT_00e572d0 = 0x361fc873;
-  DAT_00e572d4 = 0xb61fc873;
-  DAT_00e572d8 = 0x3f000000;
-  dVar28 = (double)g_ViewContext.nearClip;
-  dVar26 = (double)g_ViewContext.farClip;
-  DAT_00e572dc = g_ViewContext.xpix / (float)((double)g_ViewContext.xratio * 210000.0);
-  g_ViewContext.fMtx.forward.y = 0.0;
-  g_ViewContext.fMtx.forward.z = 0.0;
-  g_ViewContext.fMtx.forward.w = 0.0;
-  g_ViewContext.fMtx.right.x = 0.0;
-  g_ViewContext.fMtx.right.z = 0.0;
-  g_ViewContext.fMtx.right.w = 0.0;
-  g_ViewContext.fMtx.up.x = 0.0;
-  g_ViewContext.fMtx.up.y = 0.0;
-  g_ViewContext.fMtx.forward.x = g_ViewContext.xpix / (float)((double)g_ViewContext.xratio * dVar28);
-  g_ViewContext.fMtx.right.y = g_ViewContext.ypix / (float)((double)g_ViewContext.yratio * dVar28);
-  fVar8 = (float)(dVar28 * (double)(float)(dVar26 - dVar28));
-  dVar27 = -8388080.0;
-  g_ViewContext.fMtx.position.x = 0.0;
-  g_ViewContext.fMtx.position.y = 0.0;
-  g_ViewContext.fMtx.up.w = (float)(dVar29 / dVar28) * g_ViewContext.perspScale;
-  g_ViewContext.fMtx.up.z = ((float)(dVar26 + dVar28) / fVar8) * -8.38808e+06;
-  g_ViewContext.fMtx.position.w = 0.0;
-  g_ViewContext.fMtx.position.z =
-       ((float)((double)(float)(dVar28 * -2.0) * dVar26) / fVar8) * -8.38808e+06;
-  FastMemCopy32(0x95d080,0x95d040,0x40);
-  g_ViewContext.nfMtx.up.w = (float)(dVar29 / (double)g_ViewContext.nearClip);
-  FastMemCopy32(0x95d0c0,0x95d080,0x40);
-  auVar31 = ZEXT416(0xffffffff);
-  auVar35 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar31 = ZEXT416(0xffffffff);
-  auVar37 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar31 = ZEXT416(0xffffffff);
-  auVar42 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar31 = ZEXT416(0xffffffff);
-  auVar39 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar36 = vectorShiftLeftIntegerWord(auVar35,auVar35);
-  auVar30 = loadVectorLeftIndexed(0x208,0x95cf80);
-  auVar31 = loadVectorLeftIndexed(0x44,0x66810);
-  auVar33 = loadVectorLeftIndexed(0x20c,0x95cf80);
-  auVar35 = vectorReciprocalEstimateFloatingPoint(auVar30);
-  auVar34 = vectorReciprocalEstimateFloatingPoint(auVar33);
-  auVar31 = auVar31 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar32 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar37 = vectorShiftLeftIntegerWord(auVar37,auVar37);
-  auVar39 = vectorShiftLeftIntegerWord(auVar39,auVar39);
-  auVar31 = ZEXT416(0xffffffff);
-  auVar53 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar31 = vectorNegativeMultiplySubtractFloatingPoint(auVar35,auVar30,auVar32);
-  auVar40 = vectorNegativeMultiplySubtractFloatingPoint(auVar34,auVar33,auVar32);
-  auVar36 = vectorMultiplyAddFloatingPoint(auVar35,auVar31,auVar36);
-  auVar34 = vectorMultiplyAddFloatingPoint(auVar34,auVar40,auVar37);
-  auVar38 = loadVectorLeftIndexed(0x210,0x95cf80);
-  auVar37 = vectorShiftLeftIntegerWord(auVar42,auVar42);
-  auVar40 = vectorReciprocalEstimateFloatingPoint(auVar38);
-  auVar31 = ZEXT416(0xffffffff);
-  auVar42 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar45 = loadVectorLeftIndexed(0xc0,0x95cf80);
-  auVar46 = loadVectorLeftIndexed(0x140,0x95cf80);
-  auVar35 = vectorReciprocalEstimateFloatingPoint(auVar45);
-  auVar43 = vectorNegativeMultiplySubtractFloatingPoint(auVar36,auVar30,auVar32);
-  auVar31 = vectorNegativeMultiplySubtractFloatingPoint(auVar34,auVar33,auVar32);
-  auVar41 = vectorShiftLeftIntegerWord(auVar42,auVar42);
-  auVar47 = vectorNegativeMultiplySubtractFloatingPoint(auVar40,auVar38,auVar32);
-  auVar36 = vectorMultiplyAddFloatingPoint(auVar36,auVar43,auVar39);
-  auVar34 = vectorMultiplyAddFloatingPoint(auVar34,auVar31,auVar37);
-  auVar31 = ZEXT416(0xffffffff);
-  auVar42 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar48 = vectorNegativeMultiplySubtractFloatingPoint(auVar35,auVar45,auVar32);
-  auVar37 = loadVectorLeftIndexed(0xd4,0x95cf80);
-  auVar31 = ZEXT416(0xffffffff);
-  auVar39 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar49 = vectorReciprocalEstimateFloatingPoint(auVar37);
-  auVar43 = vectorShiftLeftIntegerWord(auVar42,auVar42);
-  auVar31 = ZEXT416(0xffffffff);
-  auVar44 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar42 = vectorShiftLeftIntegerWord(auVar39,auVar39);
-  auVar50 = loadVectorLeftIndexed(0x154,0x95cf80);
-  auVar43 = vectorMultiplyAddFloatingPoint(auVar40,auVar47,auVar43);
-  auVar31 = ZEXT416(0xffffffff);
-  auVar31 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar40 = vectorNegativeMultiplySubtractFloatingPoint(auVar36,auVar30,auVar32);
-  auVar47 = vectorShiftLeftIntegerWord(auVar44,auVar44);
-  auVar44 = vectorNegativeMultiplySubtractFloatingPoint(auVar34,auVar33,auVar32);
-  auVar31 = vectorShiftLeftIntegerWord(auVar31,auVar31);
-  auVar39 = vectorMultiplyAddFloatingPoint(auVar35,auVar48,auVar31);
-  auVar31 = ZEXT416(0xffffffff);
-  auVar35 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar48 = vectorNegativeMultiplySubtractFloatingPoint(auVar43,auVar38,auVar32);
-  auVar40 = vectorMultiplyAddFloatingPoint(auVar36,auVar40,auVar41);
-  auVar42 = vectorMultiplyAddFloatingPoint(auVar34,auVar44,auVar42);
-  auVar41 = vectorShiftLeftIntegerWord(auVar53,auVar53);
-  auVar36 = vectorNegativeMultiplySubtractFloatingPoint(auVar49,auVar37,auVar32);
-  auVar31 = ZEXT416(0xffffffff);
-  auVar31 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar53 = loadVectorLeftIndexed(0x200,0x95cf80);
-  auVar35 = vectorShiftLeftIntegerWord(auVar35,auVar35);
-  auVar54 = vectorReciprocalEstimateFloatingPoint(auVar53);
-  auVar34 = vectorShiftLeftIntegerWord(auVar31,auVar31);
-  auVar44 = vectorMultiplyAddFloatingPoint(auVar43,auVar48,auVar35);
-  auVar31 = ZEXT416(0xffffffff);
-  auVar31 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar46 = vectorMultiplyAddFloatingPoint(auVar40,auVar46,auVar47);
-  auVar35 = auVar40 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar47 = vectorMultiplyAddFloatingPoint(auVar42,auVar50,auVar41);
-  auVar48 = vectorNegativeMultiplySubtractFloatingPoint(auVar39,auVar45,auVar32);
-  auVar43 = vectorMultiplyAddFloatingPoint(auVar49,auVar36,auVar34);
-  auVar49 = vectorShiftLeftIntegerWord(auVar31,auVar31);
-  auVar41 = loadVectorLeftIndexed(0x204,0x95cf80);
-  auVar31 = ZEXT416(0xffffffff);
-  auVar34 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar31 = ZEXT416(0xffffffff);
-  auVar31 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  g_ViewContext.pad_1B0[2] = (u32)(float)(dVar27 / (double)g_ViewContext.fMtx.up.z);
-  auVar36 = auVar42 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar50 = vectorShiftLeftIntegerWord(auVar34,auVar34);
-  auVar51 = vectorShiftLeftIntegerWord(auVar31,auVar31);
-  auVar31 = auVar46 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar34 = auVar47 >> 0x60 & (GPiece<16>)0xffffffff;
-  g_ViewContext.hMtx.forward.x =
-       (float)storeVectorElementWordIndexed
-                        (auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60,0x140,
-                         0x95cf80);
-  g_ViewContext.hMtx.right.y =
-       (float)storeVectorElementWordIndexed
-                        (auVar34 | auVar34 << 0x20 | auVar34 << 0x40 | auVar34 << 0x60,0x154,
-                         0x95cf80);
-  auVar31 = ZEXT416(0xffffffff);
-  auVar31 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar34 = vectorMultiplyAddFloatingPoint(auVar39,auVar48,auVar49);
-  auVar48 = vectorReciprocalEstimateFloatingPoint(auVar41);
-  auVar47 = vectorNegativeMultiplySubtractFloatingPoint(auVar54,auVar53,auVar32);
-  auVar49 = vectorNegativeMultiplySubtractFloatingPoint(auVar44,auVar38,auVar32);
-  auVar39 = vectorShiftLeftIntegerWord(auVar31,auVar31);
-  auVar46 = vectorNegativeMultiplySubtractFloatingPoint(auVar43,auVar37,auVar32);
-  g_ViewContext.pad_180[0] =
-       storeVectorElementWordIndexed
-                 (auVar35 | auVar35 << 0x20 | auVar35 << 0x40 | auVar35 << 0x60,0x180,0x95cf80);
-  auVar31 = ZEXT416(0xffffffff);
-  auVar52 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  g_ViewContext.pad_180[1] =
-       storeVectorElementWordIndexed
-                 (auVar36 | auVar36 << 0x20 | auVar36 << 0x40 | auVar36 << 0x60,0x184,0x95cf80);
-  g_ViewContext.hMtx.up.z = g_ViewContext.hMtx.up.z * -1.1921679e-07;
-  g_ViewContext.hMtx.position.z = g_ViewContext.hMtx.position.z * -1.1921679e-07;
-  g_ViewContext.pad_180[2] = 0xb4000210;
-  auVar45 = vectorNegativeMultiplySubtractFloatingPoint(auVar34,auVar45,auVar32);
-  auVar47 = vectorMultiplyAddFloatingPoint(auVar54,auVar47,auVar39);
-  auVar44 = vectorMultiplyAddFloatingPoint(auVar44,auVar49,auVar50);
-  auVar49 = vectorNegativeMultiplySubtractFloatingPoint(auVar48,auVar41,auVar32);
-  auVar31 = ZEXT416(0xffffffff);
-  auVar35 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar43 = vectorMultiplyAddFloatingPoint(auVar43,auVar46,auVar51);
-  auVar31 = ZEXT416(0xffffffff);
-  auVar51 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar36 = vectorShiftLeftIntegerWord(auVar52,auVar52);
-  auVar31 = ZEXT416(0xffffffff);
-  auVar39 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar31 = vectorShiftLeftIntegerWord(auVar35,auVar35);
-  auVar35 = auVar30 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar50 = vectorShiftLeftIntegerWord(auVar39,auVar39);
-  auVar46 = vectorMultiplyAddFloatingPoint(auVar34,auVar45,auVar36);
-  auVar39 = vectorNegativeMultiplySubtractFloatingPoint(auVar47,auVar53,auVar32);
-  auVar36 = auVar44 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar45 = vectorMultiplyAddFloatingPoint(auVar48,auVar49,auVar31);
-  auVar34 = vectorNegativeMultiplySubtractFloatingPoint(auVar43,auVar37,auVar32);
-  auVar31 = ZEXT416(0xffffffff);
-  auVar37 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar31 = auVar33 >> 0x60 & (GPiece<16>)0xffffffff;
-  g_ViewContext.pad_180[3] =
-       storeVectorElementWordIndexed
-                 (auVar36 | auVar36 << 0x20 | auVar36 << 0x40 | auVar36 << 0x60,0x18c,0x95cf80);
-  auVar36 = vectorShiftLeftIntegerWord(auVar37,auVar37);
-  auVar37 = vectorShiftLeftIntegerWord(auVar51,auVar51);
-  auVar46 = vectorMultiplyAddFloatingPoint(auVar46,auVar30,auVar50);
-  auVar47 = vectorMultiplyAddFloatingPoint(auVar47,auVar39,auVar36);
-  g_ViewContext.fontClipScale.x =
-       (float)storeVectorElementWordIndexed
-                        (auVar35 | auVar35 << 0x20 | auVar35 << 0x40 | auVar35 << 0x60,400,0x95cf80)
-  ;
-  auVar36 = vectorNegativeMultiplySubtractFloatingPoint(auVar45,auVar41,auVar32);
-  auVar37 = vectorMultiplyAddFloatingPoint(auVar43,auVar34,auVar37);
-  g_ViewContext.fontClipScale.y =
-       (float)storeVectorElementWordIndexed
-                        (auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60,0x194,
-                         0x95cf80);
-  auVar31 = ZEXT416(0xffffffff);
-  auVar35 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar31 = ZEXT416(0xffffffff);
-  auVar34 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar31 = ZEXT416(0xffffffff);
-  auVar43 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar31 = auVar38 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar49 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar31 = vectorShiftLeftIntegerWord(auVar35,auVar35);
-  auVar39 = vectorShiftLeftIntegerWord(auVar34,auVar34);
-  g_ViewContext.fontClipScale.z = -8.38808e+06;
-  auVar35 = auVar46 >> 0x60 & (GPiece<16>)0xffffffff;
-  g_ViewContext.fontClipScale.w = (float)storeVectorElementWordIndexed(auVar49,0x19c,0x95cf80);
-  auVar34 = vectorMultiplyAddFloatingPoint(auVar45,auVar36,auVar31);
-  auVar36 = vectorMultiplyAddFloatingPoint(auVar37,auVar33,auVar39);
-  auVar31 = ZEXT416(0xffffffff);
-  auVar39 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar46 = vectorNegativeMultiplySubtractFloatingPoint(auVar47,auVar53,auVar32);
-  auVar37 = vectorShiftLeftIntegerWord(auVar43,auVar43);
-  g_ViewContext.pad_1B0[0] =
-       storeVectorElementWordIndexed
-                 (auVar35 | auVar35 << 0x20 | auVar35 << 0x40 | auVar35 << 0x60,0x1b0,0x95cf80);
-  auVar31 = ZEXT416(0xffffffff);
-  auVar31 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar45 = vectorShiftLeftIntegerWord(auVar39,auVar39);
-  auVar48 = loadVectorLeftIndexed(0x214,0x95cf80);
-  auVar43 = vectorShiftLeftIntegerWord(auVar31,auVar31);
-  auVar35 = auVar48 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar39 = vectorNegativeMultiplySubtractFloatingPoint(auVar34,auVar41,auVar32);
-  auVar36 = auVar36 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar32 = vectorMultiplyAddFloatingPoint(auVar47,auVar46,auVar37);
-  auVar31 = ZEXT416(0xffffffff);
-  auVar31 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  auVar37 = vectorShiftLeftIntegerWord(auVar31,auVar31);
-  g_ViewContext.pad_1B0[1] =
-       storeVectorElementWordIndexed
-                 (auVar36 | auVar36 << 0x20 | auVar36 << 0x40 | auVar36 << 0x60,0x1b4,0x95cf80);
-  g_ViewContext.pad_1B0[3] = storeVectorElementWordIndexed(auVar49,0x1bc,0x95cf80);
-  g_ViewContext.hvdf[0] = 2048.0;
-  g_ViewContext.hvdf[1] = 2048.0;
-  auVar36 = vectorMultiplyAddFloatingPoint(auVar34,auVar39,auVar45);
-  g_ViewContext.hvdf[3] =
-       (float)storeVectorElementWordIndexed
-                        (auVar35 | auVar35 << 0x20 | auVar35 << 0x40 | auVar35 << 0x60,0x1ac,
-                         0x95cf80);
-  g_ViewContext.hvdf[2] = 8388112.0;
-  auVar34 = vectorMultiplyAddFloatingPoint(auVar32,auVar30,auVar43);
-  auVar31 = auVar38 >> 0x60 & (GPiece<16>)0xff;
-  auVar39 = auVar31 | auVar31 << 8 | auVar31 << 0x10 | auVar31 << 0x18 | auVar31 << 0x20 |
-            auVar31 << 0x28 | auVar31 << 0x30 | auVar31 << 0x38 | auVar31 << 0x40 | auVar31 << 0x48
-            | auVar31 << 0x50 | auVar31 << 0x58 | auVar31 << 0x60 | auVar31 << 0x68 |
-            auVar31 << 0x70 | auVar31 << 0x78;
-  auVar36 = vectorMultiplyAddFloatingPoint(auVar36,auVar33,auVar37);
-  auVar31 = auVar34 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar32 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  g_ViewContext.guardX = (float)storeVectorElementWordIndexed(auVar32,0x1c0,0x95cf80);
-  auVar31 = auVar36 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar37 = auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60;
-  g_ViewContext.pad_1C4[0] = storeVectorElementWordIndexed(auVar37,0x1c4,0x95cf80);
-  g_ViewContext.pad_1C4[1] = 0x3f800000;
-  g_ViewContext.pad_1C4[2] = 0x3f800000;
-  g_ViewContext.pad_00[0].piece<0,1>() = SUB41(g_ViewContext.fogFarIntensity,0);
-  g_ViewContext.pad_00[0].piece<1,1>() = 0;
-  g_ViewContext.pad_00[0].piece<2,1>() = 0xe;
-  g_ViewContext.pad_00[0].piece<3,1>() = 0;
-  auVar35[0] = g_ViewContext.field_40.up.x.piece<0,1>();
-  auVar35[1] = g_ViewContext.field_40.up.x.piece<1,1>();
-  auVar35[2] = g_ViewContext.field_40.up.x.piece<2,1>();
-  auVar35[3] = g_ViewContext.field_40.up.x.piece<3,1>();
-  auVar35.piece<4,4>() = g_ViewContext.field_40.up.y;
-  auVar35.piece<8,4>() = g_ViewContext.field_40.up.z;
-  auVar35.piece<12,4>() = g_ViewContext.field_40.up.w;
-  g_ViewContext.field_40.up.x.piece<0,1>() = storeVectorElementByteIndexed(auVar39,0x60,0x95cf80);
-  g_ViewContext.field_40.up.x.piece<1,1>() = 0;
-  g_ViewContext.field_40.up.x.piece<2,1>() = 0x12;
-  g_ViewContext.field_40.up.x.piece<3,1>() = 0;
-  g_ViewContext.field_40.position.x.piece<0,1>() = storeVectorElementByteIndexed(auVar39,0x70,0x95cf80);
-  g_ViewContext.field_40.position.x.piece<1,1>() = 0;
-  g_ViewContext.field_40.position.x.piece<2,1>() = 0x12;
-  g_ViewContext.field_40.position.x.piece<3,1>() = 0;
-  g_ViewContext.pad_80[0].piece<0,1>() = storeVectorElementByteIndexed(auVar39,0x80,0x95cf80);
-  g_ViewContext.pad_80[0].piece<1,1>() = 0;
-  g_ViewContext.pad_80[0].piece<2,1>() = 0x41;
-  g_ViewContext.pad_80[0].piece<3,1>() = 0;
-  g_ViewContext.pad_80[4].piece<0,1>() = storeVectorElementByteIndexed(auVar39,0x90,0x95cf80);
-  g_ViewContext.pad_80[4].piece<1,1>() = 0;
-  g_ViewContext.pad_80[4].piece<2,1>() = 0x41;
-  g_ViewContext.pad_80[4].piece<3,1>() = 0;
-  auVar31 = loadVectorLeftIndexed(0x4c,0x66810);
-  auVar31 = auVar31 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar31 = vectorPermute(auVar38,auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60,
-                          _DAT_00066860);
-  g_ViewContext.pad_00.piece<16,16>() = vectorPermute(auVar31,auVar35,_DAT_00066870);
-  auVar31 = loadVectorLeftIndexed(8,0x66810);
-  auVar35 = vectorPermute(auVar34,auVar36,_DAT_00066880);
-  auVar31 = auVar31 >> 0x60 & (GPiece<16>)0xffffffff;
-  _DAT_00735cf0 =
-       vectorPermute(auVar35,auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60,
-                     _DAT_00066890);
-  auVar31 = loadVectorLeftIndexed(0x48,0x66810);
-  auVar31 = auVar31 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar36 = vectorPermute(auVar40,auVar42,_DAT_000668a0);
-  auVar35 = vectorPermute(auVar30,auVar33,_DAT_000668a0);
-  auVar31 = vectorPermute(auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60,auVar44,
-                          _DAT_000668a0);
-  _DAT_00735db0 = vectorPermute(auVar36,auVar31,_DAT_00066890);
-  auVar31 = loadVectorLeftIndexed(0x3c,0x66810);
-  auVar31 = auVar31 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar31 = vectorPermute(auVar31 | auVar31 << 0x20 | auVar31 << 0x40 | auVar31 << 0x60,auVar38,
-                          _DAT_000668a0);
-  _DAT_00735ce0 = (Vec4)vectorPermute(auVar35,auVar31,_DAT_00066890);
-  _DAT_00735cd0 = (Vec4)vectorPermute(_DAT_000668b0,auVar48,_DAT_000668c0);
-  DAT_00735de0 = storeVectorElementWordIndexed(auVar32,0xa0,0x735d40);
-  DAT_00735de4 = storeVectorElementWordIndexed(auVar37,0xa4,0x735d40);
-  _DAT_00735da0 = _DAT_00735cd0;
-  _DAT_00735dc0 = _DAT_00735ce0;
-  _DAT_00736040 = _DAT_00735ce0;
-  _DAT_00736050 = _DAT_00735cd0;
-  g_ViewContext.pad_00.piece<32,16>() = _DAT_00735cf0;
-  g_ViewContext.pad_00.piece<48,16>() = _DAT_00735db0;
-  g_ViewContext.field_40.forward = _DAT_00735ce0;
-  g_ViewContext.field_40.right = _DAT_00735cd0;
-  RebuildSharedWaveTables();
-  return;
+    ViewContext *view = &g_ViewContext;
+    float yratioScale = (Cutscene != 0) ? 0.756f : 0.775f;
+
+    view->sphereCheckB.x = view->farClip;
+    view->sphereCheckB.y = view->nearClip;
+    view->xclipratio = view->xclip / view->xpix;
+    view->yclipratio = view->yclip / view->ypix;
+    view->iguard.x = view->xclipratio;
+    view->iguard.y = view->yclipratio;
+    view->yratio = view->xratio * yratioScale;
+    view->xradpad = ViewRadPad(view->xratio);
+    view->yradpad = ViewRadPad(view->yratio);
+    view->sphereCheckA.x = view->xradpad;
+    view->sphereCheckA.y = view->yradpad;
+
+    float xradpadClip = ViewRadPad(view->xratio * view->xclipratio);
+    float yradpadClip = ViewRadPad(view->yratio * view->yclipratio);
+    view->sphereCheckA.z = (xradpadClip / view->xradpad + yradpadClip / view->yradpad) * 0.5f;
+    view->iguard.z = 1.0f / view->xclipratio;
+    view->iguard.w = 1.0f / view->yclipratio;
+
+    /* the fog as a line in depth */
+    float fogRange = view->fogFarDist - view->fogNearDist;
+    float fogSpan = view->fogFarIntensity - view->fogNearIntensity;
+    view->perspScale = fogSpan * view->nearClip / fogRange;
+    view->fog1 = (view->fogNearIntensity * view->fogFarDist - view->fogFarIntensity * view->fogNearDist) / fogRange;
+    view->fogMult = fogSpan / (fogRange * 0.0009765625f);
+    view->fogAdd = view->fogNearIntensity - view->fogNearDist * 0.0009765625f * view->fogMult;
+
+    g_CullView.ratio.x = view->xratio;
+    g_CullView.ratio.y = view->yratio;
+    g_CullView.ratio.z = view->xradpad;
+    g_CullView.ratio.w = view->yradpad;
+    g_CullView.iguard = view->iguard;
+    g_CullView.sphereCheckA = view->sphereCheckA;
+    g_CullView.sphereCheckB = view->sphereCheckB;
+
+    g_ViewFogA.x = view->perspScale;
+    g_ViewFogA.y = view->fogFarIntensity;
+    g_ViewFogA.z = view->fogNearIntensity;
+    g_ViewFogB.fog0 = view->perspScale;
+    g_ViewFogB.max = 254.99998f;
+    g_ViewFogB.fogFarIntensity = view->fogFarIntensity;
+    g_ViewFogB.fogNearIntensity = view->fogNearIntensity;
+    g_ViewFogC = g_ViewFogB;
+    g_ViewFog0D = view->perspScale;
+    g_ViewFog0E = view->perspScale;
+    g_ViewFog0F = view->perspScale;
+    Draw_SetupFogTable();
+
+    u32 pixelBits[2] = {0x361fc873, 0xb61fc873};    /* +-2.3776e-06 */
+    memcpy(&g_ViewPixelConsts.x, &pixelBits[0], sizeof(float));
+    memcpy(&g_ViewPixelConsts.y, &pixelBits[1], sizeof(float));
+    g_ViewPixelConsts.z = 0.5f;
+    g_ViewPixelConsts.w = view->xpix / (view->xratio * 210000.0f);
+
+    /* the projection: x, y to pixels, z to the PS2's 24-bit depth */
+    float nearClip = view->nearClip;
+    float farClip = view->farClip;
+    float depthRange = nearClip * (farClip - nearClip);
+    FastMemSetZero(&view->fMtx, sizeof(view->fMtx));
+    view->fMtx.v0.x = view->xpix / (view->xratio * nearClip);
+    view->fMtx.v1.y = view->ypix / (view->yratio * nearClip);
+    view->fMtx.v2.w = 1.0f / nearClip * view->perspScale;
+    view->fMtx.v2.z = (farClip + nearClip) / depthRange * -8388080.0f;
+    view->fMtx.v3.z = nearClip * -2.0f * farClip / depthRange * -8388080.0f;
+    FastMemCopy32(&view->nfMtx, &view->fMtx, sizeof(view->nfMtx));
+    view->nfMtx.v2.w = 1.0f / nearClip;
+    FastMemCopy32(&view->hMtx, &view->nfMtx, sizeof(view->hMtx));
+
+    view->hMtx.v0.x = view->hMtx.v0.x / view->xclip;
+    view->hMtx.v1.y = view->hMtx.v1.y / view->yclip;
+    view->hMtx.v2.z = view->hMtx.v2.z * -1.1921679e-07f;
+    view->hMtx.v3.z = view->hMtx.v3.z * -1.1921679e-07f;
+
+    view->hmgScale.x = 1.0f / view->xclip;
+    view->hmgScale.y = 1.0f / view->yclip;
+    view->hmgScale.z = -1.1921679e-07f;
+    view->hmgScale.w = 1.0f / view->perspScale;
+    view->ihmgScale.x = view->xclip;
+    view->ihmgScale.y = view->yclip;
+    view->ihmgScale.z = -8388080.0f;
+    view->ihmgScale.w = view->perspScale;
+    view->hvdf.x = 2048.0f;
+    view->hvdf.y = 2048.0f;
+    view->hvdf.z = 8388112.0f;
+    view->hvdf.w = view->fog1;
+    view->unSquish.x = view->xclip / view->fMtx.v0.x;
+    view->unSquish.y = view->yclip / view->fMtx.v1.y;
+    view->unSquish.z = -8388080.0f / view->fMtx.v2.z;
+    view->unSquish.w = view->perspScale;
+    view->guard.x = view->xclipratio;
+    view->guard.y = view->yclipratio;
+    view->guard.z = 1.0f;
+    view->guard.w = 1.0f;
+
+    /* the GIF tags (their NLOOP bytes take the low byte of a float, as the binary has it) */
+    ViewGifTag(view->headerBase[0][0], (u8)*(u32 *)&view->fogFarIntensity, 14);
+    ViewGifTag(view->headerTex, (u8)*(u32 *)&view->perspScale, 0x12);
+    ViewGifTag(view->headerTexNoFog, (u8)*(u32 *)&view->perspScale, 0x12);
+    ViewGifTag(view->headerGr, (u8)*(u32 *)&view->perspScale, 0x41);
+    ViewGifTag(view->headerGrNoFog, (u8)*(u32 *)&view->perspScale, 0x41);
+
+    Vec4 *rows = (Vec4 *)view->headerBase[0][0];
+    u32 *tagRow = (u32 *)&rows[1];
+    ViewGifTag((u8 *)&tagRow[0], (u8)*(u32 *)&view->perspScale, 0x12);
+    tagRow[1] = *(u32 *)&view->headerTex[4];
+    tagRow[2] = *(u32 *)&view->headerTex[8];
+    tagRow[3] = *(u32 *)&view->headerTex[12];
+    rows[2].x = view->unSquish.y;
+    rows[2].y = view->yclipratio;
+    rows[2].z = 1.0f;
+    rows[2].w = 1.0f;
+    rows[3] = view->hmgScale;
+    rows[4] = view->ihmgScale;
+    rows[5] = view->hvdf;
+
+    g_ViewConstsA.hvdf = view->hvdf;
+    g_ViewConstsA.ihmgScale = view->ihmgScale;
+    g_ViewConstsA.clipRow = rows[2];
+    g_ViewConstsB.hvdf = view->hvdf;
+    g_ViewConstsB.hmgScale = view->hmgScale;
+    g_ViewConstsB.ihmgScale = view->ihmgScale;
+    g_ViewConstsB.xclipratio = view->xclipratio;
+    g_ViewConstsB.yclipratio = view->yclipratio;
+    g_ViewIhmgScaleC = view->ihmgScale;
+    g_ViewHvdfC = view->hvdf;
+
+    RebuildSharedWaveTables();
 }
 
 
 // 0x00678d8 (0xec bytes)
+/* the level's fog, or the water's while the camera is under it, into the view */
 void UpdateFog(void)
-
 {
-  byte g;
-  byte b;
-  byte r;
-  
-  if (GameCamera.camUnderWater == 0) {
-    PartClipDist = 0x1f4000;
-    r = levelFog.r;
-    g = levelFog.g;
-    b = levelFog.b;
-    g_ViewContext.fogNearDist = LevelFogNearDist;
-    g_ViewContext.fogFarDist = LevelFogFarDist;
-    g_ViewContext.fogNearIntensity = LevelFogNearIntensity;
-    g_ViewContext.fogFarIntensity = LevelFogFarIntensity;
-  }
-  else {
-    PartClipDist = 0x40000;
-    r = WaterFog.r;
-    g = WaterFog.g;
-    b = WaterFog.b;
-    g_ViewContext.fogNearDist = WaterFogNearDist;
-    g_ViewContext.fogFarDist = WaterFogFarDist;
-    g_ViewContext.fogNearIntensity = WaterFogNearIntensity;
-    g_ViewContext.fogFarIntensity = WaterFogFarIntensity;
-  }
-  g_ViewContext.fogR = (int)r;
-  g_ViewContext.fogG = (int)g;
-  g_ViewContext.fogB = (int)b;
-  UpdateViewContext();
-  LevelFogMode = 0;
-  return;
+    RGBA color;
+
+    if (GameCamera.camUnderWater == 0) {
+        PartClipDist = 0x1f4000;
+        color = levelFog;
+        g_ViewContext.fogNearDist = LevelFogNearDist;
+        g_ViewContext.fogFarDist = LevelFogFarDist;
+        g_ViewContext.fogNearIntensity = LevelFogNearIntensity;
+        g_ViewContext.fogFarIntensity = LevelFogFarIntensity;
+    }
+    else {
+        PartClipDist = 0x40000;
+        color = WaterFog;
+        g_ViewContext.fogNearDist = WaterFogNearDist;
+        g_ViewContext.fogFarDist = WaterFogFarDist;
+        g_ViewContext.fogNearIntensity = WaterFogNearIntensity;
+        g_ViewContext.fogFarIntensity = WaterFogFarIntensity;
+    }
+
+    g_ViewContext.fogR = color.r;
+    g_ViewContext.fogG = color.g;
+    g_ViewContext.fogB = color.b;
+    UpdateViewContext();
+    LevelFogMode = 0;
 }
+
+/* the occlusion grid: a header {dataOfs, pad, zMin, zCnt, zRows[zCnt]}; each z row {yMin,
+   yCnt, yRows[yCnt]}; each y row {xMin, xCnt, cells[xCnt]} of 0x80-byte visibility bitmaps */
+struct OcclGridHeader {
+    int dataOfs;
+    u16 zMin;
+    u16 zCnt;
+    int zRows[1];
+};
+
+struct OcclGridRow {
+    u16 min;
+    u16 cnt;
+    int next[1];
+};
+
+struct OcclGridCells {
+    u16 min;
+    u16 cnt;
+    u16 cells[1];
+};
 
 
 // 0x00679c4 (0xe4 bytes)
-char * ParseOcclGrid(int x,int y,int z)
-
+/* the visibility bitmap of the 4-unit occlusion cell (x, y, z), or NULL where there is none */
+char *ParseOcclGrid(int x, int y, int z)
 {
-  int iVar1;
-  ushort *puVar2;
-  
-                    /* WARNING: Load size is inaccurate */
-  iVar1 = z - (uint)*(ushort *)((int)OcclGrid + 4);
-  if (((-1 < iVar1) && (iVar1 < (int)(uint)*(ushort *)((int)OcclGrid + 6))) &&
-     (iVar1 = *(int *)((int)OcclGrid + iVar1 * 4 + 8), iVar1 != 0)) {
-    puVar2 = (ushort *)((int)OcclGrid + iVar1);
-    iVar1 = y - (uint)*puVar2;
-    if (((-1 < iVar1) && (iVar1 < (int)(uint)puVar2[1])) && (*(int *)(puVar2 + iVar1 * 2 + 2) != 0))
-    {
-      puVar2 = (ushort *)((int)OcclGrid + *(int *)(puVar2 + iVar1 * 2 + 2));
-      iVar1 = x - (uint)*puVar2;
-      if (((-1 < iVar1) && (iVar1 < (int)(uint)puVar2[1])) && (puVar2[iVar1 + 2] != 0xffff)) {
-        return (char *)((int)OcclGrid + (uint)puVar2[iVar1 + 2] * 0x80 + *OcclGrid);
-      }
+    OcclGridHeader *grid = (OcclGridHeader *)OcclGrid;
+    int zi = z - grid->zMin;
+
+    if (zi < 0 || zi >= grid->zCnt || grid->zRows[zi] == 0) {
+        return NULL;
     }
-  }
-  return (char *)0x0;
+
+    OcclGridRow *zRow = (OcclGridRow *)((u8 *)grid + grid->zRows[zi]);
+    int yi = y - zRow->min;
+    if (yi < 0 || yi >= zRow->cnt || zRow->next[yi] == 0) {
+        return NULL;
+    }
+
+    OcclGridCells *yRow = (OcclGridCells *)((u8 *)grid + zRow->next[yi]);
+    int xi = x - yRow->min;
+    if (xi < 0 || xi >= yRow->cnt || yRow->cells[xi] == 0xffff) {
+        return NULL;
+    }
+
+    return (char *)grid + yRow->cells[xi] * 0x80 + grid->dataOfs;
 }
 
 
 // 0x0067ab0 (0xd0 bytes)
-char * GetOcclGridFromPair(int x0,int y0,int z0,int x1,int y1,int z1,float interp)
-
+/* the nearer of two cells' bitmaps (by interp), falling back to the other */
+char *GetOcclGridFromPair(int x0, int y0, int z0, int x1, int y1, int z1, float interp)
 {
-  char *pcVar1;
-  
-  if (0.5 <= interp) {
-    pcVar1 = ParseOcclGrid(x1,y1,z1);
-    if (pcVar1 == (char *)0x0) {
-      pcVar1 = ParseOcclGrid(x0,y0,z0);
+    char *cell;
+
+    if (interp >= 0.5f) {
+        cell = ParseOcclGrid(x1, y1, z1);
+        if (cell == NULL) {
+            cell = ParseOcclGrid(x0, y0, z0);
+        }
     }
-  }
-  else {
-    pcVar1 = ParseOcclGrid(x0,y0,z0);
-    if (pcVar1 == (char *)0x0) {
-      pcVar1 = ParseOcclGrid(x1,y1,z1);
+    else {
+        cell = ParseOcclGrid(x0, y0, z0);
+        if (cell == NULL) {
+            cell = ParseOcclGrid(x1, y1, z1);
+        }
     }
-  }
-  return pcVar1;
+
+    return cell;
+}
+
+/* the neighbour of (x, y, z) along one axis nearer the camera's fraction, or the other side */
+static inline char *OcclNeighbour(int x, int y, int z, int dx, int dy, int dz, float fraction)
+{
+    char *cell;
+
+    if (fraction >= 0.5f) {
+        cell = ParseOcclGrid(x + dx, y + dy, z + dz);
+        if (cell == NULL) {
+            cell = ParseOcclGrid(x - dx, y - dy, z - dz);
+        }
+    }
+    else {
+        cell = ParseOcclGrid(x - dx, y - dy, z - dz);
+        if (cell == NULL) {
+            cell = ParseOcclGrid(x + dx, y + dy, z + dz);
+        }
+    }
+
+    return cell;
 }
 
 
 // 0x0067b90 (0x558 bytes)
+/* OcclVisibility from the camera's occlusion cell. Outside the grid: the neighbours merged
+   (mode 0), the last cell, the octant table, or everything visible. */
 void BuildOcclVisibility(void)
-
 {
-  undefined8 x;
-  undefined8 y;
-  int z;
-  char *pcVar1;
-  char *pcVar2;
-  char *pcVar3;
-  int y_00;
-  undefined *puVar4;
-  double dVar5;
-  double dVar6;
-  double OCCL_SCALE;
-  int x_00;
-  
-  OCCL_SCALE = 0.25;
-  x = FastDoubleToInt((double)(GameCamera.posX * 0.25));
-  y = FastDoubleToInt((double)(float)((double)GameCamera.posY * OCCL_SCALE));
-  z = FastDoubleToInt((double)(float)((double)GameCamera.posZ * OCCL_SCALE));
-  x_00 = (int)x;
-  y_00 = (int)y;
-  pcVar1 = ParseOcclGrid(x_00,y_00,z);
-  if (pcVar1 == (char *)0x0) {
+    float scale = 0.25f;
+    int x = FastDoubleToInt(GameCamera.posX * scale);
+    int y = FastDoubleToInt(GameCamera.posY * scale);
+    int z = FastDoubleToInt(GameCamera.posZ * scale);
+    char *cell = ParseOcclGrid(x, y, z);
+
+    if (cell != NULL) {
+        OcclInvalidGridGp = 0;
+        FastMemCopy(OcclVisibility, cell, 0x80);
+        OcclPreviousGrid = (u32)(uintptr_t)cell;
+        OcclVisibility[0x7f] = OcclVisibility[0x7f] | 0x80;
+        return;
+    }
+
     OcclInvalidGridGp = 1;
-    puVar4 = (undefined *)0x0;
+
+    char *merged = NULL;
     if (OcclMode == 0) {
-      dVar5 = (double)FastIntToDouble(x);
-      dVar6 = 0.5;
-      if (0.5 <= (float)((double)GameCamera.posX * OCCL_SCALE - dVar5)) {
-        pcVar1 = ParseOcclGrid(x_00 + 1,y_00,z);
-        if (pcVar1 == (char *)0x0) {
-          pcVar1 = ParseOcclGrid(x_00 + -1,y_00,z);
+        char *nearX = OcclNeighbour(x, y, z, 1, 0, 0, GameCamera.posX * scale - (float)FastIntToDouble(x));
+        char *nearY = OcclNeighbour(x, y, z, 0, 1, 0, GameCamera.posY * scale - (float)FastIntToDouble(y));
+        char *nearZ = OcclNeighbour(x, y, z, 0, 0, 1, GameCamera.posZ * scale - (float)FastIntToDouble(z));
+
+        if (nearX != NULL || nearY != NULL || nearZ != NULL) {
+            merged = (char *)OcclVisibilityMerged;
+            FastMemSetZero(OcclVisibilityMerged, 0x80);
+            if (nearX != NULL) {
+                FastMemOr16((uint *)OcclVisibilityMerged, (uint *)OcclVisibilityMerged, (uint *)nearX, 0x80);
+            }
+            if (nearY != NULL) {
+                FastMemOr16((uint *)OcclVisibilityMerged, (uint *)OcclVisibilityMerged, (uint *)nearY, 0x80);
+            }
+            if (nearZ != NULL) {
+                FastMemOr16((uint *)OcclVisibilityMerged, (uint *)OcclVisibilityMerged, (uint *)nearZ, 0x80);
+            }
+            OcclPreviousGrid = (u32)(uintptr_t)OcclVisibilityMerged;
+            FastMemCopy(OcclVisibility, OcclVisibilityMerged, 0x80);
         }
-      }
-      else {
-        pcVar1 = ParseOcclGrid(x_00 + -1,y_00,z);
-        if (pcVar1 == (char *)0x0) {
-          pcVar1 = ParseOcclGrid(x_00 + 1,y_00,z);
-        }
-      }
-      dVar5 = (double)FastIntToDouble(y);
-      if (dVar6 <= (double)(float)((double)GameCamera.posY * OCCL_SCALE - dVar5)) {
-        pcVar2 = ParseOcclGrid(x_00,y_00 + 1,z);
-        if (pcVar2 == (char *)0x0) {
-          pcVar2 = ParseOcclGrid(x_00,y_00 + -1,z);
-        }
-      }
-      else {
-        pcVar2 = ParseOcclGrid(x_00,y_00 + -1,z);
-        if (pcVar2 == (char *)0x0) {
-          pcVar2 = ParseOcclGrid(x_00,y_00 + 1,z);
-        }
-      }
-      dVar5 = (double)FastIntToDouble();
-      if (dVar6 <= (double)(float)((double)GameCamera.posZ * OCCL_SCALE - dVar5)) {
-        pcVar3 = ParseOcclGrid(x_00,y_00,z + 1);
-        if (pcVar3 == (char *)0x0) {
-          pcVar3 = ParseOcclGrid(x_00,y_00,z + -1);
-        }
-      }
-      else {
-        pcVar3 = ParseOcclGrid(x_00,y_00,z + -1);
-        if (pcVar3 == (char *)0x0) {
-          pcVar3 = ParseOcclGrid(x_00,y_00,z + 1);
-        }
-      }
-      if (((pcVar1 != (char *)0x0) || (pcVar2 != (char *)0x0)) || (pcVar3 != (char *)0x0)) {
-        puVar4 = OcclVisibilityMerged;
-        FastMemSetZero(OcclVisibilityMerged,0x80);
-        if (pcVar1 != (char *)0x0) {
-          FastMemOr16(OcclVisibilityMerged,OcclVisibilityMerged,pcVar1,0x80);
-        }
-        if (pcVar2 != (char *)0x0) {
-          FastMemOr16(OcclVisibilityMerged,OcclVisibilityMerged,pcVar2,0x80);
-        }
-        if (pcVar3 != (char *)0x0) {
-          FastMemOr16(OcclVisibilityMerged,OcclVisibilityMerged,pcVar3,0x80);
-        }
-        OcclPreviousGrid = OcclVisibilityMerged;
-        FastMemCopy(OcclVisibility,OcclVisibilityMerged,0x80);
-      }
     }
-    if (puVar4 == (undefined *)0x0) {
-      if (OcclMode < 1) {
-        if (-1 < OcclMode) {
-          if ((ControlMode == 0) && (OcclPreviousGrid != (char *)0x0)) {
-            FastMemCopy(OcclVisibility,OcclPreviousGrid,0x80);
-          }
-          else {
-            FastMemSet(OcclVisibility,0xffffffffffffffff,0x80);
-          }
+
+    if (merged == NULL) {
+        if (OcclMode == 1) {
+            FastMemSet(OcclVisibility, -1, 0x80);
         }
-      }
-      else if (OcclMode < 2) {
-        FastMemSet(OcclVisibility,0xffffffffffffffff,0x80);
-      }
-      else if (OcclMode < 3) {
-        if (OcclOct == (void *)0x0) {
-          if ((ControlMode == 0) && (OcclPreviousGrid != (char *)0x0)) {
-            FastMemCopy(OcclVisibility,OcclPreviousGrid,0x80);
-          }
-          else {
-            FastMemSet(OcclVisibility,0xffffffffffffffff,0x80);
-          }
+        else if (OcclMode == 2 && OcclOct != NULL) {
+            /* the octant table: eight bitmaps around a point */
+            float *origin = (float *)OcclOct;
+            int octant = (GameCamera.posX - origin[0] > 0.0f) << 2 | (GameCamera.posY - origin[1] > 0.0f) << 1 |
+                         (GameCamera.posZ - origin[2] > 0.0f);
+
+            FastMemCopy(OcclVisibility, (u8 *)OcclOct + octant * 0x80 + 0x10, 0x80);
         }
-        else {
-                    /* WARNING: Load size is inaccurate */
-          FastMemCopy
-                    (OcclVisibility,
-                     ZEXT48(OcclOct) +
-                     ((ulonglong)(0.0 < GameCamera.posX - *OcclOct) << 2 |
-                     (ulonglong)(0.0 < GameCamera.posY - *(float *)((int)OcclOct + 4)) << 1 |
-                     (ulonglong)(0.0 < GameCamera.posZ - *(float *)((int)OcclOct + 8))) * 0x80 +
-                     0x10 & 0xffffffff,0x80);
+        else if (OcclMode == 0 || OcclMode == 2) {
+            if (ControlMode == 0 && OcclPreviousGrid != 0) {
+                FastMemCopy(OcclVisibility, (void *)(uintptr_t)OcclPreviousGrid, 0x80);
+            }
+            else {
+                FastMemSet(OcclVisibility, -1, 0x80);
+            }
         }
-      }
     }
-  }
-  else {
-    OcclInvalidGridGp = 0;
-    FastMemCopy(OcclVisibility,pcVar1,0x80);
-    OcclPreviousGrid = pcVar1;
-  }
-  OcclVisibility[0x7f] = OcclVisibility[0x7f] | 0x80;
-  return;
+
+    OcclVisibility[0x7f] = OcclVisibility[0x7f] | 0x80;
 }
 
 
 // 0x00680e8 (0x6c bytes)
-void UpdateOcclusion(int param_1)
-
+/* this frame's OcclVisibility (all on, or built from the grid), handed to the renderer */
+void Occlusion_Update(void)
 {
-  if (OcclUpdate == 0) {
-    FastMemSet(OcclVisibility,0xffffffffffffffff,0x80);
-  }
-  else if (OcclUpdate == 2) {
-    BuildOcclVisibility();
-  }
-  *(undefined **)(DAT_00902e9c + 0x41c) = OcclVisibility;
-  return;
+    if (OcclUpdate == 0) {
+        FastMemSet(OcclVisibility, -1, 0x80);
+    }
+    else if (OcclUpdate == 2) {
+        BuildOcclVisibility();
+    }
+
+    *(void **)((u8 *)(uintptr_t)g_pIdolDrawBase + 0x41c) = OcclVisibility;
 }
 
 
 // 0x0068160 (0x15c bytes)
+/* the view for the game's own frame buffer */
 void InitViewContext(void)
-
 {
-  double dVar1;
-  double dVar2;
-  
-  g_ScreenWidth = (int)g_FrameBufWidth;
-  g_ScreenHalfWidth = g_ScreenWidth >> 1;
-  DAT_00966b18 = g_ScreenHalfWidth * 0x10 + 0x8000;
-  g_ScreenHeight = (int)g_FrameBufHeight;
-  g_ScreenHalfHeight = g_ScreenHeight >> 1;
-  SCREEN_PROJECTION_MAP_X = (undefined4)((0x800U - (longlong)g_ScreenHalfWidth & 0xffffffff) << 4);
-  DAT_00966b1c = g_ScreenHalfHeight * 0x10 + 0x8000;
-  SCREEN_PROJECTION_MAP_Y = (undefined4)((0x800U - (longlong)g_ScreenHalfHeight & 0xffffffff) << 4);
-  DAT_00966b20 = *(undefined4 *)(g_pIdolDraw + 4);
-  DAT_00966b24 = *(undefined4 *)(g_pIdolDraw + 8);
-  g_ViewContext.nearClip = 32.0;
-  g_ViewContext.farClip = 745472.0;
-  g_ViewContext.xratio = 0.63;
-  dVar1 = (double)FastIntToDouble();
-  dVar2 = 0.5;
-  g_ViewContext.xpix = (float)(dVar1 * 0.5);
-  dVar1 = (double)FastIntToDouble(g_FrameBufHeight);
-  g_ViewContext.ypix = (float)(dVar1 * dVar2);
-  g_ViewContext.fogNearDist = 0.0;
-  g_ViewContext.fogFarDist = 524288.0;
-  g_ViewContext.fogNearIntensity = 255.0;
-  g_ViewContext.fogFarIntensity = 0.0;
-  FLOAT_0095d1c8 = 2.0;
-  g_ViewContext.xclip = g_ViewContext.xpix * 4.0;
-  g_ViewContext.yclip = (float)(dVar1 * dVar2) * 4.0;
-  return;
+    g_ScreenWidth = g_FrameBufWidth;
+    DAT_00966b18 = g_ScreenHalfWidth * 16 + 0x8000;
+    g_ScreenHeight = g_FrameBufHeight;
+    SCREEN_PROJECTION_MAP_X = (0x800 - g_ScreenHalfWidth) << 4;
+    DAT_00966b1c = g_ScreenHalfHeight * 16 + 0x8000;
+    SCREEN_PROJECTION_MAP_Y = (0x800 - g_ScreenHalfHeight) << 4;
+    DAT_00966b20 = Idol()->unk04;
+    DAT_00966b24 = Idol()->unk08;
+    g_ViewContext.nearClip = 32.0f;
+    g_ViewContext.farClip = 745472.0f;
+    g_ViewContext.xratio = 0.63f;
+    g_ViewContext.xpix = (float)FastIntToDouble(g_FrameBufWidth) * 0.5f;
+    g_ViewContext.ypix = (float)FastIntToDouble(g_FrameBufHeight) * 0.5f;
+    g_ViewContext.fogNearDist = 0.0f;
+    g_ViewContext.fogFarDist = 524288.0f;
+    g_ViewContext.fogNearIntensity = 255.0f;
+    g_ViewContext.fogFarIntensity = 0.0f;
+    g_ViewContext.fovScale = 2.0f;
+    g_ViewContext.xclip = g_ViewContext.xpix * 4.0f;
+    g_ViewContext.yclip = g_ViewContext.ypix * 4.0f;
 }
 
 
 // 0x00682c8 (0x144 bytes)
-void SetUserViewContext
-               (int width,int height,float xratio,float fogNearDist,float fogFarDist,
-               float fogNearIntensity,float fogFarIntensity)
-
+/* a view of the given size and fog (the menus and movies) */
+void SetUserViewContext(int width, int height, float xratio, float fogNearDist, float fogFarDist, float fogNearIntensity,
+                        float fogFarIntensity)
 {
-  double dVar1;
-  double dVar2;
-  double dVar3;
-  double dVar4;
-  double dVar5;
-  double dVar6;
-  
-  dVar5 = (double)fogNearIntensity;
-  dVar6 = (double)fogFarIntensity;
-  dVar2 = (double)fogNearDist;
-  dVar4 = (double)fogFarDist;
-  g_ScreenHalfWidth = width >> 1;
-  g_ScreenHalfHeight = height >> 1;
-  SCREEN_PROJECTION_MAP_X = (undefined4)((0x800U - (longlong)g_ScreenHalfWidth & 0xffffffff) << 4);
-  SCREEN_PROJECTION_MAP_Y = (undefined4)((0x800U - (longlong)g_ScreenHalfHeight & 0xffffffff) << 4);
-  DAT_00966b18 = g_ScreenHalfWidth * 0x10 + 0x8000;
-  DAT_00966b1c = g_ScreenHalfHeight * 0x10 + 0x8000;
-  g_ViewContext.nearClip = 32.0;
-  g_ViewContext.farClip = 524288.0;
-  g_ViewContext.xratio = xratio;
-  g_ScreenWidth = width;
-  g_ScreenHeight = height;
-  dVar1 = (double)FastIntToDouble();
-  dVar3 = 0.5;
-  g_ViewContext.xpix = (float)(dVar1 * 0.5);
-  dVar1 = (double)FastIntToDouble(height);
-  g_ViewContext.ypix = (float)(dVar1 * dVar3);
-  g_ViewContext.fogNearDist = (float)dVar2;
-  g_ViewContext.xclip = g_ViewContext.xpix * 4.0;
-  g_ViewContext.yclip = g_ViewContext.ypix * 4.0;
-  g_ViewContext.fogFarDist = (float)dVar4;
-  g_ViewContext.fogNearIntensity = (float)dVar5;
-  g_ViewContext.fogFarIntensity = (float)dVar6;
-  UpdateViewContext();
-  return;
+    SCREEN_PROJECTION_MAP_X = (0x800 - g_ScreenHalfWidth) << 4;
+    SCREEN_PROJECTION_MAP_Y = (0x800 - g_ScreenHalfHeight) << 4;
+    DAT_00966b18 = g_ScreenHalfWidth * 16 + 0x8000;
+    DAT_00966b1c = g_ScreenHalfHeight * 16 + 0x8000;
+    g_ViewContext.nearClip = 32.0f;
+    g_ViewContext.farClip = 524288.0f;
+    g_ViewContext.xpix = (float)FastIntToDouble(width) * 0.5f;
+    g_ViewContext.ypix = (float)FastIntToDouble(height) * 0.5f;
+    g_ViewContext.fogNearDist = fogNearDist;
+    g_ViewContext.xclip = g_ViewContext.xpix * 4.0f;
+    g_ViewContext.yclip = g_ViewContext.ypix * 4.0f;
+    g_ViewContext.fogFarDist = fogFarDist;
+    g_ViewContext.fogNearIntensity = fogNearIntensity;
+    g_ViewContext.fogFarIntensity = fogFarIntensity;
+    UpdateViewContext();
 }
 
 
 // 0x006840c (0x90 bytes)
 void ResetDrawGlobals(void)
-
 {
-  g_MobyFuncListCount = 0;
-  g_PostDrawCount = 0;
-  g_NumLameShadows = 0;
-  g_PreDrawCount = 0;
-  DAT_0095cae0 = 0;
-  g_PostPreDrawCount = 0;
-  DAT_0095ccf0 = 0;
-  LetterBoxOn = 0;
-  LetterBoxPixels = 0;
-  ScreenColorEffectEnabled = 0;
-  DAT_0095cf20 = 0;
-  g_ScreenInsertEffect = 0;
-  OcclMode = 0;
-  WaterTiles = (WaterTile *)0x0;
-  WaterTileBoxes = (WaterTileBox *)0x0;
-  WaterTileCnt = 0;
-  WaterPlaneActive = 0;
-  return;
+    DAT_0095cae0 = 0;
+    DAT_0095ccf0 = 0;
+    LetterBoxOn = 0;
+    LetterBoxPixels = 0;
+    ScreenColorEffectEnabled = 0;
+    DAT_0095cf20 = 0;
+    OcclMode = 0;
+    WaterTiles = NULL;
+    WaterTileBoxes = NULL;
+    WaterTileCnt = 0;
+    WaterPlaneActive = 0;
 }
 
 
 // 0x006849c (0x4 bytes)
 void STUB_0006849c(...)
-
 {
-  return;
 }
 
 
 // 0x00684a0 (0x4 bytes)
 void STUB_000684a0(...)
-
 {
-  return;
 }
 
 
 // 0x00684a4 (0xbc bytes)
-void UpdateOcclusion(int param_1)
-
+/* the frame's camera matrices and (when asked) occlusion, then the renderer's pass setup */
+void UpdateOcclusion(int withOcclusion)
 {
-  int *piVar1;
-  
-  piVar1 = g_pIdolDraw;
-  ComposeCameraMatrix();
-  if (param_1 != '\0') {
-    if (OcclUpdate == 0) {
-      FastMemSet(OcclVisibility,0xffffffffffffffff,0x80);
+    IdolDraw *idol = Idol();
+
+    ComposeCameraMatrix();
+    if (withOcclusion != 0) {
+        Occlusion_Update();
     }
-    else if (OcclUpdate == 2) {
-      BuildOcclVisibility();
-    }
-    *(undefined **)(DAT_00902e9c + 0x41c) = OcclVisibility;
-  }
-  (*(code *)**(undefined4 **)(*piVar1 + 0x14))(piVar1);
-  return;
+
+    idol->vtable->SetupPasses(idol);
 }
 
 
 // 0x0068560 (0x64 bytes)
+/* flushes the SPU job queue and has the renderer build and flip the frame */
 void Render_DispatchJob(void)
-
 {
-  idol_draw::Spurs_FlushAndSwapQueue(&DAT_01111700);
-  OcclMode = 0;
-  (*(code *)**(undefined4 **)(*g_pIdolDraw + 0x18))(g_pIdolDraw);
-  return;
+    IdolDraw *idol = Idol();
+
+    idol_draw::Spurs_FlushAndSwapQueue((uint *)&DAT_01111700);
+    OcclMode = 0;
+    idol->vtable->BuildAndFlipFrame(idol);
+}
+
+/* NV4097 methods the HUD sprites use */
+#define HUD_SET_COLOR4UB      CELL_GCM_METHOD(CELL_GCM_NV4097_SET_VERTEX_DATA4UB_M + 2 * 4, 1)
+#define HUD_SET_TEXCOORD2S    CELL_GCM_METHOD(CELL_GCM_NV4097_SET_VERTEX_DATA2S_M + 1 * 4, 1)
+#define HUD_SET_POSITION2S    CELL_GCM_METHOD(CELL_GCM_NV4097_SET_VERTEX_DATA2S_M, 1)
+#define HUD_SET_BEGIN_END     CELL_GCM_METHOD(CELL_GCM_NV4097_SET_BEGIN_END, 1)
+#define HUD_SET_POSITION2F    CELL_GCM_METHOD(CELL_GCM_NV4097_SET_VERTEX_DATA2F_M, 2)
+
+/* a HUD vertex: its texture coordinate, then its position (16 bits each, y/v high) */
+static inline void HudVertex(RenderingStep *pass, int u, int v, int x, int y)
+{
+    Emit(pass, HUD_SET_TEXCOORD2S);
+    Emit(pass, (v & 0xffff) << 16 | (u & 0xffff));
+    Emit(pass, HUD_SET_POSITION2S);
+    Emit(pass, (y & 0xffff) << 16 | (x & 0xffff));
+}
+
+/* binds tex and starts a quad in color on the HUD pass */
+/* one HUD vertex at a float position */
+static inline void HudVertexF(RenderingStep *pass, int u, int v, float x, float y)
+{
+    Emit(pass, HUD_SET_TEXCOORD2S);
+    Emit(pass, (v & 0xffff) << 16 | (u & 0xffff));
+    Emit(pass, HUD_SET_POSITION2F);
+    Emit(pass, *(u32 *)&x);
+    Emit(pass, *(u32 *)&y);
+}
+
+static inline void HudBeginQuad(void *tex, u32 color)
+{
+    idol_draw::BindTexture(HUD_Pass, 0, tex, TexSamplerFlags);
+    idol_draw::ResetPassState(HUD_Pass);
+
+    Emit(HUD_Pass, HUD_SET_COLOR4UB);
+    Emit(HUD_Pass, color);
+    /* (three words to method 0x1714, all zero) */
+    Emit(HUD_Pass, 0x400c1714);
+    Emit(HUD_Pass, 0);
+    Emit(HUD_Pass, 0);
+    Emit(HUD_Pass, 0);
+    Emit(HUD_Pass, HUD_SET_BEGIN_END);
+    Emit(HUD_Pass, CELL_GCM_PRIMITIVE_QUADS);
+}
+
+static inline void HudEnd(void)
+{
+    Emit(HUD_Pass, HUD_SET_BEGIN_END);
+    Emit(HUD_Pass, 0);
 }
 
 
 // 0x00685c4 (0x1c bytes)
-int GetEffectTex(int param_1)
-
+/* effect texture idx's entry in TexInfo */
+int GetEffectTex(int idx)
 {
-  return *(undefined4 *)(TexInfo + (int)(param_1 << 2));
+    return ((int *)(uintptr_t)TexInfo)[idx];
 }
 
 
 // 0x00685e0 (0x2bc bytes)
-void DrawFullScreenQuad(int rgba,void *tex)
-
+/* tex over the whole 512x416 screen in the frame buffer's own viewport */
+void DrawFullScreenQuad(int rgba, void *tex)
 {
-  uint uVar1;
-  RenderingStep *pRVar2;
-  undefined4 uVar3;
-  
-  uVar3 = g_pIdolDraw;
-  FUN_004deab8(g_pIdolDraw,g_FrameBufWidth,g_FrameBufHeight);
-  uVar1 = *(uint *)((int)tex + 0x18);
-  idol_draw::BindTexture(HUD_Pass,0,tex,TexSamplerFlags);
-  idol_draw::ResetPassState(HUD_Pass);
-  pRVar2 = HUD_Pass;
-  *HUD_Pass->command = 0x41948;
-  pRVar2->command[1] =
-       (rgba >> 8 & 0xffU) << 8 | (rgba >> 0x10 & 0xffU) << 0x10 | rgba & 0xff000000 | rgba & 0xff;
-  pRVar2->command = pRVar2->command + 2;
-  pRVar2 = HUD_Pass;
-  *HUD_Pass->command = 0x400c1714;
-  pRVar2->command[1] = 0;
-  pRVar2->command[2] = 0;
-  pRVar2->command[3] = 0;
-  pRVar2->command[4] = NV4097_SET_BEGIN_END_x1;
-  pRVar2->command[5] = 8;
-  pRVar2->command = pRVar2->command + 6;
-  pRVar2 = HUD_Pass;
-  *HUD_Pass->command = 0x41904;
-  pRVar2->command[1] = 0;
-  pRVar2->command = pRVar2->command + 2;
-  pRVar2 = HUD_Pass;
-  *HUD_Pass->command = NV4097_SET_VERTEX_DATA2S_M_x1;
-  pRVar2->command[1] = 0;
-  pRVar2->command = pRVar2->command + 2;
-  pRVar2 = HUD_Pass;
-  *HUD_Pass->command = 0x41904;
-  pRVar2->command[1] = uVar1 << 0x10;
-  pRVar2->command = pRVar2->command + 2;
-  pRVar2 = HUD_Pass;
-  *HUD_Pass->command = NV4097_SET_VERTEX_DATA2S_M_x1;
-  pRVar2->command[1] = 0x1a00000;
-  pRVar2->command = pRVar2->command + 2;
-  pRVar2 = HUD_Pass;
-  *HUD_Pass->command = 0x41904;
-  pRVar2->command[1] = uVar1 << 0x10 | uVar1 >> 0x10;
-  pRVar2->command = pRVar2->command + 2;
-  pRVar2 = HUD_Pass;
-  *HUD_Pass->command = NV4097_SET_VERTEX_DATA2S_M_x1;
-  pRVar2->command[1] = 0x1a00200;
-  pRVar2->command = pRVar2->command + 2;
-  pRVar2 = HUD_Pass;
-  *HUD_Pass->command = 0x41904;
-  pRVar2->command[1] = uVar1 >> 0x10;
-  pRVar2->command = pRVar2->command + 2;
-  pRVar2 = HUD_Pass;
-  *HUD_Pass->command = NV4097_SET_VERTEX_DATA2S_M_x1;
-  pRVar2->command[1] = 0x200;
-  pRVar2->command = pRVar2->command + 2;
-  pRVar2 = HUD_Pass;
-  *HUD_Pass->command = NV4097_SET_BEGIN_END_x1;
-  pRVar2->command[1] = 0;
-  pRVar2->command = pRVar2->command + 2;
-  FUN_004d86b0(uVar3);
-  return;
+    int idolDraw = g_pIdolDraw;
+
+    FUN_004deab8(idolDraw, g_FrameBufWidth, g_FrameBufHeight);
+
+    /* the texture's size, width high and height low */
+    u32 size = *(u32 *)((u8 *)tex + 0x18);
+    int width = size >> 16;
+    int height = size & 0xffff;
+
+    HudBeginQuad(tex, rgba);
+    HudVertex(HUD_Pass, 0, 0, 0, 0);
+    HudVertex(HUD_Pass, 0, height, 0, 416);
+    HudVertex(HUD_Pass, width, height, 512, 416);
+    HudVertex(HUD_Pass, width, 0, 512, 0);
+    HudEnd();
+
+    FUN_004d86b0(idolDraw);
 }
 
 
 // 0x006889c (0x354 bytes)
-void Sprite_DrawShape(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6,int param_7,int param_8,u32 param_9,void *param_10)
-
+/* tex's (u, v, uw, vh) texels (in half-texel units) drawn at (x, y, w, h) on the HUD pass, in
+   color; a full 512x416 rectangle goes through DrawFullScreenQuad */
+void Sprite_DrawShape(int x, int y, int w, int h, int u, int v, int uw, int vh, u32 color, void *tex)
 {
-  RsxCmd *pRVar1;
-  ulonglong uVar2;
-  RsxCmd RVar3;
-  RsxCmd RVar4;
-  RenderingStep *pRVar5;
-  ulonglong in_stack_00000070;
-  void *in_stack_0000007c;
-  
-  if (((param_1 == 0 && param_3 == 0x200) && ((int)param_2 == 0)) && ((int)param_4 == 0x1a0)) {
-    DrawFullScreenQuad((RsxCmd)in_stack_00000070,in_stack_0000007c);
-  }
-  else {
-    uVar2 = (param_8 + param_6) * 2;
-    idol_draw::BindTexture(HUD_Pass,0,in_stack_0000007c,TexSamplerFlags);
-    idol_draw::ResetPassState(HUD_Pass);
-    pRVar5 = HUD_Pass;
-    *HUD_Pass->command = 0x41948;
-    pRVar1 = pRVar5->command;
-    pRVar1[1] = (RsxCmd)((in_stack_00000070 >> 8 & 0xff) << 8) |
-                (RsxCmd)((in_stack_00000070 >> 0x18 & 0xff) << 0x18) |
-                (RsxCmd)((in_stack_00000070 >> 0x10 & 0xff) << 0x10) |
-                (RsxCmd)in_stack_00000070 & 0xff;
-    pRVar5->command = pRVar1 + 2;
-    pRVar5 = HUD_Pass;
-    *HUD_Pass->command = 0x400c1714;
-    pRVar5->command[1] = 0;
-    pRVar5->command[2] = 0;
-    pRVar5->command[3] = 0;
-    pRVar5->command[4] = NV4097_SET_BEGIN_END_x1;
-    pRVar1 = pRVar5->command;
-    pRVar1[5] = 8;
-    pRVar5->command = pRVar1 + 6;
-    pRVar5 = HUD_Pass;
-    RVar3 = (RsxCmd)(param_5 << 1) & 0xfffe;
-    *HUD_Pass->command = 0x41904;
-    pRVar1 = pRVar5->command;
-    pRVar1[1] = (RsxCmd)((param_6 << 1 & 0xfffffffeU) << 0x10) | RVar3;
-    pRVar5->command = pRVar1 + 2;
-    pRVar5 = HUD_Pass;
-    *HUD_Pass->command = NV4097_SET_VERTEX_DATA2S_M_x1;
-    pRVar1 = pRVar5->command;
-    pRVar1[1] = (RsxCmd)((param_2 & 0xffffffff) << 0x10) | param_1 & 0xffff;
-    pRVar5->command = pRVar1 + 2;
-    pRVar5 = HUD_Pass;
-    RVar4 = param_3 + param_1 & 0xffff;
-    *HUD_Pass->command = 0x41904;
-    pRVar1 = pRVar5->command;
-    pRVar1[1] = (RsxCmd)((uVar2 & 0xfffffffe) << 0x10) | RVar3;
-    pRVar5->command = pRVar1 + 2;
-    pRVar5 = HUD_Pass;
-    RVar3 = ((int)param_5 + param_7) * 2 & 0xfffe;
-    *HUD_Pass->command = NV4097_SET_VERTEX_DATA2S_M_x1;
-    pRVar1 = pRVar5->command;
-    pRVar1[1] = (RsxCmd)((param_4 + param_2 & 0xffffffff) << 0x10) | param_1 & 0xffff;
-    pRVar5->command = pRVar1 + 2;
-    pRVar5 = HUD_Pass;
-    *HUD_Pass->command = 0x41904;
-    pRVar1 = pRVar5->command;
-    pRVar1[1] = (RsxCmd)((uVar2 & 0xfffffffe) << 0x10) | RVar3;
-    pRVar5->command = pRVar1 + 2;
-    pRVar5 = HUD_Pass;
-    *HUD_Pass->command = NV4097_SET_VERTEX_DATA2S_M_x1;
-    pRVar1 = pRVar5->command;
-    pRVar1[1] = (RsxCmd)((param_4 + param_2 & 0xffffffff) << 0x10) | RVar4;
-    pRVar5->command = pRVar1 + 2;
-    pRVar5 = HUD_Pass;
-    *HUD_Pass->command = 0x41904;
-    pRVar1 = pRVar5->command;
-    pRVar1[1] = (RsxCmd)((param_6 << 1 & 0xfffffffeU) << 0x10) | RVar3;
-    pRVar5->command = pRVar1 + 2;
-    pRVar5 = HUD_Pass;
-    *HUD_Pass->command = NV4097_SET_VERTEX_DATA2S_M_x1;
-    pRVar1 = pRVar5->command;
-    pRVar1[1] = (RsxCmd)((param_2 & 0xffffffff) << 0x10) | RVar4;
-    pRVar5->command = pRVar1 + 2;
-    pRVar5 = HUD_Pass;
-    *HUD_Pass->command = NV4097_SET_BEGIN_END_x1;
-    pRVar1 = pRVar5->command;
-    pRVar1[1] = 0;
-    pRVar5->command = pRVar1 + 2;
-  }
-  return;
+    if (x == 0 && w == 512 && y == 0 && h == 416) {
+        DrawFullScreenQuad(color, tex);
+        return;
+    }
+
+    int left = u * 2;
+    int top = v * 2;
+    int right = (u + uw) * 2;
+    int bottom = (v + vh) * 2;
+
+    HudBeginQuad(tex, color);
+    HudVertex(HUD_Pass, left, top, x, y);
+    HudVertex(HUD_Pass, left, bottom, x, y + h);
+    HudVertex(HUD_Pass, right, bottom, x + w, y + h);
+    HudVertex(HUD_Pass, right, top, x + w, y);
+    HudEnd();
 }
 
 
 // 0x0068bf0 (0x78 bytes)
-void Sprite_DrawShapeF(double param_1,double param_2,double param_3,double param_4)
-
+void Sprite_DrawShapeF(float x, float y, float w, float h, int u, int v, int uw, int vh, u32 color, void *tex)
 {
-  Sprite_DrawShape((int)param_1,(int)param_2,(int)param_3,(int)param_4);
-  return;
+    Sprite_DrawShape((int)x, (int)y, (int)w, (int)h, u, v, uw, vh, color, tex);
 }
 
 
 // 0x0068c70 (0x3e4 bytes)
-void FontPrintJapanese_unk2
-               (double param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
-               undefined4 param_6,int param_7,int param_8,undefined8 param_9,undefined8 param_10,
-               int param_11)
-
+/* Draws len bytes of str with g_JapanFontTex. Bytes 8..15 pick a palette colour, bytes below 32
+   are 24x16 grey glyphs, 0xbd/0xbe are diacritics placed against the previous character */
+void FontPrintScaledJapanese(float x, float y, float scale, u32 color, const u8 *str, int len, int unused, const FontGlyph *table)
 {
-  int iVar1;
-  double dVar2;
-  byte bVar3;
-  int iVar4;
-  int iVar5;
-  int iVar6;
-  int iVar7;
-  double dVar8;
-  
-  if (DAT_0095ee18 == 0) {
-    DAT_0071ef98 = param_6;
-  }
-  iVar7 = 0;
-  if (param_8 != 0) {
-    iVar1 = (int)(param_3 * 16.0);
-    dVar2 = param_3 * 24.0;
-    do {
-      bVar3 = *(byte *)(param_7 + iVar7);
-      if (bVar3 == 0) {
-        return;
-      }
-      if ((bVar3 < 8) || (0xf < bVar3)) {
-        dVar8 = (double)FastIntToDouble(*(undefined1 *)(param_11 + (uint)bVar3 * 4 + 2));
-        bVar3 = *(byte *)(param_7 + iVar7);
-        iVar6 = (uint)bVar3 * 4;
-        if (*(char *)(param_11 + iVar6 + 3) != '\0') {
-          iVar4 = param_11 + (uint)bVar3 * 4;
-          if (bVar3 < 0x20) {
-            Sprite_DrawShape((int)param_1,(int)(dVar8 * param_3 + param_2),(int)dVar2,iVar1,
-                             *(undefined1 *)(param_11 + iVar6),*(undefined1 *)(iVar4 + 1),0x18,0x10)
-            ;
-          }
-          else {
-            if ((0xbc < bVar3) && (bVar3 < 0xbf)) {
-              bVar3 = *(byte *)(param_7 + iVar7 + -1);
-              iVar5 = param_11 + (bVar3 + 0x80) * 4;
-              Sprite_DrawShape((int)((double)(longlong)
-                                             ((int)*(char *)(iVar5 + 3) -
-                                             (int)*(char *)(param_11 + (uint)bVar3 * 4 + 3)) *
-                                     param_3 + param_1),
-                               (int)((double)(longlong)(int)*(char *)(iVar5 + 2) * param_3 + param_2
-                                    ),iVar1,iVar1,*(undefined1 *)(param_11 + iVar6),
-                               *(undefined1 *)(iVar4 + 1),0x10,0x10);
-              param_1 = (double)(float)((double)(longlong)
-                                                (int)(((int)*(char *)(iVar5 + 3) -
-                                                      (int)*(char *)(param_11 +
-                                                                     (uint)*(byte *)(param_7 + iVar7
-                                                                                    + -1) * 4 + 3))
-                                                      + ((*(byte *)(param_7 + iVar7) -
-                                                                       0xbe == 0)) + 4) * param_3 +
-                                       param_1);
-              goto LAB_00068ffc;
-            }
-            if (0x20 < bVar3) {
-              Sprite_DrawShape((int)param_1,(int)(dVar8 * param_3 + param_2),iVar1,iVar1,
-                               *(undefined1 *)(param_11 + (uint)bVar3 * 4),
-                               *(undefined1 *)(iVar4 + 1),0x10,0x10);
-            }
-          }
-          dVar8 = (double)FastIntToDouble
-                                    (*(undefined1 *)
-                                      (param_11 + (uint)*(byte *)(param_7 + iVar7) * 4 + 3));
-          param_1 = (double)(float)(dVar8 * param_3 + param_1);
+    if (g_FontKeepPalette == 0) {
+        g_FontPalette[0] = color;
+    }
+
+    int wide = (int)(scale * 24.0f);
+    int size = (int)(scale * 16.0f);
+
+    for (int i = 0; i != len; i++) {
+        u8 ch = str[i];
+
+        if (ch == 0) {
+            return;
         }
-      }
-LAB_00068ffc:
-      iVar7 = iVar7 + 1;
-    } while (iVar7 != param_8);
-  }
-  return;
+
+        if (ch >= 8 && ch <= 15) {
+            if (g_FontColorsEnabled != 0) {
+                color = (color & 0xff000000) | (g_FontPalette[ch - 8] & 0xffffff);
+            }
+
+            continue;
+        }
+
+        float yOff = (float)FastIntToDouble(table[ch].yOff);
+
+        ch = str[i];
+
+        if (table[ch].width == 0) {
+            continue;
+        }
+
+        const FontGlyph *glyph = &table[ch];
+
+        if (ch < 32) {
+            u32 sum = (color & 0xff) + ((color >> 8) & 0xff) + ((color >> 16) & 0xff) + 1;
+            u32 grey = (sum * 341) >> 10;
+            u32 greyColor = (color & 0xff000000) + (grey << 16) + (grey << 8) + grey;
+
+            Sprite_DrawShape((int)x, (int)(yOff * scale + y), wide, size, glyph->u, glyph->v, 24, 16, greyColor, &g_JapanFontTex);
+        }
+        else if (ch == 0xbd || ch == 0xbe) {
+            u8 prev = str[i - 1];
+            const FontGlyph *mark = &table[prev + 0x80];
+            int shift = mark->width - table[prev].width;
+
+            Sprite_DrawShape((int)(shift * scale + x), (int)(mark->yOff * scale + y), size, size, glyph->u, glyph->v, 16, 16, color, &g_JapanFontTex);
+
+            shift = mark->width - table[str[i - 1]].width;
+            x = (shift + (str[i] == 0xbe) + 4) * scale + x;
+
+            continue;
+        }
+        else if (ch > 32) {
+            Sprite_DrawShape((int)x, (int)(yOff * scale + y), size, size, glyph->u, glyph->v, 16, 16, color, &g_JapanFontTex);
+        }
+
+        x = (float)FastIntToDouble(table[str[i]].width) * scale + x;
+    }
 }
 
 
 // 0x0069058 (0x7c bytes)
-int FontLenScaledWithTableNoKern
-              (double param_1,int param_2,int param_3,undefined8 param_4,int param_5)
-
+/* Width of the first len characters of str (up to a 0 byte) in table, times scale */
+int FontLenScaledWithTableNoKern(float scale, const u8 *str, int len, const FontGlyph *table)
 {
-  byte *pbVar1;
-  int iVar2;
-  double dVar3;
-  
-  iVar2 = 0;
-  dVar3 = 0.0;
-  if (param_3 != 0) {
-    do {
-      pbVar1 = (byte *)(param_2 + iVar2);
-      if (*pbVar1 == 0) break;
-      iVar2 = iVar2 + 1;
-      dVar3 = (double)(float)((double)(longlong)(int)*(char *)(param_5 + (uint)*pbVar1 * 4 + 3) *
-                              param_1 + dVar3);
-    } while (iVar2 != param_3);
-  }
-  return (int)dVar3;
+    float width = 0.0f;
+
+    for (int i = 0; i != len; i++) {
+        if (str[i] == 0) {
+            break;
+        }
+
+        width = (float)table[str[i]].width * scale + width;
+    }
+
+    return (int)width;
 }
 
 
 // 0x00690e0 (0x5ac bytes)
-void FontPrintOptJapanese
-               (double param_1,undefined8 param_2,undefined4 param_3,int param_4,int param_5,
-               undefined8 param_6,longlong param_7)
-
+/* Prints str into win with FontPrintScaledJapanese, breaking lines at spaces and control bytes so
+   each fits the window (centred on text_x with flag 1, the block centred on text_y with flag 2).
+   Fills max_width/max_height; flag 4 only measures, flag 8 adds the sub-pixel offsets. */
+void FontPrintOptJapanese(float scale, FontWindow *win, u32 color, const u8 *str, int len, int unused, const FontGlyph *table)
 {
-  byte bVar1;
-  ushort uVar2;
-  short sVar3;
-  undefined4 uVar4;
-  undefined2 uVar5;
-  GPiece<16> auVar6;
-  ulonglong *puVar7;
-  int iVar8;
-  int iVar9;
-  int iVar11;
-  longlong lVar10;
-  int iVar12;
-  ulonglong uVar13;
-  short sVar14;
-  short sVar15;
-  short sVar17;
-  int iVar16;
-  longlong lVar18;
-  int iVar19;
-  short sVar20;
-  ulonglong unaff_r20;
-  ulonglong unaff_r21;
-  longlong lVar21;
-  ulonglong unaff_r22;
-  ulonglong unaff_r23;
-  longlong lVar22;
-  ulonglong unaff_r24;
-  ulonglong unaff_r25;
-  int iVar23;
-  ulonglong unaff_r26;
-  int iVar24;
-  ulonglong unaff_r27;
-  ulonglong unaff_r28;
-  ulonglong unaff_r29;
-  ulonglong unaff_r30;
-  ulonglong unaff_r31;
-  ulonglong in_LR;
-  double dVar25;
-  ulonglong uVar26;
-  ulonglong uVar27;
-  ulonglong in_f31;
-  GPiece<16> auVar28;
-  GPiece<16> auVar29;
-  GPiece<16> auVar30;
-  
-  lVar22 = ZEXT48(&stack0x00000000) - 0x1d0;
-  puVar7 = (ulonglong *)lVar22;
-  *puVar7 = ZEXT48(&stack0x00000000);
-  puVar7[0x3c] = in_LR;
-  puVar7[0x39] = in_f31;
-  puVar7[0x38] = unaff_r31;
-  *(float *)(puVar7 + 0x26) = (float)param_1;
-  *(float *)((int)puVar7 + 0x134) = (float)param_1;
-  *(float *)(puVar7 + 0x27) = (float)param_1;
-  puVar7[0x36] = unaff_r29;
-  puVar7[0x31] = unaff_r24;
-  *(float *)((int)puVar7 + 0x13c) = (float)param_1;
-  puVar7[0x37] = unaff_r30;
-  iVar8 = (int)param_2;
-  uVar2 = *(ushort *)(iVar8 + 0x12);
-  sVar14 = *(short *)(iVar8 + 0x10);
-  sVar3 = *(short *)(iVar8 + 10);
-  puVar7[0x35] = unaff_r28;
-  auVar30 = *(undefined1 (*) [16])(puVar7 + 0x26);
-  puVar7[0x34] = unaff_r27;
-  puVar7[0x33] = unaff_r26;
-  puVar7[0x32] = unaff_r25;
-  puVar7[0x30] = unaff_r23;
-  puVar7[0x2f] = unaff_r22;
-  puVar7[0x2e] = unaff_r21;
-  puVar7[0x2d] = unaff_r20;
-  DAT_0095ee18 = 1;
-  if ((uVar2 & 1) == 0) {
-    iVar11 = (int)*(short *)(iVar8 + 6) - (int)*(short *)(iVar8 + 8);
-  }
-  else {
-    lVar10 = (longlong)*(short *)(iVar8 + 8);
-    lVar18 = (longlong)*(short *)(iVar8 + 4);
-    lVar21 = *(short *)(iVar8 + 6) - lVar10;
-    iVar11 = (int)(((lVar10 + (lVar21 - (lVar10 - lVar18) >> 0x3f & *(short *)(iVar8 + 6) - lVar10))
-                    - (lVar18 + (lVar21 - (lVar10 - lVar18) >> 0x3f & lVar10 - lVar18)) &
-                   0xffffffffU) << 1);
-  }
-  iVar24 = 0;
-  iVar16 = 0;
-  sVar15 = 0;
-  lVar10 = lVar22;
-  iVar9 = 0;
-  if (param_5 != 0) {
-    while (iVar24 = iVar9, *(char *)(param_4 + iVar16) != '\0') {
-      iVar9 = (int)lVar10;
-      sVar17 = (short)iVar16;
-      *(short *)(iVar9 + 0x70) = sVar17;
-      lVar18 = 0;
-      *(short *)(iVar9 + 0xf0) = sVar15;
-      iVar19 = iVar16;
-      if (0 < iVar11) {
-        do {
-          bVar1 = *(byte *)(param_4 + iVar16);
-          if ((bVar1 == 0x20) || (bVar1 < 0x10)) {
-            iVar19 = iVar16;
-          }
-          if (((g_FontColorsEnabled != 0) && (7 < bVar1)) && (bVar1 < 0x10)) {
-            sVar15 = bVar1 - 8;
-          }
-          if ((bVar1 == 0) || (bVar1 == 1)) break;
-          iVar16 = iVar16 + 1;
-          bVar1 = *(byte *)((int)param_7 + (uint)bVar1 * 4 + 3);
-          lVar21 = lVar18 + (char)bVar1;
-          lVar18 = lVar21 + (ZERO_MASK((uint)bVar1) & lVar18 - lVar21);
-        } while ((int)lVar18 < iVar11);
-      }
-      sVar20 = (short)iVar19;
-      *(short *)(iVar9 + 0xb0) = sVar20;
-      if (sVar20 == sVar17) {
-        sVar20 = (short)iVar16;
-        *(short *)(iVar9 + 0xb0) = sVar20;
-      }
-      bVar1 = *(byte *)(param_4 + sVar20);
-      if ((bVar1 == 0x20) || (bVar1 < 0x10)) {
-        *(short *)(iVar9 + 0xb0) = sVar20 + -1;
-      }
-      iVar24 = iVar24 + 1;
-      if ((bVar1 == 0) ||
-         (iVar16 = sVar20 + 1, lVar10 = lVar10 + 2, iVar9 = iVar24, iVar16 == param_5)) break;
+    short lineStart[32];
+    short lineEnd[32];
+    short lineColor[32];
+
+    g_FontKeepPalette = 1;
+
+    int spacing = win->line_spacing;
+    int textY = win->text_y;
+    int flags = win->flags;
+    int width;
+
+    if ((flags & 1) == 0) {
+        width = win->win_right - win->text_x;
     }
-  }
-  *(undefined2 *)(iVar8 + 0xc) = 0;
-  *(short *)(iVar8 + 0xe) = (short)iVar24 * sVar14;
-  lVar10 = (longlong)sVar3 - (longlong)(sVar14 * iVar24 >> 1);
-  iVar11 = 0;
-  if (0 < iVar24) {
-    lVar10 = lVar10 + (ZERO_MASK((uVar2 & 2)) & sVar3 - lVar10);
-    do {
-      iVar9 = (int)lVar22;
-      iVar12 = 0;
-      auVar28 = ZEXT416(0);
-      auVar28 = auVar28 | auVar28 << 0x20 | auVar28 << 0x40 | auVar28 << 0x60;
-      dVar25 = 0.0;
-      iVar16 = *(short *)(iVar9 + 0x70) + param_4;
-      iVar19 = ((int)*(short *)(iVar9 + 0xb0) - (int)*(short *)(iVar9 + 0x70)) + 1;
-      if (iVar19 != 0) {
-        auVar6 = ZEXT416(0xfffffff8);
-        do {
-          auVar28 = auVar28 >> 0x60 & (GPiece<16>)0xffffffff;
-          auVar28 = auVar28 | auVar28 << 0x20 | auVar28 << 0x40 | auVar28 << 0x60;
-          if (*(byte *)(iVar16 + iVar12) == 0) break;
-          uVar13 = param_7 + (ulonglong)*(byte *)(iVar16 + iVar12) * 4;
-          iVar12 = iVar12 + 1;
-          auVar29 = loadVectorLeftIndexed(3,uVar13 & 0xffffffff);
-          auVar29 = vectorShiftRightAlgebraicWord
-                              (auVar29,auVar6 | auVar6 << 0x20 | auVar6 << 0x40 | auVar6 << 0x60);
-          puVar7[0x28] = (longlong)(int)*(char *)((int)uVar13 + 3);
-          auVar29 = vectorConvertFromSignedFixedPointWord(auVar29,0);
-          auVar28 = vectorMultiplyAddFloatingPoint(auVar29,auVar30,auVar28);
-          dVar25 = (double)(float)((double)(longlong)puVar7[0x28] * param_1 + dVar25);
-        } while (iVar12 != iVar19);
-      }
-      sVar14 = *(short *)(iVar8 + 0xc);
-      auVar28 = auVar28 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar28 = vectorConvertToSignedFixedPointWordSaturate
-                          (auVar28 | auVar28 << 0x20 | auVar28 << 0x40 | auVar28 << 0x60,0);
-      puVar7[0x28] = (longlong)(int)dVar25;
-      iVar12 = *(int *)((int)puVar7 + 0x144);
-      if (sVar14 < iVar12) {
-        auVar28 = vectorSplatHalfWord(auVar28,1);
-        uVar5 = storeVectorElementHalfWordIndexed(auVar28,0xc,param_2);
-        *(undefined2 *)(iVar8 + 0xc) = uVar5;
-      }
-      uVar2 = *(ushort *)(iVar8 + 0x12);
-      if ((uVar2 & 4) == 0) {
-        iVar23 = (int)lVar10;
-        iVar12 = iVar12 >> 1;
-        DAT_0071ef98 = param_3;
-        if ((uVar2 & 8) == 0) {
-          if ((uVar2 & 1) == 0) {
-            puVar7[0x28] = (longlong)(int)*(short *)(iVar8 + 8);
-            lVar18 = (longlong)*(short *)(iVar9 + 0xf0) << 2;
-            uVar4 = *(undefined4 *)((int)&DAT_0071ef98 + (int)lVar18);
-            uVar13 = puVar7[0x28];
-            puVar7[0x28] = (longlong)iVar23;
-            FontPrintJapanese_unk2
-                      ((double)(longlong)uVar13,(double)(longlong)puVar7[0x28],param_1,lVar18,iVar16
-                       ,uVar4,iVar16,iVar19,(longlong)iVar23,param_6,param_7);
-          }
-          else {
-            puVar7[0x28] = (longlong)(*(short *)(iVar8 + 8) - iVar12);
-            uVar4 = *(undefined4 *)
-                     ((int)&DAT_0071ef98 + (int)((longlong)*(short *)(iVar9 + 0xf0) << 2));
-            uVar13 = puVar7[0x28];
-            puVar7[0x28] = (longlong)iVar23;
-            FontPrintJapanese_unk2
-                      ((double)(longlong)uVar13,(double)(longlong)puVar7[0x28],param_1,iVar19,iVar16
-                       ,uVar4,iVar16,iVar19,(longlong)iVar23,param_6,param_7);
-          }
+    else {
+        int right = win->win_right - win->text_x;
+        int left = win->text_x - win->win_left;
+
+        width = (right < left ? right : left) * 2;
+    }
+
+    int lines = 0;
+    int pos = 0;
+    int colorIdx = 0;
+
+    if (len != 0) {
+        while (str[pos] != 0) {
+            int start = pos;
+            int breakAt = start;
+            int lineWidth = 0;
+
+            lineStart[lines] = pos;
+            lineColor[lines] = colorIdx;
+
+            if (width > 0) {
+                do {
+                    u8 ch = str[pos];
+
+                    if (ch == ' ' || ch < 16) {
+                        breakAt = pos;
+                    }
+
+                    if (g_FontColorsEnabled != 0 && ch >= 8 && ch <= 15) {
+                        colorIdx = ch - 8;
+                    }
+
+                    if (ch == 0 || ch == 1) {
+                        break;
+                    }
+
+                    pos++;
+                    lineWidth += table[ch].width;
+                } while (lineWidth < width);
+            }
+
+            lineEnd[lines] = breakAt;
+
+            if ((short)breakAt == (short)start) {
+                lineEnd[lines] = pos;
+            }
+
+            pos = lineEnd[lines];
+
+            u8 ch = str[pos];
+
+            if (ch == ' ' || ch < 16) {
+                lineEnd[lines] = pos - 1;
+            }
+
+            lines++;
+
+            if (ch == 0) {
+                break;
+            }
+
+            pos++;
+
+            if (pos == len) {
+                break;
+            }
         }
-        else {
-          if ((uVar2 & 1) == 0) {
-            sVar14 = *(short *)(iVar8 + 0x14);
-            iVar12 = (int)*(short *)(iVar8 + 8);
-          }
-          else {
-            sVar14 = *(short *)(iVar8 + 0x14);
-            iVar12 = *(short *)(iVar8 + 8) - iVar12;
-          }
-          puVar7[0x28] = (longlong)(int)sVar14;
-          sVar14 = *(short *)(iVar8 + 0x16);
-          sVar3 = *(short *)(iVar9 + 0xf0);
-          uVar13 = puVar7[0x28];
-          puVar7[0x28] = (longlong)iVar12;
-          uVar26 = puVar7[0x28];
-          puVar7[0x28] = (longlong)iVar23;
-          uVar4 = *(undefined4 *)((int)&DAT_0071ef98 + (int)((longlong)sVar3 << 2));
-          uVar27 = puVar7[0x28];
-          puVar7[0x28] = (longlong)(int)sVar14;
-          FontPrintJapanese_unk2
-                    ((double)((float)(longlong)uVar13 * 0.0625 + (float)(longlong)uVar26),
-                     (double)((float)(longlong)puVar7[0x28] * 0.0625 + (float)(longlong)uVar27),
-                     param_1,iVar19,iVar16,uVar4,iVar16,iVar19,(longlong)(int)sVar14,param_6,param_7
-                    );
+    }
+
+    win->max_width = 0;
+    win->max_height = lines * spacing;
+
+    int y = textY;
+
+    if (flags & 2) {
+        y = textY - ((short)spacing * lines >> 1);
+    }
+
+    for (int i = 0; i < lines; i++) {
+        int count = lineEnd[i] - lineStart[i] + 1;
+        const u8 *line = str + lineStart[i];
+        float lineWidth = 0.0f;
+
+        for (int j = 0; j != count; j++) {
+            if (line[j] == 0) {
+                break;
+            }
+
+            lineWidth = (float)table[line[j]].width * scale + lineWidth;
         }
-      }
-      iVar11 = iVar11 + 1;
-      lVar22 = lVar22 + 2;
-      lVar10 = lVar10 + *(short *)(iVar8 + 0x10);
-    } while (iVar11 < iVar24);
-  }
-  DAT_0095ee18 = 0;
-  return;
+
+        int pixels = (int)lineWidth;
+
+        if (pixels > win->max_width) {
+            win->max_width = pixels;
+        }
+
+        flags = win->flags;
+
+        if ((flags & 4) == 0) {
+            g_FontPalette[0] = color;
+
+            int x = win->text_x;
+
+            if (flags & 1) {
+                x = win->text_x - (pixels >> 1);
+            }
+
+            float drawX = (float)x;
+            float drawY = (float)y;
+
+            if (flags & 8) {
+                drawX = (float)win->sub_pixel_x * 0.0625f + drawX;
+                drawY = (float)win->sub_pixel_y * 0.0625f + drawY;
+            }
+
+            FontPrintScaledJapanese(drawX, drawY, scale, g_FontPalette[lineColor[i]], line, count, unused, table);
+        }
+
+        y += win->line_spacing;
+    }
+
+    g_FontKeepPalette = 0;
+}
+
+/* effect texture tex on the HUD pass, its words copied with word 1's filter bits forced to
+   0x14000 */
+static inline void HudBindEffectTex(int tex)
+{
+    u32 *header = (u32 *)((u8 *)(uintptr_t)EffectTexHeaders + tex * 0x24);
+    u32 words[9];
+
+    for (int i = 0; i < 9; i++) {
+        words[i] = header[i];
+    }
+
+    words[1] = (header[1] & 0xffff) | 0x14000;
+
+    FUN_004d6bb0(HUD_Pass, 0, (RsxCmd *)words);
 }
 
 
 // 0x006968c (0x378 bytes)
-void DrawSpriteFont(double param_1,double param_2,double param_3,double param_4)
-
+/* DL's DrawSpriteFont without one_to_one: texels (tx_u, tx_v, tx_w, tx_h) of effect texture tex0
+   drawn at (sc_x, sc_y, sc_w, sc_h) on the HUD pass */
+void DrawSpriteFont(float sc_x, float sc_y, float sc_w, float sc_h, int tx_u, int tx_v, int tx_w, int tx_h, u64 rgba, u64 tex0)
 {
-  ulonglong uVar1;
-  RsxCmd RVar2;
-  RenderingStep *pRVar3;
-  undefined4 *puVar4;
-  ulonglong in_r7;
-  ulonglong in_r8;
-  int in_r9;
-  longlong in_r10;
-  double dVar5;
-  double dVar6;
-  ulonglong in_stack_00000070;
-  longlong in_stack_00000078;
-  undefined4 local_90;
-  uint local_8c;
-  undefined4 local_88;
-  undefined4 local_84;
-  undefined4 local_80;
-  undefined4 local_7c;
-  undefined4 local_78;
-  undefined4 local_74;
-  undefined4 local_70;
-  
-  dVar6 = (double)(float)(param_3 + param_1);
-  dVar5 = (double)(float)(param_4 + param_2);
-  puVar4 = (undefined4 *)
-           (EffectTexHeaders + (int)(in_stack_00000078 << 5) + (int)(in_stack_00000078 << 2));
-  uVar1 = (in_r10 + in_r8) * 2;
-  local_90 = *puVar4;
-  local_88 = puVar4[2];
-  local_84 = puVar4[3];
-  local_80 = puVar4[4];
-  local_7c = puVar4[5];
-  local_8c = puVar4[1] & 0xffff | 0x14000;
-  local_78 = puVar4[6];
-  local_74 = puVar4[7];
-  local_70 = puVar4[8];
-  FUN_004d6bb0(HUD_Pass,0,&local_90);
-  idol_draw::ResetPassState(HUD_Pass);
-  pRVar3 = HUD_Pass;
-  *HUD_Pass->command = 0x41948;
-  pRVar3->command[1] =
-       (RsxCmd)((in_stack_00000070 >> 8 & 0xff) << 8) |
-       (RsxCmd)((in_stack_00000070 >> 0x18 & 0xff) << 0x18) |
-       (RsxCmd)((in_stack_00000070 >> 0x10 & 0xff) << 0x10) | (RsxCmd)in_stack_00000070 & 0xff;
-  pRVar3->command = pRVar3->command + 2;
-  pRVar3 = HUD_Pass;
-  *HUD_Pass->command = 0x400c1714;
-  pRVar3->command[1] = 0;
-  pRVar3->command[2] = 0;
-  pRVar3->command[3] = 0;
-  pRVar3->command[4] = NV4097_SET_BEGIN_END_x1;
-  pRVar3->command[5] = 8;
-  RVar2 = (RsxCmd)((in_r7 & 0xffffffff) << 1) & 0xfffe;
-  pRVar3->command = pRVar3->command + 6;
-  pRVar3 = HUD_Pass;
-  *HUD_Pass->command = 0x41904;
-  pRVar3->command[1] = (RsxCmd)((in_r8 & 0xffffffff) << 0x11) | RVar2;
-  pRVar3->command = pRVar3->command + 2;
-  pRVar3 = HUD_Pass;
-  *HUD_Pass->command = NV4097_SET_VERTEX_DATA2F_M_x2;
-  pRVar3->command[1] = (RsxCmd)(float)param_1;
-  pRVar3->command[2] = (RsxCmd)(float)param_2;
-  pRVar3->command = pRVar3->command + 3;
-  pRVar3 = HUD_Pass;
-  *HUD_Pass->command = 0x41904;
-  pRVar3->command[1] = (RsxCmd)((uVar1 & 0xfffffffe) << 0x10) | RVar2;
-  RVar2 = ((int)in_r7 + in_r9) * 2 & 0xfffe;
-  pRVar3->command = pRVar3->command + 2;
-  pRVar3 = HUD_Pass;
-  *HUD_Pass->command = NV4097_SET_VERTEX_DATA2F_M_x2;
-  pRVar3->command[1] = (RsxCmd)(float)param_1;
-  pRVar3->command[2] = (RsxCmd)(float)dVar5;
-  pRVar3->command = pRVar3->command + 3;
-  pRVar3 = HUD_Pass;
-  *HUD_Pass->command = 0x41904;
-  pRVar3->command[1] = (RsxCmd)((uVar1 & 0xfffffffe) << 0x10) | RVar2;
-  pRVar3->command = pRVar3->command + 2;
-  pRVar3 = HUD_Pass;
-  *HUD_Pass->command = NV4097_SET_VERTEX_DATA2F_M_x2;
-  pRVar3->command[1] = (RsxCmd)(float)dVar6;
-  pRVar3->command[2] = (RsxCmd)(float)dVar5;
-  pRVar3->command = pRVar3->command + 3;
-  pRVar3 = HUD_Pass;
-  *HUD_Pass->command = 0x41904;
-  pRVar3->command[1] = (RsxCmd)((in_r8 & 0xffffffff) << 0x11) | RVar2;
-  pRVar3->command = pRVar3->command + 2;
-  pRVar3 = HUD_Pass;
-  *HUD_Pass->command = NV4097_SET_VERTEX_DATA2F_M_x2;
-  pRVar3->command[1] = (RsxCmd)(float)dVar6;
-  pRVar3->command[2] = (RsxCmd)(float)param_2;
-  pRVar3->command = pRVar3->command + 3;
-  pRVar3 = HUD_Pass;
-  *HUD_Pass->command = NV4097_SET_BEGIN_END_x1;
-  pRVar3->command[1] = 0;
-  pRVar3->command = pRVar3->command + 2;
-  return;
+    float right = sc_w + sc_x;
+    float bottom = sc_h + sc_y;
+    HudBindEffectTex((int)tex0);
+    idol_draw::ResetPassState(HUD_Pass);
+
+    Emit(HUD_Pass, HUD_SET_COLOR4UB);
+    Emit(HUD_Pass, (u32)rgba);
+    /* (three words to method 0x1714, all zero) */
+    Emit(HUD_Pass, 0x400c1714);
+    Emit(HUD_Pass, 0);
+    Emit(HUD_Pass, 0);
+    Emit(HUD_Pass, 0);
+    Emit(HUD_Pass, HUD_SET_BEGIN_END);
+    Emit(HUD_Pass, CELL_GCM_PRIMITIVE_QUADS);
+
+    int left = tx_u * 2;
+    int top = tx_v * 2;
+    int texRight = (tx_u + tx_w) * 2;
+    int texBottom = (tx_v + tx_h) * 2;
+
+    HudVertexF(HUD_Pass, left, top, sc_x, sc_y);
+    HudVertexF(HUD_Pass, left, texBottom, sc_x, bottom);
+    HudVertexF(HUD_Pass, texRight, texBottom, right, bottom);
+    HudVertexF(HUD_Pass, texRight, top, right, sc_y);
+    HudEnd();
 }
 
 
 // 0x0069a04 (0x40 bytes)
-void DrawSpriteFont_thunk(void)
-
+void DrawSpriteFont_thunk(float sc_x, float sc_y, float sc_w, float sc_h, int tx_u, int tx_v, int tx_w, int tx_h, u64 rgba, u64 tex0)
 {
-  DrawSpriteFont();
-  return;
+    DrawSpriteFont(sc_x, sc_y, sc_w, sc_h, tx_u, tx_v, tx_w, tx_h, rgba, tex0);
 }
 
 
 // 0x0069a50 (0x34c bytes)
-void FontPrint_unk3
-               (double param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
-               undefined4 param_6,int param_7,int param_8,undefined8 param_9,undefined8 param_10,
-               int param_11)
-
+/* FontPrintScaledJapanese through DrawSpriteFont with effect texture tex: glyph rows start one
+   texel down and are 15 high, and bytes 0x80..0xa7 also draw the mark at table[ch + 0x40] */
+void FontPrintScaledWestern(float x, float y, float scale, u32 color, const u8 *str, int len, u64 tex, const FontGlyph *table)
 {
-  int iVar1;
-  undefined8 uVar2;
-  byte bVar3;
-  int iVar4;
-  double dVar5;
-  double dVar6;
-  double dVar7;
-  double dVar8;
-  double dVar9;
-  
-  uVar2 = idol_draw::PackCmd(0,1,0,1,0);
-  SetGSReg(3,uVar2);
-  uVar2 = idol_draw::Blend(1,5,4,0,0,0,0,1);
-  SetGSReg(0x16,uVar2);
-  if (DAT_0095ee18 == 0) {
-    DAT_0071ef98 = param_6;
-  }
-  iVar4 = 0;
-  dVar8 = (double)(float)(param_3 * 16.0);
-  if (param_8 != 0) {
-    dVar9 = (double)(float)(param_3 * 24.0);
-    do {
-      bVar3 = *(byte *)(param_7 + iVar4);
-      if (bVar3 == 0) {
+    SetGSReg(3, idol_draw::PackCmd(0, 1, 0, 1, 0));
+    SetGSReg(0x16, idol_draw::Blend(1, 5, 4, 0, 0, 0, 0, 1));
+
+    if (g_FontKeepPalette == 0) {
+        g_FontPalette[0] = color;
+    }
+
+    float size = scale * 16.0f;
+
+    if (len == 0) {
         return;
-      }
-      if (((bVar3 < 8) || (0xf < bVar3)) &&
-         (iVar1 = param_11 + (uint)bVar3 * 4, *(char *)(iVar1 + 3) != '\0')) {
-        dVar5 = (double)FastIntToDouble(*(undefined1 *)(iVar1 + 2));
-        bVar3 = *(byte *)(param_7 + iVar4);
-        if ((0x7f < bVar3) && (bVar3 < 0xa8)) {
-          iVar1 = param_11 + (bVar3 + 0x40) * 4;
-          dVar6 = (double)FastIntToDouble(*(undefined1 *)(iVar1 + 3));
-          dVar7 = (double)FastIntToDouble(*(undefined1 *)(iVar1 + 2));
-          DrawSpriteFont((double)(float)(dVar6 * param_3 + param_1),
-                         (double)(float)(dVar7 * param_3 + param_2),dVar8,dVar8);
-          bVar3 = *(byte *)(param_7 + iVar4);
+    }
+
+    float wide = scale * 24.0f;
+
+    for (int i = 0; i != len; i++) {
+        u8 ch = str[i];
+
+        if (ch == 0) {
+            return;
         }
-        dVar5 = (double)(float)(dVar5 * param_3 + param_2);
-        if (bVar3 < 0x20) {
-          DrawSpriteFont(param_1,dVar5,dVar9,dVar8);
+
+        if (ch >= 8 && ch <= 15) {
+            if (g_FontColorsEnabled != 0) {
+                color = (color & 0xff000000) | (g_FontPalette[ch - 8] & 0xffffff);
+            }
+
+            continue;
         }
-        else if (0x20 < bVar3) {
-          DrawSpriteFont(param_1,dVar5,dVar8,dVar8);
+
+        if (table[ch].width == 0) {
+            continue;
         }
-        dVar5 = (double)FastIntToDouble
-                                  (*(undefined1 *)
-                                    (param_11 + (uint)*(byte *)(param_7 + iVar4) * 4 + 3));
-        param_1 = (double)(float)(dVar5 * param_3 + param_1);
-      }
-      iVar4 = iVar4 + 1;
-    } while (iVar4 != param_8);
-  }
-  return;
+
+        float yOff = (float)FastIntToDouble(table[ch].yOff);
+
+        ch = str[i];
+
+        if (ch >= 128 && ch < 168) {
+            const FontGlyph *mark = &table[ch + 0x40];
+            float markX = (float)FastIntToDouble(mark->width);
+            float markY = (float)FastIntToDouble(mark->yOff);
+
+            DrawSpriteFont(markX * scale + x, markY * scale + y, size, size, mark->u, mark->v + 1, 16, 15, color, tex);
+
+            ch = str[i];
+        }
+
+        const FontGlyph *glyph = &table[ch];
+        float drawY = yOff * scale + y;
+
+        if (ch < 32) {
+            u32 sum = (color & 0xff) + ((color >> 8) & 0xff) + ((color >> 16) & 0xff) + 1;
+            u32 grey = (sum * 341) >> 10;
+            u32 greyColor = (color & 0xff000000) + (grey << 16) + (grey << 8) + grey;
+
+            DrawSpriteFont(x, drawY, wide, size, glyph->u, glyph->v + 1, 24, 15, greyColor, tex);
+        }
+        else if (ch > 32) {
+            DrawSpriteFont(x, drawY, size, size, glyph->u, glyph->v + 1, 16, 15, color, tex);
+        }
+
+        x = (float)FastIntToDouble(table[str[i]].width) * scale + x;
+    }
 }
 
 
 // 0x0069db8 (0x750 bytes)
-void FontPrintOptWestern(float param_1,FontWindow *param_2,u32 param_3,const char *param_4,int param_5,int param_6,void *param_7)
-
+/* FontPrintOptJapanese for the Western fonts through FontPrintScaledWestern. A scale of 1 becomes 0.9 in
+   languages 2..5 (0.8 in language 3 with flag 0x10). Lines are balanced: while the line count
+   holds and the last line is under a third of the width, the width shrinks by 16 and the text is
+   broken again; if a narrower width adds a line, the original width is used. */
+void FontPrintOptWestern(float scale, FontWindow *win, u32 color, const char *text, int len, int tex, void *glyphs)
 {
-  byte bVar1;
-  ushort uVar2;
-  ushort uVar3;
-  undefined4 uVar4;
-  undefined2 uVar5;
-  GPiece<16> auVar6;
-  ulonglong *puVar7;
-  int iVar8;
-  int iVar9;
-  bool bVar10;
-  undefined4 *puVar11;
-  short sVar15;
-  int iVar13;
-  ulonglong uVar12;
-  int iVar14;
-  longlong lVar16;
-  longlong lVar17;
-  int iVar18;
-  short sVar19;
-  int iVar20;
-  short sVar21;
-  longlong lVar22;
-  ulonglong unaff_r14;
-  ulonglong unaff_r15;
-  ulonglong unaff_r16;
-  ulonglong unaff_r17;
-  ulonglong unaff_r18;
-  ulonglong unaff_r19;
-  ulonglong unaff_r20;
-  ulonglong unaff_r21;
-  ulonglong unaff_r22;
-  longlong lVar23;
-  ulonglong unaff_r23;
-  ulonglong unaff_r24;
-  ulonglong unaff_r25;
-  longlong lVar24;
-  ulonglong unaff_r26;
-  ulonglong unaff_r27;
-  ulonglong unaff_r28;
-  ulonglong unaff_r29;
-  ulonglong unaff_r30;
-  longlong lVar25;
-  int iVar28;
-  longlong lVar26;
-  longlong lVar27;
-  ulonglong unaff_r31;
-  longlong lVar29;
-  ulonglong uVar30;
-  int iVar31;
-  ulonglong in_LR;
-  double dVar32;
-  ulonglong uVar33;
-  ulonglong in_f31;
-  double dVar34;
-  GPiece<16> auVar35;
-  GPiece<16> auVar36;
-  undefined4 in_vr31_32_0;
-  undefined4 in_vr31_32_1;
-  undefined4 in_vr31_32_2;
-  undefined4 in_vr31_32_3;
-  GPiece<16> auVar37;
-  
-  uVar12 = ZEXT48(&stack0x00000000);
-  lVar27 = uVar12 - 0x210;
-  puVar7 = (ulonglong *)lVar27;
-  *puVar7 = uVar12;
-  puVar7[0x44] = in_LR;
-  puVar7[0x41] = in_f31;
-  puVar7[0x30] = unaff_r15;
-  puVar11 = (undefined4 *)(uVar12 - 0xb0);
-  puVar11[3] = in_vr31_32_3;
-  puVar11[2] = in_vr31_32_2;
-  puVar11[1] = in_vr31_32_1;
-  *puVar11 = in_vr31_32_0;
-  puVar7[0x31] = unaff_r16;
-  puVar7[0x2f] = unaff_r14;
-  iVar8 = (int)param_2;
-  uVar2 = *(ushort *)(iVar8 + 0x12);
-  puVar7[0x38] = unaff_r23;
-  DAT_0095ee18 = 1;
-  puVar7[0x33] = unaff_r18;
-  uVar3 = *(ushort *)(iVar8 + 10);
-  puVar7[0x28] = (ulonglong)*(ushort *)(iVar8 + 0x10);
-  puVar7[0x3d] = unaff_r28;
-  puVar7[0x3c] = unaff_r27;
-  puVar7[0x34] = unaff_r19;
-  puVar7[0x29] = (ulonglong)uVar3;
-  puVar7[0x40] = unaff_r31;
-  puVar7[0x3f] = unaff_r30;
-  puVar7[0x3e] = unaff_r29;
-  puVar7[0x3b] = unaff_r26;
-  puVar7[0x3a] = unaff_r25;
-  puVar7[0x39] = unaff_r24;
-  puVar7[0x37] = unaff_r22;
-  puVar7[0x36] = unaff_r21;
-  puVar7[0x35] = unaff_r20;
-  puVar7[0x32] = unaff_r17;
-  if ((uVar2 & 1) == 0) {
-    lVar25 = (longlong)*(short *)(iVar8 + 6) - (longlong)*(short *)(iVar8 + 8);
-  }
-  else {
-    lVar25 = (longlong)*(short *)(iVar8 + 8);
-    lVar16 = (longlong)*(short *)(iVar8 + 4);
-    lVar26 = *(short *)(iVar8 + 6) - lVar25;
-    lVar25 = ((lVar25 + (lVar26 - (lVar25 - lVar16) >> 0x3f & *(short *)(iVar8 + 6) - lVar25)) -
-              (lVar16 + (lVar26 - (lVar25 - lVar16) >> 0x3f & lVar25 - lVar16)) & 0x7fffffffU) << 1;
-  }
-  dVar34 = 1.0;
-  if (0.001 < ABS((float)(param_1 - 1.0))) {
-    *(float *)(puVar7 + 0x26) = (float)param_1;
-    *(float *)((int)puVar7 + 0x134) = (float)param_1;
-    *(float *)(puVar7 + 0x27) = (float)param_1;
-    *(float *)((int)puVar7 + 0x13c) = (float)param_1;
-    auVar37 = *(undefined1 (*) [16])(puVar7 + 0x26);
-    dVar34 = param_1;
-    goto LAB_00069fb0;
-  }
-  if (g_Language < 4) {
-    if (1 < g_Language) {
-      if (g_Language < 3) {
-        dVar34 = 0.8999999761581421;
-        auVar37 = loadVectorLeftIndexed(8,0x69d9c);
-        auVar37 = auVar37 >> 0x60 & (GPiece<16>)0xffffffff;
-        auVar37 = auVar37 | auVar37 << 0x20 | auVar37 << 0x40 | auVar37 << 0x60;
-      }
-      else {
-        dVar34 = 0.8999999761581421;
-        auVar37 = loadVectorLeftIndexed(8,0x69d9c);
-        auVar37 = auVar37 >> 0x60 & (GPiece<16>)0xffffffff;
-        auVar37 = auVar37 | auVar37 << 0x20 | auVar37 << 0x40 | auVar37 << 0x60;
-        if ((uVar2 & 0x10) != 0) {
-          dVar34 = 0.7999999523162842;
-          auVar37 = loadVectorLeftIndexed(0xc,0x69d9c);
-          auVar37 = auVar37 >> 0x60 & (GPiece<16>)0xffffffff;
-          auVar37 = auVar37 | auVar37 << 0x20 | auVar37 << 0x40 | auVar37 << 0x60;
-        }
-      }
-      goto LAB_00069fb0;
-    }
-  }
-  else {
-    if (g_Language < 5) {
-      dVar34 = 0.8999999761581421;
-      auVar37 = loadVectorLeftIndexed(8,0x69d9c);
-      auVar37 = auVar37 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar37 = auVar37 | auVar37 << 0x20 | auVar37 << 0x40 | auVar37 << 0x60;
-      goto LAB_00069fb0;
-    }
-    if (g_Language < 6) {
-      dVar34 = 0.8999999761581421;
-      auVar37 = loadVectorLeftIndexed(8,0x69d9c);
-      auVar37 = auVar37 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar37 = auVar37 | auVar37 << 0x20 | auVar37 << 0x40 | auVar37 << 0x60;
-      goto LAB_00069fb0;
-    }
-  }
-  auVar37 = loadVectorLeftIndexed(uVar12 - 0xb0,0x69d9c);
-  auVar37 = auVar37 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar37 = auVar37 | auVar37 << 0x20 | auVar37 << 0x40 | auVar37 << 0x60;
-LAB_00069fb0:
-  sVar19 = 0;
-  bVar10 = false;
-  lVar23 = 0;
-  lVar16 = 0;
-  lVar26 = lVar25;
-  do {
-    iVar13 = 0;
-    lVar24 = 0;
-    iVar28 = (int)lVar26;
-    lVar17 = lVar16;
-    lVar29 = lVar27;
-    if (param_5 != 0) {
-      while (lVar17 = lVar16, *(char *)(param_4 + iVar13) != '\0') {
-        iVar9 = (int)lVar29;
-        sVar15 = (short)iVar13;
-        *(short *)(iVar9 + 0x70) = sVar15;
-        lVar17 = 0;
-        *(short *)(iVar9 + 0xf0) = sVar19;
-        iVar20 = iVar13;
-        if (0 < iVar28) {
-          do {
-            bVar1 = *(byte *)(param_4 + iVar13);
-            if ((bVar1 == 0x20) || (bVar1 < 0x10)) {
-              iVar20 = iVar13;
-            }
-            if (((g_FontColorsEnabled != 0) && (7 < bVar1)) && (bVar1 < 0x10)) {
-              sVar19 = bVar1 - 8;
-            }
-            if ((bVar1 == 0) || (bVar1 == 1)) break;
-            iVar13 = iVar13 + 1;
-            bVar1 = *(byte *)((int)param_7 + (uint)bVar1 * 4 + 3);
-            puVar7[0x2a] = (longlong)(int)(char)bVar1;
-            puVar7[0x2a] = (longlong)(int)((double)(longlong)puVar7[0x2a] * dVar34);
-            lVar22 = lVar17 + (ulonglong)*(uint *)((int)puVar7 + 0x154);
-            lVar17 = lVar22 + (ZERO_MASK((uint)bVar1) & lVar17 - lVar22);
-          } while ((int)lVar17 < iVar28);
-        }
-        sVar21 = (short)iVar20;
-        *(short *)(iVar9 + 0xb0) = sVar21;
-        if (sVar21 == sVar15) {
-          sVar21 = (short)iVar13;
-          *(short *)(iVar9 + 0xb0) = sVar21;
-        }
-        bVar1 = *(byte *)(param_4 + sVar21);
-        if ((bVar1 == 0x20) || (bVar1 < 0x10)) {
-          *(short *)(iVar9 + 0xb0) = sVar21 + -1;
-        }
-        lVar24 = lVar24 + 1;
-        if ((bVar1 == 0) ||
-           (iVar13 = sVar21 + 1, lVar17 = lVar16, lVar29 = lVar29 + 2, iVar13 == param_5)) break;
-      }
-    }
-    iVar13 = (int)lVar24;
-    if ((bVar10) || (iVar13 < 2)) {
-LAB_0006a184:
-      uVar12 = puVar7[0x28];
-      uVar30 = puVar7[0x29];
-      *(undefined2 *)(iVar8 + 0xc) = 0;
-      *(short *)(iVar8 + 0xe) = (short)lVar24 * (short)uVar12;
-      iVar28 = 0;
-      lVar25 = (longlong)(short)uVar30 - (longlong)((short)uVar12 * iVar13 >> 1);
-      if (0 < iVar13) {
-        lVar25 = lVar25 + (ZERO_MASK((uVar2 & 2)) & (short)uVar30 - lVar25);
-        do {
-          iVar9 = (int)lVar27;
-          iVar18 = 0;
-          auVar35 = ZEXT416(0);
-          auVar35 = auVar35 | auVar35 << 0x20 | auVar35 << 0x40 | auVar35 << 0x60;
-          dVar32 = 0.0;
-          iVar14 = *(short *)(iVar9 + 0x70) + param_4;
-          iVar20 = ((int)*(short *)(iVar9 + 0xb0) - (int)*(short *)(iVar9 + 0x70)) + 1;
-          if (iVar20 != 0) {
-            auVar6 = ZEXT416(0xfffffff8);
-            do {
-              auVar35 = auVar35 >> 0x60 & (GPiece<16>)0xffffffff;
-              auVar35 = auVar35 | auVar35 << 0x20 | auVar35 << 0x40 | auVar35 << 0x60;
-              if (*(byte *)(iVar14 + iVar18) == 0) break;
-              uVar12 = param_7 + (ulonglong)*(byte *)(iVar14 + iVar18) * 4;
-              iVar18 = iVar18 + 1;
-              puVar7[0x2a] = (longlong)(int)*(char *)((int)uVar12 + 3);
-              auVar36 = loadVectorLeftIndexed(3,uVar12 & 0xffffffff);
-              auVar36 = vectorShiftRightAlgebraicWord
-                                  (auVar36,auVar6 | auVar6 << 0x20 | auVar6 << 0x40 | auVar6 << 0x60
-                                  );
-              auVar36 = vectorConvertFromSignedFixedPointWord(auVar36,0);
-              auVar35 = vectorMultiplyAddFloatingPoint(auVar36,auVar37,auVar35);
-              dVar32 = (double)(float)((double)(longlong)puVar7[0x2a] * dVar34 + dVar32);
-            } while (iVar18 != iVar20);
-          }
-          auVar35 = auVar35 >> 0x60 & (GPiece<16>)0xffffffff;
-          sVar19 = *(short *)(iVar8 + 0xc);
-          auVar35 = vectorConvertToSignedFixedPointWordSaturate
-                              (auVar35 | auVar35 << 0x20 | auVar35 << 0x40 | auVar35 << 0x60,0);
-          puVar7[0x2a] = (longlong)(int)dVar32;
-          iVar18 = *(int *)((int)puVar7 + 0x154);
-          if (sVar19 < iVar18) {
-            auVar35 = vectorSplatHalfWord(auVar35,1);
-            uVar5 = storeVectorElementHalfWordIndexed(auVar35,0xc,param_2);
-            *(undefined2 *)(iVar8 + 0xc) = uVar5;
-          }
-          uVar2 = *(ushort *)(iVar8 + 0x12);
-          if ((uVar2 & 4) == 0) {
-            iVar31 = (int)lVar25;
-            iVar18 = iVar18 >> 1;
-            DAT_0071ef98 = param_3;
-            if ((uVar2 & 8) == 0) {
-              if ((uVar2 & 1) == 0) {
-                puVar7[0x2a] = (longlong)(int)*(short *)(iVar8 + 8);
-                uVar4 = *(undefined4 *)
-                         ((int)&DAT_0071ef98 + (int)((longlong)*(short *)(iVar9 + 0xf0) << 2));
-                uVar12 = puVar7[0x2a];
-                puVar7[0x2a] = (longlong)iVar31;
-                FontPrint_unk3((double)(longlong)uVar12,(double)(longlong)puVar7[0x2a],dVar34,iVar20
-                               ,iVar14,uVar4,iVar14,iVar20,(longlong)iVar31,param_6,param_7);
-              }
-              else {
-                puVar7[0x2a] = (longlong)(*(short *)(iVar8 + 8) - iVar18);
-                lVar16 = (longlong)*(short *)(iVar9 + 0xf0) << 2;
-                uVar4 = *(undefined4 *)((int)&DAT_0071ef98 + (int)lVar16);
-                uVar12 = puVar7[0x2a];
-                puVar7[0x2a] = (longlong)iVar31;
-                FontPrint_unk3((double)(longlong)uVar12,(double)(longlong)puVar7[0x2a],dVar34,lVar16
-                               ,iVar14,uVar4,iVar14,iVar20,(longlong)iVar31,param_6,param_7);
-              }
-            }
-            else {
-              if ((uVar2 & 1) == 0) {
-                sVar19 = *(short *)(iVar8 + 0x14);
-                iVar18 = (int)*(short *)(iVar8 + 8);
-              }
-              else {
-                sVar19 = *(short *)(iVar8 + 0x14);
-                iVar18 = *(short *)(iVar8 + 8) - iVar18;
-              }
-              puVar7[0x2a] = (longlong)(int)sVar19;
-              sVar19 = *(short *)(iVar8 + 0x16);
-              sVar15 = *(short *)(iVar9 + 0xf0);
-              uVar12 = puVar7[0x2a];
-              puVar7[0x2a] = (longlong)iVar18;
-              uVar30 = puVar7[0x2a];
-              puVar7[0x2a] = (longlong)iVar31;
-              uVar4 = *(undefined4 *)((int)&DAT_0071ef98 + (int)((longlong)sVar15 << 2));
-              uVar33 = puVar7[0x2a];
-              puVar7[0x2a] = (longlong)(int)sVar19;
-              FontPrint_unk3((double)((float)(longlong)uVar12 * 0.0625 + (float)(longlong)uVar30),
-                             (double)((float)(longlong)puVar7[0x2a] * 0.0625 +
-                                     (float)(longlong)uVar33),dVar34,iVar20,iVar14,uVar4,iVar14,
-                             iVar20,(longlong)(int)sVar19,param_6,param_7);
-            }
-          }
-          iVar28 = iVar28 + 1;
-          lVar27 = lVar27 + 2;
-          lVar25 = lVar25 + *(short *)(iVar8 + 0x10);
-        } while (iVar28 < iVar13);
-      }
-      DAT_0095ee18 = 0;
-      return;
-    }
-    lVar23 = lVar23 + (ZERO_MASK((int)lVar23) & lVar24 - lVar23);
-    lVar16 = lVar17;
-    if ((int)lVar23 < iVar13) {
-      bVar10 = true;
-      lVar26 = lVar25;
+    const u8 *str = (const u8 *)text;
+    const FontGlyph *table = (const FontGlyph *)glyphs;
+    short lineStart[32];
+    short lineEnd[32];
+    short lineColor[32];
+
+    g_FontKeepPalette = 1;
+
+    int flags = win->flags;
+    int spacing = win->line_spacing;
+    int textY = win->text_y;
+    int startWidth;
+
+    if ((flags & 1) == 0) {
+        startWidth = win->win_right - win->text_x;
     }
     else {
-      if (iVar28 / 3 <= (int)lVar17) goto LAB_0006a184;
-      lVar26 = lVar26 + -0x10;
+        int right = win->win_right - win->text_x;
+        int left = win->text_x - win->win_left;
+
+        startWidth = (right < left ? right : left) * 2;
     }
-  } while( true );
+
+    if (fabsf(scale - 1.0f) <= 0.001f) {
+        scale = 1.0f;
+
+        if (g_Language == 2 || g_Language == 4 || g_Language == 5) {
+            scale = 0.9f;
+        }
+        else if (g_Language == 3) {
+            scale = 0.9f;
+
+            if (flags & 0x10) {
+                scale = 0.8f;
+            }
+        }
+    }
+
+    int colorIdx = 0;
+    int width = startWidth;
+    int settled = 0;
+    int firstLines = 0;
+    int lastWidth = 0;
+    int lines;
+
+    while (true) {
+        int pos = 0;
+
+        lines = 0;
+
+        if (len != 0) {
+            while (str[pos] != 0) {
+                int start = pos;
+                int breakAt = start;
+                int lineWidth = 0;
+
+                lineStart[lines] = pos;
+                lineColor[lines] = colorIdx;
+
+                if (width > 0) {
+                    do {
+                        u8 ch = str[pos];
+
+                        if (ch == ' ' || ch < 16) {
+                            breakAt = pos;
+                        }
+
+                        if (g_FontColorsEnabled != 0 && ch >= 8 && ch <= 15) {
+                            colorIdx = ch - 8;
+                        }
+
+                        if (ch == 0 || ch == 1) {
+                            break;
+                        }
+
+                        pos++;
+                        lineWidth += (int)((float)table[ch].width * scale);
+                    } while (lineWidth < width);
+                }
+
+                lineEnd[lines] = breakAt;
+
+                if ((short)breakAt == (short)start) {
+                    lineEnd[lines] = pos;
+                }
+
+                pos = lineEnd[lines];
+
+                u8 ch = str[pos];
+
+                if (ch == ' ' || ch < 16) {
+                    lineEnd[lines] = pos - 1;
+                }
+
+                lines++;
+
+                if (ch == 0) {
+                    lastWidth = lineWidth;
+                    break;
+                }
+
+                pos++;
+
+                if (pos == len) {
+                    break;
+                }
+            }
+        }
+
+        if (settled != 0 || lines <= 1) {
+            break;
+        }
+
+        if (firstLines == 0) {
+            firstLines = lines;
+        }
+
+        if (firstLines < lines) {
+            width = startWidth;
+            settled = 1;
+        }
+        else if (lastWidth < width / 3) {
+            width -= 16;
+        }
+        else {
+            break;
+        }
+    }
+
+    win->max_width = 0;
+    win->max_height = lines * spacing;
+
+    int y = textY;
+
+    if (flags & 2) {
+        y = textY - ((short)spacing * lines >> 1);
+    }
+
+    for (int i = 0; i < lines; i++) {
+        int count = lineEnd[i] - lineStart[i] + 1;
+        const u8 *line = str + lineStart[i];
+        float lineWidth = 0.0f;
+
+        for (int j = 0; j != count; j++) {
+            if (line[j] == 0) {
+                break;
+            }
+
+            lineWidth = (float)table[line[j]].width * scale + lineWidth;
+        }
+
+        int pixels = (int)lineWidth;
+
+        if (pixels > win->max_width) {
+            win->max_width = pixels;
+        }
+
+        flags = win->flags;
+
+        if ((flags & 4) == 0) {
+            g_FontPalette[0] = color;
+
+            int x = win->text_x;
+
+            if (flags & 1) {
+                x = win->text_x - (pixels >> 1);
+            }
+
+            float drawX = (float)x;
+            float drawY = (float)y;
+
+            if (flags & 8) {
+                drawX = (float)win->sub_pixel_x * 0.0625f + drawX;
+                drawY = (float)win->sub_pixel_y * 0.0625f + drawY;
+            }
+
+            FontPrintScaledWestern(drawX, drawY, scale, g_FontPalette[lineColor[i]], line, count, tex, table);
+        }
+
+        y += win->line_spacing;
+    }
+
+    g_FontKeepPalette = 0;
 }
 
 
 // 0x006a510 (0xb4 bytes)
-void FontPrintMediumOpt(FontWindow *param_1,u32 param_2,const char *param_3,int param_4)
-
+/* text in win at scale 1 with the medium font: JapaneseGlyphs in Japanese mode, else
+   MediumWesternGlyphs, both on effect texture 1 (used by the cheats menu, "No cheats activated") */
+void FontPrintMediumOpt(FontWindow *win, u32 color, const char *str, int len)
 {
-                    /* Is used in cheats menu
-                       "No cheats activated" */
-  if (g_JapaneseMode) {
-    FontPrintOptJapanese
-              (0x3ff0000000000000,param_1,param_2,param_3,param_4,*(undefined4 *)(TexInfo + 4),
-               &JapaneseGlyphs);
-  }
-  else {
-    FontPrintOptWestern(param_1,param_2,param_3,param_4,*(undefined4 *)(TexInfo + 4),
-                        &MediumWesternGlyphs);
-  }
-  return;
+    if (g_JapaneseMode) {
+        FontPrintOptJapanese(1.0f, win, color, (const u8 *)str, len, GetEffectTex(1), (const FontGlyph *)&JapaneseGlyphs);
+    }
+    else {
+        FontPrintOptWestern(1.0f, win, color, str, len, GetEffectTex(1), &MediumWesternGlyphs);
+    }
 }
 
 
 // 0x006a5c4 (0x70 bytes)
-void Sprite_DrawShapeWrapper(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6,int param_7,int param_8,u32 param_9,int param_10)
-
+/* Sprite_DrawShape with an effect texture by its index in EffectTexHeaders */
+void Sprite_DrawShapeWrapper(int x, int y, int w, int h, int u, int v, int uw, int vh, u32 color, int tex)
 {
-  Sprite_DrawShape();
-  return;
+    Sprite_DrawShape(x, y, w, h, u, v, uw, vh, color, (u8 *)(uintptr_t)EffectTexHeaders + tex * 0x24);
 }
 
 
 // 0x006a634 (0xe4 bytes)
-void DrawRectOverlay(int top,int bot,int left,int right,int color)
-
+/* a flat rectangle in color with effect texture 22 (the whole screen through DrawFullScreenQuad) */
+void DrawRectOverlay(int top, int bot, int left, int right, int color)
 {
-  if (((top == 0 && bot == 0x1a0) && (left == 0)) && (right == 0x200)) {
-    DrawFullScreenQuad(color,(void *)(EffectTexHeaders + *(int *)(TexInfo + 0x58) * 0x24));
-  }
-  else {
-    Sprite_DrawShape(left,top,right - left,bot - top,0,0,0x10,0x10);
-  }
-  return;
+    void *tex = (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(22) * 0x24;
+
+    if (top == 0 && bot == 416 && left == 0 && right == 512) {
+        DrawFullScreenQuad(color, tex);
+        return;
+    }
+
+    Sprite_DrawShape(left, top, right - left, bot - top, 0, 0, 16, 16, color, tex);
 }
 
 
 // 0x006a718 (0x578 bytes)
-void DrawRoundedRect(short param_1,short param_2,short param_3,short param_4,int param_5)
-
+/* a dark grey (0x040404) box with alpha whose left and right edges step in over two, three and
+   four pixels; seven inlined DrawRectOverlay calls */
+void DrawRoundedRect(short top, short bot, short left, short right, int alpha)
 {
-  uint rgba;
-  int iVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  int iVar5;
-  int iVar6;
-  int iVar7;
-  int iVar8;
-  int iVar9;
-  
-  rgba = param_5 << 0x18 | 0x40404;
-  iVar9 = (int)param_1;
-  iVar1 = (int)param_3;
-  iVar8 = (int)param_4;
-  if (((iVar9 == 0 && param_2 == 0x1a0) && (iVar1 == 0)) && (iVar8 == 0x200)) {
-    DrawFullScreenQuad(rgba,(void *)(EffectTexHeaders + *(int *)(TexInfo + 0x58) * 0x24));
-  }
-  else {
-    Sprite_DrawShape(param_3,param_1,iVar8 - iVar1,param_2 - iVar9,0,0,0x10,0x10);
-  }
-  iVar7 = iVar9 + 1;
-  iVar6 = param_2 + -1;
-  iVar2 = iVar1 + -2;
-  if (((iVar7 == 0 && iVar6 == 0x1a0) && (iVar2 == 0)) && (iVar1 == 0x200)) {
-    DrawFullScreenQuad(rgba,(void *)(EffectTexHeaders + *(int *)(TexInfo + 0x58) * 0x24));
-  }
-  else {
-    Sprite_DrawShape(iVar2,iVar7,iVar1 - iVar2,iVar6 - iVar7,0,0,0x10,0x10);
-  }
-  iVar5 = iVar9 + 2;
-  iVar4 = param_2 + -2;
-  iVar3 = iVar1 + -3;
-  if (((iVar5 == 0 && iVar4 == 0x1a0) && (iVar3 == 0)) && (iVar2 == 0x200)) {
-    DrawFullScreenQuad(rgba,(void *)(EffectTexHeaders + *(int *)(TexInfo + 0x58) * 0x24));
-  }
-  else {
-    Sprite_DrawShape(iVar3,iVar5,iVar2 - iVar3,iVar4 - iVar5,0,0,0x10,0x10);
-  }
-  iVar9 = iVar9 + 4;
-  param_2 = param_2 + -4;
-  iVar1 = iVar1 + -4;
-  if (((iVar9 == 0 && param_2 == 0x1a0) && (iVar1 == 0)) && (iVar3 == 0x200)) {
-    DrawFullScreenQuad(rgba,(void *)(EffectTexHeaders + *(int *)(TexInfo + 0x58) * 0x24));
-  }
-  else {
-    Sprite_DrawShape(iVar1,iVar9,iVar3 - iVar1,param_2 - iVar9,0,0,0x10,0x10);
-  }
-  iVar1 = iVar8 + 2;
-  if (((iVar7 == 0) && (iVar6 == 0x1a0)) && ((iVar8 == 0 && (iVar1 == 0x200)))) {
-    DrawFullScreenQuad(rgba,(void *)(EffectTexHeaders + *(int *)(TexInfo + 0x58) * 0x24));
-  }
-  else {
-    Sprite_DrawShape(param_4,iVar7,iVar1 - iVar8,iVar6 - iVar7,0,0,0x10,0x10);
-  }
-  iVar2 = iVar8 + 3;
-  if (((iVar5 == 0) && (iVar4 == 0x1a0)) && ((iVar1 == 0 && (iVar2 == 0x200)))) {
-    DrawFullScreenQuad(rgba,(void *)(EffectTexHeaders + *(int *)(TexInfo + 0x58) * 0x24));
-  }
-  else {
-    Sprite_DrawShape(iVar1,iVar5,iVar2 - iVar1,iVar4 - iVar5,0,0,0x10,0x10);
-  }
-  if ((((iVar9 == 0) && (param_2 == 0x1a0)) && (iVar2 == 0)) && (iVar8 + 4 == 0x200)) {
-    DrawFullScreenQuad(rgba,(void *)(EffectTexHeaders + *(int *)(TexInfo + 0x58) * 0x24));
-  }
-  else {
-    Sprite_DrawShape(iVar2,iVar9,(iVar8 + 4) - iVar2,param_2 - iVar9,0,0,0x10,0x10);
-  }
-  return;
+    int color = alpha << 24 | 0x040404;
+
+    DrawRectOverlay(top, bot, left, right, color);
+
+    DrawRectOverlay(top + 1, bot - 1, left - 2, left, color);
+    DrawRectOverlay(top + 2, bot - 2, left - 3, left - 2, color);
+    DrawRectOverlay(top + 4, bot - 4, left - 4, left - 3, color);
+
+    DrawRectOverlay(top + 1, bot - 1, right, right + 2, color);
+    DrawRectOverlay(top + 2, bot - 2, right + 2, right + 3, color);
+    DrawRectOverlay(top + 4, bot - 4, right + 3, right + 4, color);
 }
 
 
 // 0x006ac90 (0x3c bytes)
-void SetFontWindow(FontWindow *window,int win_top,int win_bot,int win_left,int win_right,
-                        int text_x,int text_y,int line_spacing,int flags)
-
+void SetFontWindow(FontWindow *window, int win_top, int win_bot, int win_left, int win_right, int text_x, int text_y, int line_spacing, int flags)
 {
-  short in_stack_00000076;
-  
-  window->win_top = (short)win_top;
-  window->win_bot = (short)win_bot;
-  window->win_left = (short)win_left;
-  window->win_right = (short)win_right;
-  window->text_x = (short)text_x;
-  window->text_y = (short)text_y;
-  window->line_spacing = (short)line_spacing;
-  window->flags = in_stack_00000076;
-  window->max_width = 0;
-  window->max_height = 0;
-  window->sub_pixel_x = 0;
-  window->sub_pixel_y = 0;
-  return;
+    window->win_top = win_top;
+    window->win_bot = win_bot;
+    window->win_left = win_left;
+    window->win_right = win_right;
+    window->text_x = text_x;
+    window->text_y = text_y;
+    window->line_spacing = line_spacing;
+    window->flags = flags;
+    window->max_width = 0;
+    window->max_height = 0;
+    window->sub_pixel_x = 0;
+    window->sub_pixel_y = 0;
 }
 
 
 // 0x006accc (0x74 bytes)
-undefined8 ShouldForceSubtitles(void)
-
+/* subtitles are always on in languages 2..5, and in two English cutscenes (scene 4 on Novalis,
+   scene 0 on Aridia) */
+int ShouldForceSubtitles(void)
 {
-  undefined8 uVar1;
-  
-  if (g_Language < 2 || 5 < g_Language) {
-    if ((g_SceneId == 4) && (Level == Novalis)) {
-      uVar1 = 1;
+    if (g_Language >= 2 && g_Language <= 5) {
+        return 1;
     }
-    else if ((g_SceneId == 0) && (Level == Aridia)) {
-      uVar1 = 1;
+
+    if (g_SceneId == 4 && Level == Novalis) {
+        return 1;
+    }
+
+    if (g_SceneId == 0 && Level == Aridia) {
+        return 1;
+    }
+
+    return 0;
+}
+
+/* the subtitle window and its print in the medium font */
+static inline void SubtitlePrint(FontWindow *window, const char *text)
+{
+    if (g_JapaneseMode) {
+        FontPrintOptJapanese(1.0f, window, 0x80b0b0b0, (const u8 *)text, -1, GetEffectTex(1), (const FontGlyph *)&JapaneseGlyphs);
     }
     else {
-      uVar1 = 0;
+        FontPrintOptWestern(1.0f, window, 0x80b0b0b0, text, -1, GetEffectTex(1), &MediumWesternGlyphs);
     }
-  }
-  else {
-    uVar1 = 1;
-  }
-  return uVar1;
 }
 
 
 // 0x006ad48 (0x460 bytes)
-// strings: 00651fa4: 'Fammi vedere la trivella....tieni!'
-
-/* WARNING: Removing unreachable block (ram,0x0006b030) */
-
+/* Prints the first subtitle line covering g_SpaceSceneFrame over a rounded box at the bottom of
+   the screen. Patches: a narrower window in scene 5 on Kerwan, an Italian line on Hoven whose
+   text is replaced, and a box raised by 20 pixels for a long line on Veldin 2. */
 void DrawSubtitles(void)
-
 {
-  short sVar1;
-  short sVar2;
-  longlong lVar3;
-  int iVar4;
-  ulonglong uVar5;
-  char *__s;
-  ulonglong uVar6;
-  short *psVar7;
-  undefined8 uVar8;
-  char local_110 [128];
-  GPiece<24> local_90;
-  
-  uVar6 = ZEXT48(g_SubtitleTable);
-  if (g_SubtitleTable != (short *)0x0) {
-    lVar3 = 0;
-    if ((1 < (int)g_Language) && ((int)g_Language < 6)) {
-      lVar3 = (ulonglong)g_Language - 1;
+    Subtitle *subs = (Subtitle *)(uintptr_t)g_SubtitleTable;
+
+    if (subs == NULL) {
+        return;
     }
-    if (-1 < *g_SubtitleTable) {
-      uVar5 = uVar6 + ((ZERO_MASK((uint)g_JapaneseMode) & lVar3 - 5U) + 5) * 2 &
-              0xffffffff;
-      do {
-        psVar7 = (short *)uVar6;
-        sVar1 = *psVar7;
-        if ((sVar1 <= g_SpaceSceneFrame) &&
-           (sVar2 = psVar7[1], g_SpaceSceneFrame <= sVar2)) {
-          __s = (char *)((int)g_SubtitleTable + (int)*(short *)((int)uVar5 + 4));
-          memset(local_110,0x20,0x80);
-          if ((Level == Hoven) &&
-             ((((g_Language == 5 && (g_SceneId == 2)) && (sVar1 == 0x38b)) &&
-              (sVar2 == 0x3d3)))) {
-            __s = local_110;
-            snprintf(__s,"Fammi vedere la trivella....tieni!");
-          }
-          if (*__s != '\0') {
-            uVar8 = 0x3ff0000000000000;
-            if (g_JapaneseMode == false) {
-              FontPrintOptWestern(0x3ff0000000000000,local_90,0x80b0b0b0,__s,0xffffffffffffffff,
-                                  *(undefined4 *)(TexInfo + 4),&MediumWesternGlyphs);
+
+    int pad = ShouldForceSubtitles() ? 10 : 0;
+    int lang = 0;
+
+    if (g_Language >= 2 && g_Language <= 5) {
+        lang = g_Language - 1;
+    }
+
+    if (g_JapaneseMode) {
+        lang = 5;
+    }
+
+    if (subs[0].start < 0) {
+        return;
+    }
+
+    for (Subtitle *sub = subs; ; sub++) {
+        short start = sub->start;
+        short stop = sub->stop;
+
+        if (g_SpaceSceneFrame >= start && g_SpaceSceneFrame <= stop) {
+            FontWindow window;
+            char patched[128];
+
+            SetFontWindow(&window, 300, 380, pad + 40, 472, 250, 340, 18, 7);
+
+            if (g_SceneId == 5 && Level == Kerwan) {
+                if (g_Language != 4) {
+                    window.win_left = pad + 50;
+                }
+
+                window.win_right = 460;
             }
-            else {
-              FontPrintOptJapanese
-                        (0x3ff0000000000000,local_90,0x80b0b0b0,__s,0xffffffffffffffff,
-                         *(undefined4 *)(TexInfo + 4),&JapaneseGlyphs);
+
+            char *text = (char *)subs + sub->text_ofs[lang];
+
+            memset(patched, ' ', sizeof(patched));
+
+            if (Level == Hoven && g_Language == 5 && g_SceneId == 2 && start == 907 && stop == 979) {
+                text = patched;
+                strcpy(patched, "Fammi vedere la trivella....tieni!");
             }
-            iVar4 = 0;
-            if (((0 < (int)g_Language && (int)g_Language < 6) && (Level == Veldin2)) &&
-               ((g_SceneId == 2 && ((*psVar7 == 0x340 && (psVar7[1] == 0xa03)))))) {
-              iVar4 = 1;
+
+            if (text[0] != 0) {
+                /* flag 4: measure only */
+                SubtitlePrint(&window, text);
+
+                int half = window.max_height >> 1;
+                int bottom = half + 345;
+
+                window.text_y = 340;
+
+                if (bottom > 396) {
+                    window.text_y = 396 - (half + 5);
+                }
+
+                int raise = 0;
+
+                if (g_Language > 0 && g_Language <= 5 && Level == Veldin2 && g_SceneId == 2 && sub->start == 832 && sub->stop == 2563) {
+                    raise = 20;
+                }
+
+                DrawRoundedRect(340 - raise - (half + 5), bottom, 40, 472, 96);
+
+                window.flags &= ~4;
+                SubtitlePrint(&window, text);
+
+                return;
             }
-            DrawRoundedRect(0x14f - (((uint)(ZERO_MASK(iVar4)) & 0xffffffec) + 0x14
-                                    ),0x159,0x28,0x1d8,0x60);
-            if (g_JapaneseMode == false) {
-              FontPrintOptWestern(uVar8,local_90,0x80b0b0b0,__s,0xffffffffffffffff,
-                                  *(undefined4 *)(TexInfo + 4),&MediumWesternGlyphs);
-              return;
-            }
-            FontPrintOptJapanese
-                      (uVar8,local_90,0x80b0b0b0,__s,0xffffffffffffffff,*(undefined4 *)(TexInfo + 4)
-                       ,&JapaneseGlyphs);
-            return;
-          }
         }
-        uVar5 = uVar5 + 0x10;
-        uVar6 = uVar6 + 0x10;
-      } while (-1 < psVar7[8]);
+
+        if (sub[1].start < 0) {
+            return;
+        }
     }
-  }
-  return;
 }
 
 
 // 0x006b1a8 (0x44 bytes)
+/* slides the letterbox bars one pixel a frame towards 24 pixels while LetterBoxOn, else to 0 */
 void UpdateLetterBox(void)
-
 {
-  if (LetterBoxOn == 0) {
-    if (LetterBoxPixels != 0) {
-      LetterBoxPixels = LetterBoxPixels + -1;
+    if (LetterBoxOn == 0) {
+        if (LetterBoxPixels != 0) {
+            LetterBoxPixels--;
+        }
     }
-  }
-  else if (LetterBoxPixels < 0x18) {
-    LetterBoxPixels = LetterBoxPixels + 1;
-  }
-  return;
+    else if (LetterBoxPixels < 24) {
+        LetterBoxPixels++;
+    }
+}
+
+/* effect texture 22: the plain texture the flat overlays are drawn with */
+static inline void *FlatTex(void)
+{
+    return (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(22) * 0x24;
+}
+
+/* GS register 3 from an effect's alpha, when it has one */
+static inline void SetEffectAlpha(u64 alpha)
+{
+    if (alpha != 0) {
+        SetGSReg(3, alpha & 0xff000000ffULL);
+    }
 }
 
 
 // 0x006b1f8 (0x3ac bytes)
+/* ScreenColorEffectNow over the frame buffer: the background colour over everything, then
+   bands of A_lines and B_lines lines (300 pixels wider than the screen on each side) down the
+   screen, then normal alpha blending again */
 void DrawScreenEffect(void)
-
 {
-  RsxCmd *pRVar1;
-  int iVar2;
-  RenderingStep *pRVar3;
-  undefined4 uVar4;
-  short sVar5;
-  longlong lVar6;
-  int iVar7;
-  int iVar8;
-  
-  uVar4 = g_pIdolDraw;
-  FUN_004deab8(g_pIdolDraw,g_FrameBufWidth,g_FrameBufHeight);
-  sVar5 = g_FrameBufHeight;
-  lVar6 = (longlong)g_FrameBufHeight;
-  if (*(ulonglong *)(ScreenColorEffectNow + 8) != 0) {
-    SetGSReg(3,*(ulonglong *)(ScreenColorEffectNow + 8) & 0xff000000ff);
-  }
-  iVar7 = (int)sVar5;
-  if ((*(uint *)(ScreenColorEffectNow + 4) & 0xff000000) != 0) {
-    if (iVar7 == 0x1a0 && g_FrameBufWidth == 0x200) {
-      DrawFullScreenQuad(*(uint *)(ScreenColorEffectNow + 4),
-                         (void *)(EffectTexHeaders + *(int *)(TexInfo + 0x58) * 0x24));
+    int idolDraw = g_pIdolDraw;
+
+    FUN_004deab8(idolDraw, g_FrameBufWidth, g_FrameBufHeight);
+
+    int height = g_FrameBufHeight;
+    ScreenVBEffect *effect = (ScreenVBEffect *)ScreenColorEffectNow;
+
+    SetEffectAlpha(effect->BKG_alpha);
+
+    effect = (ScreenVBEffect *)ScreenColorEffectNow;
+
+    if (effect->BKG_color & 0xff000000) {
+        if (height == 416 && g_FrameBufWidth == 512) {
+            DrawFullScreenQuad(effect->BKG_color, FlatTex());
+        }
+        else {
+            Sprite_DrawShape(0, 0, g_FrameBufWidth, height, 0, 0, 16, 16, effect->BKG_color, FlatTex());
+        }
     }
-    else {
-      Sprite_DrawShape(0,0,g_FrameBufWidth,lVar6,0,0,0x10,0x10);
+
+    int last = height - 1;
+
+    for (int line = 0; line < height; ) {
+        SetEffectAlpha(((ScreenVBEffect *)ScreenColorEffectNow)->A_alpha);
+
+        effect = (ScreenVBEffect *)ScreenColorEffectNow;
+
+        if (effect->A_color & 0xff000000) {
+            int bottom = line + effect->A_lines;
+
+            if (bottom >= last) {
+                bottom = last;
+            }
+
+            Sprite_DrawShape(-300, line, g_FrameBufWidth + 600, bottom - line, 0, 0, 16, 16, effect->A_color, FlatTex());
+
+            effect = (ScreenVBEffect *)ScreenColorEffectNow;
+        }
+
+        line += effect->A_lines;
+
+        SetEffectAlpha(effect->B_alpha);
+
+        effect = (ScreenVBEffect *)ScreenColorEffectNow;
+
+        if (effect->B_color & 0xff000000) {
+            int bottom = line + effect->B_lines;
+
+            if (bottom >= last) {
+                bottom = last;
+            }
+
+            Sprite_DrawShape(-300, line, g_FrameBufWidth + 600, bottom - line, 0, 0, 16, 16, effect->B_color, FlatTex());
+
+            effect = (ScreenVBEffect *)ScreenColorEffectNow;
+        }
+
+        line += effect->B_lines;
     }
-  }
-  iVar8 = 0;
-  if (0 < iVar7) {
-    lVar6 = lVar6 + -1;
-    do {
-      if (*(ulonglong *)(ScreenColorEffectNow + 0x18) != 0) {
-        SetGSReg(3,*(ulonglong *)(ScreenColorEffectNow + 0x18) & 0xff000000ff);
-      }
-      iVar2 = (int)lVar6;
-      if ((*(uint *)(ScreenColorEffectNow + 0x14) & 0xff000000) != 0) {
-        Sprite_DrawShape(0xfffffffffffffed4,iVar8,(longlong)g_FrameBufWidth + 600,
-                         (iVar2 + ((uint)((iVar8 + *(int *)(ScreenColorEffectNow + 0x10)) - lVar6 >>
-                                         0x3f) &
-                                  (iVar8 + *(int *)(ScreenColorEffectNow + 0x10)) - iVar2)) - iVar8,
-                         0,0,0x10,0x10);
-      }
-      iVar8 = iVar8 + *(int *)(ScreenColorEffectNow + 0x10);
-      if (*(ulonglong *)(ScreenColorEffectNow + 0x28) != 0) {
-        SetGSReg(3,*(ulonglong *)(ScreenColorEffectNow + 0x28) & 0xff000000ff);
-      }
-      if ((*(uint *)(ScreenColorEffectNow + 0x24) & 0xff000000) != 0) {
-        Sprite_DrawShape(0xfffffffffffffed4,iVar8,(longlong)g_FrameBufWidth + 600,
-                         (iVar2 + ((uint)((iVar8 + *(int *)(ScreenColorEffectNow + 0x20)) - lVar6 >>
-                                         0x3f) &
-                                  (iVar8 + *(int *)(ScreenColorEffectNow + 0x20)) - iVar2)) - iVar8,
-                         0,0,0x10,0x10);
-      }
-      iVar8 = iVar8 + *(int *)(ScreenColorEffectNow + 0x20);
-    } while (iVar8 < iVar7);
-  }
-  pRVar1 = HUD_Pass->command;
-  HUD_Pass->command = pRVar1 + 2;
-  pRVar3 = HUD_Pass;
-  *pRVar1 = NV4097_SET_BLEND_EQUATION_x1;
-  pRVar1[1] = 0x80068006;
-  pRVar1 = pRVar3->command;
-  *pRVar1 = NV4097_SET_BLEND_FUNC_SFACTOR_x2;
-  pRVar1[1] = 0x3020302;
-  pRVar1[2] = 0x3030303;
-  pRVar3->command = pRVar1 + 3;
-  FUN_004d86b0(uVar4);
-  return;
+
+    Emit(HUD_Pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_BLEND_EQUATION, 1));
+    Emit(HUD_Pass, CELL_GCM_FUNC_ADD << 16 | CELL_GCM_FUNC_ADD);
+    Emit(HUD_Pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_BLEND_FUNC_SFACTOR, 2));
+    Emit(HUD_Pass, CELL_GCM_SRC_ALPHA << 16 | CELL_GCM_SRC_ALPHA);
+    Emit(HUD_Pass, CELL_GCM_ONE_MINUS_SRC_ALPHA << 16 | CELL_GCM_ONE_MINUS_SRC_ALPHA);
+
+    FUN_004d86b0(idolDraw);
 }
 
 
 // 0x006b5a4 (0x38 bytes)
-void DrawScreenOverlayTex(int r,int g,int b,int a,void *tex)
-
+void DrawScreenOverlayTex(int r, int g, int b, int a, void *tex)
 {
-  DrawFullScreenQuad(a << 0x18 | (b & 0xffU) << 0x10 | (g & 0xffU) << 8 | r & 0xffU,tex);
-  return;
+    DrawFullScreenQuad(a << 24 | (b & 0xff) << 16 | (g & 0xff) << 8 | (r & 0xff), tex);
 }
 
 
 // 0x006b5dc (0x5c bytes)
-void DrawScreenOverlay(int r,int g,int b,int a)
-
+void DrawScreenOverlay(int r, int g, int b, int a)
 {
-  DrawFullScreenQuad(a << 0x18 | (b & 0xffU) << 0x10 | (g & 0xffU) << 8 | r & 0xffU,
-                     (void *)(EffectTexHeaders + *(int *)(TexInfo + 0x58) * 0x24));
-  return;
+    DrawFullScreenQuad(a << 24 | (b & 0xff) << 16 | (g & 0xff) << 8 | (r & 0xff), FlatTex());
 }
 
 
 // 0x006b638 (0xdc bytes)
-// strings: 00651fc8: 'PostDraw'
-
-
 void ExecutePostDraws(void)
-
 {
-  undefined4 *puVar1;
-  undefined4 *puVar2;
-  int iVar3;
-  
-  if (g_PostDrawCount != 0) {
-    idol_draw::RsxCmd_DebugStr_Marker(ForwardPass,"PostDraw");
-  }
-  iVar3 = 0;
-  if (0 < g_PostDrawCount) {
-    puVar1 = &g_PostDrawFuncs;
-    puVar2 = &g_PostDrawArgs;
-    do {
-      (**(code **)*puVar1)(*puVar2);
-      iVar3 = iVar3 + 1;
-      puVar1 = puVar1 + 1;
-      puVar2 = puVar2 + 1;
-    } while (iVar3 < g_PostDrawCount);
-  }
-  if (g_PostDrawCount != 0) {
-    idol_draw::RsxCmd_WritePass(ForwardPass);
-  }
-  return;
+    if (g_PostDrawCount != 0) {
+        idol_draw::RsxCmd_DebugStr_Marker(ForwardPass, "PostDraw");
+    }
+
+    for (int i = 0; i < g_PostDrawCount; i++) {
+        g_PostDrawFuncs[i](g_PostDrawArgs[i]);
+    }
+
+    if (g_PostDrawCount != 0) {
+        idol_draw::RsxCmd_WritePass(ForwardPass);
+    }
 }
 
 
 // 0x006b714 (0x94 bytes)
 void ExecuteRegisteredMobyFuncs(void)
-
 {
-  int iVar1;
-  undefined4 *puVar2;
-  undefined4 *puVar3;
-  
-  iVar1 = 0;
-  if (0 < g_MobyFuncListCount) {
-    puVar2 = &g_MobyFuncList;
-    puVar3 = &g_MobyFuncListArgs;
-    do {
-      (**(code **)*puVar2)(*puVar3);
-      iVar1 = iVar1 + 1;
-      puVar2 = puVar2 + 1;
-      puVar3 = puVar3 + 1;
-    } while (iVar1 < g_MobyFuncListCount);
-  }
-  return;
+    for (int i = 0; i < g_MobyFuncListCount; i++) {
+        g_MobyFuncList[i](g_MobyFuncListArgs[i]);
+    }
 }
 
 
 // 0x006b7a8 (0xdc bytes)
-// strings: 00651fd4: 'PostPreDraw'
-
-
 void ExecutePostPreDraws(void)
-
 {
-  undefined4 *puVar1;
-  undefined4 *puVar2;
-  int iVar3;
-  
-  if (g_PostPreDrawCount != 0) {
-    idol_draw::RsxCmd_DebugStr_Marker(ForwardPass,"PostPreDraw");
-  }
-  iVar3 = 0;
-  if (0 < g_PostPreDrawCount) {
-    puVar1 = &g_PostPreDrawFuncs;
-    puVar2 = &g_PostPreDrawArgs;
-    do {
-      (**(code **)*puVar1)(*puVar2);
-      iVar3 = iVar3 + 1;
-      puVar1 = puVar1 + 1;
-      puVar2 = puVar2 + 1;
-    } while (iVar3 < g_PostPreDrawCount);
-  }
-  if (g_PostPreDrawCount != 0) {
-    idol_draw::RsxCmd_WritePass(ForwardPass);
-  }
-  return;
+    if (g_PostPreDrawCount != 0) {
+        idol_draw::RsxCmd_DebugStr_Marker(ForwardPass, "PostPreDraw");
+    }
+
+    for (int i = 0; i < g_PostPreDrawCount; i++) {
+        g_PostPreDrawFuncs[i](g_PostPreDrawArgs[i]);
+    }
+
+    if (g_PostPreDrawCount != 0) {
+        idol_draw::RsxCmd_WritePass(ForwardPass);
+    }
 }
 
 
 // 0x006b890 (0x200 bytes)
-void DrawScreenInsertEffect(void *effect)
-
+/* effect's colour over the frame buffer with the depth test off */
+void DrawScreenInsertEffect(ScreenInsertEffect *effect)
 {
-  undefined4 uVar1;
-  undefined8 uVar2;
-  
-  uVar1 = g_pIdolDraw;
-  FUN_004deab8(g_pIdolDraw,g_FrameBufWidth,g_FrameBufHeight);
-  if (*(ulonglong *)((int)effect + 8) != 0) {
-    SetGSReg(3,*(ulonglong *)((int)effect + 8) & 0xff000000ff);
-  }
-  if ((*(uint *)((int)effect + 4) & 0xff000000) != 0) {
-    uVar2 = VU1_addGSregister(GSmem.zbuf >> 0xd,1,1);
-    SetGSReg(0x21,uVar2);
-    if ((g_FrameBufHeight == 0x1a0) && (g_FrameBufWidth == 0x200)) {
-      DrawFullScreenQuad(*(int *)((int)effect + 4),
-                         (void *)(EffectTexHeaders + *(int *)(TexInfo + 0x58) * 0x24));
+    int idolDraw = g_pIdolDraw;
+
+    FUN_004deab8(idolDraw, g_FrameBufWidth, g_FrameBufHeight);
+
+    SetEffectAlpha(effect->alpha);
+
+    if (effect->color & 0xff000000) {
+        SetGSReg(0x21, VU1_addGSregister(GSmem.zbuf >> 13, 1, 1));
+
+        if (g_FrameBufHeight == 416 && g_FrameBufWidth == 512) {
+            DrawFullScreenQuad(effect->color, FlatTex());
+        }
+        else {
+            Sprite_DrawShape(0, 0, g_FrameBufWidth, g_FrameBufHeight, 0, 0, 16, 16, effect->color, FlatTex());
+        }
+
+        SetGSReg(0x21, VU1_addGSregister(GSmem.zbuf >> 13, 1, 0));
     }
-    else {
-      Sprite_DrawShape(0,0,g_FrameBufWidth,g_FrameBufHeight,0,0,0x10,0x10);
+
+    if (effect->alpha != 0) {
+        SetGSReg(3, idol_draw::PackCmd(0, 1, 0, 1, 0x80));
     }
-    uVar2 = VU1_addGSregister(GSmem.zbuf >> 0xd,1,0);
-    SetGSReg(0x21,uVar2);
-  }
-  if (*(longlong *)((int)effect + 8) != 0) {
-    uVar2 = idol_draw::PackCmd(0,1,0,1,0x80);
-    SetGSReg(3,uVar2);
-  }
-  FUN_004d86b0(uVar1);
-  return;
+
+    FUN_004d86b0(idolDraw);
 }
 
 
 // 0x006ba90 (0xdc bytes)
-// strings: 00651fe0: 'PreDraw'
-
-
 void ExecutePreDraws(void)
-
 {
-  undefined4 *puVar1;
-  MobyInstance **ppMVar2;
-  int iVar3;
-  
-  if (g_PreDrawCount != 0) {
-    idol_draw::RsxCmd_DebugStr_Marker(ForwardPass,"PreDraw");
-  }
-  iVar3 = 0;
-  if (0 < g_PreDrawCount) {
-    puVar1 = &CurrentOceanSubmitter;
-    ppMVar2 = &WaterMoby;
-    do {
-      (**(code **)*puVar1)(*ppMVar2);
-      iVar3 = iVar3 + 1;
-      puVar1 = puVar1 + 1;
-      ppMVar2 = ppMVar2 + 1;
-    } while (iVar3 < g_PreDrawCount);
-  }
-  if (g_PreDrawCount != 0) {
-    idol_draw::RsxCmd_WritePass(ForwardPass);
-  }
-  return;
+    if (g_PreDrawCount != 0) {
+        idol_draw::RsxCmd_DebugStr_Marker(ForwardPass, "PreDraw");
+    }
+
+    for (int i = 0; i < g_PreDrawCount; i++) {
+        g_PreDrawFuncs[i](g_PreDrawArgs[i]);
+    }
+
+    if (g_PreDrawCount != 0) {
+        idol_draw::RsxCmd_WritePass(ForwardPass);
+    }
+}
+
+/* a full-screen quad whose alpha is amount (clamped to 1) times 128, over rgb */
+static inline void DrawScreenFade(float *amount, u32 rgb)
+{
+    if (*amount > 0.0f) {
+        if (*amount > 1.0f) {
+            *amount = 1.0f;
+        }
+
+        int alpha = FastDoubleToInt(*amount * 128.0f);
+
+        DrawFullScreenQuad(alpha << 24 | rgb, FlatTex());
+    }
 }
 
 
 // 0x006bb78 (0x8a8 bytes)
-// strings: 00651fe0: 'PreDraw' | 00651fd4: 'PostPreDraw' | 00651fc8: 'PostDraw' | 00651fe8: 'screen overlays'
-
+/* One frame of the world: sets up and draws tfrags, ties and shrubs, the sky, the registered
+   pre-draws, the mobys, particles and post-draws, then the screen overlays (underwater tint,
+   scene fade and flash, ScreenColorEffectNow), the HUD and subtitles; picks the level or water
+   fog for the next frame. Each part is gated by its g_RenderFlags bit and g_DebugEnables entry. */
 void DefaultDraw(void)
-
 {
-  RenderingStep *pRVar1;
-  undefined8 uVar2;
-  ulonglong uVar3;
-  MobyInstance **ppMVar4;
-  undefined4 *puVar5;
-  undefined4 *puVar6;
-  int iVar7;
-  GPiece<4> auStack_50;
-  undefined4 local_4c;
-  undefined4 local_48;
-  GPiece<4> auStack_44;
-  undefined4 local_40;
-  undefined4 local_3c;
-  undefined4 local_38;
-  undefined4 local_34;
-  byte g;
-  byte r;
-  byte b;
-  
-  CleanAnimationCache();
-  RebuildSharedWaveTables();
-  idol_draw::InitFrameRenderState
-            (&DAT_01111700,DirectionalLights,0x10,PointLights,8,&g_HeroLightDir,4);
-  if ((g_RenderFlags & Tfrags) != 0) {
-    FUN_0050b08c(&TEX_BASE,&local_38);
-    FUN_004ec8a4(&DAT_01111700,local_34,local_38);
-    FUN_0050bfd4(&local_38);
-  }
-  if ((g_RenderFlags & Ties) != 0) {
-    FUN_0050c020(&TEX_BASE,auStack_50);
-    FUN_004ecc84(&DAT_01111700,local_4c,local_48);
-  }
-  if ((g_RenderFlags & Shrubs) != 0) {
-    FUN_00508738(&TEX_BASE,auStack_44);
-    FUN_004ed144(&DAT_01111700,local_40,local_3c);
-  }
-  if ((g_RenderFlags & Sky) != 0) {
-    if (g_FrontEnd == '\0') {
-      InitSky();
+    /* filled by each geometry type's setup and passed to its draw; layout unknown */
+    u32 tieInfo[3];
+    u32 shrubInfo[3];
+    u32 tfragInfo[2];
+    int texBase = (int)(uintptr_t)&TEX_BASE;
+    int *renderState = (int *)&DAT_01111700;
+
+    CleanAnimationCache();
+    RebuildSharedWaveTables();
+    idol_draw::InitFrameRenderState((int)(uintptr_t)renderState, DirectionalLights, 16, PointLights, 8, &g_HeroLightDir, 4);
+
+    if (g_RenderFlags & RENDER__Tfrags) {
+        FUN_0050b08c(texBase, (uintptr_t)tfragInfo);
+        FUN_004ec8a4(renderState, tfragInfo[1], (int)tfragInfo[0]);
+        FUN_0050bfd4((int)(uintptr_t)tfragInfo);
+    }
+
+    if (g_RenderFlags & Ties) {
+        FUN_0050c020(texBase, (undefined4 *)tieInfo);
+        FUN_004ecc84(renderState, tieInfo[1], (int)tieInfo[2]);
+    }
+
+    if (g_RenderFlags & Shrubs) {
+        FUN_00508738(texBase, (undefined4 *)shrubInfo);
+        FUN_004ed144(renderState, shrubInfo[1], (int)shrubInfo[2]);
+    }
+
+    if (g_RenderFlags & RENDER__Sky) {
+        if (g_FrontEnd == 0) {
+            InitSky();
+        }
+        else {
+            SkyLevelGeneric();
+        }
+    }
+
+    if (g_RenderFlags & RENDER__Tfrags) {
+        DrawTfrag(texBase, (uintptr_t)tfragInfo);
+    }
+
+    if (g_RenderFlags & Ties) {
+        DrawTie(texBase, (int *)tieInfo);
+    }
+
+    if (g_DebugEnables[13] != 0) {
+        ExecutePreDraws();
+    }
+
+    if (g_RenderFlags & Shrubs) {
+        DrawShrub(texBase, (uintptr_t)shrubInfo);
+    }
+
+    if (g_ScreenInsertEffect != 0) {
+        DrawScreenInsertEffect((ScreenInsertEffect *)&g_ScreenInsertEffect);
+    }
+
+    if (g_DebugEnables[13] != 0) {
+        ExecutePostPreDraws();
+    }
+
+    DrawMobys();
+
+    if ((g_RenderFlags & Ocean) && g_DebugEnables[13] != 0) {
+        ExecuteRegisteredMobyFuncs();
+        Camera_DrawReticule();
+    }
+
+    if (g_DebugEnables[14] != 0) {
+        DrawParts();
+    }
+
+    if (g_DebugEnables[15] != 0) {
+        ExecutePostDraws();
+
+        if (g_gameMode == GAME_MODE_NORMAL) {
+            ImpactSprite_Draw();
+        }
+
+        TargetCrosshairDraw();
+    }
+
+    if (g_RenderFlags & Screen_Overlays) {
+        if (g_DebugEnables[17] != 0) {
+            idol_draw::DrawDepth(HUD_Pass, idol_draw::PackCmd(0, 1, 0, 1, 0x80));
+
+            if (GameCamera.camUnderWater != 0) {
+                RGBA tint = g_UnderwaterTint;
+
+                DrawFullScreenQuad(tint.a << 24 | tint.b << 16 | tint.g << 8 | tint.r, FlatTex());
+            }
+
+            DrawScreenFade(&SceneScreenFade, 0);
+            DrawScreenFade(&g_SceneFlash, 0xffffff);
+
+            if (ScreenColorEffectEnabled != 0 && ScreenColorEffectNow != NULL) {
+                DrawScreenEffect();
+            }
+        }
+
+        STUB_00065630("screen overlays", 10);
+    }
+
+    if ((g_RenderFlags & HUD) && g_DebugEnables[16] != 0) {
+        DrawGameplayHud();
+        Help_Draw();
+        UpdateLetterBox();
+    }
+
+    if (g_gameMode == GAME_MODE_SCENE && g_SubtitlesOn) {
+        DrawSubtitles();
+    }
+
+    RGBA fog;
+
+    if (GameCamera.camUnderWater != 0) {
+        fog = WaterFog;
+        g_ViewContext.fogNearDist = *(float *)&WaterFogNearDist;
+        g_ViewContext.fogFarDist = *(float *)&WaterFogFarDist;
+        g_ViewContext.fogNearIntensity = *(float *)&WaterFogNearIntensity;
+        g_ViewContext.fogFarIntensity = *(float *)&WaterFogFarIntensity;
+        PartClipDist = 0x40000;
     }
     else {
-      SkyLevelGeneric();
+        fog = levelFog;
+        g_ViewContext.fogNearDist = LevelFogNearDist;
+        g_ViewContext.fogFarDist = LevelFogFarDist;
+        g_ViewContext.fogNearIntensity = LevelFogNearIntensity;
+        g_ViewContext.fogFarIntensity = LevelFogFarIntensity;
+        PartClipDist = 0x1f4000;
     }
-  }
-  if ((g_RenderFlags & Tfrags) != 0) {
-    DrawTfrag(&TEX_BASE,&local_38);
-  }
-  if ((g_RenderFlags & Ties) != 0) {
-    DrawTie(&TEX_BASE,auStack_50);
-  }
-  if ((g_DebugEnables[0xd] != 0) && (g_PreDrawCount != 0)) {
-    idol_draw::RsxCmd_DebugStr_Marker(ForwardPass,"PreDraw");
-    iVar7 = 0;
-    if (0 < g_PreDrawCount) {
-      puVar5 = &CurrentOceanSubmitter;
-      ppMVar4 = &WaterMoby;
-      do {
-        (**(code **)*puVar5)(*ppMVar4);
-        iVar7 = iVar7 + 1;
-        puVar5 = puVar5 + 1;
-        ppMVar4 = ppMVar4 + 1;
-      } while (iVar7 < g_PreDrawCount);
-    }
-    if (g_PreDrawCount != 0) {
-      idol_draw::RsxCmd_WritePass(ForwardPass);
-    }
-  }
-  if ((g_RenderFlags & Shrubs) != 0) {
-    DrawShrub(&TEX_BASE,auStack_44);
-  }
-  if (g_ScreenInsertEffect != '\0') {
-    DrawScreenInsertEffect(&g_ScreenInsertEffect);
-  }
-  if ((g_DebugEnables[0xd] != 0) && (g_PostPreDrawCount != 0)) {
-    idol_draw::RsxCmd_DebugStr_Marker(ForwardPass,"PostPreDraw");
-    iVar7 = 0;
-    if (0 < g_PostPreDrawCount) {
-      puVar6 = &g_PostPreDrawFuncs;
-      puVar5 = &g_PostPreDrawArgs;
-      do {
-        (**(code **)*puVar6)(*puVar5);
-        iVar7 = iVar7 + 1;
-        puVar6 = puVar6 + 1;
-        puVar5 = puVar5 + 1;
-      } while (iVar7 < g_PostPreDrawCount);
-    }
-    if (g_PostPreDrawCount != 0) {
-      idol_draw::RsxCmd_WritePass(ForwardPass);
-    }
-  }
-  DrawMobys();
-  if (((g_RenderFlags & Ocean) != 0) && (g_DebugEnables[0xd] != 0)) {
-    if (g_MobyFuncListCount != 0) {
-      iVar7 = 0;
-      if (0 < g_MobyFuncListCount) {
-        puVar6 = &g_MobyFuncList;
-        puVar5 = &g_MobyFuncListArgs;
-        do {
-          (**(code **)*puVar6)(*puVar5);
-          iVar7 = iVar7 + 1;
-          puVar6 = puVar6 + 1;
-          puVar5 = puVar5 + 1;
-        } while (iVar7 < g_MobyFuncListCount);
-      }
-    }
-    Camera_DrawReticule();
-  }
-  if (g_DebugEnables[0xe] != 0) {
-    DrawParts();
-  }
-  if (g_DebugEnables[0xf] != 0) {
-    if (g_PostDrawCount != 0) {
-      idol_draw::RsxCmd_DebugStr_Marker(ForwardPass,"PostDraw");
-      iVar7 = 0;
-      if (0 < g_PostDrawCount) {
-        puVar6 = &g_PostDrawFuncs;
-        puVar5 = &g_PostDrawArgs;
-        do {
-          (**(code **)*puVar6)(*puVar5);
-          iVar7 = iVar7 + 1;
-          puVar6 = puVar6 + 1;
-          puVar5 = puVar5 + 1;
-        } while (iVar7 < g_PostDrawCount);
-      }
-      if (g_PostDrawCount != 0) {
-        idol_draw::RsxCmd_WritePass(ForwardPass);
-      }
-    }
-    if (g_gameMode == GAME_MODE_NORMAL) {
-      ImpactSprite_Draw();
-    }
-    TargetCrosshairDraw();
-  }
-  pRVar1 = HUD_Pass;
-                    /* Handles screen overlays such as when you're underwater */
-  if ((g_RenderFlags & Screen_Overlays) != 0) {
-    if (g_DebugEnables[0x11] != 0) {
-      uVar2 = idol_draw::PackCmd(0,1,0,1,0x80);
-      idol_draw::DrawDepth(pRVar1,uVar2);
-      if (GameCamera.camUnderWater != 0) {
-        DrawFullScreenQuad(CONCAT13(DAT_0073a963,
-                                    CONCAT12(DAT_0073a962,CONCAT11(DAT_0073a961,DAT_0073a960))),
-                           (void *)(EffectTexHeaders + *(int *)(TexInfo + 0x58) * 0x24));
-      }
-      if (0 < (int)SceneScreenFade) {
-        if (0x3f800000 <
-            (int)(FLOAT_ORDER(SceneScreenFade))) {
-          SceneScreenFade = 1.0;
-        }
-        uVar3 = FastDoubleToInt((double)(SceneScreenFade * 128.0));
-        DrawFullScreenQuad((int)((uVar3 & 0xffffffff) << 0x18),
-                           (void *)(EffectTexHeaders + *(int *)(TexInfo + 0x58) * 0x24));
-      }
-      if (0 < (int)g_SceneFlash) {
-        if (0x3f800000 <
-            (int)(FLOAT_ORDER(g_SceneFlash))) {
-          g_SceneFlash = 1.0;
-        }
-        uVar3 = FastDoubleToInt((double)(g_SceneFlash * 128.0));
-        DrawFullScreenQuad((uint)((uVar3 & 0xffffffff) << 0x18) | 0xffffff,
-                           (void *)(EffectTexHeaders + *(int *)(TexInfo + 0x58) * 0x24));
-      }
-      if ((ScreenColorEffectEnabled != '\0') && (ScreenColorEffectNow != (undefined *)0x0)) {
-        DrawScreenEffect();
-      }
-    }
-    STUB_00065630("screen overlays",10);
-  }
-  if (((g_RenderFlags & HUD) != 0) && (g_DebugEnables[0x10] != 0)) {
-    DrawGameplayHud();
-    Help_Draw();
-    if (LetterBoxOn == 0) {
-      if (LetterBoxPixels != 0) {
-        LetterBoxPixels = LetterBoxPixels + -1;
-      }
-    }
-    else if (LetterBoxPixels < 0x18) {
-      LetterBoxPixels = LetterBoxPixels + 1;
-    }
-  }
-  if ((g_gameMode == GAME_MODE_SCENE) && (DAT_00969c78 != '\0')) {
-    DrawSubtitles();
-  }
-  if (GameCamera.camUnderWater == 0) {
-    PartClipDist = 0x1f4000;
-    b = levelFog.b;
-    g = levelFog.g;
-    r = levelFog.r;
-    g_ViewContext.fogFarIntensity = LevelFogFarIntensity;
-    g_ViewContext.fogNearIntensity = LevelFogNearIntensity;
-    g_ViewContext.fogFarDist = LevelFogFarDist;
-    g_ViewContext.fogNearDist = LevelFogNearDist;
-  }
-  else {
-    PartClipDist = 0x40000;
-    b = WaterFog.b;
-    g = WaterFog.g;
-    r = WaterFog.r;
-    g_ViewContext.fogFarIntensity = WaterFogFarIntensity;
-    g_ViewContext.fogNearIntensity = WaterFogNearIntensity;
-    g_ViewContext.fogFarDist = WaterFogFarDist;
-    g_ViewContext.fogNearDist = WaterFogNearDist;
-  }
-  g_ViewContext.fogR = (int)r;
-  g_ViewContext.fogG = (int)g;
-  g_ViewContext.fogB = (int)b;
-  UpdateViewContext();
-  LevelFogMode = 0;
-  return;
+
+    g_ViewContext.fogR = fog.r;
+    g_ViewContext.fogG = fog.g;
+    g_ViewContext.fogB = fog.b;
+
+    UpdateViewContext();
+
+    LevelFogMode = 0;
 }
 
 
 // 0x006c424 (0x70 bytes)
 void SetupDefaultDraw(void)
-
 {
-  if ((g_CutscenePlaying == 0) && (g_HeroIsOutOfBounds == '\0')) {
-    g_RenderFlags = 0x100ff;
-    if (g_gameMode == GAME_MODE_PAUSE) {
-      g_RenderFlags = 0x7f;
+    if (g_CutscenePlaying != 0 || g_HeroIsOutOfBounds) {
+        return;
     }
+
+    g_RenderFlags = (RENDER)0x100ff;
+
+    if (g_gameMode == GAME_MODE_PAUSE) {
+        g_RenderFlags = (RENDER)0x7f;
+    }
+
     DefaultDraw();
-  }
-  return;
 }
 
 
 // 0x006c494 (0x44 bytes)
 void SetupDefaultDrawMovie(void)
-
 {
-  if (g_CutscenePlaying == 0) {
+    if (g_CutscenePlaying != 0) {
+        return;
+    }
+
     STUB_00078100();
-    g_RenderFlags = 0x7f;
+    g_RenderFlags = (RENDER)0x7f;
     DefaultDraw();
-  }
-  return;
 }
 
 
 // 0x006c4d8 (0x80 bytes)
+/* the world under the freeze overlay when it froze normal play, the pause menu when it froze the
+   pause menu */
 void SetupDefaultDrawFreeze(void)
-
 {
-  gameMode_t gVar1;
-  
-  if (g_CutscenePlaying == 0) {
-    gVar1 = GetFreezePrevGameMode();
-    if (gVar1 == GAME_MODE_NORMAL) {
-      STUB_00078100();
-      g_RenderFlags = 0x100ff;
-      DefaultDraw();
+    if (g_CutscenePlaying != 0) {
+        return;
     }
-    else {
-      gVar1 = GetFreezePrevGameMode();
-      if (gVar1 == GAME_MODE_PAUSE) {
+
+    if (GetFreezePrevGameMode() == GAME_MODE_NORMAL) {
+        STUB_00078100();
+        g_RenderFlags = (RENDER)0x100ff;
+        DefaultDraw();
+    }
+    else if (GetFreezePrevGameMode() == GAME_MODE_PAUSE) {
         DrawPauseMenu(1);
-      }
     }
+
     DrawDialogText();
-  }
-  return;
 }
 
 
 // 0x006c558 (0x84 bytes)
 void InitLevelRenderState(void)
-
 {
-  if (g_CutscenePlaying == 0) {
+    if (g_CutscenePlaying != 0) {
+        return;
+    }
+
     DAT_010ee2f0 = 0xffffffff;
-    idol_draw::InitFrameRenderState
-              (&DAT_01111700,DirectionalLights,0x10,PointLights,8,&g_HeroLightDir,4);
+    idol_draw::InitFrameRenderState((int)(uintptr_t)&DAT_01111700, DirectionalLights, 16, PointLights, 8, &g_HeroLightDir, 4);
     DrawPauseMenu(0);
-  }
-  return;
 }
 
 
 // 0x006c5dc (0x10 bytes)
 void EnableFontColors(void)
-
 {
-  g_FontColorsEnabled = 1;
-  return;
+    g_FontColorsEnabled = 1;
+}
+
+/* a palette byte (8..15) changes color when font colours are on; true when ch was one */
+static inline bool FontPaletteCode(u8 ch, u32 *color)
+{
+    if (ch < 8 || ch > 15) {
+        return false;
+    }
+
+    if (g_FontColorsEnabled != 0) {
+        *color = (*color & 0xff000000) | (g_FontPalette[ch - 8] & 0xffffff);
+    }
+
+    return true;
+}
+
+/* color with its RGB replaced by their average, for the 24-wide glyphs below 32 */
+static inline u32 FontGrey(u32 color)
+{
+    u32 sum = (color & 0xff) + ((color >> 8) & 0xff) + ((color >> 16) & 0xff) + 1;
+    u32 grey = (sum * 341) >> 10;
+
+    return (color & 0xff000000) + (grey << 16) + (grey << 8) + grey;
 }
 
 
 // 0x006c5ec (0x2e4 bytes)
-void FontPrintJapanese
-               (int param_1,int param_2,undefined4 param_3,int param_4,int param_5,
-               undefined8 param_6,int param_7)
-
+/* FontPrintScaledJapanese at scale 1 in whole pixels */
+void FontPrintJapanese(int x, int y, u32 color, const char *text, int len, int unused, void *glyphs)
 {
-  byte bVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  int iVar5;
-  
-  if (DAT_0095ee18 == 0) {
-    DAT_0071ef98 = param_3;
-  }
-  iVar5 = 0;
-  if (param_5 != 0) {
-    do {
-      bVar1 = *(byte *)(param_4 + iVar5);
-      if (bVar1 == 0) {
-        return;
-      }
-      iVar3 = (uint)bVar1 * 4;
-      if (((bVar1 < 8) || (0xf < bVar1)) && (iVar4 = param_7 + iVar3, *(char *)(iVar4 + 3) != '\0'))
-      {
-        if (bVar1 < 0x20) {
-          Sprite_DrawShape(param_1,param_2 + *(char *)(iVar4 + 2),0x18,0x10,
-                           *(undefined1 *)(param_7 + iVar3),*(undefined1 *)(iVar4 + 1),0x18,0x10);
+    const u8 *str = (const u8 *)text;
+    const FontGlyph *table = (const FontGlyph *)glyphs;
+
+    if (g_FontKeepPalette == 0) {
+        g_FontPalette[0] = color;
+    }
+
+    for (int i = 0; i != len; i++) {
+        u8 ch = str[i];
+
+        if (ch == 0) {
+            return;
         }
-        else {
-          if ((0xbc < bVar1) && (bVar1 < 0xbf)) {
-            bVar1 = *(byte *)(param_4 + iVar5 + -1);
-            iVar2 = param_7 + (bVar1 + 0x80) * 4;
-            Sprite_DrawShape((param_1 - *(char *)(param_7 + (uint)bVar1 * 4 + 3)) +
-                             (int)*(char *)(iVar2 + 3),param_2 + *(char *)(iVar2 + 2),0x10,0x10,
-                             *(undefined1 *)(param_7 + iVar3),*(undefined1 *)(iVar4 + 1),0x10,0x10);
-            param_1 = ((int)*(char *)(iVar2 + 3) -
-                      (int)*(char *)(param_7 + (uint)*(byte *)(param_4 + iVar5 + -1) * 4 + 3)) +
-                      ((*(byte *)(param_4 + iVar5) == 0xbe)) + param_1 + 4;
-            goto LAB_0006c884;
-          }
-          if (0x20 < bVar1) {
-            Sprite_DrawShape(param_1,param_2 + *(char *)(iVar4 + 2),0x10,0x10,
-                             *(undefined1 *)(param_7 + iVar3),*(undefined1 *)(iVar4 + 1),0x10,0x10);
-          }
+
+        if (FontPaletteCode(ch, &color)) {
+            continue;
         }
-        param_1 = param_1 + *(char *)(param_7 + (uint)*(byte *)(param_4 + iVar5) * 4 + 3);
-      }
-LAB_0006c884:
-      iVar5 = iVar5 + 1;
-    } while (iVar5 != param_5);
-  }
-  return;
+
+        const FontGlyph *glyph = &table[ch];
+
+        if (glyph->width == 0) {
+            continue;
+        }
+
+        if (ch < 32) {
+            Sprite_DrawShape(x, y + glyph->yOff, 24, 16, glyph->u, glyph->v, 24, 16, FontGrey(color), &g_JapanFontTex);
+        }
+        else if (ch == 0xbd || ch == 0xbe) {
+            u8 prev = str[i - 1];
+            const FontGlyph *mark = &table[prev + 0x80];
+
+            Sprite_DrawShape(x - table[prev].width + mark->width, y + mark->yOff, 16, 16, glyph->u, glyph->v, 16, 16, color, &g_JapanFontTex);
+
+            x = (mark->width - table[str[i - 1]].width) + (str[i] == 0xbe) + x + 4;
+
+            continue;
+        }
+        else if (ch > 32) {
+            Sprite_DrawShape(x, y + glyph->yOff, 16, 16, glyph->u, glyph->v, 16, 16, color, &g_JapanFontTex);
+        }
+
+        x += table[str[i]].width;
+    }
 }
 
 
 // 0x006c8d0 (0x33c bytes)
-void FontPrint(int param_1,int param_2,undefined4 param_3,int param_4,int param_5,
-                    undefined8 param_6,int param_7)
-
+/* FontPrintScaledWestern at scale 1 in whole pixels through Sprite_DrawShape, glyphs a full 16 high */
+void FontPrint(int x, int y, u32 color, const char *text, int len, int tex, void *glyphs)
 {
-  byte bVar1;
-  undefined8 uVar2;
-  uint uVar3;
-  int iVar4;
-  int iVar5;
-  int iVar6;
-  
-  uVar2 = idol_draw::PackCmd(0,1,0,1,0);
-  SetGSReg(3,uVar2);
-  uVar2 = idol_draw::Blend(1,5,4,0,0,0,0,1);
-  SetGSReg(0x16,uVar2);
-  if (DAT_0095ee18 == 0) {
-    DAT_0071ef98 = param_3;
-  }
-  iVar6 = 0;
-  if (param_5 != 0) {
-    do {
-      bVar1 = *(byte *)(param_4 + iVar6);
-      uVar3 = (uint)bVar1;
-      if (bVar1 == 0) {
-        return;
-      }
-      if ((0xf < bVar1 || bVar1 < 8) && (*(char *)(param_7 + (uint)bVar1 * 4 + 3) != '\0')) {
-        if ((char)bVar1 < -0x58) {
-          iVar4 = (uVar3 + 0x40) * 4;
-          iVar5 = param_7 + iVar4;
-          Sprite_DrawShape(param_1 + *(char *)(iVar5 + 3),param_2 + *(char *)(iVar5 + 2),0x10,0x10,
-                           *(undefined1 *)(param_7 + iVar4),*(undefined1 *)(iVar5 + 1),0x10,0x10);
-          uVar3 = (uint)*(byte *)(param_4 + iVar6);
+    const u8 *str = (const u8 *)text;
+    const FontGlyph *table = (const FontGlyph *)glyphs;
+    void *texHeader = (u8 *)(uintptr_t)EffectTexHeaders + tex * 0x24;
+
+    SetGSReg(3, idol_draw::PackCmd(0, 1, 0, 1, 0));
+    SetGSReg(0x16, idol_draw::Blend(1, 5, 4, 0, 0, 0, 0, 1));
+
+    if (g_FontKeepPalette == 0) {
+        g_FontPalette[0] = color;
+    }
+
+    for (int i = 0; i != len; i++) {
+        u8 ch = str[i];
+
+        if (ch == 0) {
+            return;
         }
-        iVar5 = uVar3 * 4;
-        iVar4 = param_7 + iVar5;
-        if (uVar3 < 0x20) {
-          Sprite_DrawShape(param_1,param_2 + *(char *)(iVar4 + 2),0x18,0x10,
-                           *(undefined1 *)(param_7 + iVar5),*(undefined1 *)(iVar4 + 1),0x18,0x10);
+
+        if (FontPaletteCode(ch, &color)) {
+            continue;
         }
-        else if (0x20 < uVar3) {
-          Sprite_DrawShape(param_1,param_2 + *(char *)(iVar4 + 2),0x10,0x10,
-                           *(undefined1 *)(param_7 + iVar5),*(undefined1 *)(iVar4 + 1),0x10,0x10);
+
+        if (table[ch].width == 0) {
+            continue;
         }
-        param_1 = param_1 + *(char *)(param_7 + (uint)*(byte *)(param_4 + iVar6) * 4 + 3);
-      }
-      iVar6 = iVar6 + 1;
-    } while (iVar6 != param_5);
-  }
-  return;
+
+        if (ch >= 128 && ch < 168) {
+            const FontGlyph *mark = &table[ch + 0x40];
+
+            Sprite_DrawShape(x + mark->width, y + mark->yOff, 16, 16, mark->u, mark->v, 16, 16, color, texHeader);
+
+            ch = str[i];
+        }
+
+        const FontGlyph *glyph = &table[ch];
+
+        if (ch < 32) {
+            Sprite_DrawShape(x, y + glyph->yOff, 24, 16, glyph->u, glyph->v, 24, 16, FontGrey(color), texHeader);
+        }
+        else if (ch > 32) {
+            Sprite_DrawShape(x, y + glyph->yOff, 16, 16, glyph->u, glyph->v, 16, 16, color, texHeader);
+        }
+
+        x += table[str[i]].width;
+    }
 }
 
 
 // 0x006cc0c (0xa8 bytes)
-void FontPrintMediumLeft
-               (undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-               undefined8 param_5)
-
+/* str at (x, y) in the medium font: JapaneseGlyphs in Japanese mode, else MediumWesternGlyphs */
+void FontPrintMediumLeft(int x, int y, u32 color, const char *str, int len)
 {
-  if (g_JapaneseMode) {
-    FontPrintJapanese(param_1,param_2,param_3,param_4,param_5,*(undefined4 *)(TexInfo + 4),
-                      &JapaneseGlyphs);
-  }
-  else {
-    FontPrint(param_1,param_2,param_3,param_4,param_5,*(undefined4 *)(TexInfo + 4),
-              &MediumWesternGlyphs);
-  }
-  return;
+    if (g_JapaneseMode) {
+        FontPrintJapanese(x, y, color, str, len, GetEffectTex(1), &JapaneseGlyphs);
+    }
+    else {
+        FontPrint(x, y, color, str, len, GetEffectTex(1), &MediumWesternGlyphs);
+    }
 }
 
 
 // 0x006ccb4 (0x10 bytes)
 void DisableFontColors(void)
-
 {
-  g_FontColorsEnabled = 0;
-  return;
+    g_FontColorsEnabled = 0;
 }
 
 
 // 0x006ccc4 (0xbc bytes)
-int FontLenWithTable(char *s,int len,void *glyphs)
-
+/* width of the first len characters of s (up to a 0 byte), the 0xbd/0xbe diacritics advancing
+   as FontPrintJapanese does */
+int FontLenWithTable(char *s, int len, void *glyphs)
 {
-  char cVar1;
-  byte bVar2;
-  int iVar3;
-  int iVar4;
-  
-  iVar4 = 0;
-  iVar3 = 0;
-  if (len != 0) {
-    do {
-      bVar2 = s[iVar4];
-      if (bVar2 == 0) {
-        return iVar3;
-      }
-      cVar1 = *(char *)((int)glyphs + (uint)bVar2 * 4 + 3);
-      if (cVar1 != '\0') {
-        if ((bVar2 < 0xbd) || (0xbe < bVar2)) {
-          iVar3 = iVar3 + cVar1;
+    const FontGlyph *table = (const FontGlyph *)glyphs;
+    int width = 0;
+
+    for (int i = 0; i != len; i++) {
+        u8 ch = s[i];
+
+        if (ch == 0) {
+            return width;
+        }
+
+        int advance = table[ch].width;
+
+        if (advance == 0) {
+            continue;
+        }
+
+        if (ch < 0xbd || ch > 0xbe) {
+            width += advance;
         }
         else {
-          iVar3 = ((int)*(char *)((int)glyphs + (uint)(byte)s[iVar4 + -1] * 4 + 0x203) -
-                  (int)*(char *)((int)glyphs + (uint)(byte)s[iVar4 + -1] * 4 + 3)) +
-                  ((bVar2 == 0xbe)) + iVar3 + 4;
+            u8 prev = s[i - 1];
+
+            width = (table[prev + 0x80].width - table[prev].width) + (ch == 0xbe) + width + 4;
         }
-      }
-      iVar4 = iVar4 + 1;
-    } while (iVar4 != len);
-  }
-  return iVar3;
+    }
+
+    return width;
 }
 
 
 // 0x006cd80 (0x68 bytes)
-int FontLenWithTableNoKern(char *s,int len,void *glyphs)
-
+int FontLenWithTableNoKern(char *s, int len, void *glyphs)
 {
-  byte bVar1;
-  int iVar2;
-  int iVar3;
-  
-  iVar2 = 0;
-  iVar3 = 0;
-  if (len != 0) {
-    do {
-      bVar1 = s[iVar2];
-      if (bVar1 == 0) {
-        return iVar3;
-      }
-      if (*(char *)((int)glyphs + (uint)bVar1 * 4 + 3) != '\0') {
-        iVar3 = iVar3 + *(char *)((int)glyphs + (uint)bVar1 * 4 + 3);
-      }
-      iVar2 = iVar2 + 1;
-    } while (iVar2 != len);
-  }
-  return iVar3;
+    const FontGlyph *table = (const FontGlyph *)glyphs;
+    int width = 0;
+
+    for (int i = 0; i != len; i++) {
+        u8 ch = s[i];
+
+        if (ch == 0) {
+            return width;
+        }
+
+        width += table[ch].width;
+    }
+
+    return width;
 }
 
 
 // 0x006cde8 (0xb0 bytes)
-int FontLen(char *s,int len)
-
+/* width of s in the medium font */
+int FontLen(char *s, int len)
 {
-  byte bVar1;
-  int iVar2;
-  int iVar3;
-  
-  if (g_JapaneseMode) {
-    iVar2 = FontLenWithTable(s,len,&JapaneseGlyphs);
-  }
-  else {
-    iVar3 = 0;
-    iVar2 = 0;
-    if (len != 0) {
-      do {
-        bVar1 = s[iVar3];
-        if (bVar1 == 0) {
-          return iVar2;
-        }
-        if ((&DAT_007368b3)[(uint)bVar1 * 4] != '\0') {
-          iVar2 = iVar2 + (char)(&DAT_007368b3)[(uint)bVar1 * 4];
-        }
-        iVar3 = iVar3 + 1;
-      } while (iVar3 != len);
+    if (g_JapaneseMode) {
+        return FontLenWithTable(s, len, &JapaneseGlyphs);
     }
-  }
-  return iVar2;
+
+    return FontLenWithTableNoKern(s, len, &MediumWesternGlyphs);
 }
 
 
 // 0x006cea0 (0x2dc bytes)
-void DrawFancyTextWithBox
-               (double param_1,double param_2,longlong param_3,int param_4,int param_5,
-               undefined8 param_6,undefined8 param_7,char *param_8)
-
+/* str in a HUD text box at y: starting at x (align -1), centred on x (0) or ending at x (1);
+   the box is sized for the text at scale and has opacity scale; the text is drawn with a black
+   shadow and its alpha is alpha * 128 */
+void DrawFancyTextWithBox(int x, int y, int align, float scale, float alpha, char *str)
 {
-  uint uVar1;
-  byte bVar2;
-  int iVar5;
-  longlong lVar3;
-  undefined8 uVar4;
-  int iVar6;
-  int iVar7;
-  
-  if (g_JapaneseMode) {
-    iVar5 = FontLenWithTable(param_8,-1,&JapaneseGlyphs);
-  }
-  else {
-    iVar6 = 0;
-    iVar5 = 0;
-    do {
-      bVar2 = param_8[iVar6];
-      if (bVar2 == 0) break;
-      if ((&DAT_007368b3)[(uint)bVar2 * 4] != '\0') {
-        iVar5 = iVar5 + (char)(&DAT_007368b3)[(uint)bVar2 * 4];
-      }
-      iVar6 = iVar6 + 1;
-    } while (iVar6 != -1);
-  }
-  uVar1 = (uint)((double)(longlong)iVar5 * param_1);
-  lVar3 = param_3;
-  if (param_5 < 0) {
-    if (-2 < param_5) {
-      lVar3 = (ulonglong)uVar1 + param_3;
+    int width = (int)((float)FontLen(str, -1) * scale);
+    int left = x;
+    int right = x;
+
+    if (align == -1) {
+        right = width + x;
     }
-  }
-  else if (param_5 < 1) {
-    lVar3 = param_3 + ((int)uVar1 >> 1);
-    param_3 = (longlong)((int)param_3 - ((int)uVar1 >> 1));
-  }
-  else if (param_5 < 2) {
-    param_3 = (longlong)(int)((int)param_3 - uVar1);
-  }
-  iVar6 = (int)param_3;
-  uVar4 = FastDoubleToInt((double)(float)(param_1 * 112.0));
-  Hud_DrawTextBox(iVar6 + -0x20,param_4 + -0xe,((int)lVar3 - iVar6) + 0x40,0x1c,uVar4);
-  g_FontColorsEnabled = 0;
-  iVar5 = (int)(param_2 * 128.0) * 0x1000000;
-  iVar7 = iVar5 + 0xe0e0e0;
-  if (g_JapaneseMode == false) {
-    FontPrint();
-  }
-  else {
-    FontPrintJapanese(iVar6 + 1,param_4 + -7,iVar5,param_8,0xffffffffffffffff,
-                      *(undefined4 *)(TexInfo + 4),&JapaneseGlyphs);
-  }
-  if (g_JapaneseMode == false) {
-    FontPrint(param_3,param_4 + -8,iVar7,param_8,0xffffffffffffffff,*(undefined4 *)(TexInfo + 4),
-              &MediumWesternGlyphs);
-  }
-  else {
-    FontPrintJapanese(param_3,param_4 + -8,iVar7,param_8,0xffffffffffffffff,
-                      *(undefined4 *)(TexInfo + 4),&JapaneseGlyphs);
-  }
-  g_FontColorsEnabled = 1;
-  return;
+    else if (align == 0) {
+        left = x - (width >> 1);
+        right = x + (width >> 1);
+    }
+    else if (align == 1) {
+        left = x - width;
+    }
+
+    Hud_DrawTextBox(left - 32, y - 14, right - left + 64, 28, FastDoubleToInt(scale * 112.0f));
+
+    g_FontColorsEnabled = 0;
+
+    int color = ((int)(alpha * 128.0f) << 24) + 0xe0e0e0;
+
+    if (g_JapaneseMode) {
+        FontPrintJapanese(left + 1, y - 7, color & 0xff000000, str, -1, GetEffectTex(1), &JapaneseGlyphs);
+        FontPrintJapanese(left, y - 8, color, str, -1, GetEffectTex(1), &JapaneseGlyphs);
+    }
+    else {
+        FontPrint(left + 1, y - 7, color & 0xff000000, str, -1, GetEffectTex(1), &MediumWesternGlyphs);
+        FontPrint(left, y - 8, color, str, -1, GetEffectTex(1), &MediumWesternGlyphs);
+    }
+
+    g_FontColorsEnabled = 1;
 }
 
 
 // 0x006d190 (0x3f8 bytes)
-void DrawTimedHelpMsg(undefined8 param_1,int param_2)
-
+/* msg in text boxes while frame is in [start, start + duration]: the boxes grow in over 16
+   frames and shrink over the last 8, the text fades in after them over 16 frames and out over
+   8 frames before. Each 0x01 starts a new box 26 pixels lower, or with oneLine becomes " - ". */
+void DrawTimedHelpMsg(TimedHelpMsg *msg, int frame)
 {
-  char cVar1;
-  short sVar2;
-  int *piVar3;
-  char *pcVar4;
-  char *pcVar5;
-  int iVar6;
-  char *pcVar7;
-  longlong lVar8;
-  byte in_cr6;
-  double dVar9;
-  double dVar10;
-  GPiece<16> auVar11;
-  GPiece<16> auVar12;
-  GPiece<16> auVar13;
-  GPiece<16> auVar14;
-  GPiece<16> auVar15;
-  GPiece<16> auVar16;
-  char local_150 [288];
-  
-  auVar11 = ZEXT416(0xfffffff0);
-  auVar11 = auVar11 | auVar11 << 0x20 | auVar11 << 0x40 | auVar11 << 0x60;
-  piVar3 = (int *)param_1;
-  sVar2 = *(short *)(piVar3 + 2);
-  auVar13 = loadVectorLeftIndexed(8,param_1);
-  auVar12 = loadVectorLeftIndexed(10,param_1);
-  auVar14 = vectorShiftRightAlgebraicWord(auVar13,auVar11);
-  auVar11 = vectorShiftRightAlgebraicWord(auVar12,auVar11);
-  iVar6 = (int)sVar2 + (int)*(short *)((int)piVar3 + 10);
-  auVar15.piece<0,4>() = auVar14.piece<0,4>() + auVar11.piece<0,4>();
-  auVar15.piece<8,8>() = auVar11.piece<8,8>();
-  auVar15.piece<4,4>() = auVar14.piece<4,4>() + auVar11.piece<4,4>();
-  auVar13.piece<0,8>() = auVar15.piece<0,8>();
-  auVar13.piece<12,4>() = auVar11.piece<12,4>();
-  auVar13.piece<8,4>() = auVar14.piece<8,4>() + auVar11.piece<8,4>();
-  auVar12.piece<0,12>() = auVar13.piece<0,12>();
-  auVar12.piece<12,4>() = auVar14.piece<12,4>() + auVar13.piece<12,4>();
-  auVar11.piece<0,4>() = param_2;
-  auVar11.piece<4,4>() = param_2;
-  auVar11.piece<8,4>() = param_2;
-  auVar11.piece<12,4>() = param_2;
-  if (param_2 <= iVar6 && sVar2 <= param_2) {
-    dVar9 = 1.0;
-    dVar10 = dVar9;
-    if (param_2 < sVar2 + 0x10) {
-      dVar10 = (double)((float)(longlong)(param_2 - sVar2) * 0.0625);
+    char line[288];
+    int start = msg->start;
+    int end = start + msg->duration;
+
+    if (frame < start || end < frame) {
+        return;
     }
-    if (iVar6 + -8 < param_2) {
-      dVar10 = (double)((float)(longlong)(iVar6 - param_2) * 0.125);
+
+    float scale = 1.0f;
+    float alpha = 1.0f;
+
+    if (frame < start + 16) {
+        scale = (float)(frame - start) * 0.0625f;
     }
-    if (param_2 < sVar2 + 0x20) {
-      auVar14 = vectorSubtractUnsignedWordModulo(auVar11,auVar14);
-      auVar13 = ZEXT416(0xffffffff);
-      auVar15 = auVar13 | auVar13 << 0x20 | auVar13 << 0x40 | auVar13 << 0x60;
-      auVar13 = loadVectorLeftIndexed(0xc,0x6d17c);
-      auVar16 = vectorShiftLeftIntegerWord(auVar15,auVar15);
-      auVar15 = auVar13 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar13 = ZEXT416(0);
-      auVar14 = vectorSubtractUnsignedWordModulo
-                          (auVar14,auVar15 | auVar15 << 0x20 | auVar15 << 0x40 | auVar15 << 0x60);
-      auVar15 = loadVectorLeftIndexed(4,0x6d17c);
-      auVar15 = auVar15 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar14 = vectorConvertFromSignedFixedPointWord(auVar14,0);
-      auVar15 = vectorMultiplyAddFloatingPoint
-                          (auVar14,auVar15 | auVar15 << 0x20 | auVar15 << 0x40 | auVar15 << 0x60,
-                           auVar16);
-      dVar9 = (double)((float)(longlong)((param_2 - sVar2) + -0x10) * 0.0625);
-      auVar15 = auVar15 >> 0x60 & (GPiece<16>)0xffffffff;
-      vectorCompareGreaterThanOrEqualToFloatingPoint
-                (auVar15 | auVar15 << 0x20 | auVar15 << 0x40 | auVar15 << 0x60,
-                 auVar13 | auVar13 << 0x20 | auVar13 << 0x40 | auVar13 << 0x60);
-      if ((bool)(in_cr6 >> 1 & 1)) {
-        dVar9 = 0.0;
-      }
+
+    if (frame > end - 8) {
+        scale = (float)(end - frame) * 0.125f;
     }
-    if (iVar6 + -0x10 < param_2) {
-      auVar13 = vectorSubtractUnsignedWordModulo(auVar12,auVar11);
-      auVar11 = ZEXT416(8);
-      auVar12 = ZEXT416(0);
-      auVar13 = vectorSubtractUnsignedWordModulo
-                          (auVar13,auVar11 | auVar11 << 0x20 | auVar11 << 0x40 | auVar11 << 0x60);
-      auVar11 = ZEXT416(0xffffffff);
-      auVar11 = auVar11 | auVar11 << 0x20 | auVar11 << 0x40 | auVar11 << 0x60;
-      auVar13 = vectorConvertFromSignedFixedPointWord(auVar13,0);
-      auVar14 = loadVectorLeftIndexed(8,0x6d17c);
-      auVar15 = vectorShiftLeftIntegerWord(auVar11,auVar11);
-      auVar11 = auVar14 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar11 = vectorMultiplyAddFloatingPoint
-                          (auVar13,auVar11 | auVar11 << 0x20 | auVar11 << 0x40 | auVar11 << 0x60,
-                           auVar15);
-      auVar11 = auVar11 >> 0x60 & (GPiece<16>)0xffffffff;
-      dVar9 = (double)((float)(longlong)((iVar6 - param_2) + -8) * 0.125);
-      vectorCompareGreaterThanOrEqualToFloatingPoint
-                (auVar11 | auVar11 << 0x20 | auVar11 << 0x40 | auVar11 << 0x60,
-                 auVar12 | auVar12 << 0x20 | auVar12 << 0x40 | auVar12 << 0x60);
-      if ((bool)(in_cr6 >> 1 & 1)) {
-        dVar9 = 0.0;
-      }
+
+    if (frame < start + 32) {
+        alpha = (float)(frame - start - 16) * 0.0625f;
+
+        if (alpha < 0.0f) {
+            alpha = 0.0f;
+        }
     }
-    pcVar4 = (char *)help_msg_string_by_index
-                               (*piVar3 + (int)((longlong)*piVar3 + -0x5136 >> 0x3f));
-    if (*(short *)((int)piVar3 + 0xe) == 1) {
-      cVar1 = *pcVar4;
-      pcVar5 = local_150;
-      while (cVar1 != '\0') {
-        if (*pcVar4 == '\x01') {
-          *pcVar5 = ' ';
-          pcVar5[1] = '-';
-          pcVar5[2] = ' ';
-          cVar1 = *pcVar4;
-          while (cVar1 == '\x01') {
-            pcVar4 = pcVar4 + 1;
-            cVar1 = *pcVar4;
-          }
-          pcVar7 = pcVar5 + 3;
-          if (*pcVar4 == '\0') {
-            pcVar7 = pcVar5;
-          }
+
+    if (frame > end - 16) {
+        alpha = (float)(end - frame - 8) * 0.125f;
+
+        if (alpha < 0.0f) {
+            alpha = 0.0f;
+        }
+    }
+
+    int id = msg->id;
+
+    if (id < 20790) {
+        id--;
+    }
+
+    char *text = help_msg_string_by_index((StringId)id);
+    char *out = line;
+
+    if (msg->oneLine == 1) {
+        while (*text != 0) {
+            if (*text == 1) {
+                char *dash = out;
+
+                out[0] = ' ';
+                out[1] = '-';
+                out[2] = ' ';
+                out += 3;
+
+                while (*text == 1) {
+                    text++;
+                }
+
+                if (*text == 0) {
+                    out = dash;
+                }
+            }
+            else {
+                *out++ = *text++;
+            }
+        }
+
+        *out = 0;
+        DrawFancyTextWithBox(msg->x, msg->y, msg->align, scale, alpha, line);
+
+        return;
+    }
+
+    int y = msg->y;
+
+    while (*text != 0) {
+        if (*text == 1) {
+            *out = 0;
+            DrawFancyTextWithBox(msg->x, y, msg->align, scale, alpha, line);
+
+            y += 26;
+            out = line;
+
+            while (*text == 1) {
+                text++;
+            }
+
+            if (*text == 0) {
+                break;
+            }
         }
         else {
-          cVar1 = *pcVar4;
-          pcVar4 = pcVar4 + 1;
-          *pcVar5 = cVar1;
-          pcVar7 = pcVar5 + 1;
+            *out++ = *text++;
         }
-        pcVar5 = pcVar7;
-        cVar1 = *pcVar4;
-      }
-      *pcVar5 = '\0';
-      DrawFancyTextWithBox
-                (dVar10,dVar9,*(undefined2 *)(piVar3 + 1),*(undefined2 *)((int)piVar3 + 6),
-                 *(undefined2 *)(piVar3 + 3));
     }
-    else {
-      lVar8 = (longlong)*(short *)((int)piVar3 + 6);
-      cVar1 = *pcVar4;
-      pcVar5 = local_150;
-      while (cVar1 != '\0') {
-        if (*pcVar4 == '\x01') {
-          *pcVar5 = '\0';
-          DrawFancyTextWithBox
-                    (dVar10,dVar9,*(undefined2 *)(piVar3 + 1),lVar8,*(undefined2 *)(piVar3 + 3));
-          lVar8 = (longlong)((int)lVar8 + 0x1a);
-          cVar1 = *pcVar4;
-          while (cVar1 == '\x01') {
-            pcVar4 = pcVar4 + 1;
-            cVar1 = *pcVar4;
-          }
-          pcVar5 = local_150;
-          if (*pcVar4 == '\0') break;
-        }
-        else {
-          cVar1 = *pcVar4;
-          pcVar4 = pcVar4 + 1;
-          *pcVar5 = cVar1;
-          pcVar5 = pcVar5 + 1;
-        }
-        cVar1 = *pcVar4;
-      }
-      if (local_150 < pcVar5) {
-        *pcVar5 = '\0';
-        DrawFancyTextWithBox
-                  (dVar10,dVar9,*(undefined2 *)(piVar3 + 1),lVar8,*(undefined2 *)(piVar3 + 3));
-      }
+
+    if (out > line) {
+        *out = 0;
+        DrawFancyTextWithBox(msg->x, y, msg->align, scale, alpha, line);
     }
-  }
-  return;
 }
 
 
 // 0x006d590 (0x174 bytes)
-void DrawSomeOverlay(void)
-
+/* the credits screen: the current credits image over the whole screen, the scene fade, and the
+   help messages of g_CreditsHelpMsgs (ended by a negative id) at g_Credits.frame */
+void DrawCredits(void)
 {
-  int *piVar1;
-  ulonglong uVar2;
-  int iVar3;
-  undefined4 *puVar4;
-  
-  if (g_CutscenePlaying == 0) {
+    if (g_CutscenePlaying != 0) {
+        return;
+    }
+
     TexSamplerFlags = 5;
-    Sprite_DrawShape(0,0,0x200,0x1a0,0,0,0x100,0xd0);
-    if (0 < (int)SceneScreenFade) {
-      if (0x3f800000 <
-          (int)(FLOAT_ORDER(SceneScreenFade))) {
-        SceneScreenFade = 1.0;
-      }
-      uVar2 = FastDoubleToInt((double)(SceneScreenFade * 128.0));
-      DrawFullScreenQuad((int)((uVar2 & 0xffffffff) << 0x18),
-                         (void *)(EffectTexHeaders + *(int *)(TexInfo + 0x58) * 0x24));
+    Sprite_DrawShape(0, 0, 512, 416, 0, 0, 256, 208, 0x80808080, &g_Credits.images[0]);
+
+    DrawScreenFade(&SceneScreenFade, 0);
+
+    for (TimedHelpMsg *msg = g_CreditsHelpMsgs; msg->id >= 0; msg++) {
+        DrawTimedHelpMsg(msg, g_Credits.frame);
     }
-    puVar4 = &DAT_0071fbdc;
-    if (-1 < DAT_0071fbdc) {
-      iVar3 = 0;
-      do {
-        DrawTimedHelpMsg(puVar4,g_Credits.frame);
-        puVar4 = puVar4 + 4;
-        piVar1 = (int *)(&DAT_0071fbec + iVar3);
-        iVar3 = iVar3 + 0x10;
-      } while (-1 < *piVar1);
-    }
-  }
-  return;
 }
 
 
 // 0x006d704 (0x4 bytes)
 void STUB_0006d704(...)
-
 {
-  return;
 }
 
 
 // 0x006d708 (0x4 bytes)
 void STUB_0006d708(...)
-
 {
-  return;
 }
 
 
 // 0x006d70c (0x14 bytes)
-int GetEffectTexAddr(int param_1)
-
+int GetEffectTexAddr(int index)
 {
-  return g_PartTexBaseIndex + param_1;
+    return g_PartTexBaseIndex + index;
 }
 
 
 // 0x006d720 (0x40 bytes)
-void RegisterFuncForMoby(void **function,MobyInstance *moby)
-
+/* adds function(moby) to the list DefaultDraw runs after the mobys (64 at most) */
+void RegisterFuncForMoby(void **function, MobyInstance *moby)
 {
-  undefined4 *puVar1;
-  int iVar2;
-  
-  iVar2 = g_MobyFuncListCount;
-  if (g_MobyFuncListCount < 0x40) {
-    puVar1 = &g_MobyFuncList + g_MobyFuncListCount;
-    g_MobyFuncListCount = g_MobyFuncListCount + 1;
-    *puVar1 = function;
-    (&g_MobyFuncListArgs)[iVar2] = moby;
-  }
-  return;
+    if (g_MobyFuncListCount < 64) {
+        g_MobyFuncList[g_MobyFuncListCount] = (MobyDrawFunc)function;
+        g_MobyFuncListArgs[g_MobyFuncListCount] = moby;
+        g_MobyFuncListCount++;
+    }
 }
 
 
 // 0x006d760 (0x40 bytes)
-void RegisterOceanUpdate(undefined4 param_1,MobyInstance *param_2)
-
+/* adds func(moby) to the pre-draws, run after the tfrags and ties (64 at most) */
+void RegisterOceanUpdate(undefined4 func, MobyInstance *moby)
 {
-  undefined4 *puVar1;
-  int iVar2;
-  
-  iVar2 = g_PreDrawCount;
-  if (g_PreDrawCount < 0x40) {
-    puVar1 = &CurrentOceanSubmitter + g_PreDrawCount;
-    g_PreDrawCount = g_PreDrawCount + 1;
-    *puVar1 = param_1;
-    (&WaterMoby)[iVar2] = param_2;
-  }
-  return;
+    if (g_PreDrawCount < 64) {
+        g_PreDrawFuncs[g_PreDrawCount] = (MobyDrawFunc)(uintptr_t)func;
+        g_PreDrawArgs[g_PreDrawCount] = moby;
+        g_PreDrawCount++;
+    }
 }
 
 
 // 0x006d7a0 (0x40 bytes)
-void RegisterPostPreDraw(void *func,void *arg)
-
+/* adds func(arg) to the post-pre-draws, run after the shrubs (64 at most) */
+void RegisterPostPreDraw(void *func, void *arg)
 {
-  undefined4 *puVar1;
-  int iVar2;
-  
-  iVar2 = g_PostPreDrawCount;
-  if (g_PostPreDrawCount < 0x40) {
-    puVar1 = &g_PostPreDrawFuncs + g_PostPreDrawCount;
-    g_PostPreDrawCount = g_PostPreDrawCount + 1;
-    *puVar1 = func;
-    (&g_PostPreDrawArgs)[iVar2] = arg;
-  }
-  return;
+    if (g_PostPreDrawCount < 64) {
+        g_PostPreDrawFuncs[g_PostPreDrawCount] = (MobyDrawFunc)func;
+        g_PostPreDrawArgs[g_PostPreDrawCount] = (MobyInstance *)arg;
+        g_PostPreDrawCount++;
+    }
 }
 
 
 // 0x006d7e0 (0x40 bytes)
-void RegisterPostDraw(void *func,void *arg)
-
+/* adds func(arg) to the post-draws, run after the particles (64 at most) */
+void RegisterPostDraw(void *func, void *arg)
 {
-  undefined4 *puVar1;
-  int iVar2;
-  
-  iVar2 = g_PostDrawCount;
-  if (g_PostDrawCount < 0x40) {
-    puVar1 = &g_PostDrawFuncs + g_PostDrawCount;
-    g_PostDrawCount = g_PostDrawCount + 1;
-    *puVar1 = func;
-    (&g_PostDrawArgs)[iVar2] = arg;
-  }
-  return;
+    if (g_PostDrawCount < 64) {
+        g_PostDrawFuncs[g_PostDrawCount] = (MobyDrawFunc)func;
+        g_PostDrawArgs[g_PostDrawCount] = (MobyInstance *)arg;
+        g_PostDrawCount++;
+    }
 }
 
 
 // 0x006d830 (0x290 bytes)
 // inlined: FastRSqrt @0x6d984
+/* Each of the g_NumLameShadows queued blob shadows (DL: LameShadows, a position whose w is the
+   size and a surface normal) as a quad of effect texture TexInfo[0]: LameShadowTable's corner
+   offsets (x, y) taken into the surface plane and scaled by the size, its z, w the texture
+   coordinates. */
 void DrawLameShadows(void)
-
 {
-  longlong lVar1;
-  undefined4 uVar2;
-  undefined4 uVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  ulonglong *puVar7;
-  float fVar8;
-  float fVar9;
-  float fVar10;
-  float fVar11;
-  int iVar12;
-  uint *puVar13;
-  ulonglong uVar14;
-  ulonglong uVar15;
-  undefined4 *puVar16;
-  undefined4 *puVar17;
-  longlong lVar18;
-  float *pfVar19;
-  longlong lVar20;
-  float *pfVar21;
-  ulonglong unaff_r27;
-  int iVar22;
-  ulonglong unaff_r28;
-  int iVar23;
-  ulonglong unaff_r29;
-  ulonglong unaff_r30;
-  ulonglong unaff_r31;
-  ulonglong in_LR;
-  longlong lVar24;
-  
-  uVar14 = ZEXT48(&stack0x00000000);
-  lVar1 = uVar14 - 0x130;
-  puVar7 = (ulonglong *)lVar1;
-  *puVar7 = uVar14;
-  puVar7[0x28] = in_LR;
-  puVar7[0x23] = unaff_r29;
-  puVar13 = TexInfo;
-  puVar7[0x25] = unaff_r31;
-  puVar7[0x24] = unaff_r30;
-  puVar7[0x22] = unaff_r28;
-  puVar7[0x21] = unaff_r27;
-  puVar7[0x1d] = (ulonglong)*puVar13;
-  uVar15 = SCE_GS_SET_TEX1(0,0,1,1,1,0,0xff90);
-  puVar7[0x1e] = uVar15;
-  uVar15 = SCE_GS_SET_CLAMP(1,1,0,0,0,0);
-  puVar7[0x1c] = uVar15;
-  uVar15 = idol_draw::PackCmd(0,1,0,1,0x80);
-  puVar7[0x1f] = uVar15;
-  iVar23 = 0;
-  puVar16 = &DAT_0071ef48;
-  puVar17 = &DAT_0071ef4c;
-  lVar24 = 4;
-  lVar18 = lVar1;
-  lVar20 = lVar1;
-  do {
-    uVar2 = *puVar16;
-    uVar3 = *puVar17;
-    puVar16 = puVar16 + 4;
-    *(undefined4 *)((int)lVar20 + 0xc0) = uVar2;
-    puVar17 = puVar17 + 4;
-    *(undefined4 *)((int)lVar20 + 0xc4) = uVar3;
-    *(undefined4 *)((int)lVar18 + 0xb0) = 0x40808080;
-    lVar20 = lVar20 + 8;
-    lVar18 = lVar18 + 4;
-    lVar24 = lVar24 + -1;
-  } while (lVar24 != 0);
-  iVar22 = 0;
-  if (0 < g_NumLameShadows) {
-    do {
-      fVar4 = *(float *)((int)&DAT_0095e604 + iVar23);
-      fVar5 = *(float *)((int)&DAT_0095e600 + iVar23);
-      fVar6 = *(float *)((int)&DAT_0095e608 + iVar23);
-      fVar9 = 0.0;
-      fVar11 = fVar6 * fVar6 + fVar5 * fVar5 + fVar4 * fVar4;
-      fVar10 = fVar9;
-      fVar8 = fVar9;
-      if (SQRT(fVar11) != 0.0) {
-        fVar10 = 1.0 / SQRT(fVar11);
-        fVar10 = -(fVar11 * fVar10 * fVar10 - 1.0) * fVar10 * 0.5 + fVar10;
-        fVar10 = -(fVar11 * fVar10 * fVar10 - 1.0) * fVar10 * 0.5 + fVar10;
-        fVar10 = -(fVar11 * fVar10 * fVar10 - 1.0) * fVar10 * 0.5 + fVar10;
-        fVar9 = fVar5 * fVar10;
-        fVar8 = fVar4 * fVar10;
-        fVar10 = fVar6 * fVar10;
-      }
-      fVar4 = *(float *)((int)&DAT_0095e5fc + iVar23);
-      pfVar19 = (float *)&DAT_0071ef44;
-      lVar24 = 4;
-      lVar20 = uVar14 - 0xc0;
-      lVar18 = lVar1;
-      pfVar21 = (float *)&DAT_0071ef40;
-      do {
-        fVar5 = *pfVar19;
-        fVar6 = *pfVar21;
-        puVar17 = (undefined4 *)lVar20;
-        *puVar17 = *(undefined4 *)((int)&g_LameShadows + iVar23);
-        puVar17[1] = *(undefined4 *)((int)&DAT_0095e5f4 + iVar23);
-        puVar17[2] = *(undefined4 *)((int)&DAT_0095e5f8 + iVar23);
-        fVar11 = fVar6 * fVar9 + fVar5 * fVar8;
-        puVar17[3] = *(undefined4 *)((int)&DAT_0095e5fc + iVar23);
-        fVar5 = *pfVar21;
-        lVar20 = lVar20 + 0x10;
-        fVar6 = *pfVar19;
-        pfVar21 = pfVar21 + 4;
-        iVar12 = (int)lVar18;
-        pfVar19 = pfVar19 + 4;
-        *(float *)(iVar12 + 0x78) = -(fVar11 * fVar10 * fVar4 - *(float *)(iVar12 + 0x78));
-        *(float *)(iVar12 + 0x70) = -(fVar11 * fVar9 - fVar5) * fVar4 + *(float *)(iVar12 + 0x70);
-        *(float *)(iVar12 + 0x74) = -(fVar11 * fVar8 - fVar6) * fVar4 + *(float *)(iVar12 + 0x74);
-        lVar18 = lVar18 + 0x10;
-        lVar24 = lVar24 + -1;
-      } while (lVar24 != 0);
-      FastDrawQuad(uVar14 - 0xc0,0,0,EffectTexHeaders,9);
-      iVar22 = iVar22 + 1;
-      iVar23 = iVar23 + 0x20;
-    } while (iVar22 < g_NumLameShadows);
-  }
-  return;
+    Vec4 (*shadows)[2] = (Vec4 (*)[2])&g_LameShadows;
+    QuadDef quad;
+    float *st = &quad.st[0][0];
+
+    quad.tex0 = ((int *)(uintptr_t)TexInfo)[0];
+    quad.tex1 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
+    quad.clamp = SCE_GS_SET_CLAMP(1, 1, 0, 0, 0, 0);
+    quad.alpha = idol_draw::PackCmd(0, 1, 0, 1, 0x80);
+
+    for (int i = 0; i < 4; i++) {
+        st[i * 2] = LameShadowTable[i].z;
+        st[i * 2 + 1] = LameShadowTable[i].w;
+        quad.rgba[i] = 0x40808080;
+    }
+
+    for (int shadow = 0; shadow < g_NumLameShadows; shadow++) {
+        Vec4 *pos = &shadows[shadow][0];
+        Vec4 *normal = &shadows[shadow][1];
+        float lengthSq = normal->z * normal->z + normal->x * normal->x + normal->y * normal->y;
+        float normalX = 0.0f;
+        float normalY = 0.0f;
+        float normalZ = 0.0f;
+
+        if (sqrtf(lengthSq) != 0.0f) {
+            /* FastRSqrt */
+            float inv = 1.0f / sqrtf(lengthSq);
+
+            normalX = normal->x * inv;
+            normalY = normal->y * inv;
+            normalZ = normal->z * inv;
+        }
+
+        float size = pos->w;
+
+        for (int i = 0; i < 4; i++) {
+            float offsetX = LameShadowTable[i].x;
+            float offsetY = LameShadowTable[i].y;
+            float along = offsetX * normalX + offsetY * normalY;
+
+            quad.xyzw[i] = *pos;
+            quad.xyzw[i].z = quad.xyzw[i].z - along * normalZ * size;
+            quad.xyzw[i].x = (offsetX - along * normalX) * size + quad.xyzw[i].x;
+            quad.xyzw[i].y = (offsetY - along * normalY) * size + quad.xyzw[i].y;
+        }
+
+        FastDrawQuad((undefined4 *)&quad, 0, 0, (longlong)EffectTexHeaders, 9);
+    }
+}
+
+/* libgcm's cellGcmSetSurface, into pass */
+static inline void EmitSetSurface(RenderingStep *pass, IdolSurface *surface)
+{
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_CONTEXT_DMA_COLOR_A, 1));
+    Emit(pass, CELL_GCM_CONTEXT_DMA_MEMORY_FRAME_BUFFER + surface->colorLocation[0]);
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_CONTEXT_DMA_COLOR_B, 1));
+    Emit(pass, CELL_GCM_CONTEXT_DMA_MEMORY_FRAME_BUFFER + surface->colorLocation[1]);
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_CONTEXT_DMA_COLOR_C, 2));
+    Emit(pass, CELL_GCM_CONTEXT_DMA_MEMORY_FRAME_BUFFER + surface->colorLocation[2]);
+    Emit(pass, CELL_GCM_CONTEXT_DMA_MEMORY_FRAME_BUFFER + surface->colorLocation[3]);
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_CONTEXT_DMA_ZETA, 1));
+    Emit(pass, CELL_GCM_CONTEXT_DMA_MEMORY_FRAME_BUFFER + surface->depthLocation);
+
+    u32 logWidth = 31 - __builtin_clz(surface->width);
+    u32 logHeight = 31 - __builtin_clz(surface->height);
+
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_SURFACE_FORMAT, 6));
+    Emit(pass, surface->colorFormat | surface->depthFormat << 5 | surface->type << 8 | surface->antialias << 12 | logWidth << 16 | logHeight << 24);
+    Emit(pass, surface->colorPitch[0]);
+    Emit(pass, surface->colorOffset[0]);
+    Emit(pass, surface->depthOffset);
+    Emit(pass, surface->colorOffset[1]);
+    Emit(pass, surface->colorPitch[1]);
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_SURFACE_PITCH_Z, 1));
+    Emit(pass, surface->depthPitch);
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_SURFACE_PITCH_C, 4));
+    Emit(pass, surface->colorPitch[2]);
+    Emit(pass, surface->colorPitch[3]);
+    Emit(pass, surface->colorOffset[2]);
+    Emit(pass, surface->colorOffset[3]);
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_SURFACE_COLOR_TARGET, 1));
+    Emit(pass, surface->colorTarget);
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_WINDOW_OFFSET, 1));
+    Emit(pass, surface->y << 16 | surface->x);
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_SURFACE_CLIP_HORIZONTAL, 2));
+    Emit(pass, surface->width << 16 | surface->x);
+    Emit(pass, surface->height << 16 | surface->y);
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_SHADER_WINDOW, 1));
+    Emit(pass, (surface->height - ((surface->height >> 12) & 1)) | 0x1000);
 }
 
 
 // 0x006dad0 (0x598 bytes)
-void FadeToBlack(int param_1)
-
+/* Flips frames more frames while the brightness at 0x8fa550 falls from (frames-1)/frames to 0,
+   then sets the frame buffer up again on DepthPass, clears it to black and puts the brightness
+   back to 1. In stereo each frame is flipped twice. */
+void FadeToBlack(int frames)
 {
-  ushort uVar1;
-  ushort uVar2;
-  RsxCmd *pRVar3;
-  RenderingStep *pRVar4;
-  int *piVar5;
-  undefined8 uVar6;
-  GPiece<16> in_vs34;
-  GPiece<16> auVar7;
-  GPiece<16> auVar8;
-  GPiece<16> auVar9;
-  GPiece<16> auVar10;
-  GPiece<16> auVar11;
-  GPiece<16> auVar12;
-  GPiece<16> auVar13;
-  GPiece<16> auVar14;
-  GPiece<16> auVar15;
-  GPiece<16> auVar16;
-  GPiece<16> auVar17;
-  GPiece<16> auVar18;
-  GPiece<16> auVar19;
-  
-  piVar5 = g_pIdolDraw;
-  uVar6 = 0x70;
-  auVar14.piece<0,4>() = param_1;
-  auVar14.piece<4,4>() = param_1;
-  auVar14.piece<8,4>() = param_1;
-  auVar14.piece<12,4>() = param_1;
-  if (g_pIdolDraw[0x6a3] == 0) {
+    IdolDraw *idol = Idol();
+
+    if (idol->unk1a8c != 0) {
+        return;
+    }
+
     idol_draw::Spurs_FlushAndSwapQueue(&DAT_01111700);
-    FUN_004edcfc(&DAT_01111700);
-    if ((piVar5[0x128] == 1) && ((piVar5[0x69b] & 1U) != 0)) {
-      (*(code *)**(undefined4 **)(*piVar5 + 0x18))(piVar5);
+    FUN_004edcfc((int)(uintptr_t)&DAT_01111700);
+
+    if (idol->stereo == 1 && (idol->unk1a6c & 1)) {
+        idol->vtable->BuildAndFlipFrame(idol);
     }
-    param_1 = param_1 + -1;
-    auVar18 = ZEXT416(1);
-    auVar18 = auVar18 | auVar18 << 0x20 | auVar18 << 0x40 | auVar18 << 0x60;
-    if (-1 < param_1) {
-      auVar17 = vectorSubtractUnsignedWordModulo(auVar14,auVar18);
-      auVar14 = loadVectorLeftIndexed(uVar6,0x6dac0);
-      auVar16 = loadVectorLeftIndexed(4,0x6dac0);
-      auVar19 = loadVectorLeftIndexed(8,0x6dac0);
-      auVar14 = auVar14 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar15 = auVar14 | auVar14 << 0x20 | auVar14 << 0x40 | auVar14 << 0x60;
-      auVar14 = auVar16 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar16 = auVar14 | auVar14 << 0x20 | auVar14 << 0x40 | auVar14 << 0x60;
-      auVar14 = auVar19 >> 0x60 & (GPiece<16>)0xffffffff;
-      auVar14 = auVar14 | auVar14 << 0x20 | auVar14 << 0x40 | auVar14 << 0x60;
-      do {
-        auVar19.piece<0,4>() = auVar17.piece<0,4>() + auVar18.piece<0,4>();
-        auVar19.piece<8,8>() = in_vs34.piece<8,8>();
-        auVar19.piece<4,4>() = auVar17.piece<4,4>() + auVar18.piece<4,4>();
-        auVar7.piece<0,8>() = auVar19.piece<0,8>();
-        auVar7.piece<8,4>() = auVar17.piece<8,4>() + auVar18.piece<8,4>();
-        auVar7.piece<12,4>() = auVar17.piece<12,4>() + auVar18.piece<12,4>();
-        auVar19 = ZEXT416(0xffffffff);
-        auVar8 = auVar19 | auVar19 << 0x20 | auVar19 << 0x40 | auVar19 << 0x60;
-        auVar19 = ZEXT416(0xffffffff);
-        auVar19 = auVar19 | auVar19 << 0x20 | auVar19 << 0x40 | auVar19 << 0x60;
-        auVar7 = vectorConvertFromSignedFixedPointWord(auVar7,0);
-        auVar8 = vectorShiftLeftIntegerWord(auVar8,auVar8);
-        auVar10 = vectorConvertFromSignedFixedPointWord(auVar17,0);
-        auVar9 = vectorShiftLeftIntegerWord(auVar19,auVar19);
-        auVar19 = ZEXT416(0xffffffff);
-        auVar11 = auVar19 | auVar19 << 0x20 | auVar19 << 0x40 | auVar19 << 0x60;
-        auVar19 = ZEXT416(0xffffffff);
-        auVar12 = auVar19 | auVar19 << 0x20 | auVar19 << 0x40 | auVar19 << 0x60;
-        auVar19 = vectorShiftLeftIntegerWord(auVar11,auVar11);
-        auVar13 = vectorShiftLeftIntegerWord(auVar12,auVar12);
-        auVar11 = vectorReciprocalEstimateFloatingPoint(auVar7);
-        auVar10 = vectorMultiplyAddFloatingPoint(auVar10,auVar15,auVar19);
-        auVar19 = ZEXT416(0xffffffff);
-        auVar19 = auVar19 | auVar19 << 0x20 | auVar19 << 0x40 | auVar19 << 0x60;
-        auVar12 = vectorNegativeMultiplySubtractFloatingPoint(auVar11,auVar7,auVar14);
-        auVar8 = vectorMultiplyAddFloatingPoint(auVar11,auVar12,auVar8);
-        auVar11 = vectorShiftLeftIntegerWord(auVar19,auVar19);
-        auVar19 = ZEXT416(0xffffffff);
-        auVar19 = auVar19 | auVar19 << 0x20 | auVar19 << 0x40 | auVar19 << 0x60;
-        auVar12 = vectorShiftLeftIntegerWord(auVar19,auVar19);
-        auVar19 = vectorNegativeMultiplySubtractFloatingPoint(auVar8,auVar7,auVar14);
-        auVar8 = vectorMultiplyAddFloatingPoint(auVar8,auVar19,auVar9);
-        auVar19 = vectorNegativeMultiplySubtractFloatingPoint(auVar8,auVar7,auVar14);
-        auVar19 = vectorMultiplyAddFloatingPoint(auVar8,auVar19,auVar13);
-        auVar19 = vectorMultiplyAddFloatingPoint(auVar19,auVar10,auVar11);
-        in_vs34 = vectorMultiplyAddFloatingPoint(auVar19,auVar16,auVar12);
-        DAT_008fa550 = storeVectorElementWordIndexed(in_vs34,0xffffffffffffa550,0x900000);
-        (*(code *)**(undefined4 **)(*piVar5 + 0x18))(piVar5);
-        if (piVar5[0x128] == 1) {
-          (*(code *)**(undefined4 **)(*piVar5 + 0x18))(piVar5);
+
+    for (int i = frames - 1; i >= 0; i--) {
+        float brightness = (float)i * 255.0f * (1.0f / (float)(i + 1)) * (1.0f / 255.0f);
+
+        DAT_008fa550 = *(u32 *)&brightness;
+
+        idol->vtable->BuildAndFlipFrame(idol);
+
+        if (idol->stereo == 1) {
+            idol->vtable->BuildAndFlipFrame(idol);
         }
-        param_1 = param_1 + -1;
-        auVar17 = vectorSubtractUnsignedWordModulo(auVar17,auVar18);
-        g_MainLoopFrames = g_MainLoopFrames + 1;
-      } while (-1 < param_1);
+
+        g_MainLoopFrames++;
     }
-    g_MainLoopFrames = g_MainLoopFrames + 1;
-    (*(code *)**(undefined4 **)(*piVar5 + 0x10))(piVar5,DepthPass,piVar5[1],piVar5[2]);
-    pRVar4 = DepthPass;
-    *DepthPass->command = NV4097_SET_CONTEXT_DMA_COLOR_A_x1;
-    pRVar4->command[1] = *(byte *)(piVar5 + 0x6fa) + 0xfeed0000;
-    pRVar3 = pRVar4->command;
-    pRVar4->command = pRVar3 + 2;
-    pRVar3[2] = NV4097_SET_CONTEXT_DMA_COLOR_B_x1;
-    pRVar4->command[1] = *(byte *)((int)piVar5 + 0x1be9) + 0xfeed0000;
-    pRVar3 = pRVar4->command;
-    pRVar4->command = pRVar3 + 2;
-    pRVar3[2] = NV4097_SET_CONTEXT_DMA_COLOR_C_x2;
-    pRVar4->command[1] = *(byte *)((int)piVar5 + 0x1bea) + 0xfeed0000;
-    pRVar4->command[2] = *(byte *)((int)piVar5 + 0x1beb) + 0xfeed0000;
-    pRVar3 = pRVar4->command;
-    pRVar4->command = pRVar3 + 3;
-    pRVar3[3] = NV4097_SET_CONTEXT_DMA_ZETA_x1;
-    pRVar4->command[1] = *(byte *)((int)piVar5 + 0x1c0d) + 0xfeed0000;
-    pRVar3 = pRVar4->command;
-    pRVar4->command = pRVar3 + 2;
-    uVar1 = *(ushort *)(piVar5 + 0x706);
-    uVar2 = *(ushort *)((int)piVar5 + 0x1c1a);
-    pRVar3[2] = (RsxCmd)&DAT_00180208;
-    pRVar4->command[1] =
-         (uint)*(byte *)((int)piVar5 + 0x1be6) | (uint)*(byte *)(piVar5 + 0x703) << 5 |
-         (uint)*(byte *)(piVar5 + 0x6f9) << 8 | (uint)*(byte *)((int)piVar5 + 0x1be5) << 0xc |
-         (RsxCmd)((0x1fU - LZCOUNT((uint)uVar1) & 0xffffffff) << 0x10) |
-         (RsxCmd)((0x1fU - LZCOUNT((uint)uVar2) & 0xffffffff) << 0x18);
-    pRVar4->command[2] = piVar5[0x6ff];
-    pRVar4->command[3] = piVar5[0x6fb];
-    pRVar4->command[4] = piVar5[0x704];
-    pRVar4->command[5] = piVar5[0x6fc];
-    pRVar4->command[6] = piVar5[0x700];
-    pRVar3 = pRVar4->command;
-    pRVar4->command = pRVar3 + 7;
-    pRVar3[7] = NV4097_SET_SURFACE_PITCH_Z_x1;
-    pRVar4->command[1] = piVar5[0x705];
-    pRVar3 = pRVar4->command;
-    pRVar4->command = pRVar3 + 2;
-    pRVar3[2] = NV4097_SET_SURFACE_PITCH_C_x4;
-    pRVar4->command[1] = piVar5[0x701];
-    pRVar4->command[2] = piVar5[0x702];
-    pRVar4->command[3] = piVar5[0x6fd];
-    pRVar4->command[4] = piVar5[0x6fe];
-    pRVar3 = pRVar4->command;
-    pRVar4->command = pRVar3 + 5;
-    pRVar3[5] = NV4097_SET_SURFACE_COLOR_TARGET_x1;
-    pRVar4->command[1] = (uint)*(byte *)((int)piVar5 + 0x1be7);
-    pRVar3 = pRVar4->command;
-    pRVar4->command = pRVar3 + 2;
-    pRVar3[2] = NV4097_SET_WINDOW_OFFSET_x1;
-    pRVar4->command[1] =
-         CONCAT22(*(undefined2 *)((int)piVar5 + 0x1c1e),*(undefined2 *)(piVar5 + 0x707));
-    pRVar3 = pRVar4->command;
-    pRVar4->command = pRVar3 + 2;
-    pRVar3[2] = NV4097_SET_SURFACE_CLIP_HORIZONTAL_x2;
-    pRVar4->command[1] = CONCAT22(*(undefined2 *)(piVar5 + 0x706),*(undefined2 *)(piVar5 + 0x707));
-    pRVar4->command[2] =
-         CONCAT22(*(undefined2 *)((int)piVar5 + 0x1c1a),*(undefined2 *)((int)piVar5 + 0x1c1e));
-    pRVar3 = pRVar4->command;
-    pRVar4->command = pRVar3 + 3;
-    pRVar3[3] = NV4097_SET_SHADER_WINDOW_x1;
-    pRVar4->command[1] =
-         (uint)*(ushort *)((int)piVar5 + 0x1c1a) - (*(ushort *)((int)piVar5 + 0x1c1a) >> 0xc & 1) |
-         0x1000;
-    pRVar4->command = pRVar4->command + 2;
-    pRVar4 = DepthPass;
-    *DepthPass->command = NV4097_SET_COLOR_CLEAR_VALUE_x1;
-    pRVar4->command[1] = 0;
-    pRVar4->command = pRVar4->command + 2;
-    pRVar4 = DepthPass;
-    *DepthPass->command = NV4097_CLEAR_SURFACE_x1;
-    pRVar4->command[1] = 0xf0;
-    pRVar3 = pRVar4->command;
-    pRVar4->command = pRVar3 + 2;
-    pRVar3[2] = NV4097_NO_OPERATION_x1;
-    pRVar4->command[1] = 0;
-    pRVar4->command = pRVar4->command + 2;
-    DAT_008fa550 = 0x3f800000;
-  }
-  return;
+
+    g_MainLoopFrames++;
+
+    idol->vtable->unk10(idol, (int)(uintptr_t)DepthPass, idol->unk04, idol->unk08);
+
+    EmitSetSurface(DepthPass, &idol->surface);
+
+    Emit(DepthPass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_COLOR_CLEAR_VALUE, 1));
+    Emit(DepthPass, 0);
+    Emit(DepthPass, CELL_GCM_METHOD(CELL_GCM_NV4097_CLEAR_SURFACE, 1));
+    Emit(DepthPass, CELL_GCM_CLEAR_R | CELL_GCM_CLEAR_G | CELL_GCM_CLEAR_B | CELL_GCM_CLEAR_A);
+    Emit(DepthPass, CELL_GCM_METHOD(CELL_GCM_NV4097_NO_OPERATION, 1));
+    Emit(DepthPass, 0);
+
+    float one = 1.0f;
+
+    DAT_008fa550 = *(u32 *)&one;
 }
 
 
 // 0x006e068 (0x70 bytes)
 void Draw_FlushAndPresent(void)
-
 {
-  int iVar1;
-  
-  iVar1 = g_pIdolDraw;
-  idol_draw::Spurs_FlushAndSwapQueue(&DAT_01111700);
-  FUN_004edcfc(&DAT_01111700);
-  idol_draw::Gfx_Present(iVar1,iVar1 + 0x1fe0);
-  FUN_004d5e48(*(undefined4 *)(iVar1 + 0x1a74));
-  return;
+    IdolDraw *idol = Idol();
+
+    idol_draw::Spurs_FlushAndSwapQueue(&DAT_01111700);
+    FUN_004edcfc((int)(uintptr_t)&DAT_01111700);
+    idol_draw::Gfx_Present((int *)idol, (int)(uintptr_t)&idol->presentInfo);
+    FUN_004d5e48(idol->unk1a74);
+}
+
+static inline void EmitF(RenderingStep *pass, float value)
+{
+    Emit(pass, *(u32 *)&value);
+}
+
+/* one method with a single word */
+static inline void EmitMethod(RenderingStep *pass, u32 method, u32 value)
+{
+    Emit(pass, CELL_GCM_METHOD(method, 1));
+    Emit(pass, value);
+}
+
+/* libgcm's cellGcmSetTexture for unit 0, into pass */
+static inline void EmitSetTexture0(RenderingStep *pass, IdolTexture *texture)
+{
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_TEXTURE_OFFSET, 2));
+    Emit(pass, texture->offset);
+    Emit(pass, (texture->location + 1) | texture->cubemap << 2 | CELL_GCM_TEXTURE_BORDER_COLOR << 3 | texture->dimension << 4 | texture->format << 8 | texture->mipmap << 16);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_TEXTURE_IMAGE_RECT, texture->width << 16 | texture->height);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_TEXTURE_CONTROL3, texture->pitch | texture->depth << 20);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_TEXTURE_CONTROL1, texture->remap);
 }
 
 
 // 0x006e0d8 (0x644 bytes)
+/* Copies the renderer's off-screen target over the whole ForwardPass viewport: depth, stencil
+   writes, blending and alpha test off, the target as texture 0 with the default programs, one
+   quad from (-1, 1) to (1, -1); depth and blending on again after. */
 void DrawRenderTargetToScreen(void)
-
 {
-  byte bVar1;
-  byte bVar2;
-  byte bVar3;
-  byte bVar4;
-  byte bVar5;
-  ushort uVar6;
-  RsxCmd RVar7;
-  RsxCmd RVar8;
-  RsxCmd RVar9;
-  RsxCmd *pRVar10;
-  RsxCmd RVar11;
-  RenderingStep *pRVar12;
-  int iVar13;
-  
-  iVar13 = g_pIdolDraw;
-  pRVar12 = ForwardPass;
-  *ForwardPass->command = NV4097_SET_DEPTH_TEST_ENABLE_x1;
-  pRVar12->command[1] = 0;
-  pRVar12->command = pRVar12->command + 2;
-  pRVar12 = ForwardPass;
-  *ForwardPass->command = NV4097_SET_DEPTH_MASK_x1;
-  pRVar12->command[1] = 0;
-  pRVar12->command = pRVar12->command + 2;
-  pRVar12 = ForwardPass;
-  *ForwardPass->command = NV4097_SET_STENCIL_MASK_x1;
-  pRVar12->command[1] = 0;
-  pRVar12->command = pRVar12->command + 2;
-  pRVar12 = ForwardPass;
-  *ForwardPass->command = NV4097_SET_BLEND_ENABLE_x1;
-  pRVar12->command[1] = 0;
-  pRVar12->command = pRVar12->command + 2;
-  pRVar12 = ForwardPass;
-  *ForwardPass->command = NV4097_SET_ALPHA_TEST_ENABLE_x1;
-  pRVar12->command[1] = 0;
-  RVar7 = *(RsxCmd *)(iVar13 + 0x206c);
-  pRVar12->command = pRVar12->command + 2;
-  pRVar12 = ForwardPass;
-  bVar1 = *(byte *)(iVar13 + 0x2066);
-  bVar2 = *(byte *)(iVar13 + 0x2059);
-  bVar3 = *(byte *)(iVar13 + 0x2058);
-  bVar4 = *(byte *)(iVar13 + 0x205b);
-  bVar5 = *(byte *)(iVar13 + 0x205a);
-  RVar11 = *(RsxCmd *)(iVar13 + 0x2060);
-  RVar8 = *(RsxCmd *)(iVar13 + 0x205c);
-  RVar9 = *(RsxCmd *)(iVar13 + 0x2068);
-  uVar6 = *(ushort *)(iVar13 + 0x2064);
-  *ForwardPass->command = (RsxCmd)&DAT_00081a00;
-  pRVar12->command[1] = RVar7;
-  pRVar12->command[2] =
-       (uint)bVar2 << 0x10 | bVar1 + 1 | 8 | (uint)bVar3 << 8 | (uint)bVar4 << 2 | (uint)bVar5 << 4;
-  pRVar10 = pRVar12->command;
-  pRVar12->command = pRVar10 + 3;
-  pRVar10[3] = NV4097_SET_TEXTURE_IMAGE_RECT_x1;
-  pRVar12->command[1] = RVar11;
-  pRVar10 = pRVar12->command;
-  pRVar12->command = pRVar10 + 2;
-  pRVar10[2] = (RsxCmd)&DAT_00041840;
-  pRVar12->command[1] = RVar9 | (uint)uVar6 << 0x14;
-  pRVar10 = pRVar12->command;
-  pRVar12->command = pRVar10 + 2;
-  pRVar10[2] = NV4097_SET_TEXTURE_CONTROL1_x1;
-  pRVar12->command[1] = RVar8;
-  pRVar12->command = pRVar12->command + 2;
-  pRVar12 = ForwardPass;
-  *ForwardPass->command = NV4097_SET_TEXTURE_CONTROL0_x1;
-  pRVar12->command[1] = 0x80000000;
-  pRVar12->command = pRVar12->command + 2;
-  pRVar12 = ForwardPass;
-  *ForwardPass->command = NV4097_SET_TEXTURE_ADDRESS_x1;
-  pRVar12->command[1] = 0x40030303;
-  pRVar12->command = pRVar12->command + 2;
-  pRVar12 = ForwardPass;
-  *ForwardPass->command = NV4097_SET_TEXTURE_FILTER_x1;
-  pRVar12->command[1] = 0x2022000;
-  pRVar12->command = pRVar12->command + 2;
-  idol_draw::BindVertexProgram(iVar13,ForwardPass,0);
-  idol_draw::BindFragmentProgram(iVar13,ForwardPass,0);
-  pRVar12 = ForwardPass;
-  *ForwardPass->command = NV4097_SET_VERTEX_DATA_ARRAY_FORMAT_x1;
-  pRVar12->command[1] = 2;
-  pRVar10 = pRVar12->command;
-  pRVar12->command = pRVar10 + 2;
-  pRVar10[2] = NV4097_SET_VERTEX_DATA_ARRAY_OFFSET_x1;
-  pRVar12->command[1] = 0;
-  pRVar12->command = pRVar12->command + 2;
-  pRVar12 = ForwardPass;
-  *ForwardPass->command = 0x41744;
-  pRVar12->command[1] = 2;
-  pRVar10 = pRVar12->command;
-  pRVar12->command = pRVar10 + 2;
-  pRVar10[2] = 0x41684;
-  pRVar12->command[1] = 0;
-  pRVar12->command = pRVar12->command + 2;
-  pRVar12 = ForwardPass;
-  *ForwardPass->command = 0x41748;
-  pRVar12->command[1] = 2;
-  pRVar10 = pRVar12->command;
-  pRVar12->command = pRVar10 + 2;
-  pRVar10[2] = 0x41688;
-  pRVar12->command[1] = 0;
-  pRVar12->command = pRVar12->command + 2;
-  pRVar12 = ForwardPass;
-  *ForwardPass->command = 0x4174c;
-  pRVar12->command[1] = 2;
-  pRVar10 = pRVar12->command;
-  pRVar12->command = pRVar10 + 2;
-  pRVar10[2] = 0x4168c;
-  pRVar12->command[1] = 0;
-  pRVar12->command = pRVar12->command + 2;
-  pRVar12 = ForwardPass;
-  *ForwardPass->command = 0x400c1714;
-  pRVar12->command[1] = 0;
-  pRVar12->command[2] = 0;
-  pRVar12->command[3] = 0;
-  pRVar12->command[4] = NV4097_SET_BEGIN_END_x1;
-  pRVar12->command[5] = 8;
-  pRVar12->command = pRVar12->command + 6;
-  pRVar12 = ForwardPass;
-  *ForwardPass->command = 0xc1510;
-  pRVar12->command[1] = 0;
-  pRVar12->command[2] = 0;
-  pRVar12->command[3] = 0x3f800000;
-  pRVar12->command = pRVar12->command + 4;
-  pRVar12 = ForwardPass;
-  *ForwardPass->command = NV4097_SET_VERTEX_DATA2F_M_x2;
-  pRVar12->command[1] = 0xbf800000;
-  pRVar12->command[2] = 0x3f800000;
-  pRVar12->command = pRVar12->command + 3;
-  pRVar12 = ForwardPass;
-  *ForwardPass->command = 0xc1510;
-  pRVar12->command[1] = 0;
-  pRVar12->command[2] = 0x3f800000;
-  pRVar12->command[3] = 0x3f800000;
-  pRVar12->command = pRVar12->command + 4;
-  pRVar12 = ForwardPass;
-  *ForwardPass->command = NV4097_SET_VERTEX_DATA2F_M_x2;
-  pRVar12->command[1] = 0xbf800000;
-  pRVar12->command[2] = 0xbf800000;
-  pRVar12->command = pRVar12->command + 3;
-  pRVar12 = ForwardPass;
-  *ForwardPass->command = 0xc1510;
-  pRVar12->command[1] = 0x3f800000;
-  pRVar12->command[2] = 0x3f800000;
-  pRVar12->command[3] = 0x3f800000;
-  pRVar12->command = pRVar12->command + 4;
-  pRVar12 = ForwardPass;
-  *ForwardPass->command = NV4097_SET_VERTEX_DATA2F_M_x2;
-  pRVar12->command[1] = 0x3f800000;
-  pRVar12->command[2] = 0xbf800000;
-  pRVar12->command = pRVar12->command + 3;
-  pRVar12 = ForwardPass;
-  *ForwardPass->command = 0xc1510;
-  pRVar12->command[1] = 0x3f800000;
-  pRVar12->command[2] = 0;
-  pRVar12->command[3] = 0x3f800000;
-  pRVar12->command = pRVar12->command + 4;
-  pRVar12 = ForwardPass;
-  *ForwardPass->command = NV4097_SET_VERTEX_DATA2F_M_x2;
-  pRVar12->command[1] = 0x3f800000;
-  pRVar12->command[2] = 0x3f800000;
-  pRVar12->command = pRVar12->command + 3;
-  pRVar12 = ForwardPass;
-  *ForwardPass->command = NV4097_SET_BEGIN_END_x1;
-  pRVar12->command[1] = 0;
-  pRVar12->command = pRVar12->command + 2;
-  pRVar12 = ForwardPass;
-  *ForwardPass->command = NV4097_SET_DEPTH_TEST_ENABLE_x1;
-  pRVar12->command[1] = 1;
-  pRVar12->command = pRVar12->command + 2;
-  pRVar12 = ForwardPass;
-  *ForwardPass->command = NV4097_SET_DEPTH_MASK_x1;
-  pRVar12->command[1] = 1;
-  pRVar12->command = pRVar12->command + 2;
-  pRVar12 = ForwardPass;
-  *ForwardPass->command = NV4097_SET_BLEND_ENABLE_x1;
-  pRVar12->command[1] = 1;
-  pRVar12->command = pRVar12->command + 2;
-  return;
+    IdolDraw *idol = Idol();
+    RenderingStep *pass = ForwardPass;
+
+    EmitMethod(pass, CELL_GCM_NV4097_SET_DEPTH_TEST_ENABLE, 0);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_DEPTH_MASK, 0);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_STENCIL_MASK, 0);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_BLEND_ENABLE, 0);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_ALPHA_TEST_ENABLE, 0);
+
+    EmitSetTexture0(pass, &idol->renderTarget);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_TEXTURE_CONTROL0, 0x80000000);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_TEXTURE_ADDRESS, 0x40030303);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_TEXTURE_FILTER, 0x2022000);
+
+    idol_draw::BindVertexProgram((uintptr_t)idol, (int)(uintptr_t)pass, 0);
+    idol_draw::BindFragmentProgram((uintptr_t)idol, (int)(uintptr_t)pass, 0);
+
+    /* vertex arrays 0..3 off: float, size 0, offset 0 */
+    for (int i = 0; i < 4; i++) {
+        EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + i * 4, CELL_GCM_VERTEX_F);
+        EmitMethod(pass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_OFFSET + i * 4, 0);
+    }
+
+    /* (three words to method 0x1714, all zero) */
+    Emit(pass, 0x400c1714);
+    Emit(pass, 0);
+    Emit(pass, 0);
+    Emit(pass, 0);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_BEGIN_END, CELL_GCM_PRIMITIVE_QUADS);
+
+    static const float corners[4][4] = {
+        /* u, v, x, y */
+        { 0.0f, 0.0f, -1.0f, 1.0f },
+        { 0.0f, 1.0f, -1.0f, -1.0f },
+        { 1.0f, 1.0f, 1.0f, -1.0f },
+        { 1.0f, 0.0f, 1.0f, 1.0f },
+    };
+
+    for (int i = 0; i < 4; i++) {
+        Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_VERTEX_DATA3F_M + 1 * 16, 3));
+        EmitF(pass, corners[i][0]);
+        EmitF(pass, corners[i][1]);
+        EmitF(pass, 1.0f);
+        Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_VERTEX_DATA2F_M, 2));
+        EmitF(pass, corners[i][2]);
+        EmitF(pass, corners[i][3]);
+    }
+
+    EmitMethod(pass, CELL_GCM_NV4097_SET_BEGIN_END, 0);
+
+    EmitMethod(pass, CELL_GCM_NV4097_SET_DEPTH_TEST_ENABLE, 1);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_DEPTH_MASK, 1);
+    EmitMethod(pass, CELL_GCM_NV4097_SET_BLEND_ENABLE, 1);
 }
 
 
 // 0x006e71c (0x4 bytes)
 void STUB_0006e71c(...)
-
 {
-  return;
 }
 
 
 // 0x006e740 (0x598 bytes)
-void Sprite_DrawRotated(float param_1,float param_2,float param_3,float param_4,float param_5,float param_6,float param_7,int param_8,int param_9,int param_10,int param_11,u32 param_12,int param_13,int param_14,int param_15)
-
+/* Texels (0, 0, tw, th) of effect texture tex (flipped by flipU, flipV) as a w by h quad at
+   (x, y) turned by angle about the pivot (pivotX, pivotY), fractions of the quad's size. With
+   perEye set each vertex position is preceded by FUN_004e3178 (presumably the stereo offset).
+   unused is never read. */
+void Sprite_DrawRotated(float x, float y, float w, float h, float angle, float pivotX, float pivotY, int tw, int th, int tex, int unused, u32 color, int flipU, int flipV, int perEye)
 {
-  float fVar1;
-  RsxCmd *pRVar2;
-  RsxCmd *pRVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  RsxCmd RVar7;
-  RsxCmd RVar8;
-  RenderingStep *pRVar9;
-  undefined4 *puVar10;
-  ulonglong in_r8;
-  ulonglong in_r9;
-  longlong in_r10;
-  ulonglong uVar11;
-  ulonglong uVar12;
-  double dVar13;
-  double dVar14;
-  double dVar15;
-  double dVar16;
-  double dVar17;
-  double dVar18;
-  double dVar19;
-  double dVar20;
-  RsxCmd in_stack_0000007c;
-  uint in_stack_00000084;
-  uint in_stack_0000008c;
-  char in_stack_000000a7;
-  undefined4 local_110;
-  uint local_10c;
-  undefined4 local_108;
-  undefined4 local_104;
-  undefined4 local_100;
-  undefined4 local_fc;
-  undefined4 local_f8;
-  undefined4 local_f4;
-  undefined4 local_f0;
-  
-  fVar1 = (float)(param_5 + 1.570796251296997);
-  uVar11 = (in_r9 & 0x7fffffff) * 2;
-  dVar13 = (double)(float)(3.141592502593994 - param_5);
-  if (param_5 - (double)(float)(3.141592502593994 - param_5) < 0.0) {
-    dVar13 = param_5;
-  }
-  fVar4 = 3.1415925 - fVar1;
-  if (fVar1 - (3.1415925 - fVar1) < 0.0) {
-    fVar4 = fVar1;
-  }
-  dVar14 = (double)(float)(-3.141592502593994 - param_5);
-  if ((double)(float)(-3.141592502593994 - param_5) - dVar13 < 0.0) {
-    dVar14 = dVar13;
-  }
-  dVar13 = (double)(float)(dVar14 * dVar14);
-  fVar5 = -3.1415925 - fVar1;
-  if ((-3.1415925 - fVar1) - fVar4 < 0.0) {
-    fVar5 = fVar4;
-  }
-  fVar6 = fVar5 * fVar5;
-  RVar8 = (RsxCmd)((in_r8 & 0x7fffffff) << 1);
-  dVar20 = (double)(float)(dVar13 * (double)(float)(dVar13 * dVar14));
-  dVar19 = (double)(float)(dVar13 * dVar20);
-  fVar4 = fVar6 * fVar6 * fVar5;
-  uVar12 = uVar11 + (ZERO_MASK((in_stack_0000008c & 0xff)) &
-                    (in_r9 & 0x7fffffff) * -2);
-  fVar1 = fVar6 * fVar4;
-  dVar13 = (double)((float)(dVar13 * dVar19) * 2.601887e-06 +
-                   (float)(dVar19 * -0.0001980741071747616 +
-                          (double)(float)(dVar20 * 0.008333025500178337 +
-                                         (double)(float)((double)(float)(dVar13 * dVar14) *
-                                                         -0.16666656732559204 + dVar14))));
-  dVar16 = (double)(float)(1.0 - param_6);
-  uVar11 = ZERO_MASK((in_stack_0000008c & 0xff)) & uVar11;
-  dVar20 = (double)(float)(param_4 * dVar13);
-  dVar19 = (double)(float)(param_3 * dVar13);
-  dVar13 = (double)(fVar6 * fVar1 * 2.601887e-06 +
-                   fVar1 * -0.0001980741 +
-                   fVar4 * 0.0083330255 + fVar6 * fVar5 * -0.16666657 + fVar5);
-  puVar10 = (undefined4 *)(EffectTexHeaders + (int)(in_r10 << 5) + (int)(in_r10 << 2));
-  dVar14 = (double)(float)(param_4 * dVar13);
-  dVar17 = (double)(float)(param_3 * dVar13);
-  local_110 = *puVar10;
-  local_108 = puVar10[2];
-  local_104 = puVar10[3];
-  dVar15 = (double)(float)((double)(float)(1.0 - param_7) * dVar20 + (double)param_1);
-  fVar4 = -(float)(dVar19 * param_6);
-  fVar1 = (float)((double)(float)(1.0 - param_7) * dVar14 + (double)param_2);
-  local_10c = puVar10[1] & 0xffff | 0x14000;
-  local_100 = puVar10[4];
-  dVar13 = -(double)(float)(dVar20 * param_7 - (double)param_1);
-  fVar5 = -(float)(dVar14 * param_7 - (double)param_2);
-  local_fc = puVar10[5];
-  fVar6 = -(float)(dVar19 * dVar16);
-  local_f8 = puVar10[6];
-  local_f4 = puVar10[7];
-  dVar14 = -(double)(float)(dVar16 * dVar17 - dVar15);
-  dVar20 = (double)(fVar1 + fVar4);
-  dVar19 = (double)(float)(param_6 * dVar17 + dVar15);
-  local_f0 = puVar10[8];
-  dVar15 = -(double)(float)(dVar16 * dVar17 - dVar13);
-  dVar18 = (double)(fVar5 + fVar4);
-  dVar17 = (double)(float)(param_6 * dVar17 + dVar13);
-  dVar13 = (double)(fVar1 - fVar6);
-  dVar16 = (double)(fVar5 - fVar6);
-  FUN_004d6bb0(HUD_Pass,0,&local_110);
-  idol_draw::ResetPassState(HUD_Pass);
-  pRVar2 = HUD_Pass->command;
-  RVar7 = RVar8 + ((uint)(ZERO_MASK((in_stack_00000084 & 0xff))) & -RVar8) & 0xffff
-  ;
-  HUD_Pass->command = pRVar2 + 2;
-  pRVar9 = HUD_Pass;
-  pRVar3 = HUD_Pass->command;
-  *pRVar2 = 0x41948;
-  pRVar2[1] = ((int)in_stack_0000007c >> 8 & 0xffU) << 8 |
-              ((int)in_stack_0000007c >> 0x10 & 0xffU) << 0x10 | in_stack_0000007c & 0xff000000 |
-              in_stack_0000007c & 0xff;
-  *pRVar3 = 0x400c1714;
-  pRVar9->command = pRVar3 + 6;
-  pRVar9 = HUD_Pass;
-  pRVar3[1] = 0;
-  pRVar3[2] = 0;
-  pRVar3[3] = 0;
-  pRVar3[4] = NV4097_SET_BEGIN_END_x1;
-  pRVar2 = pRVar9->command;
-  pRVar3[5] = 8;
-  *pRVar2 = 0x41904;
-  pRVar2[1] = (RsxCmd)((uVar12 & 0xffffffff) << 0x10) | RVar7;
-  pRVar9->command = pRVar2 + 2;
-  if (in_stack_000000a7 != '\0') {
-    FUN_004e3178(g_pIdolDraw);
-  }
-  pRVar9 = HUD_Pass;
-  pRVar2 = HUD_Pass->command;
-  pRVar2[1] = (RsxCmd)(float)dVar14;
-  pRVar3 = pRVar9->command;
-  *pRVar2 = NV4097_SET_VERTEX_DATA2F_M_x2;
-  pRVar3[2] = (RsxCmd)(float)dVar13;
-  pRVar9->command = pRVar3 + 3;
-  pRVar9 = HUD_Pass;
-  pRVar2 = HUD_Pass->command;
-  *pRVar2 = 0x41904;
-  pRVar2[1] = (RsxCmd)(uVar11 << 0x10) | RVar7;
-  pRVar9->command = pRVar2 + 2;
-  if (in_stack_000000a7 != '\0') {
-    FUN_004e3178(g_pIdolDraw);
-  }
-  pRVar9 = HUD_Pass;
-  RVar7 = (RsxCmd)(ZERO_MASK((in_stack_00000084 & 0xff))) & RVar8 & 0xffff;
-  pRVar2 = HUD_Pass->command;
-  pRVar2[1] = (RsxCmd)(float)dVar15;
-  pRVar3 = pRVar9->command;
-  *pRVar2 = NV4097_SET_VERTEX_DATA2F_M_x2;
-  pRVar3[2] = (RsxCmd)(float)dVar16;
-  pRVar9->command = pRVar3 + 3;
-  pRVar9 = HUD_Pass;
-  pRVar2 = HUD_Pass->command;
-  *pRVar2 = 0x41904;
-  pRVar2[1] = (RsxCmd)(uVar11 << 0x10) | RVar7;
-  pRVar9->command = pRVar2 + 2;
-  if (in_stack_000000a7 != '\0') {
-    FUN_004e3178(g_pIdolDraw);
-  }
-  pRVar9 = HUD_Pass;
-  pRVar2 = HUD_Pass->command;
-  pRVar2[1] = (RsxCmd)(float)dVar17;
-  pRVar3 = pRVar9->command;
-  *pRVar2 = NV4097_SET_VERTEX_DATA2F_M_x2;
-  pRVar3[2] = (RsxCmd)(float)dVar18;
-  pRVar9->command = pRVar3 + 3;
-  pRVar9 = HUD_Pass;
-  pRVar2 = HUD_Pass->command;
-  *pRVar2 = 0x41904;
-  pRVar2[1] = (RsxCmd)((uVar12 & 0xffffffff) << 0x10) | RVar7;
-  pRVar9->command = pRVar2 + 2;
-  if (in_stack_000000a7 != '\0') {
-    FUN_004e3178(g_pIdolDraw);
-  }
-  pRVar9 = HUD_Pass;
-  pRVar2 = HUD_Pass->command;
-  pRVar2[1] = (RsxCmd)(float)dVar19;
-  pRVar3 = pRVar9->command;
-  *pRVar2 = NV4097_SET_VERTEX_DATA2F_M_x2;
-  pRVar3[2] = (RsxCmd)(float)dVar20;
-  pRVar9->command = pRVar3 + 3;
-  pRVar9 = HUD_Pass;
-  pRVar2 = HUD_Pass->command;
-  *pRVar2 = NV4097_SET_BEGIN_END_x1;
-  pRVar2[1] = 0;
-  pRVar9->command = pRVar2 + 2;
-  return;
+    float sinA = FastSinInline(angle);
+    float cosA = FastCosInline(angle);
+    float hSin = h * sinA;
+    float wSin = w * sinA;
+    float hCos = h * cosA;
+    float wCos = w * cosA;
+
+    float topX = (1.0f - pivotY) * hSin + x;
+    float topY = (1.0f - pivotY) * hCos + y;
+    float bottomX = x - hSin * pivotY;
+    float bottomY = y - hCos * pivotY;
+
+    float pos[4][2] = {
+        { topX - (1.0f - pivotX) * wCos, topY + wSin * (1.0f - pivotX) },
+        { bottomX - (1.0f - pivotX) * wCos, bottomY + wSin * (1.0f - pivotX) },
+        { pivotX * wCos + bottomX, bottomY - wSin * pivotX },
+        { pivotX * wCos + topX, topY - wSin * pivotX },
+    };
+
+    int u0 = (u8)flipU ? tw * 2 : 0;
+    int u1 = (u8)flipU ? 0 : tw * 2;
+    int v0 = (u8)flipV ? th * 2 : 0;
+    int v1 = (u8)flipV ? 0 : th * 2;
+    int uv[4][2] = { { u0, v0 }, { u0, v1 }, { u1, v1 }, { u1, v0 } };
+
+    HudBindEffectTex(tex);
+    idol_draw::ResetPassState(HUD_Pass);
+
+    Emit(HUD_Pass, HUD_SET_COLOR4UB);
+    Emit(HUD_Pass, color);
+    /* (three words to method 0x1714, all zero) */
+    Emit(HUD_Pass, 0x400c1714);
+    Emit(HUD_Pass, 0);
+    Emit(HUD_Pass, 0);
+    Emit(HUD_Pass, 0);
+    Emit(HUD_Pass, HUD_SET_BEGIN_END);
+    Emit(HUD_Pass, CELL_GCM_PRIMITIVE_QUADS);
+
+    for (int i = 0; i < 4; i++) {
+        Emit(HUD_Pass, HUD_SET_TEXCOORD2S);
+        Emit(HUD_Pass, (uv[i][1] & 0xffff) << 16 | (uv[i][0] & 0xffff));
+
+        if ((u8)perEye != 0) {
+            FUN_004e3178(g_pIdolDraw);
+        }
+
+        Emit(HUD_Pass, HUD_SET_POSITION2F);
+        EmitF(HUD_Pass, pos[i][0]);
+        EmitF(HUD_Pass, pos[i][1]);
+    }
+
+    HudEnd();
+}
+
+/* a PS2 colour channel (0x80 = full) to 0..255: doubled, clamped, rounded */
+static inline u32 Ps2Channel(u32 value)
+{
+    float doubled = (float)value * 2.0f;
+
+    if (doubled > 255.0f) {
+        doubled = 255.0f;
+    }
+
+    doubled += 0.5f;
+
+    if (doubled > 255.0f) {
+        doubled = 255.0f;
+    }
+
+    return (int)doubled;
 }
 
 
 // 0x006ecf8 (0x3a8 bytes)
-void DrawTexturedQuadHud(int param_1,int param_2,undefined8 param_3,int param_4,int param_5)
-
+/* DL's DrawScreenQuad: a quad of effect texture tex (clamped when clamp is set) on the HUD pass
+   from PS2 GS data: xy in 12.4 fixed point with the SCREEN_PROJECTION_MAP offset, uv in 1/8
+   texels (u low, v high), PS2 colours; the vertices go in the order 0, 1, 3, 2 */
+void DrawScreenQuad(u64 *xy, int *uv, u32 *rgba, int tex, int clamp)
 {
-  RsxCmd *pRVar1;
-  uint uVar2;
-  RsxCmd RVar3;
-  int iVar4;
-  undefined4 uVar5;
-  ulonglong *puVar6;
-  RenderingStep *pRVar7;
-  undefined8 uVar8;
-  longlong lVar9;
-  longlong lVar10;
-  ulonglong unaff_r28;
-  ulonglong unaff_r29;
-  ulonglong unaff_r30;
-  ulonglong unaff_r31;
-  ulonglong in_LR;
-  longlong lVar11;
-  ulonglong uVar12;
-  ulonglong uVar13;
-  GPiece<16> auVar14;
-  GPiece<16> auVar15;
-  GPiece<16> auVar16;
-  GPiece<16> auVar17;
-  GPiece<16> auVar18;
-  GPiece<16> auVar19;
-  GPiece<16> auVar20;
-  GPiece<16> auVar21;
-  GPiece<16> auVar22;
-  GPiece<16> auVar23;
-  GPiece<16> auVar24;
-  GPiece<16> auVar25;
-  GPiece<16> auVar26;
-  GPiece<16> auVar27;
-  
-  lVar9 = ZEXT48(&stack0x00000000) - 0xb0;
-  puVar6 = (ulonglong *)lVar9;
-  *puVar6 = ZEXT48(&stack0x00000000);
-  puVar6[0x18] = in_LR;
-  puVar6[0x13] = unaff_r29;
-  puVar6[0x14] = unaff_r30;
-  uVar8 = 0;
-  puVar6[0x15] = unaff_r31;
-  puVar6[0x12] = unaff_r28;
-  if (param_5 != 0) {
-    uVar8 = 5;
-  }
-  idol_draw::BindTexture(HUD_Pass,0,EffectTexHeaders + param_4 * 0x24,uVar8);
-  idol_draw::ResetPassState(HUD_Pass);
-  pRVar7 = HUD_Pass;
-  *HUD_Pass->command = 0x400c1714;
-  pRVar7->command[1] = 0;
-  pRVar7->command[2] = 0;
-  pRVar7->command[3] = 0;
-  pRVar7->command[4] = NV4097_SET_BEGIN_END_x1;
-  pRVar1 = pRVar7->command;
-  *(undefined4 *)(puVar6 + 0xe) = 0;
-  *(undefined4 *)((int)puVar6 + 0x74) = 1;
-  *(undefined4 *)(puVar6 + 0xf) = 3;
-  pRVar1[5] = 8;
-  pRVar1 = pRVar7->command;
-  *(undefined4 *)((int)puVar6 + 0x7c) = 2;
-  pRVar7->command = pRVar1 + 6;
-  auVar20 = loadVectorLeftIndexed(4,0x6ecd8);
-  auVar18 = loadVectorLeftIndexed(8,0x6ecd8);
-  auVar16 = loadVectorLeftIndexed(0x10,0x6ecd8);
-  auVar20 = auVar20 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar21 = auVar20 | auVar20 << 0x20 | auVar20 << 0x40 | auVar20 << 0x60;
-  auVar20 = auVar18 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar19 = auVar20 | auVar20 << 0x20 | auVar20 << 0x40 | auVar20 << 0x60;
-  auVar20 = loadVectorLeftIndexed(0xc,0x6ecd8);
-  auVar15 = loadVectorLeftIndexed(0x14,0x6ecd8);
-  lVar11 = 4;
-  auVar18 = loadVectorLeftIndexed(0x18,0x6ecd8);
-  auVar20 = auVar20 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar17 = auVar20 | auVar20 << 0x20 | auVar20 << 0x40 | auVar20 << 0x60;
-  auVar20 = auVar16 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar16 = auVar20 | auVar20 << 0x20 | auVar20 << 0x40 | auVar20 << 0x60;
-  auVar20 = auVar15 >> 0x60 & (GPiece<16>)0xffffffff;
-  auVar15 = auVar20 | auVar20 << 0x20 | auVar20 << 0x40 | auVar20 << 0x60;
-  auVar20 = auVar18 >> 0x60 & (GPiece<16>)0xffffffff;
-  do {
-    uVar2 = *(uint *)((int)lVar9 + 0x70);
-    auVar18 = ZEXT416(0xfffffff8);
-    lVar10 = ((ulonglong)uVar2 & 0x3fffffff) << 2;
-    auVar22 = ZEXT416(0xfffffff0);
-    auVar14 = ZEXT416(0xffffffff);
-    auVar25 = auVar14 | auVar14 << 0x20 | auVar14 << 0x40 | auVar14 << 0x60;
-    auVar14 = ZEXT416(0xffffffff);
-    auVar27 = auVar14 | auVar14 << 0x20 | auVar14 << 0x40 | auVar14 << 0x60;
-    auVar14 = ZEXT416(0xffffffff);
-    auVar14 = auVar14 | auVar14 << 0x20 | auVar14 << 0x40 | auVar14 << 0x60;
-    auVar23 = loadVectorLeftIndexed(lVar10,param_3);
-    auVar26 = vectorShiftLeftIntegerWord(auVar25,auVar25);
-    auVar18 = vectorRotateLeftIntegerWord
-                        (auVar23,auVar18 | auVar18 << 0x20 | auVar18 << 0x40 | auVar18 << 0x60);
-    auVar25 = vectorRotateLeftIntegerWord
-                        (auVar23,auVar22 | auVar22 << 0x20 | auVar22 << 0x40 | auVar22 << 0x60);
-    auVar24 = vectorLogicalAnd(auVar23,auVar16);
-    auVar23 = vectorShiftRightWord(auVar23,auVar15);
-    auVar22 = vectorLogicalAnd(auVar18,auVar16);
-    auVar25 = vectorLogicalAnd(auVar25,auVar16);
-    auVar24 = vectorConvertFromUnsignedFixedPointWord(auVar24,0);
-    auVar27 = vectorShiftLeftIntegerWord(auVar27,auVar27);
-    auVar23 = vectorConvertFromUnsignedFixedPointWord(auVar23,0);
-    auVar18 = ZEXT416(0xffffffff);
-    auVar18 = auVar18 | auVar18 << 0x20 | auVar18 << 0x40 | auVar18 << 0x60;
-    auVar22 = vectorConvertFromUnsignedFixedPointWord(auVar22,0);
-    auVar25 = vectorConvertFromUnsignedFixedPointWord(auVar25,0);
-    uVar8 = *(undefined8 *)(param_1 + uVar2 * 8);
-    auVar24 = vectorMultiplyAddFloatingPoint(auVar24,auVar21,auVar27);
-    auVar27 = vectorShiftLeftIntegerWord(auVar18,auVar18);
-    auVar22 = vectorMultiplyAddFloatingPoint(auVar22,auVar21,auVar26);
-    auVar18 = vectorShiftLeftIntegerWord(auVar14,auVar14);
-    auVar23 = vectorMultiplyAddFloatingPoint(auVar23,auVar21,auVar27);
-    auVar14 = vectorMultiplyAddFloatingPoint(auVar25,auVar21,auVar18);
-    puVar6[0x10] = (longlong)(int)(((uint)uVar8 & 0xffff) - SCREEN_PROJECTION_MAP_X);
-    auVar25 = vectorCompareGreaterThanFloatingPoint(auVar24,auVar19);
-    uVar12 = puVar6[0x10];
-    auVar18 = vectorCompareGreaterThanFloatingPoint(auVar22,auVar19);
-    auVar25 = vectorConditionalSelect(auVar24,auVar19,auVar25);
-    auVar22 = vectorConditionalSelect(auVar22,auVar19,auVar18);
-    auVar18 = vectorCompareGreaterThanFloatingPoint(auVar23,auVar19);
-    auVar24 = vectorAddFloatingPoint(auVar25,auVar17);
-    auVar26 = vectorCompareGreaterThanFloatingPoint(auVar14,auVar19);
-    auVar22 = vectorAddFloatingPoint(auVar22,auVar17);
-    auVar25 = vectorConditionalSelect(auVar23,auVar19,auVar18);
-    auVar18 = vectorConditionalSelect(auVar14,auVar19,auVar26);
-    auVar25 = vectorAddFloatingPoint(auVar25,auVar17);
-    auVar14 = vectorAddFloatingPoint(auVar18,auVar17);
-    puVar6[0x10] = (longlong)
-                   (int)(((uint)((ulonglong)uVar8 >> 0x10) & 0xffff) - SCREEN_PROJECTION_MAP_Y);
-    pRVar7 = HUD_Pass;
-    uVar2 = *(uint *)(param_2 + (int)lVar10);
-    uVar13 = puVar6[0x10];
-    auVar23 = vectorCompareGreaterThanFloatingPoint(auVar24,auVar19);
-    auVar18 = vectorCompareGreaterThanFloatingPoint(auVar22,auVar19);
-    auVar23 = vectorConditionalSelect(auVar24,auVar19,auVar23);
-    auVar18 = vectorConditionalSelect(auVar22,auVar19,auVar18);
-    auVar23 = vectorConvertToSignedFixedPointWordSaturate(auVar23,0);
-    auVar24 = vectorCompareGreaterThanFloatingPoint(auVar14,auVar19);
-    auVar22 = vectorConvertToSignedFixedPointWordSaturate(auVar18,0);
-    auVar18 = vectorConditionalSelect(auVar14,auVar19,auVar24);
-    auVar14 = vectorCompareGreaterThanFloatingPoint(auVar25,auVar19);
-    *HUD_Pass->command = 0x41948;
-    auVar25 = vectorConditionalSelect(auVar25,auVar19,auVar14);
-    auVar14 = vectorConvertToSignedFixedPointWordSaturate(auVar18,0);
-    auVar18 = ZEXT416(8);
-    auVar25 = vectorConvertToSignedFixedPointWordSaturate(auVar25,0);
-    auVar18 = vectorShiftLeftIntegerWord
-                        (auVar22,auVar18 | auVar18 << 0x20 | auVar18 << 0x40 | auVar18 << 0x60);
-    auVar22 = vectorShiftLeftIntegerWord
-                        (auVar14,auVar20 | auVar20 << 0x20 | auVar20 << 0x40 | auVar20 << 0x60);
-    auVar14 = vectorShiftLeftIntegerWord(auVar25,auVar15);
-    lVar9 = lVar9 + 4;
-    auVar18 = (auVar23 | auVar18 | auVar22 | auVar14) >> 0x60 & (GPiece<16>)0xffffffff;
-    uVar5 = storeVectorElementWordIndexed
-                      (auVar18 | auVar18 << 0x20 | auVar18 << 0x40 | auVar18 << 0x60,4,
-                       ZEXT48(pRVar7->command));
-    *(undefined4 *)((uint)(pRVar7->command + 1) & 0xfffffffc) = uVar5;
-    pRVar7->command = pRVar7->command + 2;
-    pRVar7 = HUD_Pass;
-    *HUD_Pass->command = 0x41904;
-    pRVar1 = pRVar7->command;
-    puVar6[0x10] = (longlong)(int)((float)(longlong)uVar12 * 0.0625);
-    pRVar1[1] = ((int)uVar2 >> 0x10 & 0xfff8U) << 0xd | (int)(short)((ushort)(uVar2 >> 3) & 0x1fff);
-    pRVar7->command = pRVar7->command + 2;
-    pRVar7 = HUD_Pass;
-    RVar3 = *(RsxCmd *)((int)puVar6 + 0x84);
-    puVar6[0x10] = (longlong)(int)((float)(longlong)uVar13 * 0.0625);
-    iVar4 = *(int *)((int)puVar6 + 0x84);
-    *pRVar7->command = NV4097_SET_VERTEX_DATA2S_M_x1;
-    pRVar7->command[1] = iVar4 << 0x10 | RVar3 & 0xffff;
-    pRVar7->command = pRVar7->command + 2;
-    pRVar7 = HUD_Pass;
-    lVar11 = lVar11 + -1;
-  } while (lVar11 != 0);
-  *HUD_Pass->command = NV4097_SET_BEGIN_END_x1;
-  pRVar7->command[1] = 0;
-  pRVar7->command = pRVar7->command + 2;
-  return;
+    static const int order[4] = { 0, 1, 3, 2 };
+
+    idol_draw::BindTexture(HUD_Pass, 0, (u8 *)(uintptr_t)EffectTexHeaders + tex * 0x24, clamp != 0 ? 5 : 0);
+    idol_draw::ResetPassState(HUD_Pass);
+
+    /* (three words to method 0x1714, all zero) */
+    Emit(HUD_Pass, 0x400c1714);
+    Emit(HUD_Pass, 0);
+    Emit(HUD_Pass, 0);
+    Emit(HUD_Pass, 0);
+    Emit(HUD_Pass, HUD_SET_BEGIN_END);
+    Emit(HUD_Pass, CELL_GCM_PRIMITIVE_QUADS);
+
+    for (int i = 0; i < 4; i++) {
+        int vertex = order[i];
+        u32 color = rgba[vertex];
+
+        Emit(HUD_Pass, HUD_SET_COLOR4UB);
+        Emit(HUD_Pass, Ps2Channel(color & 0xff) | Ps2Channel((color >> 8) & 0xff) << 8 | Ps2Channel((color >> 16) & 0xff) << 16 | Ps2Channel(color >> 24) << 24);
+
+        u32 texel = uv[vertex];
+        int u = (texel >> 3) & 0x1fff;
+        int v = ((texel >> 16) >> 3) & 0x1fff;
+
+        Emit(HUD_Pass, HUD_SET_TEXCOORD2S);
+        Emit(HUD_Pass, v << 16 | u);
+
+        u64 pos = xy[vertex];
+        int x = (int)((float)(int)((pos & 0xffff) - SCREEN_PROJECTION_MAP_X) * 0.0625f);
+        int y = (int)((float)(int)(((pos >> 16) & 0xffff) - SCREEN_PROJECTION_MAP_Y) * 0.0625f);
+
+        Emit(HUD_Pass, HUD_SET_POSITION2S);
+        Emit(HUD_Pass, (y & 0xffff) << 16 | (x & 0xffff));
+    }
+
+    HudEnd();
 }
 
 
 // 0x006f0a0 (0x710 bytes)
-void DrawTextBox(int param_1,int param_2,int param_3,int param_4,u32 param_5)
-
+/* a box from (left, top) to (right, bot): filled with color's alpha over near-black (4), then
+   edge strips in color around it; nine inlined DrawRectOverlay calls (some strips run
+   bottom-up, as the original's coordinates have them) */
+void DrawTextBox(int top, int bot, int left, int right, u32 color)
 {
-  int iVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  int iVar5;
-  int iVar6;
-  int iVar7;
-  int iVar8;
-  int iVar9;
-  
-  iVar9 = (int)param_1;
-  iVar2 = (int)param_3;
-  if (((iVar9 == 0 && param_2 == 0x1a0) && (iVar2 == 0)) && (param_4 == 0x200)) {
-    DrawFullScreenQuad(param_5 & 0xff000000 | 4,
-                       (void *)(EffectTexHeaders + *(int *)(TexInfo + 0x58) * 0x24));
-  }
-  else {
-    Sprite_DrawShape(param_3,param_1,param_4 - iVar2,param_2 - iVar9,0,0,0x10,0x10);
-  }
-  iVar1 = iVar9 + -1;
-  iVar8 = iVar9 + 1;
-  iVar7 = iVar2 + 3;
-  iVar6 = param_4 + 5;
-  if (((iVar1 == 0 && iVar8 == 0x1a0) && (iVar7 == 0)) && (iVar6 == 0x200)) {
-    DrawFullScreenQuad(param_5,(void *)(EffectTexHeaders + *(int *)(TexInfo + 0x58) * 0x24));
-  }
-  else {
-    Sprite_DrawShape(iVar7,iVar1,iVar6 - iVar7,iVar8 - iVar1,0,0,0x10,0x10);
-  }
-  iVar1 = iVar9 + -3;
-  iVar4 = iVar9 + -5;
-  iVar3 = iVar2 + -1;
-  iVar5 = param_4 + -3;
-  if (((iVar1 == 0 && iVar4 == 0x1a0) && (iVar3 == 0)) && (iVar5 == 0x200)) {
-    DrawFullScreenQuad(param_5,(void *)(EffectTexHeaders + *(int *)(TexInfo + 0x58) * 0x24));
-  }
-  else {
-    Sprite_DrawShape(iVar3,iVar1,iVar5 - iVar3,iVar4 - iVar1,0,0,0x10,0x10);
-  }
-  iVar1 = param_2 + -3;
-  if (((iVar4 == 0 && iVar1 == 0x1a0) && (iVar3 == 0)) && (iVar2 + 1 == 0x200)) {
-    DrawFullScreenQuad(param_5,(void *)(EffectTexHeaders + *(int *)(TexInfo + 0x58) * 0x24));
-  }
-  else {
-    Sprite_DrawShape(iVar3,iVar4,(iVar2 + 1) - iVar3,iVar1 - iVar4,0,0,0x10,0x10);
-  }
-  iVar9 = iVar9 + 3;
-  iVar4 = param_2 + 1;
-  iVar3 = iVar2 + -3;
-  if (((iVar9 == 0 && iVar4 == 0x1a0) && (iVar3 == 0)) && (iVar2 + -5 == 0x200)) {
-    DrawFullScreenQuad(param_5,(void *)(EffectTexHeaders + *(int *)(TexInfo + 0x58) * 0x24));
-  }
-  else {
-    Sprite_DrawShape(iVar3,iVar9,(iVar2 + -5) - iVar3,iVar4 - iVar9,0,0,0x10,0x10);
-  }
-  iVar2 = param_2 + -1;
-  if (((iVar2 == 0) && (iVar4 == 0x1a0)) && ((iVar3 == 0 && (iVar5 == 0x200)))) {
-    DrawFullScreenQuad(param_5,(void *)(EffectTexHeaders + *(int *)(TexInfo + 0x58) * 0x24));
-  }
-  else {
-    Sprite_DrawShape(iVar3,iVar2,iVar5 - iVar3,iVar4 - iVar2,0,0,0x10,0x10);
-  }
-  iVar2 = param_2 + 3;
-  iVar3 = param_4 + 1;
-  if (((iVar2 == 0 && param_2 + 5 == 0x1a0) && (iVar7 == 0)) && (iVar3 == 0x200)) {
-    DrawFullScreenQuad(param_5,(void *)(EffectTexHeaders + *(int *)(TexInfo + 0x58) * 0x24));
-  }
-  else {
-    Sprite_DrawShape(iVar7,iVar2,iVar3 - iVar7,(param_2 + 5) - iVar2,0,0,0x10,0x10);
-  }
-  iVar7 = param_4 + -1;
-  if (((iVar9 == 0) && (iVar2 == 0x1a0)) && ((iVar7 == 0 && (iVar3 == 0x200)))) {
-    DrawFullScreenQuad(param_5,(void *)(EffectTexHeaders + *(int *)(TexInfo + 0x58) * 0x24));
-  }
-  else {
-    Sprite_DrawShape(iVar7,iVar9,iVar3 - iVar7,iVar2 - iVar9,0,0,0x10,0x10);
-  }
-  param_4 = param_4 + 3;
-  if (((iVar8 == 0) && (iVar1 == 0x1a0)) && ((param_4 == 0 && (iVar6 == 0x200)))) {
-    DrawFullScreenQuad(param_5,(void *)(EffectTexHeaders + *(int *)(TexInfo + 0x58) * 0x24));
-  }
-  else {
-    Sprite_DrawShape(param_4,iVar8,iVar6 - param_4,iVar1 - iVar8,0,0,0x10,0x10);
-  }
-  return;
+    DrawRectOverlay(top, bot, left, right, (color & 0xff000000) | 4);
+
+    /* top edge */
+    DrawRectOverlay(top - 1, top + 1, left + 3, right + 5, color);
+    DrawRectOverlay(top - 3, top - 5, left - 1, right - 3, color);
+
+    /* left edge */
+    DrawRectOverlay(top - 5, bot - 3, left - 1, left + 1, color);
+    DrawRectOverlay(top + 3, bot + 1, left - 3, left - 5, color);
+
+    /* bottom edge */
+    DrawRectOverlay(bot - 1, bot + 1, left - 3, right - 3, color);
+    DrawRectOverlay(bot + 3, bot + 5, left + 3, right + 1, color);
+
+    /* right edge */
+    DrawRectOverlay(top + 3, bot + 3, right - 1, right + 1, color);
+    DrawRectOverlay(top + 1, bot - 3, right + 3, right + 5, color);
 }
 
 
 // 0x006f7b0 (0xb0 bytes)
-int FontLenSmall(char *s,int len)
-
+/* width of s in the small font */
+int FontLenSmall(char *s, int len)
 {
-  byte bVar1;
-  int iVar2;
-  int iVar3;
-  
-  if (g_JapaneseMode) {
-    iVar2 = FontLenWithTable(s,len,&JapaneseGlyphs);
-  }
-  else {
-    iVar3 = 0;
-    iVar2 = 0;
-    if (len != 0) {
-      do {
-        bVar1 = s[iVar3];
-        if (bVar1 == 0) {
-          return iVar2;
-        }
-        if ((&DAT_00736c53)[(uint)bVar1 * 4] != '\0') {
-          iVar2 = iVar2 + (char)(&DAT_00736c53)[(uint)bVar1 * 4];
-        }
-        iVar3 = iVar3 + 1;
-      } while (iVar3 != len);
+    if (g_JapaneseMode) {
+        return FontLenWithTable(s, len, &JapaneseGlyphs);
     }
-  }
-  return iVar2;
+
+    return FontLenWithTableNoKern(s, len, &Glyphs);
 }
 
 
 // 0x006f860 (0xb0 bytes)
-int FontLenLarge(char *s,int len)
-
+/* width of s in the large font */
+int FontLenLarge(char *s, int len)
 {
-  byte bVar1;
-  int iVar2;
-  int iVar3;
-  
-  if (g_JapaneseMode) {
-    iVar2 = FontLenWithTable(s,len,&JapaneseGlyphs);
-  }
-  else {
-    iVar3 = 0;
-    iVar2 = 0;
-    if (len != 0) {
-      do {
-        bVar1 = s[iVar3];
-        if (bVar1 == 0) {
-          return iVar2;
-        }
-        if ((&DAT_00736ff3)[(uint)bVar1 * 4] != '\0') {
-          iVar2 = iVar2 + (char)(&DAT_00736ff3)[(uint)bVar1 * 4];
-        }
-        iVar3 = iVar3 + 1;
-      } while (iVar3 != len);
+    if (g_JapaneseMode) {
+        return FontLenWithTable(s, len, &JapaneseGlyphs);
     }
-  }
-  return iVar2;
+
+    return FontLenWithTableNoKern(s, len, &LargeWesternGlyphs);
 }
 
 
 // 0x006f918 (0xe4 bytes)
-int FontLenScaledWithTable
-              (double param_1,int param_2,int param_3,undefined8 param_4,int param_5)
-
+/* FontLenWithTable at scale, summed in floats */
+int FontLenScaledWithTable(float scale, const char *s, int len, void *glyphs)
 {
-  char cVar1;
-  byte bVar2;
-  byte bVar3;
-  int iVar4;
-  int iVar5;
-  double dVar6;
-  
-  iVar5 = 0;
-  dVar6 = 0.0;
-  if (param_3 != 0) {
-    do {
-      bVar3 = *(byte *)(param_2 + iVar5);
-      if (bVar3 == 0) break;
-      cVar1 = *(char *)(param_5 + (uint)bVar3 * 4 + 3);
-      if (cVar1 != '\0') {
-        if ((bVar3 < 0xbd) || (0xbe < bVar3)) {
-          iVar4 = (int)cVar1;
+    const u8 *str = (const u8 *)s;
+    const FontGlyph *table = (const FontGlyph *)glyphs;
+    float width = 0.0f;
+
+    for (int i = 0; i != len; i++) {
+        u8 ch = str[i];
+
+        if (ch == 0) {
+            break;
         }
-        else {
-          bVar2 = *(byte *)(param_2 + iVar5 + -1);
-          iVar4 = ((int)*(char *)(param_5 + (uint)bVar2 * 4 + 0x203) -
-                  (int)*(char *)(param_5 + (uint)bVar2 * 4 + 3)) +
-                  ((bVar3 == 0xbe)) + 4;
+
+        int advance = table[ch].width;
+
+        if (advance == 0) {
+            continue;
         }
-        dVar6 = (double)(float)((double)(longlong)iVar4 * param_1 + dVar6);
-      }
-      iVar5 = iVar5 + 1;
-    } while (iVar5 != param_3);
-  }
-  return (int)dVar6;
+
+        if (ch >= 0xbd && ch <= 0xbe) {
+            u8 prev = str[i - 1];
+
+            advance = (table[prev + 0x80].width - table[prev].width) + (ch == 0xbe) + 4;
+        }
+
+        width = (float)advance * scale + width;
+    }
+
+    return (int)width;
+}
+
+/* FontLenScaledWithTableNoKern for a Western table, in Japanese mode FontLenScaledWithTable */
+static inline int FontLenScaledIn(float scale, const char *s, int len, void *western)
+{
+    if (g_JapaneseMode) {
+        return FontLenScaledWithTable(scale, s, len, &JapaneseGlyphs);
+    }
+
+    return FontLenScaledWithTableNoKern(scale, (const u8 *)s, len, (const FontGlyph *)western);
 }
 
 
 // 0x006fa00 (0xc4 bytes)
-int FontLenScaled(double param_1,int param_2,undefined8 param_3)
-
+int FontLenScaled(float scale, const char *s, int len)
 {
-  byte *pbVar1;
-  int iVar2;
-  double dVar3;
-  
-  if (g_JapaneseMode) {
-    iVar2 = FontLenScaledWithTable(param_2,param_3,param_2,&JapaneseGlyphs);
-  }
-  else {
-    iVar2 = 0;
-    dVar3 = 0.0;
-    if ((int)param_3 != 0) {
-      do {
-        pbVar1 = (byte *)(param_2 + iVar2);
-        if (*pbVar1 == 0) break;
-        iVar2 = iVar2 + 1;
-        dVar3 = (double)(float)((double)(longlong)(int)(char)(&DAT_007368b3)[(uint)*pbVar1 * 4] *
-                                param_1 + dVar3);
-      } while (iVar2 != (int)param_3);
-    }
-    iVar2 = (int)dVar3;
-  }
-  return iVar2;
+    return FontLenScaledIn(scale, s, len, &MediumWesternGlyphs);
 }
 
 
 // 0x006fac8 (0xc4 bytes)
-int FontLenScaledSmall(double param_1,int param_2,undefined8 param_3)
-
+int FontLenScaledSmall(float scale, const char *s, int len)
 {
-  byte *pbVar1;
-  int iVar2;
-  double dVar3;
-  
-  if (g_JapaneseMode) {
-    iVar2 = FontLenScaledWithTable(param_2,param_3,param_2,&JapaneseGlyphs);
-  }
-  else {
-    iVar2 = 0;
-    dVar3 = 0.0;
-    if ((int)param_3 != 0) {
-      do {
-        pbVar1 = (byte *)(param_2 + iVar2);
-        if (*pbVar1 == 0) break;
-        iVar2 = iVar2 + 1;
-        dVar3 = (double)(float)((double)(longlong)(int)(char)(&DAT_00736c53)[(uint)*pbVar1 * 4] *
-                                param_1 + dVar3);
-      } while (iVar2 != (int)param_3);
-    }
-    iVar2 = (int)dVar3;
-  }
-  return iVar2;
+    return FontLenScaledIn(scale, s, len, &Glyphs);
 }
 
 
 // 0x006fb90 (0xc4 bytes)
-int FontLenScaledLarge(double param_1,int param_2,undefined8 param_3)
-
+int FontLenScaledLarge(float scale, const char *s, int len)
 {
-  byte *pbVar1;
-  int iVar2;
-  double dVar3;
-  
-  if (g_JapaneseMode) {
-    iVar2 = FontLenScaledWithTable(param_2,param_3,param_2,&JapaneseGlyphs);
-  }
-  else {
-    iVar2 = 0;
-    dVar3 = 0.0;
-    if ((int)param_3 != 0) {
-      do {
-        pbVar1 = (byte *)(param_2 + iVar2);
-        if (*pbVar1 == 0) break;
-        iVar2 = iVar2 + 1;
-        dVar3 = (double)(float)((double)(longlong)(int)(char)(&DAT_00736ff3)[(uint)*pbVar1 * 4] *
-                                param_1 + dVar3);
-      } while (iVar2 != (int)param_3);
-    }
-    iVar2 = (int)dVar3;
-  }
-  return iVar2;
+    return FontLenScaledIn(scale, s, len, &LargeWesternGlyphs);
 }
 
 
 // 0x006fc54 (0xa8 bytes)
-void FontPrintSmallLeft
-               (undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-               undefined8 param_5)
-
+/* str at (x, y) in the small font (effect texture 2) */
+void FontPrintSmallLeft(int x, int y, u32 color, const char *str, int len)
 {
-  if (g_JapaneseMode) {
-    FontPrintJapanese(param_1,param_2,param_3,param_4,param_5,*(undefined4 *)(TexInfo + 4),
-                      &JapaneseGlyphs);
-  }
-  else {
-    FontPrint(param_1,param_2,param_3,param_4,param_5,*(undefined4 *)(TexInfo + 8),&Glyphs);
-  }
-  return;
+    if (g_JapaneseMode) {
+        FontPrintJapanese(x, y, color, str, len, GetEffectTex(1), &JapaneseGlyphs);
+    }
+    else {
+        FontPrint(x, y, color, str, len, GetEffectTex(2), &Glyphs);
+    }
 }
 
 
 // 0x006fcfc (0xa8 bytes)
-void FontPrintLarge
-               (undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-               undefined8 param_5)
-
+/* str at (x, y) in the large font (effect texture 3) */
+void FontPrintLarge(int x, int y, u32 color, const char *str, int len)
 {
-  if (g_JapaneseMode) {
-    FontPrintJapanese(param_1,param_2,param_3,param_4,param_5,*(undefined4 *)(TexInfo + 4),
-                      &JapaneseGlyphs);
-  }
-  else {
-    FontPrint(param_1,param_2,param_3,param_4,param_5,*(undefined4 *)(TexInfo + 0xc),
-              &LargeWesternGlyphs);
-  }
-  return;
+    if (g_JapaneseMode) {
+        FontPrintJapanese(x, y, color, str, len, GetEffectTex(1), &JapaneseGlyphs);
+    }
+    else {
+        FontPrint(x, y, color, str, len, GetEffectTex(3), &LargeWesternGlyphs);
+    }
+}
+
+/* FontPrintScaledWestern with Western table western on effect texture tex, in Japanese mode
+   FontPrintScaledJapanese */
+static inline void FontPrintScaledIn(float x, float y, float scale, u32 color, const char *str, int len, int tex, void *western)
+{
+    if (g_JapaneseMode) {
+        FontPrintScaledJapanese(x, y, scale, color, (const u8 *)str, len, GetEffectTex(1), (const FontGlyph *)&JapaneseGlyphs);
+    }
+    else {
+        FontPrintScaledWestern(x, y, scale, color, (const u8 *)str, len, GetEffectTex(tex), (const FontGlyph *)western);
+    }
 }
 
 
 // 0x006fda4 (0xa0 bytes)
-void FontPrint_unk(undefined8 param_1,undefined8 param_2,undefined8 param_3)
-
+void FontPrintScaledMedium(float x, float y, float scale, u32 color, const char *str, int len)
 {
-  if (g_JapaneseMode) {
-    FontPrintJapanese_unk2(param_1,param_2,param_3);
-  }
-  else {
-    FontPrint_unk3(param_1,param_2,param_3);
-  }
-  return;
+    FontPrintScaledIn(x, y, scale, color, str, len, 1, &MediumWesternGlyphs);
 }
 
 
 // 0x006fe44 (0xa0 bytes)
-void FontPrintScaled(undefined8 param_1,undefined8 param_2,undefined8 param_3)
-
+void FontPrintScaledSmall(float x, float y, float scale, u32 color, const char *str, int len)
 {
-  if (g_JapaneseMode) {
-    FontPrintJapanese_unk2(param_1,param_2,param_3);
-  }
-  else {
-    FontPrint_unk3(param_1,param_2,param_3);
-  }
-  return;
+    FontPrintScaledIn(x, y, scale, color, str, len, 2, &Glyphs);
 }
 
 
 // 0x006fee4 (0xa0 bytes)
-void FontPrintScaled_v2(undefined8 param_1,undefined8 param_2,undefined8 param_3)
-
+void FontPrintScaledLarge(float x, float y, float scale, u32 color, const char *str, int len)
 {
-  if (g_JapaneseMode) {
-    FontPrintJapanese_unk2(param_1,param_2,param_3);
-  }
-  else {
-    FontPrint_unk3(param_1,param_2,param_3);
-  }
-  return;
+    FontPrintScaledIn(x, y, scale, color, str, len, 3, &LargeWesternGlyphs);
 }
 
 
 // 0x006ff88 (0x1a8 bytes)
-void FontPrintRightWithScale
-               (double param_1,int param_2,int param_3,undefined8 param_4,int param_5,
-               undefined8 param_6)
-
+/* str in the medium font at scale, ending at x */
+void FontPrintRightWithScale(float scale, int x, int y, u32 color, const char *str, int len)
 {
-  byte *pbVar1;
-  longlong lVar2;
-  int iVar3;
-  double dVar4;
-  
-  if (g_JapaneseMode) {
-    iVar3 = FontLenScaledWithTable(param_1,param_5,param_6,param_4,&JapaneseGlyphs);
-  }
-  else {
-    iVar3 = 0;
-    dVar4 = 0.0;
-    if ((int)param_6 != 0) {
-      do {
-        pbVar1 = (byte *)(param_5 + iVar3);
-        if (*pbVar1 == 0) break;
-        iVar3 = iVar3 + 1;
-        dVar4 = (double)(float)((double)(longlong)(int)(char)(&DAT_007368b3)[(uint)*pbVar1 * 4] *
-                                param_1 + dVar4);
-      } while (iVar3 != (int)param_6);
-    }
-    iVar3 = (int)dVar4;
-  }
-  lVar2 = (longlong)(param_2 - iVar3);
-  if (g_JapaneseMode == false) {
-    FontPrint_unk3((double)lVar2,(double)(longlong)param_3,param_1,TexInfo,lVar2,param_4,param_5,
-                   param_6);
-  }
-  else {
-    FontPrintJapanese_unk2
-              ((double)lVar2,(double)(longlong)param_3,param_1,TexInfo,lVar2,param_4,param_5,param_6
-              );
-  }
-  return;
+    int width = FontLenScaled(scale, str, len);
+
+    FontPrintScaledMedium((float)(x - width), (float)y, scale, color, str, len);
 }
 
 
 // 0x0070130 (0x14c bytes)
-void FontPrintMediumRight
-               (int param_1,undefined8 param_2,undefined8 param_3,char *param_4,undefined8 param_5)
-
+/* str in the medium font ending at x */
+void FontPrintMediumRight(int x, int y, u32 color, char *str, int len)
 {
-  byte bVar1;
-  int iVar2;
-  int len;
-  int iVar3;
-  
-  len = (int)param_5;
-  if (g_JapaneseMode) {
-    iVar2 = FontLenWithTable(param_4,len,&JapaneseGlyphs);
-  }
-  else {
-    iVar3 = 0;
-    iVar2 = 0;
-    if (len != 0) {
-      do {
-        bVar1 = param_4[iVar3];
-        if (bVar1 == 0) break;
-        if ((&DAT_007368b3)[(uint)bVar1 * 4] != '\0') {
-          iVar2 = iVar2 + (char)(&DAT_007368b3)[(uint)bVar1 * 4];
-        }
-        iVar3 = iVar3 + 1;
-      } while (iVar3 != len);
-    }
-  }
-  if (g_JapaneseMode == false) {
-    FontPrint(param_1 - iVar2,param_2,param_3,param_4,param_5,*(undefined4 *)(TexInfo + 4),
-              &MediumWesternGlyphs);
-  }
-  else {
-    FontPrintJapanese(param_1 - iVar2,param_2,param_3,param_4,param_5,*(undefined4 *)(TexInfo + 4),
-                      &JapaneseGlyphs);
-  }
-  return;
+    FontPrintMediumLeft(x - FontLen(str, len), y, color, str, len);
 }
 
 
 // 0x007027c (0x14c bytes)
-void FontPrintSmallRight
-               (int param_1,undefined8 param_2,undefined8 param_3,char *param_4,undefined8 param_5)
-
+/* str in the small font ending at x */
+void FontPrintSmallRight(int x, int y, u32 color, char *str, int len)
 {
-  byte bVar1;
-  int iVar2;
-  int len;
-  int iVar3;
-  
-  len = (int)param_5;
-  if (g_JapaneseMode) {
-    iVar2 = FontLenWithTable(param_4,len,&JapaneseGlyphs);
-  }
-  else {
-    iVar3 = 0;
-    iVar2 = 0;
-    if (len != 0) {
-      do {
-        bVar1 = param_4[iVar3];
-        if (bVar1 == 0) break;
-        if ((&DAT_00736c53)[(uint)bVar1 * 4] != '\0') {
-          iVar2 = iVar2 + (char)(&DAT_00736c53)[(uint)bVar1 * 4];
-        }
-        iVar3 = iVar3 + 1;
-      } while (iVar3 != len);
-    }
-  }
-  if (g_JapaneseMode == false) {
-    FontPrint(param_1 - iVar2,param_2,param_3,param_4,param_5,*(undefined4 *)(TexInfo + 8),&Glyphs);
-  }
-  else {
-    FontPrintJapanese(param_1 - iVar2,param_2,param_3,param_4,param_5,*(undefined4 *)(TexInfo + 4),
-                      &JapaneseGlyphs);
-  }
-  return;
+    FontPrintSmallLeft(x - FontLenSmall(str, len), y, color, str, len);
 }
 
 
 // 0x00703c8 (0x14c bytes)
-void FontPrintLargeRight
-               (int param_1,undefined8 param_2,undefined8 param_3,char *param_4,undefined8 param_5)
-
+/* str in the large font ending at x */
+void FontPrintLargeRight(int x, int y, u32 color, char *str, int len)
 {
-  byte bVar1;
-  int iVar2;
-  int len;
-  int iVar3;
-  
-  len = (int)param_5;
-  if (g_JapaneseMode) {
-    iVar2 = FontLenWithTable(param_4,len,&JapaneseGlyphs);
-  }
-  else {
-    iVar3 = 0;
-    iVar2 = 0;
-    if (len != 0) {
-      do {
-        bVar1 = param_4[iVar3];
-        if (bVar1 == 0) break;
-        if ((&DAT_00736ff3)[(uint)bVar1 * 4] != '\0') {
-          iVar2 = iVar2 + (char)(&DAT_00736ff3)[(uint)bVar1 * 4];
-        }
-        iVar3 = iVar3 + 1;
-      } while (iVar3 != len);
-    }
-  }
-  if (g_JapaneseMode == false) {
-    FontPrint(param_1 - iVar2,param_2,param_3,param_4,param_5,*(undefined4 *)(TexInfo + 0xc),
-              &LargeWesternGlyphs);
-  }
-  else {
-    FontPrintJapanese(param_1 - iVar2,param_2,param_3,param_4,param_5,*(undefined4 *)(TexInfo + 4),
-                      &JapaneseGlyphs);
-  }
-  return;
+    FontPrintLarge(x - FontLenLarge(str, len), y, color, str, len);
 }
 
 
 // 0x0070514 (0x164 bytes)
-int FontPrintMediumCenter(int param_1,int param_2,u32 param_3,const char *param_4,int param_5)
-
+/* str in the medium font centred on x; returns its left edge */
+int FontPrintMediumCenter(int x, int y, u32 color, const char *str, int len)
 {
-  byte bVar1;
-  int iVar2;
-  int iVar3;
-  int len;
-  int iVar4;
-  
-  len = (int)param_5;
-  if (g_JapaneseMode) {
-    iVar3 = FontLenWithTable(param_4,len,&JapaneseGlyphs);
-  }
-  else {
-    iVar4 = 0;
-    iVar3 = 0;
-    iVar2 = 0;
-    if (len != 0) {
-      do {
-        iVar3 = iVar2;
-        bVar1 = param_4[iVar4];
-        if (bVar1 == 0) break;
-        if ((&DAT_007368b3)[(uint)bVar1 * 4] != '\0') {
-          iVar3 = iVar3 + (char)(&DAT_007368b3)[(uint)bVar1 * 4];
-        }
-        iVar4 = iVar4 + 1;
-        iVar2 = iVar3;
-      } while (iVar4 != len);
-    }
-  }
-  param_1 = param_1 - (iVar3 >> 1);
-  if (g_JapaneseMode == false) {
-    FontPrint(param_1,param_2,param_3,param_4,param_5,*(undefined4 *)(TexInfo + 4),
-              &MediumWesternGlyphs);
-  }
-  else {
-    FontPrintJapanese(param_1,param_2,param_3,param_4,param_5,*(undefined4 *)(TexInfo + 4),
-                      &JapaneseGlyphs);
-  }
-  return param_1;
+    x -= FontLen((char *)str, len) >> 1;
+
+    FontPrintMediumLeft(x, y, color, str, len);
+
+    return x;
 }
 
 
 // 0x0070680 (0x1b4 bytes)
-int FontPrintCenterScaled
-              (double param_1,int param_2,int param_3,undefined8 param_4,int param_5,
-              undefined8 param_6)
-
+/* str in the medium font at scale centred on x; returns its left edge */
+int FontPrintCenterScaled(float scale, int x, int y, u32 color, const char *str, int len)
 {
-  byte *pbVar1;
-  int iVar2;
-  double dVar3;
-  
-  if (g_JapaneseMode) {
-    iVar2 = FontLenScaledWithTable(param_1,param_5,param_6,param_4,&JapaneseGlyphs);
-  }
-  else {
-    iVar2 = 0;
-    dVar3 = 0.0;
-    if ((int)param_6 != 0) {
-      do {
-        pbVar1 = (byte *)(param_5 + iVar2);
-        if (*pbVar1 == 0) break;
-        iVar2 = iVar2 + 1;
-        dVar3 = (double)(float)((double)(longlong)(int)(char)(&DAT_007368b3)[(uint)*pbVar1 * 4] *
-                                param_1 + dVar3);
-      } while (iVar2 != (int)param_6);
-    }
-    iVar2 = (int)dVar3;
-  }
-  param_2 = param_2 - (iVar2 >> 1);
-  dVar3 = (double)(longlong)param_2;
-  if (g_JapaneseMode == false) {
-    FontPrint_unk3(dVar3,(double)(longlong)param_3,param_1,TexInfo,CHAR_ARRAY_00a0feec + 0x114,
-                   param_4,param_5,param_6);
-  }
-  else {
-    FontPrintJapanese_unk2
-              (dVar3,(double)(longlong)param_3,param_1,TexInfo,CHAR_ARRAY_00a0feec + 0x114,param_4,
-               param_5,param_6);
-  }
-  return param_2;
+    x -= FontLenScaled(scale, str, len) >> 1;
+
+    FontPrintScaledMedium((float)x, (float)y, scale, color, str, len);
+
+    return x;
 }
 
 
 // 0x0070834 (0x164 bytes)
-int FontPrintSmallCenter
-              (int param_1,undefined8 param_2,undefined8 param_3,char *param_4,undefined8 param_5)
-
+/* str in the small font centred on x; returns its left edge */
+int FontPrintSmallCenter(int x, int y, u32 color, char *str, int len)
 {
-  byte bVar1;
-  int iVar2;
-  int iVar3;
-  int len;
-  int iVar4;
-  
-  len = (int)param_5;
-  if (g_JapaneseMode) {
-    iVar3 = FontLenWithTable(param_4,len,&JapaneseGlyphs);
-  }
-  else {
-    iVar4 = 0;
-    iVar3 = 0;
-    iVar2 = 0;
-    if (len != 0) {
-      do {
-        iVar3 = iVar2;
-        bVar1 = param_4[iVar4];
-        if (bVar1 == 0) break;
-        if ((&DAT_00736c53)[(uint)bVar1 * 4] != '\0') {
-          iVar3 = iVar3 + (char)(&DAT_00736c53)[(uint)bVar1 * 4];
-        }
-        iVar4 = iVar4 + 1;
-        iVar2 = iVar3;
-      } while (iVar4 != len);
-    }
-  }
-  param_1 = param_1 - (iVar3 >> 1);
-  if (g_JapaneseMode == false) {
-    FontPrint(param_1,param_2,param_3,param_4,param_5,*(undefined4 *)(TexInfo + 8),&Glyphs);
-  }
-  else {
-    FontPrintJapanese(param_1,param_2,param_3,param_4,param_5,*(undefined4 *)(TexInfo + 4),
-                      &JapaneseGlyphs);
-  }
-  return param_1;
+    x -= FontLenSmall(str, len) >> 1;
+
+    FontPrintSmallLeft(x, y, color, str, len);
+
+    return x;
 }
 
 
 // 0x0070998 (0x164 bytes)
-int FontPrintLargeCenter
-              (int param_1,undefined8 param_2,undefined8 param_3,char *param_4,undefined8 param_5)
-
+/* str in the large font centred on x; returns its left edge */
+int FontPrintLargeCenter(int x, int y, u32 color, char *str, int len)
 {
-  byte bVar1;
-  int iVar2;
-  int iVar3;
-  int len;
-  int iVar4;
-  
-  len = (int)param_5;
-  if (g_JapaneseMode) {
-    iVar3 = FontLenWithTable(param_4,len,&JapaneseGlyphs);
-  }
-  else {
-    iVar4 = 0;
-    iVar3 = 0;
-    iVar2 = 0;
-    if (len != 0) {
-      do {
-        iVar3 = iVar2;
-        bVar1 = param_4[iVar4];
-        if (bVar1 == 0) break;
-        if ((&DAT_00736ff3)[(uint)bVar1 * 4] != '\0') {
-          iVar3 = iVar3 + (char)(&DAT_00736ff3)[(uint)bVar1 * 4];
-        }
-        iVar4 = iVar4 + 1;
-        iVar2 = iVar3;
-      } while (iVar4 != len);
-    }
-  }
-  param_1 = param_1 - (iVar3 >> 1);
-  if (g_JapaneseMode == false) {
-    FontPrint(param_1,param_2,param_3,param_4,param_5,*(undefined4 *)(TexInfo + 0xc),
-              &LargeWesternGlyphs);
-  }
-  else {
-    FontPrintJapanese(param_1,param_2,param_3,param_4,param_5,*(undefined4 *)(TexInfo + 4),
-                      &JapaneseGlyphs);
-  }
-  return param_1;
+    x -= FontLenLarge(str, len) >> 1;
+
+    FontPrintLarge(x, y, color, str, len);
+
+    return x;
 }
 
 
 // 0x0070b00 (0x1ac bytes)
-void FontPrintCenterScaledMedium
-               (double param_1,int param_2,int param_3,undefined8 param_4,int param_5,
-               undefined8 param_6)
-
+void FontPrintCenterScaledMedium(float scale, int x, int y, u32 color, const char *str, int len)
 {
-  byte *pbVar1;
-  longlong lVar2;
-  int iVar3;
-  double dVar4;
-  
-  if (g_JapaneseMode) {
-    iVar3 = FontLenScaledWithTable(param_1,param_5,param_6,param_4,&JapaneseGlyphs);
-  }
-  else {
-    iVar3 = 0;
-    dVar4 = 0.0;
-    if ((int)param_6 != 0) {
-      do {
-        pbVar1 = (byte *)(param_5 + iVar3);
-        if (*pbVar1 == 0) break;
-        iVar3 = iVar3 + 1;
-        dVar4 = (double)(float)((double)(longlong)(int)(char)(&DAT_007368b3)[(uint)*pbVar1 * 4] *
-                                param_1 + dVar4);
-      } while (iVar3 != (int)param_6);
-    }
-    iVar3 = (int)dVar4;
-  }
-  lVar2 = (longlong)(param_2 - (iVar3 >> 1));
-  if (g_JapaneseMode == false) {
-    FontPrint_unk3((double)lVar2,(double)(longlong)param_3,param_1,TexInfo,lVar2,param_4,param_5,
-                   param_6);
-  }
-  else {
-    FontPrintJapanese_unk2
-              ((double)lVar2,(double)(longlong)param_3,param_1,TexInfo,lVar2,param_4,param_5,param_6
-              );
-  }
-  return;
+    x -= FontLenScaled(scale, str, len) >> 1;
+
+    FontPrintScaledMedium((float)x, (float)y, scale, color, str, len);
 }
 
 
 // 0x0070cb0 (0x1ac bytes)
-void FontPrintCenterScaledSmall
-               (double param_1,int param_2,int param_3,undefined8 param_4,int param_5,
-               undefined8 param_6)
-
+void FontPrintCenterScaledSmall(float scale, int x, int y, u32 color, const char *str, int len)
 {
-  byte *pbVar1;
-  longlong lVar2;
-  int iVar3;
-  double dVar4;
-  
-  if (g_JapaneseMode) {
-    iVar3 = FontLenScaledWithTable(param_1,param_5,param_6,param_4,&JapaneseGlyphs);
-  }
-  else {
-    iVar3 = 0;
-    dVar4 = 0.0;
-    if ((int)param_6 != 0) {
-      do {
-        pbVar1 = (byte *)(param_5 + iVar3);
-        if (*pbVar1 == 0) break;
-        iVar3 = iVar3 + 1;
-        dVar4 = (double)(float)((double)(longlong)(int)(char)(&DAT_00736c53)[(uint)*pbVar1 * 4] *
-                                param_1 + dVar4);
-      } while (iVar3 != (int)param_6);
-    }
-    iVar3 = (int)dVar4;
-  }
-  lVar2 = (longlong)(param_2 - (iVar3 >> 1));
-  if (g_JapaneseMode == false) {
-    FontPrint_unk3((double)lVar2,(double)(longlong)param_3,param_1,TexInfo,lVar2,param_4,param_5,
-                   param_6);
-  }
-  else {
-    FontPrintJapanese_unk2
-              ((double)lVar2,(double)(longlong)param_3,param_1,TexInfo,lVar2,param_4,param_5,param_6
-              );
-  }
-  return;
+    x -= FontLenScaledSmall(scale, str, len) >> 1;
+
+    FontPrintScaledSmall((float)x, (float)y, scale, color, str, len);
 }
 
 
 // 0x0070e60 (0x1ac bytes)
-void FontPrintCenterScaledLarge
-               (double param_1,int param_2,int param_3,undefined8 param_4,int param_5,
-               undefined8 param_6)
-
+void FontPrintCenterScaledLarge(float scale, int x, int y, u32 color, const char *str, int len)
 {
-  byte *pbVar1;
-  longlong lVar2;
-  int iVar3;
-  double dVar4;
-  
-  if (g_JapaneseMode) {
-    iVar3 = FontLenScaledWithTable(param_1,param_5,param_6,param_4,&JapaneseGlyphs);
-  }
-  else {
-    iVar3 = 0;
-    dVar4 = 0.0;
-    if ((int)param_6 != 0) {
-      do {
-        pbVar1 = (byte *)(param_5 + iVar3);
-        if (*pbVar1 == 0) break;
-        iVar3 = iVar3 + 1;
-        dVar4 = (double)(float)((double)(longlong)(int)(char)(&DAT_00736ff3)[(uint)*pbVar1 * 4] *
-                                param_1 + dVar4);
-      } while (iVar3 != (int)param_6);
-    }
-    iVar3 = (int)dVar4;
-  }
-  lVar2 = (longlong)(param_2 - (iVar3 >> 1));
-  if (g_JapaneseMode == false) {
-    FontPrint_unk3((double)lVar2,(double)(longlong)param_3,param_1,TexInfo,lVar2,param_4,param_5,
-                   param_6);
-  }
-  else {
-    FontPrintJapanese_unk2
-              ((double)lVar2,(double)(longlong)param_3,param_1,TexInfo,lVar2,param_4,param_5,param_6
-              );
-  }
-  return;
+    x -= FontLenScaledLarge(scale, str, len) >> 1;
+
+    FontPrintScaledLarge((float)x, (float)y, scale, color, str, len);
 }
 
 
 // 0x007100c (0xa8 bytes)
-void FontPrintOpt(float param_1,FontWindow *param_2,u32 param_3,const char *param_4,int param_5)
-
+/* text in win at scale with the small font (Glyphs on effect texture 2) */
+void FontPrintOpt(float scale, FontWindow *win, u32 color, const char *str, int len)
 {
-  if (g_JapaneseMode) {
-    FontPrintOptJapanese
-              (param_1,param_2,param_3,param_4,*(undefined4 *)(TexInfo + 4),&JapaneseGlyphs);
-  }
-  else {
-    FontPrintOptWestern(param_1,param_2,param_3,param_4,*(undefined4 *)(TexInfo + 8),&Glyphs);
-  }
-  return;
+    if (g_JapaneseMode) {
+        FontPrintOptJapanese(scale, win, color, (const u8 *)str, len, GetEffectTex(1), (const FontGlyph *)&JapaneseGlyphs);
+    }
+    else {
+        FontPrintOptWestern(scale, win, color, str, len, GetEffectTex(2), &Glyphs);
+    }
 }
 
 
 // 0x00710b8 (0xb4 bytes)
-void FontPrintOptLarge
-               (undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4)
-
+/* text in win at scale 1 with the large font (LargeWesternGlyphs on effect texture 3) */
+void FontPrintOptLarge(FontWindow *win, u32 color, const char *str, int len)
 {
-  if (g_JapaneseMode) {
-    FontPrintOptJapanese
-              (0x3ff0000000000000,param_1,param_2,param_3,param_4,*(undefined4 *)(TexInfo + 4),
-               &JapaneseGlyphs);
-  }
-  else {
-    FontPrintOptWestern(param_1,param_2,param_3,param_4,*(undefined4 *)(TexInfo + 0xc),
-                        &LargeWesternGlyphs);
-  }
-  return;
+    if (g_JapaneseMode) {
+        FontPrintOptJapanese(1.0f, win, color, (const u8 *)str, len, GetEffectTex(1), (const FontGlyph *)&JapaneseGlyphs);
+    }
+    else {
+        FontPrintOptWestern(1.0f, win, color, str, len, GetEffectTex(3), &LargeWesternGlyphs);
+    }
 }
 
 
 // 0x007116c (0x4 bytes)
 void STUB_0007116c(...)
-
 {
-  return;
 }
 
 
 // 0x0071170 (0x4 bytes)
 void STUB_00071170(...)
-
 {
-  return;
 }
 
 
@@ -6323,7 +3354,7 @@ void SetScreenResolution
   auVar27 = vectorShiftLeftIntegerWord(auVar26,auVar27);
   SCREEN_PROJECTION_MAP_Y = (undefined4)((0x800U - (longlong)g_ScreenHalfHeight & 0xffffffff) << 4);
   g_ScreenHalfWidth = (int)uVar5 >> 1;
-  FLOAT_0095d1c8 = 1.0;
+  g_ViewContext.fovScale = 1.0;
   auVar26 = vectorShiftLeftIntegerWord(auVar26,*(undefined1 (*) [16])(puVar7 + 0x18));
   puVar7[0x1f] = unaff_r24;
   SCREEN_PROJECTION_MAP_X = (undefined4)((0x800U - (longlong)g_ScreenHalfWidth & 0xffffffff) << 4);
@@ -8461,7 +5492,7 @@ void ImpactSprite_Draw(void)
   puVar3[0x6b] = unaff_r29;
   puVar3[0x6c] = unaff_r30;
   puVar3[0x6d] = unaff_r31;
-  iVar5 = DAT_00902e9c;
+  iVar5 = g_pIdolDrawBase;
   puVar3[0x6a] = unaff_r28;
   pRVar4 = DL_Pass;
   puVar3[0x69] = unaff_r27;
