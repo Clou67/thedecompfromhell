@@ -587,7 +587,7 @@ errors	file
 0	game/update/moby3.cpp
 20	game/update/moby30.cpp
 10	game/update/moby303.cpp
-3	game/update/moby304.cpp
+2	game/update/moby304.cpp
 24	game/update/moby305.cpp
 0	game/update/moby306.cpp
 0	game/update/moby308.cpp
@@ -1019,7 +1019,7 @@ errors	file
 4	game/update/sound4.cpp
 1	game/update/sound5.cpp
 0	game/update/sound6.cpp
-348	game/vendor.cpp
+182	game/vendor.cpp
 53	game/vuchain.cpp
 0	game/walk.cpp
 0	game/water.cpp

@@ -511,3 +511,44 @@ g_VendorCutsceneRot	Vec4 NAME /* 0xe5a700 */
 g_VendorCutsceneMtx	float NAME[12] /* 0xe5a6d0: from g_VendorCutsceneRot */
 g_VendorBoughtItem	int NAME /* 0xe5a698: the item whose cutscene plays, -1 = none */
 g_WeaponCutscenes	int NAME[] /* 0x73a240: the weapon cutscene of each item */
+g_GadgetPickupOffset	Vec4 NAME /* 0x73a2f0: where a gadget pickup cutscene plays, in the pickup moby's space */
+g_GadgetPickupMoby	MobyInstance *NAME /* 0xe5a678 */
+g_VendorScrollText	char *NAME /* 0xe5a67c */
+g_VendorScrollPos	int NAME /* 0xe5a694 */
+g_VendorDudeManip	Manipulator NAME /* 0xe5a990: on the vendor moby's root joint for the big-head cheat */
+g_VendorDudeTimer	int NAME /* 0xe5a684: frames in the idle states */
+g_VendorDudeLine	int NAME /* 0xe5a68c: which of the two idle lines (0, 1) */
+g_VendorDudeSpeechPending	bool NAME /* 0xe5a9d4 */
+g_VendorDudeSpeechReady	bool NAME /* 0xe5a9d5 */
+g_VendorDudeTriggers	int NAME[3][2] /* 0x73a300: the speech frame of animations 4/5/6 (+3 * line) */
+g_VendorDude	MobyInstance *NAME /* 0xe5a674: the vendor dude on the vendor screen */
+g_VendorDudeLastChat	int NAME /* 0xe5a680: g_MainLoopFrames of his last chatter */
+g_VendorDudeActive	bool NAME /* 0xe5a9d0 */
+g_VendorPreviews	MobyInstance *NAME /* 0xe5a670: the vendor screen's own mobies; [1] the selected item, [2] its second part, [3] the item again (hidden), [4] and [5] the screen's */
+g_VendorPreviewDirty	u8 NAME /* 0xe5a9d3: cleared once the preview is spawned (invented name) */
+g_VendorPreviewOffset	Vec4 NAME /* 0x738870: the preview's offset from the vendor moby, w its w */
+g_VendorItemViews	VendorItemView NAME[] /* 0x738b30: how each item sits in the preview */
+g_VendorItemNarrowOffset	Vec4 NAME[] /* 0x7388d0: extra preview offset per item on a 4:3 screen */
+g_AmmoBought	int NAME[37] /* 0xa0f51c: ammo bought at vendors per weapon (invented name; cleared by boot) */
+g_VendorHoldLess	int NAME /* 0xe5a954: frames left held on the quantity box */
+g_VendorHoldMore	int NAME /* 0xe5a958: frames right held */
+g_VendorQuantity	int NAME /* 0xe5a95c: units of ammo to buy */
+g_VendorConfirmed	u8 NAME /* 0xe5aa41: the purchase box was confirmed (not cancelled) */
+g_VendorPickQuantity	u8 NAME /* 0xe5aa42: the purchase box lets you pick a quantity (ammo you can afford) */
+g_VendorMenuState	int NAME /* 0xe5a6ac: the purchase box: 0 closed, 1 opening, 2 open, 3 closing, 4 closed this frame */
+g_lastVendorWasPda	int NAME /* 0xe5a690 */
+g_VendorItemModels	VendorItemModel NAME[] /* 0x739220: an item's second preview part */
+g_VendorCopyViews	VendorCopyView NAME[] /* 0x739b50: how preview moby 3 (the item's copy) sits */
+g_VendorDudeOffset	Vec4 NAME /* 0x738860: the vendor dude's place on the vendor moby (x, z changed on a 4:3 screen) */
+g_VendorSpinOffset	Vec4 NAME /* 0x738880: where the spinning preview parts (mobies 2 and 3) sit */
+g_VendorScreenOffset	Vec4 NAME /* 0x738890: preview moby 0 (y depends on the video mode) */
+g_VendorScreen2Offset	Vec4 NAME /* 0x7388a0: preview moby 5 */
+g_VendorStateFrames	int NAME /* 0xe5a654: frames in the current g_OpenVendorState */
+g_VendorExitTimer	int NAME /* 0xe5a940: frames until the vendor closes after triangle */
+g_VendorExiting	u8 NAME /* 0xe5a944 */
+g_VendorOpenTimer	int NAME /* 0xe5a948 */
+g_VendorOpening	u8 NAME /* 0xe5a94c */
+g_VendorSpin	float NAME /* 0xe5a950: angle of the spinning preview parts */
+g_VendorDudeLoaded	u8 NAME /* 0xe5a9d1: the dude's data is in; spawn him */
+g_VendorNarrow	u8 NAME /* 0xe5a9d2: the screen is 4:3 (set once, at the first vendor) */
+g_VendorSavedOrient	Vec4 NAME[3] /* 0xe5a960: GameCamera.orientMtx forward/right/up while the vendor is open */

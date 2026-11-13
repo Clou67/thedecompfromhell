@@ -125,3 +125,7 @@ WaterPatchList	game/draw
 LavaPatch	game/draw
 GradientStrip	game/draw
 VendorItem	game/vendor
+VendorItemView	game/vendor
+VendorItemModel	game/vendor
+WeaponAmmoInfo	game/vendor
+VendorCopyView	game/vendor

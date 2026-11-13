@@ -61,7 +61,8 @@ struct IdolDraw {
     int widescreen;                   /* 0x00c */
     u8 unk10;                         /* 0x010 */
     u8 unk11;                         /* 0x011 */
-    u8 _pad12[6];
+    u8 _pad12[2];
+    int unk14;                        /* 0x014  bit 1: StartGadgetPickupCutscene skips its extra flip */
     int unk18;                        /* 0x018 */
     u8 _pad1c[4];
     struct Vec4 camPos;               /* 0x020  the camera position (ImpactSprite_Draw) */

@@ -2,6 +2,7 @@
 // game/hero.h
 #include "types.h"
 #include "game/collproc.h"
+#include "game/debug.h"
 
 // ---- types
 struct HeroCollVert { /* u16 coords = world*64 */
@@ -278,6 +279,8 @@ extern undefined4 DAT_007358e0; /* 0x7358e0 */
 extern undefined4 DAT_00735904; /* no defined data */
 extern undefined4 DAT_00737994; /* no defined data */
 extern undefined4 DAT_007379d0; /* no defined data */
+extern undefined2 DAT_00737d3e; /* 0x737d3e */
+extern undefined4 DAT_0095cd50; /* 0x95cd50 */
 extern undefined4 DAT_00965050; /* no defined data */
 extern undefined4 DAT_00969c80; /* 0x969c80 */
 extern undefined4 DAT_00969c84; /* 0x969c84 */
@@ -1056,6 +1059,7 @@ extern pointer32 PTR_TrickHud_Update_00705850; /* 0x705850 */
 extern pointer32 PTR_UpdateQuickSelect_007057c0; /* 0x7057c0 */
 extern Items UnlockableItems; /* 0x96c140 */
 extern float animationSpeed; /* 0x71f410 */
+extern Items32 currentAmmoArray; /* 0x96c0ac */
 extern MobyInstance *g_CollMobyHits[256]; /* 0xa14a00: the mobys CollMobySphere/CollHeroSphere hit, NULL ended (the real length is unknown) */ /* type set in global_types.tsv */
 extern undefined4 g_CurrentWeapon; /* 0x96ad98 */
 extern undefined4 g_DustHoverState; /* 0x96a0f8 */

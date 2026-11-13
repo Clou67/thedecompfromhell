@@ -3,6 +3,7 @@
 #include "types.h"
 
 // ---- globals
+extern undefined4 DAT_00101010; /* 0x101010 */
 extern undefined4 DAT_002a2374; /* 0x2a2374 */
 extern pointer32 PTR_M169_002a1370_0070ab78; /* 0x70ab78 */
 extern undefined4 _DAT_007ac8c0; /* direct read */
