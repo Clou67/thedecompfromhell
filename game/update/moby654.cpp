@@ -3,6 +3,7 @@
 // 4 functions, 0x402750-0x403594
 #include "game/update/moby654.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/hud.h"

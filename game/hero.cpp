@@ -18545,10 +18545,10 @@ MobyInstance * ____Hero_ApplyHitGravityToMobyList(MobyInstance *param_1,int para
       iVar3 = 0;
       do {
         sVar1 = 0;
-        param_1 = (MobyInstance *)&DAT_00a14a00;
-        if ((*(int *)((int)&DAT_00a14a00 + iVar3) != 0) &&
-           (*(int *)(*(int *)((int)&DAT_00a14a00 + iVar3) + 0x24) != 0)) {
-          sVar1 = *(short *)(*(int *)(*(int *)((int)&DAT_00a14a00 + iVar3) + 0x24) + 0x46);
+        param_1 = (MobyInstance *)&g_CollMobyHits;
+        if ((*(int *)((int)&g_CollMobyHits + iVar3) != 0) &&
+           (*(int *)(*(int *)((int)&g_CollMobyHits + iVar3) + 0x24) != 0)) {
+          sVar1 = *(short *)(*(int *)(*(int *)((int)&g_CollMobyHits + iVar3) + 0x24) + 0x46);
         }
         if (sVar1 == 9 || sVar1 == 5) {
           Hero_AddGravity(-0.5,local_40,local_40);
@@ -26727,10 +26727,10 @@ LAB_000b4328:
           if (0 < iVar10) {
             iVar12 = 0;
             do {
-              bVar19 = MB_isCrate(*(undefined4 *)((int)&DAT_00a14a00 + iVar12));
+              bVar19 = MB_isCrate(*(undefined4 *)((int)&g_CollMobyHits + iVar12));
               if (bVar19) {
                 CollDamageMobyDirect
-                          (1.0,*(MobyInstance **)((int)&DAT_00a14a00 + iVar12),g_heroMobyPtr,0x10000
+                          (1.0,*(MobyInstance **)((int)&g_CollMobyHits + iVar12),g_heroMobyPtr,0x10000
                            ,(int)uVar9,&g_heroPosition.x,afStack_400);
               }
               iVar15 = iVar15 + 1;
@@ -26998,10 +26998,10 @@ LAB_000b4328:
                 iVar15 = 0;
                 if (0 < iVar10) {
                   do {
-                    bVar19 = MB_isCrate((&DAT_00a14a00)[iVar15]);
-                    if ((bVar19) || (*(short *)((&DAT_00a14a00)[iVar15] + 0xa6) == 0x85)) {
+                    bVar19 = MB_isCrate((&g_CollMobyHits)[iVar15]);
+                    if ((bVar19) || (*(short *)((&g_CollMobyHits)[iVar15] + 0xa6) == 0x85)) {
                       CollDamageMobyDirect
-                                (1.0,(MobyInstance *)(&DAT_00a14a00)[iVar15],g_heroMobyPtr,0x10000,
+                                (1.0,(MobyInstance *)(&g_CollMobyHits)[iVar15],g_heroMobyPtr,0x10000,
                                  (int)uVar9,&g_heroPosition.x,afStack_7d0);
                     }
                     iVar15 = iVar15 + 1;

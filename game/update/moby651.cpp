@@ -3,6 +3,7 @@
 // 3 functions, 0x401f88-0x40271c
 #include "game/update/moby651.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"

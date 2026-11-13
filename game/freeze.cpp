@@ -9,6 +9,7 @@
 #include <string.h>
 #include "game/freeze.h"
 #include "game/boot.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/help.h"
 #include "game/hero.h"

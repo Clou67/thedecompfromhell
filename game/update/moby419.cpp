@@ -2,6 +2,7 @@
 // STATUS: NOT STARTED (raw Ghidra output)
 // 1 functions, 0x367dc0-0x367dc4
 #include "game/update/moby419.h"
+#include "game/collproc.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 

@@ -3,6 +3,7 @@
 // 3 functions, 0x356514-0x3572f4
 #include <stdio.h>
 #include "game/update/moby375.h"
+#include "game/collproc.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"

@@ -1559,7 +1559,7 @@ LAB_0043f4c8:
       uVar29.piece<0,4>() = (moby->pos).z;
       uVar29.piece<4,4>() = (moby->pos).w;
       MB_DamageMobyList
-                (dVar42,0x3fd0000000000000,0x3ff8000000000000,lVar8,4,uVar28,uVar29,&DAT_00a14a00,
+                (dVar42,0x3fd0000000000000,0x3ff8000000000000,lVar8,4,uVar28,uVar29,&g_CollMobyHits,
                  uVar7,0,&DAT_00810000);
     }
     dVar37 = (double)GetGroundZNoWater(lVar20);

@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "game/update/moby1421.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/help.h"
 #include "game/hero.h"

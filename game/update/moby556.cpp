@@ -1332,7 +1332,7 @@ void UpdateMoby_556(MobyInstance *moby)
           *(float *)(puVar16 + 0x1e) = (float)(dVar50 * 7.0);
           *(float *)((int)puVar16 + 0xf4) = (float)(dVar46 * 7.0);
           if (0 < iVar22) {
-            puVar31 = &DAT_00a14a00;
+            puVar31 = &g_CollMobyHits;
             iVar33 = 0;
             dVar46 = 1.0;
             do {

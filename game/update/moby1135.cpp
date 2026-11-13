@@ -2,6 +2,7 @@
 // STATUS: NOT STARTED (raw Ghidra output)
 // 8 functions, 0x1da838-0x1db910
 #include "game/update/moby1135.h"
+#include "game/collproc.h"
 #include "game/debug.h"
 #include "game/draw.h"
 #include "game/hero.h"

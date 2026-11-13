@@ -3,6 +3,7 @@
 // 5 functions, 0x26d8d8-0x26e290
 #include "game/update/moby1403.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/hud.h"

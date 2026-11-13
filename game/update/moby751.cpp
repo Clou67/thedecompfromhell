@@ -3,6 +3,7 @@
 // 4 functions, 0x44cddc-0x44d980
 #include "game/update/moby751.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/mesh.h"

@@ -3,6 +3,7 @@
 // 7 functions, 0x3426d8-0x3431c8
 #include "game/update/moby327.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/hud.h"

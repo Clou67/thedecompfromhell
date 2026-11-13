@@ -165,7 +165,7 @@ LAB_0022990c:
     uVar9 = CollMobySphere(uVar11,lVar8);
     MB_DamageMobyList
               (uVar10,uVar10,uVar10,lVar5,2,*(undefined8 *)((int)this_ + 0x10),
-               *(undefined8 *)((int)this_ + 0x18),&DAT_00a14a00,uVar9,0,&DAT_00830001);
+               *(undefined8 *)((int)this_ + 0x18),&g_CollMobyHits,uVar9,0,&DAT_00830001);
     DeleteMoby((MobyInstance *)this_);
   }
   return;

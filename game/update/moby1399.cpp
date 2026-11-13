@@ -3,6 +3,7 @@
 // 2 functions, 0x26a978-0x26ad9c
 // shared update function UpdateMoby_{1399_1451_1899}; registered for oClasses 1399, 1451, 1899
 #include "game/update/moby1399.h"
+#include "game/collproc.h"
 #include "game/debug.h"
 #include "game/freeze.h"
 #include "game/hero.h"

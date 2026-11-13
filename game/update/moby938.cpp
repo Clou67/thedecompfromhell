@@ -1098,7 +1098,7 @@ LAB_004c3b14:
       puVar13[0xf] = 2;
       puVar13[0x10] = 1;
       MB_DamageMobyList
-                (dVar34,dVar34,dVar34,lVar24,2,puVar13[8],puVar13[9],&DAT_00a14a00,uVar21,0,
+                (dVar34,dVar34,dVar34,lVar24,2,puVar13[8],puVar13[9],&g_CollMobyHits,uVar21,0,
                  &DAT_00810001);
       MB_SpawnExplosionSparks(0x3fe0000000000000,0x402a000000000000,lVar24,lVar24 + 0x10);
       DeleteMoby(moby);

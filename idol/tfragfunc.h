@@ -1,7 +1,6 @@
 #pragma once
 // idol/tfragfunc.h
 #include "types.h"
-#include "game/mobyfunc.h"
 
 // ---- types
 struct Tfrag {

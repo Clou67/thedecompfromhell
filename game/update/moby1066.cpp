@@ -3,6 +3,7 @@
 // 5 functions, 0x1ad26c-0x1ae034
 #include "game/update/moby1066.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/hud.h"

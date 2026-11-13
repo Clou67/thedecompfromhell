@@ -3,6 +3,7 @@
 // 4 functions, 0x44f348-0x44fe94
 #include "game/update/moby760.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"

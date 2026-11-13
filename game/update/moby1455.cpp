@@ -3,6 +3,7 @@
 // 5 functions, 0x284b14-0x286128
 #include "game/update/moby1455.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/freeze.h"
 #include "game/help.h"
 #include "game/hero.h"

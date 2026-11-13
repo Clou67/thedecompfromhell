@@ -2,6 +2,7 @@
 // STATUS: NOT STARTED (raw Ghidra output)
 // 4 functions, 0x267300-0x267994
 #include "game/update/moby1388.h"
+#include "game/collproc.h"
 #include "game/freeze.h"
 #include "game/hero.h"
 #include "game/hud.h"

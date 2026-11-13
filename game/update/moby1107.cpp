@@ -3,6 +3,7 @@
 // 3 functions, 0x1c90b0-0x1c9524
 #include "game/update/moby1107.h"
 #include "game/boot.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/hud.h"

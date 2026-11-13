@@ -3,6 +3,7 @@
 // 4 functions, 0x45aa28-0x45c4b8
 #include "game/update/moby786.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/freeze.h"
 #include "game/help.h"

@@ -3,6 +3,7 @@
 // 2 functions, 0x478e68-0x479528
 #include "game/update/moby825.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/hud.h"

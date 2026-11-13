@@ -3,6 +3,7 @@
 // 1 functions, 0x4091a0-0x409e18
 #include "game/update/moby666.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"

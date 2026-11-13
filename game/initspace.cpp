@@ -5,6 +5,7 @@
 // No section header of its own; split from initsky.cpp by its contents.
 #include <math.h>
 #include "game/initspace.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/hud.h"

@@ -4,6 +4,7 @@
 // shared update function UpdateMoby_{674_677_680}; registered for oClasses 674, 677, 680
 #include <stdio.h>
 #include "game/update/moby674.h"
+#include "game/collproc.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"

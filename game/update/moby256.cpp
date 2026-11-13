@@ -868,7 +868,7 @@ LAB_000edea4:
       uVar10.piece<0,4>() = (moby->pos).z;
       uVar10.piece<4,4>() = (moby->pos).w;
       MB_DamageMobyList
-                (dVar33,dVar38,dVar38,lVar11,3,uVar41,uVar10,&DAT_00a14a00,uVar12,lVar13,
+                (dVar33,dVar38,dVar38,lVar11,3,uVar41,uVar10,&g_CollMobyHits,uVar12,lVar13,
                  &DAT_00810000);
       local_310 = 0;
       local_2f0 = (float)dVar26;

@@ -3,6 +3,7 @@
 // 3 functions, 0x481ca8-0x48243c
 #include "game/update/moby841.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/debug.h"
 #include "game/draw.h"
 #include "game/hero.h"

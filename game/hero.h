@@ -1,6 +1,7 @@
 #pragma once
 // game/hero.h
 #include "types.h"
+#include "game/collproc.h"
 
 // ---- types
 struct HeroCollCell { /* Hero-only collision cell (camera passes through). Coords are u16 = world*64. data -> HeroCollVert[vertCount] then HeroCollTri-style 4-byte index records[triCount]. data is relocated to an absolute pointer by ParseColl. */
@@ -999,7 +1000,6 @@ extern undefined2 DAT_00a0fd86; /* 0xa0fd86 */
 extern undefined4 DAT_00a0fd88; /* 0xa0fd88 */
 extern undefined4 DAT_00a10548; /* 0xa10548 */
 extern undefined4 DAT_00a1054c; /* 0xa1054c */
-extern undefined4 DAT_00a14a00; /* 0xa14a00 */
 extern undefined4 DAT_00a15f34; /* 0xa15f34 */
 extern undefined4 DAT_00a1a840; /* 0xa1a840 */
 extern undefined4 DAT_00a1a844; /* 0xa1a844 */
@@ -1066,6 +1066,7 @@ extern pointer32 PTR_TrickHud_Update_00705850; /* 0x705850 */
 extern pointer32 PTR_UpdateQuickSelect_007057c0; /* 0x7057c0 */
 extern Items UnlockableItems; /* 0x96c140 */
 extern float animationSpeed; /* 0x71f410 */
+extern MobyInstance *g_CollMobyHits[256]; /* 0xa14a00: the mobys CollMobySphere/CollHeroSphere hit, NULL ended (the real length is unknown) */ /* type set in global_types.tsv */
 extern undefined4 g_CurrentWeapon; /* 0x96ad98 */
 extern undefined4 g_DustHoverState; /* 0x96a0f8 */
 extern float g_FrameTime; /* 0x71f414 */

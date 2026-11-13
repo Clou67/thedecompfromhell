@@ -4,6 +4,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include "game/update/moby428.h"
+#include "game/collproc.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"

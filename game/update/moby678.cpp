@@ -2,6 +2,7 @@
 // STATUS: NOT STARTED (raw Ghidra output)
 // 3 functions, 0x40f878-0x40fabc
 #include "game/update/moby678.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/mesh.h"
 #include "game/mobyfunc.h"

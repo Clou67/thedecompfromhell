@@ -3,6 +3,7 @@
 // 4 functions, 0x1951c0-0x195a3c
 // shared update function UpdateMoby_{104_106_1129}; registered for oClasses 104, 106, 1129
 #include "game/update/moby104.h"
+#include "game/collproc.h"
 #include "game/debug.h"
 #include "game/hero.h"
 #include "game/map.h"

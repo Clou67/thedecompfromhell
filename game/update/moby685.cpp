@@ -3,6 +3,7 @@
 // 8 functions, 0x4122c8-0x414594
 #include "game/update/moby685.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/debug.h"
 #include "game/draw.h"
 #include "game/hero.h"

@@ -5,6 +5,7 @@
 #include <math.h>
 #include <stdio.h>
 #include "game/update/moby1182.h"
+#include "game/collproc.h"
 #include "game/hero.h"
 #include "game/map.h"
 #include "game/mobyfunc.h"

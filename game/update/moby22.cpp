@@ -3,6 +3,7 @@
 // 1 functions, 0x2f7690-0x2f7c68
 #include "game/update/moby22.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/debug.h"
 #include "game/freeze.h"
 #include "game/hero.h"

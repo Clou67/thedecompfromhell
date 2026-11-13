@@ -3,6 +3,7 @@
 // 4 functions, 0x23dccc-0x23e4b0
 #include <stdio.h>
 #include "game/update/moby1290.h"
+#include "game/collproc.h"
 #include "game/debug.h"
 #include "game/freeze.h"
 #include "game/help.h"

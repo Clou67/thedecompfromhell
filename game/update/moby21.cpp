@@ -4,6 +4,7 @@
 // shared update function UpdateMoby_{21_244}; registered for oClasses 21, 244
 #include "game/update/moby21.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"

@@ -3,6 +3,7 @@
 // 2 functions, 0x47e760-0x47ebac
 #include "game/update/moby830.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/debug.h"
 #include "game/hero.h"
 #include "game/loaders.h"

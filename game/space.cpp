@@ -1974,7 +1974,7 @@ void SpaceTransition_LoadWad(void)
     InitMemSlots();
     g_GsRamAlloc = GSmem.base;
     g_GsRamBase = GSmem.base;
-    FastMemSet(&MobyClassRef, 0x87654321, 0x10);
+    FastMemSet(g_CollJointCacheKeys, 0x87654321, 0x10);
     FastMemSet(&MobyClassLookup, -1, 0x800);
     FastMemSet(&MobyTexLookup, -1, 0xe00);
     FastMemSet(&MobyMipDists, 0, 0xe0);

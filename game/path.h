@@ -2,7 +2,6 @@
 // game/path.h
 #include "types.h"
 #include "game/camera.h"
-#include "game/mobyfunc.h"
 
 // ---- types
 struct ABGR {

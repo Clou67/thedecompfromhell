@@ -1352,8 +1352,8 @@ LAB_0042c880:
   }
   uVar24 = CollMobySphere((double)fVar1,&local_190,puVar23,0,g_heroMobyPtr,&local_130);
   if (((int)uVar24 != 0) &&
-     (((DAT_00a14a00 == 0 || (*(int *)(DAT_00a14a00 + 0x24) == 0)) ||
-      (sVar19 = *(short *)(*(int *)(DAT_00a14a00 + 0x24) + 0x46), uVar24 = (ulonglong)sVar19,
+     (((g_CollMobyHits == 0 || (*(int *)(g_CollMobyHits + 0x24) == 0)) ||
+      (sVar19 = *(short *)(*(int *)(g_CollMobyHits + 0x24) + 0x46), uVar24 = (ulonglong)sVar19,
       sVar19 != 0x12)))) {
     uVar24 = MB_GetPvarsIfMobyHasThem(g_CollOutput.pMoby);
     if (((int)uVar24 != 0) &&

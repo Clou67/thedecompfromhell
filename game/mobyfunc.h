@@ -1,37 +1,9 @@
 #pragma once
 // game/mobyfunc.h
 #include "types.h"
+#include "game/collproc.h"
 
 // ---- types
-struct BSphere {
-    f32 x;
-    f32 y;
-    f32 z;
-    f32 rad;
-};
-
-typedef char s8;
-
-typedef enum MobyModeBit {
-    NONE=0,
-    DISABLED=1,
-    NO_UPDATE=2,
-    NO_POST_UPDATE=4,
-    TRANSPARENT=8,
-    HAS_GLOW=16,
-    HAS_SPECIAL_VARS=32,
-    UNK_40=64,
-    NO_DRAW=128,
-    LOCK_ROTATION=256,
-    DRAW_TRANSPARENT_WEIRD=512,
-    DRAW_SHADOW=1024,
-    DISABLE_Z_WRITE=2048,
-    CAN_BE_AUTO_TARGETED=4096,
-    HIDE_BACKFACES=8192,
-    CAN_BE_DAMAGED=16384,
-    MIRROR=32768
-} MobyModeBit;
-
 typedef enum MOBY_OCLASSES {
     RATCHET=0,
     BLARG_HEAVY_INTERCEPTOR_0008=8,
@@ -935,8 +907,16 @@ enum CollPrimType {
     COLLPRIM_CAPSULE  = 4,   /* between two joints */
 };
 typedef struct CollPrim {
-    u8 _pad00[3];
-    u8 type;                 /* 0x03  CollPrimType */
+    u8 collType;             /* 0x00  the type the collision queries switch on (0 and 4+ are
+                                      capsules there) */
+    u8 _pad01;
+    union {
+        s16 sets;            /* 0x02  bit 0: in the primSetB set, bit 1: in primSetA */
+        struct {
+            u8 _setsHi;
+            u8 type;         /* 0x03  CollPrimType, as MB_GetCollPrimWorld reads it */
+        };
+    };
     union {
         float length;        /* 0x04  COLLPRIM_PILL */
         int joint;           /* 0x04  COLLPRIM_JOINT */
@@ -959,6 +939,9 @@ struct IceSheet {
     float *vertexData;
     int32_t meshParamB;
     int32_t vertexCount;
+};
+
+struct Moby {
 };
 
 struct Moby1267Vars { /* pVars of oClass 1267 (mounted turret used by UpdateMoby_1267). Offsets from PS3 code; no DL equivalent. */
@@ -1085,6 +1068,12 @@ struct MobyCollHeader { /* MobyInstance.collision (+0x94). +0x10: CollPrim[primB
     int primBytes;
     int triBytes;
     int vertBytes;
+};
+
+struct MobyGridCell { /* Moby broadphase grid cell (64x64, XY, 16 world units). listStart in 32-byte blocks of g_MobyGridLists (16 moby indices per block). */
+    short listStart;
+    char count;
+    char blocks;
 };
 
 struct MobyVTable {

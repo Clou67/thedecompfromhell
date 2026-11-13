@@ -1124,7 +1124,7 @@ LAB_002941a8:
       uVar41.piece<0,4>() = (moby->pos).z;
       uVar41.piece<4,4>() = (moby->pos).w;
       MB_DamageMobyList
-                (dVar21,dVar37,dVar37,lVar8,3,uVar28,uVar41,&DAT_00a14a00,uVar10,lVar17,
+                (dVar21,dVar37,dVar37,lVar8,3,uVar28,uVar41,&g_CollMobyHits,uVar10,lVar17,
                  &DAT_00830000);
       local_380 = -local_4b8;
       local_388 = -local_4bc;

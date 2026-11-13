@@ -3,6 +3,7 @@
 // 6 functions, 0x27f6fc-0x27ffec
 // shared update function UpdateMoby_{1443_1890}; registered for oClasses 1443, 1890
 #include "game/update/moby1443.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/hud.h"

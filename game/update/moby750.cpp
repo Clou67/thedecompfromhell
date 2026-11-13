@@ -3,6 +3,7 @@
 // 4 functions, 0x44a708-0x44cddc
 #include "game/update/moby750.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/freeze.h"
 #include "game/hero.h"
 #include "game/memcard.h"

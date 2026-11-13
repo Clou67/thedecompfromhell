@@ -4,6 +4,7 @@
 // shared update function UpdateMoby_{196_197_1958}; registered for oClasses 196, 197, 1958
 #include <math.h>
 #include "game/update/moby196.h"
+#include "game/collproc.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"

@@ -3,6 +3,7 @@
 // 3 functions, 0x18f410-0x1907cc
 #include "game/update/moby1028.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/debug.h"
 #include "game/freeze.h"
 #include "game/help.h"

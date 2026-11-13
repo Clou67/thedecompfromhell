@@ -3,6 +3,7 @@
 // 4 functions, 0x265a10-0x2666e8
 #include "game/update/moby1380.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"

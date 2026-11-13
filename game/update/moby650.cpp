@@ -2,6 +2,7 @@
 // STATUS: NOT STARTED (raw Ghidra output)
 // 3 functions, 0x401de4-0x401f84
 #include "game/update/moby650.h"
+#include "game/collproc.h"
 #include "game/hero.h"
 #include "game/map.h"
 #include "game/mobyfunc.h"

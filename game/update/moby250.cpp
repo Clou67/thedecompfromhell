@@ -3,6 +3,7 @@
 // 1 functions, 0x316950-0x316b90
 #include "game/update/moby250.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"

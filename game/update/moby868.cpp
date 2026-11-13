@@ -4,6 +4,7 @@
 // shared update function UpdateMoby_{868_905_928}; registered for oClasses 868, 905, 928
 #include "game/update/moby868.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"

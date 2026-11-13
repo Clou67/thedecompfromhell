@@ -3,6 +3,7 @@
 // 3 functions, 0x1bc580-0x1bc824
 // shared update function UpdateMoby_a_lot_18; registered for oClasses 1091, 1092, 1093, 1094, 1095, 1096, 1097, 1098, 1103
 #include "game/update/moby1091.h"
+#include "game/collproc.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"

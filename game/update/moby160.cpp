@@ -1024,7 +1024,7 @@ LAB_002a3378:
     uVar28.piece<0,4>() = (moby->pos).z;
     uVar28.piece<4,4>() = (moby->pos).w;
     MB_DamageMobyList
-              (dVar40,0x3fd0000000000000,0x3ff8000000000000,lVar11,1,uVar31,uVar28,&DAT_00a14a00,
+              (dVar40,0x3fd0000000000000,0x3ff8000000000000,lVar11,1,uVar31,uVar28,&g_CollMobyHits,
                uVar10,0,&DAT_00810001);
   }
   lVar19 = lVar11 + 0x10;

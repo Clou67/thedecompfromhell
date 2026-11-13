@@ -1,7 +1,6 @@
 #pragma once
 // game/loaders.h
 #include "types.h"
-#include "game/mobyfunc.h"
 
 // ---- types
 struct EffectTexHeader { /* Pre-baked RSX texture registers; words 0-6 go to methods 0x1A00+unit*0x20 (OFFSET,FORMAT,ADDRESS,CONTROL0,CONTROL1,FILTER,IMAGE_RECT), word 7 to 0x1840+unit*4 (CONTROL3) */
@@ -77,6 +76,7 @@ extern int g_GadgetModels[24]; /* 0xa4d5a0: the gadget classes in the engine fil
 extern int g_GadgetOClasses[24]; /* 0xa4d540 */ /* type set in global_types.tsv */
 extern short g_GadgetSoundIds[][16]; /* 0xa4d7e0: sound ids of gadgets whose class is loaded later */ /* type set in global_types.tsv */
 extern int g_GsRamAlloc; /* 0x966ad0: next free GS memory, bytes */ /* type set in global_types.tsv */
+extern HeroCollHeader * g_HeroCollision; /* 0xa15c00 */
 extern u32 g_IopGameplay; /* 0x964568: where the gameplay file goes in IOP memory */ /* type set in global_types.tsv */
 extern u32 g_IopSpaceships; /* 0x96456c: where the spaceships file goes */ /* type set in global_types.tsv */
 extern undefined4 g_IsPal; /* 0x966ae8 */

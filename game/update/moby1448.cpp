@@ -3,6 +3,7 @@
 // 9 functions, 0x280de0-0x283428
 #include "game/update/moby1448.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"

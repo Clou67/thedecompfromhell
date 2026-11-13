@@ -962,9 +962,9 @@ u8 *LoadGameplayFile(int reload)
     FastMemSet(&g_AnimLayerPool, 0, 0x180);
     seedRand(1234);
     SetNtscPalTiming();
-    g_CollOutput.padding[0] = (int)&g_CollMobyJointCache;
-    g_CollOutput.padding[1] = (int)&MobyClassRef;
-    g_CollOutput.padding[2] = 0;
+    g_CollOutput.jointCache = &g_CollMobyJointCache[0][0];
+    g_CollOutput.jointCacheKeys = g_CollJointCacheKeys;
+    g_CollOutput.jointCacheNext = 0;
     g_CollOutput.collCount = 0;
     g_CollOutput.damageNext = 0;
     FastMemSetZero(g_MobyGrid, 0x10000);

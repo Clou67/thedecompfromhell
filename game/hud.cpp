@@ -5,6 +5,7 @@
 #include <string.h>
 #include <time.h>
 #include "game/hud.h"
+#include "game/collproc.h"
 #include "game/crt0.h"
 #include "game/debug.h"
 #include "game/draw.h"

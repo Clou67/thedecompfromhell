@@ -2,6 +2,7 @@
 // STATUS: NOT STARTED (raw Ghidra output)
 // 1 functions, 0x2bc4b8-0x2bc748
 #include "game/update/moby1812.h"
+#include "game/collproc.h"
 #include "game/freeze.h"
 #include "game/initspace.h"
 #include "game/mobyfunc.h"

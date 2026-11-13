@@ -3,6 +3,7 @@
 // 4 functions, 0x47ffac-0x4804b4
 #include "game/update/moby832.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/mesh.h"

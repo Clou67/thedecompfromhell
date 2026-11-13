@@ -1,7 +1,6 @@
 #pragma once
 // game/tieproc.h
 #include "types.h"
-#include "game/mobyfunc.h"
 
 // ---- types
 struct TieInstance {           /* 0x70 */

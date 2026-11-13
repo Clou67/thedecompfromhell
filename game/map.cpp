@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "game/map.h"
+#include "game/collproc.h"
 #include "game/debug.h"
 #include "game/draw.h"
 #include "game/help.h"

@@ -1,9 +1,9 @@
-// sdk/xUnk5.cpp -- reconstructed from NPEA00385 EBOOT
-// STATUS: NOT STARTED (raw Ghidra output)
-// 54 functions, 0x5e6a10-0x5e7e0c
+#include <math.h>
 #include <string.h>
 #include "sdk/xUnk5.h"
 #include "game/boot.h"
+#include "game/collproc.h"
+#include "game/mobyfunc.h"
 #include "idol/mathfunc.h"
 #include "sdk/cUnk.h"
 #include "sdk/cell.h"
@@ -13,6 +13,7 @@
 #include "sdk/libcgc/libcgc_cell_localize.h"
 #include "sdk/mUnk3.h"
 #include "sdk/xUnk.h"
+// MERGE (4 of 54 functions cleaned; the rest are generated)
 
 // 0x05e6a10 (0x58 bytes)
 undefined4 FUN_005e6a10(undefined4 param_1)
@@ -731,119 +732,50 @@ void FUN_005e799c(int param_1,longlong param_2,longlong param_3,undefined8 param
 
 
 // 0x05e7a78 (0x60 bytes)
-void FUN_005e7a78(undefined4 *param_1)
-
+/* a hit with nothing found yet (t = 1) */
+void CollHit_Init(CollHit *hit)
 {
-  param_1[3] = 0;
-  *param_1 = 0;
-  param_1[1] = 0;
-  param_1[2] = 0x3f800000;
-  param_1[4] = 0;
-  param_1[5] = 0;
-  param_1[6] = 0;
-  param_1[7] = 0;
-  param_1[8] = 0;
-  param_1[9] = 0;
-  param_1[10] = 0;
-  param_1[0xb] = 0;
-  param_1[0xc] = 0;
-  param_1[0xd] = 0;
-  param_1[0xe] = 0;
-  param_1[0xf] = 0;
-  param_1[0x10] = 0;
-  param_1[0x11] = 0;
-  return;
+    memset(hit, 0, sizeof(*hit));
+    hit->t = 1.0f;
 }
 
 
 // 0x05e7ad8 (0x78 bytes)
-void FUN_005e7ad8(double param_1,float *param_2,float *param_3)
-
+/* out = in (3x3) * scale */
+void Mtx33_Scale(float scale, float *out, float *in)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  float fVar7;
-  float fVar8;
-  
-  fVar1 = param_3[1];
-  fVar2 = param_3[2];
-  fVar3 = param_3[3];
-  fVar4 = param_3[4];
-  fVar5 = param_3[5];
-  fVar6 = param_3[6];
-  fVar7 = param_3[7];
-  fVar8 = param_3[8];
-  *param_2 = (float)((double)*param_3 * param_1);
-  param_2[1] = (float)((double)fVar1 * param_1);
-  param_2[2] = (float)((double)fVar2 * param_1);
-  param_2[3] = (float)((double)fVar3 * param_1);
-  param_2[4] = (float)((double)fVar4 * param_1);
-  param_2[5] = (float)((double)fVar5 * param_1);
-  param_2[6] = (float)((double)fVar6 * param_1);
-  param_2[7] = (float)((double)fVar7 * param_1);
-  param_2[8] = (float)((double)fVar8 * param_1);
-  return;
+    for (int i = 0; i < 9; i++) {
+        out[i] = in[i] * scale;
+    }
 }
 
 
 // 0x05e7b50 (0xa0 bytes)
-void FUN_005e7b50(float *param_1,float *param_2,undefined8 param_3,undefined8 param_4)
-
+/* out = mtx (3x3, column per 3 floats) * v */
+void Mtx33_MulVec3(float *out, float *mtx, Vec3 v)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  float fVar7;
-  float fStack00000040;
-  float fStack00000044;
-  
-  fVar7 = (float)((ulonglong)param_4 >> 0x20);
-  fStack00000040 = (float)((ulonglong)param_3 >> 0x20);
-  fStack00000044 = (float)param_3;
-  fVar1 = param_2[1];
-  fVar2 = param_2[4];
-  fVar3 = param_2[2];
-  fVar4 = param_2[5];
-  fVar5 = param_2[7];
-  fVar6 = param_2[8];
-  *param_1 = *param_2 * fStack00000040 + param_2[3] * fStack00000044 + param_2[6] * fVar7;
-  param_1[1] = fVar1 * fStack00000040 + fVar2 * fStack00000044 + fVar5 * fVar7;
-  param_1[2] = fVar3 * fStack00000040 + fVar4 * fStack00000044 + fVar6 * fVar7;
-  return;
+    out[0] = mtx[0] * v.x + mtx[3] * v.y + mtx[6] * v.z;
+    out[1] = mtx[1] * v.x + mtx[4] * v.y + mtx[7] * v.z;
+    out[2] = mtx[2] * v.x + mtx[5] * v.y + mtx[8] * v.z;
 }
 
 
 // 0x05e7bf8 (0xa0 bytes)
-void FUN_005e7bf8(float *param_1,undefined8 param_2,undefined8 param_3)
-
+/* out = v made unit length (v itself when it is zero) */
+void Vec3_Normalize(float *out, Vec3 v)
 {
-  float fVar1;
-  float fVar2;
-  float fStack00000038;
-  float fStack0000003c;
-  
-  fVar1 = (float)((ulonglong)param_3 >> 0x20);
-  fStack00000038 = (float)((ulonglong)param_2 >> 0x20);
-  fStack0000003c = (float)param_2;
-  fVar2 = SQRT(fStack00000038 * fStack00000038 + fStack0000003c * fStack0000003c + fVar1 * fVar1);
-  if (fVar2 == 0.0) {
-    *param_1 = fStack00000038;
-    param_1[1] = fStack0000003c;
-    param_1[2] = fVar1;
-  }
-  else {
-    *param_1 = fStack00000038 / fVar2;
-    param_1[1] = fStack0000003c / fVar2;
-    param_1[2] = fVar1 / fVar2;
-  }
-  return;
+    float length = sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
+
+    if (length == 0.0f) {
+        out[0] = v.x;
+        out[1] = v.y;
+        out[2] = v.z;
+    }
+    else {
+        out[0] = v.x / length;
+        out[1] = v.y / length;
+        out[2] = v.z / length;
+    }
 }
 
 

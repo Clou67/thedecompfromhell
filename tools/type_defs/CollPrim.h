@@ -8,8 +8,16 @@ enum CollPrimType {
     COLLPRIM_CAPSULE  = 4,   /* between two joints */
 };
 typedef struct CollPrim {
-    u8 _pad00[3];
-    u8 type;                 /* 0x03  CollPrimType */
+    u8 collType;             /* 0x00  the type the collision queries switch on (0 and 4+ are
+                                      capsules there) */
+    u8 _pad01;
+    union {
+        s16 sets;            /* 0x02  bit 0: in the primSetB set, bit 1: in primSetA */
+        struct {
+            u8 _setsHi;
+            u8 type;         /* 0x03  CollPrimType, as MB_GetCollPrimWorld reads it */
+        };
+    };
     union {
         float length;        /* 0x04  COLLPRIM_PILL */
         int joint;           /* 0x04  COLLPRIM_JOINT */

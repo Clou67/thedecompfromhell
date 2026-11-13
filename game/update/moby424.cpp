@@ -3,11 +3,11 @@
 // 7 functions, 0x368c84-0x36a198
 #include "game/update/moby424.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/debug.h"
 #include "game/freeze.h"
 #include "game/help.h"
 #include "game/hero.h"
-#include "game/mesh.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/pad.h"

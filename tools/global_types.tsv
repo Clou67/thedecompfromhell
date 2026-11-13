@@ -417,3 +417,6 @@ g_DialogLine	u32 NAME /* 0xa15c10: that dialog's state, Dialog_Advance's second 
 g_SceneHideMoby	u32 NAME /* 0xa52c98: a moby disabled while a scene plays (set by the pause menu) */
 g_WalkStateAnim	int NAME[21] /* 0x73a850: the w_2legData.anims[] index each WALK_STATE_* plays (-1 none) */
 g_WalkAnimState	int NAME[13] /* 0x73a8a4: the WALK_STATE_* for each anims[] index (Walk_ResetLegState) */
+g_CollJointCacheKeys	CollJointCacheKey NAME[8] /* 0xa109c0 */
+g_CollMobyJointCache	u8 NAME[8][0x7fc] /* 0xa10a00: joint matrices of 8 mobys, for their collision prims */
+g_CollMobyHits	MobyInstance *NAME[256] /* 0xa14a00: the mobys CollMobySphere/CollHeroSphere hit, NULL ended (the real length is unknown) */

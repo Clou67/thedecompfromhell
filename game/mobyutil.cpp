@@ -19,7 +19,6 @@
 #include "game/loaders.h"
 #include "game/mUnk.h"
 #include "game/main.h"
-#include "game/mesh.h"
 #include "game/mission.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
@@ -10598,7 +10597,7 @@ int MB_UpdateKick(MobyInstance *pMoby,KickVars *kv)
                     ((double)(float)(dVar20 * 0.0010742187732830644),local_e0,&DAT_0010afe8,0x10,
                      lVar8,0);
   if (0 < iVar9) {
-    puVar13 = &DAT_00a14a00;
+    puVar13 = &g_CollMobyHits;
     dVar20 = 1.0;
     do {
       victim = (MobyInstance *)*puVar13;

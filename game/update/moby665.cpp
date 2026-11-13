@@ -3,6 +3,7 @@
 // 2 functions, 0x408ef8-0x409170
 #include "game/update/moby665.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/sound.h"

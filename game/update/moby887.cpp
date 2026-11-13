@@ -3,6 +3,7 @@
 // 3 functions, 0x4a2854-0x4a2b74
 #include <math.h>
 #include "game/update/moby887.h"
+#include "game/collproc.h"
 #include "game/debug.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"

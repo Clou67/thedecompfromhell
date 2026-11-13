@@ -3,6 +3,7 @@
 // 10 functions, 0x42de7c-0x42f948
 #include "game/update/moby712.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/debug.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"

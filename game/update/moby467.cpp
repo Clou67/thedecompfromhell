@@ -3,6 +3,7 @@
 // 2 functions, 0x3982d8-0x398524
 // shared update function UpdateMoby_{467_472}; registered for oClasses 467, 472
 #include "game/update/moby467.h"
+#include "game/collproc.h"
 #include "game/hero.h"
 #include "game/map.h"
 #include "game/mobyfunc.h"

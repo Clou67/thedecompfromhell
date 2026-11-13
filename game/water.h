@@ -2,7 +2,6 @@
 // game/water.h
 #include "types.h"
 #include "game/mesh.h"
-#include "game/mobyfunc.h"
 
 // ---- types
 struct OceanPlane {

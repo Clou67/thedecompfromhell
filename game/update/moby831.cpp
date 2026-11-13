@@ -3,6 +3,7 @@
 // 5 functions, 0x47ebac-0x47ffac
 #include "game/update/moby831.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/debug.h"
 #include "game/draw.h"
 #include "game/freeze.h"

@@ -3,6 +3,7 @@
 // 3 functions, 0x1d5168-0x1d5844
 #include <stdio.h>
 #include "game/update/moby1120.h"
+#include "game/collproc.h"
 #include "game/freeze.h"
 #include "game/hero.h"
 #include "game/hud.h"

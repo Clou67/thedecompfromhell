@@ -1090,7 +1090,7 @@ LAB_002cc0e0:
         uVar20.piece<0,4>() = (moby->pos).z;
         uVar20.piece<4,4>() = (moby->pos).w;
         MB_DamageMobyList
-                  (0x4008000000000000,dVar25,dVar25,lVar11,2,uVar22,uVar20,&DAT_00a14a00,uVar21,0,
+                  (0x4008000000000000,dVar25,dVar25,lVar11,2,uVar22,uVar20,&g_CollMobyHits,uVar21,0,
                    0x10000);
         if (g_goldWeaponsArray.gloveOfDoom == '\0') {
           PlayMobySound(0,0,moby);

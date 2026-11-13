@@ -3,6 +3,7 @@
 // 3 functions, 0x35511c-0x3552f0
 #include <stdio.h>
 #include "game/update/moby37.h"
+#include "game/collproc.h"
 #include "game/hero.h"
 #include "game/hud.h"
 #include "game/map.h"

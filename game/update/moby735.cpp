@@ -3,6 +3,7 @@
 // 1 functions, 0x437ec0-0x4381a0
 // shared update function UpdateMoby_{735_736}; registered for oClasses 735, 736
 #include "game/update/moby735.h"
+#include "game/collproc.h"
 #include "game/debug.h"
 #include "game/freeze.h"
 #include "game/hero.h"

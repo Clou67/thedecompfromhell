@@ -4,6 +4,7 @@
 // shared update function UpdateMoby_a_lot_16; registered for oClasses 1085, 1086, 1087, 1088, 1089
 #include "game/update/moby1085.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/hud.h"

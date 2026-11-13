@@ -290,7 +290,7 @@ ulonglong M405_00363df8(longlong param_1,undefined8 param_2)
     uVar12 = lVar1 + lVar8;
     uVar15 = uVar12 & 0xffffffff;
     *(ulonglong *)((int)puVar7 + (int)lVar8) = *puVar7;
-    pvVar13 = memcpy((void *)((int)uVar12 + 0x70),&DAT_00a14a00,
+    pvVar13 = memcpy((void *)((int)uVar12 + 0x70),&g_CollMobyHits,
                            (size_t)((uVar11 & 0xffffffff) << 2));
     uVar11 = (ulonglong)(int)pvVar13;
     iVar18 = 0;
@@ -480,7 +480,7 @@ ulonglong M405_00363df8(longlong param_1,undefined8 param_2)
             iVar17 = (int)uVar11;
             if (0 < iVar17) {
               uVar20 = 0x3ff0000000000000;
-              puVar14 = &DAT_00a14a00;
+              puVar14 = &g_CollMobyHits;
               do {
                 uVar11 = (ulonglong)*puVar14;
                 if (*puVar14 == uVar5) {

@@ -35,7 +35,7 @@ static inline float PathDist(Vec4 *a, Vec4 *b)
 
 static inline int PathCollLine(Vec4 *from, Vec4 *to, int flags, MobyInstance *ignore)
 {
-    return (int)CollLine(&from->x, &to->x, flags, (undefined8)ignore, 0);
+    return CollLine(&from->x, &to->x, flags, ignore, NULL);
 }
 
 /* the node after `node` going `dir` (+1 / -1) along a closed path */

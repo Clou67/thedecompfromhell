@@ -327,7 +327,7 @@ void UpdateMoby_1261(MobyInstance *moby)
     local_e8 = CONCAT44(fVar2 + 1.0,fVar3);
     MB_DamageMobyList
               ((double)DAT_007750ec,uVar18,uVar18,moby,&PTR_DAT_00770000,uVar7,local_e8,
-               &DAT_00a14a00,uVar8,0,&DAT_00830001);
+               &g_CollMobyHits,uVar8,0,&DAT_00830001);
     auVar21 = ZEXT416(0xffffffff);
     auVar22 = auVar21 | auVar21 << 0x20 | auVar21 << 0x40 | auVar21 << 0x60;
     auVar21 = ZEXT416(0xffffffff);

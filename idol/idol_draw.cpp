@@ -7980,7 +7980,7 @@ void FUN_004ff8dc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 // 0x04ff98c (0xc0 bytes)
 // strings: 0065f614: 'Post Break\n'
 
-int32_t FUN_004ff98c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+int32_t Idol_Break(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                     undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 
 {

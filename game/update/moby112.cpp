@@ -3,6 +3,7 @@
 // 5 functions, 0x1d4cb0-0x1d5148
 // shared update function UpdateMoby_{112_1192}; registered for oClasses 112, 1192
 #include "game/update/moby112.h"
+#include "game/collproc.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"

@@ -3,6 +3,7 @@
 // 3 functions, 0x3a372c-0x3a38c8
 // shared update function UpdateMoby_a_lot_23; registered for oClasses 492, 724, 725, 766, 767, 1781, 1782
 #include "game/update/moby492.h"
+#include "game/collproc.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"

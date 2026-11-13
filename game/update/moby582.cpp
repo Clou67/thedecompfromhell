@@ -3,6 +3,7 @@
 // 9 functions, 0x3d0b20-0x3d14d8
 #include "game/update/moby582.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/hero.h"
 #include "game/loaders.h"
 #include "game/mobyfunc.h"

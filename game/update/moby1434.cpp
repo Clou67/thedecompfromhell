@@ -3,6 +3,7 @@
 // 1 functions, 0x27c5f8-0x27c750
 // shared update function UpdateMoby_{1434_1435}; registered for oClasses 1434, 1435
 #include "game/update/moby1434.h"
+#include "game/collproc.h"
 #include "game/freeze.h"
 #include "game/initspace.h"
 #include "game/mobyfunc.h"

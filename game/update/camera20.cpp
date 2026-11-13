@@ -4,6 +4,7 @@
 #include "game/update/camera20.h"
 #include "game/bloaders.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"

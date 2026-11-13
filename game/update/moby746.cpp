@@ -3,6 +3,7 @@
 // 2 functions, 0x445354-0x445710
 #include "game/update/moby746.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/debug.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"

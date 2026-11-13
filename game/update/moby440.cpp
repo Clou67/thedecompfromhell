@@ -4,6 +4,7 @@
 #include <math.h>
 #include "game/update/moby440.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/debug.h"
 #include "game/draw.h"
 #include "game/freeze.h"

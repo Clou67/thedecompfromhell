@@ -3,6 +3,7 @@
 // 5 functions, 0x254604-0x254e90
 #include "game/update/moby1349.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/help.h"
 #include "game/hero.h"
 #include "game/map.h"

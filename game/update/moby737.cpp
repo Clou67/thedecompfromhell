@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include "game/update/moby737.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/freeze.h"
 #include "game/hero.h"

@@ -3,6 +3,7 @@
 // 12 functions, 0x39294-0x3a810
 #include "game/update/camera13.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"

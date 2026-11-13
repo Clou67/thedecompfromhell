@@ -3,6 +3,7 @@
 // 3 functions, 0x411198-0x4122a8
 #include "game/update/moby684.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/freeze.h"
 #include "game/hero.h"

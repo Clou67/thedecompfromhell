@@ -9478,7 +9478,7 @@ void UpdatePart_54(void *this_,PartInstance *part)
     MB_DamageMobyList
               (0x4000000000000000,0x3ff0000000000000,0x3ff0000000000000,
                *(undefined4 *)((int)this_ + 0x34),2,*(undefined8 *)((int)this_ + 0x10),
-               *(undefined8 *)((int)this_ + 0x18),&DAT_00a14a00,uVar3,0,&DAT_00810001);
+               *(undefined8 *)((int)this_ + 0x18),&g_CollMobyHits,uVar3,0,&DAT_00810001);
   }
   else {
     DeletePart(lVar2);

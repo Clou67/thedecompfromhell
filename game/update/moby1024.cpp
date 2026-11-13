@@ -4,6 +4,7 @@
 // shared update function UpdateMoby_{1024_1302}; registered for oClasses 1024, 1302
 #include "game/update/moby1024.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/debug.h"
 #include "game/draw.h"
 #include "game/hero.h"

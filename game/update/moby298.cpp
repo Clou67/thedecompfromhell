@@ -3,6 +3,7 @@
 // 2 functions, 0x3361b0-0x336fa4
 #include "game/update/moby298.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/debug.h"
 #include "game/freeze.h"
 #include "game/help.h"

@@ -3,6 +3,7 @@
 // 4 functions, 0x180984-0x18150c
 #include "game/update/moby100.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"

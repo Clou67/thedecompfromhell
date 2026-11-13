@@ -1231,7 +1231,7 @@ u32 walk_Update(float speed, float angle, float accel, MobyInstance *moby, w_2le
 
         /* flags 4, ignoring the moby itself (the binary leaves the 4th and 5th arguments unset) */
         for (int i = 0; i < 8; i++) {
-            if (CollPill(radius, length, &center.x, 0, 0, 4, (ulonglong)(uintptr_t)moby) == 0) {
+            if (CollPill(radius, length, &center.x, 0, 0, 4, moby) == 0) {
                 break;
             }
 

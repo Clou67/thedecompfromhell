@@ -59,7 +59,7 @@ static inline float SoundDistToCamera(float *pos)
 
 static inline int SoundCollLine(float *from, float *to, MobyInstance *ignore)
 {
-    return (int)CollLine(from, to, SOUND_COLL_FLAGS, (undefined8)ignore, 0);
+    return (int)CollLine(from, to, SOUND_COLL_FLAGS, ignore, NULL);
 }
 
 /* the volume a blocked line-of-sight count leaves: full up to half blocked, then down to 0 */

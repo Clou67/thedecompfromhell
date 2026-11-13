@@ -3,6 +3,7 @@
 // 3 functions, 0x3358c8-0x336144
 // shared update function UpdateMoby_{296_297_652_653}; registered for oClasses 296, 297, 652, 653
 #include "game/update/moby296.h"
+#include "game/collproc.h"
 #include "game/freeze.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"

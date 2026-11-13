@@ -3,6 +3,7 @@
 // 6 functions, 0x4c84b4-0x4caa88
 #include "game/update/moby983.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"

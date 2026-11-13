@@ -3,6 +3,7 @@
 // 2 functions, 0x2ba398-0x2bab80
 #include "game/update/moby180.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"

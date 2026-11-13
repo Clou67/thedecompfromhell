@@ -399,7 +399,7 @@ void UpdateMoby_1523_GC_Blueball(MobyInstance *moby)
     uVar10.piece<4,4>() = (moby->pos).w;
     MB_DamageMobyList
               (0x4034000000000000,0x3ff0000000000000,0x3ff0000000000000,lVar11,2,uVar29,uVar10,
-               &DAT_00a14a00,uVar14,0,0x8b0000);
+               &g_CollMobyHits,uVar14,0,0x8b0000);
     dVar37 = (double)(float)(dVar26 * dVar32);
     uVar29 = 0x4109a28000000000;
     dVar32 = (double)(float)(dVar37 * 210000.0);

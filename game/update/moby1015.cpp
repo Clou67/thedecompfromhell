@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include "game/update/moby1015.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/hero.h"
 #include "game/map.h"
 #include "game/mobyfunc.h"

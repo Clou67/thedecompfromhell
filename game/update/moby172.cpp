@@ -974,7 +974,7 @@ void UpdateMoby_172(MobyInstance *moby)
             puVar12[0xf] = 3;
             puVar12[0x10] = 2;
             MB_DamageMobyList
-                      (uVar30,uVar32,uVar32,lVar14,3,puVar12[8],puVar12[9],&DAT_00a14a00,uVar34,0,
+                      (uVar30,uVar32,uVar32,lVar14,3,puVar12[8],puVar12[9],&g_CollMobyHits,uVar34,0,
                        &DAT_00830000);
           }
           fVar2 = DAT_0071f408;

@@ -1259,7 +1259,7 @@ void UpdateMoby_294(MobyInstance *moby)
           *(undefined4 *)(puVar16 + 0x13) = uVar20;
           *(undefined4 *)((int)puVar16 + 0x9c) = uVar27;
           if (0 < iVar25) {
-            puVar33 = &DAT_00a14a00;
+            puVar33 = &g_CollMobyHits;
             dVar39 = 0.699999988079071;
             dVar38 = 1.0;
             do {

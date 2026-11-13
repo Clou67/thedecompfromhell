@@ -90,3 +90,10 @@ CreditsState	game/update
 w_2legAnim	game/walk
 w_legData	game/walk
 w_2legData	game/walk
+CollOutput	game/collproc
+CollJointCacheKey	game/collproc
+CollHit	game/collproc
+CollBox	game/collproc
+CollRot	game/collproc
+CollDamageIn	game/collproc
+CollCellStep	game/collproc

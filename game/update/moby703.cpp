@@ -3,6 +3,7 @@
 // 3 functions, 0x429228-0x429654
 // shared update function UpdateMoby_{703_715}; registered for oClasses 703, 715
 #include "game/update/moby703.h"
+#include "game/collproc.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"

@@ -6,6 +6,7 @@
 #include "game/pause.h"
 #include "game/boot.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/debug.h"
 #include "game/draw.h"
 #include "game/freeze.h"

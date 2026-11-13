@@ -4,6 +4,7 @@
 // shared update function UpdateMoby_a_lot_2; registered for oClasses 902, 941, 942, 943, 944, 948, 949, 950, 951, 952, 953, 954, 955, 956, 957, 958, 959, 960, 961, 962, 963, 964, 965, 966, 967, 968, 969, 970, 971, 972, 973, 974, 975, 976, 977
 #include "game/update/moby902.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/mesh.h"

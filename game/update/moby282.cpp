@@ -3,6 +3,7 @@
 // 3 functions, 0x32ca80-0x32dac4
 #include "game/update/moby282.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/freeze.h"
 #include "game/hero.h"
 #include "game/map.h"

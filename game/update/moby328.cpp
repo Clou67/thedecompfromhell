@@ -3,6 +3,7 @@
 // 3 functions, 0x3431c8-0x344134
 #include "game/update/moby328.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/freeze.h"
 #include "game/hero.h"
 #include "game/memcard.h"

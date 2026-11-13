@@ -1,7 +1,6 @@
 #pragma once
 // idol/shrubfunc.h
 #include "types.h"
-#include "game/mobyfunc.h"
 
 // ---- types
 struct ShrubInstance {

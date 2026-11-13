@@ -3,6 +3,7 @@
 // 7 functions, 0x46daf0-0x46f590
 #include "game/update/moby816.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"

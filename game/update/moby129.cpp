@@ -4,6 +4,7 @@
 // shared update function UpdateMoby_a_lot_4; registered for oClasses 129, 130, 182, 183, 360, 1063, 1078, 1079, 1131
 #include <math.h>
 #include "game/update/moby129.h"
+#include "game/collproc.h"
 #include "game/debug.h"
 #include "game/hero.h"
 #include "game/map.h"

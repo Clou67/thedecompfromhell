@@ -3,6 +3,7 @@
 // 3 functions, 0x1e29b4-0x1e348c
 #include "game/update/moby1157.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"

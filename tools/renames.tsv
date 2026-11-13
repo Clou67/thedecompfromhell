@@ -530,3 +530,10 @@ ____Hero_AddPulsingMobyGlow	Hero_AddPulsingMobyGlow
 DAT_0073a850	g_WalkStateAnim
 DAT_0073a8a4	g_WalkAnimState
 Walk_ApplyLegQuatToEuler	Walk_ResetLegTwist
+MobyClassRef	g_CollJointCacheKeys
+FUN_005e7a78	CollHit_Init
+FUN_005e7ad8	Mtx33_Scale
+FUN_005e7b50	Mtx33_MulVec3
+FUN_005e7bf8	Vec3_Normalize
+FUN_004ff98c	Idol_Break
+DAT_00a14a00	g_CollMobyHits

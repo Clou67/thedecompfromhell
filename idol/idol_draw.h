@@ -366,7 +366,7 @@ void print_tty(const char *param_1,...);
 void FUN_004ff780(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4, undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 void FUN_004ff868(undefined8 param_1,undefined8 param_2);
 void FUN_004ff8dc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4, undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
-int32_t FUN_004ff98c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4, undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+int32_t Idol_Break(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4, undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 void FUN_004ffa4c(undefined8 param_1);
 int32_t FUN_004ffac4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4, undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 void FUN_004ffb7c(undefined1 param_1);

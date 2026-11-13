@@ -3,6 +3,7 @@
 // 5 functions, 0x3fd8d8-0x3fecd4
 #include <math.h>
 #include "game/update/moby639.h"
+#include "game/collproc.h"
 #include "game/hero.h"
 #include "game/lights.h"
 #include "game/mobyfunc.h"

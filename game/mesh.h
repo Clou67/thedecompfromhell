@@ -8,12 +8,6 @@ struct Vec2 {
     float y;
 };
 
-struct Vec3 {
-    float x;
-    float y;
-    float z;
-};
-
 // ---- globals
 extern undefined4 DAT_00726aac; /* 0x726aac */
 extern undefined4 minHeight; /* 0x73aa1c */

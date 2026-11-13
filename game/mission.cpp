@@ -7,6 +7,7 @@
 // at mission targets: on the current level at their mobys, elsewhere at the positions kept in the
 // save (g_MissionTargets).
 #include "game/mission.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/map.h"

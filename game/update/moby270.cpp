@@ -820,7 +820,7 @@ void UpdateMoby_270(MobyInstance *moby)
       uVar14.piece<0,4>() = (moby->pos).z;
       uVar14.piece<4,4>() = (moby->pos).w;
       MB_DamageMobyList
-                (uVar31,uVar31,uVar31,lVar15,2,uVar36,uVar14,&DAT_00a14a00,uVar17,0,&DAT_00830000);
+                (uVar31,uVar31,uVar31,lVar15,2,uVar36,uVar14,&g_CollMobyHits,uVar17,0,&DAT_00830000);
     }
     uVar20 = MB_randRange(5,8);
     iVar18 = FLOAT_ORDER(g_FrameLoad);

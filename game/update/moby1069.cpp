@@ -3,6 +3,7 @@
 // 8 functions, 0x1b1eb8-0x1b32b8
 #include <stdlib.h>
 #include "game/update/moby1069.h"
+#include "game/collproc.h"
 #include "game/debug.h"
 #include "game/draw.h"
 #include "game/hero.h"

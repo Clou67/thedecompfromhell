@@ -2,6 +2,7 @@
 // STATUS: NOT STARTED (raw Ghidra output)
 // 2 functions, 0x286128-0x286aa0
 #include "game/update/moby1469.h"
+#include "game/collproc.h"
 #include "game/help.h"
 #include "game/hero.h"
 #include "game/map.h"

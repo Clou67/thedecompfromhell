@@ -3,6 +3,7 @@
 // 2 functions, 0x3d3cec-0x3d4228
 #include "game/update/moby586.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/help.h"
 #include "game/hero.h"

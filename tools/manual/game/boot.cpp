@@ -533,9 +533,9 @@ u8 *LoadGameplay(int *gameplay, int size)
     FastMemSet(g_AnimLayerPool, 0, sizeof(g_AnimLayerPool));
 
     DAT_00a52e60 = (u8)Cutscene;
-    g_CollOutput.padding[0] = (int)&g_CollMobyJointCache;
-    g_CollOutput.padding[1] = (int)&MobyClassRef;
-    g_CollOutput.padding[2] = 0;
+    g_CollOutput.jointCache = &g_CollMobyJointCache[0][0];
+    g_CollOutput.jointCacheKeys = g_CollJointCacheKeys;
+    g_CollOutput.jointCacheNext = 0;
     g_CollOutput.collCount = 0;
     g_CollOutput.damageNext = 0;
     FastMemSetZero(g_MobyGrid, 0x10000);
@@ -664,7 +664,7 @@ void Load_Front_End(void)
     g_GsRamAlloc = 0x2c0000;
     GSmem.base = 0x2c0000;
 
-    FastMemSet(&MobyClassRef, 0x87654321, 0x10);
+    FastMemSet(g_CollJointCacheKeys, 0x87654321, 0x10);
     FastMemSet(&MobyClassLookup, 0xff, 0x800);
     FastMemSet(&MobyTexLookup, 0xff, 0xe00);
     FastMemSet(&MobyMipDists, 0, 0xe0);

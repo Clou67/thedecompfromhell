@@ -339,7 +339,7 @@ void UpdateMoby_979(MobyInstance *moby)
     if (0 < iVar16) {
       iVar22 = 0;
       do {
-        iVar7 = *(int *)((int)&DAT_00a14a00 + iVar22);
+        iVar7 = *(int *)((int)&g_CollMobyHits + iVar22);
         if ((*(short *)(iVar7 + 0xa6) == 0x359) &&
            (*(MobyInstance **)(*(int *)(iVar7 + 0x78) + 0x19c) == moby)) {
           fVar3 = *(float *)(iVar7 + 0x10) - (moby->pos).x;

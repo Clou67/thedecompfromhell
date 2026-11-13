@@ -3,6 +3,7 @@
 // 11 functions, 0x2d47e8-0x2d5ad0
 #include "game/update/moby1903.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/hud.h"
 #include "game/mesh.h"

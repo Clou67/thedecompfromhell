@@ -3,6 +3,7 @@
 // 4 functions, 0x384148-0x384adc
 // shared update function UpdateMoby_a_lot_7; registered for oClasses 441, 442, 443, 445, 448, 449, 450, 451, 464, 465
 #include "game/update/moby441.h"
+#include "game/collproc.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"

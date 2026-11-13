@@ -2,6 +2,7 @@
 // game/mobyproc.h
 #include "types.h"
 #include "game/camera.h"
+#include "game/mobyfunc.h"
 #include "game/path.h"
 
 // ---- types
@@ -54,6 +55,7 @@ extern undefined4 _DAT_000f5b70; /* direct read */
 extern undefined4 _DAT_000f7ae0; /* direct read */
 extern Blender g_Blenders[32]; /* 0xa1cb00 */
 extern undefined4 g_CurrentBlender; /* 0x7291a4 */
+extern MobyGridCell g_MobyGrid[4096]; /* 0xa39120 */
 extern undefined4 g_MobyGridLists; /* 0xa3d120 */
 
 // ---- functions

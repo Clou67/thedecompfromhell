@@ -1633,7 +1633,7 @@ void UpdateMoby_717(MobyInstance *moby)
         *(float *)(puVar13 + 0x14) = (float)(dVar44 * 7.0);
         *(float *)((int)puVar13 + 0xa4) = (float)(dVar41 * 7.0);
         if (0 < iVar20) {
-          puVar27 = &DAT_00a14a00;
+          puVar27 = &g_CollMobyHits;
           iVar28 = 0;
           do {
             bVar22 = MB_isCrate(*puVar27);

@@ -1790,7 +1790,7 @@ void UpdateMoby_121(MobyInstance *moby)
             uVar10.piece<0,4>() = (moby->pos).z;
             uVar10.piece<4,4>() = (moby->pos).w;
             MB_DamageMobyList
-                      (dVar43,dVar42,dVar42,lVar6,1,uVar9,uVar10,&DAT_00a14a00,uVar11,0,
+                      (dVar43,dVar42,dVar42,lVar6,1,uVar9,uVar10,&g_CollMobyHits,uVar11,0,
                        &DAT_00830000);
             moby->state = '\x02';
           }
@@ -2190,7 +2190,7 @@ void UpdateMoby_121(MobyInstance *moby)
         uVar12.piece<0,4>() = (moby->pos).z;
         uVar12.piece<4,4>() = (moby->pos).w;
         MB_DamageMobyList
-                  (dVar43,dVar42,dVar42,lVar6,2,uVar11,uVar12,&DAT_00a14a00,uVar9,0,&DAT_00830000);
+                  (dVar43,dVar42,dVar42,lVar6,2,uVar11,uVar12,&g_CollMobyHits,uVar9,0,&DAT_00830000);
         bVar23 = moby->setByGroup + 1;
         moby->setByGroup = bVar23;
         local_108 = (longlong)(int)((double)animationSpeed * dVar28);

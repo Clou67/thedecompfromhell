@@ -4,6 +4,7 @@
 #include <math.h>
 #include "game/update/camera16.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/fUnk.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"

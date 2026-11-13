@@ -3,6 +3,7 @@
 // 3 functions, 0x45f698-0x4603ac
 #include "game/update/moby792.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/debug.h"
 #include "game/draw.h"
 #include "game/hero.h"

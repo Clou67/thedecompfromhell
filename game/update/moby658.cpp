@@ -3,6 +3,7 @@
 // 1 functions, 0x407868-0x407eec
 #include <math.h>
 #include "game/update/moby658.h"
+#include "game/collproc.h"
 #include "game/hero.h"
 #include "game/lights.h"
 #include "game/mobyfunc.h"

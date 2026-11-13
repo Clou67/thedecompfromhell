@@ -11,7 +11,6 @@
 #include "game/boot.h"
 #include "game/camera.h"
 #include "game/loaders.h"
-#include "game/mobyfunc.h"
 #include "game/tieproc.h"
 #include "idol/fastfunc.h"
 #include "idol/shrubfunc.h"

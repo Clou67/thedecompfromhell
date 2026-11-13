@@ -3,6 +3,7 @@
 // 1 functions, 0x1806e8-0x1807e0
 #include "game/update/sound5.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/sound.h"

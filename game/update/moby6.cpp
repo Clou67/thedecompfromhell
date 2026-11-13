@@ -3,6 +3,7 @@
 // 1 functions, 0x3d5588-0x3d5a48
 #include <stdio.h>
 #include "game/update/moby6.h"
+#include "game/collproc.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"

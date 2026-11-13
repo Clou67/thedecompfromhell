@@ -3,6 +3,7 @@
 // 3 functions, 0x44e100-0x44ecac
 #include "game/update/moby757.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/freeze.h"
 #include "game/hero.h"

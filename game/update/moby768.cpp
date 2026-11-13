@@ -4,6 +4,7 @@
 // shared update function UpdateMoby_{768_769}; registered for oClasses 768, 769
 #include "game/update/moby768.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"

@@ -153,7 +153,7 @@ void UpdateMoby_1090(MobyInstance *moby)
       uVar4.piece<0,4>() = (moby->pos).z;
       uVar4.piece<4,4>() = (moby->pos).w;
       MB_DamageMobyList
-                (0x4000000000000000,uVar11,uVar11,puVar2[4],puVar2[4],uVar3,uVar4,&DAT_00a14a00,
+                (0x4000000000000000,uVar11,uVar11,puVar2[4],puVar2[4],uVar3,uVar4,&g_CollMobyHits,
                  uVar5,0,&DAT_00810001);
     }
   }

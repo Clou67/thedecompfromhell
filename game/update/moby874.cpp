@@ -3,6 +3,7 @@
 // 2 functions, 0x49e520-0x49e580
 // shared update function UpdateMoby_{874_1104}; registered for oClasses 874, 1104
 #include "game/update/moby874.h"
+#include "game/collproc.h"
 #include "game/hero.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"

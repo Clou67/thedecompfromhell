@@ -3,6 +3,7 @@
 // 2 functions, 0x409e18-0x40a074
 #include <stdio.h>
 #include "game/update/moby667.h"
+#include "game/collproc.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 

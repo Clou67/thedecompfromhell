@@ -3,6 +3,7 @@
 // 9 functions, 0x3fb90-0x41024
 #include "game/update/camera19.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/debug.h"
 #include "game/draw.h"
 #include "game/hero.h"

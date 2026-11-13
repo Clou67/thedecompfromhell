@@ -53,7 +53,7 @@ void UpdateMoby_1031(MobyInstance *moby)
                     (0x3ff0000000000000,(longlong)(int)moby + 0x10,&DAT_001907e0,0,
                      (longlong)(int)moby,0);
   if ((iVar4 != 0) && (iVar5 = 0, 0 < iVar4)) {
-    puVar6 = &DAT_00a14a00;
+    puVar6 = &g_CollMobyHits;
     uVar9 = 0x3fe0000000000000;
     dVar10 = 0.10000000149011612;
     bVar3 = false;

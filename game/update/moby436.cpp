@@ -3,6 +3,7 @@
 // 4 functions, 0x374e80-0x375fd0
 #include "game/update/moby436.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/freeze.h"
 #include "game/hero.h"
 #include "game/map.h"

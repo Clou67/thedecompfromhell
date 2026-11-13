@@ -4,6 +4,7 @@
 // shared update function UpdateMoby_a_lot_0; registered for oClasses 1667, 1668, 1669, 1670, 1671
 #include "game/update/moby1667.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/hud.h"

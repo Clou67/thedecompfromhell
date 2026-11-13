@@ -3,6 +3,7 @@
 // 3 functions, 0x45ca38-0x45de60
 #include "game/update/moby788.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/freeze.h"
 #include "game/help.h"

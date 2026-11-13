@@ -3,6 +3,7 @@
 // 8 functions, 0x235530-0x235a08
 #include "game/update/moby1268.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/debug.h"
 #include "game/hero.h"
 #include "game/map.h"

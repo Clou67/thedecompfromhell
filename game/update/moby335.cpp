@@ -4,6 +4,7 @@
 // shared update function UpdateMoby_{335_337_338}; registered for oClasses 335, 337, 338
 #include <stdio.h>
 #include "game/update/moby335.h"
+#include "game/collproc.h"
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"

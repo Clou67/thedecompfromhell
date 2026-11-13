@@ -2991,7 +2991,7 @@ void M849_0048b288(int param_1)
     uVar5 = CollMobySphere(uVar5,iVar11);
     MB_DamageMobyList
               (uVar23,dVar22,dVar22,param_1,2,*(undefined8 *)(param_1 + 0x10),
-               *(undefined8 *)(param_1 + 0x18),&DAT_00a14a00,uVar5,0,&DAT_00830000);
+               *(undefined8 *)(param_1 + 0x18),&g_CollMobyHits,uVar5,0,&DAT_00830000);
   }
   return;
 }

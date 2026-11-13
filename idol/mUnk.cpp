@@ -251,7 +251,7 @@ void FUN_004d3044(void)
   InitMemSlots();
   g_GsRamAlloc = GSmem.base;
   g_GsRamBase = GSmem.base;
-  FastMemSet(&MobyClassRef,0xffffffff87654321,0x10);
+  FastMemSet(&g_CollJointCacheKeys,0xffffffff87654321,0x10);
   FastMemSet(&MobyClassLookup,0xffffffffffffffff,0x800);
   FastMemSet(&MobyTexLookup,0xffffffffffffffff,0xe00);
   FastMemSet(&MobyMipDists,0,0xe0);

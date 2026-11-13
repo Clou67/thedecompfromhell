@@ -312,6 +312,13 @@ struct Mtx4 {
 
 typedef float f32;
 
+struct BSphere {
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 rad;
+};
+
 typedef short s16;
 
 struct CameraControlActivation { /* DL struct CameraControlActivation (UpdateCam+0x74) */
@@ -324,21 +331,40 @@ struct CameraControlActivation { /* DL struct CameraControlActivation (UpdateCam
     short orgCam;
 };
 
+struct CollCell { /* Env collision cell header. Followed by float verts[vertCount][3] (cell-local, (world - cellCenter)*1024, cellCenter = 4*idx+2), CollTri tris[faceCount], char quadV3[quadCount] (first quadCount tris are quads). */
+    short faceCount;
+    char vertCount;
+    char quadCount;
+};
+
 typedef ushort u16;
 
-struct CollOutput {
-    void *grid;
-    int padding[3];
-    int collCount;
-    int damageNext;
-    struct MobyInstance *pMoby;
-    int poly;
-    struct Vec4 ip;
-    struct Vec4 push;
-    struct Vec4 normal;
-    struct Vec4 v0;
-    struct Vec4 v1;
-    struct Vec4 v2;
+typedef char s8;
+
+typedef enum MobyModeBit {
+    NONE=0,
+    DISABLED=1,
+    NO_UPDATE=2,
+    NO_POST_UPDATE=4,
+    TRANSPARENT=8,
+    HAS_GLOW=16,
+    HAS_SPECIAL_VARS=32,
+    UNK_40=64,
+    NO_DRAW=128,
+    LOCK_ROTATION=256,
+    DRAW_TRANSPARENT_WEIRD=512,
+    DRAW_SHADOW=1024,
+    DISABLE_Z_WRITE=2048,
+    CAN_BE_AUTO_TARGETED=4096,
+    HIDE_BACKFACES=8192,
+    CAN_BE_DAMAGED=16384,
+    MIRROR=32768
+} MobyModeBit;
+
+struct CollGridLevel { /* One level of the env collision grid (z, y or x). shift = first cell index, count = number of cells, followed by count int offsets (relative to grid base) to the next level / CollCell. 0 = empty. Cells are 4 world units. */
+    short shift;
+    short count;
+    int offsets[1];
 };
 
 struct CollTri { /* Env/moby collision face: 3 vertex indices + collision type (low5=material, bits5-6=group/sound surface, bit7=camera ignores). */
@@ -462,15 +488,6 @@ typedef enum LevelId {
     Fleet=17,
     Veldin2=18
 } LevelId;
-
-struct Moby {
-};
-
-struct MobyGridCell { /* Moby broadphase grid cell (64x64, XY, 16 world units). listStart in 32-byte blocks of g_MobyGridLists (16 moby indices per block). */
-    short listStart;
-    char count;
-    char blocks;
-};
 
 typedef unsigned long long u64;
 
@@ -2613,6 +2630,12 @@ struct UpdateCam { /* DL struct UpdateCam (RC1 size 0xa0); 48 of them at UpdateC
     undefined field27_0x9d;
     undefined field28_0x9e;
     undefined field29_0x9f;
+};
+
+struct Vec3 {
+    float x;
+    float y;
+    float z;
 };
 
 extern undefined4 DAT_0011eec0; /* 0x11eec0 */

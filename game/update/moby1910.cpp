@@ -3,6 +3,7 @@
 // 4 functions, 0x2d8600-0x2d8a54
 #include "game/update/moby1910.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"

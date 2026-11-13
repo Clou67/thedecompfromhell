@@ -132,7 +132,7 @@ ulonglong M242_0030e980(longlong param_1,undefined8 param_2)
       uVar14 = lVar1 + lVar13;
       uVar17 = uVar14 & 0xffffffff;
       *(ulonglong *)((int)puVar9 + (int)lVar13) = *puVar9;
-      pvVar15 = memcpy((void *)((int)uVar14 + 0x70),&DAT_00a14a00,
+      pvVar15 = memcpy((void *)((int)uVar14 + 0x70),&g_CollMobyHits,
                              (size_t)((uVar12 & 0xffffffff) << 2));
       uVar12 = (ulonglong)(int)pvVar15;
       iVar20 = 0;
@@ -200,7 +200,7 @@ ulonglong M242_0030e980(longlong param_1,undefined8 param_2)
               uVar12 = CollMobySphere(dVar23,uVar11 - 0x130);
               iVar18 = 0;
               iVar19 = (int)uVar12;
-              puVar16 = &DAT_00a14a00;
+              puVar16 = &g_CollMobyHits;
               if (0 < iVar19) {
                 do {
                   uVar12 = (ulonglong)*puVar16;

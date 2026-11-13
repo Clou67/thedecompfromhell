@@ -9,6 +9,7 @@
 #include "game/respawn.h"
 #include "game/boot.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/debug.h"
 #include "game/hero.h"
 #include "game/main.h"

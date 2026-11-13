@@ -135,7 +135,7 @@ void UpdateMoby_627(MobyInstance *moby)
     uVar14.piece<4,4>() = (moby->pos).w;
     MB_DamageMobyList
               (0x4008000000000000,0x3fd0000000000000,0x3ff8000000000000,lVar11,4,uVar20,uVar14,
-               &DAT_00a14a00,uVar12,0,&DAT_00810001);
+               &g_CollMobyHits,uVar12,0,&DAT_00810001);
     iVar15 = 0x96;
     local_f8 = (float)dVar23;
     if (dVar23 < 10.0 != 0xffffffce) {
@@ -285,7 +285,7 @@ void UpdateMoby_627(MobyInstance *moby)
       iVar17 = CollMobySphere
                          (0x3ff0000000000000,lVar11 + 0x10,&DAT_003eacb4,0x10,lVar11,0);
       if (0 < iVar17) {
-        pfVar18 = (float *)&DAT_00a14a00;
+        pfVar18 = (float *)&g_CollMobyHits;
         do {
           if (((*(ushort *)((int)*pfVar18 + 0x34) & 0x1000) != 0) &&
              ((*pfVar18 != kv[1].kickVel[2] || (kv[1].kickVel[1] == 0.0)))) {

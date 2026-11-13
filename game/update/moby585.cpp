@@ -3,11 +3,11 @@
 // 3 functions, 0x3d24a8-0x3d3cec
 #include "game/update/moby585.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/debug.h"
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/hud.h"
-#include "game/mesh.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/pad.h"

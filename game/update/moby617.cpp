@@ -3,6 +3,7 @@
 // 10 functions, 0x3deb50-0x3e21b4
 #include "game/update/moby617.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/hud.h"
 #include "game/mobyfunc.h"

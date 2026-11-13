@@ -2389,7 +2389,7 @@ void ____Cam0_UpdateTargetSpecial(int param_1)
   iVar10 = CollMobySphere
                      (0x402e000000000000,&g_heroPosition,&DAT_0002f4dc,1,g_heroMobyPtr,0);
   if ((0 < iVar10) && (iVar15 = 0, 0 < iVar10)) {
-    puVar14 = &DAT_00a14a00;
+    puVar14 = &g_CollMobyHits;
     dVar21 = 0.0;
     do {
       iVar11 = MB_GetPvarsIfMobyHasThem((MobyInstance *)*puVar14);
@@ -3903,7 +3903,7 @@ void UpdateCamCollisions_0(int param_1)
                               ),local_160,Level,1,g_heroMobyPtr,0);
   if ((0 < iVar12) && (iVar14 = 0, 0 < iVar12)) {
     iVar18 = 0;
-    piVar17 = &DAT_00a14a00;
+    piVar17 = &g_CollMobyHits;
     dVar39 = 0.0;
     dVar38 = 1.0;
     dVar37 = 1.5707963705062866;

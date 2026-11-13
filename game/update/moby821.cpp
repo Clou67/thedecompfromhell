@@ -3,6 +3,7 @@
 // 2 functions, 0x4764c8-0x47667c
 // shared update function UpdateMoby_{821_1210}; registered for oClasses 821, 1210
 #include "game/update/moby821.h"
+#include "game/collproc.h"
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 

@@ -4,6 +4,7 @@
 // shared update function UpdateMoby_{1263_1393}; registered for oClasses 1263, 1393
 #include "game/update/moby1263.h"
 #include "game/camera.h"
+#include "game/collproc.h"
 #include "game/draw.h"
 #include "game/hero.h"
 #include "game/hud.h"
