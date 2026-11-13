@@ -6,7 +6,7 @@ data, not hand edits to generated files. See `STYLE.md` for how cleaned code sho
 
 ## Ground rules
 
-1. **The assembly is the source of truth.** Every `.cpp` has a `.s` beside it with the original
+1. **The assembly is the source of truth.** Every `.cpp` has a `.s` (under `raw/`, local only) with the original
    instructions of the same functions in the same order. Ghidra's C is a first draft; it routinely
    drops arguments that pass through in registers, invents parameters, loses stores, and mangles
    compiler idioms. Check every cleaned function against its `.s`.

@@ -22,8 +22,9 @@ hand-maintained tables, so fixes go into those tables (or Ghidra) and the tree i
 - Each `.cpp` includes its own header plus the headers owning what it uses (types, globals,
   functions, types reached through members), and the SDK headers it needs (`<math.h>` for
   `sqrtf`, ...). Update files always include `mobyfunc.h` and `mobyutil.h`.
-- Each `.cpp` has a `.s` next to it: the original instructions of the same functions in the same
-  order. **The assembly is the source of truth**; Ghidra's C is a draft that drops things
+- Each `.cpp` has a `.s`: the original instructions of the same functions in the same order.
+  The `.s` files and every `.cpp` not yet cleaned live under `raw/` (same paths), which is
+  local-only and gitignored; the published tree holds the finished files and all headers. **The assembly is the source of truth**; Ghidra's C is a draft that drops things
   (arguments passed through in registers, stores, values kept across calls).
 - `// inlined: FastAtan2 @0x..., FastRSqrt @0x...` above a function marks inlined helpers found
   from its instructions; replace that region with a call when cleaning (`idol/fastinline.h`).
