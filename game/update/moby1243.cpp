@@ -575,13 +575,13 @@ void UpdateMoby_1243(MobyInstance *moby)
   iVar22 = FastDecTimerS16(uVar30 + 0xec);
   if (iVar22 == 0) {
     lVar27 = lVar20;
-    RegisterFuncForMoby(&PTR_M1246_0022485c_00709818,moby);
+    RegisterMobyDraw(&PTR_M1246_0022485c_00709818,moby);
     iVar23 = (int)lVar27;
   }
   iVar22 = FastDecTimerS16(uVar30 + 0xee);
   if (iVar22 == 0) {
     lVar27 = lVar20;
-    RegisterFuncForMoby(&PTR_M1246_00224a00_00709820,moby);
+    RegisterMobyDraw(&PTR_M1246_00224a00_00709820,moby);
     iVar23 = (int)lVar27;
   }
   pCVar25 = Cuboids;

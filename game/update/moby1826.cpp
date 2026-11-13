@@ -152,7 +152,7 @@ void UpdateMoby_1826(MobyInstance *moby)
       moby->state = '\x02';
     }
     else if (*(int *)((int)pvVar6 + 0xb0) != 0) {
-      RegisterFuncForMoby(&PTR_M1827_002c11e8_0070b020,moby);
+      RegisterMobyDraw(&PTR_M1827_002c11e8_0070b020,moby);
     }
   }
 LAB_002c1150:

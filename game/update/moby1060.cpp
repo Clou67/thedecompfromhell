@@ -61,7 +61,7 @@ void M1060_001abfcc(MobyInstance *param_1)
     if ((worldUpdateTime != 0) &&
        (piVar1 = *(int **)((int)param_1->pVar + 8), worldUpdateTime != *piVar1)) {
       *piVar1 = worldUpdateTime;
-      RegisterFuncForMoby(&PTR_M1060_001abec8_00708890,param_1);
+      RegisterMobyDraw(&PTR_M1060_001abec8_00708890,param_1);
     }
   }
   return;
@@ -126,7 +126,7 @@ void UpdateMoby_1060(MobyInstance *moby)
     if (((moby->group != -1) && (worldUpdateTime != 0)) &&
        (piVar2 = *(int **)((int)moby->pVar + 8), worldUpdateTime != *piVar2)) {
       *piVar2 = worldUpdateTime;
-      RegisterFuncForMoby(&PTR_M1060_001abec8_00708890,moby);
+      RegisterMobyDraw(&PTR_M1060_001abec8_00708890,moby);
     }
     SetColorOfMoby
               (moby,uVar5 & 0xff,(ulonglong)(uint)(iVar7 >> 0x10) & 0xff,

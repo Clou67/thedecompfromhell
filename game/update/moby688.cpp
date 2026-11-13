@@ -1331,7 +1331,7 @@ void UpdateMoby_689(MobyInstance *moby)
     (moby->pos).z = 1013.0;
   }
   if (3 < moby->state) {
-    RegisterFuncForMoby(&PTR_M688_00417220_0070e0d8,moby);
+    RegisterMobyDraw(&PTR_M688_00417220_0070e0d8,moby);
     local_70 = *out * 0.25;
     local_6c = out[1] * 0.25;
     local_68 = out[2] * 0.25;

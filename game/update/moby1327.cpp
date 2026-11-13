@@ -46,7 +46,7 @@ void UpdateMoby_1327(MobyInstance *moby)
       *pfVar1 = fVar2 + 1.0;
     }
     if (DAT_0078e640 != 0) {
-      RegisterFuncForMoby(&PTR_M1327_0024ac08_00709e58,moby);
+      RegisterMobyDraw(&PTR_M1327_0024ac08_00709e58,moby);
     }
   }
   return;

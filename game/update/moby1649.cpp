@@ -562,7 +562,7 @@ void UpdateMoby_1649(MobyInstance *moby)
     M1649_002a79d0(0);
     M1649_002a7910(0);
     M1649_002a7910(1);
-    RegisterFuncForMoby(&PTR_M1649_DrawScrollingTexLayers_0070ac70,moby);
+    RegisterMobyDraw(&PTR_M1649_DrawScrollingTexLayers_0070ac70,moby);
   }
   return;
 }

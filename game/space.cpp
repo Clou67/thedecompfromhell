@@ -157,7 +157,7 @@ void UpdateMoby_Spaceship(MobyInstance *moby)
         float dx = moby->pos.x - GameCamera.posX;
         float dy = moby->pos.y - GameCamera.posY;
         if (sqrtf(dx * dx + dy * dy) < 32.0f) {
-            RegisterFuncForMoby((void **)STUB_0015e2c0, moby);
+            RegisterMobyDraw((void **)STUB_0015e2c0, moby);
         }
     }
 
@@ -1357,7 +1357,7 @@ static inline void SpaceTakeoffShip(MobyInstance *moby, int frame)
     if (g_SpaceSceneFrame > ScaledFrames(420.5f)) {
         g_SpaceshipPtr->setByGroup = (char)(int)((DAT_0071f408 * 1.2f) * ((float)g_SpaceSceneFrame - animationSpeed * 420.0f));
         g_SpaceshipPtr->uid = 0;
-        RegisterFuncForMoby((void **)Space_DrawShipEngineGlow, g_SpaceshipPtr);
+        RegisterMobyDraw((void **)Space_DrawShipEngineGlow, g_SpaceshipPtr);
     }
 
     if (g_SpaceSceneFrame > ScaledFrames(464.5f)) {
@@ -1380,7 +1380,7 @@ static inline void SpaceLandingShip(MobyInstance *moby, int frame)
         SpaceGlowPulse(moby, frame);
         moby->setByGroup = 50;
         moby->uid = 10;
-        RegisterFuncForMoby((void **)Space_DrawShipEngineGlow, moby);
+        RegisterMobyDraw((void **)Space_DrawShipEngineGlow, moby);
         return;
     }
 
@@ -1392,7 +1392,7 @@ static inline void SpaceLandingShip(MobyInstance *moby, int frame)
     if (frame < ScaledFrames(300.5f)) {
         g_SpaceshipPtr->setByGroup = (char)(int)((DAT_0071f408 * 1.5f) * (animationSpeed * 300.0f - (float)frame));
         g_SpaceshipPtr->uid = 0;
-        RegisterFuncForMoby((void **)Space_DrawShipEngineGlow, g_SpaceshipPtr);
+        RegisterMobyDraw((void **)Space_DrawShipEngineGlow, g_SpaceshipPtr);
     }
 
     frame = g_SpaceSceneFrame;
@@ -1465,7 +1465,7 @@ static inline void SpaceSceneMoby(MobyInstance *moby, char holdKey)
     }
 
     RegisterPostDraw((void *)Space_DrawShipEffects, moby);
-    RegisterFuncForMoby((void **)STUB_0015e2c0, moby);
+    RegisterMobyDraw((void **)STUB_0015e2c0, moby);
 
     if (g_SpaceCutscene == 0) {
         SpaceTakeoffShip(moby, g_SpaceSceneFrame);
@@ -1793,7 +1793,7 @@ static inline void SpaceFlightCruise(void)
     if (g_SpaceshipVariant < 2) {
         ship->setByGroup = 50;
         ship->uid = 10;
-        RegisterFuncForMoby((void **)Space_DrawShipEngineGlow, ship);
+        RegisterMobyDraw((void **)Space_DrawShipEngineGlow, ship);
     }
 
     float param = (1.0f / g_ShipFlightSegLen) * (g_ShipFlightSpeed * g_FrameTime) + g_ShipFlightParam;
@@ -1815,7 +1815,7 @@ static inline void SpaceFlightCruise(void)
 
     SpaceTrailPoint(&g_ShipTrails[0][g_ShipTrailHead], &g_ShipTrailOffsets[g_SpaceshipVariant][0]);
     SpaceTrailPoint(&g_ShipTrails[1][g_ShipTrailHead], &g_ShipTrailOffsets[g_SpaceshipVariant][1]);
-    RegisterFuncForMoby((void **)Space_DrawTransitionOverlay, ship);
+    RegisterMobyDraw((void **)Space_DrawTransitionOverlay, ship);
 
     if (SceneScreenFade > 0.0f) {
         SceneScreenFade += 0.0625f;

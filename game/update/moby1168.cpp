@@ -336,7 +336,7 @@ void UpdateMoby_1168(MobyInstance *moby)
                ((g_CollOutput.pMoby)->oClass == MORPH_O_RAY_CHICKEN)))) {
         moby->state = '\x02';
       }
-      RegisterFuncForMoby(&PTR_M1169_001ea390_00709118,moby);
+      RegisterMobyDraw(&PTR_M1169_001ea390_00709118,moby);
     }
     else if (uVar7 == '\0') {
       if (*(int *)((int)pvVar10 + 0x70) == -1) {

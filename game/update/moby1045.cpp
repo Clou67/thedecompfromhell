@@ -1103,7 +1103,7 @@ void M1045_00199300(MobyInstance *param_1)
       psVar2 = psVar2 + 1;
       lVar3 = lVar3 + -1;
     } while (lVar3 != 0);
-    RegisterFuncForMoby(&PTR_M1046_0019d958_007086a0,param_1);
+    RegisterMobyDraw(&PTR_M1046_0019d958_007086a0,param_1);
   }
   return;
 }
@@ -1208,7 +1208,7 @@ void M1045_00199398(MobyInstance *param_1)
       psVar19 = psVar19 + 1;
       lVar22 = lVar22 + -1;
     } while (lVar22 != 0);
-    RegisterFuncForMoby(&PTR_M1046_0019d958_007086a0,param_1);
+    RegisterMobyDraw(&PTR_M1046_0019d958_007086a0,param_1);
   }
   return;
 }
@@ -1857,7 +1857,7 @@ double M1045_00199888(longlong param_1,float *param_2)
     dVar25 = local_140;
     start = end;
   } while (iVar16 < 10);
-  RegisterFuncForMoby(&PTR_M1046_0019d958_007086a0,(MobyInstance *)param_1);
+  RegisterMobyDraw(&PTR_M1046_0019d958_007086a0,(MobyInstance *)param_1);
   iVar17 = 0;
   iVar15 = 0;
   iVar18 = 0;
@@ -2339,7 +2339,7 @@ void UpdateMoby_1045(MobyInstance *moby)
   }
   dVar35 = 0.0;
   if (0 < *(int *)((int)pvVar5 + 0x1c8)) {
-    RegisterFuncForMoby(&PTR_M1045_00198280_007085c8,moby);
+    RegisterMobyDraw(&PTR_M1045_00198280_007085c8,moby);
   }
   iVar19 = g_standingOnMoby;
   bVar2 = moby->state;
@@ -2785,7 +2785,7 @@ void UpdateMoby_1045(MobyInstance *moby)
           iVar16 = idol::GetAnimDuration(0x3c);
           if (iVar14 < iVar16) {
             FUN_005e7f54((int)pvVar5 + 0x140,(int)pvVar5 + 0x140,(int)pvVar5 + 0x130);
-            RegisterFuncForMoby(&PTR_M1045_00196fc8_007085b0,moby);
+            RegisterMobyDraw(&PTR_M1045_00196fc8_007085b0,moby);
             *(undefined4 *)((int)pvVar5 + 0x164) = 2;
           }
           else {
@@ -3011,7 +3011,7 @@ void UpdateMoby_1045(MobyInstance *moby)
            (iVar14 = FastDecTimerS32((int)pvVar5 + 0x160), iVar14 != 0)) {
           *(undefined4 *)((int)pvVar5 + 0x164) = 5;
         }
-        RegisterFuncForMoby(&PTR_M1045_001989d0_007085d8,moby);
+        RegisterMobyDraw(&PTR_M1045_001989d0_007085d8,moby);
       }
       else if (iVar14 == 3) {
         dVar31 = (double)FUN_005e8588(lVar28,auStack_130);
@@ -3025,7 +3025,7 @@ void UpdateMoby_1045(MobyInstance *moby)
           uVar15 = idol::GetAnimDuration(0x14);
           *(undefined4 *)((int)pvVar5 + 0x160) = uVar15;
         }
-        RegisterFuncForMoby(&PTR_M1045_001989d0_007085d8,moby);
+        RegisterMobyDraw(&PTR_M1045_001989d0_007085d8,moby);
       }
       else if (iVar14 == 2) {
         iVar14 = FastDecTimerS32((int)pvVar5 + 0x160);

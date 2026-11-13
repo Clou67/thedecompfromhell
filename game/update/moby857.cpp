@@ -468,7 +468,7 @@ void M857_00490cb8(MobyInstance *param_1)
     *(uint *)((int)pvVar2 + 0x290) = param_1->glowRgba;
     if ((worldUpdateTime != 0) && (worldUpdateTime != **(int **)((int)pvVar2 + 0x294))) {
       **(int **)((int)pvVar2 + 0x294) = worldUpdateTime;
-      RegisterFuncForMoby(&PTR_M859_00495620_0070f208,param_1);
+      RegisterMobyDraw(&PTR_M859_00495620_0070f208,param_1);
     }
   }
   return;

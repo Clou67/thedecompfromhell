@@ -59,7 +59,7 @@ void UpdateMoby_823(MobyInstance *moby)
     moby->state = '\x01';
   }
   else if (moby->state < 2) {
-    RegisterFuncForMoby(&PTR_M825_00478e68_0070edb0,moby);
+    RegisterMobyDraw(&PTR_M825_00478e68_0070edb0,moby);
     dVar2 = (double)FastWrapRot
                               (*(float *)((int)manipulator + 0x44),
                                *(float *)((int)manipulator + 0x4c));

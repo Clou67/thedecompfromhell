@@ -300,7 +300,7 @@ void UpdateMoby_1511(MobyInstance *moby)
                          ((double)(float)(dVar19 * -(double)(float)(dVar36 * dVar18 - 1.0)));
     }
     *(uint *)((int)pvVar2 + 0x60) = uVar10;
-    RegisterFuncForMoby(&PTR_M1512_0028f3f0_0070a8a0,moby);
+    RegisterMobyDraw(&PTR_M1512_0028f3f0_0070a8a0,moby);
     pfVar11 = (float *)MB_damage(lVar9,&DAT_00810000,0);
     moby->damage = -1;
     if (pfVar11 != (float *)0x0) {

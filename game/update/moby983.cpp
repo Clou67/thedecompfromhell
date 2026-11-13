@@ -1195,7 +1195,7 @@ void UpdateMoby_983(MobyInstance *moby)
       return;
     }
   }
-  RegisterFuncForMoby(&PTR_M984_004cabd8_0070f8f0,moby);
+  RegisterMobyDraw(&PTR_M984_004cabd8_0070f8f0,moby);
   return;
 }
 

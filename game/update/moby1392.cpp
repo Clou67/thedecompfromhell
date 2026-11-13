@@ -643,7 +643,7 @@ void UpdateMoby_1392(MobyInstance *moby)
     piVar2[3] = 0x3f800000;
   }
   else if (bVar1 < 2) {
-    RegisterFuncForMoby(&PTR_M1394_00269d18_0070a2e0,moby);
+    RegisterMobyDraw(&PTR_M1394_00269d18_0070a2e0,moby);
     iVar3 = IsMobyPlayingSound(moby,piVar2[1]);
     if (iVar3 == 0) {
       iVar3 = PlayMobySound(0,4,moby);

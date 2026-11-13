@@ -383,7 +383,7 @@ void UpdateMoby_19(MobyInstance *moby)
     (&DAT_010a245e)[iVar22 * 0x8d0] = uVar23;
     if (iVar22 == 0) {
       WaterTile_UpdateWaves((WaterTile *)&DAT_010a2440,0x11);
-      RegisterFuncForMoby(&PTR_M190_002d2290_0070b2d8,moby);
+      RegisterMobyDraw(&PTR_M190_002d2290_0070b2d8,moby);
     }
   }
   return;

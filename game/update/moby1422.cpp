@@ -3122,7 +3122,7 @@ LAB_00279dec:
        (((int)uVar15 >> 0x10 & 0xffU) + 1) * 0x5500 & 0x7f0000 | uVar15 & 0xff000000 |
        ((int)uVar15 >> 8 & 0xffU) << 8 | ((uVar15 & 0xff) + 1) * 0x55 >> 8;
   if (moby->enabled != '\0') {
-    RegisterFuncForMoby(&PTR_M1424_0027a098_0070a5b0,moby);
+    RegisterMobyDraw(&PTR_M1424_0027a098_0070a5b0,moby);
   }
   return;
 }

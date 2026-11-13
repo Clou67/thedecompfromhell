@@ -126,7 +126,7 @@ void UpdateMoby_1918(MobyInstance *moby)
     moby->state = '\x01';
   }
   else if (moby->state < 2) {
-    RegisterFuncForMoby(&PTR_M1918_002d94c8_0070b480,moby);
+    RegisterMobyDraw(&PTR_M1918_002d94c8_0070b480,moby);
   }
   return;
 }

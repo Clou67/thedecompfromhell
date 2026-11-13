@@ -162,7 +162,7 @@ void UpdateMoby_1848(MobyInstance *moby)
     if (DAT_010a0be4 < -1.0) {
       DAT_010a0be4 = DAT_010a0be4 + 1.0;
     }
-    RegisterFuncForMoby(&PTR_M1848_002c4f7c_0070b0a8,moby);
+    RegisterMobyDraw(&PTR_M1848_002c4f7c_0070b0a8,moby);
   }
   return;
 }

@@ -466,8 +466,8 @@ g_PostPreDrawFuncs	MobyDrawFunc NAME[64] /* 0x95e1e0 */
 g_PostPreDrawArgs	MobyInstance *NAME[64] /* 0x95e2e0 */
 g_PostDrawFuncs	MobyDrawFunc NAME[64] /* 0x95e3e4 */
 g_PostDrawArgs	MobyInstance *NAME[64] /* 0x95e4e4 */
-g_MobyFuncList	MobyDrawFunc NAME[64] /* 0x95ddd8 */
-g_MobyFuncListArgs	MobyInstance *NAME[64] /* 0x95ded8 */
+g_MobyDrawFuncs	MobyDrawFunc NAME[64] /* 0x95ddd8 */
+g_MobyDrawArgs	MobyInstance *NAME[64] /* 0x95ded8 */
 g_SubtitlesOn	bool NAME /* 0x969c78 */
 g_UnderwaterTint	RGBA NAME /* 0x73a960 */
 g_CreditsHelpMsgs	TimedHelpMsg NAME[] /* 0x71fbdc */
@@ -486,3 +486,4 @@ g_WaterColorGridChunk	WaterPatchChunk NAME /* 0x961640 */
 g_WaterColorGrid	WaterPatchList NAME /* 0x961650 */
 g_WaterPatchData	u8 NAME[0x2000] /* 0x961658 */
 g_WaterPatchChunk	WaterPatchChunk NAME /* 0x963658 */
+g_MobyDrawCount	int NAME /* 0x95dfd8 */

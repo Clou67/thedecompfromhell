@@ -75,7 +75,7 @@ void UpdateMoby_669(MobyInstance *moby)
     else if (moby->state < 2) {
       dVar18 = (double)FastWrapRot((moby->rotation).x,pfVar1[1]);
       (moby->rotation).x = (float)dVar18;
-      RegisterFuncForMoby(&PTR_M669_0040b310_0070df38,moby);
+      RegisterMobyDraw(&PTR_M669_0040b310_0070df38,moby);
     }
     dVar18 = 0.0;
     dVar19 = 1.0;

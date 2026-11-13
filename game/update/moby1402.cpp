@@ -155,7 +155,7 @@ void UpdateMoby_1402(MobyInstance *moby)
   fVar7 = pfVar4[5];
   if ((int)fVar7 < 1) {
     if (-1 < (int)fVar7) {
-      RegisterFuncForMoby(&PTR_M1403_0026dd28_0070a388,moby);
+      RegisterMobyDraw(&PTR_M1403_0026dd28_0070a388,moby);
     }
   }
   else if ((int)fVar7 < 2) {
@@ -163,10 +163,10 @@ void UpdateMoby_1402(MobyInstance *moby)
     if (1.0 < DAT_00fa8a48) {
       DAT_00fa8a48 = DAT_00fa8a48 - 1.0;
     }
-    RegisterFuncForMoby(&PTR_M1403_0026d8d8_0070a378,moby);
+    RegisterMobyDraw(&PTR_M1403_0026d8d8_0070a378,moby);
   }
   else if ((int)fVar7 < 3) {
-    RegisterFuncForMoby(&PTR_M1403_0026db00_0070a380,moby);
+    RegisterMobyDraw(&PTR_M1403_0026db00_0070a380,moby);
   }
   return;
 }

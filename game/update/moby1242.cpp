@@ -2232,7 +2232,7 @@ void M1242_0021ff90(MobyInstance *param_1,longlong param_2)
   if (HelpData.piece<680,2>() == 0) {
     Help_QueueMessage(STR_PRESS__TO_FIRE_0x2AFC,0x55);
   }
-  RegisterFuncForMoby(&PTR_M1242_Hud_Draw_00709798,param_1);
+  RegisterMobyDraw(&PTR_M1242_Hud_Draw_00709798,param_1);
   M1242_0021f5b8(param_1,param_2);
   uVar32 = FastWrapRot
                      (*(float *)(iVar14 + 0x28),-(*(float *)(iVar14 + 0x6c) * 0.14285715));

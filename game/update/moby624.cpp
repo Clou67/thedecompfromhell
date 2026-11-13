@@ -290,7 +290,7 @@ void UpdateMoby_624(MobyInstance *moby)
     else if (bVar1 < 3) {
       pfVar3[9] = pfVar3[9] + pfVar3[8];
       M624_003e7450((longlong)(int)moby);
-      RegisterFuncForMoby(&PTR_M625_003e82b0_0070da40,moby);
+      RegisterMobyDraw(&PTR_M625_003e82b0_0070da40,moby);
       uVar13 = (int)pfVar3[9] >> 0x1f;
       uVar5 = (int)pfVar3[10] >> 0x1f;
       if ((int)((uVar5 >> 1 ^ (uint)pfVar3[10]) - uVar5) <

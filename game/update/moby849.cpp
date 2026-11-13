@@ -1609,7 +1609,7 @@ void M849_00488b5c(MobyInstance *param_1)
       psVar2 = psVar2 + 1;
       lVar3 = lVar3 + -1;
     } while (lVar3 != 0);
-    RegisterFuncForMoby(&PTR_M849_0048d430_0070f0c0,param_1);
+    RegisterMobyDraw(&PTR_M849_0048d430_0070f0c0,param_1);
   }
   return;
 }
@@ -1714,7 +1714,7 @@ void M849_00488bf8(MobyInstance *param_1)
       psVar19 = psVar19 + 1;
       lVar22 = lVar22 + -1;
     } while (lVar22 != 0);
-    RegisterFuncForMoby(&PTR_M849_0048d430_0070f0c0,param_1);
+    RegisterMobyDraw(&PTR_M849_0048d430_0070f0c0,param_1);
   }
   return;
 }
@@ -1828,7 +1828,7 @@ void UpdateMoby_849(MobyInstance *moby)
       psVar13 = psVar13 + 1;
       lVar21 = lVar21 + -1;
     } while (lVar21 != 0);
-    RegisterFuncForMoby(&PTR_M849_0048d430_0070f0c0,moby);
+    RegisterMobyDraw(&PTR_M849_0048d430_0070f0c0,moby);
   }
   M849_004889a0();
   uVar2 = moby->state;

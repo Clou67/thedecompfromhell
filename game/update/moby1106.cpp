@@ -2016,7 +2016,7 @@ void M1106_001c3478(MobyInstance *param_1)
       psVar2 = psVar2 + 1;
       lVar3 = lVar3 + -1;
     } while (lVar3 != 0);
-    RegisterFuncForMoby(&PTR_M1107_001c90b0_00708cb0,param_1);
+    RegisterMobyDraw(&PTR_M1107_001c90b0_00708cb0,param_1);
   }
   return;
 }
@@ -2122,7 +2122,7 @@ void M1106_001c3510(MobyInstance *param_1)
       psVar19 = psVar19 + 1;
       lVar22 = lVar22 + -1;
     } while (lVar22 != 0);
-    RegisterFuncForMoby(&PTR_M1107_001c90b0_00708cb0,param_1);
+    RegisterMobyDraw(&PTR_M1107_001c90b0_00708cb0,param_1);
   }
   return;
 }
@@ -2771,7 +2771,7 @@ double M1106_001c3a18(longlong param_1,float *param_2)
     dVar25 = local_140;
     start = end;
   } while (iVar16 < 10);
-  RegisterFuncForMoby(&PTR_M1107_001c90b0_00708cb0,(MobyInstance *)param_1);
+  RegisterMobyDraw(&PTR_M1107_001c90b0_00708cb0,(MobyInstance *)param_1);
   iVar17 = 0;
   iVar15 = 0;
   iVar18 = 0;
@@ -3325,7 +3325,7 @@ void UpdateMoby_1106(MobyInstance *moby)
   }
   dVar46 = 0.0;
   if (0 < *(int *)((int)pvVar4 + 0x1c8)) {
-    RegisterFuncForMoby(&PTR_M1106_001c13d0_00708ba8,moby);
+    RegisterMobyDraw(&PTR_M1106_001c13d0_00708ba8,moby);
   }
   M1106_001c30c0(lVar12,pvVar4,&g_heroPosition);
   bVar25 = moby->state;
@@ -3380,7 +3380,7 @@ void UpdateMoby_1106(MobyInstance *moby)
                  (iVar14 = FastDecTimerS32((int)pvVar4 + 0x160), iVar14 != 0)) {
                 *(undefined4 *)((int)pvVar4 + 0x164) = 5;
               }
-              RegisterFuncForMoby(&PTR_M1106_001c1a58_00708bb8,moby);
+              RegisterMobyDraw(&PTR_M1106_001c1a58_00708bb8,moby);
             }
             else if (iVar14 == 3) {
               dVar41 = (double)FUN_005e8588(lVar32,auStack_150);
@@ -3394,7 +3394,7 @@ void UpdateMoby_1106(MobyInstance *moby)
                 uVar16 = idol::GetAnimDuration(0x14);
                 *(undefined4 *)((int)pvVar4 + 0x160) = uVar16;
               }
-              RegisterFuncForMoby(&PTR_M1106_001c1a58_00708bb8,moby);
+              RegisterMobyDraw(&PTR_M1106_001c1a58_00708bb8,moby);
             }
             else if (iVar14 == 2) {
               bVar1 = moby->animationId != '\a';
@@ -3883,7 +3883,7 @@ void UpdateMoby_1106(MobyInstance *moby)
               iVar15 = idol::GetAnimDuration(0x3c);
               if (iVar14 < iVar15) {
                 FUN_005e7f54((int)pvVar4 + 0x140,(int)pvVar4 + 0x140,(int)pvVar4 + 0x130);
-                RegisterFuncForMoby(&PTR_M1106_001c00b8_00708b90,moby);
+                RegisterMobyDraw(&PTR_M1106_001c00b8_00708b90,moby);
                 *(undefined4 *)((int)pvVar4 + 0x164) = 2;
               }
               else {

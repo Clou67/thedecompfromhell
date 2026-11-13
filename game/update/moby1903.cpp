@@ -563,7 +563,7 @@ void UpdateMoby_1903(MobyInstance *moby)
     M1903_002d5690(0);
     M1903_002d55d0(0);
     M1903_002d55d0(1);
-    RegisterFuncForMoby(&PTR_M1903_002d4ad0_0070b340,moby);
+    RegisterMobyDraw(&PTR_M1903_002d4ad0_0070b340,moby);
   }
   return;
 }

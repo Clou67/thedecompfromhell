@@ -44,7 +44,7 @@ void UpdateMoby_1345(MobyInstance *moby)
   else if (moby->state < 2) {
     iVar4 = MB_ScaledVecWrapper(0x4048000000000000,moby);
     if (iVar4 != -1) {
-      RegisterFuncForMoby(&PTR_M1346_00252318_00709f48,moby);
+      RegisterMobyDraw(&PTR_M1346_00252318_00709f48,moby);
     }
     uVar3 = (ulonglong)(uint)piVar1[1];
     if (piVar1[1] == 0xffffffff) {

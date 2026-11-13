@@ -1585,7 +1585,7 @@ void M1160_UpdateFlight(MobyInstance *moby,int param_2)
     }
   }
 LAB_001e7ef4:
-  RegisterFuncForMoby(&PTR_M1160_Hud_Draw_007090b0,moby);
+  RegisterMobyDraw(&PTR_M1160_Hud_Draw_007090b0,moby);
   M1160_UpdateMissiles(lVar21,lVar25);
   uVar40 = FastWrapRot
                      (*(float *)(param_2 + 0x28),-(*(float *)(param_2 + 0x4c) * 0.14285715));

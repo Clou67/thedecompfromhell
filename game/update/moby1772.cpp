@@ -1042,7 +1042,7 @@ void UpdateMoby_1772(MobyInstance *moby)
       pfVar7 = pfVar7 + 1;
       pfVar9 = pfVar9 + 1;
     } while (iVar6 < 2);
-    RegisterFuncForMoby(&PTR_M1772_002b8748_0070aed8,moby);
+    RegisterMobyDraw(&PTR_M1772_002b8748_0070aed8,moby);
   }
   return;
 }

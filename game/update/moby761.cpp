@@ -659,7 +659,7 @@ void UpdateMoby_761(MobyInstance *moby)
   DAT_0087339c = DAT_0087333c;
   DAT_008733fc = DAT_0087333c;
   DAT_0087345c = DAT_0087333c;
-  RegisterFuncForMoby(&PTR_M761_00450c28_0070e850,moby);
+  RegisterMobyDraw(&PTR_M761_00450c28_0070e850,moby);
   return;
 }
 

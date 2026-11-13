@@ -395,7 +395,7 @@ void M1259_0022ab80(MobyInstance *param_1)
   fVar3 = (param_1->pos).x - GameCamera.posX;
   fVar8 = (param_1->pos).z - GameCamera.posZ;
   if (SQRT(fVar8 * fVar8 + fVar3 * fVar3 + fVar2 * fVar2) < 48.0) {
-    RegisterFuncForMoby(&PTR_M1259_0022a720_00709940,param_1);
+    RegisterMobyDraw(&PTR_M1259_0022a720_00709940,param_1);
   }
   return;
 }

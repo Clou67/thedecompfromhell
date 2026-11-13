@@ -1122,7 +1122,7 @@ void M69_0041bf10(MobyInstance *param_1,longlong param_2)
       *(undefined4 *)(iVar21 + 0xdcU & 0xfffffffc) = uVar13;
     }
   }
-  RegisterFuncForMoby(&PTR_M688_0041b008_0070e148,param_1);
+  RegisterMobyDraw(&PTR_M688_0041b008_0070e148,param_1);
   M688_0041bb00(param_1,param_2);
   uVar43 = FastWrapRot
                      (*(float *)(iVar21 + 0x28),-(*(float *)(iVar21 + 0x6c) * 0.14285715));

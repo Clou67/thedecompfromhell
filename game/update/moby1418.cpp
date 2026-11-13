@@ -37,7 +37,7 @@ void UpdateMoby_1418(MobyInstance *moby)
     moby->updateDistance = -1;
   }
   else if (moby->state < 2) {
-    RegisterOceanUpdate(&PTR_M1418_00272c18_0070a490,moby);
+    RegisterPreDraw(&PTR_M1418_00272c18_0070a490,moby);
   }
   return;
 }

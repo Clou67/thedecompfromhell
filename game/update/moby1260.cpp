@@ -40,7 +40,7 @@ void UpdateMoby_1260(MobyInstance *moby)
     moby->updateDistance = -1;
   }
   else if (moby->state < 2) {
-    RegisterFuncForMoby(&PTR_M1260_0022b828_00709980,moby);
+    RegisterMobyDraw(&PTR_M1260_0022b828_00709980,moby);
   }
   return;
 }

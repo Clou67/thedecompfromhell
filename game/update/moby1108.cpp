@@ -198,7 +198,7 @@ void UpdateMoby_1108(MobyInstance *moby)
                      (auVar30 | auVar30 << 0x20 | auVar30 << 0x40 | auVar30 << 0x60,0x168,0x9513c0);
     }
     if (g_gameMode == GAME_MODE_NORMAL) {
-      RegisterFuncForMoby(&PTR_M1109_001ca5d8_00708cd8,moby);
+      RegisterMobyDraw(&PTR_M1109_001ca5d8_00708cd8,moby);
     }
     if (g_heroState == MOVEMENT_LOCKED) {
       moby->state = '\x06';

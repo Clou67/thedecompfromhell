@@ -1498,7 +1498,7 @@ void M1818_002bea80(MobyInstance *param_1)
     iVar1 = iVar1 + 1;
     uVar2 = uVar2 + 0x10;
   } while (iVar1 < 2);
-  RegisterFuncForMoby(&PTR_M1818_002bea00_0070afe8,param_1);
+  RegisterMobyDraw(&PTR_M1818_002bea00_0070afe8,param_1);
   return;
 }
 
@@ -1755,7 +1755,7 @@ void UpdateMoby_1818(MobyInstance *moby)
           iVar21 = iVar21 + 1;
           uVar19 = uVar19 + 0x10;
         } while (iVar21 < 2);
-        RegisterFuncForMoby(&PTR_M1818_002bea00_0070afe8,moby);
+        RegisterMobyDraw(&PTR_M1818_002bea00_0070afe8,moby);
         bVar1 = moby->state;
       }
       if (bVar1 == 7) {

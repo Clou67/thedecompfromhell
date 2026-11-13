@@ -119,7 +119,7 @@ void M541_003ac860(MobyInstance *param_1)
       uVar1 = *puVar3;
       puVar3 = puVar3 + 1;
     } while (-1 < (short)uVar1);
-    RegisterFuncForMoby(&PTR_M542_003aefd0_0070d110,param_1);
+    RegisterMobyDraw(&PTR_M542_003aefd0_0070d110,param_1);
   }
   return;
 }
@@ -259,7 +259,7 @@ void M541_003ac968(MobyInstance *param_1)
           puVar22 = puVar22 + 1;
           iVar16 = worldUpdateTime;
         } while (-1 < (short)uVar6);
-        RegisterFuncForMoby(&PTR_M542_003aefd0_0070d110,param_1);
+        RegisterMobyDraw(&PTR_M542_003aefd0_0070d110,param_1);
       }
       dVar27 = 0.0;
       *(undefined4 *)((int)puVar9 + 0xb4) = 0;

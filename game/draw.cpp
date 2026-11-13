@@ -1777,10 +1777,10 @@ void ExecutePostDraws(void)
 }
 
 // 0x006b714 (0x94 bytes)
-void ExecuteRegisteredMobyFuncs(void)
+void ExecuteMobyDraws(void)
 {
-    for (int i = 0; i < g_MobyFuncListCount; i++) {
-        g_MobyFuncList[i](g_MobyFuncListArgs[i]);
+    for (int i = 0; i < g_MobyDrawCount; i++) {
+        g_MobyDrawFuncs[i](g_MobyDrawArgs[i]);
     }
 }
 
@@ -1930,7 +1930,7 @@ void DefaultDraw(void)
     DrawMobys();
 
     if ((g_RenderFlags & Ocean) && g_DebugEnables[13] != 0) {
-        ExecuteRegisteredMobyFuncs();
+        ExecuteMobyDraws();
         Camera_DrawReticule();
     }
 
@@ -2463,18 +2463,18 @@ int GetEffectTexAddr(int index)
 
 // 0x006d720 (0x40 bytes)
 /* adds function(moby) to the list DefaultDraw runs after the mobys (64 at most) */
-void RegisterFuncForMoby(void **function, MobyInstance *moby)
+void RegisterMobyDraw(void **function, MobyInstance *moby)
 {
-    if (g_MobyFuncListCount < 64) {
-        g_MobyFuncList[g_MobyFuncListCount] = (MobyDrawFunc)function;
-        g_MobyFuncListArgs[g_MobyFuncListCount] = moby;
-        g_MobyFuncListCount++;
+    if (g_MobyDrawCount < 64) {
+        g_MobyDrawFuncs[g_MobyDrawCount] = (MobyDrawFunc)function;
+        g_MobyDrawArgs[g_MobyDrawCount] = moby;
+        g_MobyDrawCount++;
     }
 }
 
 // 0x006d760 (0x40 bytes)
 /* adds func(moby) to the pre-draws, run after the tfrags and ties (64 at most) */
-void RegisterOceanUpdate(undefined4 func, MobyInstance *moby)
+void RegisterPreDraw(undefined4 func, MobyInstance *moby)
 {
     if (g_PreDrawCount < 64) {
         g_PreDrawFuncs[g_PreDrawCount] = (MobyDrawFunc)(uintptr_t)func;

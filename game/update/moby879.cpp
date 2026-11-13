@@ -93,7 +93,7 @@ void UpdateMoby_879_RilgarOcean(MobyInstance *moby)
          (fVar5 * fVar2 * 2.601887e-06 +
          fVar2 * -0.0001980741 + fVar3 * 0.0083330255 + fVar5 * fVar4 * -0.16666657 + fVar4) * 0.25
          + fVar1;
-    RegisterOceanUpdate(&PTR_M879_Rilgar_SubmitOcean_0070f340,moby);
+    RegisterPreDraw(&PTR_M879_Rilgar_SubmitOcean_0070f340,moby);
   }
   return;
 }

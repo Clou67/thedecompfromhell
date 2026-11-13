@@ -315,7 +315,7 @@ void UpdateMoby_1901(MobyInstance *moby)
     if (DAT_010b6004 < -1.0) {
       DAT_010b6004 = DAT_010b6004 + 1.0;
     }
-    RegisterOceanUpdate(&PTR_M1901_002d40b8_0070b310,moby);
+    RegisterPreDraw(&PTR_M1901_002d40b8_0070b310,moby);
   }
   return;
 }

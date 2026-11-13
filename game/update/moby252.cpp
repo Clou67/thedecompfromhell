@@ -745,7 +745,7 @@ void UpdateMoby_252(MobyInstance *moby)
         *(float *)((int)pvVar8 + 0x1d4) = fVar1;
         *(float *)((int)pvVar8 + 0x1e8) = fVar2;
         *(float *)((int)pvVar8 + 0x1d8) = fVar2;
-        RegisterFuncForMoby(&PTR_M253_00318b50_0070bcc8,moby);
+        RegisterMobyDraw(&PTR_M253_00318b50_0070bcc8,moby);
       }
       iVar21 = MB_MayaFrameTrigger(14.0,moby);
       if (iVar21 != 0) {

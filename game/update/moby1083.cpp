@@ -546,17 +546,17 @@ void UpdateMoby_1083(MobyInstance *moby)
   }
   if (piVar10[1] == 0) {
     if (*piVar10 == 0) {
-      RegisterFuncForMoby(&PTR_M1089_001ba9c0_00708a90,moby);
+      RegisterMobyDraw(&PTR_M1089_001ba9c0_00708a90,moby);
     }
     else {
-      RegisterFuncForMoby(&PTR_M1089_001ba794_00708a88,moby);
+      RegisterMobyDraw(&PTR_M1089_001ba794_00708a88,moby);
     }
   }
   else if (*piVar10 == 0) {
-    RegisterFuncForMoby(&PTR_M1089_001bafc0_00708aa0,moby);
+    RegisterMobyDraw(&PTR_M1089_001bafc0_00708aa0,moby);
   }
   else {
-    RegisterFuncForMoby(&PTR_M1089_001babf8_00708a98,moby);
+    RegisterMobyDraw(&PTR_M1089_001babf8_00708a98,moby);
   }
   return;
 }

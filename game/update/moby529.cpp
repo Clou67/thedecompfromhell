@@ -25,7 +25,7 @@ void UpdateMoby_529(MobyInstance *moby)
 {
   moby->updateDistance = '\b';
   moby->oClass = PURPLE_SHIP_0215;
-  RegisterFuncForMoby(&PTR_Space_DrawShipEffects_00707cd8,moby);
+  RegisterMobyDraw(&PTR_Space_DrawShipEffects_00707cd8,moby);
   return;
 }
 

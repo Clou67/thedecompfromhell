@@ -108,7 +108,7 @@ void UpdateMoby_77(MobyInstance *moby)
     if (*piVar9 == worldUpdateTime) goto LAB_00453d7c;
     *piVar9 = worldUpdateTime;
   }
-  RegisterFuncForMoby(&PTR_M771_00454680_0070e8e8,moby);
+  RegisterMobyDraw(&PTR_M771_00454680_0070e8e8,moby);
 LAB_00453d7c:
   uVar1 = moby->state;
   if (uVar1 == '\x04') {

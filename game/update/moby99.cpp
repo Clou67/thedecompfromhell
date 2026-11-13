@@ -335,7 +335,7 @@ void UpdateMoby_99(MobyInstance *moby)
         MB_randRangeFloat((float)dVar14,(float)dVar18);
         SpawnPart_79(0,pfVar6 + 8,local_1c0);
       }
-      RegisterFuncForMoby(&PTR_M994_004ceb50_0070f950,moby);
+      RegisterMobyDraw(&PTR_M994_004ceb50_0070f950,moby);
     }
   }
   return;

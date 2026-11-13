@@ -1323,7 +1323,7 @@ void UpdateMoby_806(MobyInstance *moby)
     }
     iVar13 = FastCheckBsphereInView(0x4050000000000000,local_190);
     if (-1 < iVar13) {
-      RegisterFuncForMoby(&PTR_M807_004687d8_0070eb90,moby);
+      RegisterMobyDraw(&PTR_M807_004687d8_0070eb90,moby);
       fVar2 = (moby->pos).y - GameCamera.posY;
       fVar5 = (moby->pos).x - GameCamera.posX;
       if (SQRT(fVar5 * fVar5 + fVar2 * fVar2) <= 10.0) {

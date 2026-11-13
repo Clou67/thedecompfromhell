@@ -65,7 +65,7 @@ void UpdateMoby_854_AridiaOcean(MobyInstance *moby)
     moby->updateDistance = -1;
   }
   else if (moby->state < 2) {
-    RegisterOceanUpdate(&PTR_M854_Aridia_SubmitOcean_0070f0f8,moby);
+    RegisterPreDraw(&PTR_M854_Aridia_SubmitOcean_0070f0f8,moby);
   }
   return;
 }

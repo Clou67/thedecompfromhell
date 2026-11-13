@@ -136,7 +136,7 @@ void UpdateSpaceSceneEffects(void)
     if (Level == Veldin) {
         for (i = 0; i < g_SpaceSceneMobyCnt; i++)
             if (g_SpaceSceneMobys[i]->oClass == VELDIN_SHIP)
-                RegisterFuncForMoby((void **)Space_DrawShipEffects, g_SpaceSceneMobys[i]);
+                RegisterMobyDraw((void **)Space_DrawShipEffects, g_SpaceSceneMobys[i]);
     }
     if (Level == Aridia) {
         for (i = 0; i < g_SpaceSceneMobyCnt; i++)
@@ -160,12 +160,12 @@ void UpdateSpaceSceneEffects(void)
     }
     if (Level == Umbris && g_SceneId == 4 && g_SpaceSceneMobys[4] != 0 &&
         g_SpaceSceneMobys[4]->oClass == RED_SHIP)
-        RegisterFuncForMoby((void **)Space_DrawShipEffects, g_SpaceSceneMobys[4]);
+        RegisterMobyDraw((void **)Space_DrawShipEffects, g_SpaceSceneMobys[4]);
     if (Level == Oltanis && g_SceneId == 0 && g_SpaceSceneMobys[1] != 0 &&
         g_SpaceSceneFrame >= 28 && g_SpaceSceneFrame < 34) {
         MobyInstance *ship = g_SpaceSceneMobys[1];
         SpawnSceneShipParticles(ship);
-        RegisterFuncForMoby((void **)DrawSceneShipEffect, ship);
+        RegisterMobyDraw((void **)DrawSceneShipEffect, ship);
     }
     if (Level == Quartu && (g_SceneId == 3 || g_SceneId == 4)) {
         for (i = 0; i < g_SpaceSceneMobyCnt; i++) SetMobyLightFromBlender(g_SpaceSceneMobys[i]);

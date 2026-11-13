@@ -3319,7 +3319,7 @@ void UpdateMoby_388(MobyInstance *moby)
                                     (double)(g_heroPosition.y - (moby->pos).y));
       dVar32 = (double)FastSubRots((float)dVar29,(float)dVar32);
       if (dVar32 < 1.0471975803375244) {
-        RegisterFuncForMoby(&PTR_M388_0035f100_0070c738,moby);
+        RegisterMobyDraw(&PTR_M388_0035f100_0070c738,moby);
       }
     }
     else if (bVar1 < 7) {

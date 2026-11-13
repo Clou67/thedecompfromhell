@@ -624,7 +624,7 @@ LAB_003f4428:
     if (DAT_00854498 == 0) {
       return;
     }
-    RegisterFuncForMoby(&PTR_M1382_003f5d90_0070dc68,moby);
+    RegisterMobyDraw(&PTR_M1382_003f5d90_0070dc68,moby);
     return;
   }
   pvVar8 = moby->pVar;

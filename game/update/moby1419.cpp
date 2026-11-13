@@ -78,7 +78,7 @@ void UpdateMoby_1419(MobyInstance *moby)
     }
   }
   if (g_gameMode == GAME_MODE_SCENE) {
-    RegisterFuncForMoby(&PTR_M1421_00272f40_0070a4b0,moby);
+    RegisterMobyDraw(&PTR_M1421_00272f40_0070a4b0,moby);
   }
   return;
 }

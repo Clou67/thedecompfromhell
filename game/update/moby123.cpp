@@ -459,7 +459,7 @@ void UpdateMoby_123(MobyInstance *moby)
       iVar9 = iVar9 + 1;
     } while (iVar9 < DAT_007685ac);
   }
-  RegisterFuncForMoby(&PTR_M1230_00213920_007095e0,moby);
+  RegisterMobyDraw(&PTR_M1230_00213920_007095e0,moby);
   return;
 }
 

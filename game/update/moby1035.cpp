@@ -344,7 +344,7 @@ void UpdateMoby_1035(MobyInstance *moby)
         }
       }
       if (*(int *)((int)pvVar7 + 0x18) != 0) {
-        dVar23 = (double)RegisterFuncForMoby(&PTR_M1038_001942f4_00708528,moby);
+        dVar23 = (double)RegisterMobyDraw(&PTR_M1038_001942f4_00708528,moby);
       }
       if (HelpData.piece<344,2>() == 0) {
         if ((*(short *)((int)pvVar7 + 0x16) == 0) &&

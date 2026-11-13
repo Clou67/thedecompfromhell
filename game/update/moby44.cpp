@@ -2225,7 +2225,7 @@ LAB_00380248:
     iVar12 = iVar12 + 1;
     pvVar20 = (void *)((int)pvVar20 + 0x10);
   } while (iVar12 < 3);
-  RegisterFuncForMoby(&PTR_M440_003805d0_0070cbb8,moby);
+  RegisterMobyDraw(&PTR_M440_003805d0_0070cbb8,moby);
   return;
 }
 

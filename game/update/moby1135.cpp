@@ -480,7 +480,7 @@ void UpdateMoby_1135(MobyInstance *moby)
       }
       dVar15 = 0.0;
       if (piVar2[0xd] != 0) {
-        RegisterFuncForMoby(&PTR_M1138_001db948_00708f10,moby);
+        RegisterMobyDraw(&PTR_M1138_001db948_00708f10,moby);
         Delt((float)dVar15,g_FrameTime * 4.0,(float *)(piVar2 + 0xd));
         return;
       }
@@ -575,7 +575,7 @@ LAB_001db308:
     uVar4 = piVar2[0xd] >> 0x1f;
     dVar15 = 1.9500000476837158;
     if ((int)((uVar4 >> 1 ^ piVar2[0xd]) - uVar4) < 0x3ff9999a) {
-      RegisterFuncForMoby(&PTR_M1138_001db948_00708f10,moby);
+      RegisterMobyDraw(&PTR_M1138_001db948_00708f10,moby);
       fVar16 = Delt((float)dVar15,g_FrameTime * 4.0,(float *)(piVar2 + 0xd));
       dVar15 = (double)fVar16;
     }

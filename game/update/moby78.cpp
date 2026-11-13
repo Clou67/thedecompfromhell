@@ -211,7 +211,7 @@ void UpdateMoby_78(MobyInstance *moby)
         pfVar9[1] = fVar3 + (moby->pos).y;
         pfVar9[2] = fVar4 + (moby->pos).z;
       }
-      RegisterFuncForMoby(&PTR_M786_0045aa28_0070e9c0,moby);
+      RegisterMobyDraw(&PTR_M786_0045aa28_0070e9c0,moby);
     }
     else {
       M78_00459ff0((longlong)(int)moby);
@@ -237,7 +237,7 @@ void UpdateMoby_78(MobyInstance *moby)
       *(undefined1 *)((int)pfVar9 + 0xd) = 0;
       *(undefined1 *)((int)pfVar9 + 0xe) = 0;
       *(undefined1 *)((int)pfVar9 + 0xf) = 0;
-      RegisterFuncForMoby(&PTR_M786_0045aa28_0070e9c0,moby);
+      RegisterMobyDraw(&PTR_M786_0045aa28_0070e9c0,moby);
     }
     else {
       moby->state = '\x03';

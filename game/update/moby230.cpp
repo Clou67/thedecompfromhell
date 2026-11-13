@@ -983,7 +983,7 @@ LAB_002ff060:
   else {
     if (((param_3 != 2) || (g_CollOutput.pMoby == (MobyInstance *)0x0)) ||
        (iVar23 = MB_GetPlatformParent(), iVar23 == 0)) {
-      RegisterFuncForMoby(&PTR_M230_002fdab8_0070b940,param_2);
+      RegisterMobyDraw(&PTR_M230_002fdab8_0070b940,param_2);
     }
     param_1[8] = g_CollOutput.normal.x;
     param_1[9] = g_CollOutput.normal.y;

@@ -214,7 +214,7 @@ void UpdateMoby_628(MobyInstance *moby)
                 ((double)*pfVar1,0x3ff0000000000000,0x3ff0000000000000,pfVar1[3],
                  (longlong)(int)moby + 0x10,0,0x10000);
     }
-    RegisterFuncForMoby(&PTR_M629_003ec168_0070daa8,moby);
+    RegisterMobyDraw(&PTR_M629_003ec168_0070daa8,moby);
   }
   else {
     DeleteMoby(moby);

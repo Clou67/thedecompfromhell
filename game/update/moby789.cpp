@@ -110,7 +110,7 @@ void M79_0045dfb0(MobyInstance *param_1)
          0x30000000;
     if ((worldUpdateTime != 0) && (worldUpdateTime != **(int **)((int)pvVar1 + 0x364))) {
       **(int **)((int)pvVar1 + 0x364) = worldUpdateTime;
-      RegisterFuncForMoby(&PTR_M789_0045de88_0070ea20,param_1);
+      RegisterMobyDraw(&PTR_M789_0045de88_0070ea20,param_1);
     }
   }
   return;

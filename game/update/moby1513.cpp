@@ -283,7 +283,7 @@ void UpdateMoby_1513(MobyInstance *moby)
                    lVar13);
         SetCameraPosition(0x951500,0x951510,1,0,0);
       }
-      RegisterFuncForMoby(&PTR_M1514_00290e8c_0070a8c0,moby);
+      RegisterMobyDraw(&PTR_M1514_00290e8c_0070a8c0,moby);
     }
   }
   else if (bVar1 < 4) {
@@ -361,7 +361,7 @@ void UpdateMoby_1513(MobyInstance *moby)
         moby->state = '\x04';
       }
     }
-    RegisterFuncForMoby(&PTR_M1514_00290e8c_0070a8c0,moby);
+    RegisterMobyDraw(&PTR_M1514_00290e8c_0070a8c0,moby);
   }
   else if (bVar1 < 5) {
     DAT_007ab398 = FastLerpColor(0x3f999999a0000000,DAT_007ab398,PTR_DAT_007ab3a4);
@@ -395,7 +395,7 @@ void UpdateMoby_1513(MobyInstance *moby)
     piVar14[8] = (int)(float)dVar16;
     dVar16 = (double)FastWrapRot((float)piVar14[10],(float)dVar18);
     piVar14[10] = (int)(float)dVar16;
-    RegisterFuncForMoby(&PTR_M1514_00290e8c_0070a8c0,moby);
+    RegisterMobyDraw(&PTR_M1514_00290e8c_0070a8c0,moby);
     if (((GameCamera.pCurrentUpdCam != (void *)0x0) &&
         (*(short *)((int)GameCamera.pCurrentUpdCam + 0x86) == 5)) && (g_framesNotGrounded == 0)) {
       Camera_DeactivateMobyDrivenCam(2);

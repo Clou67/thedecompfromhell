@@ -715,7 +715,7 @@ LAB_003f6e14:
     GetBonePosition(param_1,iVar14,uVar13 + 0x200);
     uVar13 = uVar13 + 0x10;
   } while (iVar14 < 3);
-  RegisterFuncForMoby(&PTR_M1382_003f9a38_0070dcd0,param_1);
+  RegisterMobyDraw(&PTR_M1382_003f9a38_0070dcd0,param_1);
   return;
 }
 

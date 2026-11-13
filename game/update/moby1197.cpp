@@ -542,7 +542,7 @@ void M1197_001f52a0(MobyInstance *param_1)
       iVar20 = iVar20 + 1;
       uVar27 = uVar27 + 0x10;
     } while (iVar20 < 0xf);
-    RegisterFuncForMoby(&PTR_M1198_001f6448_007092a0,param_1);
+    RegisterMobyDraw(&PTR_M1198_001f6448_007092a0,param_1);
     M1197_001f4d90(param_1);
   }
   return;

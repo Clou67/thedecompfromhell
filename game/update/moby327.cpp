@@ -307,7 +307,7 @@ void UpdateMoby_327_BataliaOcean(MobyInstance *moby)
     DAT_010c50e0 = 1;
     OceanPlane_SetDefaultDepth(0x3fe5555560000000,&OCEAN_BATALIA);
   }
-  RegisterFuncForMoby(&PTR_M327_Batalia_SubmitOcean_0070c2e8,moby);
+  RegisterMobyDraw(&PTR_M327_Batalia_SubmitOcean_0070c2e8,moby);
   if (Level == Batalia) {
     if (((int)(((uint)((int)g_heroPosition.z >> 0x1f) >> 1 ^ (uint)g_heroPosition.z) -
               ((int)g_heroPosition.z >> 0x1f)) <

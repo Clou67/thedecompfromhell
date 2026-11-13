@@ -987,7 +987,7 @@ void UpdateMoby_940(MobyInstance *moby)
       puVar14[0x42] = (longlong)(int)(animationSpeed * 10.5);
       MB_SetAnimation(lVar24,0,0,*(undefined4 *)((int)puVar14 + 0x214));
     }
-    RegisterFuncForMoby(&PTR_M945_004c6b80_0070f848,moby);
+    RegisterMobyDraw(&PTR_M945_004c6b80_0070f848,moby);
   }
   else if (uVar3 == '\x04') {
     if (*(int *)((int)pvVar8 + 0x164) == 2) {

@@ -25,7 +25,7 @@ void UpdateMoby_1898(MobyInstance *moby)
     DeleteMoby(moby);
   }
   else if (moby->state < 2) {
-    RegisterFuncForMoby(&PTR_M1898_002d1540_0070b2b8,moby);
+    RegisterMobyDraw(&PTR_M1898_002d1540_0070b2b8,moby);
     fVar1 = *pfVar2;
     *pfVar2 = fVar1 + pfVar2[1];
     if (2.0 < fVar1 + pfVar2[1]) {

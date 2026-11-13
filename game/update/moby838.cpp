@@ -51,7 +51,7 @@ void UpdateMoby_838(MobyInstance *moby)
   if (bVar1 < 2) {
     if (DAT_010d9d40 != worldUpdateTime) {
       DAT_010d9d40 = worldUpdateTime;
-      RegisterFuncForMoby(&PTR_M841_00481ca8_0070ef38,moby);
+      RegisterMobyDraw(&PTR_M841_00481ca8_0070ef38,moby);
     }
     fVar2 = (moby->pos).y;
     fVar3 = (moby->pos).x;

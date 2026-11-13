@@ -448,7 +448,7 @@ void UpdateMoby_1225(MobyInstance *moby)
 {
   moby->drawDistance = 0xff;
   moby->updateDistance = -1;
-  RegisterFuncForMoby(&PTR_M1225_0020e950_00709540,moby);
+  RegisterMobyDraw(&PTR_M1225_0020e950_00709540,moby);
   return;
 }
 

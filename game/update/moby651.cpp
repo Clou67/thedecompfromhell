@@ -249,7 +249,7 @@ LAB_00402554:
     moby->state = '\x02';
   }
   else if (*(int *)((int)pvVar5 + 0xb0) != 0) {
-    RegisterFuncForMoby(&PTR_M654_00402750_0070de30,moby);
+    RegisterMobyDraw(&PTR_M654_00402750_0070de30,moby);
   }
 LAB_004026b8:
   local_50.x = local_50.x + (moby->pos).x;

@@ -583,3 +583,9 @@ DAT_00963668	g_WaterPatches
 DAT_0095f240	g_WaterBaseUVs
 DAT_0071f070	g_WaterSpadIndex
 DAT_0071f074	g_WaterSpadBufs
+RegisterFuncForMoby	RegisterMobyDraw
+RegisterOceanUpdate	RegisterPreDraw
+ExecuteRegisteredMobyFuncs	ExecuteMobyDraws
+g_MobyFuncListCount	g_MobyDrawCount
+g_MobyFuncListArgs	g_MobyDrawArgs
+g_MobyFuncList	g_MobyDrawFuncs

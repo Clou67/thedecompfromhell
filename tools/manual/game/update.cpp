@@ -121,7 +121,7 @@ void STUB_00166e28(...)
 // 0x0166e30 (0x4c bytes)
 void ResetGameCounters(void)
 {
-    g_MobyFuncListCount = 0;
+    g_MobyDrawCount = 0;
     g_PostDrawCount = 0;
     g_NumLameShadows = 0;
     g_PreDrawCount = 0;

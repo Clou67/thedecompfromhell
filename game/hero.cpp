@@ -2460,7 +2460,7 @@ void Hero_RegisterGlowDraw(void)
 {
   if (DAT_0096bb92 == 0) {
     DAT_0096bb92 = 1;
-    RegisterFuncForMoby(&PTR_Hero_DrawGlows_00705228,g_heroMobyPtr);
+    RegisterMobyDraw(&PTR_Hero_DrawGlows_00705228,g_heroMobyPtr);
   }
   return;
 }
@@ -8172,7 +8172,7 @@ void HeroUpdateNonRatchet(void)
           DAT_0096ba6c = local_144;
           if (DAT_0096bb92 == 0) {
             DAT_0096bb92 = 1;
-            RegisterFuncForMoby(&PTR_Hero_DrawGlows_00705228,g_heroMobyPtr);
+            RegisterMobyDraw(&PTR_Hero_DrawGlows_00705228,g_heroMobyPtr);
           }
           if (DAT_0096b304 != (MobyInstance *)0x0) {
             GetBoneTransformations(g_heroMobyPtr,7,aVStack_120);
@@ -8317,7 +8317,7 @@ void HeroUpdateNonRatchet(void)
           DAT_0096ba6c = local_124;
           if (DAT_0096bb92 == 0) {
             DAT_0096bb92 = 1;
-            RegisterFuncForMoby(&PTR_Hero_DrawGlows_00705228,g_heroMobyPtr);
+            RegisterMobyDraw(&PTR_Hero_DrawGlows_00705228,g_heroMobyPtr);
           }
         }
       }
@@ -8386,7 +8386,7 @@ void HeroUpdateNonRatchet(void)
                        ((int)uVar11 >> 8 & 0xffU) << 8 | uVar11 & 0xff;
         if (DAT_0096bb92 == 0) {
           DAT_0096bb92 = 1;
-          RegisterFuncForMoby(&PTR_Hero_DrawGlows_00705228,g_heroMobyPtr);
+          RegisterMobyDraw(&PTR_Hero_DrawGlows_00705228,g_heroMobyPtr);
         }
         DAT_0096bfc0 = 0;
       }
@@ -9535,7 +9535,7 @@ void Hero_AddGlow(float size,float intensity,float *pos,int color)
   *(float *)(&DAT_0096bb70 + (int)(lVar4 << 2)) = intensity;
   if (sVar3 == 0) {
     DAT_0096bb92 = 1;
-    RegisterFuncForMoby(&PTR_Hero_DrawGlows_00705228,g_heroMobyPtr);
+    RegisterMobyDraw(&PTR_Hero_DrawGlows_00705228,g_heroMobyPtr);
   }
   g_heroGlowCount = g_heroGlowCount + 1;
   return;
@@ -9609,7 +9609,7 @@ void Hero_UpdateGadgetGlows(void)
       *(undefined4 *)(&DAT_0096bb70 + (int)(lVar17 << 2)) = 0x3e19999a;
       if (sVar7 == 0) {
         DAT_0096bb92 = 1;
-        RegisterFuncForMoby(&PTR_Hero_DrawGlows_00705228,g_heroMobyPtr);
+        RegisterMobyDraw(&PTR_Hero_DrawGlows_00705228,g_heroMobyPtr);
       }
       iVar18 = iVar18 + 1;
       g_heroGlowCount = g_heroGlowCount + 1;
@@ -9689,7 +9689,7 @@ void Hero_UpdateGadgetGlows(void)
       *(undefined4 *)(&DAT_0096bb70 + (int)(lVar16 << 2)) = 0x3dcccccd;
       if (sVar7 == 0) {
         DAT_0096bb92 = 1;
-        RegisterFuncForMoby(&PTR_Hero_DrawGlows_00705228,g_heroMobyPtr);
+        RegisterMobyDraw(&PTR_Hero_DrawGlows_00705228,g_heroMobyPtr);
       }
       g_heroGlowCount = g_heroGlowCount + 1;
     }
@@ -9867,7 +9867,7 @@ void Hero_UpdateGadgetGlows(void)
       *(undefined4 *)(&DAT_0096bb70 + (int)(lVar16 << 2)) = 0x3dcccccd;
       if (sVar7 == 0) {
         DAT_0096bb92 = 1;
-        RegisterFuncForMoby(&PTR_Hero_DrawGlows_00705228,g_heroMobyPtr);
+        RegisterMobyDraw(&PTR_Hero_DrawGlows_00705228,g_heroMobyPtr);
       }
       g_heroGlowCount = g_heroGlowCount + 1;
     }
@@ -9964,7 +9964,7 @@ void Hero_UpdateGadgetGlows(void)
         *(undefined4 *)(&DAT_0096bb70 + (int)(lVar16 << 2)) = 0x3d23d70a;
         if (sVar7 == 0) {
           DAT_0096bb92 = 1;
-          RegisterFuncForMoby(&PTR_Hero_DrawGlows_00705228,g_heroMobyPtr);
+          RegisterMobyDraw(&PTR_Hero_DrawGlows_00705228,g_heroMobyPtr);
         }
         g_heroGlowCount = g_heroGlowCount + 1;
       }
@@ -9993,7 +9993,7 @@ void Hero_UpdateGadgetGlows(void)
       *(undefined4 *)(&DAT_0096bb70 + (int)(lVar17 << 2)) = 0x3cf5c28f;
       if (sVar7 == 0) {
         DAT_0096bb92 = 1;
-        RegisterFuncForMoby(&PTR_Hero_DrawGlows_00705228,g_heroMobyPtr);
+        RegisterMobyDraw(&PTR_Hero_DrawGlows_00705228,g_heroMobyPtr);
       }
       g_heroGlowCount = g_heroGlowCount + 1;
     }
@@ -10963,7 +10963,7 @@ void Hero_UpdateGadgetMobys(void)
             DAT_0096ba6c = *(undefined4 *)((int)puVar10 + 0xbc);
             if (DAT_0096bb92 == 0) {
               DAT_0096bb92 = 1;
-              RegisterFuncForMoby(&PTR_Hero_DrawGlows_00705228,g_heroMobyPtr);
+              RegisterMobyDraw(&PTR_Hero_DrawGlows_00705228,g_heroMobyPtr);
             }
             (pMVar18->pos).x = *(f32 *)(puVar10 + 0x16);
             (pMVar18->pos).y = *(f32 *)((int)puVar10 + 0xb4);
@@ -12777,7 +12777,7 @@ void Hero_AddPulsingMobyGlow(MobyInstance *param_1)
       *(undefined4 *)(&DAT_0096bb50 + (int)(lVar9 << 2)) = 0x3e800000;
       if (bVar1) {
         DAT_0096bb92 = 1;
-        RegisterFuncForMoby(&PTR_Hero_DrawGlows_00705228,g_heroMobyPtr);
+        RegisterMobyDraw(&PTR_Hero_DrawGlows_00705228,g_heroMobyPtr);
       }
       g_heroGlowCount = g_heroGlowCount + 1;
     }
@@ -12797,7 +12797,7 @@ void Hero_AddPulsingMobyGlow(MobyInstance *param_1)
     *(undefined4 *)(&DAT_0096bb50 + (int)(lVar9 << 2)) = 0x3d408312;
     if (bVar1) {
       DAT_0096bb92 = 1;
-      RegisterFuncForMoby(&PTR_Hero_DrawGlows_00705228,g_heroMobyPtr);
+      RegisterMobyDraw(&PTR_Hero_DrawGlows_00705228,g_heroMobyPtr);
     }
     g_heroGlowCount = g_heroGlowCount + 1;
   }

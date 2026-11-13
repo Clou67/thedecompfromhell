@@ -620,7 +620,7 @@ void UpdateMoby_576(MobyInstance *moby)
     (moby->transform).v1.x = fVar10 * fVar5;
     (moby->transform).v1.y = fVar11 * fVar5;
     (moby->transform).v1.z = fVar12 * fVar5;
-    RegisterFuncForMoby(&PTR_M577_003c83e0_0070d540,moby);
+    RegisterMobyDraw(&PTR_M577_003c83e0_0070d540,moby);
   }
   return;
 }

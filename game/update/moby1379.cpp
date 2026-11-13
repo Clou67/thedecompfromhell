@@ -3428,7 +3428,7 @@ void M1379_UpdateFlight(MobyInstance *param_1,int param_2)
       *(undefined4 *)(param_2 + 0xdc) = DAT_0079c46c;
     }
   }
-  RegisterFuncForMoby(&PTR_M1379_Hud_Draw_0070a1b8,param_1);
+  RegisterMobyDraw(&PTR_M1379_Hud_Draw_0070a1b8,param_1);
   M1379_UpdateMissiles(param_1,param_2);
   uVar42 = FastWrapRot
                      (*(float *)(param_2 + 0x28),-(*(float *)(param_2 + 0x6c) * 0.14285715));

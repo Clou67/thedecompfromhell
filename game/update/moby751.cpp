@@ -412,7 +412,7 @@ void UpdateMoby_751(MobyInstance *moby)
       }
     }
     WaterTile_UpdateWaves((WaterTile *)&DAT_0085a8c0,0x15);
-    RegisterFuncForMoby(&PTR_M751_0044ce28_0070e7c8,moby);
+    RegisterMobyDraw(&PTR_M751_0044ce28_0070e7c8,moby);
     if (((iVar12 == 0) || (iVar12 == 6)) && (DAT_010cce90 = DAT_010cce90 + -1, DAT_010cce90 < 1)) {
       lVar14 = MB_randInt(5);
       iVar19 = (int)(lVar14 << 4);

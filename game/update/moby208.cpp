@@ -179,7 +179,7 @@ MobyInstance * UpdateMoby_208(MobyInstance *moby)
             }
           }
           else if (bVar1 < 3) {
-            RegisterFuncForMoby(&PTR_M1449_002eb6d8_0070b750,moby);
+            RegisterMobyDraw(&PTR_M1449_002eb6d8_0070b750,moby);
             if (((moby->field43_0x70 & 2U) != 0) && (moby->animationId != '\x04')) {
               MB_SetAnimation(moby,4,0,(int)(animationSpeed * 10.5));
             }
@@ -258,7 +258,7 @@ MobyInstance * UpdateMoby_208(MobyInstance *moby)
           }
           else {
             PlayMobySound(1,0,moby);
-            RegisterFuncForMoby(&PTR_M1449_002eb6d8_0070b750,moby);
+            RegisterMobyDraw(&PTR_M1449_002eb6d8_0070b750,moby);
             pMVar18 = DAT_0096a644;
             iVar19 = *(int *)((int)pvVar6 + 0x14);
             *(f32 *)(iVar19 + 0x10) = (DAT_0096a644->pos).x;
@@ -276,7 +276,7 @@ MobyInstance * UpdateMoby_208(MobyInstance *moby)
               if (((moby->field43_0x70 & 2U) != 0) && (moby->animationId != '\x04')) {
                 MB_SetAnimation(moby,4,0,(int)(animationSpeed * 10.5));
               }
-              RegisterFuncForMoby(&PTR_M1449_002eb6d8_0070b750,moby);
+              RegisterMobyDraw(&PTR_M1449_002eb6d8_0070b750,moby);
               pMVar18 = (MobyInstance *)&DAT_002ebd50;
               fVar3 = *(float *)((int)pvVar6 + 0x20) * (DAT_0071f408 * -0.100000024 + 1.0);
               *(float *)((int)pvVar6 + 0x20) = fVar3;
@@ -337,7 +337,7 @@ MobyInstance * UpdateMoby_208(MobyInstance *moby)
             *(float *)((int)pvVar6 + 0x20) =
                  *(float *)((int)pvVar6 + 0x20) * (DAT_0071f408 * -0.100000024 + 1.0);
             *(float *)((int)pvVar6 + 0x18) = *(float *)((int)pvVar6 + 0x18) + 0.6981317;
-            pMVar18 = (MobyInstance *)RegisterFuncForMoby(&PTR_M1449_002eb6d8_0070b750,moby);
+            pMVar18 = (MobyInstance *)RegisterMobyDraw(&PTR_M1449_002eb6d8_0070b750,moby);
             if ((g_heroState != PULLING_GREEN_SWINGSHOT) && (g_heroState != UNK_26)) {
               pMVar18 = (MobyInstance *)0x6;
               moby->state = '\x06';
@@ -345,7 +345,7 @@ MobyInstance * UpdateMoby_208(MobyInstance *moby)
           }
         }
         else if (bVar1 < 7) {
-          RegisterFuncForMoby(&PTR_M1449_002eb6d8_0070b750,moby);
+          RegisterMobyDraw(&PTR_M1449_002eb6d8_0070b750,moby);
           pMVar18 = (MobyInstance *)0x7;
           *(float *)(iVar20 + 4) = g_FrameTime * 80.0;
           moby->state = '\a';
@@ -399,7 +399,7 @@ MobyInstance * UpdateMoby_208(MobyInstance *moby)
             *(float *)(iVar19 + 0x18) = fVar4 + fVar14;
             *(float *)(iVar19 + 0x14) = fVar3 + fVar13;
             *(float *)(iVar19 + 0x10) = fVar2 + fVar11;
-            pMVar18 = (MobyInstance *)RegisterFuncForMoby(&PTR_M1449_002eb6d8_0070b750,moby);
+            pMVar18 = (MobyInstance *)RegisterMobyDraw(&PTR_M1449_002eb6d8_0070b750,moby);
           }
         }
       }
@@ -454,7 +454,7 @@ MobyInstance * UpdateMoby_208(MobyInstance *moby)
           *(float *)(iVar19 + 0x18) = fVar4 + fVar14;
           *(float *)(iVar19 + 0x14) = fVar3 + fVar13;
           *(float *)(iVar19 + 0x10) = fVar2 + fVar11;
-          RegisterFuncForMoby(&PTR_M1449_002eb6d8_0070b750,moby);
+          RegisterMobyDraw(&PTR_M1449_002eb6d8_0070b750,moby);
         }
         pMVar18 = (MobyInstance *)g_heroState;
         if (g_heroState == SWINGING_YELLOW_SWINGSHOT && iVar20 != 0) {
@@ -477,7 +477,7 @@ MobyInstance * UpdateMoby_208(MobyInstance *moby)
         if (((moby->field43_0x70 & 2U) != 0) && (moby->animationId != '\x04')) {
           MB_SetAnimation(moby,4,0,(int)(animationSpeed * 10.5));
         }
-        RegisterFuncForMoby(&PTR_M1449_002eb6d8_0070b750,moby);
+        RegisterMobyDraw(&PTR_M1449_002eb6d8_0070b750,moby);
         pMVar18 = (MobyInstance *)0xe;
         *(float *)(iVar20 + 4) = g_FrameTime * 80.0;
         moby->state = '\x0e';
@@ -496,7 +496,7 @@ MobyInstance * UpdateMoby_208(MobyInstance *moby)
         *(float *)((int)pvVar6 + 0x20) =
              *(float *)((int)pvVar6 + 0x20) * (DAT_0071f408 * -0.6 + 1.0);
         *(float *)((int)pvVar6 + 0x18) = *(float *)((int)pvVar6 + 0x18) + 0.6981317;
-        RegisterFuncForMoby(&PTR_M1449_002eb6d8_0070b750,moby);
+        RegisterMobyDraw(&PTR_M1449_002eb6d8_0070b750,moby);
         pMVar18 = (MobyInstance *)g_heroState;
         if (g_heroState != SWINGING_YELLOW_SWINGSHOT) {
           pMVar18 = (MobyInstance *)0xd;
@@ -507,7 +507,7 @@ MobyInstance * UpdateMoby_208(MobyInstance *moby)
         if (((moby->field43_0x70 & 2U) != 0) && (moby->animationId != '\x04')) {
           MB_SetAnimation(moby,4,0,(int)(animationSpeed * 10.5));
         }
-        RegisterFuncForMoby(&PTR_M1449_002eb6d8_0070b750,moby);
+        RegisterMobyDraw(&PTR_M1449_002eb6d8_0070b750,moby);
         pMVar18 = (MobyInstance *)&DAT_002ebd50;
         fVar3 = *(float *)((int)pvVar6 + 0x20) * (DAT_0071f408 * -0.6 + 1.0);
         *(float *)((int)pvVar6 + 0x20) = fVar3;
@@ -519,12 +519,12 @@ MobyInstance * UpdateMoby_208(MobyInstance *moby)
         }
       }
       else if (bVar1 == 10) {
-        RegisterFuncForMoby(&PTR_M1449_002eb6d8_0070b750,moby);
+        RegisterMobyDraw(&PTR_M1449_002eb6d8_0070b750,moby);
         pMVar18 = (MobyInstance *)0xb;
         moby->state = '\v';
       }
       else if (bVar1 == 9) {
-        RegisterFuncForMoby(&PTR_M1449_002eb6d8_0070b750,moby);
+        RegisterMobyDraw(&PTR_M1449_002eb6d8_0070b750,moby);
         if (((moby->field43_0x70 & 2U) != 0) && (moby->animationId != '\x04')) {
           MB_SetAnimation(moby,4,0,(int)(animationSpeed * 10.5));
         }

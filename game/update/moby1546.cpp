@@ -204,7 +204,7 @@ void UpdateMoby_1546(MobyInstance *moby)
     pMVar2 = g_SpaceSceneMobys[4];
     if (((g_SceneId == 4) && (g_SpaceSceneMobys[4] != (MobyInstance *)0x0)) &&
        ((g_SpaceSceneMobys[4]->oClass == GREEN_SHIP_0213 &&
-        ((RegisterFuncForMoby(&PTR_Space_DrawShipEffects_00707cd8,g_SpaceSceneMobys[4]),
+        ((RegisterMobyDraw(&PTR_Space_DrawShipEffects_00707cd8,g_SpaceSceneMobys[4]),
          (int)(animationSpeed * 850.5) <= g_SpaceSceneFrame &&
          (local_c0 = (longlong)(int)(animationSpeed * 1160.5),
          g_SpaceSceneFrame <= (int)(animationSpeed * 1160.5))))))) {
@@ -294,7 +294,7 @@ void UpdateMoby_1546(MobyInstance *moby)
                   (dVar24,dVar24,dVar25,0x3fe0000000000000,uVar12,dVar25,uVar4,pMVar2,&local_e0,
                    &local_d0);
       }
-      RegisterFuncForMoby(&PTR_Space_DrawShipEffects_00707cd8,pMVar2);
+      RegisterMobyDraw(&PTR_Space_DrawShipEffects_00707cd8,pMVar2);
       GetBonePosition(pMVar2,1,&local_100);
       GetBonePosition(pMVar2,2,&local_f0);
       dVar24 = (double)local_100 - dVar23;

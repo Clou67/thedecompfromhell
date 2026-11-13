@@ -689,7 +689,7 @@ LAB_001af770:
       iVar17 = iVar17 + 1;
       uVar19 = uVar19 + 0x10;
     } while (iVar17 < 0xf);
-    RegisterFuncForMoby(&PTR_M1069_001b1eb8_00708938,param_1);
+    RegisterMobyDraw(&PTR_M1069_001b1eb8_00708938,param_1);
     M1068_001aefb8(param_1);
   }
   return;

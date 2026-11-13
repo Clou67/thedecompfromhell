@@ -564,7 +564,7 @@ void UpdateMoby_902(MobyInstance *moby)
       *(undefined2 *)(&DAT_008cc29e + (int)fVar40 * 0x11a0) = uVar22;
       if (fVar40 == 0.0) {
         WaterTile_UpdateWaves((WaterTile *)&DAT_008cc280,0x24);
-        RegisterFuncForMoby(&PTR_M977_004a6518_0070f450,moby);
+        RegisterMobyDraw(&PTR_M977_004a6518_0070f450,moby);
         fVar40 = pfVar6[5];
       }
       if (fVar40 == DAT_008cc240) {

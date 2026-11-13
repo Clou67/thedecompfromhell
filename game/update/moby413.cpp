@@ -353,7 +353,7 @@ void UpdateMoby_413(MobyInstance *moby)
         dVar12 = (double)MB_randRangeFloat((float)dVar18,(float)dVar17);
         local_f8 = (float)(dVar12 * (double)g_FrameTime);
         if (((moby->enabled != '\0') &&
-            (RegisterFuncForMoby(&PTR_M413_00366968_0070c898,moby),
+            (RegisterMobyDraw(&PTR_M413_00366968_0070c898,moby),
             fVar3 = g_heroPosition.y - (moby->pos).y, fVar4 = g_heroPosition.x - (moby->pos).x,
             fVar8 = g_heroPosition.z - (moby->pos).z,
             SQRT(fVar8 * fVar8 + fVar4 * fVar4 + fVar3 * fVar3) < 15.0)) &&

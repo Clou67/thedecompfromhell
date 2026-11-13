@@ -252,7 +252,7 @@ void M1906_002d5f48(MobyInstance *param_1)
   if ((uVar12 != '\0') && (uVar12 != '\b')) {
     if ((uVar12 != '\a') && (DAT_010b6ff4 != worldUpdateTime)) {
       DAT_010b6ff4 = worldUpdateTime;
-      RegisterFuncForMoby(&PTR_M1907_002d74b8_0070b3b0,param_1);
+      RegisterMobyDraw(&PTR_M1907_002d74b8_0070b3b0,param_1);
       uVar12 = param_1->state;
     }
     if ((uVar12 == '\x04') || (fVar2 = DAT_007d88b8, uVar12 == '\x05')) {
@@ -727,7 +727,7 @@ void UpdateMoby_1906(MobyInstance *moby)
     (moby->transform).v1.x = fVar10 * fVar5;
     (moby->transform).v1.y = fVar11 * fVar5;
     (moby->transform).v1.z = fVar12 * fVar5;
-    RegisterFuncForMoby(&PTR_M1907_002d7188_0070b3a8,moby);
+    RegisterMobyDraw(&PTR_M1907_002d7188_0070b3a8,moby);
   }
   return;
 }

@@ -556,7 +556,7 @@ undefined ** UpdateMoby_564(MobyInstance *moby)
                     (auVar42 | auVar42 << 0x20 | auVar42 << 0x40 | auVar42 << 0x60,
                      auVar43 | auVar43 << 0x20 | auVar43 << 0x40 | auVar43 << 0x60);
           if ((bool)(in_cr6 >> 1 & 1)) {
-            ppuVar23 = (undefined **)RegisterFuncForMoby(&PTR_M566_003bb988_0070d2e0,moby);
+            ppuVar23 = (undefined **)RegisterMobyDraw(&PTR_M566_003bb988_0070d2e0,moby);
           }
         }
       }

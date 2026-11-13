@@ -42,7 +42,7 @@ void UpdateMoby_126(MobyInstance *moby)
   DAT_00771348 = (fVar1 * fVar4 * 2.601887e-06 +
                  fVar4 * -0.0001980741 + fVar2 * 0.0083330255 + fVar1 * fVar3 * -0.16666657 + fVar3)
                  * 0.25 + 54.0;
-  RegisterFuncForMoby(&PTR_M1259_0022b668_00709968,moby);
+  RegisterMobyDraw(&PTR_M1259_0022b668_00709968,moby);
   return;
 }
 

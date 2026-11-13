@@ -206,7 +206,7 @@ void UpdateMoby_318(MobyInstance *moby)
     uVar3 = piVar11[0xf] >> 0x1f;
     dVar14 = 1.9500000476837158;
     if ((int)((uVar3 >> 1 ^ piVar11[0xf]) - uVar3) < 0x3ff9999a) {
-      RegisterFuncForMoby(&PTR_M319_003411d0_0070c278,moby);
+      RegisterMobyDraw(&PTR_M319_003411d0_0070c278,moby);
       fVar15 = Delt((float)dVar14,g_FrameTime * 4.0,(float *)(piVar11 + 0xf));
       dVar14 = (double)fVar15;
     }
@@ -287,7 +287,7 @@ void UpdateMoby_318(MobyInstance *moby)
       M318_00340640(lVar5);
     }
     else {
-      RegisterFuncForMoby(&PTR_M319_003411d0_0070c278,moby);
+      RegisterMobyDraw(&PTR_M319_003411d0_0070c278,moby);
       Delt((float)dVar14,g_FrameTime * 4.0,(float *)(piVar11 + 0xf));
     }
   }

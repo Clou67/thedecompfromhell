@@ -89,7 +89,7 @@ void UpdateMoby_1378(MobyInstance *moby)
         DAT_0096bfab = fVar2 < 0.5;
       }
     }
-    RegisterFuncForMoby(&PTR_M1379_0025e1a8_0070a150,moby);
+    RegisterMobyDraw(&PTR_M1379_0025e1a8_0070a150,moby);
   }
   return;
 }

@@ -528,7 +528,7 @@ void UpdateMoby_100(MobyInstance *moby)
     M100_00180ae8(moby,Splines[*piVar1]);
     M100_00180998(moby);
     if (DAT_00e5af04 == 0) {
-      RegisterFuncForMoby(&PTR_M1000_0018150c_007082b8,moby);
+      RegisterMobyDraw(&PTR_M1000_0018150c_007082b8,moby);
     }
   }
   return;

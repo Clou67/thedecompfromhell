@@ -97,7 +97,7 @@ void UpdateMoby_678(MobyInstance *moby)
       pfVar4[3] = local_54;
     } while (iVar7 < 2);
   }
-  RegisterFuncForMoby(&PTR_M678_0040f890_0070dff0,moby);
+  RegisterMobyDraw(&PTR_M678_0040f890_0070dff0,moby);
   return;
 }
 

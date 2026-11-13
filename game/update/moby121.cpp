@@ -1335,7 +1335,7 @@ LAB_002028d4:
   else {
     if (((param_3 != 2) || (g_CollOutput.pMoby == (MobyInstance *)0x0)) ||
        (iVar25 = MB_GetPlatformParent(), iVar25 == 0)) {
-      RegisterFuncForMoby(&PTR_M1209_00200608_007093a8,param_2);
+      RegisterMobyDraw(&PTR_M1209_00200608_007093a8,param_2);
     }
     if (((!bVar20) && (fVar11 = param_1[0x18], fVar11 != 0.0)) &&
        ((*(char *)((int)fVar11 + 0x20) == -3 || *(char *)((int)fVar11 + 0x20) == -2 ||

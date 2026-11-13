@@ -371,7 +371,7 @@ void UpdateMoby_384(MobyInstance *moby)
       Delt(-1.0,DAT_0084080c * g_FrameTime,pfVar4 + 2);
     }
   }
-  RegisterFuncForMoby(&PTR_M386_00359ad0_0070c680,moby);
+  RegisterMobyDraw(&PTR_M386_00359ad0_0070c680,moby);
   return;
 }
 

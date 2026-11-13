@@ -258,7 +258,7 @@ ulonglong UpdateMoby_1123(MobyInstance *moby)
     fVar5 = (moby->pos).x - GameCamera.posX;
     fVar6 = (moby->pos).z - GameCamera.posZ;
     if (SQRT(fVar6 * fVar6 + fVar5 * fVar5 + fVar18 * fVar18) < 48.0) {
-      RegisterFuncForMoby(&PTR_M1124_001d64b0_00708e50,moby);
+      RegisterMobyDraw(&PTR_M1124_001d64b0_00708e50,moby);
     }
     fVar18 = pfVar8[0x3c5];
     uVar15 = (ulonglong)(uint)fVar18;

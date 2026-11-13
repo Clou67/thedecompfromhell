@@ -216,7 +216,7 @@ void UpdateMoby_471(MobyInstance *moby)
     if (iVar8 != 0) {
       moby->state = '\x02';
     }
-    RegisterFuncForMoby(&PTR_M475_0039a180_0070ce70,moby);
+    RegisterMobyDraw(&PTR_M475_0039a180_0070ce70,moby);
   }
   else if (bVar1 < 3) {
     if (*(float *)((int)pvVar5 + 0x6c) != -(DAT_00842e90 * g_FrameTime)) {
@@ -257,7 +257,7 @@ void UpdateMoby_471(MobyInstance *moby)
     if (iVar8 != 0) {
       moby->state = '\x01';
     }
-    RegisterFuncForMoby(&PTR_M475_0039a180_0070ce70,moby);
+    RegisterMobyDraw(&PTR_M475_0039a180_0070ce70,moby);
   }
   if (moby->state != '\0') {
     M471_00399a30(moby);

@@ -142,7 +142,7 @@ void UpdateMoby_1443(MobyInstance *moby)
       pvVar8 = (void *)((int)pvVar8 + 4);
     } while (iVar6 < 4);
     if (moby->enabled != '\0') {
-      RegisterFuncForMoby(&PTR_M1890_0027fb48_0070a6c0,moby);
+      RegisterMobyDraw(&PTR_M1890_0027fb48_0070a6c0,moby);
     }
     if ((*(int *)((int)pvVar3 + 0x20) != -1) &&
        (puVar7 = (ushort *)(&g_MobyGroups)[*(int *)((int)pvVar3 + 0x20)],

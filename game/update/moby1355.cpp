@@ -85,8 +85,8 @@ void M1355_00256748(MobyInstance *param_1)
        0x3f800000;
   if (bVar1) {
     DAT_00fa3f08 = uVar5;
-    RegisterFuncForMoby(&PTR_M1356_00257d50_0070a058,param_1);
-    RegisterFuncForMoby(&PTR_M1356_00258108_0070a060,param_1);
+    RegisterMobyDraw(&PTR_M1356_00257d50_0070a058,param_1);
+    RegisterMobyDraw(&PTR_M1356_00258108_0070a060,param_1);
   }
   return;
 }
@@ -546,8 +546,8 @@ undefined4 * UpdateMoby_1355(MobyInstance *moby)
       puVar23 = DAT_00fa3f08;
       if (DAT_00fa3f08 != puVar19) {
         DAT_00fa3f08 = puVar19;
-        RegisterFuncForMoby(&PTR_M1356_00257d50_0070a058,moby);
-        puVar23 = (undefined4 *)RegisterFuncForMoby(&PTR_M1356_00258108_0070a060,moby);
+        RegisterMobyDraw(&PTR_M1356_00257d50_0070a058,moby);
+        puVar23 = (undefined4 *)RegisterMobyDraw(&PTR_M1356_00258108_0070a060,moby);
       }
     }
     else {
@@ -846,8 +846,8 @@ undefined4 * UpdateMoby_1355(MobyInstance *moby)
            = 0x3f800000;
       if (DAT_00fa3f08 != puVar23) {
         DAT_00fa3f08 = puVar23;
-        RegisterFuncForMoby(&PTR_M1356_00257d50_0070a058,moby);
-        puVar23 = (undefined4 *)RegisterFuncForMoby(&PTR_M1356_00258108_0070a060,moby);
+        RegisterMobyDraw(&PTR_M1356_00257d50_0070a058,moby);
+        puVar23 = (undefined4 *)RegisterMobyDraw(&PTR_M1356_00258108_0070a060,moby);
       }
       if (dVar34 < (double)*(float *)((int)pvVar11 + 0x128)) {
         PlayMobySound(1,0,moby);
@@ -921,8 +921,8 @@ undefined4 * UpdateMoby_1355(MobyInstance *moby)
            = 0x3f800000;
       if (DAT_00fa3f08 != puVar19) {
         DAT_00fa3f08 = puVar19;
-        RegisterFuncForMoby(&PTR_M1356_00257d50_0070a058,moby);
-        RegisterFuncForMoby(&PTR_M1356_00258108_0070a060,moby);
+        RegisterMobyDraw(&PTR_M1356_00257d50_0070a058,moby);
+        RegisterMobyDraw(&PTR_M1356_00258108_0070a060,moby);
       }
       puVar23 = (undefined4 *)MB_randInt(DAT_0079bcf4);
       if (puVar23 == (undefined4 *)0x0) {

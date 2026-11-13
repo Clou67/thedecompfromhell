@@ -43,7 +43,7 @@ void UpdateMoby_293(MobyInstance *moby)
           ((iVar1 = *(int *)((int)moby->pVar + 0xc), iVar1 == -1 ||
            (iVar1 = MB_IsPntInCuboid((Vec4 *)&GameCamera.posX,(longlong)iVar1), iVar1 != 0
            )))) {
-    RegisterOceanUpdate(&PTR_M293_00331468_0070c028,moby);
+    RegisterPreDraw(&PTR_M293_00331468_0070c028,moby);
   }
   return;
 }

@@ -367,8 +367,8 @@ void FrontEnd_Draw(void)
         FrontEnd_DrawMenu();
     }
 
-    if (g_MobyFuncListCount != 0) {
-        ExecuteRegisteredMobyFuncs();
+    if (g_MobyDrawCount != 0) {
+        ExecuteMobyDraws();
     }
 
     STUB_001754c8();

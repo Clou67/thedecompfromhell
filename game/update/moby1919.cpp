@@ -567,7 +567,7 @@ void UpdateMoby_1919(MobyInstance *moby)
     M1919_002da598(0);
     M1919_002da4d8(0);
     M1919_002da4d8(1);
-    RegisterFuncForMoby(&PTR_M1919_002d9948_0070b4a8,moby);
+    RegisterMobyDraw(&PTR_M1919_002d9948_0070b4a8,moby);
   }
   return;
 }

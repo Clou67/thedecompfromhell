@@ -30,7 +30,7 @@ void UpdateMoby_1062(MobyInstance *moby)
   int *piVar4;
   
   piVar4 = (int *)moby->pVar;
-  RegisterFuncForMoby(&PTR_M1066_001ad528_007088c8,moby);
+  RegisterMobyDraw(&PTR_M1066_001ad528_007088c8,moby);
   iVar2 = 0;
   piVar3 = piVar4;
   while ((*piVar3 < 0 ||
@@ -51,11 +51,11 @@ LAB_001ad1e0:
           return;
         }
       }
-      RegisterFuncForMoby(&PTR_M1066_001ad990_007088d0,moby);
+      RegisterMobyDraw(&PTR_M1066_001ad990_007088d0,moby);
       return;
     }
   }
-  RegisterFuncForMoby(&PTR_M1066_001ad26c_007088c0,moby);
+  RegisterMobyDraw(&PTR_M1066_001ad26c_007088c0,moby);
   goto LAB_001ad1e0;
 }
 

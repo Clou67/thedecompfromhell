@@ -571,7 +571,7 @@ void UpdateMoby_600(MobyInstance *moby)
     M600_003d6860(0);
     M600_003d67a0(0);
     M600_003d67a0(1);
-    RegisterFuncForMoby(&PTR_M600_003d5d30_0070d800,moby);
+    RegisterMobyDraw(&PTR_M600_003d5d30_0070d800,moby);
   }
   return;
 }

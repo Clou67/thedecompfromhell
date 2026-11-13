@@ -113,7 +113,7 @@ void UpdateMoby_586(MobyInstance *moby)
         if (g_heroState == MOVEMENT_LOCKED) {
           return;
         }
-        RegisterFuncForMoby(&PTR_M587_003d43c8_0070d798,moby);
+        RegisterMobyDraw(&PTR_M587_003d43c8_0070d798,moby);
         iVar6 = FastDecTimerS32((int)pvVar2 + 0x6c);
         if (iVar6 == 0) {
           return;

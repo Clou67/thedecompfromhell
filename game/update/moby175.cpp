@@ -533,7 +533,7 @@ void M175_002b1078(undefined8 param_1)
     pfVar7 = pfVar7 + 3;
   } while (iVar4 < 10);
   GetBonePosition(param_1,0,&DAT_00fb0220);
-  RegisterFuncForMoby(&PTR_M1750_002b1950_0070ae30,(MobyInstance *)param_1);
+  RegisterMobyDraw(&PTR_M1750_002b1950_0070ae30,(MobyInstance *)param_1);
   return;
 }
 

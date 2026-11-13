@@ -764,7 +764,7 @@ void UpdateMoby_1046(MobyInstance *moby)
   }
   moby->alpha = sVar4;
   if (dVar5 < 1.0) {
-    RegisterFuncForMoby(&PTR_M1046_0019e010_007086b8,moby);
+    RegisterMobyDraw(&PTR_M1046_0019e010_007086b8,moby);
     M1046_0019e848(g_heroMobyPtr,moby,pfVar2);
     for (iVar3 = MobyUpdateChainStart; iVar3 != 0; iVar3 = *(int *)(iVar3 + 0x28)) {
       M1046_0019e848(iVar3,moby,pfVar2);

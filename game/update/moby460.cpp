@@ -38,7 +38,7 @@ void UpdateMoby_460(MobyInstance *moby)
     OceanPlane_SetDepth(1.0,&OCEAN_UMBRIS,ZEXT48(&DAT_00392e54),0x80);
   }
   else if (moby->state < 2) {
-    RegisterOceanUpdate(&PTR_M460_00392e28_0070cd80,moby);
+    RegisterPreDraw(&PTR_M460_00392e28_0070cd80,moby);
   }
   return;
 }

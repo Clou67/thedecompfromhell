@@ -891,7 +891,7 @@ void UpdateMoby_79(MobyInstance *moby)
            = 0x3f800000;
       if (uVar29 != *puVar14) {
         *puVar14 = uVar29;
-        RegisterFuncForMoby(&PTR_M792_0045f698_0070ea40,moby);
+        RegisterMobyDraw(&PTR_M792_0045f698_0070ea40,moby);
       }
       fVar15 = (moby->pos).x;
       uVar29 = (int)fVar15 >> 0x1f;

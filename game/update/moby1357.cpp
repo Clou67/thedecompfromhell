@@ -779,7 +779,7 @@ void UpdateMoby_1357(MobyInstance *moby)
     (moby->pos).z = 1013.0;
   }
   if (2 < moby->state) {
-    RegisterFuncForMoby(&PTR_M1357_0025a374_0070a0b0,moby);
+    RegisterMobyDraw(&PTR_M1357_0025a374_0070a0b0,moby);
   }
   return;
 }

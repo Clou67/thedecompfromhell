@@ -296,7 +296,7 @@ void M1319_00246598(MobyInstance *param_1)
   *(undefined4 *)((int)pvVar11 + *(int *)((int)pvVar11 + 0x2c4) * 0x10 + 0x1cc) = 0x3f800000;
   if ((bVar1) && (uVar14 != **(uint **)((int)pvVar11 + 0x2c8))) {
     **(uint **)((int)pvVar11 + 0x2c8) = uVar14;
-    RegisterFuncForMoby(&PTR_M1319_002461a0_00709dc0,param_1);
+    RegisterMobyDraw(&PTR_M1319_002461a0_00709dc0,param_1);
   }
   return;
 }

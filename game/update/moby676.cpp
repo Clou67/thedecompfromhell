@@ -24,7 +24,7 @@ void M676_0040f810(void)
 void UpdateMoby_676(MobyInstance *moby)
 
 {
-  RegisterFuncForMoby(&PTR_M676_0040f810_0070dfd8,moby);
+  RegisterMobyDraw(&PTR_M676_0040f810_0070dfd8,moby);
   return;
 }
 

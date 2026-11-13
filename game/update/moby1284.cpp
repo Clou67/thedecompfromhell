@@ -2534,7 +2534,7 @@ void UpdateMoby_1284(MobyInstance *moby)
       else {
         M1284_00239d98(moby,pvVar8);
       }
-      RegisterFuncForMoby(&PTR_M1284_0023b238_00709c10,moby);
+      RegisterMobyDraw(&PTR_M1284_0023b238_00709c10,moby);
     }
     else if ((DAT_0096b2d0 != 0) && (*(short *)(DAT_0096b2d0 + 0xa6) == 0x45)) {
       *(undefined1 *)(DAT_0096b2d0 + 0xbc) = 0;

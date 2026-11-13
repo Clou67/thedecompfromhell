@@ -1529,7 +1529,7 @@ LAB_00405564:
         *(undefined4 *)((int)pvVar8 + 0x120) = 0xffffffff;
       }
       if (*(short *)((int)pvVar8 + 0x12) != 0) {
-        RegisterFuncForMoby(&PTR_M656_00406458_0070de78,moby);
+        RegisterMobyDraw(&PTR_M656_00406458_0070de78,moby);
       }
       if (*(MobyInstance **)((int)pvVar8 + 0x84) != (MobyInstance *)0x0) {
         iVar17 = *(int *)((int)pvVar8 + 0x14);

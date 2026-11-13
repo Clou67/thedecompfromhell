@@ -1265,7 +1265,7 @@ LAB_002e8510:
   else {
     if (((param_3 != 2) || (g_CollOutput.pMoby == (MobyInstance *)0x0)) ||
        (iVar23 = MB_GetPlatformParent(), iVar23 == 0)) {
-      RegisterFuncForMoby(&PTR_M1900_002e68e0_0070b6c8,param_2);
+      RegisterMobyDraw(&PTR_M1900_002e68e0_0070b6c8,param_2);
     }
     *(float *)(param_1 + 0x30) = g_CollOutput.normal.x;
     *(float *)(param_1 + 0x34) = g_CollOutput.normal.y;

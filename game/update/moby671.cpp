@@ -927,7 +927,7 @@ void UpdateMoby_671(MobyInstance *moby)
         }
       }
       else {
-        RegisterFuncForMoby(&PTR_M671_0040c3f0_0070dfa0,moby);
+        RegisterMobyDraw(&PTR_M671_0040c3f0_0070dfa0,moby);
         if ((*(ushort *)((int)pfVar2 + 10) & 4) != 0) {
           dVar15 = 0.009999999776482582;
           if (*(char *)((int)pfVar2 + 0x13b) == -1) {

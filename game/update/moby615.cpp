@@ -431,7 +431,7 @@ void UpdateMoby_615(MobyInstance *moby)
       }
     }
     else {
-      RegisterFuncForMoby(&PTR_M617_003dfa30_0070d980,moby);
+      RegisterMobyDraw(&PTR_M617_003dfa30_0070d980,moby);
       uVar10 = uVar14;
       do {
         if (*(int *)((int)uVar10 + 0xb0) == 1) break;

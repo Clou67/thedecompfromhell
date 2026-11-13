@@ -343,9 +343,9 @@ extern short g_FrameBufWidth; /* 0x966b7c */
 extern ImpactSprite g_ImpactSprites[32]; /* 0x95ee40 */ /* type set in global_types.tsv */
 extern undefined4 g_JapanFontTex; /* 0x90d724 */
 extern undefined4 g_LameShadows; /* 0x95e5f0 */
-extern MobyDrawFunc g_MobyFuncList[64]; /* 0x95ddd8 */ /* type set in global_types.tsv */
-extern MobyInstance *g_MobyFuncListArgs[64]; /* 0x95ded8 */ /* type set in global_types.tsv */
-extern int g_MobyFuncListCount; /* 0x95dfd8 */
+extern MobyInstance *g_MobyDrawArgs[64]; /* 0x95ded8 */ /* type set in global_types.tsv */
+extern int g_MobyDrawCount; /* 0x95dfd8 */ /* type set in global_types.tsv */
+extern MobyDrawFunc g_MobyDrawFuncs[64]; /* 0x95ddd8 */ /* type set in global_types.tsv */
 extern int g_PartTexBaseIndex; /* 0xa52b38 */
 extern MobyInstance *g_PostDrawArgs[64]; /* 0x95e4e4 */ /* type set in global_types.tsv */
 extern int g_PostDrawCount; /* 0x95e5e4 */
@@ -433,7 +433,7 @@ void DrawScreenEffect(void);
 void DrawScreenOverlayTex(int red, int green, int blue, int alpha, void *tex);
 void DrawScreenOverlay(int red, int green, int blue, int alpha);
 void ExecutePostDraws(void);
-void ExecuteRegisteredMobyFuncs(void);
+void ExecuteMobyDraws(void);
 void ExecutePostPreDraws(void);
 void DrawScreenInsertEffect(ScreenInsertEffect *effect);
 void ExecutePreDraws(void);
@@ -456,8 +456,8 @@ void DrawCredits(void);
 void STUB_0006d704(...);
 void STUB_0006d708(...);
 int GetEffectTexAddr(int index);
-void RegisterFuncForMoby(void **function, MobyInstance *moby);
-void RegisterOceanUpdate(undefined4 func, MobyInstance *moby);
+void RegisterMobyDraw(void **function, MobyInstance *moby);
+void RegisterPreDraw(undefined4 func, MobyInstance *moby);
 void RegisterPostPreDraw(void *func, void *arg);
 void RegisterPostDraw(void *func, void *arg);
 void DrawLameShadows(void);

@@ -36,7 +36,7 @@ void UpdateMoby_1018(MobyInstance *moby)
     if ((moby->state < 2) &&
        (iVar1 = MB_IsPntInCuboid((Vec4 *)&GameCamera.posX,(longlong)*moby->pVar),
        iVar1 == 0)) {
-      RegisterOceanUpdate(&PTR_M1018_00188858_007083e8,moby);
+      RegisterPreDraw(&PTR_M1018_00188858_007083e8,moby);
     }
   }
   return;

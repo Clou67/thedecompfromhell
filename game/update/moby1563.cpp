@@ -374,7 +374,7 @@ void UpdateMoby_1563(MobyInstance *moby)
                (longlong)(int)(animationSpeed * (float)((double)(longlong)puVar10[0x4c] + dVar34));
           dVar37 = (double)FastIntToDouble(*(undefined4 *)((int)puVar10 + 0x264));
           DAT_00fadb84 = FastDoubleToInt((double)((float)(dVar35 / dVar37) * 255.0));
-          RegisterFuncForMoby(&PTR_M1564_0029c6c8_0070aab0,DAT_00fadb88);
+          RegisterMobyDraw(&PTR_M1564_0029c6c8_0070aab0,DAT_00fadb88);
           fVar1 = animationSpeed;
           iVar30 = g_SpaceSceneFrame;
         }
@@ -391,7 +391,7 @@ void UpdateMoby_1563(MobyInstance *moby)
                (longlong)(int)(animationSpeed * (float)((double)(longlong)puVar10[0x4c] + dVar34));
           dVar37 = (double)FastIntToDouble(*(undefined4 *)((int)puVar10 + 0x264));
           DAT_00fadb8c = (float)(dVar35 / dVar37) * 200.0 + 0.25;
-          RegisterFuncForMoby(&PTR_M1564_0029cc78_0070aab8,DAT_00fadb88);
+          RegisterMobyDraw(&PTR_M1564_0029cc78_0070aab8,DAT_00fadb88);
           fVar1 = animationSpeed;
           iVar30 = g_SpaceSceneFrame;
         }
@@ -402,7 +402,7 @@ void UpdateMoby_1563(MobyInstance *moby)
         puVar10[0x4c] = (longlong)DAT_007ab920;
         puVar10[0x4c] = (longlong)(int)(fVar1 * (float)((double)(longlong)puVar10[0x4c] + dVar34));
         if (iVar30 < *(int *)((int)puVar10 + 0x264)) {
-          RegisterFuncForMoby(&PTR_M1564_0029bde8_0070aaa0,g_SpaceSceneMobys[0]);
+          RegisterMobyDraw(&PTR_M1564_0029bde8_0070aaa0,g_SpaceSceneMobys[0]);
           puVar10[0x4c] = (longlong)DAT_007ab91c;
           iVar30 = g_SpaceSceneFrame;
           fVar1 = animationSpeed;
@@ -455,7 +455,7 @@ void UpdateMoby_1563(MobyInstance *moby)
           dVar35 = (double)FastIntToDouble(iVar30 - iVar29);
           dVar37 = (double)FastIntToDouble(DAT_007ab940 - DAT_007ab93c);
           DAT_00fadb84 = FastDoubleToInt((double)((float)(dVar35 / dVar37) * 255.0));
-          RegisterFuncForMoby(&PTR_M1564_0029c6c8_0070aab0,DAT_00fadb88);
+          RegisterMobyDraw(&PTR_M1564_0029c6c8_0070aab0,DAT_00fadb88);
           iVar30 = g_SpaceSceneFrame;
           fVar1 = animationSpeed;
         }
@@ -470,7 +470,7 @@ void UpdateMoby_1563(MobyInstance *moby)
           dVar35 = (double)FastIntToDouble(iVar30 - iVar29);
           dVar37 = (double)FastIntToDouble(DAT_007ab948 - DAT_007ab944);
           DAT_00fadb8c = (float)(dVar35 / dVar37) * 200.0 + 0.25;
-          RegisterFuncForMoby(&PTR_M1564_0029cc78_0070aab8,DAT_00fadb88);
+          RegisterMobyDraw(&PTR_M1564_0029cc78_0070aab8,DAT_00fadb88);
           iVar30 = g_SpaceSceneFrame;
           fVar1 = animationSpeed;
         }
@@ -481,7 +481,7 @@ void UpdateMoby_1563(MobyInstance *moby)
         puVar10[0x4c] = (longlong)DAT_007ab920;
         puVar10[0x4c] = (longlong)(int)(fVar1 * (float)((double)(longlong)puVar10[0x4c] + dVar34));
         if (iVar30 < *(int *)((int)puVar10 + 0x264)) {
-          RegisterFuncForMoby(&PTR_M1564_0029bde8_0070aaa0,g_SpaceSceneMobys[0]);
+          RegisterMobyDraw(&PTR_M1564_0029bde8_0070aaa0,g_SpaceSceneMobys[0]);
           if (g_SpaceSceneFrame < DAT_007ab91c) {
             dVar34 = (double)FastIntToDouble(g_SpaceSceneFrame - DAT_007ab918);
             dVar35 = (double)FastIntToDouble(DAT_007ab91c - DAT_007ab918);
@@ -494,7 +494,7 @@ void UpdateMoby_1563(MobyInstance *moby)
       }
     }
     if ((g_SceneId == 1) && (g_SpaceSceneMobys[3] != (MobyInstance *)0x0)) {
-      RegisterFuncForMoby(&PTR_M1564_0029c460_0070aaa8,g_SpaceSceneMobys[3]);
+      RegisterMobyDraw(&PTR_M1564_0029c460_0070aaa8,g_SpaceSceneMobys[3]);
     }
     iVar30 = g_SpaceSceneFrame;
     fVar1 = animationSpeed;
@@ -747,7 +747,7 @@ void UpdateMoby_1563(MobyInstance *moby)
         ((iVar30 == 3 &&
          (puVar10[0x4c] = (longlong)(int)(animationSpeed * 586.5),
          iVar29 < *(int *)((int)puVar10 + 0x264))))) && (g_SpaceSceneMobys[2] != (MobyInstance *)0x0)) {
-      RegisterFuncForMoby(&PTR_M1564_0029c460_0070aaa8,g_SpaceSceneMobys[2]);
+      RegisterMobyDraw(&PTR_M1564_0029c460_0070aaa8,g_SpaceSceneMobys[2]);
       iVar30 = g_SceneId;
     }
     iVar29 = g_SpaceSceneFrame;

@@ -756,7 +756,7 @@ void UpdateMoby_1111(MobyInstance *moby)
         pfVar13 = pfVar13 + 2;
         pfVar12 = pfVar12 + 2;
       } while (iVar8 < 2);
-      RegisterFuncForMoby(&PTR_M1111_Pokitaru_Ocean_00708d88,moby);
+      RegisterMobyDraw(&PTR_M1111_Pokitaru_Ocean_00708d88,moby);
     }
   }
   return;

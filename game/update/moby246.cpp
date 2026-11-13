@@ -1002,9 +1002,9 @@ LAB_00314324:
       return;
     }
     kv[2].zBounceDamp = fVar24;
-    RegisterFuncForMoby(&PTR_M246_00312d38_0070bc18,moby);
+    RegisterMobyDraw(&PTR_M246_00312d38_0070bc18,moby);
   }
-  RegisterFuncForMoby(&PTR_M246_00312b68_0070bc10,moby);
+  RegisterMobyDraw(&PTR_M246_00312b68_0070bc10,moby);
   return;
 }
 

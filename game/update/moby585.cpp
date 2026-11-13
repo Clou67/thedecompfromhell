@@ -714,7 +714,7 @@ void UpdateMoby_585(MobyInstance *moby)
           }
           piVar12[3] = -1;
         }
-        RegisterFuncForMoby(&PTR_M585_003d24a8_0070d758,moby);
+        RegisterMobyDraw(&PTR_M585_003d24a8_0070d758,moby);
       }
     }
   }

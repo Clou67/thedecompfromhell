@@ -163,7 +163,7 @@ void UpdateMoby_317_GasparOcean(MobyInstance *moby)
     OceanPlane_SetDepth(1.0,&OCEAN_GASPAR,ZEXT48(&DAT_00340584),0x80);
   }
   else if (moby->state < 2) {
-    RegisterOceanUpdate(&PTR_M317_Gaspar_SubmitOcean_0070c240,moby);
+    RegisterPreDraw(&PTR_M317_Gaspar_SubmitOcean_0070c240,moby);
   }
   return;
 }
