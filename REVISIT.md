@@ -3,6 +3,11 @@
 Shortcomings in work already committed: places where the source is a best guess, was not checked
 against the asm all the way, or left loose ends. Newest first.
 
+**Rule: every time a file is decompiled, add its section here in the same commit** — anything not
+fully traced against the asm, guessed signatures or unused parameters, invented names, symbols
+left as raw `DAT_`/`FUN_`/offsets, and other files made worse by the change. Files cleaned before
+this rule (everything before collproc.cpp) have no entries yet.
+
 ## game/draw.cpp
 
 ### Not fully traced against the asm
@@ -75,3 +80,22 @@ against the asm all the way, or left loose ends. Newest first.
 - The style rule against one/two-letter locals was only applied at the end, by script, to the
   whole file (including older functions). Check the script didn't touch anything it shouldn't
   (it skipped member accesses, strings, numbers and comments).
+
+## game/camera.cpp (from memory of the session; less detail than draw.cpp)
+
+- `CameraVTable` members are `void *`, with casts at the call sites: typing them as function
+  pointers broke raw code elsewhere. Type them once the callers are cleaned.
+- Renamed by guess: `Camera_ClampAngles` → `Camera_Polar2Pos`, `???_Camera_CalcPolarToTarget` →
+  `Camera_Pos2Polar` (named from what they compute).
+- Types laid out partly from use: GAMECAMERA, CameraStatics, CamBlender (+ PosQuat/PolarQuat/Data),
+  CamOffsetRec (strength/adjust/time/div), ImportCamera, CameraImportVars, CamCrosshair,
+  CamCollGridPrim, Pill, CamPostUpdFunc. Which individual fields were guesses was not recorded;
+  re-check them against their uses.
+- Global renames that reached other files: `DAT_00902e9c` → `g_pIdolDrawBase` (loaders.cpp,
+  update.cpp), `DAT_0071f028` → `g_CameraEulerBase`, `g_FrustumExtra` (mission.cpp).
+
+## game/collproc.cpp and sdk/xUnk5.cpp (from memory; no details kept)
+
+- Added CollMobySphere, CollHeroSphere, the small getters, and the four helpers in sdk/xUnk5.cpp.
+  No shortcomings were written down at the time; re-review against the asm when convenient
+  (xUnk5's file and function names are placeholders).
