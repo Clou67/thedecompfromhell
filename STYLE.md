@@ -77,3 +77,15 @@ written in `.cpp` files, Idol's PS3 layer may use C++ features. Examples: `game/
 
   quad += 4;
   ```
+
+## Vector (AltiVec) code
+
+- Where the asm uses AltiVec (`vmaddfp`, `vperm`, `vrsqrtefp`, `vrefp`, `vcfsx`, ...), the source
+  must emit the same instructions: do not replace it with scalar maths (`1.0f / sqrtf`, plain
+  float loops), which rounds differently and does not match the asm.
+- Write the vector work in small `static inline` helpers (in `idol/fastinline.h` when shared)
+  so the calling code stays readable, e.g. `VecRSqrt`, `VecSinCos`, `Ps2ColorVec`.
+- Inside the helpers use the intrinsics from `<altivec.h>` (`vec_madd`, `vec_perm`, `vec_splat`,
+  `vec_rsqrte`, ...): they map one-to-one to the instructions and clang can check them. Use
+  inline asm only for what has no intrinsic (e.g. `lvlx`/`lvrx`), still inside a helper.
+- Keep the asm's Newton steps, constants and operation order.

@@ -19,6 +19,13 @@ this rule (everything before collproc.cpp) have no entries yet.
   DefaultDraw runs after DrawMobys). Parameter types are still `void **` / `undefined4` for the
   raw callers; type them as MobyDrawFunc once those are cleaned.
 
+### Scalar stand-ins for AltiVec code (must be converted, see STYLE.md)
+- ImpactSprite_Draw (quaternion turn, rsqrte normalising, vector sincos), DrawLameShadows and
+  Normalize3 (`1.0f / sqrtf` for vrsqrtefp + Newton), FadeToBlack (vrefp + Newton), DrawScreenQuad,
+  DrawTexturedStrips and DrawColorGradientStrip (Ps2Channel for the splat colour maths),
+  FontPrintOptJapanese/Western and DrawTimedHelpMsg (vector width/fade sums), BeginAuxDrawMode
+  (viewport constants), FastDrawQuad (vmrghw transpose).
+
 ### Not fully traced against the asm
 - **ImpactSprite_Draw (0x74fa0).** The game turns each sprite's right/up axes with a vectorised
   quaternion (half angle, vperm-built cross products). I wrote it as a plain rotation about the

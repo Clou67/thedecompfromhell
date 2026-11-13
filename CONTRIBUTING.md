@@ -82,6 +82,8 @@ data, not hand edits to generated files. See `STYLE.md` for how cleaned code sho
   (`--target=powerpc64-unknown-lv2 -D__LP32__`: 32-bit pointers and longs, big-endian), so
   structure offsets match the game. It is a syntax/type check; nothing is linked or run.
 - Commit one cleaned file (plus the table entries it needed) per commit.
+- Vector code must stay vector code (see STYLE.md, "Vector (AltiVec) code"); a scalar stand-in
+  is a REVISIT.md entry until it is converted.
 - In the same commit, add the file's section to `REVISIT.md`. List everything that is not fully
   checked against the asm, guessed signatures and unused parameters, names you made up, symbols
   left as raw `DAT_`/`FUN_`/offsets, and other files whose error counts went up because of the
