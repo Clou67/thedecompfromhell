@@ -69,3 +69,66 @@ static inline float FastAcosInline(float x)
     float half = FAST_HALF_PI - poly * sqrtf(rest);
     return FAST_HALF_PI - half * sign;
 }
+
+/* ---- AltiVec helpers (see STYLE.md, "Vector (AltiVec) ...") ----
+   SNC has the vec_* intrinsics built in; gcc and clang need <altivec.h>. */
+#if !defined(__SNC__)
+#include <altivec.h>
+#endif
+
+typedef vector float VecF;
+typedef vector unsigned int VecU;
+
+/* a Vec4 into a vector register and back (aligned copies) */
+static inline VecF VecLoad4(const struct Vec4 *v)
+{
+    return *(const VecF *)v;
+}
+
+static inline void VecStore4(struct Vec4 *out, VecF v)
+{
+    *(VecF *)out = v;
+}
+
+/* -0.0f in every lane: the addend vmaddfp uses for a plain multiply (vspltisw -1; vslw) */
+static inline VecF VecNegZero(void)
+{
+    VecU ones = vec_splat_u32(-1);
+
+    return (VecF)vec_sl(ones, ones);
+}
+
+static inline VecF VecSplatF(float value)
+{
+    union { float f[4]; VecF v; } u = { { value, value, value, value } };
+
+    return u.v;
+}
+
+/* the first three lanes' dot product in every lane */
+static inline VecF VecDot3(VecF a, VecF b)
+{
+    VecF product = vec_madd(a, b, VecNegZero());
+    VecF y = vec_splat(product, 1);
+    VecF z = vec_splat(product, 2);
+
+    return vec_splat(vec_add(vec_add(product, y), z), 0);
+}
+
+/* 1 / sqrt(d): vrsqrtefp and one Newton step, the estimate kept where the step gives NaN */
+static inline VecF VecRSqrt(VecF d)
+{
+    VecF estimate = vec_rsqrte(d);
+    VecF times = vec_madd(estimate, d, VecNegZero());
+    VecF half = vec_madd(estimate, VecSplatF(0.5f), VecNegZero());
+    VecF error = vec_nmsub(estimate, times, VecSplatF(1.0f));
+    VecF refined = vec_madd(error, half, estimate);
+
+    return vec_sel(estimate, refined, (VecU)vec_cmpeq(refined, refined));
+}
+
+/* v scaled so its first three lanes have length 1 */
+static inline VecF VecNormalize3(VecF v)
+{
+    return vec_madd(v, VecRSqrt(VecDot3(v, v)), VecNegZero());
+}

@@ -80,6 +80,15 @@ written in `.cpp` files, Idol's PS3 layer may use C++ features. Examples: `game/
 
 ## Vector (AltiVec) and other PS3-specific instructions
 
+The game was built with SN Systems' SNC (`ps3ppusnc`, in the SDK), not ppu-lv2-gcc: SNC's
+float-to-int is `fctiwz`/`stfd`/`lwz` like the game, gcc's is `stfiwx`. SNC does not vectorise
+plain C (tried -O2, -O3, -Xautovecreg=1), so every vector instruction in the game came from the
+source, most likely a `vec4`-style AltiVec type as in DL. `ppusnc.sh FILE [flags]` (rc1src/,
+runs SNC through Wine) prints SNC's asm for a file.
+
+The goal is the same behaviour and mostly the same instructions, not a byte match (TOC loads,
+scheduling and register choice will differ); small variations are not worth chasing.
+
 - Where the asm uses AltiVec (`vmaddfp`, `vperm`, `vrsqrtefp`, `vrefp`, `vcfsx`, ...), the source
   must emit the same instructions: do not replace it with scalar maths (`1.0f / sqrtf`, plain
   float loops), which rounds differently and does not match the asm.

@@ -1,4 +1,5 @@
 #include <math.h>
+#include <stdlib.h>
 #include <string.h>
 #include "game/draw.h"
 #include "game/boot.h"
@@ -4105,11 +4106,12 @@ void ImpactSprite_Update(void)
     }
 }
 
-/* texV's first three components scaled to length 1 (FastRSqrt) */
-static inline Vec4 Normalize3(Vec4 texV)
+/* vec's first three components scaled to length 1 (vrsqrtefp + one Newton step) */
+static inline Vec4 Normalize3(Vec4 vec)
 {
-    float inv = 1.0f / sqrtf(texV.x * texV.x + texV.y * texV.y + texV.z * texV.z);
-    Vec4 out = { texV.x * inv, texV.y * inv, texV.z * inv, texV.w * inv };
+    Vec4 out __attribute__((aligned(16))) = vec;
+
+    VecStore4(&out, VecNormalize3(VecLoad4(&out)));
 
     return out;
 }

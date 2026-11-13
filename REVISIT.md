@@ -16,9 +16,8 @@ Scan of the asm of every function in a finished manual file (not MERGE) for vect
 `stvewx`, `dcbt`, `mftb`, `lwarx`, ... (prologue `stvx`/`lvx` register saves excluded). None of
 these files emit them yet (only crt0.cpp has any asm). Each function below needs checking:
 
-- Many hits are short patterns (`lvlx` + `vspltw` + `vctsxs`/`vcfsx`, or a lone `vspltisw`/`stvewx`)
-  that gcc for the PPU may produce by itself for scalar int/float conversion. Before converting
-  one, find out whether plain C gives the same code; if it does it is not a stand-in.
+- Checked: SNC (the game's compiler) does not produce even the short patterns (`lvlx` + `vspltw` +
+  `vctsxs`, lone `stvewx`) from plain C, so every function listed needs vector source.
 - Longer runs (`vmaddfp`, `vperm`, `vnmsubfp`, `vsel`, `vrsqrtefp`) are real vector code and need
   intrinsics.
 
@@ -111,7 +110,7 @@ these files emit them yet (only crt0.cpp has any asm). Each function below needs
   raw callers; type them as MobyDrawFunc once those are cleaned.
 
 ### Scalar stand-ins for AltiVec code (must be converted, see STYLE.md)
-- ImpactSprite_Draw (quaternion turn, rsqrte normalising, vector sincos), DrawLameShadows and
+- ImpactSprite_Draw (quaternion turn and vector sincos; its normalising now uses VecNormalize3), DrawLameShadows and
   Normalize3 (`1.0f / sqrtf` for vrsqrtefp + Newton), FadeToBlack (vrefp + Newton), DrawScreenQuad,
   DrawTexturedStrips and DrawColorGradientStrip (Ps2Channel for the splat colour maths),
   FontPrintOptJapanese/Western and DrawTimedHelpMsg (vector width/fade sums), BeginAuxDrawMode
