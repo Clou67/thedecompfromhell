@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include "game/crt0.h"
 #include "game/boot.h"
+#include "idol/sUnk.h"
 #include "sdk/linked.h"
 #include "sdk/mUnk3.h"
 #include "sdk/sys.h"
@@ -71,7 +72,7 @@ void crt0_exit(void)
 {
     idol::ExitToSystem();
     __call_functions_registered_with_atexit();
-    FUN_0064ed80();
+    CallGlobalDtors();
 
     _libc_cleanup();
 }

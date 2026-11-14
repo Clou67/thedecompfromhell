@@ -41,6 +41,7 @@
 #include "idol/idol.h"
 #include "idol/idol_draw.h"
 #include "idol/mUnk.h"
+#include "idol/mathfunc.h"
 #include "idol/sound.h"
 #include "idol/tiefunc.h"
 #include "sdk/linked.h"
@@ -1279,7 +1280,7 @@ static inline char SpaceSceneCamera(void)
     euler.x = frame->rotX;
     euler.y = frame->rotY;
     memcpy(&m, &DAT_00653758, sizeof(Mtx4));
-    FUN_005e8c64((undefined8)(uintptr_t)&m, &euler.x);
+    Mtx4FromEulerXYZ((undefined8)(uintptr_t)&m, &euler.x);
 
     GameCamera.orientMtx.up.x = m.v1.x;
     GameCamera.orientMtx.forward.x = -m.v2.x;
@@ -1660,8 +1661,8 @@ static inline void SpaceFlightStart(void)
 
     pts[0].w = 0.0f;
     for (int i = 1; i < spline->cnt - 1; i++) {
-        float in = (float)FUN_005e8338(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y);
-        float out = (float)FUN_005e8338(pts[i + 1].x - pts[i].x, pts[i + 1].y - pts[i].y);
+        float in = (float)MathAtan2(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y);
+        float out = (float)MathAtan2(pts[i + 1].x - pts[i].x, pts[i + 1].y - pts[i].y);
         float turn = FastDiffRots(out, in);
 
         pts[i].w = turn;
@@ -1671,8 +1672,8 @@ static inline void SpaceFlightStart(void)
     }
 
     cnt = spline->cnt;
-    float in = (float)FUN_005e8338(pts[cnt - 1].x - pts[cnt - 2].x, pts[cnt - 1].y - pts[cnt - 2].y);
-    float out = (float)FUN_005e8338(pts[0].x - pts[cnt - 1].x, pts[0].y - pts[cnt - 1].y);
+    float in = (float)MathAtan2(pts[cnt - 1].x - pts[cnt - 2].x, pts[cnt - 1].y - pts[cnt - 2].y);
+    float out = (float)MathAtan2(pts[0].x - pts[cnt - 1].x, pts[0].y - pts[cnt - 1].y);
     pts[spline->cnt - 1].w = FastDiffRots(out, in);
 
     float scale = 0.34906584f / maxTurn;
@@ -1695,9 +1696,9 @@ static inline void SpaceFlightStart(void)
     g_ShipLiftTo.z = pts[0].z;
     g_ShipLiftTo.w = pts[0].w;
     g_ShipLiftFromRot = ship->rotation;
-    g_ShipLiftPitch = (float)FUN_005e8338(sqrtf((pts[1].y - pts[0].y) * (pts[1].y - pts[0].y) + (pts[1].x - pts[0].x) * (pts[1].x - pts[0].x)),
+    g_ShipLiftPitch = (float)MathAtan2(sqrtf((pts[1].y - pts[0].y) * (pts[1].y - pts[0].y) + (pts[1].x - pts[0].x) * (pts[1].x - pts[0].x)),
                                           pts[0].z - pts[1].z);
-    g_ShipLiftYaw = (float)FUN_005e8338(pts[1].x - pts[0].x, pts[1].y - pts[0].y);
+    g_ShipLiftYaw = (float)MathAtan2(pts[1].x - pts[0].x, pts[1].y - pts[0].y);
 }
 
 /* the camera drifts from the start cuboid to the end one */

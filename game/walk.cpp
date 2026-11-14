@@ -8,6 +8,7 @@
 #include "game/mobyutil.h"
 #include "game/partupd.h"
 #include "idol/fastfunc.h"
+#include "idol/mathfunc.h"
 #include "idol/xUnk.h"
 #include "idol/fastinline.h"
 // game/walk.cpp -- reconstructed from NPEA00385 EBOOT
@@ -173,13 +174,13 @@ static void Walk_UpdateTakeOff(MobyInstance *moby, w_2legData *pLD, u32 contacts
                                int landIndex, int landState)
 {
     if (contacts & (WALK_CONTACT_MOVE1 | WALK_CONTACT_MOVE2)) {
-        double dist = flat ? FUN_005e8588(&moby->pos.x, &pLD->jumpPos.m.x)
-                           : FUN_005e8548(&moby->pos.x, &pLD->jumpPos.m.x);
+        double dist = flat ? Vec2Distance(&moby->pos.x, &pLD->jumpPos.m.x)
+                           : Vec3Distance(&moby->pos.x, &pLD->jumpPos.m.x);
 
         printf("jumpdist = %f\n", dist);
         pLD->zVel = (float)MB_computeLobVelocity(pLD->speed, -pLD->grav, &moby->pos.x, &pLD->jumpPos.m.x, NULL);
         pLD->flags |= WALK_FLAG_AIRBORNE;
-        pLD->jumpPos.m.w = (float)FUN_005e8338(pLD->jumpPos.m.x - moby->pos.x, pLD->jumpPos.m.y - moby->pos.y);
+        pLD->jumpPos.m.w = (float)MathAtan2(pLD->jumpPos.m.x - moby->pos.x, pLD->jumpPos.m.y - moby->pos.y);
     }
 
     w_2legAnim *anim = pLD->anims[index];

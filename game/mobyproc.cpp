@@ -1249,18 +1249,18 @@ static inline void MobyEmitConstMtx(RenderingStep *pass, int index, Mtx4 *mtx)
 /* the moby vertex layout: attribute 0 3 floats, 1 2 floats, 3 4 bytes; stride 28 */
 static inline void MobySetVertexFormat(RenderingStep *pass)
 {
-    FUN_005e85b4(pass, 0, CELL_GCM_VERTEX_F, 3, 28, 0);
-    FUN_005e85b4(pass, 1, CELL_GCM_VERTEX_F, 2, 28, 0);
-    FUN_005e85b4(pass, 3, CELL_GCM_VERTEX_UB, 4, 28, 0);
+    GcmSetVertexDataArrayFormat(pass, 0, CELL_GCM_VERTEX_F, 3, 28, 0);
+    GcmSetVertexDataArrayFormat(pass, 1, CELL_GCM_VERTEX_F, 2, 28, 0);
+    GcmSetVertexDataArrayFormat(pass, 3, CELL_GCM_VERTEX_UB, 4, 28, 0);
 }
 
 /* the vertex arrays at offset (positions, +12 coordinates, +24 colours) and the index array */
 static inline void MobySetVertexArrays(RenderingStep *pass, u32 offset, u32 indices)
 {
-    FUN_005e8970(pass, 0, offset);
-    FUN_005e8970(pass, 1, offset + 12);
-    FUN_005e8970(pass, 3, offset + 24);
-    FUN_005e899c(pass, indices);
+    GcmSetVertexDataArrayOffset(pass, 0, offset);
+    GcmSetVertexDataArrayOffset(pass, 1, offset + 12);
+    GcmSetVertexDataArrayOffset(pass, 3, offset + 24);
+    GcmSetIndexArrayAddress(pass, indices);
 }
 
 /* arrays 0..3 off */
@@ -1315,8 +1315,8 @@ typedef struct MobyModel {
 static inline void MobyDrawPacket(RenderingStep *pass, MobyPacket *packet, int samplerA, int samplerB)
 {
     FUN_004d676c(pass, 0, packet->tex, samplerA, samplerB);
-    FUN_005e8b20(pass, CELL_GCM_PRIMITIVE_TRIANGLES);
-    FUN_005e8b5c(pass, packet->indexStart, packet->indexCount);
+    GcmSetBegin(pass, CELL_GCM_PRIMITIVE_TRIANGLES);
+    GcmDrawArrays(pass, packet->indexStart, packet->indexCount);
     MobyEmitMethod(pass, CELL_GCM_NV4097_SET_BEGIN_END, 0);
 }
 
@@ -1352,7 +1352,7 @@ u8 *MB_BuildDrawEntry(MobyInstance *moby, u8 *entryList, int count, int unused)
     if (idol->auxDepth != 0) {
         MobyBeginPass(idol, HUD_Pass, &light);
         MobySetAlphaFunc(HUD_Pass, 1);
-        FUN_005e85f0(HUD_Pass, 1);
+        GcmSetAlphaFunc(HUD_Pass, 1);
         MobyEmitMethod(HUD_Pass, CELL_GCM_NV4097_SET_DEPTH_MASK, 1);
         MobyEmitMethod(HUD_Pass, CELL_GCM_NV4097_SET_DEPTH_TEST_ENABLE, 1);
     }
@@ -1361,13 +1361,13 @@ u8 *MB_BuildDrawEntry(MobyInstance *moby, u8 *entryList, int count, int unused)
             RenderingStep *pass = passes[k];
             RenderingStep *depth = depths[k];
 
-            FUN_005e8610(pass, 0);
-            FUN_005e8610(pass, 1);
-            FUN_005e8610(pass, 3);
-            FUN_005e8610(depth, 0);
-            FUN_005e8610(depth, 1);
-            FUN_005e8610(depth, 2);
-            FUN_005e8610(depth, 3);
+            GcmDisableVertexDataArray(pass, 0);
+            GcmDisableVertexDataArray(pass, 1);
+            GcmDisableVertexDataArray(pass, 3);
+            GcmDisableVertexDataArray(depth, 0);
+            GcmDisableVertexDataArray(depth, 1);
+            GcmDisableVertexDataArray(depth, 2);
+            GcmDisableVertexDataArray(depth, 3);
             MobyBeginPass(idol, pass, &light);
 
             if (depth != NULL) {
@@ -1375,11 +1375,11 @@ u8 *MB_BuildDrawEntry(MobyInstance *moby, u8 *entryList, int count, int unused)
             }
 
             MobySetAlphaFunc(depth, 255);
-            FUN_005e85f0(depth, 1);
+            GcmSetAlphaFunc(depth, 1);
             MobySetAlphaFunc(pass, 1);
 
             /* (the asm turns the alpha test on for the depth pass again, not for pass) */
-            FUN_005e85f0(depth, 1);
+            GcmSetAlphaFunc(depth, 1);
         }
     }
 
@@ -1430,7 +1430,7 @@ u8 *MB_BuildDrawEntry(MobyInstance *moby, u8 *entryList, int count, int unused)
 
         MobyClass *pClass = moby->pClass;
 
-        if (FUN_005e8638((int)(uintptr_t)idol, moby->occlIndex) != 0) {
+        if (IsVisMaskHidden((int)(uintptr_t)idol, moby->occlIndex) != 0) {
             continue;
         }
 
@@ -1439,16 +1439,16 @@ u8 *MB_BuildDrawEntry(MobyInstance *moby, u8 *entryList, int count, int unused)
         Vec4 sphere;
         Vec4 center;
 
-        FUN_005e868c((float *)&sphere, (float *)&moby->bSphere);
-        FUN_005e86a8(1024.0f, (float *)&center, (float *)&sphere);
+        Vec3Copy((float *)&sphere, (float *)&moby->bSphere);
+        Vec3Div(1024.0f, (float *)&center, (float *)&sphere);
 
-        if (!FUN_005e86d8(radius, (float)moby->drawDistance, center)) {
+        if (!CheckSphereFrustum(radius, (float)moby->drawDistance, center)) {
             continue;
         }
 
         Vec4 pos;
 
-        FUN_005e87d8(moby->bSphere.x * (1.0f / 1024.0f), moby->bSphere.y * (1.0f / 1024.0f), moby->bSphere.z * (1.0f / 1024.0f), (float *)&pos);
+        Vec3Set(moby->bSphere.x * (1.0f / 1024.0f), moby->bSphere.y * (1.0f / 1024.0f), moby->bSphere.z * (1.0f / 1024.0f), (float *)&pos);
 
         if (shadow == 0) {
             pass = M_Pass;
@@ -1463,7 +1463,7 @@ u8 *MB_BuildDrawEntry(MobyInstance *moby, u8 *entryList, int count, int unused)
         camera.y = g_FrustumExtra.y;
         camera.z = g_FrustumExtra.z;
 
-        float distance = FUN_005e87e8(center, camera);
+        float distance = Vec4Distance3(center, camera);
         int faded = 0;
 
         if (distance - radius > (float)moby->drawDistance - 8.0f) {
@@ -1519,8 +1519,8 @@ u8 *MB_BuildDrawEntry(MobyInstance *moby, u8 *entryList, int count, int unused)
         for (u32 i = 0; i < (u8)pClass->joint_cnt; i++, mat++) {
             Mtx4 identity;
 
-            FUN_005e88f0(&identity);
-            FUN_005e8940(mat, &identity);
+            Mtx4Identity(&identity);
+            Mtx4Copy(mat, &identity);
         }
 
         entry->unk5c = idol->memBase + model->vertexOffset;
@@ -1572,20 +1572,20 @@ u8 *MB_BuildDrawEntry(MobyInstance *moby, u8 *entryList, int count, int unused)
         Mtx4 transposed;
         Vec4 translation;
 
-        FUN_005e89c4(&world, &moby->transform);
-        FUN_005e89f4(moby->scale, &world);
-        FUN_005e8848(moby->pos.x, moby->pos.y, moby->pos.z, 1.0f, (float *)&translation);
+        Mtx4Copy_2(&world, &moby->transform);
+        Mtx4SetScale(moby->scale, &world);
+        Vec4Set(moby->pos.x, moby->pos.y, moby->pos.z, 1.0f, (float *)&translation);
         world.v3 = translation;
         entry->world = world;
         entry->scale = moby->scale;
 
         /* c[4] = its transpose without the translation */
-        FUN_005e8a94(&transposed, &world);
+        Mtx4Transpose(&transposed, &world);
         world = transposed;
 
         Vec4 zero;
 
-        FUN_005e8b10(0.0f, 0.0f, 0.0f, (float *)&zero);
+        Vec3Set_2(0.0f, 0.0f, 0.0f, (float *)&zero);
         world.v3.x = zero.x;
         world.v3.y = zero.y;
         world.v3.z = zero.z;

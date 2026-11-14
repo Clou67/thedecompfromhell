@@ -66,7 +66,7 @@ void crt0_exit(void)
 {
     idol::ExitToSystem();
     __call_functions_registered_with_atexit();
-    FUN_0064ed80();
+    CallGlobalDtors();
 
     _libc_cleanup();
 }
