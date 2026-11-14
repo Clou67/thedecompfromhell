@@ -3,12 +3,15 @@ struct MapIcon {
     short target;            /* 0x00  index into g_MissionTargets / g_MissionMobys; < 0: fixed spot */
     short mission;           /* 0x02  index into the level's missions, -1 = always */
     u16 flags;               /* 0x04  MAPICON_* */
-    u8 _pad06[4];
+    short frame;             /* 0x06  icon (GetIconFrameTex); 0 = none */
+    short frameSub;          /* 0x08  its frame */
     short label;             /* 0x0a  has a text label */
     short unk0c;
     short labelW;            /* 0x0e  label box size, fitted by UpdateMissionDisplay */
     short labelH;            /* 0x10 */
-    u8 _pad12[6];
+    short labelX;            /* 0x12  label side: < 0 left edge, > 0 right edge, 0 centred; then an offset */
+    short labelY;            /* 0x14  the same in y */
+    u8 _pad16[2];
     float u;                 /* 0x18  map coordinates */
     float v;                 /* 0x1c */
     float rot;               /* 0x20 */

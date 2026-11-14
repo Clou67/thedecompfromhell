@@ -626,3 +626,7 @@ ptr_GalacticMap	int *NAME /* 0x729970: levels in galactic map order, 0 ends */
 g_LevelTargetStart	int NAME[20] /* 0x738138: each level's first entry in g_MissionTargets/g_MissionMobys (the next level's start ends it) */
 g_MapIconSource	void *NAME /* 0xa204dc: set by Map_SetIconSource (nothing calls it) */
 g_MapIconSourceArg	int NAME /* 0xa20570 */
+g_MapCellMarksOn	int NAME /* 0xa204ec: draw g_MapCellMarks (invented name; no writer found) */
+g_MapCellMarks	int NAME[8][4] /* 0xa204f0: [i][0] = a cell of the 16x16 map grid to darken, < 0 none (invented name) */
+g_MapIconSizes	float NAME[3][2] /* 0x7264cc: icon sizes (w, h) at zoom 1 for MapIcon flags 0x800, 0x400, 0x1000 */
+g_MapSourceDotRadius	int NAME /* 0x7264e4: half size of a g_MapIconSource dot, 1/16 pixels (32) */

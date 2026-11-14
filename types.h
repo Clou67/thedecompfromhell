@@ -2794,6 +2794,11 @@ extern undefined4 DAT_00724d54; /* 0x724d54 */
 extern undefined4 DAT_00724d58; /* 0x724d58 */
 extern undefined4 DAT_00724d5c; /* 0x724d5c */
 extern undefined4 DAT_007261d0; /* 0x7261d0 */
+extern undefined4 DAT_007264d0; /* 0x7264d0 */
+extern undefined4 DAT_007264d4; /* 0x7264d4 */
+extern undefined4 DAT_007264d8; /* 0x7264d8 */
+extern undefined4 DAT_007264dc; /* 0x7264dc */
+extern undefined4 DAT_007264e0; /* 0x7264e0 */
 extern undefined2 DAT_0072b33c; /* 0x72b33c */
 extern undefined2 DAT_0072b348; /* 0x72b348 */
 extern undefined2 DAT_0072b354; /* 0x72b354 */

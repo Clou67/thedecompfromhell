@@ -1,8 +1,9 @@
 #include "rc1.h"
-// MERGE
 #include "idol/fastinline.h"
+#include <cell/gcm/gcm_macros.h>
+#include <cell/gcm/gcm_enum.h>
 // game/map.cpp -- reconstructed from NPEA00385 EBOOT
-// 78 functions, 0xe1b0c-...: the pause menu map. Loading a level's map image and reveal mask,
+// 78 functions, 0xe1b0c-0xe64fc: the pause menu map. Loading a level's map image and reveal mask,
 // the map cache of the pause menu (5 slots, prefetched in galactic map order), revealing the
 // map around Ratchet, zoom and pan, and the per-level checks for which map regions show.
 
@@ -543,6 +544,434 @@ void Map_GetIconLabel(int icon, char *out)
     }
 
     *out = 0;
+}
+
+/* one HUD vertex: a float texture coordinate (attribute 8) and a float position */
+static inline void MapEmit(u32 word)
+{
+    *HUD_Pass->command++ = (RsxCmd)word;
+}
+
+static inline void MapVertexF(float texU, float texV, float posX, float posY)
+{
+    MapEmit(CELL_GCM_METHOD(CELL_GCM_NV4097_SET_VERTEX_DATA2F_M + 1 * 8, 2));
+    MapEmit(*(u32 *)&texU);
+    MapEmit(*(u32 *)&texV);
+    MapEmit(CELL_GCM_METHOD(CELL_GCM_NV4097_SET_VERTEX_DATA2F_M, 2));
+    MapEmit(*(u32 *)&posX);
+    MapEmit(*(u32 *)&posY);
+}
+
+/* an entry of g_MapIconSource */
+struct MapSourceDot {
+    float x;
+    float y;
+    int shown;               /* -1 = drawn */
+    u32 color;
+};
+
+#define MAP_ICON_HIDDEN      0x0001
+#define MAP_ICON_NO_PUSH     0x0002   /* not moved apart from the others */
+#define MAP_ICON_END         0x0004
+#define MAP_ICON_LABEL       0x0010
+#define MAP_ICON_SHADED      0x0040   /* a dark box behind it */
+#define MAP_ICON_BIG         0x0080   /* 1.5x */
+#define MAP_ICON_ROTATED     0x0100   /* drawn turned by rot */
+#define MAP_ICON_ZOOMED      0x0200   /* scales with the map zoom */
+#define MAP_ICON_SIZE_B      0x0400
+#define MAP_ICON_SIZE_A      0x0800
+#define MAP_ICON_SIZE_C      0x1000
+
+/* icon i shows: visible, has an icon, and none of hideMask */
+static inline bool MapIconShown(int i, int hideMask)
+{
+    MapIcon *icon = &g_MapIcons[i];
+
+    return icon->visible != 0 && icon->frame != 0 && (icon->flags & hideMask) == 0;
+}
+
+// 0x00e2e10 (0x1838 bytes)
+// strings: 0065296c: 'No Map Available'
+/* The pause map. Works in 1/16 pixels, the map 512 wide at zoom 1 (8192) around Ratchet's marker
+   (mirrored in x by the mirror cheat). Draws the map texture three times its size (it wraps) then
+   the map through the reveal mask (fragment program 14, units: the mask, two textures of the map
+   file), darkens the marked cells, then places the icons: each one's box (icon size x scale) is
+   pushed apart from every later box it overlaps along the smallest overlap, half each. Then the
+   icons, their shaded boxes and labels, Ratchet's marker on his own level, and the
+   g_MapIconSource dots. The arithmetic of the setup runs in vector registers holding one value. */
+void DrawMapFrame(void)
+{
+    if (g_MapAvailable == 0) {
+        STUB_0006d704(0);
+        DebugFontPrintCenter(0x100, g_FrameBufHeight >> 1, (int)0x80909090, (char *)"No Map Available");
+        STUB_0006d708();
+        return;
+    }
+
+    if (g_MapCurIndex < 0) {
+        return;
+    }
+
+    STUB_0006d704(0);
+
+    int index = g_MapCurIndex;
+    float zoom = g_MapZoom[index];
+    int mirror = Cheats[4] == 0 ? 1 : -1;
+    int heroU = (int)(zoom * (float)(g_MapHeroU[index] >> 15));
+    int heroV = (int)(zoom * (float)(g_MapHeroV[index] >> 15));
+    int size = (int)(zoom * 8192.0f);
+
+    /* the map's rectangle on the screen, 1/16 pixels, centred on Ratchet's marker */
+    int left = 0x1000 - heroU * mirror;
+    int right = left + size * mirror;
+    int top = 0x800 - heroV;
+    int bottom = top + size;
+
+    /* the map texture three times over, wrapping */
+    int tex = GetIconFrameTex(0xe999, index);
+    u32 header[9];
+    u32 *src = (u32 *)((u8 *)(uintptr_t)EffectTexHeaders + ((int *)(uintptr_t)TexturePointerArray)[tex] * 0x24);
+
+    for (int i = 0; i < 9; i++) {
+        header[i] = src[i];
+    }
+
+    header[2] = 0x10101;
+
+    float leftF = (float)left;
+    float topF = (float)top;
+    int overlapX16 = (int)(leftF * 0.0625f);
+    int top16 = (int)(topF * 0.0625f);
+    int overlapX26 = (int)((float)right * 0.0625f);
+    int bottom16 = (int)((float)bottom * 0.0625f);
+    int width16 = overlapX26 - overlapX16;
+    int height16 = bottom16 - top16;
+
+    Hud_DrawTexQuadF((float)(overlapX16 - width16), (float)(top16 - height16), (float)(overlapX26 + width16), (float)(bottom16 + height16), -1024.0f, -1024.0f, 2048.0f, 2048.0f, header, 0x80);
+
+    /* the map through the reveal mask */
+    u32 idol = g_pIdolDrawBase;
+    int mapTex = g_NpcBuffer + *(int *)(g_NpcBuffer + 8);
+
+    idol_draw::BindFragmentProgram(idol, (int)(uintptr_t)HUD_Pass, 14);
+    idol_draw::SetTextureUnitRegs((int)(uintptr_t)HUD_Pass, 0, (int *)&DAT_00a207e8);
+    idol_draw::SetTextureUnitRegs((int)(uintptr_t)HUD_Pass, 1, (int *)(uintptr_t)(mapTex + 0x6c));
+    idol_draw::SetTextureUnitRegs((int)(uintptr_t)HUD_Pass, 2, (int *)(uintptr_t)(mapTex + 0x90));
+    idol_draw::ResetPassState(HUD_Pass);
+
+    MapEmit(CELL_GCM_METHOD(CELL_GCM_NV4097_SET_VERTEX_DATA4UB_M + 2 * 4, 1));
+    MapEmit(0x80808080);
+    /* (three words to method 0x1714, all zero) */
+    MapEmit(0x400c1714);
+    MapEmit(0);
+    MapEmit(0);
+    MapEmit(0);
+    MapEmit(CELL_GCM_METHOD(CELL_GCM_NV4097_SET_BEGIN_END, 1));
+    MapEmit(CELL_GCM_PRIMITIVE_QUADS);
+    MapVertexF(0.0f, 0.0f, (float)overlapX16, (float)top16);
+    MapVertexF(0.0f, 1024.0f, (float)overlapX16, (float)bottom16);
+    MapVertexF(1024.0f, 1024.0f, (float)overlapX26, (float)bottom16);
+    MapVertexF(1024.0f, 0.0f, (float)overlapX26, (float)top16);
+    MapEmit(CELL_GCM_METHOD(CELL_GCM_NV4097_SET_BEGIN_END, 1));
+    MapEmit(0);
+
+    idol_draw::BindFragmentProgram(idol, (int)(uintptr_t)HUD_Pass, 12);
+    SetGSReg(0x16, idol_draw::Blend(1, 5, 0x60, 3, 0, 0, 0, 0));
+
+    int mapW = right - left;
+    int mapH = bottom - top;
+
+    /* the marked cells of the 16x16 grid, darkened */
+    if (g_MapCellMarksOn != 0 && g_MapUnkA204c8 != 0) {
+        for (int i = 0; i < 8; i++) {
+            int cell = g_MapCellMarks[i][0];
+
+            if (cell < 0) {
+                continue;
+            }
+
+            int x = cell % 16 * mapW;
+            int y = cell / 16 * mapH;
+
+            DrawFlatOverlay(x / 16 + left, y / 16 + top, (x + mapW) / 16 + left, (y + mapH) / 16 + top, FUN_00502f74_RET_0(0, 0, 0, 0x20, 0), 1);
+        }
+    }
+
+    MapIcon *icons = g_MapIcons;
+    int *boxes = (int *)g_ScratchBuf;   /* per icon: x0, y0, x1, y1 */
+
+    if (icons != NULL) {
+        float iconScale = (g_MapZoom[g_MapCurIndex] * 2.0f + 5.0f) * (1.0f / 13.0f);
+
+        /* each icon's box: from its spot back (up and left) by its size */
+        if (!(icons[0].flags & MAP_ICON_END)) {
+            for (int i = 0; !(g_MapIcons[i].flags & MAP_ICON_END); i++) {
+                MapIcon *icon = &g_MapIcons[i];
+
+                if (!MapIconShown(i, MAP_ICON_HIDDEN)) {
+                    continue;
+                }
+
+                float scale = icon->flags & MAP_ICON_BIG ? 1.5f : 1.0f;
+                int frameTex = GetIconFrameTex(icon->frame, icon->frameSub);
+                u32 texSize = *(u32 *)((u8 *)(uintptr_t)EffectTexHeaders + ((int *)(uintptr_t)TexturePointerArray)[frameTex] * 0x24 + 0x18);
+                float texW = (float)(texSize >> 16);
+                float texH = (float)(texSize & 0xffff);
+                float u = g_MapIcons[i].u * (float)mapW + leftF;
+                float v = g_MapIcons[i].v * (float)mapH + topF;
+                float z = g_MapIcons[i].flags & MAP_ICON_ZOOMED ? g_MapZoom[g_MapCurIndex] : iconScale;
+
+                z = z * scale;
+
+                int x0 = (int)(u - z * texW);
+                int y0 = (int)(v - z * texH);
+
+                boxes[i * 4 + 0] = x0;
+                boxes[i * 4 + 1] = y0;
+                boxes[i * 4 + 2] = (int)(z * texW + (float)x0);
+                boxes[i * 4 + 3] = (int)(z * texH + (float)y0);
+            }
+        }
+
+        /* push overlapping boxes apart */
+        if (!(g_MapIcons[1].flags & MAP_ICON_END)) {
+            for (int i = 0; !(g_MapIcons[i + 1].flags & MAP_ICON_END); i++) {
+                if (!MapIconShown(i, MAP_ICON_HIDDEN | MAP_ICON_NO_PUSH)) {
+                    continue;
+                }
+
+                int *a = &boxes[i * 4];
+
+                for (int j = i + 1; !(g_MapIcons[j].flags & MAP_ICON_END); j++) {
+                    int *b = &boxes[j * 4];
+                    int overlapX1 = b[2] - a[0];
+                    int overlapX2 = a[2] - b[0];
+                    int overlapY1 = b[3] - a[1];
+                    int overlapY2 = a[3] - b[1];
+
+                    if (overlapX1 <= 0 || overlapX2 <= 0 || overlapY1 <= 0 || overlapY2 <= 0) {
+                        continue;
+                    }
+
+                    if (!MapIconShown(j, MAP_ICON_HIDDEN | MAP_ICON_NO_PUSH)) {
+                        continue;
+                    }
+
+                    int moveAX;
+                    int moveAY;
+                    int moveBX;
+                    int moveBY;
+
+                    if (overlapX1 <= overlapX2 && overlapX1 <= overlapY1 && overlapX1 <= overlapY2) {
+                        moveAX = overlapX1 >> 1;
+                        moveBX = moveAX - overlapX1;
+                        moveAY = 0;
+                        moveBY = 0;
+                    }
+                    else if (overlapX2 <= overlapY1 && overlapX2 <= overlapY2) {
+                        moveBX = overlapX2 >> 1;
+                        moveAX = moveBX - overlapX2;
+                        moveAY = 0;
+                        moveBY = 0;
+                    }
+                    else if (overlapY1 <= overlapY2) {
+                        moveAY = overlapY1 >> 1;
+                        moveBY = moveAY - overlapY1;
+                        moveAX = 0;
+                        moveBX = 0;
+                    }
+                    else {
+                        moveBY = overlapY2 >> 1;
+                        moveAY = moveBY - overlapY2;
+                        moveAX = 0;
+                        moveBX = 0;
+                    }
+
+                    a[0] += moveAX;
+                    a[2] += moveAX;
+                    a[1] += moveAY;
+                    a[3] += moveAY;
+                    b[0] += moveBX;
+                    b[2] += moveBX;
+                    b[1] += moveBY;
+                    b[3] += moveBY;
+                }
+            }
+        }
+
+        /* the icons */
+        if (!(g_MapIcons[0].flags & MAP_ICON_END)) {
+            for (int i = 0; !(g_MapIcons[i].flags & MAP_ICON_END); i++) {
+                if (!MapIconShown(i, MAP_ICON_HIDDEN)) {
+                    continue;
+                }
+
+                int *box = &boxes[i * 4];
+                int frame = g_MapIcons[i].frame;
+                int frameSub = g_MapIcons[i].frameSub;
+
+                if (g_MapIcons[i].flags & MAP_ICON_SHADED) {
+                    DrawFlatOverlay_Fixed(box[0] - 32, box[1] - 32, box[2] + 32, box[3] + 32, 0x80000000, 1);
+                }
+
+                MapIcon *icon = &g_MapIcons[i];
+                float z = icon->flags & MAP_ICON_ZOOMED ? g_MapZoom[g_MapCurIndex] : iconScale;
+
+                if (!(icon->flags & MAP_ICON_ROTATED)) {
+                    Hud_DrawTexQuad_v2_Fixed(GetIconFrameTex(frame, frameSub), box[0], box[1], box[2] - box[0], box[3] - box[1], 0x80);
+                }
+                else {
+                    float width = z * 256.0f;
+                    float height = width;
+                    float rot = icon->rot;
+                    int texW = 32;
+
+                    if (icon->flags & MAP_ICON_SIZE_B) {
+                        rot = FastWrapRot(rot, 1.5707964f);
+                        width = g_MapIconSizes[1][0] * z;
+                        height = g_MapIconSizes[1][1] * z;
+                        texW = 64;
+
+                        if (g_MissionTargets[g_MapIcons[i].target].state & 2) {
+                            frameSub++;
+                        }
+                    }
+
+                    if (g_MapIcons[i].flags & MAP_ICON_SIZE_A) {
+                        rot = FastWrapRot(rot, 1.5707964f);
+                        width = g_MapIconSizes[0][0] * z;
+                        height = g_MapIconSizes[0][1] * z;
+                        texW = 64;
+
+                        if (g_MissionTargets[g_MapIcons[i].target].state & 2) {
+                            frameSub++;
+                        }
+                    }
+
+                    if (g_MapIcons[i].flags & MAP_ICON_SIZE_C) {
+                        rot = FastWrapRot(rot, 1.5707964f);
+                        width = g_MapIconSizes[2][0] * z;
+                        height = g_MapIconSizes[2][1] * z;
+                    }
+
+                    float centerX = (float)(box[0] + box[2]) * 0.5f;
+                    float centerY = (float)(box[1] + box[3]) * 0.5f;
+                    int texIndex = Hud_GetTexIndex(GetIconFrameTex(frame, frameSub));
+
+                    Hud_DrawTexQuadF_v4_Fixed(centerX, centerY, width, height, rot, texW * 2, 64, texIndex);
+                }
+
+                icon = &g_MapIcons[i];
+
+                if (!(icon->flags & MAP_ICON_LABEL)) {
+                    continue;
+                }
+
+                /* the label box beside (or on) the icon, in pixels */
+                int labelX;
+                int labelY;
+
+                if (icon->labelX == 0) {
+                    labelX = ((box[0] + box[2]) >> 5) - icon->labelW / 2;
+                }
+                else {
+                    labelX = ((icon->labelX > 0 ? box[2] : box[0]) >> 4) - icon->labelW / 2 + icon->labelX;
+                }
+
+                if (icon->labelY == 0) {
+                    labelY = ((box[1] + box[3]) >> 5) - icon->labelH / 2;
+                }
+                else {
+                    labelY = ((icon->labelY > 0 ? box[3] : box[1]) >> 4) - icon->labelH / 2 + icon->labelY;
+                }
+
+                int labelW = icon->labelW;
+                int labelBottom = labelY + icon->labelH;
+                int labelRight = labelX + labelW;
+                char text[128];
+                FontWindow window;
+
+                DrawRoundedRect(labelY, labelBottom, labelX, labelRight, 0x40);
+                Map_GetIconLabel(i, text);
+
+                window.win_top = labelY;
+                window.win_bot = labelBottom;
+                window.win_left = labelX;
+                window.win_right = labelRight;
+                window.text_x = labelX + labelW / 2;
+                window.text_y = labelY + 4;
+                window.max_width = 0;
+                window.max_height = 0;
+                window.line_spacing = 15;
+                window.flags = 1;
+                window.sub_pixel_x = 0;
+                window.sub_pixel_y = 0;
+                FontPrintOpt(&window, 0x80ffa888, text, -1, 1.0f);
+            }
+        }
+    }
+
+    /* Ratchet's marker on his own level's map */
+    if (Level == g_MapCurIndex) {
+        int markerTex = GetIconFrameTex(0xe99a, 5);
+        float markerSize = (g_MapZoom[g_MapCurIndex] * 4.0f + 10.0f) * 0.75f * (1.0f / 13.0f);
+        float rot = g_heroRotation.z;
+        float u;
+        float v;
+
+        if (g_heroStateType == 0xf) {
+            rot = FastWrapRot(rot, 1.5707964f);
+        }
+
+        if (g_MapAlt != 0) {
+            Map_WorldToMapCoords(g_heroPosition.x, g_heroPosition.y, &u, &v, Level + 100);
+            rot = FastWrapRot(rot, 1.5707964f);
+        }
+        else {
+            Map_WorldToMapCoords(g_heroPosition.x, g_heroPosition.y, &u, &v, Level);
+        }
+
+        u = u * (float)mapW + leftF;
+        v = v * (float)mapH + topF;
+
+        if (Cheats[4] != 0) {
+            rot = FastDiffRots(-FastWrapRot(rot, 1.5707964f), 1.5707964f);
+        }
+
+        markerSize = markerSize * 256.0f;
+        Hud_DrawTexQuadF_v4_Fixed(u, v, markerSize, markerSize, rot, 128, 128, Hud_GetTexIndex(markerTex));
+    }
+
+    STUB_0006d708();
+
+    /* the g_MapIconSource dots, those on or near the screen */
+    if (g_MapIconSource != NULL) {
+        STUB_0006d704(0);
+
+        MapSourceDot *dot = (MapSourceDot *)g_MapIconSource;
+        float mapWF = (float)mapW;
+        float mapHF = (float)mapH;
+
+        for (int count = g_MapIconSourceArg; count != 0; count--, dot++) {
+            float u;
+            float v;
+
+            Map_WorldToMapCoords(dot->x, dot->y, &u, &v, Level);
+
+            int x = (int)(u * mapWF) + left;
+            int y = (int)(v * mapHF) + top;
+
+            if (x < -409 || y < -409 || x > 8601 || y > 7065 || dot->shown != -1) {
+                continue;
+            }
+
+            int radius = g_MapSourceDotRadius;
+
+            DrawFlatOverlay(x - radius, y - radius, x + radius, y + radius, dot->color, 1);
+        }
+
+        STUB_0006d708();
+    }
 }
 
 // 0x00e4648 (0x2d8 bytes)

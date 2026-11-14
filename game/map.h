@@ -23,12 +23,15 @@ struct MapIcon {
     short target;            /* 0x00  index into g_MissionTargets / g_MissionMobys; < 0: fixed spot */
     short mission;           /* 0x02  index into the level's missions, -1 = always */
     u16 flags;               /* 0x04  MAPICON_* */
-    u8 _pad06[4];
+    short frame;             /* 0x06  icon (GetIconFrameTex); 0 = none */
+    short frameSub;          /* 0x08  its frame */
     short label;             /* 0x0a  has a text label */
     short unk0c;
     short labelW;            /* 0x0e  label box size, fitted by UpdateMissionDisplay */
     short labelH;            /* 0x10 */
-    u8 _pad12[6];
+    short labelX;            /* 0x12  label side: < 0 left edge, > 0 right edge, 0 centred; then an offset */
+    short labelY;            /* 0x14  the same in y */
+    u8 _pad16[2];
     float u;                 /* 0x18  map coordinates */
     float v;                 /* 0x1c */
     float rot;               /* 0x20 */
@@ -46,15 +49,6 @@ struct MapTransform {
 _Static_assert(sizeof(struct MapTransform) == 0x10, "MapTransform");
 
 // ---- globals
-extern undefined4 DAT_007264cc; /* 0x7264cc */
-extern undefined4 DAT_007264d0; /* 0x7264d0 */
-extern undefined4 DAT_007264d4; /* 0x7264d4 */
-extern undefined4 DAT_007264d8; /* 0x7264d8 */
-extern undefined4 DAT_007264dc; /* 0x7264dc */
-extern undefined4 DAT_007264e0; /* 0x7264e0 */
-extern undefined4 DAT_007264e4; /* 0x7264e4 */
-extern undefined4 DAT_00a204ec; /* 0xa204ec */
-extern undefined4 DAT_00a204f0; /* 0xa204f0 */
 extern undefined4 DAT_00a207e8; /* 0xa207e8 */
 extern undefined4 DAT_00a20824; /* 0xa20824 */
 extern undefined4 DAT_00a20828; /* 0xa20828 */
@@ -70,12 +64,15 @@ extern int g_MapAvailable; /* 0xa204e4 */
 extern u8 *g_MapCacheBuf[5]; /* 0xa207a8: map cache slots' buffers (0 = slot unused) */ /* type set in global_types.tsv */
 extern int g_MapCacheId[5]; /* 0xa207bc: the map in each slot (level, + 0x100 for Map-O-Matic), -1 free */ /* type set in global_types.tsv */
 extern int g_MapCacheSize[5]; /* 0xa207d4: its size in qwords */ /* type set in global_types.tsv */
+extern int g_MapCellMarks[8][4]; /* 0xa204f0: [i][0] = a cell of the 16x16 map grid to darken, < 0 none (invented name) */ /* type set in global_types.tsv */
+extern int g_MapCellMarksOn; /* 0xa204ec: draw g_MapCellMarks (invented name; no writer found) */ /* type set in global_types.tsv */
 extern int g_MapCurIndex; /* 0xa206e8 */
 extern int g_MapDefaultHeroPos[20][2]; /* 0x7261cc: g_MapHeroU/V's starting values per level */ /* type set in global_types.tsv */
 extern int g_MapFileId; /* 0xa206ec */
 extern int g_MapFileSize; /* 0xa206f4 */
 extern int g_MapHeroU[20]; /* 0xa205c4: Ratchet's map position per level, 16.16; 0x08000000 = none */ /* type set in global_types.tsv */
 extern int g_MapHeroV[20]; /* 0xa20614 */ /* type set in global_types.tsv */
+extern float g_MapIconSizes[3][2]; /* 0x7264cc: icon sizes (w, h) at zoom 1 for MapIcon flags 0x800, 0x400, 0x1000 */ /* type set in global_types.tsv */
 extern void *g_MapIconSource; /* 0xa204dc: set by Map_SetIconSource (nothing calls it) */ /* type set in global_types.tsv */
 extern int g_MapIconSourceArg; /* 0xa20570 */ /* type set in global_types.tsv */
 extern MapIcon *g_MapIconTables[19]; /* 0x728dd0: per level */ /* type set in global_types.tsv */
@@ -87,6 +84,7 @@ extern int g_MapPinnedSlot; /* 0xa207d0: a cache slot Map_ChooseCacheSlotToEvict
 extern u8 g_MapRevealDisc[32][4]; /* 0xa20664: 32x32 bits, a disc of radius 16 (what Map_RevealAroundPos stamps) */ /* type set in global_types.tsv */
 extern u8 *g_MapRevealMask; /* 0xa204cc: the shown level's reveal mask, 256x256 bits */ /* type set in global_types.tsv */
 extern int g_MapSectionWord; /* 0x724acc: set by SECTION_HEADER_MAP */ /* type set in global_types.tsv */
+extern int g_MapSourceDotRadius; /* 0x7264e4: half size of a g_MapIconSource dot, 1/16 pixels (32) */ /* type set in global_types.tsv */
 extern int g_MapUnkA204c0; /* 0xa204c0 */ /* type set in global_types.tsv */
 extern int g_MapUnkA204c4; /* 0xa204c4 */ /* type set in global_types.tsv */
 extern int g_MapUnkA204c8; /* 0xa204c8 */ /* type set in global_types.tsv */

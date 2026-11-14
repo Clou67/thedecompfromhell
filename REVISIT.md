@@ -340,6 +340,35 @@ All 5 functions are checked against the asm. The file is named after Global_Quic
   argument (2) that it doesn't read.
 - **Invented names:** g_QuickMovieUsed, g_GlobalSectionWord and g_GlobalSectionWord2.
 
+## game/map.cpp
+
+All 78 functions are written out and checked against the asm. The file is the pause menu map:
+loading the map file and reveal mask, the 5-slot map cache, revealing around Ratchet, zoom and pan,
+drawing the map, and the per-level region checks.
+
+- **Region callbacks (53 `Map_RegionVisible_*`).** Their table is at 0x726280 (OPD pointers at
+  0x705cxx), but the code that reads it was not found. So the two signatures are inferred from the
+  registers each one reads: `(int pixelU, int pixelV)` or `(float u, float v, float z, int pixelU,
+  int pixelV)`. The functions keep their address as their name.
+- **DrawMapFrame is written as scalar C.** SNC runs most of its setup in vector registers, but
+  every vector holds one value splatted (vmulouh + vmsumshm is a 32-bit multiply, and so on). The
+  C does the same arithmetic on ints and floats, so the asm will differ there. The functions before
+  it (Map_LoadPlanetMap's disc, Map_UpdateZoomPan) keep intrinsics.
+- **Icon boxes.** Pass 1 makes each icon's box from its spot back (up and left) by its size, not
+  centred on it. That is what the asm does.
+- **Invented names:**
+  - The MapIcon fields frame, frameSub, labelX and labelY.
+  - The `MAP_ICON_*` flags in map.cpp. MAP_ICON_SIZE_C (0x1000) is the same bit as mission.cpp's
+    MAPICON_NEEDS_TARGET; both readings are used.
+  - g_MapCellMarksOn/g_MapCellMarks (0xa204ec/0xa204f0: no writer found), g_MapIconSizes
+    (0x7264cc), g_MapSourceDotRadius (0x7264e4) and the MapSourceDot entry of g_MapIconSource.
+  - The types MapBounds, MapTransform, and the other `g_Map*` globals listed in global_types.tsv.
+- **Left raw:** `DAT_00a207e8`, the texture bound to unit 0 for the reveal-mask pass (probably the
+  mask's texture header), DAT_00a20824..840, g_MapUnkA204c0/c4/c8/d0, and the method 0x1714
+  words. HUD helpers in hud.cpp got prototypes: Hud_DrawTexQuadF (10 args, tex and alpha last),
+  Hud_DrawTexQuad_v2_Fixed, DrawFlatOverlay_Fixed and Hud_DrawTexQuadF_v4_Fixed.
+- pause.cpp has 3 more errors since the map globals were typed.
+
 ## SDK matching against SDK 4.00
 
 The EBOOT's libraries carry `GCC 4.1.1 (SDK400, $Rev: 3538 $)`, so the match was rerun against the
