@@ -75,8 +75,8 @@
 #include "idol/tfragfunc.h"
 #include "idol/trophy.h"
 #include "sdk/fios.h"
-#include "sdk/lUnk.h"
 #include "sdk/libbink/binkread.h"
+#include "sdk/libgcc/unwind_dw2_fde.h"
 #include "sdk/sce.h"
 #include <cell/fios.h>
 #include <cell/fios/ps3/ppu/fios_media_ps3ppu.h>

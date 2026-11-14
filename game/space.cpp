@@ -50,7 +50,7 @@
 #include "idol/ps2shim.h"
 #include "idol/sound.h"
 #include "idol/tiefunc.h"
-#include "sdk/lUnk.h"
+#include "sdk/libgcc/unwind_dw2_fde.h"
 #include "sdk/libscream/common/api.h"
 #include "sdk/sce.h"
 #include "idol/fastinline.h"

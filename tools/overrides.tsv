@@ -108,3 +108,4 @@ boot::_start	game/crt0.cpp
 0x5cb4fc-0x5cbc68	sdk/libc/strerror.cpp
 0x5d6920-0x5d9584	sdk/libc/xgetfloat.cpp
 0x5d97dc-0x5d9b44	sdk/libc/mbrtowc.cpp
+0x5e17c4-0x5e3b90	sdk/libgcc/unwind_dw2_fde.cpp

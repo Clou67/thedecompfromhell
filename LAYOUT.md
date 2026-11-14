@@ -249,7 +249,7 @@ Shared update functions are named `UpdateMoby_<first oClass>`, with every regist
 | sdk/libm/fesetenv.cpp | 2 | 0x5ddbd8 | 0x5ddc50 |
 | sdk/fUnk6.cpp | 1 | 0x5ddc50 | 0x5ddc68 |
 | sdk/libcgc/libcgc_cell_localize.cpp | 41 | 0x5ddc68 | 0x5e17c4 |
-| sdk/lUnk.cpp | 38 | 0x5e17c4 | 0x5e3b90 |
+| sdk/libgcc/unwind_dw2_fde.cpp | 38 | 0x5e17c4 | 0x5e3b90 |
 | sdk/libstdc++/throw.cpp | 2 | 0x5e3b94 | 0x5e3bf8 |
 | sdk/libstdcxx/cxxabi.cpp | 56 | 0x5e3bf8 | 0x5e659c |
 | sdk/libc/xfdscale.cpp | 1 | 0x5e659c | 0x5e6774 |

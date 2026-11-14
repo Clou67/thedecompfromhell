@@ -1069,7 +1069,6 @@ errors	file
 0	sdk/fUnk6.cpp
 45	sdk/fios.cpp
 30	sdk/gcmutil/texture.cpp
-158	sdk/lUnk.cpp
 125	sdk/libbink/binkaudio.cpp
 43	sdk/libbink/binkdecode.cpp
 135	sdk/libbink/binkfile.cpp
@@ -1092,6 +1091,7 @@ errors	file
 834	sdk/libdme/rt_udp.cpp
 276	sdk/libdme/rt_upnp.cpp
 69	sdk/libedgelzma/edgelzma_inflate_queue.cpp
+158	sdk/libgcc/unwind_dw2_fde.cpp
 3525	sdk/libmedius/medius_client.cpp
 972	sdk/libscream/989snd.cpp
 162	sdk/libscream/common/api.cpp
