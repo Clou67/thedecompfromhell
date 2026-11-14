@@ -290,7 +290,7 @@ static void DrawDisplayPrompt(void)
         return;
     }
     char *str = help_msg_string_by_index(msg);
-    FontPrintOptWestern(1.0f, &box, text, str, -1, GetEffectTex(1), &MediumWesternGlyphs);
+    FontPrintOptWestern(&box, text, str, -1, GetEffectTex(1), &MediumWesternGlyphs, 1.0f);
 }
 
 // 0x00784e8 (0x1620 bytes)

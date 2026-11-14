@@ -255,6 +255,7 @@ extern undefined4 DAT_007245a0; /* 0x7245a0 */
 extern undefined4 DAT_007245a4; /* 0x7245a4 */
 extern undefined4 DAT_007245a8; /* 0x7245a8 */
 extern undefined4 DAT_007245b8; /* 0x7245b8 */
+extern undefined2 DAT_00737d38; /* 0x737d38 */
 extern undefined4 DAT_0096560c; /* 0x96560c */
 extern undefined4 DAT_00965b70; /* 0x965b70 */
 extern undefined4 DAT_009660d4; /* 0x9660d4 */
@@ -386,7 +387,7 @@ void Hud_DrawTexQuad_v2 (longlong param_1,RsxCmd param_2,ulonglong param_3,int p
 void Hud_DrawTexQuad_v2_Fixed(undefined8 param_1,int param_2,int param_3);
 int GetIconFrameTex(uint param_1,int param_2);
 void Hud_DrawTexQuad_v3 (longlong param_1,RsxCmd param_2,ulonglong param_3,int param_4,longlong param_5, int param_6);
-void DrawFlatOverlay (RsxCmd param_1,ulonglong param_2,RsxCmd param_3,ulonglong param_4,ulonglong param_5, int param_6);
+void DrawFlatOverlay(int param_1,int param_2,int param_3,int param_4,u32 param_5,int param_6);
 uint DrawOxygenMeter(uint *param_1);
 void Moby185Hud_Init(undefined8 param_1);
 void Moby185Hud_Update(void);

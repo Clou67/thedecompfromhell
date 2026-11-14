@@ -3,6 +3,7 @@
 #include "types.h"
 
 // ---- globals
+extern undefined4 DAT_00080a00; /* 0x80a00 */
 extern undefined4 DAT_00735524; /* no defined data */
 extern undefined4 DAT_0073a768; /* 0x73a768 */
 extern undefined4 DAT_00a10738; /* 0xa10738 */

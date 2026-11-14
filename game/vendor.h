@@ -1,6 +1,7 @@
 #pragma once
 // game/vendor.h
 #include "types.h"
+#include "game/mobyutil.h"
 #include "idol/idol_draw.h"
 
 // ---- types
@@ -10,6 +11,18 @@ struct DirectionalLight {
     struct Vec4 color2;
     struct Vec4 direction2;
 };
+
+/* an item's entry in the item table at 0x721000 (0x4c bytes an item; only what vendor.cpp reads
+   is named, names invented) */
+struct GadgetInfo {
+    StringId name;           /* 0x00 */
+    u8 unk04[0xc];
+    int oClass;              /* 0x10  its model */
+    u8 unk14[0x14];
+    u16 icon;                /* 0x28  icon frame (GetIconFrameTex) */
+    u8 unk2a[0x22];
+};
+_Static_assert(sizeof(struct GadgetInfo) == 0x4c, "GadgetInfo");
 
 /* how preview moby 3 (the selected item again) sits (0x739b50, 0x30 bytes an item; names invented) */
 struct VendorCopyView {
@@ -48,6 +61,15 @@ struct VendorItemView {
 };
 _Static_assert(sizeof(struct VendorItemView) == 0x30, "VendorItemView");
 
+/* where a vendor screen part sits between its three joints (0x73a57c, 0x10 bytes a part; names
+   invented) */
+struct VendorScreenPart {
+    float offsetA;           /* 0x00  along joint 0 -> 1 */
+    float offsetB;           /* 0x04  along joint 0 -> 2 */
+    float insetA;            /* 0x08  taken off both ends */
+    float insetB;            /* 0x0c */
+};
+
 /* an item's prices and ammo (0x737d30, 0x18 bytes an item, read through VendorAmmoInfo; field
    names invented from use in vendor.cpp) */
 struct WeaponAmmoInfo {
@@ -62,64 +84,28 @@ struct WeaponAmmoInfo {
 _Static_assert(sizeof(struct WeaponAmmoInfo) == 0x18, "WeaponAmmoInfo");
 
 // ---- globals
-extern undefined4 DAT_00080a00; /* 0x80a00 */
-extern undefined4 DAT_0016fc04; /* 0x16fc04 */
-extern undefined4 DAT_00172c20; /* 0x172c20 */
+extern undefined4 DAT_00173684; /* 0x173684 */
+extern undefined4 DAT_00173688; /* 0x173688 */
 extern undefined4 DAT_00653f08; /* no defined data */
 extern undefined4 DAT_00653fa4; /* no defined data */
 extern undefined4 DAT_00653fac; /* no defined data */
 extern undefined4 DAT_0071efb4; /* 0x71efb4 */
 extern undefined4 DAT_00721000; /* no defined data */
-extern undefined4 DAT_00721038; /* no defined data */
 extern undefined4 DAT_00735580; /* 0x735580 */
-extern undefined4 DAT_00737d30; /* no defined data */
-extern undefined4 DAT_00737d34; /* no defined data */
-extern undefined2 DAT_00737d38; /* 0x737d38 */
-extern undefined4 DAT_00737d3a; /* no defined data */
 extern undefined4 DAT_007387cc; /* 0x7387cc */
-extern undefined4 DAT_00739240; /* no defined data */
-extern undefined4 DAT_0073a318; /* no defined data */
-extern undefined4 DAT_0073a378; /* no defined data */
-extern undefined4 DAT_0073a478; /* no defined data */
-extern undefined4 DAT_0073a578; /* 0x73a578 */
-extern undefined4 DAT_0073a57c; /* no defined data */
-extern undefined4 DAT_0073a580; /* no defined data */
-extern undefined4 DAT_0073a584; /* no defined data */
-extern undefined4 DAT_0073a588; /* no defined data */
 extern undefined4 DAT_0073a78c; /* no defined data */
-extern undefined4 DAT_0073a7dc; /* 0x73a7dc */
-extern undefined4 DAT_00e5a658; /* 0xe5a658 */
-extern undefined4 DAT_00e5a65c; /* 0xe5a65c */
 extern undefined4 DAT_00e5a668; /* 0xe5a668 */
 extern undefined4 DAT_00e5a694; /* 0xe5a694 */
 extern undefined4 DAT_00e5a698; /* 0xe5a698 */
-extern undefined4 DAT_00e5a6c4; /* 0xe5a6c4 */
-extern undefined4 DAT_00e5a6c8; /* 0xe5a6c8 */
-extern undefined4 DAT_00e5a6cc; /* 0xe5a6cc */
-extern undefined4 DAT_00e5a724; /* no defined data */
 extern undefined4 DAT_00e5a874; /* 0xe5a874 */
 extern undefined4 DAT_00e5a8b4; /* 0xe5a8b4 */
 extern undefined4 DAT_00e5a8f4; /* 0xe5a8f4 */
 extern undefined4 DAT_00e5a934; /* 0xe5a934 */
 extern undefined4 DAT_00e5a990; /* no defined data */
 extern undefined1 DAT_00e5a9d0; /* 0xe5a9d0 */
-extern undefined4 DAT_00e5a9dc; /* no defined data */
-extern undefined4 DAT_00e5a9f8; /* no defined data */
-extern undefined4 DAT_00e5aa14; /* 0xe5aa14 */
-extern undefined4 DAT_00e5aa18; /* 0xe5aa18 */
-extern undefined4 DAT_00e5aa1c; /* 0xe5aa1c */
-extern undefined4 DAT_00e5aa20; /* 0xe5aa20 */
-extern undefined4 DAT_00e5aa24; /* 0xe5aa24 */
-extern undefined4 DAT_00e5aa28; /* 0xe5aa28 */
-extern undefined4 DAT_00e5aa2c; /* 0xe5aa2c */
-extern undefined4 DAT_00e5aa30; /* 0xe5aa30 */
-extern undefined1 DAT_00e5aa34; /* 0xe5aa34 */
-extern undefined1 DAT_00e5aa35; /* 0xe5aa35 */
 extern undefined1 DAT_00e5aa38; /* 0xe5aa38 */
 extern undefined1 DAT_00e5aa40; /* 0xe5aa40 */
 extern pointer32 PTR_Draw_AmmoCounter_00705888; /* 0x705888 */
-extern undefined4 _DAT_00e5a970; /* direct read */
-extern undefined4 _DAT_00e5a980; /* direct read */
 extern int g_AmmoBought[37]; /* 0xa0f51c: ammo bought at vendors per weapon (invented name; cleared by boot) */ /* type set in global_types.tsv */
 extern MobyInstance *g_GadgetPickupMoby; /* 0xe5a678 */ /* type set in global_types.tsv */
 extern Vec4 g_GadgetPickupOffset; /* 0x73a2f0: where a gadget pickup cutscene plays, in the pickup moby's space */ /* type set in global_types.tsv */
@@ -139,6 +125,7 @@ extern float g_VendorCutsceneMtx[12]; /* 0xe5a6d0: from g_VendorCutsceneRot */ /
 extern Vec4 g_VendorCutsceneOffset; /* 0x73a2e0: where the weapon cutscene plays, in the vendor moby's space */ /* type set in global_types.tsv */
 extern Vec4 g_VendorCutscenePos; /* 0xe5a710 */ /* type set in global_types.tsv */
 extern Vec4 g_VendorCutsceneRot; /* 0xe5a700 */ /* type set in global_types.tsv */
+extern int g_VendorDrawMode; /* 0xe5a658: 0 the world is drawn, 1 the vendor screen (from its copy of the frame) */ /* type set in global_types.tsv */
 extern MobyInstance *g_VendorDude; /* 0xe5a674: the vendor dude on the vendor screen */ /* type set in global_types.tsv */
 extern bool g_VendorDudeActive; /* 0xe5a9d0 */ /* type set in global_types.tsv */
 extern int g_VendorDudeLastChat; /* 0xe5a680: g_MainLoopFrames of his last chatter */ /* type set in global_types.tsv */
@@ -152,14 +139,19 @@ extern int g_VendorDudeTimer; /* 0xe5a684: frames in the idle states */ /* type 
 extern int g_VendorDudeTriggers[3][2]; /* 0x73a300: the speech frame of animations 4/5/6 (+3 * line) */ /* type set in global_types.tsv */
 extern int g_VendorExitTimer; /* 0xe5a940: frames until the vendor closes after triangle */ /* type set in global_types.tsv */
 extern u8 g_VendorExiting; /* 0xe5a944 */ /* type set in global_types.tsv */
+extern int g_VendorFlashTimers[7]; /* 0xe5a9dc: per vendor screen part, a white flash running (0 none) */ /* type set in global_types.tsv */
+extern u32 g_VendorFontGlyphs[64]; /* 0x73a378: the vendor screen's bitmap font from ' ': texture u in bits 4-15, v in bits 20-31; -1 none (invented name) */ /* type set in global_types.tsv */
+extern int g_VendorFontWidths[64]; /* 0x73a478: its advance per character */ /* type set in global_types.tsv */
 extern Vec4 g_VendorHeroOffset; /* 0x738850: where the hero is put back, in the vendor moby's space */ /* type set in global_types.tsv */
 extern int g_VendorHoldLess; /* 0xe5a954: frames left held on the quantity box */ /* type set in global_types.tsv */
 extern int g_VendorHoldMore; /* 0xe5a958: frames right held */ /* type set in global_types.tsv */
+extern StringId g_VendorIdleTexts[24]; /* 0x73a318: the scroller's texts while nothing is selected (one picked at random) */ /* type set in global_types.tsv */
 extern VendorItemModel g_VendorItemModels[]; /* 0x739220: an item's second preview part */ /* type set in global_types.tsv */
 extern Vec4 g_VendorItemNarrowOffset[]; /* 0x7388d0: extra preview offset per item on a 4:3 screen */ /* type set in global_types.tsv */
 extern VendorItemView g_VendorItemViews[]; /* 0x738b30: how each item sits in the preview */ /* type set in global_types.tsv */
 extern VendorItem g_VendorItems[16]; /* 0xe5a720 */ /* type set in global_types.tsv */
 extern int g_VendorItemsCnt; /* 0xe5a820 */ /* type set in global_types.tsv */
+extern u32 g_VendorJapaneseColor; /* 0x73a578: the scroller's color in Japanese */ /* type set in global_types.tsv */
 extern int g_VendorLanguage; /* 0xe5a688 */ /* type set in global_types.tsv */
 extern Vec4 g_VendorLightColor; /* 0x7388c0 */ /* type set in global_types.tsv */
 extern Vec4 g_VendorLightDir; /* 0x7388b0 */ /* type set in global_types.tsv */
@@ -169,6 +161,11 @@ extern MobyInstance *g_VendorMoby; /* 0xe5a66c */ /* type set in global_types.ts
 extern u8 g_VendorNarrow; /* 0xe5a9d2: the screen is 4:3 (set once, at the first vendor) */ /* type set in global_types.tsv */
 extern int g_VendorOpenTimer; /* 0xe5a948 */ /* type set in global_types.tsv */
 extern u8 g_VendorOpening; /* 0xe5a94c */ /* type set in global_types.tsv */
+extern u32 g_VendorOverlayColors[]; /* 0x73a638: their colors */ /* type set in global_types.tsv */
+extern int g_VendorOverlayQuads[4][4]; /* 0x73a6dc: the overlay's 4 quads as corner indices */ /* type set in global_types.tsv */
+extern float g_VendorOverlayScroll; /* 0x73a7dc: the overlay's v scroll, 0..1 */ /* type set in global_types.tsv */
+extern float g_VendorOverlayUVs[][2]; /* 0x73a670: their texture coordinates (v scrolls) */ /* type set in global_types.tsv */
+extern Vec4 g_VendorOverlayVerts[]; /* 0x73a5e0: the scrolling overlay's corners on the vendor moby */ /* type set in global_types.tsv */
 extern u8 g_VendorPickQuantity; /* 0xe5aa42: the purchase box lets you pick a quantity (ammo you can afford) */ /* type set in global_types.tsv */
 extern u8 g_VendorPreviewDirty; /* 0xe5a9d3: cleared once the preview is spawned (invented name) */ /* type set in global_types.tsv */
 extern Vec4 g_VendorPreviewOffset; /* 0x738870: the preview's offset from the vendor moby, w its w */ /* type set in global_types.tsv */
@@ -176,14 +173,19 @@ extern MobyInstance *g_VendorPreviews; /* 0xe5a670: the vendor screen's own mobi
 extern int g_VendorQuantity; /* 0xe5a95c: units of ammo to buy */ /* type set in global_types.tsv */
 extern int g_VendorSavedIdol1a78; /* 0xe5a830: IdolDraw.unk1a78, zeroed while the vendor is open */ /* type set in global_types.tsv */
 extern Vec4 g_VendorSavedOrient[3]; /* 0xe5a960: GameCamera.orientMtx forward/right/up while the vendor is open */ /* type set in global_types.tsv */
+extern int g_VendorScanTimers[7]; /* 0xe5a9f8: per part, a scan line sweeping down (0 none) */ /* type set in global_types.tsv */
 extern Vec4 g_VendorScreen2Offset; /* 0x7388a0: preview moby 5 */ /* type set in global_types.tsv */
 extern Vec4 g_VendorScreenOffset; /* 0x738890: preview moby 0 (y depends on the video mode) */ /* type set in global_types.tsv */
+extern VendorScreenPart g_VendorScreenParts[7]; /* 0x73a57c: where each vendor screen part sits between its joints */ /* type set in global_types.tsv */
+extern u32 g_VendorScreenTex[9]; /* 0xe5aa14: the vendor screen render target as an effect texture header (like g_AuxBufferTex) */ /* type set in global_types.tsv */
 extern int g_VendorScrollPos; /* 0xe5a694 */ /* type set in global_types.tsv */
 extern char *g_VendorScrollText; /* 0xe5a67c */ /* type set in global_types.tsv */
 extern int g_VendorSelected; /* 0xe5a6a8: index in g_VendorItems */ /* type set in global_types.tsv */
+extern int g_VendorSetupPending; /* 0xe5a65c: the vendor finished opening; set the vendor screen up after this frame */ /* type set in global_types.tsv */
 extern float g_VendorSpin; /* 0xe5a950: angle of the spinning preview parts */ /* type set in global_types.tsv */
 extern Vec4 g_VendorSpinOffset; /* 0x738880: where the spinning preview parts (mobies 2 and 3) sit */ /* type set in global_types.tsv */
 extern int g_VendorStateFrames; /* 0xe5a654: frames in the current g_OpenVendorState */ /* type set in global_types.tsv */
+extern int g_VendorUnkAa64; /* 0xe5aa64: set to 0x60000 before the vendor screen's first present (not read in vendor.cpp) */ /* type set in global_types.tsv */
 extern int g_WeaponCutscenes[]; /* 0x73a240: the weapon cutscene of each item */ /* type set in global_types.tsv */
 extern undefined4 g_boltCount; /* 0x969ca0 */
 extern int g_lastVendorWasPda; /* 0xe5a690 */ /* type set in global_types.tsv */
@@ -206,20 +208,20 @@ void Vendor_PlayDudeSpeech(int event);
 void Vendor_SpawnPreviewMoby(void);
 void PurchaseHandler(void);
 void Vendor_PreUpdate(void);
-void DrawVendorHintFrame(double param_1,byte *param_2,int param_3,int param_4);
+void Vendor_DrawBitmapText(const u8 *text, int x, int y, float scale);
 void Vendor_DrawScrollText(void);
-void DrawVendorDude(void);
-int Vendor_FormatBolts(char *buf,int value);
-void DrawWeaponIcons(void);
-void DrawWeaponStrings(void);
-void DrawBuyButton(void);
-void DrawExitButton(void);
-void Vendor_DrawItemInfo(void);
-void Vendor_DrawFlickerText(undefined8 param_1,double param_2,longlong param_3);
-void Vendor_SetupScreenRender(double param_1,uint param_2,uint param_3);
+void DrawVendorDude(MobyInstance *moby);
+int Vendor_FormatBolts(char *buf, int value);
+void DrawWeaponIcons(MobyInstance *moby);
+void DrawWeaponStrings(MobyInstance *moby);
+void DrawBuyButton(MobyInstance *moby, int width, int height);
+void DrawExitButton(MobyInstance *moby);
+void Vendor_DrawItemInfo(MobyInstance *moby, int width, int height);
+void Vendor_DrawFlickerText(int screen, float width, float height);
+void Vendor_SetupScreenRender(float xratio, int log2Width, int log2Height);
 void Vendor_ResetHUDPass(void);
 void Vendor_HudUpdate(MobyInstance *moby);
-void Vendor_DrawMobyHighlight(undefined8 param_1);
-void Vendor_DrawScreen(undefined8 param_1);
+void Vendor_DrawMobyHighlight(MobyInstance *moby);
+void Vendor_DrawScreen(MobyInstance *moby);
 void Vendor_DrawScrollingOverlay(void);
 void Vendor_PostUpdate(void);

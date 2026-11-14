@@ -1022,14 +1022,14 @@ static inline void ScaleOceanUV(float scale)
 }
 
 // 0x017e31c (0x4c bytes)
-void OceanPlane_SetDepth(float scale, OceanPlane *ocean, u64 unused, u8 depth)
+void OceanPlane_SetDepth(OceanPlane *ocean, float scale, u8 depth)
 {
     ocean->depth = depth;
     ScaleOceanUV(scale);
 }
 
 // 0x017e368 (0x50 bytes)
-void OceanPlane_SetDefaultDepth(float scale, OceanPlane *ocean)
+void OceanPlane_SetDefaultDepth(OceanPlane *ocean, float scale)
 {
     ocean->depth = OCEAN_DEPTH_ONLY;
     ScaleOceanUV(scale);

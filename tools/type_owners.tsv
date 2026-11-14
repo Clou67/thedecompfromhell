@@ -129,3 +129,5 @@ VendorItemView	game/vendor
 VendorItemModel	game/vendor
 WeaponAmmoInfo	game/vendor
 VendorCopyView	game/vendor
+GadgetInfo	game/vendor
+VendorScreenPart	game/vendor

@@ -1,6 +1,7 @@
 #include "rc1.h"
-// MERGE
 #include "idol/fastinline.h"
+#include <cell/gcm/gcm_macros.h>
+#include <cell/gcm/gcm_enum.h>
 // game/vendor.cpp -- reconstructed from NPEA00385 EBOOT
 // 33 functions, 0x16a0d8-0x174b0c: the weapon vendor. Its item list, the purchase and gadget
 // cutscenes, the vendor dude, and the vendor screen with its scrolling text and item views.
@@ -86,6 +87,12 @@ static inline int VendorItemPrice(int item)
 static inline WeaponAmmoInfo *VendorAmmoInfo(int item)
 {
     return (WeaponAmmoInfo *)((u8 *)&DAT_00737d30 + item * sizeof(WeaponAmmoInfo));
+}
+
+/* the item's entry in the item table (0x721000) */
+static inline GadgetInfo *VendorGadget(int item)
+{
+    return (GadgetInfo *)((u8 *)&DAT_00721000 + item * sizeof(GadgetInfo));
 }
 
 /* the weapon's current ammo */
@@ -237,7 +244,7 @@ void Spawn_Moby11_Vendor(MobyInstance *moby)
     g_CutscenePlaying = 1;
     g_VendorBufEnd = (u8 *)(uintptr_t)g_NpcBuffer + 0x100000;
     g_OpenVendorState = 0;
-    DAT_00e5a658 = 0;
+    g_VendorDrawMode = 0;
     g_VendorBuf = (u8 *)(uintptr_t)g_NpcBuffer;
     g_VendorMoby = moby;
     PlayMobySound(3, 0, moby);
@@ -437,8 +444,7 @@ int Vendor_StartWeaponCutscene(void)
         DAT_0096bd98 = 0;
     }
 
-    /* the item table at 0x721010, 0x4c bytes an item: its model class first */
-    LoadGadgetModel(((int *)&DAT_00721010)[g_VendorBoughtItem * 0x13], -1);
+    LoadGadgetModel(VendorGadget(g_VendorBoughtItem)->oClass, -1);
     LoadWeaponCutscene(cutscene);
     g_PendingSpeech = 0x2734;
     ParseWeaponSceneChunk(0);
@@ -506,7 +512,7 @@ int StartGadgetPickupCutscene(MobyInstance *moby, int item)
 
     Hero_KillGadget(0, 0);
     DAT_0096bd98 = item;
-    LoadGadgetModel(((int *)&DAT_00721010)[item * 0x13], -1);
+    LoadGadgetModel(VendorGadget(item)->oClass, -1);
     LoadWeaponCutscene(cutscene);
     g_PendingSpeech = 0x2734;
     ParseWeaponSceneChunk(0);
@@ -797,13 +803,13 @@ void Vendor_SpawnPreviewMoby(void)
     idol->vtable->BuildAndFlipFrame(idol);
     idol->unk1a8c += 2;
 
-    int oClass = ((int *)&DAT_00721010)[g_VendorItems[g_VendorSelected].item * 0x13];
+    int oClass = VendorGadget(g_VendorItems[g_VendorSelected].item)->oClass;
 
     if (g_VendorItems[g_VendorSelected].item == 0x18) {
         oClass = 0x1df;
     }
     else {
-        LoadGadgetModel(((int *)&DAT_00721010)[g_VendorItems[g_VendorSelected].item * 0x13], -1);
+        LoadGadgetModel(VendorGadget(g_VendorItems[g_VendorSelected].item)->oClass, -1);
     }
 
     MobyInstance *preview = &g_VendorPreviews[1];
@@ -1418,7 +1424,7 @@ void Vendor_PreUpdate(void)
                         memcpy(&GameCamera.rotW, &g_VendorCamRot.w, 4);
                     }
 
-                    DAT_00e5a658 = 0;
+                    g_VendorDrawMode = 0;
                     g_VendorStateFrames = 0;
                     GameCamera.orientMtx.forward = g_VendorSavedOrient[0];
                     GameCamera.orientMtx.right = g_VendorSavedOrient[1];
@@ -1475,7 +1481,7 @@ void Vendor_PreUpdate(void)
 
             if ((int)(animationSpeed * 40.5f) <= g_VendorStateFrames || g_lastVendorWasPda != 0) {
                 SceneScreenFade = 0.0f;
-                DAT_00e5a65c = 1;
+                g_VendorSetupPending = 1;
                 g_OpenVendorState = 1;
                 g_VendorStateFrames = 0;
                 MB_SetAnimation(g_VendorMoby, 3, 0, 8);
@@ -1631,4 +1637,1189 @@ void Vendor_PreUpdate(void)
     }
 
     sound_Update();
+}
+
+// 0x016f9a8 (0x25c bytes)
+/* Draws text in the vendor screen's bitmap font (9x9 cells from icon 0xe935), scaled. A 'b' is
+   not drawn but makes the next character blink (hidden for the first 10 of every 40 frames).
+   Character 0x10a would start a new line 9 lower, but a byte can't hold it. Was
+   DrawVendorHintFrame. */
+void Vendor_DrawBitmapText(const u8 *text, int x, int y, float scale)
+{
+    bool blink = false;
+    int tex = Hud_GetTexIndex(GetIconFrameTex(0xe935, 0));
+    int cursor = x;
+
+    while (*text != 0) {
+        int glyph = *text++ - ' ';
+
+        if (glyph == 'b' - ' ') {
+            blink = true;
+        }
+
+        if (glyph == 0xea) {
+            y += 9;
+            cursor = x;
+        }
+
+        if (glyph < 0x3b && (g_VendorFontGlyphs[glyph] != (u32)-1 || glyph == 0)) {
+            bool hidden = false;
+
+            if (blink) {
+                int cycle = (int)(animationSpeed * 30.5f) + (int)(animationSpeed * 10.5f);
+
+                blink = false;
+
+                if (g_MainLoopFrames % cycle < (int)(animationSpeed * 10.5f)) {
+                    hidden = true;
+                }
+            }
+
+            if (!hidden && glyph != 0) {
+                u32 cell = g_VendorFontGlyphs[glyph];
+                int width = FastDoubleToInt((float)FastIntToDouble(9) * scale);
+                int height = FastDoubleToInt((float)FastIntToDouble(9) * scale);
+
+                Sprite_DrawShapeWrapper(cursor, y, width, height, (cell >> 4) & 0xfff, cell >> 20, 9, 9, 0x80808080, tex);
+            }
+
+            cursor += FastDoubleToInt((float)FastIntToDouble(g_VendorFontWidths[glyph]) * scale);
+        }
+    }
+}
+
+// 0x016fc10 (0x208 bytes)
+/* The scroller along the top of the vendor screen: two pixels a frame; when the text has
+   scrolled out, a random idle text takes its place. Japanese uses the medium font in a color
+   that blinks its alpha. Clipped to the 512x128 screen while drawing, then the edges masked. */
+void Vendor_DrawScrollText(void)
+{
+    STUB_0007813c(0, 0, 0x200, 0x80, 0x200, 0x80, 0);
+
+    if (g_JapaneseMode) {
+        DAT_0071efb4 = (g_MainLoopFrames & 0x1f) < 0x10 ? g_VendorJapaneseColor & 0xffffff : g_VendorJapaneseColor;
+    }
+
+    if ((int)strlen(g_VendorScrollText) - g_VendorScrollPos / 20 > 0) {
+        g_VendorScrollPos += 2;
+    }
+    else {
+        Vendor_SetScrollText(help_msg_string_by_index(g_VendorIdleTexts[MB_randInt(24)]));
+    }
+
+    if (!g_JapaneseMode) {
+        Vendor_DrawBitmapText((const u8 *)g_VendorScrollText, -g_VendorScrollPos, 8, 2.0f);
+    }
+    else {
+        FontPrintScaledMedium((float)-g_VendorScrollPos, 7.0f, g_VendorJapaneseColor, g_VendorScrollText, -1, 1.25f);
+    }
+
+    STUB_0007813c(0, 0, 4, 0x40, 0x200, 0x80, 0);
+    STUB_0007813c(0xe2, 0, 0xe6, 0x40, 0x200, 0x80, 0);
+}
+
+// 0x016fe20 (0x1c0 bytes)
+/* Queues the vendor dude for drawing, stretched to twice the height of his z axis on a 4:3
+   screen for the draw and put back after. Clips to the vendor screen first. */
+void DrawVendorDude(MobyInstance *moby)
+{
+    STUB_0007813c(0, 0, 0x200, 0x80, 0x200, 0x80, 0);
+
+    MobyInstance *dude = g_VendorDude;
+
+    if (g_VendorDudeActive == 1) {
+        Mtx4 saved = dude->transform;
+
+        if (g_VendorNarrow) {
+            dude->transform = saved;
+            dude->transform.v2.z = saved.v2.z * 2.0f;
+        }
+
+        MB_AddToDrawList(dude, 1);
+
+        if (g_VendorNarrow) {
+            g_VendorDude->transform = saved;
+        }
+    }
+}
+
+// 0x016ffe0 (0x9c bytes)
+/* value with a thousands comma ("1,234"); returns the length */
+int Vendor_FormatBolts(char *buf, int value)
+{
+    if (value < 1000) {
+        return sprintf(buf, "%d", value);
+    }
+
+    return sprintf(buf, "%d,%03d", value / 1000, value % 1000);
+}
+
+/* the pulsing frame around the selected icon: a gray from the frame counter, then a black inside */
+static inline void VendorDrawSelection(int x)
+{
+    u32 gray = (abs(((g_VendorStateFrames & 0xf) * 4) - 32) + 64) * 0x10202 | 0x80000000;
+
+    Sprite_DrawShapeWrapper(x, 2, 0x38, 0x38, 0, 0, 0x10, 0x10, gray, GetEffectTex(0x16));
+    Sprite_DrawShapeWrapper(x + 2, 4, 0x34, 0x34, 0, 0, 0x10, 0x10, 0x80000000, GetEffectTex(0x16));
+}
+
+/* an item's icon: the ammo frame (2) for ammo */
+static inline int VendorIconTex(VendorItem *item)
+{
+    return GetIconFrameTex(VendorGadget(item->item)->icon, item->isAmmo == 1 ? 2 : 0);
+}
+
+// 0x017007c (0x400 bytes)
+/* The row of item icons, 56 apart. Up to 7 items: fixed, the selection framed. More: a strip of
+   11 around the selection that slides 4 pixels a frame to catch up with g_VendorCursor (moved by
+   the page scroll) and wraps; the frame stays in the middle and shows once it has caught up. */
+void DrawWeaponIcons(MobyInstance *moby)
+{
+    STUB_0007813c(0, 0, 0x200, 0x80, 0x200, 0x80, 0);
+
+    if (g_VendorItemsCnt < 8) {
+        VendorDrawSelection(g_VendorSelected * 56 + 8);
+
+        for (int i = 0, x = 12; i < g_VendorItemsCnt; i++, x += 56) {
+            DrawSprite(VendorIconTex(&g_VendorItems[i]), x, 6, 0x30, 0x30, 0x80);
+        }
+    }
+    else {
+        if (g_VendorCursor < 0) {
+            g_VendorCursor += 4;
+        }
+        else if (g_VendorCursor <= 0) {
+            VendorDrawSelection(0xb0);
+        }
+        else {
+            g_VendorCursor -= 4;
+        }
+
+        for (int i = -2, x = g_VendorCursor - 100; i < 9; i++, x += 56) {
+            int index = (g_VendorItemsCnt * 2 + i + g_VendorSelected - 3) % g_VendorItemsCnt;
+
+            DrawSprite(VendorIconTex(&g_VendorItems[index]), x, 6, 0x30, 0x30, 0x80808080);
+        }
+    }
+}
+
+/* a red line through the price just drawn right-aligned at 118 (width wide): seven bars, each a
+   pixel narrower on both sides and more opaque */
+static inline void VendorStrikePrice(int width)
+{
+    for (int i = 0; i < 7; i++) {
+        DrawFlatOverlay(0x75 - width + i, 0x6d, 0x7b - i, 0x70, 0x20959544 + i * 0x10000000, 0);
+    }
+}
+
+// 0x0170490 (0x858 bytes)
+/* The selected item's name (85% on Language 3) and price, and the preview mobies 1 and 0. Ammo
+   shows "AMMO" and the price per unit; through the PDA that price is struck out with the PDA's
+   price above it. A weapon shows its price, grayed and struck out with the other price above it
+   while UnlockableItems.persuader is set. */
+void DrawWeaponStrings(MobyInstance *moby)
+{
+    char text[256];
+    float scale = g_Language == 3 ? 0.85f : 1.0f;
+
+    STUB_0007813c(0, 0, 0x200, 0x80, 0x200, 0x80, 0);
+    MB_AddToDrawList(&g_VendorPreviews[1], 1);
+    MB_AddToDrawList(&g_VendorPreviews[0], 1);
+
+    VendorItem *item = &g_VendorItems[g_VendorSelected];
+
+    if (item->isAmmo == 1) {
+        FontPrintScaledSmall(6.0f, 8.0f, 0x80f0f0f0, help_msg_string_by_index(VendorGadget(item->item)->name), -1, scale);
+        FontPrintSmallLeft(24, 24, 0x80f0f0f0, help_msg_string_by_index(STR_AMMO), -1);
+
+        Vendor_FormatBolts(text, VendorAmmoInfo(g_VendorItems[g_VendorSelected].item)->ammoPrice);
+        FontPrintSmallRight(0x76, 0x65, 0x80f0f0f0, text, -1);
+
+        if (g_lastVendorWasPda != 0) {
+            VendorStrikePrice(FontLen(text, -1));
+            Vendor_FormatBolts(text, VendorUnitPrice(g_VendorItems[g_VendorSelected].item));
+            FontPrintSmallRight(0x76, 0x55, 0x80f0f0f0, text, -1);
+        }
+    }
+    else {
+        FontPrintScaledSmall(6.0f, 8.0f, 0x80f0f0f0, help_msg_string_by_index(VendorGadget(item->item)->name), -1, scale);
+
+        Vendor_FormatBolts(text, VendorAmmoInfo(g_VendorItems[g_VendorSelected].item)->price);
+        FontPrintSmallRight(0x76, 0x65, UnlockableItems.persuader ? 0x80808080 : 0x80f0f0f0, text, -1);
+
+        if (UnlockableItems.persuader) {
+            VendorStrikePrice(FontLen(text, -1));
+            Vendor_FormatBolts(text, VendorWeaponPrice(g_VendorItems[g_VendorSelected].item));
+            FontPrintSmallRight(0x76, 0x55, 0x80f0f0f0, text, -1);
+        }
+    }
+}
+
+/* SetFontWindow's fields, written in place */
+static inline void VendorFontWindow(FontWindow *window, int bottom, int right, int textX, int textY, int maxWidth, int maxHeight, int flags)
+{
+    window->win_top = 0;
+    window->win_bot = bottom;
+    window->win_left = 0;
+    window->win_right = right;
+    window->text_x = textX;
+    window->text_y = textY;
+    window->max_width = maxWidth;
+    window->max_height = maxHeight;
+    window->line_spacing = 16;
+    window->flags = flags;
+    window->sub_pixel_x = 0;
+    window->sub_pixel_y = 0;
+}
+
+/* the selected ammo is full */
+static inline bool VendorAmmoFull(VendorItem *item)
+{
+    return item->isAmmo == 1 && *VendorAmmo(item->item) >= VendorAmmoInfo(item->item)->maxAmmo;
+}
+
+// 0x0170cf0 (0x2e0 bytes)
+/* The buy button (width x height): "BUY", or with the purchase box open "BACK" when the item
+   is out of reach, "BUY" for ammo you can afford, nothing for a weapon you can afford. Centered:
+   measured first (flag 4), then printed. moby (the vendor screen) is not used. */
+void DrawBuyButton(MobyInstance *moby, int width, int height)
+{
+    FontWindow window;
+    StringId text;
+
+    STUB_0007813c(0, 0, 0x200, 0x80, 0x200, 0x80, 0);
+    VendorFontWindow(&window, height, width, width >> 1, (height >> 1) - 7, 0, 0, 1);
+
+    VendorItem *item = &g_VendorItems[g_VendorSelected];
+
+    if (g_VendorMenuState == 0) {
+        text = STR_BUY;
+    }
+    else if (VendorAmmoFull(item)) {
+        text = STR_BACK;
+    }
+    else if (item->isAmmo == 1) {
+        text = VendorUnitPrice(item->item) <= g_boltCount ? STR_BUY : STR_BACK;
+    }
+    else {
+        text = VendorWeaponPrice(item->item) <= g_boltCount ? (StringId)0 : STR_BACK;
+    }
+
+    if (text != 0) {
+        window.flags |= 4;
+        FontPrintOpt(&window, 0x80f0f0f0, help_msg_string_by_index(text), -1, 1.0f);
+        window.flags ^= 4;
+        window.text_y = (height - window.max_height) >> 1;
+        FontPrintOpt(&window, 0x80f0f0f0, help_msg_string_by_index(text), -1, 1.0f);
+    }
+}
+
+// 0x0170fd0 (0x1bc bytes)
+/* "EXIT" under the exit button; with the purchase box open only for ammo you can afford and
+   still have room for */
+void DrawExitButton(MobyInstance *moby)
+{
+    STUB_0007813c(0, 0, 0x200, 0x80, 0x200, 0x80, 0);
+
+    if (g_VendorMenuState == 0) {
+        FontPrintSmallCenter(0x28, 0x14, 0x80f0f0f0, help_msg_string_by_index(STR_EXIT), -1);
+        return;
+    }
+
+    VendorItem *item = &g_VendorItems[g_VendorSelected];
+
+    if (!VendorAmmoFull(item) && item->isAmmo == 1 && VendorUnitPrice(item->item) <= g_boltCount) {
+        FontPrintSmallCenter(0x28, 0x14, 0x80f0f0f0, help_msg_string_by_index(STR_EXIT), -1);
+    }
+}
+
+// 0x01711a8 (0x5ec bytes)
+/* The purchase box's text (width x height): "YOU'RE MAXED OUT", "YOU CAN'T AFFORD IT", or for
+   ammo "HOW MANY?" with the quantity (shifted for its digits) between two markers, preview moby 5
+   and the total price; for a weapon "PURCHASE" with the BUY/NO choices (85% on Languages 2, 4
+   and 5). */
+void Vendor_DrawItemInfo(MobyInstance *moby, int width, int height)
+{
+    FontWindow window;
+    char text[264];
+
+    STUB_0007813c(0, 0, 0x200, 0x80, 0x200, 0x80, 0);
+    VendorFontWindow(&window, height, width, width / 2, height / 2, width - 8, height - 8, 3);
+
+    VendorItem *item = &g_VendorItems[g_VendorSelected];
+
+    if (VendorAmmoFull(item)) {
+        FontPrintOpt(&window, 0x80f0f0f0, help_msg_string_by_index(STR_YOURE_MAXED_OUT), -1, 1.0f);
+        return;
+    }
+
+    if (item->isAmmo == 1) {
+        if (g_boltCount < VendorUnitPrice(item->item)) {
+            FontPrintOpt(&window, 0x80f0f0f0, help_msg_string_by_index(STR_YOU_CANT_AFFORD_IT), -1, 1.0f);
+            return;
+        }
+
+        MB_AddToDrawList(&g_VendorPreviews[5], 1);
+        window.flags = 1;
+        window.text_y = 6;
+        FontPrintOpt(&window, 0x80f0f0f0, help_msg_string_by_index(STR_HOW_MANY), -1, 1.0f);
+
+        sprintf(text, "%d", g_VendorQuantity);
+
+        int x = g_VendorQuantity >= 100 ? 0x17 : g_VendorQuantity >= 10 ? 0x1e : 0x25;
+
+        FontPrintSmallLeft(x, 0x32, 0x80f0f0f0, text, -1);
+        FontPrintSmallLeft(0xc, 0x32, 0x80f0f0f0, (const char *)&DAT_00653fa4, -1);
+        FontPrintSmallLeft(0x40, 0x32, 0x80f0f0f0, (const char *)&DAT_00653fac, -1);
+
+        sprintf(text, "%d", g_VendorQuantity * VendorUnitPrice(g_VendorItems[g_VendorSelected].item));
+        FontPrintSmallRight(0x40, 0x4c, 0x80f0f0f0, text, -1);
+        return;
+    }
+
+    int price = VendorWeaponPrice(item->item);
+    float scale = 1.0f;
+
+    if (g_Language == 4 || g_Language == 2 || g_Language == 5) {
+        scale = 0.85f;
+    }
+
+    if (g_boltCount < price) {
+        FontPrintOpt(&window, 0x80f0f0f0, help_msg_string_by_index(STR_YOU_CANT_AFFORD_IT), -1, 1.0f);
+    }
+    else {
+        FontPrintScaledSmall(6.0f, 6.0f, 0x80f0f0f0, help_msg_string_by_index(STR_PURCHASE), -1, scale);
+        FontPrintScaledSmall(2.0f, 32.0f, 0x80f0f0f0, help_msg_string_by_index(STR_BUY), -1, scale);
+        FontPrintScaledSmall(2.0f, 62.0f, 0x80f0f0f0, help_msg_string_by_index(STR_NO), -1, scale);
+    }
+}
+
+/* effect texture tex's header word at +8 (0x24-byte headers at EffectTexHeaders) */
+static inline u32 *VendorEffectTexWord(int tex)
+{
+    return (u32 *)(EffectTexHeaders + 8 + tex * 0x24);
+}
+
+// 0x01717a8 (0x52c bytes)
+/* The vendor screen part's (screen, width x height) effects, additive: now and then (1 in 700
+   frames) a noisy white flash that fades in and out over 128 frames (part 0, the scroller,
+   always shows at least a faint one), on the other parts a scan line now and then (1 in 360)
+   sweeping down over 256 frames, and on part 6 the frame texture. */
+void Vendor_DrawFlickerText(int screen, float width, float height)
+{
+    SetGSReg(0x16, idol_draw::Blend(1, 1, 0, 2, 0, 0, 1, 1));
+    *VendorEffectTexWord(GetEffectTex(0x1c)) = 0x10101;
+    *VendorEffectTexWord(GetEffectTex(0x1a)) = 0x10101;
+
+    int *flash = &g_VendorFlashTimers[screen];
+
+    if (*flash != 0 || screen == 0) {
+        if (*flash != 0) {
+            *flash += 2;
+        }
+
+        int time = *flash;
+
+        if (screen == 0 && time < 24) {
+            time = 24;
+        }
+
+        float noiseU = (float)MB_randInt(200);
+        float noiseV = (float)MB_randInt(200);
+        int alpha = (128 - abs(time - 128)) * 2;
+
+        SetGSReg(6, SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0));
+        SetGSReg(3, idol_draw::PackCmd(0, 2, 2, 1, alpha > 255 ? 255 : alpha));
+        DrawSpriteFont(0.0f, 0.0f, width, height, (int)noiseU, (int)noiseV, (int)(width + noiseU), (int)(height + noiseV), 0x808080, GetEffectTex(0x1a));
+
+        if (*flash >= 256) {
+            *flash = 0;
+        }
+    }
+
+    if (*flash == 0 && MB_randInt(700) == 0) {
+        *flash = 2;
+    }
+
+    SetGSReg(6, SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0));
+    SetGSReg(3, idol_draw::PackCmd(0, 1, 0, 1, 0x80));
+
+    if (screen > 0) {
+        int *scan = &g_VendorScanTimers[screen];
+
+        if (*scan == 0) {
+            if (MB_randInt(360) == 0) {
+                *scan = 2;
+            }
+        }
+        else {
+            int time = *scan;
+
+            *scan = time + 2;
+
+            int alpha = 128 - abs(time - 126);
+
+            if (alpha > 80) {
+                alpha = 80;
+            }
+
+            float top = -((float)FastIntToDouble(512 - *scan) * 0.03125f);
+            float bottom = height + 16.0f;
+
+            DrawSpriteFont(0.0f, top, width, bottom, 0, 0, (int)width, (int)(bottom * 3.0f), (alpha << 24) | 0xa0a0a0, GetEffectTex(0x1c));
+
+            if (*scan >= 512) {
+                *scan = 0;
+            }
+        }
+    }
+
+    if (screen == 6) {
+        DrawSpriteFont(0.0f, 0.0f, width, height, 0, 0, 64, 64, 0x80808080, GetEffectTex(0x19));
+    }
+}
+
+/* RSX command helpers (as in draw.cpp) */
+static inline void Emit(RenderingStep *pass, u32 word)
+{
+    *pass->command++ = (RsxCmd)word;
+}
+
+static inline void EmitF(RenderingStep *pass, float value)
+{
+    Emit(pass, *(u32 *)&value);
+}
+
+static inline void EmitMethod(RenderingStep *pass, u32 method, u32 value)
+{
+    Emit(pass, CELL_GCM_METHOD(method, 1));
+    Emit(pass, value);
+}
+
+static inline void EmitVertexConstMtx(RenderingStep *pass, int index, Mtx4 *mtx)
+{
+    float *words = &mtx->v0.x;
+
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_TRANSFORM_CONSTANT_LOAD, 17));
+    Emit(pass, index);
+
+    for (int i = 0; i < 16; i++) {
+        Emit(pass, *(u32 *)&words[i]);
+    }
+}
+
+static inline void EmitVertexConstVec(RenderingStep *pass, int index, float *vec)
+{
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_TRANSFORM_CONSTANT_LOAD, 5));
+    Emit(pass, index);
+
+    for (int i = 0; i < 4; i++) {
+        Emit(pass, *(u32 *)&vec[i]);
+    }
+}
+
+/* libgcm's cellGcmSetSurface, into pass */
+static inline void EmitSetSurface(RenderingStep *pass, IdolSurface *surface)
+{
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_CONTEXT_DMA_COLOR_A, 1));
+    Emit(pass, CELL_GCM_CONTEXT_DMA_MEMORY_FRAME_BUFFER + surface->colorLocation[0]);
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_CONTEXT_DMA_COLOR_B, 1));
+    Emit(pass, CELL_GCM_CONTEXT_DMA_MEMORY_FRAME_BUFFER + surface->colorLocation[1]);
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_CONTEXT_DMA_COLOR_C, 2));
+    Emit(pass, CELL_GCM_CONTEXT_DMA_MEMORY_FRAME_BUFFER + surface->colorLocation[2]);
+    Emit(pass, CELL_GCM_CONTEXT_DMA_MEMORY_FRAME_BUFFER + surface->colorLocation[3]);
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_CONTEXT_DMA_ZETA, 1));
+    Emit(pass, CELL_GCM_CONTEXT_DMA_MEMORY_FRAME_BUFFER + surface->depthLocation);
+
+    u32 logWidth = 31 - __builtin_clz(surface->width);
+    u32 logHeight = 31 - __builtin_clz(surface->height);
+
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_SURFACE_FORMAT, 6));
+    Emit(pass, surface->colorFormat | surface->depthFormat << 5 | surface->type << 8 | surface->antialias << 12 | logWidth << 16 | logHeight << 24);
+    Emit(pass, surface->colorPitch[0]);
+    Emit(pass, surface->colorOffset[0]);
+    Emit(pass, surface->depthOffset);
+    Emit(pass, surface->colorOffset[1]);
+    Emit(pass, surface->colorPitch[1]);
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_SURFACE_PITCH_Z, 1));
+    Emit(pass, surface->depthPitch);
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_SURFACE_PITCH_C, 4));
+    Emit(pass, surface->colorPitch[2]);
+    Emit(pass, surface->colorPitch[3]);
+    Emit(pass, surface->colorOffset[2]);
+    Emit(pass, surface->colorOffset[3]);
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_SURFACE_COLOR_TARGET, 1));
+    Emit(pass, surface->colorTarget);
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_WINDOW_OFFSET, 1));
+    Emit(pass, surface->y << 16 | surface->x);
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_SURFACE_CLIP_HORIZONTAL, 2));
+    Emit(pass, surface->width << 16 | surface->x);
+    Emit(pass, surface->height << 16 | surface->y);
+    Emit(pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_SHADER_WINDOW, 1));
+    Emit(pass, (surface->height - ((surface->height >> 12) & 1)) | 0x1000);
+}
+
+// 0x0171d00 (0xefc bytes)
+/* BeginAuxDrawMode for the vendor screen: the HUD pass drawn into the aux buffer, a
+   (1 << log2Width) by (1 << log2Height) surface, with the view context set by SetUserViewContext
+   (xratio, no fog), a projection of near 0.1 and far 400 and GameCamera's view uploaded to the
+   HUD pass only; cleared to transparent black. g_VendorScreenTex describes it as a texture.
+   Unlike BeginAuxDrawMode it leaves the screen globals and the blend state alone. */
+void Vendor_SetupScreenRender(float xratio, int log2Width, int log2Height)
+{
+    IdolDraw *idol = (IdolDraw *)(uintptr_t)g_pIdolDraw;
+    int width = 1 << log2Width;
+    int height = 1 << log2Height;
+
+    g_ViewContext.fovScale = 1.0f;
+    SetUserViewContext(width, height, xratio, 0.0f, 524288.0f, 255.0f, 0.0f);
+
+    float fovDeg = FastAtan2Inline(g_ViewContext.yratio, 1.0f) * 57.295776f * g_ViewContext.fovScale;
+
+    idol->vtable->SetPerspective(fovDeg, 0.1f, 400.0f, idol);
+
+    /* the camera as a 4x4 (its rotation rows across, its position below) */
+    Mtx4 camera;
+
+    camera.v0.x = GameCamera.mtx0.v0.x;
+    camera.v0.y = GameCamera.mtx0.v1.x;
+    camera.v0.z = GameCamera.mtx0.v2.x;
+    camera.v0.w = 0.0f;
+    camera.v1.x = GameCamera.mtx0.v0.y;
+    camera.v1.y = GameCamera.mtx0.v1.y;
+    camera.v1.z = GameCamera.mtx0.v2.y;
+    camera.v1.w = 0.0f;
+    camera.v2.x = GameCamera.mtx0.v0.z;
+    camera.v2.y = GameCamera.mtx0.v1.z;
+    camera.v2.z = GameCamera.mtx0.v2.z;
+    camera.v2.w = 0.0f;
+    camera.v3.x = GameCamera.posX;
+    camera.v3.y = GameCamera.posY;
+    camera.v3.z = GameCamera.posZ;
+    camera.v3.w = 1.0f;
+    idol->vtable->SetView(idol, &camera);
+
+    Mtx4 transposed;
+
+    VecTranspose4(&transposed, &idol->viewProjMtx);
+    EmitVertexConstMtx(HUD_Pass, 0, &transposed);
+    VecTranspose4(&transposed, &idol->viewMtx);
+    EmitVertexConstMtx(HUD_Pass, 8, &transposed);
+
+    g_AuxWidth = width;
+    g_AuxHeight = height;
+    idol->auxDepth++;
+
+    IdolSurface surface;
+
+    memset(&surface, 0, sizeof(surface));
+    surface.colorFormat = CELL_GCM_SURFACE_A8R8G8B8;
+    surface.colorTarget = CELL_GCM_SURFACE_TARGET_0;
+    surface.colorLocation[0] = 0;
+    surface.colorOffset[0] = idol->auxBuffer - idol->vramBase;
+    surface.colorPitch[0] = width * 4;
+
+    for (int i = 1; i < 4; i++) {
+        surface.colorLocation[i] = 0;
+        surface.colorOffset[i] = 0;
+        surface.colorPitch[i] = 64;
+    }
+
+    surface.depthFormat = CELL_GCM_SURFACE_Z24S8;
+    surface.depthPitch = width * 4;
+    surface.depthLocation = 0;
+    surface.type = CELL_GCM_SURFACE_PITCH;
+    surface.antialias = 0;
+    surface.depthOffset = idol->auxBuffer + height * width * 4 - idol->vramBase;
+    surface.width = width;
+    surface.height = height;
+
+    g_VendorScreenTex[0] = surface.colorOffset[0];
+    surface.x = 0;
+    surface.y = 0;
+    g_VendorScreenTex[1] = 0x1a529;
+    g_VendorScreenTex[6] = width << 16 | height;
+    g_VendorScreenTex[2] = 0x30303;
+    g_VendorScreenTex[3] = 0x80010000;
+    g_VendorScreenTex[4] = 0xaae4;
+    g_VendorScreenTex[7] = (width * 4) | 1 << 20;
+    g_VendorScreenTex[5] = 0x2062000;
+    ((u8 *)g_VendorScreenTex)[32] = 0;
+    ((u8 *)g_VendorScreenTex)[33] = 0xff;
+
+    EmitSetSurface(HUD_Pass, &surface);
+
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_SET_COLOR_CLEAR_VALUE, 0);
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_SET_ZSTENCIL_CLEAR_VALUE, 0xffffff00);
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_SET_DEPTH_MASK, 1);
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_SET_DEPTH_TEST_ENABLE, 1);
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_SET_BLEND_ENABLE, 1);
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_INVALIDATE_L2, 1);
+
+    float halfWidth = (float)width * 0.5f;
+    float halfHeight = (float)height * 0.5f;
+    float screen[4] = { halfWidth, halfHeight, halfWidth, -halfHeight };
+
+    EmitVertexConstVec(HUD_Pass, 18, screen);
+
+    Emit(HUD_Pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_VIEWPORT_HORIZONTAL, 2));
+    Emit(HUD_Pass, width << 16);
+    Emit(HUD_Pass, height << 16);
+    Emit(HUD_Pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_CLIP_MIN, 2));
+    EmitF(HUD_Pass, 0.0f);
+    EmitF(HUD_Pass, 1.0f);
+
+    /* the viewport offset and scale, written twice */
+    for (int i = 0; i < 2; i++) {
+        Emit(HUD_Pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_VIEWPORT_OFFSET, 8));
+        EmitF(HUD_Pass, halfWidth);
+        EmitF(HUD_Pass, halfHeight);
+        EmitF(HUD_Pass, 0.5f);
+        EmitF(HUD_Pass, 0.0f);
+        EmitF(HUD_Pass, halfWidth);
+        EmitF(HUD_Pass, -halfHeight);
+        EmitF(HUD_Pass, 0.5f);
+        EmitF(HUD_Pass, 0.0f);
+    }
+
+    Emit(HUD_Pass, CELL_GCM_METHOD(CELL_GCM_NV4097_SET_SCISSOR_HORIZONTAL, 2));
+    Emit(HUD_Pass, width << 16);
+    Emit(HUD_Pass, height << 16);
+
+    idol_draw::BindVertexProgram((uintptr_t)idol, (int)(uintptr_t)HUD_Pass, 12);
+    idol_draw::BindFragmentProgram((uintptr_t)idol, (int)(uintptr_t)HUD_Pass, 12);
+
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_CLEAR_SURFACE, CELL_GCM_CLEAR_Z | CELL_GCM_CLEAR_S | CELL_GCM_CLEAR_R | CELL_GCM_CLEAR_G | CELL_GCM_CLEAR_B | CELL_GCM_CLEAR_A);
+    EmitMethod(HUD_Pass, CELL_GCM_NV4097_NO_OPERATION, 0);
+}
+
+// 0x0172bfc (0x24 bytes)
+/* ends the vendor screen's aux drawing */
+void Vendor_ResetHUDPass(void)
+{
+    EndAuxDrawMode();
+}
+
+/* dir scaled to length (0 for a zero dir) */
+static inline void VendorScaleTo(Vec4 *out, Vec4 *dir, float dirLength, float length)
+{
+    if (dirLength == 0.0f) {
+        out->x = 0.0f;
+        out->y = 0.0f;
+        out->z = 0.0f;
+        return;
+    }
+
+    float scale = length / dirLength;
+
+    out->x = scale * dir->x;
+    out->y = scale * dir->y;
+    out->z = scale * dir->z;
+}
+
+static inline float VendorLength3(Vec4 *v)
+{
+    return sqrtf(v->x * v->x + v->y * v->y + v->z * v->z);
+}
+
+// 0x0172c40 (0xa3c bytes)
+/* The vendor moby's six screens (its HUD update): each part spans three of its joints (4 per
+   part), inset; it is drawn into the aux buffer (512x128) with its contents and effects, then
+   put on screen as a sprite over the part's projected box. While the vendor opens or closes
+   the boxes grow from or shrink to their centers; in cutscenes the texture is cut to 92.86%. */
+void Vendor_HudUpdate(MobyInstance *moby)
+{
+    VendorScreenPart *parts = g_VendorScreenParts;
+
+    for (int screen = 0; screen < 6; screen++) {
+        int joints[3] = { screen * 4, screen * 4 + 1, screen * 4 + 2 };
+        Vec4 points[3];
+
+        GetMobyJointsWorldPos(moby, 3, joints, points);
+
+        Vec4 dirA;
+        Vec4 dirB;
+        Vec4 step;
+        Vec4 extentA;
+        Vec4 extentB;
+        Vec4 corner = points[0];
+
+        dirA.x = points[1].x - points[0].x;
+        dirA.y = points[1].y - points[0].y;
+        dirA.z = points[1].z - points[0].z;
+        dirB.x = points[2].x - points[0].x;
+        dirB.y = points[2].y - points[0].y;
+        dirB.z = points[2].z - points[0].z;
+
+        float lengthA = VendorLength3(&dirA);
+
+        VendorScaleTo(&step, &dirA, lengthA, parts[screen].offsetA);
+        corner.x += step.x;
+        corner.y += step.y;
+        corner.z += step.z;
+        VendorScaleTo(&extentA, &dirA, lengthA, lengthA - parts[screen].insetA * 2.0f);
+
+        float lengthB = VendorLength3(&dirB);
+
+        VendorScaleTo(&step, &dirB, lengthB, parts[screen].offsetB);
+        corner.x += step.x;
+        corner.y += step.y;
+        corner.z += step.z;
+        VendorScaleTo(&extentB, &dirB, lengthB, lengthB - parts[screen].insetB * 2.0f);
+
+        Vec4 opposite;
+        float fullWidth;
+        float fullHeight;
+        float unusedLeft;
+        float unusedTop;
+
+        opposite.x = corner.x + extentA.x + extentB.x;
+        opposite.y = corner.y + extentA.y + extentB.y;
+        opposite.z = corner.z + extentA.z + extentB.z;
+        opposite.w = corner.w;
+        ProjectBoxToScreen(corner, opposite, &fullWidth, &fullHeight, &unusedLeft, &unusedTop);
+
+        /* growing in or shrinking out around the center */
+        if (g_VendorExiting || g_VendorOpening) {
+            float grow = 1.0f;
+
+            if (g_VendorOpening) {
+                grow = (float)FastIntToDouble(8 - g_VendorOpenTimer) * 0.125f;
+            }
+
+            if (g_VendorExiting) {
+                grow = (float)FastIntToDouble(g_VendorExitTimer) * 0.125f;
+            }
+
+            Vec4 shiftA;
+            Vec4 shiftB;
+            float extentLengthA = VendorLength3(&extentA);
+
+            VendorScaleTo(&shiftA, &extentA, extentLengthA, extentLengthA * (1.0f - grow) * 0.5f);
+            VendorScaleTo(&extentA, &extentA, extentLengthA, grow * extentLengthA);
+
+            float extentLengthB = VendorLength3(&extentB);
+
+            VendorScaleTo(&shiftB, &extentB, extentLengthB, extentLengthB * (1.0f - grow) * 0.5f);
+            VendorScaleTo(&extentB, &extentB, extentLengthB, grow * extentLengthB);
+
+            corner.x = corner.x + shiftA.x + shiftB.x;
+            corner.y = corner.y + shiftA.y + shiftB.y;
+            corner.z = corner.z + shiftA.z + shiftB.z;
+            opposite.x = corner.x + extentB.x + extentA.x;
+            opposite.y = corner.y + extentB.y + extentA.y;
+            opposite.z = corner.z + extentB.z + extentA.z;
+        }
+
+        float width;
+        float height;
+        float left;
+        float top;
+
+        ProjectBoxToScreen(corner, opposite, &width, &height, &left, &top);
+
+        Vendor_SetupScreenRender(1.0f, 9, 7);
+        STUB_00078138(0x200, 0x200);
+        SetGSReg(3, idol_draw::PackCmd(0, 1, 2, 1, 0xff));
+
+        if (screen == 5) {
+            DrawWeaponIcons(moby);
+        }
+        else if (screen == 4) {
+            DrawExitButton(moby);
+        }
+        else if (screen == 3) {
+            DrawBuyButton(moby, (int)width, (int)height);
+        }
+        else if (screen == 2) {
+            DrawVendorDude(moby);
+        }
+        else if (screen == 1) {
+            DrawWeaponStrings(moby);
+        }
+        else if (screen == 0) {
+            Vendor_DrawScrollText();
+        }
+
+        Vendor_DrawFlickerText(screen, width, height);
+        EndAuxDrawMode();
+        SetGSReg(3, idol_draw::PackCmd(0, 1, 2, 1, 0xff));
+        SetGSReg(6, SCE_GS_SET_CLAMP(1, 1, 0, 0, 0, 0));
+        STUB_001754c0();
+
+        int texHeight = Cutscene == 0 ? (int)(fullHeight * 0.5f) : FastDoubleToInt(fullHeight * 0.92857146f * 0.5f);
+
+        Sprite_DrawShape((int)left, (int)top, (int)width, (int)height, 0, 0, (int)(fullWidth * 0.5f), texHeight, 0x80808080, g_VendorScreenTex);
+    }
+}
+
+// 0x0173690 (0x4bc bytes)
+/* Glows over screens 1-5 of the vendor moby (posted while a vendor state is young): each
+   part's box (as in Vendor_HudUpdate) as a quad of effect texture 0x19, added. The corners' w
+   and the texture's far edge come from literals at 0x173684/0x173688 the dump does not have. */
+void Vendor_DrawMobyHighlight(MobyInstance *moby)
+{
+    VendorScreenPart *parts = g_VendorScreenParts;
+    float cornerW = *(float *)&DAT_00173684;
+    float edge = *(float *)&DAT_00173688;
+
+    for (int screen = 1; screen < 6; screen++) {
+        int joints[3] = { screen * 4, screen * 4 + 1, screen * 4 + 2 };
+        Vec4 points[3];
+
+        GetMobyJointsWorldPos(moby, 3, joints, points);
+
+        Vec4 dirA;
+        Vec4 dirB;
+        Vec4 step;
+        Vec4 extentA;
+        Vec4 extentB;
+        Vec4 corner = points[0];
+
+        dirA.x = points[1].x - points[0].x;
+        dirA.y = points[1].y - points[0].y;
+        dirA.z = points[1].z - points[0].z;
+        dirB.x = points[2].x - points[0].x;
+        dirB.y = points[2].y - points[0].y;
+        dirB.z = points[2].z - points[0].z;
+
+        float lengthA = VendorLength3(&dirA);
+
+        VendorScaleTo(&step, &dirA, lengthA, parts[screen].offsetA);
+        corner.x += step.x;
+        corner.y += step.y;
+        corner.z += step.z;
+        VendorScaleTo(&extentA, &dirA, lengthA, lengthA - parts[screen].insetA * 2.0f);
+
+        float lengthB = VendorLength3(&dirB);
+
+        VendorScaleTo(&step, &dirB, lengthB, parts[screen].offsetB);
+        corner.x += step.x;
+        corner.y += step.y;
+        corner.z += step.z;
+        VendorScaleTo(&extentB, &dirB, lengthB, lengthB - parts[screen].insetB * 2.0f);
+
+        QuadDef quad;
+        float width;
+        float height;
+        float left;
+        float top;
+
+        quad.xyzw[0] = corner;
+        quad.xyzw[1].x = corner.x + extentA.x;
+        quad.xyzw[1].y = corner.y + extentA.y;
+        quad.xyzw[1].z = corner.z + extentA.z;
+        quad.xyzw[1].w = corner.w;
+        quad.xyzw[2].x = corner.x + extentB.x;
+        quad.xyzw[2].y = corner.y + extentB.y;
+        quad.xyzw[2].z = corner.z + extentB.z;
+        quad.xyzw[2].w = corner.w;
+        quad.xyzw[3].x = quad.xyzw[2].x + extentA.x;
+        quad.xyzw[3].y = quad.xyzw[2].y + extentA.y;
+        quad.xyzw[3].z = quad.xyzw[2].z + extentA.z;
+        quad.xyzw[3].w = corner.w;
+
+        /* projected too, but the result is not used */
+        ProjectBoxToScreen(quad.xyzw[0], quad.xyzw[3], &width, &height, &left, &top);
+
+        for (int i = 0; i < 4; i++) {
+            quad.rgba[i] = 0x80808080;
+        }
+
+        quad.clamp = SCE_GS_SET_CLAMP(1, 1, 0, 0, 0, 0);
+        quad.tex1 = SCE_GS_SET_TEX1(1, 0, 0, 0, 0, 0, 0);
+        quad.alpha = idol_draw::PackCmd(0, 1, 0, 1, 0x80);
+        quad.tex0 = GetEffectTex(0x19);
+        /* (s, t) per corner */
+        float *st = &quad.st[0][0];
+
+        quad.xyzw[0].w = 1.0f;
+        st[0] = 0.0f;
+        st[1] = 0.0f;
+        quad.xyzw[1].w = cornerW;
+        quad.xyzw[2].w = cornerW;
+        quad.xyzw[3].w = cornerW;
+        st[2] = 0.984375f;
+        st[3] = 0.0f;
+        st[4] = 0.0f;
+        st[5] = edge;
+        st[6] = edge;
+        st[7] = edge;
+
+        SetGSReg(0x16, idol_draw::Blend(1, 1, 0, 2, 0, 0, 1, 1));
+        FastDrawQuad(&quad, NULL, 1, (void *)(uintptr_t)EffectTexHeaders, 9);
+    }
+}
+
+// 0x0173b60 (0x40c bytes)
+/* The purchase box moby's screen (its HUD update): the box between its joints 0-2 (0.03 and
+   0.04 in from the edges), drawn into the aux buffer (512x512) with Vendor_DrawItemInfo and
+   part 6's frame, then the moby itself and the screen over it as a sprite. */
+void Vendor_DrawScreen(MobyInstance *moby)
+{
+    int joints[3] = { 0, 1, 2 };
+    Vec4 points[3];
+
+    GetMobyJointsWorldPos(moby, 3, joints, points);
+
+    Vec4 dirA;
+    Vec4 dirB;
+    Vec4 step;
+    Vec4 extentA;
+    Vec4 extentB;
+    Vec4 corner = points[0];
+
+    dirA.x = points[1].x - points[0].x;
+    dirA.y = points[1].y - points[0].y;
+    dirA.z = points[1].z - points[0].z;
+    dirB.x = points[2].x - points[0].x;
+    dirB.y = points[2].y - points[0].y;
+    dirB.z = points[2].z - points[0].z;
+
+    float lengthA = VendorLength3(&dirA);
+
+    VendorScaleTo(&step, &dirA, lengthA, 0.03f);
+    corner.x += step.x;
+    corner.y += step.y;
+    corner.z += step.z;
+    VendorScaleTo(&extentA, &dirA, lengthA, lengthA - 0.06f);
+
+    float lengthB = VendorLength3(&dirB);
+
+    VendorScaleTo(&step, &dirB, lengthB, 0.04f);
+    corner.x += step.x;
+    corner.y += step.y;
+    corner.z += step.z;
+    VendorScaleTo(&extentB, &dirB, lengthB, lengthB - 0.04f);
+
+    Vec4 opposite;
+    int width;
+    int height;
+    int left;
+    int top;
+
+    opposite.x = corner.x + extentB.x + extentA.x;
+    opposite.y = corner.y + extentB.y + extentA.y;
+    opposite.z = corner.z + extentB.z + extentA.z;
+    opposite.w = corner.w;
+    ProjectBoxToScreenInt(corner, opposite, &width, &height, &left, &top);
+
+    Vendor_SetupScreenRender(1.0f, 9, 9);
+    STUB_00078138(0x200, 0x200);
+    idol_draw::DrawDepth(HUD_Pass, idol_draw::PackCmd(0, 1, 2, 1, 0xff));
+    Vendor_DrawItemInfo(moby, width, height);
+    Vendor_DrawFlickerText(6, (float)width, (float)height);
+    EndAuxDrawMode();
+
+    STUB_00078138(0x200, 0x200);
+    idol_draw::DrawDepth(HUD_Pass, idol_draw::PackCmd(0, 1, 2, 1, 0xff));
+    idol_draw::DrawDepth(MobyPass, idol_draw::PackCmd(0, 1, 2, 1, 0xff));
+    MB_AddToDrawList(moby, 1);
+    Sprite_DrawShape(left, top, width, height, 0, 0, width / 2, height / 2, 0x80808080, g_VendorScreenTex);
+}
+
+// 0x0173f78 (0x574 bytes)
+/* The vendor moby's scrolling overlay: 4 quads of effect texture 0x18 between corners fixed on
+   the moby, half transparent, their texture scrolling 0.01 a frame. */
+void Vendor_DrawScrollingOverlay(void)
+{
+    QuadDef quad;
+
+    g_VendorOverlayScroll += 0.01f;
+
+    if (!(g_VendorOverlayScroll <= 1.0f)) {
+        g_VendorOverlayScroll -= 1.0f;
+    }
+
+    quad.clamp = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
+    quad.tex1 = SCE_GS_SET_TEX1(1, 0, 0, 0, 0, 0, 0);
+    quad.alpha = idol_draw::PackCmd(0, 1, 0, 1, 0x40);
+    quad.tex0 = GetEffectTex(0x18);
+
+    for (int i = 0; i < 4; i++) {
+        int *corners = g_VendorOverlayQuads[i];
+        float *st = &quad.st[0][0];
+
+        for (int corner = 0; corner < 4; corner++) {
+            MobyPoint(g_VendorMoby, &g_VendorOverlayVerts[corners[corner]], &quad.xyzw[corner]);
+        }
+
+        for (int corner = 0; corner < 4; corner++) {
+            quad.rgba[corner] = g_VendorOverlayColors[corners[corner]];
+            st[corner * 2] = g_VendorOverlayUVs[corners[corner]][0];
+            st[corner * 2 + 1] = g_VendorOverlayUVs[corners[corner]][1] + g_VendorOverlayScroll;
+        }
+
+        FastDrawQuad(&quad, NULL, 1, (void *)(uintptr_t)EffectTexHeaders, 9);
+    }
+}
+
+// 0x01744f0 (0x61c bytes)
+/* The vendor's frame drawing (nothing during cutscenes). While the world shows (mode 0) it is
+   drawn as usual; the frame after the vendor opened, with the vendor moby hidden and without
+   its HUD, it is presented one more time and kept in the render target, and the vendor screen
+   is set up: the vendor moby scaled for it, the camera orientation saved (from the PDA also its
+   polar angles, and it is reset to the identity; otherwise mirrored), preview mobies 0 and 5
+   made, the item preview spawned, the scroller's buffer cleared and the dude's data loaded
+   (vendor_pal.ps3 when g_IsPal is 0, as the code has it). Mode 1 draws the kept frame, then
+   the vendor moby with its item, overlay, screens and highlight, and the HUD. */
+void Vendor_PostUpdate(void)
+{
+    char path[64];
+
+    if (g_CutscenePlaying != 0) {
+        return;
+    }
+
+    STUB_00078100();
+
+    if (g_VendorDrawMode > 1 || g_VendorDrawMode < 0) {
+        return;
+    }
+
+    if (g_VendorDrawMode == 0) {
+        int setup = g_VendorSetupPending;
+
+        if (setup != 0) {
+            g_VendorMoby->modeBits |= DISABLED;
+        }
+
+        g_RenderFlags = (RENDER)0x100ff;
+
+        if (setup != 0 || g_OpenVendorState == 3) {
+            g_RenderFlags = (RENDER)(g_RenderFlags & ~0x10080);
+        }
+
+        DefaultDraw();
+
+        if (g_VendorSetupPending == 0) {
+            return;
+        }
+
+        g_VendorSetupPending = 0;
+        g_VendorDrawMode = 1;
+        g_MainLoopFrames++;
+        g_VendorUnkAa64 = 0x60000;
+        Draw_FlushAndPresent();
+
+        g_VendorMoby->scale = 0.141908f;
+        g_VendorMoby->modeBits &= ~DISABLED;
+
+        if (g_lastVendorWasPda != 0) {
+            g_VendorCamRot.x = GameCamera.rot.azimuth;
+            g_VendorCamRot.y = GameCamera.rot.elevation;
+            g_VendorCamRot.z = GameCamera.rot.radius;
+            g_VendorCamRot.w = GameCamera.rotW;
+            g_VendorSavedOrient[0] = GameCamera.orientMtx.forward;
+            g_VendorSavedOrient[1] = GameCamera.orientMtx.right;
+            g_VendorSavedOrient[2] = GameCamera.orientMtx.up;
+            memset(&GameCamera.orientMtx.forward, 0, sizeof(Vec4));
+            memset(&GameCamera.orientMtx.right, 0, sizeof(Vec4));
+            memset(&GameCamera.orientMtx.up, 0, sizeof(Vec4));
+            GameCamera.orientMtx.forward.x = 1.0f;
+            GameCamera.orientMtx.right.y = 1.0f;
+            GameCamera.orientMtx.up.z = 1.0f;
+            GameCamera.orientMtx.up.w = 1.0f;
+            ComposeCameraMatrix();
+        }
+        else {
+            /* right = up x forward */
+            Vec4 *forward = &GameCamera.orientMtx.forward;
+            Vec4 *up = &GameCamera.orientMtx.up;
+            float rightX = up->y * forward->z - up->z * forward->y;
+            float rightY = up->z * forward->x - up->x * forward->z;
+            float rightZ = up->x * forward->y - up->y * forward->x;
+
+            g_VendorSavedOrient[0] = GameCamera.orientMtx.forward;
+            g_VendorSavedOrient[1] = GameCamera.orientMtx.right;
+            g_VendorSavedOrient[2] = GameCamera.orientMtx.up;
+            GameCamera.orientMtx.right.x = rightX;
+            GameCamera.orientMtx.right.y = rightY;
+            GameCamera.orientMtx.right.z = rightZ;
+            GameCamera.orientMtx.right.w = 0.0f;
+        }
+
+        g_VendorPreviews = (MobyInstance *)(g_VendorBufEnd + 0x100);
+        InitMobyInstance(&g_VendorPreviews[0], 0xd);
+        g_VendorPreviews[0].drawDistance = 0x40;
+        UpdateMobyTransform(&g_VendorPreviews[0]);
+        MB_SetLights(&g_VendorPreviews[0], 0x202020, 0xe, 0xe, 0);
+        InitMobyInstance(&g_VendorPreviews[5], 0xd);
+        g_VendorPreviews[5].drawDistance = 0x40;
+        UpdateMobyTransform(&g_VendorPreviews[5]);
+        MB_SetLights(&g_VendorPreviews[5], 0x202020, 0xe, 0xe, 0);
+
+        IdolDraw *idol = (IdolDraw *)(uintptr_t)g_pIdolDraw;
+
+        if (idol->unk11 == 0x81 && ((idol->unk14 >> 1) & 1) == 0) {
+            idol->vtable->BuildAndFlipFrame(idol);
+        }
+
+        idol->unk1a8c += 2;
+        Vendor_SpawnPreviewMoby();
+
+        g_VendorScrollText = (char *)(g_VendorBufEnd + 0x1400);
+        FastMemSetZero(g_VendorScrollText, 0x400);
+        *(u8 **)&DAT_00e5a668 = (u8 *)g_VendorScrollText + 0x400;
+
+        if (g_MusicLoading == 0) {
+            if (g_IsPal == 0) {
+                sprintf(path, "rc1/ps3data/global/vendor_pal.ps3");
+            }
+            else {
+                sprintf(path, "rc1/ps3data/global/vendor.ps3");
+            }
+
+            g_VendorDudeLoaded = LoadAssetFromFile(path, *(u8 **)&DAT_00e5a668, -1) != 0;
+        }
+        else {
+            g_VendorDudeLoaded = 0;
+        }
+    }
+
+    DrawRenderTargetToScreen();
+    EmitMethod(DepthPass, CELL_GCM_NV4097_SET_ZSTENCIL_CLEAR_VALUE, 0xffffff00);
+    EmitMethod(DepthPass, CELL_GCM_NV4097_CLEAR_SURFACE, CELL_GCM_CLEAR_Z);
+    EmitMethod(DepthPass, CELL_GCM_NV4097_NO_OPERATION, 0);
+
+    STUB_0006d704();
+    ComposeCameraMatrix();
+    STUB_0006849c();
+    DrawMobyDepth();
+    STUB_000f1844();
+    STUB_000f1848();
+
+    if ((g_VendorPreviewDirty | g_lastVendorWasPda) == 0) {
+        VendorItem *item = &g_VendorItems[g_VendorSelected];
+
+        if (item->isAmmo == 1) {
+            if (g_VendorItemModels[item->item].extraClass != 0) {
+                MB_AddToDrawList(&g_VendorPreviews[2], 1);
+            }
+        }
+        else {
+            MB_AddToDrawList(&g_VendorPreviews[3], 1);
+        }
+    }
+
+    MB_AddToDrawList(g_VendorMoby, 1);
+
+    if (g_lastVendorWasPda == 0) {
+        Vendor_DrawScrollingOverlay();
+    }
+
+    Vendor_HudUpdate(g_VendorMoby);
+
+    if (g_VendorMenuState != 0) {
+        Vendor_DrawScreen(&g_VendorPreviews[4]);
+    }
+
+    Vendor_DrawMobyHighlight(g_VendorMoby);
+    SetGSReg(3, idol_draw::PackCmd(0, 1, 0, 1, 0x80));
+    DrawGameplayHud();
+    STUB_0006d708();
+    STUB_000f184c();
+    DrawMobyList();
+    STUB_00174cf4(0x10);
+    STUB_000f1448();
 }

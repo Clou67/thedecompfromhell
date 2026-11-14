@@ -132,3 +132,21 @@ static inline VecF VecNormalize3(VecF v)
 {
     return vec_madd(v, VecRSqrt(VecDot3(v, v)), VecNegZero());
 }
+
+/* out = source's transpose, with vmrghw/vmrglw (the 4x4 transpose the draw code inlines) */
+static inline void VecTranspose4(struct Mtx4 *out, const struct Mtx4 *source)
+{
+    VecF row0 = VecLoad4(&source->v0);
+    VecF row1 = VecLoad4(&source->v1);
+    VecF row2 = VecLoad4(&source->v2);
+    VecF row3 = VecLoad4(&source->v3);
+    VecF high02 = vec_mergeh(row0, row2);
+    VecF low02 = vec_mergel(row0, row2);
+    VecF high13 = vec_mergeh(row1, row3);
+    VecF low13 = vec_mergel(row1, row3);
+
+    VecStore4(&out->v0, vec_mergeh(high02, high13));
+    VecStore4(&out->v1, vec_mergel(high02, high13));
+    VecStore4(&out->v2, vec_mergeh(low02, low13));
+    VecStore4(&out->v3, vec_mergel(low02, low13));
+}

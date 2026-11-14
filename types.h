@@ -2631,6 +2631,8 @@ struct Vec3 {
 extern undefined4 DAT_00052b40; /* 0x52b40 */
 extern undefined4 DAT_0011eec0; /* 0x11eec0 */
 extern undefined4 DAT_0015aa20; /* 0x15aa20 */
+extern undefined4 DAT_0016fc04; /* 0x16fc04 */
+extern undefined4 DAT_00172c20; /* 0x172c20 */
 extern undefined4 DAT_001766c4; /* 0x1766c4 */
 extern undefined4 DAT_0017a1e8; /* 0x17a1e8 */
 extern undefined4 DAT_006517ac; /* no defined data */
@@ -2839,6 +2841,8 @@ extern undefined4 DAT_00737c74; /* 0x737c74 */
 extern undefined4 DAT_00737c88; /* 0x737c88 */
 extern undefined4 DAT_00737ca0; /* 0x737ca0 */
 extern undefined4 DAT_00737ce0; /* 0x737ce0 */
+extern undefined4 DAT_00737d34; /* no defined data */
+extern undefined4 DAT_00737d3a; /* no defined data */
 extern undefined4 DAT_00738844; /* 0x738844 */
 extern undefined4 DAT_00738848; /* 0x738848 */
 extern undefined4 DAT_0073884c; /* 0x73884c */
@@ -2870,6 +2874,7 @@ extern undefined4 DAT_00738b34; /* no defined data */
 extern undefined4 DAT_00738b38; /* no defined data */
 extern undefined4 DAT_00738b4c; /* no defined data */
 extern undefined4 DAT_00739224; /* no defined data */
+extern undefined4 DAT_00739240; /* no defined data */
 extern undefined4 DAT_00739b54; /* no defined data */
 extern undefined4 DAT_00739b58; /* no defined data */
 extern undefined4 DAT_00739b60; /* no defined data */
@@ -2882,6 +2887,9 @@ extern undefined4 DAT_0073a2f8; /* 0x73a2f8 */
 extern undefined4 DAT_0073a2fc; /* 0x73a2fc */
 extern undefined4 DAT_0073a308; /* no defined data */
 extern undefined4 DAT_0073a310; /* no defined data */
+extern undefined4 DAT_0073a580; /* no defined data */
+extern undefined4 DAT_0073a584; /* no defined data */
+extern undefined4 DAT_0073a588; /* no defined data */
 extern undefined2 DAT_0073aa60; /* 0x73aa60 */
 extern undefined4 DAT_0073aac0; /* 0x73aac0 */
 extern undefined4 DAT_0073aac4; /* 0x73aac4 */
@@ -3035,6 +3043,9 @@ extern undefined4 DAT_00e574f4; /* 0xe574f4 */
 extern undefined4 DAT_00e5a6b4; /* 0xe5a6b4 */
 extern undefined4 DAT_00e5a6b8; /* 0xe5a6b8 */
 extern undefined4 DAT_00e5a6bc; /* 0xe5a6bc */
+extern undefined4 DAT_00e5a6c4; /* 0xe5a6c4 */
+extern undefined4 DAT_00e5a6c8; /* 0xe5a6c8 */
+extern undefined4 DAT_00e5a6cc; /* 0xe5a6cc */
 extern undefined4 DAT_00e5a6d4; /* 0xe5a6d4 */
 extern undefined4 DAT_00e5a6d8; /* 0xe5a6d8 */
 extern undefined4 DAT_00e5a6dc; /* 0xe5a6dc */
@@ -3052,6 +3063,7 @@ extern undefined4 DAT_00e5a70c; /* 0xe5a70c */
 extern undefined4 DAT_00e5a714; /* 0xe5a714 */
 extern undefined4 DAT_00e5a718; /* 0xe5a718 */
 extern undefined4 DAT_00e5a71c; /* 0xe5a71c */
+extern undefined4 DAT_00e5a724; /* no defined data */
 extern undefined4 DAT_00e5a725; /* no defined data */
 extern undefined4 DAT_00e5a72c; /* no defined data */
 extern undefined1 DAT_00e5a841; /* 0xe5a841 */
@@ -3059,6 +3071,15 @@ extern undefined1 DAT_00e5a991; /* 0xe5a991 */
 extern undefined4 DAT_00e5a9b0; /* 0xe5a9b0 */
 extern undefined4 DAT_00e5a9b4; /* 0xe5a9b4 */
 extern undefined4 DAT_00e5a9b8; /* 0xe5a9b8 */
+extern undefined4 DAT_00e5aa18; /* 0xe5aa18 */
+extern undefined4 DAT_00e5aa1c; /* 0xe5aa1c */
+extern undefined4 DAT_00e5aa20; /* 0xe5aa20 */
+extern undefined4 DAT_00e5aa24; /* 0xe5aa24 */
+extern undefined4 DAT_00e5aa28; /* 0xe5aa28 */
+extern undefined4 DAT_00e5aa2c; /* 0xe5aa2c */
+extern undefined4 DAT_00e5aa30; /* 0xe5aa30 */
+extern undefined1 DAT_00e5aa34; /* 0xe5aa34 */
+extern undefined1 DAT_00e5aa35; /* 0xe5aa35 */
 extern undefined4 DAT_00e5aad0; /* 0xe5aad0 */
 extern undefined4 DAT_00e5aad4; /* 0xe5aad4 */
 extern undefined4 DAT_00ec4080; /* no defined data */
@@ -3150,6 +3171,8 @@ extern undefined4 _DAT_00735db0; /* direct read */
 extern undefined4 _DAT_00735dc0; /* direct read */
 extern undefined4 _DAT_00736040; /* direct read */
 extern undefined4 _DAT_00736050; /* direct read */
+extern undefined4 _DAT_00e5a970; /* direct read */
+extern undefined4 _DAT_00e5a980; /* direct read */
 extern undefined4 japanese_mode; /* 0xd9208 */
 extern char s_MESSAGE_DOES_NOT_EXIST_00720b94[23]; /* 0x720b94 */
 extern undefined4 skip_directionalLightCopy; /* 0x118a8 */

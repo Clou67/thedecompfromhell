@@ -229,7 +229,7 @@ void Help_StartMessageBox(void)
     if (g_HelpTextOn || g_HelpVoiceOn) sound_CorePlay(0, 1, 0);
     char *text = HelpMsgs[g_Help.message_index].text;
     SetFontWindow(&win, 240, 480, 44, 468, 256, 360, 16, 7);
-    FontPrintOpt(1.0f, &win, HELP_TEXT_COLOR, text, -1);
+    FontPrintOpt(&win, HELP_TEXT_COLOR, text, -1, 1.0f);
     g_Help.boxX = 256;
     g_Help.boxHalfW = (win.max_width >> 1) + 10;
     g_Help.boxHalfH = (win.max_height >> 1) + 5;
@@ -433,7 +433,7 @@ void Help_Draw(void)
         char *text = HelpMsgs[g_Help.message_index].text;
         int indent = g_Language >= LANG_FRENCH && g_Language <= LANG_ITALIAN ? 10 : 0;   /* European languages */
         SetFontWindow(&win, 300, 380, indent + 40, 472, 250, 340, 18, 3);
-        FontPrintOpt(g_Language == LANG_GERMAN ? 0.85f : 1.0f, &win, color, text, -1);
+        FontPrintOpt(&win, color, text, -1, g_Language == LANG_GERMAN ? 0.85f : 1.0f);
         break;
     }
 

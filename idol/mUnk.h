@@ -102,6 +102,7 @@ extern undefined1 DAT_0065b47d; /* 0x65b47d */
 extern undefined1 DAT_0065b51c; /* 0x65b51c */
 extern undefined1 DAT_0065b51d; /* 0x65b51d */
 extern undefined4 DAT_00737bf0; /* 0x737bf0 */
+extern undefined4 DAT_00737d30; /* no defined data */
 extern undefined4 DAT_00737d44; /* no defined data */
 extern undefined4 DAT_00738138; /* no defined data */
 extern undefined4 DAT_0073813c; /* no defined data */

@@ -552,3 +552,19 @@ g_VendorSpin	float NAME /* 0xe5a950: angle of the spinning preview parts */
 g_VendorDudeLoaded	u8 NAME /* 0xe5a9d1: the dude's data is in; spawn him */
 g_VendorNarrow	u8 NAME /* 0xe5a9d2: the screen is 4:3 (set once, at the first vendor) */
 g_VendorSavedOrient	Vec4 NAME[3] /* 0xe5a960: GameCamera.orientMtx forward/right/up while the vendor is open */
+g_VendorFontGlyphs	u32 NAME[64] /* 0x73a378: the vendor screen's bitmap font from ' ': texture u in bits 4-15, v in bits 20-31; -1 none (invented name) */
+g_VendorFontWidths	int NAME[64] /* 0x73a478: its advance per character */
+g_VendorIdleTexts	StringId NAME[24] /* 0x73a318: the scroller's texts while nothing is selected (one picked at random) */
+g_VendorJapaneseColor	u32 NAME /* 0x73a578: the scroller's color in Japanese */
+g_VendorFlashTimers	int NAME[7] /* 0xe5a9dc: per vendor screen part, a white flash running (0 none) */
+g_VendorScanTimers	int NAME[7] /* 0xe5a9f8: per part, a scan line sweeping down (0 none) */
+g_VendorScreenTex	u32 NAME[9] /* 0xe5aa14: the vendor screen render target as an effect texture header (like g_AuxBufferTex) */
+g_VendorOverlayVerts	Vec4 NAME[] /* 0x73a5e0: the scrolling overlay's corners on the vendor moby */
+g_VendorOverlayColors	u32 NAME[] /* 0x73a638: their colors */
+g_VendorOverlayUVs	float NAME[][2] /* 0x73a670: their texture coordinates (v scrolls) */
+g_VendorOverlayQuads	int NAME[4][4] /* 0x73a6dc: the overlay's 4 quads as corner indices */
+g_VendorOverlayScroll	float NAME /* 0x73a7dc: the overlay's v scroll, 0..1 */
+g_VendorScreenParts	VendorScreenPart NAME[7] /* 0x73a57c: where each vendor screen part sits between its joints */
+g_VendorDrawMode	int NAME /* 0xe5a658: 0 the world is drawn, 1 the vendor screen (from its copy of the frame) */
+g_VendorSetupPending	int NAME /* 0xe5a65c: the vendor finished opening; set the vendor screen up after this frame */
+g_VendorUnkAa64	int NAME /* 0xe5aa64: set to 0x60000 before the vendor screen's first present (not read in vendor.cpp) */

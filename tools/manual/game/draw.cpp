@@ -884,7 +884,7 @@ void Sprite_DrawShapeWrapper(int posX, int posY, int width, int height, int texU
 // 0x0068c70 (0x3e4 bytes)
 /* Draws len bytes of str with g_JapanFontTex. Bytes 8..15 pick a palette colour, bytes below 32
    are 24x16 grey glyphs, 0xbd/0xbe are diacritics placed against the previous character */
-void FontPrintScaledJapanese(float posX, float posY, float scale, u32 color, const u8 *str, int len, int unused, const FontGlyph *table)
+void FontPrintScaledJapanese(float posX, float posY, u32 color, const u8 *str, int len, float scale, int unused, const FontGlyph *table)
 {
     if (g_FontKeepPalette == 0) {
         g_FontPalette[0] = color;
@@ -947,7 +947,7 @@ void FontPrintScaledJapanese(float posX, float posY, float scale, u32 color, con
 
 // 0x0069058 (0x7c bytes)
 /* Width of the first len characters of str (up to a 0 byte) in table, times scale */
-int FontLenScaledWithTableNoKern(float scale, const u8 *str, int len, const FontGlyph *table)
+int FontLenScaledWithTableNoKern(const u8 *str, int len, float scale, const FontGlyph *table)
 {
     float width = 0.0f;
 
@@ -966,7 +966,7 @@ int FontLenScaledWithTableNoKern(float scale, const u8 *str, int len, const Font
 /* Prints str into win with FontPrintScaledJapanese, breaking lines at spaces and control bytes so
    each fits the window (centred on text_x with flag 1, the block centred on text_y with flag 2).
    Fills max_width/max_height; flag 4 only measures, flag 8 adds the sub-pixel offsets. */
-void FontPrintOptJapanese(float scale, FontWindow *win, u32 color, const u8 *str, int len, int unused, const FontGlyph *table)
+void FontPrintOptJapanese(FontWindow *win, u32 color, const u8 *str, int len, int unused, const FontGlyph *table, float scale)
 {
     short lineStart[32];
     short lineEnd[32];
@@ -1098,7 +1098,7 @@ void FontPrintOptJapanese(float scale, FontWindow *win, u32 color, const u8 *str
                 drawY = (float)win->sub_pixel_y * 0.0625f + drawY;
             }
 
-            FontPrintScaledJapanese(drawX, drawY, scale, g_FontPalette[lineColor[i]], line, count, unused, table);
+            FontPrintScaledJapanese(drawX, drawY, g_FontPalette[lineColor[i]], line, count, scale, unused, table);
         }
 
         posY += win->line_spacing;
@@ -1164,7 +1164,7 @@ void DrawSpriteFont_thunk(float sc_x, float sc_y, float sc_w, float sc_h, int tx
 // 0x0069a50 (0x34c bytes)
 /* FontPrintScaledJapanese through DrawSpriteFont with effect texture tex: glyph rows start one
    texel down and are 15 high, and bytes 0x80..0xa7 also draw the mark at table[ch + 0x40] */
-void FontPrintScaledWestern(float posX, float posY, float scale, u32 color, const u8 *str, int len, u64 tex, const FontGlyph *table)
+void FontPrintScaledWestern(float posX, float posY, u32 color, const u8 *str, int len, float scale, u64 tex, const FontGlyph *table)
 {
     SetGSReg(3, idol_draw::PackCmd(0, 1, 0, 1, 0));
     SetGSReg(0x16, idol_draw::Blend(1, 5, 4, 0, 0, 0, 0, 1));
@@ -1237,7 +1237,7 @@ void FontPrintScaledWestern(float posX, float posY, float scale, u32 color, cons
    languages 2..5 (0.8 in language 3 with flag 0x10). Lines are balanced: while the line count
    holds and the last line is under a third of the width, the width shrinks by 16 and the text is
    broken again; if a narrower width adds a line, the original width is used. */
-void FontPrintOptWestern(float scale, FontWindow *win, u32 color, const char *text, int len, int tex, void *glyphs)
+void FontPrintOptWestern(FontWindow *win, u32 color, const char *text, int len, int tex, void *glyphs, float scale)
 {
     const u8 *str = (const u8 *)text;
     const FontGlyph *table = (const FontGlyph *)glyphs;
@@ -1415,7 +1415,7 @@ void FontPrintOptWestern(float scale, FontWindow *win, u32 color, const char *te
                 drawY = (float)win->sub_pixel_y * 0.0625f + drawY;
             }
 
-            FontPrintScaledWestern(drawX, drawY, scale, g_FontPalette[lineColor[i]], line, count, tex, table);
+            FontPrintScaledWestern(drawX, drawY, g_FontPalette[lineColor[i]], line, count, scale, tex, table);
         }
 
         posY += win->line_spacing;
@@ -1430,10 +1430,10 @@ void FontPrintOptWestern(float scale, FontWindow *win, u32 color, const char *te
 void FontPrintMediumOpt(FontWindow *win, u32 color, const char *str, int len)
 {
     if (g_JapaneseMode) {
-        FontPrintOptJapanese(1.0f, win, color, (const u8 *)str, len, GetEffectTex(1), (const FontGlyph *)&JapaneseGlyphs);
+        FontPrintOptJapanese(win, color, (const u8 *)str, len, GetEffectTex(1), (const FontGlyph *)&JapaneseGlyphs, 1.0f);
     }
     else {
-        FontPrintOptWestern(1.0f, win, color, str, len, GetEffectTex(1), &MediumWesternGlyphs);
+        FontPrintOptWestern(win, color, str, len, GetEffectTex(1), &MediumWesternGlyphs, 1.0f);
     }
 }
 
@@ -1510,10 +1510,10 @@ int ShouldForceSubtitles(void)
 static inline void SubtitlePrint(FontWindow *window, const char *text)
 {
     if (g_JapaneseMode) {
-        FontPrintOptJapanese(1.0f, window, 0x80b0b0b0, (const u8 *)text, -1, GetEffectTex(1), (const FontGlyph *)&JapaneseGlyphs);
+        FontPrintOptJapanese(window, 0x80b0b0b0, (const u8 *)text, -1, GetEffectTex(1), (const FontGlyph *)&JapaneseGlyphs, 1.0f);
     }
     else {
-        FontPrintOptWestern(1.0f, window, 0x80b0b0b0, text, -1, GetEffectTex(1), &MediumWesternGlyphs);
+        FontPrintOptWestern(window, 0x80b0b0b0, text, -1, GetEffectTex(1), &MediumWesternGlyphs, 1.0f);
     }
 }
 
@@ -2885,7 +2885,7 @@ int FontLenLarge(char *text, int len)
 
 // 0x006f918 (0xe4 bytes)
 /* FontLenWithTable at scale, summed in floats */
-int FontLenScaledWithTable(float scale, const char *text, int len, void *glyphs)
+int FontLenScaledWithTable(const char *text, int len, float scale, void *glyphs)
 {
     const u8 *str = (const u8 *)text;
     const FontGlyph *table = (const FontGlyph *)glyphs;
@@ -2917,31 +2917,31 @@ int FontLenScaledWithTable(float scale, const char *text, int len, void *glyphs)
 }
 
 /* FontLenScaledWithTableNoKern for a Western table, in Japanese mode FontLenScaledWithTable */
-static inline int FontLenScaledIn(float scale, const char *text, int len, void *western)
+static inline int FontLenScaledIn(const char *text, int len, float scale, void *western)
 {
     if (g_JapaneseMode) {
-        return FontLenScaledWithTable(scale, text, len, &JapaneseGlyphs);
+        return FontLenScaledWithTable(text, len, scale, &JapaneseGlyphs);
     }
 
-    return FontLenScaledWithTableNoKern(scale, (const u8 *)text, len, (const FontGlyph *)western);
+    return FontLenScaledWithTableNoKern((const u8 *)text, len, scale, (const FontGlyph *)western);
 }
 
 // 0x006fa00 (0xc4 bytes)
-int FontLenScaled(float scale, const char *text, int len)
+int FontLenScaled(const char *text, int len, float scale)
 {
-    return FontLenScaledIn(scale, text, len, &MediumWesternGlyphs);
+    return FontLenScaledIn(text, len, scale, &MediumWesternGlyphs);
 }
 
 // 0x006fac8 (0xc4 bytes)
-int FontLenScaledSmall(float scale, const char *text, int len)
+int FontLenScaledSmall(const char *text, int len, float scale)
 {
-    return FontLenScaledIn(scale, text, len, &Glyphs);
+    return FontLenScaledIn(text, len, scale, &Glyphs);
 }
 
 // 0x006fb90 (0xc4 bytes)
-int FontLenScaledLarge(float scale, const char *text, int len)
+int FontLenScaledLarge(const char *text, int len, float scale)
 {
-    return FontLenScaledIn(scale, text, len, &LargeWesternGlyphs);
+    return FontLenScaledIn(text, len, scale, &LargeWesternGlyphs);
 }
 
 // 0x006fc54 (0xa8 bytes)
@@ -2970,41 +2970,41 @@ void FontPrintLarge(int posX, int posY, u32 color, const char *str, int len)
 
 /* FontPrintScaledWestern with Western table western on effect texture tex, in Japanese mode
    FontPrintScaledJapanese */
-static inline void FontPrintScaledIn(float posX, float posY, float scale, u32 color, const char *str, int len, int tex, void *western)
+static inline void FontPrintScaledIn(float posX, float posY, u32 color, const char *str, int len, float scale, int tex, void *western)
 {
     if (g_JapaneseMode) {
-        FontPrintScaledJapanese(posX, posY, scale, color, (const u8 *)str, len, GetEffectTex(1), (const FontGlyph *)&JapaneseGlyphs);
+        FontPrintScaledJapanese(posX, posY, color, (const u8 *)str, len, scale, GetEffectTex(1), (const FontGlyph *)&JapaneseGlyphs);
     }
     else {
-        FontPrintScaledWestern(posX, posY, scale, color, (const u8 *)str, len, GetEffectTex(tex), (const FontGlyph *)western);
+        FontPrintScaledWestern(posX, posY, color, (const u8 *)str, len, scale, GetEffectTex(tex), (const FontGlyph *)western);
     }
 }
 
 // 0x006fda4 (0xa0 bytes)
-void FontPrintScaledMedium(float posX, float posY, float scale, u32 color, const char *str, int len)
+void FontPrintScaledMedium(float posX, float posY, u32 color, const char *str, int len, float scale)
 {
-    FontPrintScaledIn(posX, posY, scale, color, str, len, 1, &MediumWesternGlyphs);
+    FontPrintScaledIn(posX, posY, color, str, len, scale, 1, &MediumWesternGlyphs);
 }
 
 // 0x006fe44 (0xa0 bytes)
-void FontPrintScaledSmall(float posX, float posY, float scale, u32 color, const char *str, int len)
+void FontPrintScaledSmall(float posX, float posY, u32 color, const char *str, int len, float scale)
 {
-    FontPrintScaledIn(posX, posY, scale, color, str, len, 2, &Glyphs);
+    FontPrintScaledIn(posX, posY, color, str, len, scale, 2, &Glyphs);
 }
 
 // 0x006fee4 (0xa0 bytes)
-void FontPrintScaledLarge(float posX, float posY, float scale, u32 color, const char *str, int len)
+void FontPrintScaledLarge(float posX, float posY, u32 color, const char *str, int len, float scale)
 {
-    FontPrintScaledIn(posX, posY, scale, color, str, len, 3, &LargeWesternGlyphs);
+    FontPrintScaledIn(posX, posY, color, str, len, scale, 3, &LargeWesternGlyphs);
 }
 
 // 0x006ff88 (0x1a8 bytes)
 /* str in the medium font at scale, ending at posX */
-void FontPrintRightWithScale(float scale, int posX, int posY, u32 color, const char *str, int len)
+void FontPrintRightWithScale(int posX, int posY, u32 color, const char *str, int len, float scale)
 {
-    int width = FontLenScaled(scale, str, len);
+    int width = FontLenScaled(str, len, scale);
 
-    FontPrintScaledMedium((float)(posX - width), (float)posY, scale, color, str, len);
+    FontPrintScaledMedium((float)(posX - width), (float)posY, color, str, len, scale);
 }
 
 // 0x0070130 (0x14c bytes)
@@ -3041,11 +3041,11 @@ int FontPrintMediumCenter(int posX, int posY, u32 color, const char *str, int le
 
 // 0x0070680 (0x1b4 bytes)
 /* str in the medium font at scale centred on posX; returns its left edge */
-int FontPrintCenterScaled(float scale, int posX, int posY, u32 color, const char *str, int len)
+int FontPrintCenterScaled(int posX, int posY, u32 color, const char *str, int len, float scale)
 {
-    posX -= FontLenScaled(scale, str, len) >> 1;
+    posX -= FontLenScaled(str, len, scale) >> 1;
 
-    FontPrintScaledMedium((float)posX, (float)posY, scale, color, str, len);
+    FontPrintScaledMedium((float)posX, (float)posY, color, str, len, scale);
 
     return posX;
 }
@@ -3073,38 +3073,38 @@ int FontPrintLargeCenter(int posX, int posY, u32 color, char *str, int len)
 }
 
 // 0x0070b00 (0x1ac bytes)
-void FontPrintCenterScaledMedium(float scale, int posX, int posY, u32 color, const char *str, int len)
+void FontPrintCenterScaledMedium(int posX, int posY, u32 color, const char *str, int len, float scale)
 {
-    posX -= FontLenScaled(scale, str, len) >> 1;
+    posX -= FontLenScaled(str, len, scale) >> 1;
 
-    FontPrintScaledMedium((float)posX, (float)posY, scale, color, str, len);
+    FontPrintScaledMedium((float)posX, (float)posY, color, str, len, scale);
 }
 
 // 0x0070cb0 (0x1ac bytes)
-void FontPrintCenterScaledSmall(float scale, int posX, int posY, u32 color, const char *str, int len)
+void FontPrintCenterScaledSmall(int posX, int posY, u32 color, const char *str, int len, float scale)
 {
-    posX -= FontLenScaledSmall(scale, str, len) >> 1;
+    posX -= FontLenScaledSmall(str, len, scale) >> 1;
 
-    FontPrintScaledSmall((float)posX, (float)posY, scale, color, str, len);
+    FontPrintScaledSmall((float)posX, (float)posY, color, str, len, scale);
 }
 
 // 0x0070e60 (0x1ac bytes)
-void FontPrintCenterScaledLarge(float scale, int posX, int posY, u32 color, const char *str, int len)
+void FontPrintCenterScaledLarge(int posX, int posY, u32 color, const char *str, int len, float scale)
 {
-    posX -= FontLenScaledLarge(scale, str, len) >> 1;
+    posX -= FontLenScaledLarge(str, len, scale) >> 1;
 
-    FontPrintScaledLarge((float)posX, (float)posY, scale, color, str, len);
+    FontPrintScaledLarge((float)posX, (float)posY, color, str, len, scale);
 }
 
 // 0x007100c (0xa8 bytes)
 /* text in win at scale with the small font (Glyphs on effect texture 2) */
-void FontPrintOpt(float scale, FontWindow *win, u32 color, const char *str, int len)
+void FontPrintOpt(FontWindow *win, u32 color, const char *str, int len, float scale)
 {
     if (g_JapaneseMode) {
-        FontPrintOptJapanese(scale, win, color, (const u8 *)str, len, GetEffectTex(1), (const FontGlyph *)&JapaneseGlyphs);
+        FontPrintOptJapanese(win, color, (const u8 *)str, len, GetEffectTex(1), (const FontGlyph *)&JapaneseGlyphs, scale);
     }
     else {
-        FontPrintOptWestern(scale, win, color, str, len, GetEffectTex(2), &Glyphs);
+        FontPrintOptWestern(win, color, str, len, GetEffectTex(2), &Glyphs, scale);
     }
 }
 
@@ -3113,10 +3113,10 @@ void FontPrintOpt(float scale, FontWindow *win, u32 color, const char *str, int 
 void FontPrintOptLarge(FontWindow *win, u32 color, const char *str, int len)
 {
     if (g_JapaneseMode) {
-        FontPrintOptJapanese(1.0f, win, color, (const u8 *)str, len, GetEffectTex(1), (const FontGlyph *)&JapaneseGlyphs);
+        FontPrintOptJapanese(win, color, (const u8 *)str, len, GetEffectTex(1), (const FontGlyph *)&JapaneseGlyphs, 1.0f);
     }
     else {
-        FontPrintOptWestern(1.0f, win, color, str, len, GetEffectTex(3), &LargeWesternGlyphs);
+        FontPrintOptWestern(win, color, str, len, GetEffectTex(3), &LargeWesternGlyphs, 1.0f);
     }
 }
 
@@ -4014,7 +4014,7 @@ void STUB_00074cec(...)
 // 0x0074cf0 (0xc8 bytes)
 /* a free impact sprite at pos with effect texture tex at scale, turned at random; its index, or
    -1 when all 32 are in use */
-int ImpactSprite_Add(float scale, Vec4 pos, short tex)
+int ImpactSprite_Add(Vec4 pos, float scale, short tex)
 {
     for (int i = 0; i < 32; i++) {
         ImpactSprite *sprite = &g_ImpactSprites[i];

@@ -214,12 +214,12 @@ void UpdateMissionDisplay(int level, bool showHero)
         win.flags = 4;                          /* measure only */
         win.sub_pixel_x = 0;
         win.sub_pixel_y = 0;
-        FontPrintOpt(1.0f, &win, 0x80ffa888, text, -1);
+        FontPrintOpt(&win, 0x80ffa888, text, -1, 1.0f);
         short height = win.max_height;
         e->labelH = height + 8;
         do {
             win.win_right -= 4;
-            FontPrintOpt(1.0f, &win, 0x80ffa888, text, -1);
+            FontPrintOpt(&win, 0x80ffa888, text, -1, 1.0f);
         } while (win.max_height == height);
         e->labelW = win.win_right + 4;
     }

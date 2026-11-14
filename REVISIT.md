@@ -207,3 +207,53 @@ these files emit them yet (only crt0.cpp has any asm). Each function below needs
 - Added CollMobySphere, CollHeroSphere, the small getters, and the four helpers in sdk/xUnk5.cpp.
   No shortcomings were written down at the time; re-review against the asm when convenient
   (xUnk5's file and function names are placeholders).
+
+## game/vendor.cpp
+
+All 33 functions are written against the asm. The control flow and calls were checked for each;
+the arithmetic of the big ones (Vendor_PreUpdate, Vendor_HudUpdate) was read through Ghidra and
+spot-checked, not traced instruction by instruction.
+
+- **Literal values the dump doesn't have.** Vendor_DrawMobyHighlight reads the corner w and the
+  far texture edge from `DAT_00173684`/`DAT_00173688` (probably 1.0 and 0.984375). Vendor_DrawItemInfo
+  prints two short strings at `DAT_00653fa4`/`DAT_00653fac` (the arrows beside the quantity?).
+  Replace them with the real constants once the EBOOT bytes are at hand.
+- **Signatures set from the callers' registers:** DrawWeaponIcons, DrawWeaponStrings, DrawVendorDude,
+  DrawExitButton take the screen moby (unused); DrawBuyButton and Vendor_DrawItemInfo take
+  (moby, width, height); Vendor_DrawFlickerText (screen, width, height) and
+  Vendor_SetupScreenRender (xratio, log2Width, log2Height). The float-vs-int order in the last two
+  can't be told from the registers.
+- **Renamed:** DrawVendorHintFrame → Vendor_DrawBitmapText (it draws text in a bitmap font).
+  Other function names are as they were and fit what the code does.
+- **Invented names:** every global named `g_Vendor*` in this commit, g_AmmoBought, and the types
+  VendorItemView, VendorItemModel, VendorCopyView, VendorScreenPart, WeaponAmmoInfo, GadgetInfo
+  (only the fields vendor.cpp reads). WeaponAmmoInfo and GadgetInfo cover tables other files read
+  as raw `DAT_00737d3x`/`DAT_007210xx`; vendor.cpp reaches them through `VendorAmmoInfo()` and
+  `VendorGadget()` casts. Give those tables real globals once the other users are cleaned.
+  `UnlockableItems.persuader` selects the alternate weapon price; that field name looks wrong
+  (probably a mode flag, not the Persuader).
+- **Left raw:** `DAT_00e5a668` (the vendor data pointer, read as `*(u8 **)&`), `DAT_0071efb4`
+  (a font color word), `DAT_00735580` (item info table, through VendorItemPrice/VendorItemText),
+  `DAT_0096bcd5`, `DAT_0096bd98`, `DAT_00e5aa38/aa40`, `DAT_0071f408`, and the STUB_ calls.
+- **Draw state helpers duplicated:** Emit/EmitMethod/EmitSetSurface/EmitVertexConst* are copied
+  from draw.cpp (each file keeps its own). Vendor_SetupScreenRender is a near-copy of
+  BeginAuxDrawMode; the float splats it stores with `stvewx` are written as plain floats, like
+  draw.cpp does (same scalar stand-in as there).
+- **AltiVec:** the matrix transposes use the new `VecTranspose4` (vmrghw/vmrglw) in fastinline.h.
+  draw.cpp's `Mtx4_Transpose` in UploadViewMatricesToPasses is the same transpose and should use it too.
+- **Odd things kept as the code has them:** vendor_pal.ps3 is loaded when `g_IsPal` is 0 (g_IsPal's
+  meaning may be the other way round); Vendor_DrawBitmapText checks for character 0x10a, which a
+  byte can't hold; Draw_FlushAndPresent and DrawRenderTargetToScreen are called with g_VendorBuf in
+  r3 although their prototypes take nothing (check draw.cpp's signatures).
+- **Fixed in other files with this commit:** the font printers in draw.cpp had the `scale` float
+  in the wrong place. A float takes a GPR slot, and the asm reads the ints in r3.. with no gap, so
+  scale goes after the ints. Fixed FontPrintScaled{Japanese,Western,Medium,Small,Large},
+  FontPrintOpt{,Japanese,Western}, FontLenScaled{,Small,Large,WithTable,WithTableNoKern},
+  FontPrintRightWithScale and FontPrintCenterScaled{,Medium,Small,Large}, plus their callers in
+  draw/help/mission/freeze. The same mistake was fixed in ImpactSprite_Add(pos, scale, tex) and
+  OceanPlane_SetDepth/SetDefaultDepth(ocean, scale, ...). OceanPlane_SetDepth's "unused" parameter
+  was the scale's slot. Look for other `float` parameters put first in cleaned files.
+  DrawFlatOverlay got a prototype with int coordinates.
+- **Files made worse (+1 error each):** game/update/moby124, 126, 1260, 460, 879, 317, 327, 994, 1018.
+  Their raw Ghidra calls still pass OceanPlane_SetDepth/SetDefaultDepth and the font/lava calls in
+  the old argument order. They will go away when those files are cleaned.
