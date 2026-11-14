@@ -9,7 +9,7 @@ g_Pad	game/pad
 g_PadPorts	game/pad
 g_pPadDriver	game/pad
 LevelRecord	game/main
-IdolMsgDialog	idol/mUnk
+IdolMsgDialog	types
 g_LevelRecords	game/main
 g_pMsgDialog	idol/mUnk
 g_pFrameTicks	game/main
@@ -35,7 +35,7 @@ HelpDatum	game/help
 HelpDef	game/help
 g_Help	game/help
 Language	game/pause
-IMSeqMem	idol/idol_draw
+IMSeqMem	types
 QuadDef	game/draw
 MissionDef	game/mission
 MapIcon	game/map
@@ -53,7 +53,7 @@ g_PartProfile	game/partproc
 sky_sprite	game/skyfunc
 CrtArgs	game/crt0
 g_CrtArgs	game/crt0
-SaveDataInfo	idol/mUnk
+SaveDataInfo	types
 Localizer	idol/idol
 SaveFileInfo	game/memcard
 SaveCardInfo	game/memcard
@@ -71,7 +71,7 @@ AnimLayer	game/mobyfunc
 EnvSample	game/mobyfunc
 g_AnimLayerPool	game/mobyfunc
 g_EnvSamples	game/mobyfunc
-BinkPlayer	idol/mUnk
+BinkPlayer	types
 SceneSound	game/boot
 SoundDef	game/sound
 WaterDrift	game/water

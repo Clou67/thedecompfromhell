@@ -36,7 +36,6 @@
 #include "idol/fastfunc.h"
 #include "idol/hwsystem.h"
 #include "idol/idol.h"
-#include "idol/mUnk.h"
 #include "idol/savesystem.h"
 #include "idol/trophy.h"
 #include "sdk/sce.h"

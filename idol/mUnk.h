@@ -2,67 +2,6 @@
 // idol/mUnk.h
 #include "types.h"
 
-// ---- types
-/* Idol's save system state (idol::GetSaveData, 0x478 bytes, @*GameSavePtr). Only the fields the
-   game code uses have real names; field0_0x0 and field3_0xc keep Ghidra's names because those
-   names are shared with other structs and the raw idol::GetSaveData still uses them. */
-typedef struct SaveDataInfo {
-    undefined **field0_0x0;  /* 0x000  vtable */
-    int loadResult;          /* 0x004  copied from result before the load callback */
-    int callbackArg;         /* 0x008 */
-    void *field3_0xc;        /* 0x00c  save callback (a function descriptor) */
-    void *onLoad;            /* 0x010  load callback */
-    u32 unk14;               /* 0x014 */
-    u32 unk18;               /* 0x018 */
-    int level;               /* 0x01c  shown in the save list */
-    u8 unk20[0x10];          /* 0x020 */
-    char title[0x400];       /* 0x030  the description (memcard_ConstructSaveString) */
-    u8 unk430[0x20];         /* 0x430 */
-    int result;              /* 0x450 */
-    u32 unk454;              /* 0x454 */
-    u32 unk458;              /* 0x458 */
-    u8 unk45c;               /* 0x45c */
-    u8 unk45d;               /* 0x45d */
-    u8 _pad45e[2];
-    u32 flags;               /* 0x460  bit 0: a game has been loaded */
-    u8 _pad464[4];
-    int state;               /* 0x468  SaveSysState */
-    int dataSize;            /* 0x46c */
-    u8 _pad470[4];
-    char *dialogTitle;       /* 0x474 */
-} SaveDataInfo;
-typedef char SaveDataInfo_size_check[sizeof(SaveDataInfo) == 0x478 ? 1 : -1];
-
-/* Idol's Bink movie player (0x60 bytes; the singleton is g_pBinkPlayer, built in place at
-   0x927078 by the static constructors) */
-typedef struct BinkPlayer {
-    void *vtable;            /* 0x00 */
-    u8 _pad04[4];
-    void *bink;              /* 0x08 */
-    u8 _pad0c[4];
-    int state;               /* 0x10  BinkPlayer_GetState; > 1 once frames are coming */
-    u8 _pad14[0x48];
-    int unk5c;               /* 0x5c  -1: nothing to stop */
-} BinkPlayer;
-typedef char BinkPlayer_size_check[sizeof(BinkPlayer) == 0x60 ? 1 : -1];
-
-/* Idol singleton (*g_pMsgDialog, 0x20 bytes, made by FUN_004eaddc) that owns the system message
-   callback ("In messageCallback"); ticked once per frame from startLevel. Identification inferred. */
-typedef struct IdolMsgDialog IdolMsgDialog;
-typedef struct IdolMsgDialogFuncs {
-    void *unk00, *unk04;
-    void (*update)(IdolMsgDialog *self, float dt);   /* +0x08 */
-} IdolMsgDialogFuncs;
-struct IdolMsgDialog {
-    IdolMsgDialogFuncs *funcs;   /* 0x00 */
-    u8 busy;                     /* 0x04  cleared by the message callback */
-    char _pad05[3];
-    u32 unk08;
-    u32 unk0c;
-    void *callback;              /* 0x10  result callback, called with 0,1,3,4 */
-    char _pad14[0x0c];
-};
-
 // ---- globals
 extern undefined4 DAT_00658e38; /* no defined data */
 extern undefined4 DAT_00658e40; /* no defined data */

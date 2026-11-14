@@ -2,7 +2,6 @@
 // game/boot.h
 #include "types.h"
 #include "game/sound.h"
-#include "idol/mUnk.h"
 
 // ---- types
 /* an ambient sound of the title scene (@0x71cb5c, ends with start == -1) */

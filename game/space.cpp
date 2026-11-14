@@ -43,7 +43,6 @@
 #include "idol/gamecontent.h"
 #include "idol/idol.h"
 #include "idol/idol_draw.h"
-#include "idol/mUnk.h"
 #include "idol/mathfunc.h"
 #include "idol/sound.h"
 #include "idol/tiefunc.h"
