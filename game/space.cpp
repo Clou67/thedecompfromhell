@@ -40,6 +40,7 @@
 #include "idol/IMSeqMem.h"
 #include "idol/audio.h"
 #include "idol/binkplayer.h"
+#include "idol/collmath.h"
 #include "idol/fastfunc.h"
 #include "idol/fileio.h"
 #include "idol/gamecontent.h"
@@ -49,10 +50,9 @@
 #include "idol/ps2shim.h"
 #include "idol/sound.h"
 #include "idol/tiefunc.h"
-#include "sdk/linked.h"
+#include "sdk/lUnk.h"
 #include "sdk/libscream/common/api.h"
 #include "sdk/sce.h"
-#include "sdk/xUnk5.h"
 #include "idol/fastinline.h"
 #include <cell/gcm/gcm_macros.h>
 #include <cell/gcm/gcm_enum.h>

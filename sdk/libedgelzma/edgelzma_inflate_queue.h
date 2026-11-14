@@ -1,5 +1,5 @@
 #pragma once
-// sdk/cUnk.h
+// sdk/libedgelzma/edgelzma_inflate_queue.h
 #include "types.h"
 
 // ---- globals

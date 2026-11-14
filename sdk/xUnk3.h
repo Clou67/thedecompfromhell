@@ -3,4 +3,4 @@
 #include "types.h"
 
 // ---- functions
-void * memcpy4(void *param_1,undefined4 param_2);
+uint * FUN_005d0d34(int param_1,uint param_2);

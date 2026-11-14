@@ -55,6 +55,7 @@
 #include "idol/IMSeqMem.h"
 #include "idol/audio.h"
 #include "idol/binkplayer.h"
+#include "idol/collmath.h"
 #include "idol/debugprint.h"
 #include "idol/fastfunc.h"
 #include "idol/fileio.h"
@@ -74,10 +75,9 @@
 #include "idol/tfragfunc.h"
 #include "idol/trophy.h"
 #include "sdk/fios.h"
+#include "sdk/lUnk.h"
 #include "sdk/libbink/binkread.h"
-#include "sdk/linked.h"
 #include "sdk/sce.h"
-#include "sdk/xUnk5.h"
 #include <cell/fios.h>
 #include <cell/fios/ps3/ppu/fios_media_ps3ppu.h>
 #include "idol/fastinline.h"

@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include "game/crt0.h"
 #include "game/boot.h"
+#include "sdk/lUnk.h"
 #include "sdk/linked.h"
 #include "sdk/libstdcxx/bad_alloc.h"
 #include "sdk/mUnk2.h"

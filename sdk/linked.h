@@ -271,27 +271,9 @@ extern pointer PTR_DAT_0071c728; /* 0x71c728 */
 extern pointer PTR_DAT_0071c72c; /* 0x71c72c */
 extern pointer PTR_DAT_0071c730; /* 0x71c730 */
 extern pointer PTR_DAT_0071c734; /* 0x71c734 */
-extern pointer PTR_DAT_0071c740; /* 0x71c740 */
 extern pointer PTR_DAT_0071c748; /* 0x71c748 */
-extern pointer PTR_DAT_0071c758; /* 0x71c758 */
-extern pointer PTR_DAT_0071c75c; /* 0x71c75c */
-extern pointer PTR_DAT_0071c76c; /* 0x71c76c */
-extern pointer PTR_DAT_0071c770; /* 0x71c770 */
-extern pointer PTR_DAT_0071c780; /* 0x71c780 */
-extern pointer PTR_DAT_0071c784; /* 0x71c784 */
-extern pointer PTR_DAT_0071c790; /* 0x71c790 */
-extern pointer PTR_DAT_0071c798; /* 0x71c798 */
 extern pointer PTR_PTR_0071c73c; /* 0x71c73c */
 extern pointer PTR_PTR_0071c744; /* 0x71c744 */
-extern pointer PTR_PTR_0071c74c; /* 0x71c74c */
-extern pointer PTR_PTR_0071c750; /* 0x71c750 */
-extern pointer PTR_PTR_0071c754; /* 0x71c754 */
-extern pointer PTR_PTR_0071c760; /* 0x71c760 */
-extern pointer PTR_PTR_0071c774; /* 0x71c774 */
-extern pointer PTR_PTR_0071c778; /* 0x71c778 */
-extern pointer PTR_PTR_0071c788; /* 0x71c788 */
-extern pointer PTR_PTR_0071c78c; /* 0x71c78c */
-extern pointer PTR_s_unknown_0071c794; /* 0x71c794 */
 // ---- functions
 // sdk/libfios/fios_base.h
 // ---- globals
@@ -641,6 +623,7 @@ extern pointer PTR_DAT_0071c7a0; /* 0x71c7a0 */
 // ---- functions
 int FUN_005d5904(void);
 void __call_functions_registered_with_atexit(void);
+void FUN_005c4d80(undefined8 param_1);
 void _close_all_FILE(void);
 void _fs_initialize(void);
 void FUN_005d000c(void);
@@ -699,16 +682,11 @@ undefined4 FUN_005ddd20(int param_1);
 undefined4 FUN_005ddd28(int param_1);
 void FUN_005ddd30(int param_1);
 extern "C" byte * _Z12read_uleb128PKhPy(byte *param_1,ulonglong *param_2);
-void __register_frame_info(const void *param_1,void *param_2);
-void __deregister_frame_info(const void *param_1);
-undefined4 FUN_005e2f70(uint param_1);
-undefined4 FUN_005e31cc(uint *param_1,undefined4 param_2);
-int FUN_005e3314(uint param_1);
-undefined4 FUN_005e3408(uint param_1,int param_2);
-void FUN_005e36ac(int param_1);
-void FUN_005e387c(int param_1);
-void *Idol_New(u32 param_1);
-void *FUN_005e39dc(u32 param_1,u32 param_2);
+byte * FUN_005e1150(byte *param_1,ulonglong *param_2);
+void FUN_005e130c(undefined4 param_1,undefined4 param_2,int param_3);
+void FUN_005e1424(void);
+undefined4 FUN_005e147c(uint param_1,int param_2);
+undefined4 * FUN_005e1508(ulonglong param_1,undefined8 param_2,int param_3,undefined4 *param_4);
 void handle_invalidate_magic(undefined4 *param_1);
 int FUN_005395bc(undefined4 param_1);
 void FUN_00539610(int param_1,uint param_2,uint param_3);

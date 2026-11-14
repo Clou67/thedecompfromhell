@@ -1,5 +1,5 @@
 #pragma once
-// sdk/vUnk2.h
+// sdk/libc/vsnprintf.h
 #include "types.h"
 
 // ---- globals

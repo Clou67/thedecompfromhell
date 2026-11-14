@@ -40,7 +40,7 @@
 #include "idol/mUnk.h"
 #include "idol/ps2shim.h"
 #include "idol/sound.h"
-#include "sdk/linked.h"
+#include "sdk/lUnk.h"
 #include "sdk/sce.h"
 // game/update.cpp -- reconstructed from NPEA00385 EBOOT
 // 22 functions, 0x166e08-0x16a0d8: the per-frame update of gameplay, scenes, movies and credits

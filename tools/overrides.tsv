@@ -100,3 +100,11 @@ boot::_start	game/crt0.cpp
 0x50e390-0x50e794	idol/idm.cpp
 0x50e794-0x50e7f8	idol/linearheap.cpp
 0x503404-0x5038c4	idol/idol.cpp
+0x50fb6c-0x510704	sdk/libedgelzma/edgelzma_inflate_queue.cpp
+0x539920-0x53c1f0	sdk/gcmutil/texture.cpp
+0x5e3bf8-0x5e659c	sdk/libstdcxx/cxxabi.cpp
+0x5e6a10-0x5e7e0c	idol/collmath.cpp
+0x5cd5c4-0x5cede8	sdk/libc/vsnprintf.cpp
+0x5cb4fc-0x5cbc68	sdk/libc/strerror.cpp
+0x5d6920-0x5d9584	sdk/libc/xgetfloat.cpp
+0x5d97dc-0x5d9b44	sdk/libc/mbrtowc.cpp

@@ -7,9 +7,9 @@
 #include "game/mobyfunc.h"
 #include "game/mobyutil.h"
 #include "game/partupd.h"
+#include "idol/collmath.h"
 #include "idol/fastfunc.h"
 #include "idol/mathfunc.h"
-#include "idol/xUnk.h"
 #include "idol/fastinline.h"
 // game/walk.cpp -- reconstructed from NPEA00385 EBOOT
 // 15 functions, 0x175558-0x17b214: the two-legged walker (w_2legData). Each frame the planted
