@@ -4,7 +4,7 @@ struct VendorItemView {
     float offsetX;           /* 0x10 */
     float offsetY;           /* 0x14 */
     float offsetZ;           /* 0x18 */
-    float weaponLift;        /* 0x1c  added to z for a weapon (not ammo), twice with UnlockableItems.persuader */
+    float weaponLift;        /* 0x1c  added to z for a weapon (not ammo), twice once you own the Persuader */
     u8 unk20[0x10];          /* 0x20 */
 };
 _Static_assert(sizeof(struct VendorItemView) == 0x30, "VendorItemView");

@@ -878,7 +878,7 @@ static inline int VendorWeaponPrice(int item)
 {
     WeaponAmmoInfo *info = VendorAmmoInfo(item);
 
-    return UnlockableItems.persuader == 0 ? info->price : info->priceAlt;
+    return UnlockableItems.persuader == 0 ? info->price : info->discountPrice;
 }
 
 /* a held d-pad direction repeats after 16 frames every 8, every frame after 48 */
@@ -1815,8 +1815,8 @@ static inline void VendorStrikePrice(int width)
 // 0x0170490 (0x858 bytes)
 /* The selected item's name (85% on Language 3) and price, and the preview mobies 1 and 0. Ammo
    shows "AMMO" and the price per unit; through the PDA that price is struck out with the PDA's
-   price above it. A weapon shows its price, grayed and struck out with the other price above it
-   while UnlockableItems.persuader is set. */
+   price above it. A weapon shows its price, grayed and struck out with the Persuader's discount price above it
+   once you own the Persuader. */
 void DrawWeaponStrings(MobyInstance *moby)
 {
     char text[256];

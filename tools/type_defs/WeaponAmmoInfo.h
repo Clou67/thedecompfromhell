@@ -2,7 +2,7 @@
    names invented from use in vendor.cpp) */
 struct WeaponAmmoInfo {
     int price;               /* 0x00 */
-    int priceAlt;            /* 0x04  the price while UnlockableItems.persuader is set */
+    int discountPrice;       /* 0x04  the price once you own the Persuader (it gets you a discount) */
     u16 ammoPrice;           /* 0x08  bolts per unit of ammo at a vendor; 0: the item uses no ammo */
     u16 pdaAmmoPrice;        /* 0x0a  the same through the PDA */
     u16 unk0c;               /* 0x0c */

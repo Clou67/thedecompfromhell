@@ -230,8 +230,9 @@ spot-checked, not traced instruction by instruction.
   (only the fields vendor.cpp reads). WeaponAmmoInfo and GadgetInfo cover tables other files read
   as raw `DAT_00737d3x`/`DAT_007210xx`; vendor.cpp reaches them through `VendorAmmoInfo()` and
   `VendorGadget()` casts. Give those tables real globals once the other users are cleaned.
-  `UnlockableItems.persuader` selects the alternate weapon price; that field name looks wrong
-  (probably a mode flag, not the Persuader).
+  `UnlockableItems.persuader` is the Persuader, the item that gives a discount: with it a weapon
+  costs `discountPrice` (WeaponAmmoInfo +4). It also lifts the weapon preview by `weaponLift` a
+  second time (Vendor_SpawnPreviewMoby); that looks odd but it's what the code does.
 - **Left raw:** `DAT_00e5a668` (the vendor data pointer, read as `*(u8 **)&`), `DAT_0071efb4`
   (a font color word), `DAT_00735580` (item info table, through VendorItemPrice/VendorItemText),
   `DAT_0096bcd5`, `DAT_0096bd98`, `DAT_00e5aa38/aa40`, `DAT_0071f408`, and the STUB_ calls.
