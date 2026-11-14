@@ -921,7 +921,7 @@ typedef struct MobySeq {
     u8 trigsCnt;             /* 0x12 */
     u8 pad;                  /* 0x13 */
     short *trigs;            /* 0x14 */
-    void *animInfo;          /* 0x18 */
+    float frameLength;       /* 0x18  every frame's length, 0: each frame's own (MobyFrame.length) */
     MobyFrame *frames[];     /* 0x1c  frameCnt of them */
 } MobySeq;
 

@@ -86,6 +86,7 @@ extern undefined4 TEX_BASE; /* 0xa15f4c */
 extern Tfrag * Tfrags; /* 0x92d440 */
 extern undefined4 TfragsCnt; /* 0x92d444 */
 extern TieInstance * g_TieInstance; /* 0xe583f4 */
+extern Blender g_Blenders[32]; /* 0xa1cb00 */
 extern s8 g_CheckpointLevelFlags; /* 0xa202c0: per level flag, -1 = clear at this checkpoint (indexed as an array) */ /* type set in global_types.tsv */
 extern short g_CockpitTexDef[8]; /* 0x7247d0 */ /* type set in global_types.tsv */
 extern int *g_EffectTableEntries; /* 0x95e9f4 */ /* type set in global_types.tsv */

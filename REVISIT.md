@@ -369,6 +369,56 @@ drawing the map, and the per-level region checks.
   Hud_DrawTexQuad_v2_Fixed, DrawFlatOverlay_Fixed and Hud_DrawTexQuadF_v4_Fixed.
 - pause.cpp has 3 more errors since the map globals were typed.
 
+## game/mobyproc.cpp
+
+All 39 functions are written out and checked against the asm. The file covers per-moby processing:
+- lights and the moby grid;
+- the transform and bounding sphere after an update;
+- the update chain;
+- the animation pipeline (frame decompression, anim layers, manipulators, joint matrices);
+- the skinned draw entries.
+
+- **DL names used** (roles match):
+  - SetMobyLights, SetMobyAmbientLights, GetMobyAmbientLights, GetMobyLightVector, GetMobyLightColor.
+  - DistBetweenMobyBspheres, FreeMobyGridLists, AllocMobyGridLists, UpdateMobyGrids.
+  - PostUpdateMobyBsphere, ProcessManipulators, ProcessAnimLayers.
+  - AnimResolveMats (was MB_TransformJointBatch), AnimDecompInterp (was MB_BlendJointFrames).
+  - BuildMobyUpdateChain (was FindMobysCloseToUpdate).
+  - The comments name the DL equivalents of UpdateMobyTransform (PostUpdateMoby),
+    GetBlenderAtPnt (CheckMobyLightBlenders) and SetMobyLightFromBlender (SetMobyLightCuboid). Their
+    names were kept because other files use them.
+  - DL's signatures differ: RaC1 passes the pose buffer explicitly, and AnimDecompInterp takes the
+    two frames.
+- **Invented names:**
+  - Types: JointPose, AnimLayerJoint, JointKeys, UnusedScaleKeys, FrameScaleKey, FrameTransKey,
+    MobyDrawEntry, MobyModel, MobyPacket.
+  - Fields: AnimLayer.weight, MobySeq.frameLength, and MobyFrame's scaleKeys/transOffset/transKeys.
+  - Globals: g_AnimPoses, g_AnimJointMats, g_MobyGridLists, MobyGridAlloc, g_TargetableMobys,
+    g_SelectedJoints, g_BlenderSpheres.
+  - Renamed function: FastQSTToMtx4 (was FastVecMtx4MultBatch4VMX: it builds a matrix from
+    rotation, scale and translation).
+- **Unused scale keys.** Scale keys with use >= 0 go to a separate scratch table:
+  - AnimDecompInterp builds that list and never reads it.
+  - MB_DrawEntries applies it, scaling each finished joint matrix (not passed to children).
+- **Scale key linking quirks kept.** The from frame's links start as 1.0f, so the to frame only
+  adds scale keys for joints the from frame already has.
+- **Vector code.** MB_DrawEntries' joint-matrix and bind multiplies are written with intrinsics.
+  The rest is scalar, including the scalar-in-vector setup.
+- **MB_BuildDrawEntry:**
+  - The depth pass gets the alpha-test enable twice and the colour pass none; this is in the asm.
+  - FUN_004dfe70 and FUN_004e1b80 (shadow begin and end) also take the moby's position in v2. Their
+    prototypes don't model that argument.
+  - The FUN_005e8xxx calls are SNC's out-of-line inline helpers (gcm vertex array setup, vec and
+    matrix copies). They got typed prototypes, so idol/mathfunc.cpp's raw bodies gained errors.
+- **InterpolateAnimation** reads the previous frame's scale keys twice; the second pass probably
+  meant the current frame. It bakes the pose into g_AnimBuffers (maybe DL's AnimCachePose).
+- **Left raw:** DAT_00a34600 (bounding spheres for sequence 255, indexed by
+  previousAnimationFrame), DAT_00a15f64 (+0x10 is the light direction), DAT_01111700 and
+  FUN_004ed52c (the draw entry consumer).
+- **Elsewhere:**
+  - mobyfunc.cpp calls Moby_BuildJointMatrices with a NULL out, which would fault as written.
+  - handle (0xa8) is incremented on every PostUpdateMobyBsphere, so "index << 16" is doubtful.
+
 ## SDK matching against SDK 4.00
 
 The EBOOT's libraries carry `GCC 4.1.1 (SDK400, $Rev: 3538 $)`, so the match was rerun against the

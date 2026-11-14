@@ -749,3 +749,5 @@ MB_BlendJointFrames	AnimDecompInterp
 DAT_00a4fb80	g_AnimPoses
 FindMobysCloseToUpdate	BuildMobyUpdateChain
 DAT_00a49344	g_TargetableMobys
+DAT_00a34700	g_SelectedJoints
+DAT_00a1c900	g_BlenderSpheres

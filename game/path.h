@@ -1,16 +1,8 @@
 #pragma once
 // game/path.h
 #include "types.h"
-#include "game/camera.h"
 
 // ---- types
-struct ABGR {
-    u8 A;
-    u8 B;
-    u8 G;
-    u8 R;
-};
-
 /* follows a Spline node by node (PathFollowUpdate) */
 struct PathFollower {
     s32 idx;                 /* 0x00  the node being walked to */

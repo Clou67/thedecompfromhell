@@ -301,6 +301,13 @@ typedef int __ssize_t;
 
 typedef uchar u8;
 
+struct ABGR {
+    u8 A;
+    u8 B;
+    u8 G;
+    u8 R;
+};
+
 typedef uint u32;
 
 struct Mtx4 {
@@ -513,6 +520,14 @@ struct MobyGridCell { /* Moby broadphase grid cell (64x64, XY, 16 world units). 
 typedef unsigned long long u64;
 
 typedef int s32;
+
+struct Spline {
+    int32_t cnt;
+    int32_t cap;
+    int32_t cursor;
+    float zOff;
+    struct Vec4 points[30];
+};
 
 struct Planets {
     char Veldin;
@@ -3168,6 +3183,8 @@ extern undefined4 DAT_00a207c8; /* 0xa207c8 */
 extern undefined4 DAT_00a207cc; /* 0xa207cc */
 extern undefined4 DAT_00a207d8; /* 0xa207d8 */
 extern undefined1 DAT_00a2c444; /* 0xa2c444 */
+extern undefined1 DAT_00a3477f; /* 0xa3477f */
+extern undefined1 DAT_00a34780; /* 0xa34780 */
 extern undefined4 DAT_00a354cc; /* no defined data */
 extern undefined4 DAT_00a4db50; /* no defined data */
 extern undefined4 DAT_00a4db60; /* no defined data */

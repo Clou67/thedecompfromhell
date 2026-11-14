@@ -20,6 +20,26 @@ struct _2legData {
     struct legData legs[2];
 };
 
+struct Blender {
+    struct Mtx4 invMatrix;
+    struct ABGR ambientA;
+    struct ABGR ambientB;
+    struct ABGR dLightA;
+    struct ABGR dLightB;
+    u32 flags;
+    struct ABGR fogColor1;
+    struct ABGR fogColor2;
+    float fogNearDist1;
+    float fogNearIntensity1;
+    float fogFarDist1;
+    float fogFarIntensity1;
+    float fogNearDist2;
+    float fogNearIntensity2;
+    float fogFarDist2;
+    float fogFarIntensity2;
+    undefined4 unk;
+};
+
 struct PolarSm {
     float azimuth;
     float elevation;
@@ -288,14 +308,6 @@ struct OcclViewParams {
     s32 minY;
     s32 maxX;
     s32 maxY;
-};
-
-struct Spline {
-    int32_t cnt;
-    int32_t cap;
-    int32_t cursor;
-    float zOff;
-    struct Vec4 points[30];
 };
 
 struct Sphere {

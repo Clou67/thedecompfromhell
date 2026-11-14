@@ -2,29 +2,8 @@
 // game/mobyproc.h
 #include "types.h"
 #include "game/mobyfunc.h"
-#include "game/path.h"
 
 // ---- types
-struct Blender {
-    struct Mtx4 invMatrix;
-    struct ABGR ambientA;
-    struct ABGR ambientB;
-    struct ABGR dLightA;
-    struct ABGR dLightB;
-    u32 flags;
-    struct ABGR fogColor1;
-    struct ABGR fogColor2;
-    float fogNearDist1;
-    float fogNearIntensity1;
-    float fogFarDist1;
-    float fogFarIntensity1;
-    float fogNearDist2;
-    float fogNearIntensity2;
-    float fogFarDist2;
-    float fogFarIntensity2;
-    undefined4 unk;
-};
-
 struct DirectionalLight {
     struct Vec4 color1;
     struct Vec4 direction1;
@@ -88,17 +67,15 @@ typedef char MobyDrawEntry_size_check[sizeof(MobyDrawEntry) == 0xb0 ? 1 : -1];
 
 // ---- globals
 extern undefined4 DAT_00a34600; /* no defined data */
-extern undefined1 DAT_00a34700; /* 0xa34700 */
-extern undefined1 DAT_00a3477f; /* 0xa3477f */
-extern undefined1 DAT_00a34780; /* 0xa34780 */
 extern DirectionalLight DirectionalLights[16]; /* 0xa1db00 */ /* type set in global_types.tsv */
 extern u32 MobyGridAlloc[24]; /* 0xa49120: which blocks of g_MobyGridLists are used, a bit each */ /* type set in global_types.tsv */
 extern Mtx4 g_AnimJointMats[128]; /* 0xa4db40: joint matrices from AnimResolveMats */ /* type set in global_types.tsv */
 extern JointPose g_AnimPoses[129]; /* 0xa4fb80: joint poses from AnimDecompInterp, changed by the anim layers and manipulators */ /* type set in global_types.tsv */
-extern Blender g_Blenders[32]; /* 0xa1cb00 */
+extern Vec4 g_BlenderSpheres[32]; /* 0xa1c900: each blender's bounding sphere (radius squared in w) */ /* type set in global_types.tsv */
 extern undefined4 g_CurrentBlender; /* 0x7291a4 */
 extern short g_MobyGridLists[1536][16]; /* 0xa3d120: the moby grid cells' lists, 32-byte blocks of 16 moby indices */ /* type set in global_types.tsv */
 extern int g_MobyProcSectionWord; /* 0x72910c */ /* type set in global_types.tsv */
+extern u8 g_SelectedJoints[256]; /* 0xa34700: MB_ComputeSelectedJoints' posed mask (128 bytes) and joint list */ /* type set in global_types.tsv */
 
 // ---- functions
 void SECTION_HEADER_MOBYPROC(void);
@@ -131,12 +108,12 @@ void MB_DrawEntries(MobyDrawEntry *entry, u32 count);
 void MB_DrawEntryList(u8 *entries, int count);
 u8 *MB_BuildDrawEntry(MobyInstance *moby, u8 *entryList, int count, int unused);
 MobyInstance *BuildMobyUpdateChain(void);
-void UpdateMobyAnimFrame(MobyInstance *param_1);
-void MB_ProcessJoints(int param_1,undefined8 param_2);
-void MB_ComputeSelectedJoints(MobyInstance *param_1,int param_2,int *param_3,Mtx4 *param_4);
-void MB_ComputeSelectedJointPos(MobyInstance *param_1,int param_2,int *param_3,Vec4 *param_4);
-undefined8 GetBlenderAtPnt(Vec4 *position,float *outBlend,int *outBlender);
+void UpdateMobyAnimFrame(MobyInstance *moby);
+Mtx4 *MB_ProcessJoints(MobyInstance *moby, u8 *posed);
+void MB_ComputeSelectedJoints(MobyInstance *moby, int count, int *joints, Mtx4 *out);
+void MB_ComputeSelectedJointPos(MobyInstance *moby, int count, int *joints, Vec4 *out);
+int GetBlenderAtPnt(Vec4 *pos, float *outBlend, int *outBlender);
 void SetMobyLightFromBlender(MobyInstance *moby);
 void STUB_000fa910(...);
-void * InterpolateAnimation(int param_1,uint param_2);
-void MB_AnimLayerBlend(struct AnimLayer *param_1);
+void *InterpolateAnimation(MobyInstance *moby, u32 flags);
+void MB_AnimLayerBlend(AnimLayer *layer);

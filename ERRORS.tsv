@@ -9,7 +9,7 @@ errors	file
 0	game/freeze.cpp
 0	game/global.cpp
 0	game/help.cpp
-1530	game/hero.cpp
+1529	game/hero.cpp
 558	game/hud.cpp
 0	game/initonce.cpp
 0	game/initsky.cpp
@@ -24,8 +24,8 @@ errors	file
 0	game/mesh.cpp
 0	game/mission.cpp
 0	game/mobyfunc.cpp
-95	game/mobyproc.cpp
-558	game/mobyutil.cpp
+0	game/mobyproc.cpp
+556	game/mobyutil.cpp
 0	game/music.cpp
 0	game/pad.cpp
 0	game/partproc.cpp

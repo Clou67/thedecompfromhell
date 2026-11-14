@@ -636,3 +636,5 @@ g_MobyGridLists	short NAME[1536][16] /* 0xa3d120: the moby grid cells' lists, 32
 g_AnimJointMats	Mtx4 NAME[128] /* 0xa4db40: joint matrices from AnimResolveMats */
 g_AnimPoses	JointPose NAME[129] /* 0xa4fb80: joint poses from AnimDecompInterp, changed by the anim layers and manipulators */
 g_TargetableMobys	MobyInstance *NAME /* 0xa49344: the first of the auto-targetable mobys BuildMobyUpdateChain found this frame, NULL-terminated (invented name) */
+g_SelectedJoints	u8 NAME[256] /* 0xa34700: MB_ComputeSelectedJoints' posed mask (128 bytes) and joint list */
+g_BlenderSpheres	Vec4 NAME[32] /* 0xa1c900: each blender's bounding sphere (radius squared in w) */

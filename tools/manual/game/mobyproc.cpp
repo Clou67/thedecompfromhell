@@ -1,5 +1,4 @@
 #include "rc1.h"
-// MERGE
 #include "idol/fastinline.h"
 #include <cell/gcm/gcm_macros.h>
 #include <cell/gcm/gcm_enum.h>
@@ -1777,5 +1776,530 @@ MobyInstance *BuildMobyUpdateChain(void)
 
     *targetable = NULL;
     return first;
+}
+
+// 0x00f98d8 (0x380 bytes)
+/* Steps the moby's animation by frameSpeed (times unk58 while not blending between sequences):
+   past 1 it moves on a frame (each step scaled by the next frame's length; wrapping sets bit 2 of
+   the step flags at 0x70, any step bit 1), below 0 it moves back. At most 8 frames a call. The
+   sequence's sound triggers between the old and new positions (1/16 frames) play the first one.
+   Then the looped sound is started when it changed (a free channel only every 4th frame, by the
+   moby's address). */
+void UpdateMobyAnimFrame(MobyInstance *moby)
+{
+    float speed = moby->frameSpeed;
+    u8 stepped = 0;
+
+    if (speed != 0.0f && moby->unk58 != 0.0f) {
+        u8 prevSeq = moby->updateId;
+        u8 seq = moby->animationId;
+        float oldBlend = moby->animationBlend;
+        float t;
+
+        if (prevSeq == seq) {
+            t = oldBlend + speed * moby->unk58;
+        }
+        else {
+            t = speed + oldBlend;
+        }
+
+        if (t > 0.997f && t < 1.003f) {
+            t = 1.0f;
+        }
+
+        u8 oldPrevFrame = moby->previousAnimationFrame;
+        u8 prevFrame = oldPrevFrame;
+        u8 curFrame = moby->animationFrame;
+        MobySeq *sequence = moby->pClass->seqs[seq];
+        float length = sequence->frameLength;
+        void *prevData;
+        void *curData;
+
+        if (t < 1.0f && t >= 0.0f) {
+            moby->animationBlend = t;
+            moby->field43_0x70 = 0;
+        }
+        else {
+            if (t < 1.0f) {
+                /* backwards */
+                for (int steps = 8; ; ) {
+                    curFrame = prevFrame;
+                    t = t / speed;
+                    prevFrame = (u8)(curFrame - 1);
+                    curData = moby->pPreviousAnimationData;
+
+                    if ((s8)prevFrame < 0) {
+                        stepped |= 2;
+                        prevFrame = (u8)(sequence->frameCnt - 1);
+                    }
+
+                    prevData = sequence->frames[prevFrame];
+
+                    if (length == 0.0f) {
+                        length = *(float *)prevData;
+                    }
+
+                    t = length * t + 1.0f;
+
+                    if (--steps <= 0) {
+                        t = 0.0f;
+                    }
+
+                    if (t >= 0.0f) {
+                        break;
+                    }
+                }
+            }
+            else {
+                /* forwards */
+                for (int steps = 8; ; ) {
+                    prevFrame = curFrame;
+                    t = t - 1.0f;
+                    prevData = moby->pCurrentAnimationData;
+                    curFrame = (u8)(prevFrame + 1);
+
+                    if (prevSeq != seq) {
+                        moby->trigsCnt = sequence->trigsCnt;
+                        prevSeq = seq;
+                    }
+
+                    length = sequence->frameLength;
+                    stepped |= 1;
+                    t = t / speed;
+
+                    if (curFrame >= sequence->frameCnt) {
+                        curFrame = 0;
+                        stepped |= 3;
+                    }
+
+                    curData = sequence->frames[curFrame];
+
+                    if (length == 0.0f) {
+                        length = *(float *)prevData;
+                    }
+
+                    t = length * t;
+
+                    if (--steps <= 0) {
+                        t = 0.0f;
+                    }
+
+                    if (t < 1.0f) {
+                        break;
+                    }
+                }
+            }
+
+            moby->updateId = prevSeq;
+            moby->previousAnimationFrame = prevFrame;
+            moby->animationFrame = curFrame;
+            moby->pPreviousAnimationData = prevData;
+            moby->pCurrentAnimationData = curData;
+            moby->frameSpeed = length;
+            moby->animationBlend = t;
+            moby->field43_0x70 = stepped;
+        }
+
+        /* the sound triggers passed */
+        if (moby->trigsCnt != 0) {
+            int newPos = (u8)moby->previousAnimationFrame * 16 + FastDoubleToInt(moby->animationBlend * 16.0f);
+            int oldPos = oldPrevFrame * 16 + FastDoubleToInt(oldBlend * 16.0f);
+            MobySeq *trigSeq = moby->pClass->seqs[(u8)moby->updateId];
+            s16 *trig = (s16 *)&trigSeq->frames[trigSeq->frameCnt];
+
+            for (int i = 0; i < trigSeq->trigsCnt; i++, trig += 2) {
+                if (newPos >= trig[1] && oldPos < trig[1]) {
+                    PlayMobySound(trig[0], 0, moby);
+                    break;
+                }
+            }
+        }
+    }
+
+    moby->field43_0x70 = stepped;
+
+    if (moby->soundDesired != moby->soundChannel) {
+        if ((u8)moby->soundChannel != 0xff || ((u32)(uintptr_t)moby >> 8 & 3) == (worldUpdateTime & 3)) {
+            MobyPlayDesiredSound(moby);
+        }
+    }
+}
+
+// 0x00f9c58 (0xc0 bytes)
+/* the moby's joint matrices (AnimResolveMats with posed as its mask) */
+Mtx4 *MB_ProcessJoints(MobyInstance *moby, u8 *posed)
+{
+    MobyClass *pClass = moby->pClass;
+    int count = pClass->joint_cnt;
+
+    if (count == 0) {
+        return AnimResolveMats(NULL, 0, NULL);
+    }
+
+    JointPose *poses = AnimDecompInterp(moby->animationBlend, pClass->joint_cnt, (u32)(uintptr_t)posed, (Vec4 *)pClass->common_trans, (MobyFrame *)moby->pPreviousAnimationData, (MobyFrame *)moby->pCurrentAnimationData);
+
+    if (moby->pAnimationLayers != NULL) {
+        ProcessAnimLayers((AnimLayer *)moby->pAnimationLayers, poses);
+    }
+
+    if (moby->pManipulators != NULL) {
+        ProcessManipulators(moby->pManipulators, poses);
+    }
+
+    return AnimResolveMats(poses, count, posed);
+}
+
+/* Marks the joints the requested ones need (each one's anim_joints entry: a count, then the joint
+   indices from +4, the last being the joint itself) in the posed mask of g_SelectedJoints, whose
+   +128 gets each request's joint, then builds the matrices of the marked joints. The highest
+   joint's mask byte becomes 0xff and byte 127 that joint + 1. */
+static inline Mtx4 *MobySelectedJointMats(MobyInstance *moby, int count, int *joints, u8 **jointList)
+{
+    u8 *posed = g_SelectedJoints;
+    u8 *list = g_SelectedJoints + 128;
+    int highest = 0;
+    int joint = 0;
+
+    memset(posed, 0, 128);
+    *jointList = list;
+
+    u8 **table = (u8 **)moby->pClass->anim_joints;
+
+    for (int i = 0; i < count; i++) {
+        u8 *entry = table[joints[i] + 1];
+        u8 *index = entry + 4;
+
+        for (u32 k = 0; k < *(u16 *)entry; k++) {
+            joint = *index++;
+            posed[joint] = 1;
+        }
+
+        list[i] = (u8)joint;
+
+        if (joint > highest) {
+            highest = joint;
+        }
+    }
+
+    posed[127] = (u8)(highest + 1);
+    posed[highest] = 0xff;
+
+    MobyClass *pClass = moby->pClass;
+    int jointCount = pClass->joint_cnt;
+
+    if (jointCount == 0) {
+        return AnimResolveMats(NULL, 0, NULL);
+    }
+
+    JointPose *poses = AnimDecompInterp(moby->animationBlend, pClass->joint_cnt, pClass->joint_cnt, (Vec4 *)pClass->common_trans, (MobyFrame *)moby->pPreviousAnimationData, (MobyFrame *)moby->pCurrentAnimationData);
+
+    if (moby->pAnimationLayers != NULL) {
+        ProcessAnimLayers((AnimLayer *)moby->pAnimationLayers, poses);
+    }
+
+    if (moby->pManipulators != NULL) {
+        ProcessManipulators(moby->pManipulators, poses);
+    }
+
+    return AnimResolveMats(poses, jointCount, posed);
+}
+
+// 0x00f9d18 (0x2a8 bytes)
+/* the matrices of count joints (indices in joints) into out */
+void MB_ComputeSelectedJoints(MobyInstance *moby, int count, int *joints, Mtx4 *out)
+{
+    u8 *list;
+    Mtx4 *mats = MobySelectedJointMats(moby, count, joints, &list);
+
+    for (int i = 0; i < count; i++) {
+        out[i] = mats[list[i]];
+    }
+}
+
+// 0x00f9fc0 (0x210 bytes)
+/* their positions (the matrices' translation rows) into out */
+void MB_ComputeSelectedJointPos(MobyInstance *moby, int count, int *joints, Vec4 *out)
+{
+    u8 *list;
+    Mtx4 *mats = MobySelectedJointMats(moby, count, joints, &list);
+
+    for (int i = 0; i < count; i++) {
+        out[i] = mats[list[i]].v3;
+    }
+}
+
+// 0x00fa1e0 (0x19c bytes)
+/* DL's CheckMobyLightBlenders: the first blender whose sphere (w: radius squared) holds pos;
+   pos is then in it when inside the blender's box (its inverse matrix maps it into -1..1). Gives
+   the blender and how far along its x the point is (0..1) and returns 1; 0 (blender -1) when not
+   in the first sphere's box or no sphere. */
+int GetBlenderAtPnt(Vec4 *pos, float *outBlend, int *outBlender)
+{
+    float x = pos->x;
+    float y = pos->y;
+    float z = pos->z;
+
+    *outBlender = -1;
+
+    for (int i = 0; i < BlenderCnt; i++) {
+        Vec4 *sphere = &g_BlenderSpheres[i];
+        float dx = x - sphere->x;
+        float dy = y - sphere->y;
+        float dz = z - sphere->z;
+
+        if (dx * dx + dy * dy + dz * dz >= sphere->w) {
+            continue;
+        }
+
+        Mtx4 *inv = &g_Blenders[i].invMatrix;
+        float localX = inv->v0.x * x + inv->v1.x * y + inv->v2.x * z + inv->v3.x;
+        float localY = inv->v0.y * x + inv->v1.y * y + inv->v2.y * z + inv->v3.y;
+        float localZ = inv->v0.z * x + inv->v1.z * y + inv->v2.z * z + inv->v3.z;
+
+        if (localX > 1.0f || localX < -1.0f || localY > 1.0f || localY < -1.0f || localZ > 1.0f || localZ < -1.0f) {
+            return 0;
+        }
+
+        *outBlender = i;
+        *outBlend = (localX + 1.0f) * 0.5f;
+        return 1;
+    }
+
+    return 0;
+}
+
+/* a colour channel as a float, scaled and capped at 255 */
+static inline float BlenderChannel(u32 color, int shift, float scale)
+{
+    float value = (float)(color >> shift & 0xff) * scale;
+
+    return value > 255.0f ? 255.0f : value;
+}
+
+// 0x00fa3a8 (0x568 bytes)
+// strings: 00652e48: 'Leaving blender %d, ambient 0x%08x,dirs 0x%08x\n' | 00652e78: 'Entering blender %d, dlighta %d, dlightb %d, ambienta 0x%08x, ambientb 0x%08x\n'
+/* DL's SetMobyLightCuboid: the moby's lights from the blender (environment transition box) it is
+   in. With a blender that has flag 1, the ambient colour (colorManipulator) is its two ambients
+   blended and the lights its two directional lights blended. Then the ambient plus the nearest
+   point light (STUB_000da2f8, never one) becomes the moby's colour. Prints entering and leaving
+   blenders. */
+void SetMobyLightFromBlender(MobyInstance *moby)
+{
+    Vec4 pos;
+    int blender;
+    float blend;
+    Blender *box = NULL;
+
+    pos.x = moby->pos.x;
+    pos.y = moby->pos.y;
+    pos.z = moby->pos.z;
+    pos.w = 1.0f;
+
+    if (GetBlenderAtPnt(&pos, &blend, &blender) != 0) {
+        box = &g_Blenders[blender];
+    }
+
+    if ((int)g_CurrentBlender != blender) {
+        if (blender == -1) {
+            printf("Leaving blender %d, ambient 0x%08x,dirs 0x%08x\n", (int)g_CurrentBlender, moby->color, moby->light);
+        }
+        else {
+            printf("Entering blender %d, dlighta %d, dlightb %d, ambienta 0x%08x, ambientb 0x%08x\n", blender, *(int *)&box->dLightA, *(int *)&box->dLightB, *(int *)&box->ambientA, *(int *)&box->ambientB);
+        }
+
+        g_CurrentBlender = blender;
+    }
+
+    u32 light = moby->light;
+
+    if (box != NULL && (box->flags & 1)) {
+        u32 ambientA = *(u32 *)&box->ambientA;
+        u32 ambientB = *(u32 *)&box->ambientB;
+        float s = 1.0f - blend;
+        float color[3];
+
+        for (int channel = 0; channel < 3; channel++) {
+            float value = BlenderChannel(ambientA, channel * 8, s) + BlenderChannel(ambientB, channel * 8, blend) + 0.5f;
+
+            color[channel] = value > 255.0f ? 255.0f : value;
+        }
+
+        moby->colorManipulator = (int)color[0] | (int)color[1] << 8 | (int)color[2] << 16 | 0xff000000;
+        light = (*(u32 *)&box->dLightA & 0xff) | (*(u32 *)&box->dLightB & 0xff) << 8 | (u32)(s64)(blend * 65535.0f) << 16;
+    }
+
+    float distance;
+    u8 *pointLight = (u8 *)(uintptr_t)STUB_000da2f8_RET_0(&pos, &distance);
+
+    if (pointLight == NULL) {
+        moby->color = moby->colorManipulator;
+        moby->light = light;
+        return;
+    }
+
+    u32 lightColor = *(u32 *)(pointLight + 0x10);
+    u32 ambient = moby->colorManipulator;
+    float falloff = 1.0f - distance * distance / *(float *)(pointLight + 0xc);
+    float color[3];
+
+    for (int channel = 0; channel < 3; channel++) {
+        float value = (float)(lightColor >> (channel * 8) & 0xff) * falloff + (float)(ambient >> (channel * 8) & 0xff) + 0.5f;
+
+        color[channel] = value > 255.0f ? 255.0f : value;
+    }
+
+    moby->color = (int)color[0] | (int)color[1] << 8 | (int)color[2] << 16 | 0xff000000;
+    moby->light = light;
+}
+
+// 0x00fa910 (0x24 bytes)
+void STUB_000fa910(...)
+{
+    STUB_000da2f8_RET_0();
+}
+
+/* v * scale as ints (FastVecScale, then truncated) */
+static inline void PoseToInts(int *out, int count, float *v, float scale)
+{
+    Vec4 scaled;
+
+    FastVecScale(scale, (float *)&scaled, v);
+
+    for (int i = 0; i < count; i++) {
+        out[i] = (int)(&scaled.x)[i];
+    }
+}
+
+// 0x00fa940 (0x146c bytes)
+/* Bakes the moby's current pose (its blend, plus its anim layers unless flag 0x100 and its
+   manipulators unless 0x200) into a frame in g_AnimBuffers[flags & 0xff]: every joint's
+   rotation (clamped to shorts), a scale key for each joint whose scale is not 1 (with the use
+   flags of the previous frame's keys; the asm reads that frame's keys twice) and a translation key
+   for each joint not at its common translation. Returns where the translation keys went. */
+void *InterpolateAnimation(MobyInstance *moby, u32 flags)
+{
+    MobyClass *pClass = moby->pClass;
+    JointPose *poses = AnimDecompInterp(moby->animationBlend, pClass->joint_cnt, pClass->joint_cnt, (Vec4 *)pClass->common_trans, (MobyFrame *)moby->pPreviousAnimationData, (MobyFrame *)moby->pCurrentAnimationData);
+
+    if (moby->pAnimationLayers != NULL && !(flags & 0x100)) {
+        ProcessAnimLayers((AnimLayer *)moby->pAnimationLayers, poses);
+    }
+
+    if (moby->pManipulators != NULL && !(flags & 0x200)) {
+        ProcessManipulators(moby->pManipulators, poses);
+    }
+
+    MobyFrame *prev = (MobyFrame *)moby->pPreviousAnimationData;
+    MobyFrame *frame = (MobyFrame *)g_AnimBuffers[flags & 0xff];
+    s16 *rotOut = (s16 *)(frame + 1);
+    int jointCount = pClass->joint_cnt;
+    Vec4 *bind = (Vec4 *)pClass->common_trans;
+    u8 use[129];
+    FrameScaleKey scaleKeys[516];
+    FrameTransKey transKeys[512];
+    int scaleCount = 0;
+    int transCount = 0;
+
+    memset(use, 0, 129);
+
+    FrameScaleKey *key = (FrameScaleKey *)FRAME_KEYS(prev, prev->jointBytes);
+
+    for (int k = 0; k < (u16)prev->scaleKeys; k++, key++) {
+        use[key->joint] = (u8)key->use;
+    }
+
+    key = (FrameScaleKey *)FRAME_KEYS(prev, prev->jointBytes);
+
+    for (int k = 0; k < (u16)prev->scaleKeys; k++, key++) {
+        use[key->joint] |= (u8)key->use;
+    }
+
+    for (int i = 0; i < jointCount; i++, bind++) {
+        JointPose *pose = &poses[i];
+        Vec4 rot = pose->rot;
+        Vec4 scale = *(Vec4 *)pose->scale;
+        Vec4 trans = *(Vec4 *)pose->trans;
+        int rotInt[4];
+        int scaleInt[3];
+        int transInt[3];
+        int bindInt[3];
+
+        PoseToInts(rotInt, 4, &rot.x, 32768.0f);
+        PoseToInts(scaleInt, 3, &scale.x, 32768.0f);
+        PoseToInts(transInt, 3, &trans.x, 1024.0f);
+        PoseToInts(bindInt, 3, &bind->x, 1024.0f);
+
+        for (int axis = 0; axis < 4; axis++) {
+            int value = rotInt[axis] < -32768 ? -32768 : rotInt[axis];
+
+            rotOut[i * 4 + axis] = (s16)(value > 32767 ? 32767 : value);
+        }
+
+        /* the scale in 4.12, 0..65535 */
+        int scale12[3];
+
+        for (int axis = 0; axis < 3; axis++) {
+            int value = scaleInt[axis] >> 3;
+
+            value = value > 0 ? value : 0;
+            scale12[axis] = value < 65535 ? value : 65535;
+        }
+
+        if (scale12[0] != 4096 || scale12[1] != 4096 || scale12[2] != 4096) {
+            FrameScaleKey *out = &scaleKeys[scaleCount++];
+
+            out->x = (u16)scale12[0];
+            out->y = (u16)scale12[1];
+            out->z = (u16)scale12[2];
+            out->joint = (u8)i;
+            out->use = (s8)use[i];
+        }
+
+        if (transInt[0] != bindInt[0] || transInt[1] != bindInt[1] || transInt[2] != bindInt[2]) {
+            FrameTransKey *out = &transKeys[transCount++];
+
+            out->x = (s16)transInt[0];
+            out->y = (s16)transInt[1];
+            out->z = (s16)transInt[2];
+            out->joint = (s8)i;
+            out->unk7 = 0;
+        }
+    }
+
+    /* the header, then the keys after the rotations */
+    *(u32 *)&frame->length = 0;
+    frame->time = 0;
+    frame->jointBytes = (s16)(jointCount * 8);
+    frame->scaleKeys = (s16)scaleCount;
+    frame->transKeys = (s16)transCount;
+    frame->transOffset = (s16)((jointCount + scaleCount) * 8);
+    frame->qwords = (s16)((jointCount + scaleCount + transCount) * 8 / 16);
+
+    u8 *keys = (u8 *)(frame + 1) + jointCount * 8;
+
+    memcpy(keys, scaleKeys, scaleCount * 8);
+    return memcpy(keys + scaleCount * 8, transKeys, transCount * 8);
+}
+
+// 0x00fbdac (0x194 bytes)
+/* the layer's joints' poses (from its own frames and blend, through jointMap) into its jointBuf
+   for ProcessAnimLayers. (The asm has two empty counting loops first.) */
+void MB_AnimLayerBlend(AnimLayer *layer)
+{
+    int count = (s16)layer->jointCount;
+    u8 *jointMap = layer->jointMap;
+    MobyClass *pClass = layer->pClass;
+    JointPose *poses = AnimDecompInterp(layer->blend, pClass->joint_cnt, pClass->joint_cnt, (Vec4 *)pClass->common_trans, (MobyFrame *)layer->prevFrameData, (MobyFrame *)layer->curFrameData);
+    AnimLayerJoint *entry = (AnimLayerJoint *)layer->jointBuf;
+
+    for (int i = 0; i < count; i++, entry++) {
+        int joint = jointMap[i];
+        JointPose *pose = &poses[joint];
+
+        entry->rot = pose->rot;
+        *(Vec4 *)entry->scale = *(Vec4 *)pose->scale;
+        *(Vec4 *)entry->trans = *(Vec4 *)pose->trans;
+        entry->joint = joint;
+    }
 }
 
