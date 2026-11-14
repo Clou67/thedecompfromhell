@@ -1473,7 +1473,7 @@ int boot(int argc, char **argv, char **envp)
     idol::CheckLicense((int *)hwSystem, "BCUS", "BCUS98212", "UP9000-BCUS98212_00", true, -1);
     idol::CheckLicense((int *)hwSystem, "BCES", "BCES01503", "EP9000-BCES01503_00", true, -1);
     HWSystem_ActivateSku(hwSystem, argv[contentArg], 0);
-    FUN_004e68bc(hwSystem, 11, 8, 16);
+    HWSystem_AllocAddressSpace(hwSystem, 11, 8, 16);
     DAT_008fa630 = &DAT_0071cce4;
 
     discBoot = *((u8 *)hwSystem + 0x10) != 0 ? 1 : 0;
@@ -1547,7 +1547,7 @@ int boot(int argc, char **argv, char **envp)
     VirtualMethod(DAT_009030e4, 8)(DAT_009030e4, heap, 0, (u8 *)g_pGame + 4);
 
     /* saves and Bink */
-    FUN_004e7f9c(idol::GetSaveData(), 0);
+    SaveSystem_GetFileName(idol::GetSaveData(), 0);
     GetBinkPlayer()->unk5c = 0;
     GetBinkPlayer();
     FUN_005eae04((u8 *)Global_QuickMovieMalloc, (u8 *)Global_QuickMovieFree);
@@ -1555,7 +1555,7 @@ int boot(int argc, char **argv, char **envp)
     GetBinkPlayer();
     FUN_005ec620((u8 *)&PTR_FUN_007108d0, AudioGetChannelCount());
     AudioInit(heap);
-    FUN_004ec568((u8 *)&DAT_01111700, 8);
+    SetupLightTfragJob((u8 *)&DAT_01111700, 8);
     cellSysutilCheckCallback();
 
     idol::GetSaveData();

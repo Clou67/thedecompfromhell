@@ -1635,7 +1635,7 @@ u8 *MB_BuildDrawEntry(MobyInstance *moby, u8 *entryList, int count, int unused)
 
         if (shadow != 0) {
             MobyClearVertexArrays(ShadowPass);
-            FUN_004e1b80(radius, shadowRadius, (int *)idol, lightIdx, (Vec4 *)((u8 *)&g_HeroLightDir + lightIdx * 16));
+            IdolDraw_SetShadowConstants(radius, shadowRadius, (int *)idol, lightIdx, (Vec4 *)((u8 *)&g_HeroLightDir + lightIdx * 16));
         }
     }
 
