@@ -19,7 +19,7 @@
 #include "idol/idol.h"
 #include "idol/idol_draw.h"
 #include "idol/sound.h"
-#include "sdk/rUnk2.h"
+#include "sdk/libscream/common/api.h"
 
 enum {                      /* PifHeader.texFormat / clutFormat */
     PIF_FMT_32 = 0x12,      /* 32 bits per pixel (clut entries: 32-bit) */

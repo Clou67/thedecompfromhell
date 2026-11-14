@@ -303,11 +303,15 @@ extern undefined4 DAT_0071aef4; /* 0x71aef4 */
 extern undefined4 DAT_0071aef8; /* 0x71aef8 */
 extern pointer PTR_DAT_0071aef0; /* 0x71aef0 */
 extern pointer PTR_DAT_0071af00; /* 0x71af00 */
+extern pointer PTR_DAT_0071af38; /* 0x71af38 */
+extern pointer PTR_DAT_0071afd8; /* 0x71afd8 */
 extern pointer PTR_PTR_0071aefc; /* 0x71aefc */
 extern pointer PTR_PTR_0071af14; /* 0x71af14 */
 extern pointer PTR_PTR_0071af24; /* 0x71af24 */
 extern pointer PTR_PTR_0071af58; /* 0x71af58 */
 extern pointer PTR_PTR_0071af84; /* 0x71af84 */
+extern pointer PTR_s_FIOS_cache_got_a_write_error_clo_0071afd4; /* 0x71afd4 */
+extern pointer PTR_s_FIOS_cache_got_a_write_error_dur_0071afd0; /* 0x71afd0 */
 extern pointer PTR_s_FIOS_cache_index_mass_flush_fail_0071af74; /* 0x71af74 */
 extern pointer PTR_s_FIOS_cache_lookup_no_existing_de_0071af28; /* 0x71af28 */
 extern pointer PTR_s_FIOS_cache_lookup_no_existing_de_0071af2c; /* 0x71af2c */
@@ -320,7 +324,13 @@ extern pointer PTR_s_Scheduler_cache_0071af88; /* 0x71af88 */
 extern pointer PTR_s_cache_0071af04; /* 0x71af04 */
 extern pointer PTR_s_cache_fillFunnel_0071af0c; /* 0x71af0c */
 extern pointer PTR_s_cache_rwlock_0071af08; /* 0x71af08 */
+extern pointer PTR_s_creation_date_changed_0071afb8; /* 0x71afb8 */
+extern pointer PTR_s_mod_date_changed_0071afb4; /* 0x71afb4 */
 extern pointer PTR_s_schedulercache_0071afa0; /* 0x71afa0 */
+extern pointer PTR_s_stat_failed_0071afb0; /* 0x71afb0 */
+extern undefined1 stack0xfffffd94[16]; /* stack slot, not a real global */
+extern undefined1 stack0xfffffe64[16]; /* stack slot, not a real global */
+extern undefined1 stack0xffffff14[16]; /* stack slot, not a real global */
 extern undefined1 stack0xffffff24[16]; /* stack slot, not a real global */
 // ---- functions
 // sdk/libfios/fios_dearchive.h
@@ -700,10 +710,6 @@ void FUN_005e387c(int param_1);
 void *Idol_New(u32 param_1);
 void *FUN_005e39dc(u32 param_1,u32 param_2);
 void handle_invalidate_magic(undefined4 *param_1);
-extern "C" uint _ZN4cell4fios5cache6getLRUEb(int param_1,int param_2);
-extern "C" void _ZN4cell4fios5cache17getDatesFromCacheEPKcPyS4_(int param_1,undefined8 param_2,undefined8 *param_3,undefined8 *param_4);
-void FUN_00532134(undefined4 *param_1);
-extern "C" void _ZN4cell4fios5cache14dumpCacheStatsEPKc(int param_1,undefined4 param_2);
 int FUN_005395bc(undefined4 param_1);
 void FUN_00539610(int param_1,uint param_2,uint param_3);
 extern "C" void _Z41__static_initialization_and_destruction_0ii(int param_1,int param_2);
@@ -712,28 +718,14 @@ extern "C" void _Z41__static_initialization_and_destruction_0ii(int param_1,int 
 extern "C" longlong _ZN4cell4fios2op17timeoutToDeadlineEx(longlong param_1);
 extern "C" int _ZN4cell4fios2op16waitListDeadlineEjPKPS1_x(int param_1,int *param_2,longlong param_3);
 extern "C" undefined4 _ZN4cell4fios2op8syncWaitEPx(int param_1,undefined8 *param_2);
-extern "C" undefined8 _ZNK4cell4fios2op16getFulfilledSizeEv(int param_1);
-extern "C" undefined4 _ZN4cell4fios8pathhashEPKc(char *param_1);
-extern "C" void _ZN4cell4fios7md5path3setEPKc(undefined8 *param_1,int param_2);
-extern "C" longlong _ZN4cell4fios8platform11currentDateEv(void);
 extern "C" void _Z41__static_initialization_and_destruction_0ii(int param_1,int param_2);
-extern "C" void _ZN4cell4fios8platform10FIOSprintfEPKcz(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4, undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
-extern "C" void _ZN4cell4fios8platform6rwlock11writeUnlockEv(int param_1);
-extern "C" void _ZN4cell4fios8platform6rwlock9writeLockEv(int param_1);
-void lwmutex_unlock_checked(int param_1);
-void lwmutex_lock_checked(int param_1);
-void FUN_0052df14(int param_1);
 undefined4 get_default_fs(void);
 extern "C" undefined4 _ZN4cell4fios9scheduler12seekFileSyncEPKNS0_8opattr_tEPNS0_10filehandleExhPx(int param_1,undefined4 param_2,int param_3,undefined8 param_4,undefined1 param_5, undefined4 param_6);
 extern "C" void _ZN4cell4fios9scheduler8deleteOpEPNS0_2opE(int param_1,undefined4 *param_2);
-extern "C" undefined8 _ZN4cell4fios9scheduler8syncFileEPKNS0_8opattr_tEPNS0_10filehandleE(int param_1,undefined8 param_2,int param_3);
 extern "C" undefined8 _ZN4cell4fios9scheduler8openFileEPKNS0_8opattr_tEPKcjPPNS0_10filehandleE(undefined4 param_1,int param_2,byte *param_3,ulonglong param_4,int *param_5);
-extern "C" undefined8 _ZN4cell4fios9scheduler8readFileEPKNS0_8opattr_tEPKcPvxx(undefined8 param_1,int param_2,byte *param_3,undefined4 param_4,longlong param_5, longlong param_6);
 extern "C" undefined8 _ZN4cell4fios9scheduler10statCommonEPKNS0_8opattr_tEPKcPvNS0_2op10e_OPSTAGESE(undefined8 param_1,int param_2,byte *param_3,int param_4,uint param_5);
 extern "C" undefined8 _ZN4cell4fios9scheduler9closeFileEPKNS0_8opattr_tEPNS0_10filehandleE(int param_1,undefined8 param_2,int param_3);
 extern "C" undefined4 _ZN4cell4fios9scheduler8readFileEPKNS0_8opattr_tEPNS0_10filehandleEPvxx (int param_1,int param_2,int param_3,undefined4 param_4,longlong param_5,longlong param_6);
 extern "C" undefined4 _ZN4cell4fios9scheduler9writeFileEPKNS0_8opattr_tEPNS0_10filehandleEPKvxx(int param_1,undefined8 param_2,int param_3,undefined4 param_4,longlong param_5, longlong param_6);
-void FUN_00526d58(int param_1,undefined4 param_2,undefined8 param_3,undefined8 param_4, undefined4 param_5);
-extern "C" void _ZN4cell4fios5watch20ReportEventCacheFillEPKNS0_2opEPKcxxi(int param_1,undefined4 param_2,undefined8 param_3,undefined8 param_4, undefined4 param_5);
 void cellGcmSetWriteCommandLabel(int param_1,uint param_2,undefined4 param_3);
 extern "C" void _ZSt6_ThrowRKSt9exception(int *param_1);

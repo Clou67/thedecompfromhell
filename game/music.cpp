@@ -28,7 +28,7 @@
 #include "idol/fastfunc.h"
 #include "idol/idol.h"
 #include "idol/sound.h"
-#include "sdk/libscream/989snd.h"
+#include "sdk/libscream/common/snd_stream.h"
 #include <ctype.h>
 
 /* music_Playing.status */

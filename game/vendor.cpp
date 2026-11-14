@@ -36,7 +36,7 @@
 #include "idol/idoldraw_ps3.h"
 #include "idol/mUnk.h"
 #include "idol/tiefunc.h"
-#include "sdk/rUnk2.h"
+#include "sdk/libscream/common/api.h"
 #include "idol/fastinline.h"
 #include <cell/gcm/gcm_macros.h>
 #include <cell/gcm/gcm_enum.h>

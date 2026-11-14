@@ -48,7 +48,7 @@
 #include "idol/sound.h"
 #include "idol/tiefunc.h"
 #include "sdk/linked.h"
-#include "sdk/rUnk2.h"
+#include "sdk/libscream/common/api.h"
 #include "sdk/sce.h"
 #include "sdk/xUnk5.h"
 #include "idol/fastinline.h"

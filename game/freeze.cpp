@@ -27,7 +27,7 @@
 #include "idol/fastfunc.h"
 #include "idol/idol.h"
 #include "sdk/linked.h"
-#include "sdk/rUnk2.h"
+#include "sdk/libscream/common/api.h"
 #include "idol/fastinline.h"
 
 #define FREEZE_OPEN_FRAMES   30.5f      /* constants at 0x7816c */

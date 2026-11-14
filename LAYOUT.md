@@ -5,7 +5,7 @@ Evidence: SECTION_HEADER_* starts a file; moby helpers come first and the `Updat
 Unknown objects are named `<first letter of the previous linked object>Unk.cpp`. Folders follow link position: everything up to the end of the moby sea is `game/`; game-labelled code after it is `idol/`.
 Shared update functions are named `UpdateMoby_<first oClass>`, with every registered oClass in a comment.
 
-11433 functions, 1229 files: 947 `game/update/moby*.cpp`, 24 `game/update/camera*.cpp`.
+11433 functions, 1240 files: 947 `game/update/moby*.cpp`, 24 `game/update/camera*.cpp`.
 
 | file | funcs | start | end |
 |---|---|---|---|
@@ -108,8 +108,8 @@ Shared update functions are named `UpdateMoby_<first oClass>`, with every regist
 | sdk/libfios/fios_ps3ppu.cpp | 1 | 0x52ea40 | 0x52eb40 |
 | sdk/libfios/psarclib_md5.cpp | 11 | 0x52eb40 | 0x52fba8 |
 | sdk/libfios/psarclib_parser.cpp | 19 | 0x52fba8 | 0x5309c8 |
-| sdk/libfios/fios_caching.cpp | 44 | 0x5309c8 | 0x53562c |
-| sdk/fUnk4.cpp | 10 | 0x53562c | 0x5392c4 |
+| sdk/libfios/fios_caching.cpp | 50 | 0x5309c8 | 0x537da8 |
+| sdk/fUnk4.cpp | 4 | 0x5390ac | 0x5392c4 |
 | sdk/libfios/fios_filehandle.cpp | 5 | 0x5392c4 | 0x539920 |
 | sdk/fUnk5.cpp | 19 | 0x539920 | 0x53c1f0 |
 | sdk/libscream/loader.cpp | 4 | 0x53c1f0 | 0x53c4e0 |
@@ -252,11 +252,22 @@ Shared update functions are named `UpdateMoby_<first oClass>`, with every regist
 | sdk/libbink/rrthreads.cpp | 56 | 0x5fbd88 | 0x5fd9f4 |
 | sdk/libbink/binkdecode.cpp | 22 | 0x5fd9f8 | 0x60404c |
 | sdk/libbink/rrstring.cpp | 18 | 0x604050 | 0x604574 |
-| sdk/rUnk2.cpp | 290 | 0x604574 | 0x6169e4 |
-| sdk/libscream/LFO.cpp | 13 | 0x6169e4 | 0x61768c |
-| sdk/lUnk.cpp | 42 | 0x61768c | 0x61948c |
-| sdk/libscream/989snd.cpp | 524 | 0x61948c | 0x63fb20 |
-| idol/9Unk.cpp | 12 | 0x63fb20 | 0x63ff34 |
+| sdk/libscream/common/snd_fios.cpp | 47 | 0x604574 | 0x605254 |
+| sdk/libscream/common/api.cpp | 112 | 0x605254 | 0x60ccc4 |
+| sdk/libscream/common/autopan.cpp | 3 | 0x60ccc4 | 0x60cf9c |
+| sdk/libscream/common/autopb.cpp | 3 | 0x60cf9c | 0x60d1c8 |
+| sdk/libscream/common/autoptch.cpp | 3 | 0x60d1c8 | 0x60d434 |
+| sdk/libscream/common/autovol.cpp | 1 | 0x60d434 | 0x60d5b0 |
+| sdk/libscream/common/blocksnd.cpp | 41 | 0x60d5b0 | 0x6104e8 |
+| sdk/libscream/common/grains.cpp | 97 | 0x6104e8 | 0x6177f4 |
+| sdk/libscream/common/loader.cpp | 54 | 0x6177f4 | 0x619a90 |
+| sdk/libscream/common/sndhand.cpp | 52 | 0x619a90 | 0x61d3a0 |
+| sdk/libscream/common/valloc.cpp | 43 | 0x61d3a0 | 0x622044 |
+| sdk/libscream/989snd.cpp | 226 | 0x622044 | 0x6317b0 |
+| sdk/libscream/common/snd_stream.cpp | 117 | 0x6317b0 | 0x6374f0 |
+| sdk/libscream/common/snd_stream_scream.cpp | 28 | 0x63753c | 0x63a208 |
+| sdk/libscream/common/snd_stream_threading.cpp | 17 | 0x63a208 | 0x63c564 |
+| sdk/libscream/common/snd_stream_parsing.cpp | 37 | 0x63c564 | 0x63ff34 |
 | sdk/libscream/sndhost.cpp | 161 | 0x63ff34 | 0x648b10 |
 | sdk/libbrb/brb.cpp | 86 | 0x648b10 | 0x64ece0 |
 | sdk/libstdcxx/bad_alloc.cpp | 5 | 0x64ece0 | 0x64eda4 |
