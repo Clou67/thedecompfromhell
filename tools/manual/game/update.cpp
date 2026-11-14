@@ -473,7 +473,7 @@ void mode_sceneInit(int absolute_scene_id)
     FastMemSet(&DAT_00a1bf00, 0, 0x40);
 
     g_SceneCheatZoom = 1.0f;
-    DAT_00e5aa64 -= 0x3c000;
+    vu1_bufSize -= 0x3c000;
     g_SceneCheatDolly = 0.0f;
     g_SpaceSceneFrame = 0;
     g_SpaceSceneChunk = 0;

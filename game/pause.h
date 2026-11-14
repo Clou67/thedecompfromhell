@@ -62,7 +62,6 @@ extern undefined4 DAT_0071fa4c; /* 0x71fa4c */
 extern undefined4 DAT_0071fa50; /* 0x71fa50 */
 extern undefined4 DAT_0071faec; /* 0x71faec */
 extern undefined4 DAT_0071fb18; /* 0x71fb18 */
-extern undefined4 DAT_0071fbd4; /* 0x71fbd4 */
 extern undefined4 DAT_007208ce; /* no defined data */
 extern undefined4 DAT_00721008; /* 0x721008 */
 extern undefined4 DAT_00721010; /* 0x721010 */
@@ -443,6 +442,7 @@ extern int g_SaveCurFile; /* 0x71fa38: the save list entry selected */ /* type s
 extern u8 *g_ScratchBuf; /* 0x902ec8: scratch memory shared by the drawing code (water uses it as a WaterStage) */ /* type set in global_types.tsv */
 extern undefined4 g_SelectedLevel; /* 0xa206e4 */
 extern char g_SkillPoints[32]; /* 0x96c08c */
+extern int g_Vu1Reserve; /* 0x71fbd4: bytes kept free at the top of a chain buffer (pause.cpp sets 0x2000 or 0x1e000) */ /* type set in global_types.tsv */
 extern undefined4 g_currentMenuPage; /* 0xa52bb4 */
 extern Items g_goldWeaponsArray; /* 0x969ca8 */
 extern undefined4 g_menuClosing; /* 0xa52bbc */

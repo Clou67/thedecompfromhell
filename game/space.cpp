@@ -96,7 +96,7 @@ static inline void ShipBoardPoint(Vec4 *out, MobyInstance *ship)
 static inline void SpaceSceneBuffers(void)
 {
     VU1_setBufSizeByLevel();
-    DAT_00e5aa64 -= 0x60000;
+    vu1_bufSize -= 0x60000;
     g_SceneLoadBuffer = g_NpcBuffer + 0x200000;
     DAT_0095cda8 = g_NpcBuffer;
 }
@@ -335,7 +335,7 @@ void PlaySpaceCutscene(int cutscene)
     FastMemSet(&DAT_00a1be80, 0, 0x40);
     FastMemSet(&DAT_00a1bec0, 0, 0x40);
     VU1_setBufSizeByLevel();
-    DAT_00e5aa64 -= 0x60000;
+    vu1_bufSize -= 0x60000;
     g_SceneLoadBuffer = g_NpcBuffer + 0x200000;
     DAT_0095cda8 = g_NpcBuffer;
     SceneScreenFade = 1.0f;
@@ -480,7 +480,7 @@ void Space_StartLevelArrival(void)
         g_SpaceCutsceneTimer = -1;
         SceneScreenFade = 1.0f;
         VU1_setBufSizeByLevel();
-        DAT_00e5aa64 -= 0x60000;
+        vu1_bufSize -= 0x60000;
         DAT_0095cda8 = g_NpcBuffer;
         g_SceneLoadBuffer = g_NpcBuffer + 0x200000;
         PlaySpaceCutscene(8);
@@ -1970,7 +1970,7 @@ void SpaceTransition_LoadWad(void)
     g_heroMobyPtr = NULL;
     g_SceneFlash = 0.0f;
     g_CutscenePlaying = 0;
-    DAT_00e5aa64 = 0x100000;
+    vu1_bufSize = 0x100000;
     InitMemSlots();
     g_GsRamAlloc = GSmem.base;
     g_GsRamBase = GSmem.base;

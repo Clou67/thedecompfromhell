@@ -185,7 +185,6 @@ extern int g_VendorSetupPending; /* 0xe5a65c: the vendor finished opening; set t
 extern float g_VendorSpin; /* 0xe5a950: angle of the spinning preview parts */ /* type set in global_types.tsv */
 extern Vec4 g_VendorSpinOffset; /* 0x738880: where the spinning preview parts (mobies 2 and 3) sit */ /* type set in global_types.tsv */
 extern int g_VendorStateFrames; /* 0xe5a654: frames in the current g_OpenVendorState */ /* type set in global_types.tsv */
-extern int g_VendorUnkAa64; /* 0xe5aa64: set to 0x60000 before the vendor screen's first present (not read in vendor.cpp) */ /* type set in global_types.tsv */
 extern int g_WeaponCutscenes[]; /* 0x73a240: the weapon cutscene of each item */ /* type set in global_types.tsv */
 extern undefined4 g_boltCount; /* 0x969ca0 */
 extern int g_lastVendorWasPda; /* 0xe5a690 */ /* type set in global_types.tsv */

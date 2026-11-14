@@ -163,7 +163,7 @@ void InitOnce(void)
     STUB_005031f8(0);
     pad_Init();
     STUB_00503208((void *)Respawn_IncCounter);
-    DAT_00e5aa64 = 0x160000;
+    vu1_bufSize = 0x160000;
     InitMemSlots();
     STUB_005031f8(0);
     cellSysutilCheckCallback();

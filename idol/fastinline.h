@@ -150,3 +150,34 @@ static inline void VecTranspose4(struct Mtx4 *out, const struct Mtx4 *source)
     VecStore4(&out->v2, vec_mergeh(low02, low13));
     VecStore4(&out->v3, vec_mergel(low02, low13));
 }
+
+/* one int in all four words (stored four times and loaded with lvx) */
+static inline VecU VecSplatU(u32 value)
+{
+    union { u32 u[4]; VecU v; } splat = { { value, value, value, value } };
+
+    return splat.v;
+}
+
+/* byte index of a 16-byte vector, through vspltb and a store (how the chain dump reads bytes) */
+static inline u8 VecByte(vector unsigned char v, int index)
+{
+    union { vector unsigned char v; u8 b[16]; } out;
+
+    switch (index) {
+    case 1:
+        out.v = vec_splat(v, 1);
+        break;
+    case 2:
+        out.v = vec_splat(v, 2);
+        break;
+    case 3:
+        out.v = vec_splat(v, 3);
+        break;
+    default:
+        out.v = v;
+        break;
+    }
+
+    return out.b[0];
+}

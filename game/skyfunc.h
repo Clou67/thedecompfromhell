@@ -46,6 +46,15 @@ struct sky_sprite {
 };
 typedef char sky_sprite_size_check[sizeof(struct sky_sprite) == 0x20 ? 1 : -1];
 
+struct sky_tex {
+    uint tex0;
+    uint tex1;
+    ushort tex_ofs;
+    ushort pal_ofs;
+    ushort u_log;
+    ushort v_log;
+};
+
 // ---- globals
 extern undefined4 DAT_00731a6c; /* 0x731a6c */
 extern SKY * Sky; /* 0xa1a79c */

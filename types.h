@@ -374,6 +374,18 @@ struct CollTri { /* Env/moby collision face: 3 vertex indices + collision type (
     char collType;
 };
 
+struct EffectTexHeader { /* Pre-baked RSX texture registers; words 0-6 go to methods 0x1A00+unit*0x20 (OFFSET,FORMAT,ADDRESS,CONTROL0,CONTROL1,FILTER,IMAGE_RECT), word 7 to 0x1840+unit*4 (CONTROL3) */
+    int offset;
+    int format;
+    int address;
+    int control0;
+    int control1;
+    int filter;
+    int imageRect;
+    int control3;
+    int unknown_20;
+};
+
 struct GSMEM_UNUSED {
     int display;
     int draw;
@@ -2572,15 +2584,6 @@ struct ShipsKilledStruct {
     int Veldin2;
 };
 
-struct sky_tex {
-    uint tex0;
-    uint tex1;
-    ushort tex_ofs;
-    ushort pal_ofs;
-    ushort u_log;
-    ushort v_log;
-};
-
 typedef ulonglong uint16;
 
 typedef uint undefined3;
@@ -3080,6 +3083,7 @@ extern undefined4 DAT_00e5aa2c; /* 0xe5aa2c */
 extern undefined4 DAT_00e5aa30; /* 0xe5aa30 */
 extern undefined1 DAT_00e5aa34; /* 0xe5aa34 */
 extern undefined1 DAT_00e5aa35; /* 0xe5aa35 */
+extern undefined4 DAT_00e5aa54; /* 0xe5aa54 */
 extern undefined4 DAT_00e5aad0; /* 0xe5aad0 */
 extern undefined4 DAT_00e5aad4; /* 0xe5aad4 */
 extern undefined4 DAT_00ec4080; /* no defined data */

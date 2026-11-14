@@ -1020,7 +1020,7 @@ errors	file
 1	game/update/sound5.cpp
 0	game/update/sound6.cpp
 0	game/vendor.cpp
-53	game/vuchain.cpp
+0	game/vuchain.cpp
 0	game/walk.cpp
 0	game/water.cpp
 23	idol/9Unk.cpp

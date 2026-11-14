@@ -2023,7 +2023,7 @@ void InitLevelRenderState(void)
         return;
     }
 
-    DAT_010ee2f0 = 0xffffffff;
+    g_GsRegBlend = 0xffffffff;
     idol_draw::InitFrameRenderState((int)(uintptr_t)&DAT_01111700, DirectionalLights, 16, PointLights, 8, &g_HeroLightDir, 4);
     DrawPauseMenu(0);
 }

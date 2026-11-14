@@ -462,7 +462,7 @@ int Vendor_StartWeaponCutscene(void)
     FastMemSet(&DAT_00a1be80, 0, 0x40);
     STUB_00174cf4(1);
     VU1_setBufSizeByLevel();
-    DAT_00e5aa64 -= 0x40000;
+    vu1_bufSize -= 0x40000;
     DAT_0095cda8 = g_NpcBuffer;
     g_SceneLoadBuffer = g_NpcBuffer + 0x80000;
     g_SceneFlash = 0.0f;
@@ -538,7 +538,7 @@ int StartGadgetPickupCutscene(MobyInstance *moby, int item)
     FastMemSet(&DAT_0095cd50, 0, 0x1c0);
     FastMemSet(&DAT_00a1be80, 0, 0x40);
     VU1_setBufSizeByLevel();
-    DAT_00e5aa64 -= 0x40000;
+    vu1_bufSize -= 0x40000;
     DAT_0095cda8 = g_NpcBuffer;
     g_SceneLoadBuffer = g_NpcBuffer + 0x200000;
     SceneScreenFade = 1.0f;
@@ -2736,7 +2736,7 @@ void Vendor_PostUpdate(void)
         g_VendorSetupPending = 0;
         g_VendorDrawMode = 1;
         g_MainLoopFrames++;
-        g_VendorUnkAa64 = 0x60000;
+        vu1_bufSize = 0x60000;
         Draw_FlushAndPresent();
 
         g_VendorMoby->scale = 0.141908f;

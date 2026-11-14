@@ -3,8 +3,6 @@
 #include "types.h"
 
 // ---- types
-typedef unsigned long long    qword;
-
 /* header of a .pif texture file (DL: PifHeader, same layout); the clut, then the mips follow */
 struct PifHeader {
     int pifID;               /* 0x00 */

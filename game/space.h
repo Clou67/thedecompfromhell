@@ -25,7 +25,6 @@ extern undefined4 DAT_00a1be80; /* no defined data */
 extern undefined4 DAT_00a1bec0; /* no defined data */
 extern undefined8 DAT_00a561c8; /* 0xa561c8 */
 extern undefined8 DAT_00a561d0; /* 0xa561d0 */
-extern undefined4 DAT_00e5aa64; /* 0xe5aa64 */
 extern pointer32 PTR_UpdateMoby_Spaceship_00707c58; /* 0x707c58 */
 extern float SceneScreenFade; /* 0x95cf10 */
 extern Planets VisitedPlanets; /* 0x96ca20 */
@@ -105,6 +104,7 @@ extern undefined4 g_shipCameraEndCuboid; /* 0x9645a8 */
 extern undefined4 g_shipCameraStartCuboid; /* 0x9645a4 */
 extern undefined4 g_shipSplinePath; /* 0x9645a0 */
 extern short g_spaceArrivalPending; /* 0x96459c */ /* type set in global_types.tsv */
+extern int vu1_bufSize; /* 0xe5aa64: size of a VU1 chain buffer (DL name); per level from vu1_buf_table, shrunk while scenes and the vendor use the top for themselves */ /* type set in global_types.tsv */
 
 // ---- functions
 void SECTION_HEADER_SPACE(void);

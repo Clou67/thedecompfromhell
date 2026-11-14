@@ -722,7 +722,7 @@ void Load_Front_End(void)
     g_FrontEndTimer = 0;
     VU1_setBufSizeByLevel();
     InitMemSlots();
-    DAT_00e5aa64 = 0x100000;
+    vu1_bufSize = 0x100000;
     g_GsRamBase = 0x2c0000;
     g_GsRamAlloc = 0x2c0000;
     GSmem.base = 0x2c0000;

@@ -69,6 +69,7 @@ extern undefined4 DAT_00041834; /* 0x41834 */
 extern undefined4 DAT_0004183c; /* 0x4183c */
 extern undefined4 DAT_00041840; /* 0x41840 */
 extern undefined4 DAT_00041844; /* 0x41844 */
+extern undefined4 DAT_00080a00; /* 0x80a00 */
 extern undefined4 DAT_00081a00; /* 0x81a00 */
 extern undefined4 DAT_00180208; /* 0x180208 */
 extern undefined4 DAT_004804d0; /* 0x4804d0 */
@@ -233,13 +234,6 @@ extern undefined4 DAT_010ee15c; /* 0x10ee15c */
 extern undefined4 DAT_010ee1c0; /* 0x10ee1c0 */
 extern undefined4 DAT_010ee1e4; /* 0x10ee1e4 */
 extern undefined4 DAT_010ee208; /* 0x10ee208 */
-extern undefined8 DAT_010ee2e8; /* 0x10ee2e8 */
-extern undefined8 DAT_010ee2f0; /* 0x10ee2f0 */
-extern undefined4 DAT_010ee2f8; /* 0x10ee2f8 */
-extern undefined4 DAT_010ee2fc; /* 0x10ee2fc */
-extern undefined8 DAT_010ee300; /* 0x10ee300 */
-extern undefined8 DAT_010ee308; /* 0x10ee308 */
-extern undefined8 DAT_010ee318; /* 0x10ee318 */
 extern undefined1 DAT_010ee328; /* 0x10ee328 */
 extern undefined4 DAT_010ee330; /* no defined data */
 extern undefined4 DAT_010ee630; /* 0x10ee630 */
@@ -490,6 +484,14 @@ extern undefined4 _DAT_004e2dd0; /* direct read */
 extern undefined4 _DAT_011116a0; /* direct read */
 extern undefined4 _DAT_011116b0; /* direct read */
 extern undefined4 _DAT_011116c0; /* direct read */
+extern u64 g_GsReg7; /* 0x10ee2e8: SetGSReg id 7 */ /* type set in global_types.tsv */
+extern u64 g_GsReg8; /* 0x10ee310: SetGSReg id 8 */ /* type set in global_types.tsv */
+extern u64 g_GsRegBlend; /* 0x10ee2f0: SetGSReg id 0x16, the blend mode (idol_draw::Blend) */ /* type set in global_types.tsv */
+extern u64 g_GsRegTest; /* 0x10ee318: SetGSReg id 3, the alpha/depth test (idol_draw::PackCmd) */ /* type set in global_types.tsv */
+extern u64 g_GsRegTex1; /* 0x10ee300: SetGSReg id 0x1a (SCE_GS_SET_TEX1) */ /* type set in global_types.tsv */
+extern u32 g_GsRegTexHeader0; /* 0x10ee2f8: SetGSReg id 0x18, the effect texture header for unit 0 (address) */ /* type set in global_types.tsv */
+extern u32 g_GsRegTexHeader1; /* 0x10ee2fc: SetGSReg id 0x19, the same for unit 1 */ /* type set in global_types.tsv */
+extern u64 g_GsRegZbuf; /* 0x10ee308: SetGSReg id 0x21 (VU1_addGSregister of the z buffer) */ /* type set in global_types.tsv */
 extern u8 g_PartNoShrink; /* 0x8fa54c: set: DrawParts does not shrink big particles */ /* type set in global_types.tsv */
 extern void *g_pGame; /* 0x902ecc: Idol's game object (0x90d770) */ /* type set in global_types.tsv */
 extern void * g_pHWSystem; /* 0x902ed0 */

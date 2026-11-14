@@ -258,3 +258,27 @@ spot-checked, not traced instruction by instruction.
 - **Files made worse (+1 error each):** game/update/moby124, 126, 1260, 460, 879, 317, 327, 994, 1018.
   Their raw Ghidra calls still pass OceanPlane_SetDepth/SetDefaultDepth and the font/lava calls in
   the old argument order. They will go away when those files are cleaned.
+
+## game/vuchain.cpp
+
+All 29 functions are checked against the asm; 16 of them are empty stubs.
+
+- **Names from DL** (its vuchain.cpp): VU1_* and VU0_loadMicroProgram as they were, plus the
+  globals `vu1_bufSize` (was `DAT_00e5aa64`, which vendor.cpp had called `g_VendorUnkAa64`),
+  `vu1_buf_table`, `vu1_DmaBuffers`, `vu1_bufId` and `vu1_bufLimit`. The role of `vu1_bufLimit`
+  is guessed from how it's computed.
+- **Invented names:** `vu1_chainEnd`, `vu1_bufLimitSafe`, `g_VifBuffers`, `g_Vu1Reserve`,
+  `g_D1Chcr`/`g_D1Tadr`, and the `g_GsReg*` state SetGSReg keeps. Ids 7 and 8 are unknown, so
+  they are named by number. `____Unused_VuChain_SetBufSize_10000` became `SECTION_HEADER_VUCHAIN`,
+  since it has the same shape as the other files' section headers (`DAT_0073a768 = 0x10000`).
+- **Signatures:** VU0_loadMicroProgram takes (program, dest), where DL has one parameter;
+  VU1_addDataRefToLoc and VU1_addDataDirect take (vuAddr, data, qwc). DMAC_BEIS_Handler is `void`
+  here; DL gives it an int, but the asm reads nothing.
+- **Guessed literals:** VU1_setScissor's literal pool (0x1750b8, three words) isn't in the dump. It
+  is written as the mask 0xffff, 0.5 and -0.5, matching BeginAuxDrawMode's viewport. Check these
+  against the EBOOT.
+- **AltiVec:** VU1_setScissor (vsubuwm, vadduwm, vand, vcfux, vmaddfp, vaddfp, stvewx) and
+  VU1_dumpChain (lvx, vspltb) use intrinsics. The new fastinline.h helpers are VecSplatU and
+  VecByte.
+- **Packet bytes:** the packet writers store one byte per PS2 word (`stb`), as the port's code
+  does. That looks like a leftover from the port, but it's what the code does.
