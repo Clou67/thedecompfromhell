@@ -717,7 +717,7 @@ void DrawMapFrame(void)
             int x = cell % 16 * mapW;
             int y = cell / 16 * mapH;
 
-            DrawFlatOverlay(x / 16 + left, y / 16 + top, (x + mapW) / 16 + left, (y + mapH) / 16 + top, FUN_00502f74_RET_0(0, 0, 0, 0x20, 0), 1);
+            DrawFlatOverlay(x / 16 + left, y / 16 + top, (x + mapW) / 16 + left, (y + mapH) / 16 + top, STUB_00502f74_RET_0(0, 0, 0, 0x20, 0), 1);
         }
     }
 

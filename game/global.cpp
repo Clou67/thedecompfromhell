@@ -64,8 +64,8 @@ void Global_InitGsRegs(void)
     fixed[22] = STUB_00502e20_RET_0();
     fixed[24] = STUB_00502e28_RET_0();
     fixed[26] = STUB_00502e30_RET_0();
-    fixed[28] = FUN_00502f98(1, 5, 0x60, 3, 0, 0, 1, 2);
-    fixed[30] = FUN_00502f98(1, 5, 0x60, 3, 0, 0, 1, 2);
+    fixed[28] = GsPackTest(1, 5, 0x60, 3, 0, 0, 1, 2);
+    fixed[30] = GsPackTest(1, 5, 0x60, 3, 0, 0, 1, 2);
     fixed[32] = STUB_00502e38_RET_0();
     fixed[34] = STUB_00502e40_RET_0();
 

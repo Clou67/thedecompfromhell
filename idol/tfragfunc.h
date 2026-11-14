@@ -22,6 +22,6 @@ extern pointer32 PTR_FUN_00712268; /* 0x712268 */
 // ---- functions
 void DrawTfrag(int param_1,RsxCmd *param_2,int *param_3);
 void DrawTfrag(int param_1,undefined8 param_2);
-int FUN_0050bf68(uint *param_1,uint *param_2);
-void FUN_0050bfd4(int param_1);
-void FUN_0050c020(int param_1,undefined4 *param_2);
+int TerrainMaterialCompare(uint *param_1,uint *param_2);
+void SortTerrainMaterials(int param_1);
+void CullTieInstances(int param_1,undefined4 *param_2);

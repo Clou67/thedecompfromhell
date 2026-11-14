@@ -54,9 +54,9 @@ enum {
 void MCSTATE_InitColors(void)
 {
     g_CardMsgScale = 0x10000;
-    g_CardMsgBgColor = FUN_00502f74_RET_0(0, 0, 0, 0x80, 0);
-    g_CardMsgTextColor = (u32)FUN_00502f74_RET_0(0xff, 0xff, 0xaf, 0x80, 0);
-    g_CardMsgTextClear = (u32)FUN_00502f74_RET_0(0xff, 0xff, 0xaf, 0, 0);
+    g_CardMsgBgColor = STUB_00502f74_RET_0(0, 0, 0, 0x80, 0);
+    g_CardMsgTextColor = (u32)STUB_00502f74_RET_0(0xff, 0xff, 0xaf, 0x80, 0);
+    g_CardMsgTextClear = (u32)STUB_00502f74_RET_0(0xff, 0xff, 0xaf, 0, 0);
 }
 
 /* a failure the save code reported: show its message */

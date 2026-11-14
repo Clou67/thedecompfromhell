@@ -1764,7 +1764,7 @@ int LoadLevelFiles(void)
     int variant = g_SpaceshipVariant;
     short stage = g_LoadingStage;
 
-    if (FUN_00503128_RET_0(1) != 0) {
+    if (STUB_00503128_RET_0(1) != 0) {
         DAT_009636c0++;
         g_LoadingStage = stage;
         return 0;
@@ -1815,10 +1815,10 @@ int LoadLevelFiles(void)
 
     case LOAD_STAGE_GAMEPLAY:
         if (Cutscene == 0) {
-            FUN_00503404(g_IopGameplay, "gameplay_ntsc");
+            m_LoadLevelFileS(g_IopGameplay, "gameplay_ntsc");
         }
         else {
-            FUN_00503404(g_IopGameplay, "gameplay_pal");
+            m_LoadLevelFileS(g_IopGameplay, "gameplay_pal");
         }
         stage = g_LoadingStage + 1;
         break;

@@ -764,7 +764,7 @@ void ____Space_TransitionDrawPass(void)
     EmitMethod(ForwardPass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 1 * 4, VTX_DISABLED);
     EmitMethod(ForwardPass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 3 * 4, VTX_DISABLED);
 
-    SetGSReg(0x16, FUN_00502f98(1, 5, 0x60, 3, 0, 0, 1, 2));
+    SetGSReg(0x16, GsPackTest(1, 5, 0x60, 3, 0, 0, 1, 2));
 }
 
 static inline void DrawBanner(u32 color)
@@ -773,7 +773,7 @@ static inline void DrawBanner(u32 color)
     SetGSReg(3, idol_draw::PackCmd(0, 1, 0, 1, 0x80));
     Sprite_DrawShape(0x20, 0x168, 0x100, 0x20, 0, 0, 0x100, 0x20, color,
                      (void *)(uintptr_t)(*(u32 *)(DAT_00a10920 + 0xc) + (u32)DAT_00a561d0 * 0x24));
-    SetGSReg(0x16, FUN_00502f98(1, 5, 0x60, 3, 0, 0, 1, 2));
+    SetGSReg(0x16, GsPackTest(1, 5, 0x60, 3, 0, 0, 1, 2));
 }
 
 
@@ -1993,7 +1993,7 @@ void SpaceTransition_LoadWad(void)
     wad->languageVram = (wad->planetVram + 0x2003f) & ~0x3f;
 
     FadeToBlack(ScaledFrames(12.5f));
-    FUN_00503128_RET_0(0);
+    STUB_00503128_RET_0(0);
 
     /* the planet's picture and name go in two spare texture headers after the wad's */
     int texBase = (int)(DAT_00a10924 - *(u32 *)(g_pIdolDraw + 0x4ac));
@@ -2195,7 +2195,7 @@ void LoadSpacePlate(int plate, int texA, int texB, u32 *outHeaders, u32 *outTexA
     *outHeaders = headers;
     *outTexA = headers + texA * TEX_HEADER_SIZE;
     *outTexB = headers + texB * TEX_HEADER_SIZE;
-    FUN_00503128_RET_0(0);
+    STUB_00503128_RET_0(0);
 }
 
 static inline void PlateCard(int y, u32 color, int u0, int u1, u32 headers, u32 tex)
@@ -2226,7 +2226,7 @@ void PlaySpacePlate(int plate, int texA, int texB, int frames, int loadLevel)
 
     for (int i = 0; i < frames; i++) {
         UpdateOcclusion(0);
-        SetGSReg(0x15, FUN_00502f74_RET_0(0, 0, 0, 0x80, 0));
+        SetGSReg(0x15, STUB_00502f74_RET_0(0, 0, 0, 0x80, 0));
         SetGSReg(6, SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0));
 
         /* in over 32 frames, out over the last 16 */
@@ -2346,7 +2346,7 @@ void DoSpaceTransition(void)
         FadeToBlack(ScaledFrames(6.5f));
         Level = (LevelId)g_newlevelnum;
         STUB_000def38_RET_1();
-        FUN_00503128_RET_0(0);
+        STUB_00503128_RET_0(0);
         g_FinishedLoading = 0;
         STUB_001754e0();
         return;
@@ -2442,7 +2442,7 @@ void DoSpaceTransition(void)
         }
     }
 
-    FUN_00503128_RET_0(0);
+    STUB_00503128_RET_0(0);
     g_FinishedLoading = 0;
     STUB_001754e0();
 }

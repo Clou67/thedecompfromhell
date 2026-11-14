@@ -4,10 +4,10 @@
 
 // ---- functions
 namespace idol { int GetAnimDuration(int param_1); } 
-void FUN_005e7e70(undefined4 *param_1);
-void FUN_005e7e98(undefined4 *param_1,undefined4 *param_2);
-double FUN_005e7ebc(float *param_1);
-bool FUN_005e7ed8(double param_1,float *param_2,float *param_3);
-void FUN_005e7f54(float *param_1,float *param_2,float *param_3);
-void FUN_005e7f98(double param_1,float *param_2,float *param_3);
-double FUN_005e8030(float *param_1);
+void Vec4Zero(undefined4 *param_1);
+void Vec4Copy(undefined4 *param_1,undefined4 *param_2);
+double Vec2Length(float *param_1);
+bool Vec2ClampLength(double param_1,float *param_2,float *param_3);
+void Vec3Add(float *param_1,float *param_2,float *param_3);
+void Vec3SetLength(double param_1,float *param_2,float *param_3);
+double Vec3Length(float *param_1);

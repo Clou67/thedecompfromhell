@@ -148,12 +148,12 @@ void ShadowClearStencil(void)
     g_pPacket += 16;
     words[2] = SCE_GIF_SET_TAG(1, 0, 0, 0, 0, 1);
     words[3] = 0xe;
-    words[4] = FUN_00502f98(1, 0, 0, 1, 0, 0, 1, 1);
+    words[4] = GsPackTest(1, 0, 0, 1, 0, 0, 1, 1);
     words[5] = 0x16;
     words[6] = SCE_GIF_SET_TAG(1, 1, 0, 0, 1, 2);
     words[7] = 0x10;
     words[8] = SCE_GS_SET_PRIM(0xf, 0, 0, 0, 1, 0, 1, 0);
-    words[9] = FUN_00502f74_RET_0(0x80, 0x80, 0x80, 0x7f, 0);
+    words[9] = STUB_00502f74_RET_0(0x80, 0x80, 0x80, 0x7f, 0);
     words[10] = SCE_GIF_SET_TAG(strips, 1, 0, 0, 1, 2);
     words[11] = 0x44;
     ShadowFullScreenStrips(packet, strips);
@@ -259,7 +259,7 @@ void shadow_init_gs_regs(void)
 
     for (int i = 0; i < 4; i++) {
         shadow_gs_regs.blends[i][0] = SCE_GIF_SET_TAG(2, 1, 0, 0, 0, 1);
-        shadow_gs_regs.blends[i][2] = FUN_00502f98(1, 0, 0, 1, 0, 0, 1, i);
+        shadow_gs_regs.blends[i][2] = GsPackTest(1, 0, 0, 1, 0, 0, 1, i);
     }
 
     shadow_gs_regs.stencils[0][0] = SCE_GIF_SET_TAG(6, 1, 0, 0, 0, 1);

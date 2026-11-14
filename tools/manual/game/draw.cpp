@@ -3249,7 +3249,7 @@ void BeginAuxDrawMode(float xratio, int log2Width, int log2Height, int flag, u32
     EmitMethod(HUD_Pass, CELL_GCM_NV4097_CLEAR_SURFACE, CELL_GCM_CLEAR_Z | CELL_GCM_CLEAR_S | CELL_GCM_CLEAR_R | CELL_GCM_CLEAR_G | CELL_GCM_CLEAR_B | CELL_GCM_CLEAR_A);
     EmitMethod(HUD_Pass, CELL_GCM_NV4097_NO_OPERATION, 0);
 
-    SetGSReg(0x16, FUN_00502f98(0, 0, 0, 0, 0, 0, 1, 1));
+    SetGSReg(0x16, GsPackTest(0, 0, 0, 0, 0, 0, 1, 1));
     SetGSReg(3, idol_draw::PackCmd(0, 1, 0, 1, 0x80));
 }
 
@@ -4439,7 +4439,7 @@ static inline u64 *SkyStripLayer(u64 *out, u32 qBits, float texQ, float texLeft,
     int posX = 0;
 
     for (int i = 0; i < 16; i++) {
-        out[0] = FUN_00502f74_RET_0(0x80, 0x80, 0x80, 0x60, qBits);
+        out[0] = STUB_00502f74_RET_0(0x80, 0x80, 0x80, 0x60, qBits);
         out[1] = STUB_00503034_RET_0(((float)i * 0.0625f + texLeft) * texQ, -(camZ * texQ));
         out[2] = SCE_GS_SET_XYZ(posX + 0x7000, 0x7200, 0);
         out[3] = STUB_00503034_RET_0(((float)(i + 1) * 0.0625f + texLeft) * texQ, camFar * texQ);
@@ -4610,8 +4610,8 @@ void ____Draw_InitGsRegPresets_777d0(void)
     DAT_0071f100 = idol_draw::Blend(0, 5, 1, 0, 0, 0, 1, 2);
     DAT_0071f110 = idol_draw::PackCmd(0, 1, 2, 1, 0x50);
     DAT_0071f120 = SCE_GIF_SET_TAG(1, 1, 0, 0, 0, 8);
-    DAT_0071f130 = FUN_00502f98(0, 0, 0, 0, 0, 0, 1, 2);
-    DAT_0071f140 = FUN_00502f98(0, 0, 0, 0, 0, 0, 1, 2);
+    DAT_0071f130 = GsPackTest(0, 0, 0, 0, 0, 0, 1, 2);
+    DAT_0071f140 = GsPackTest(0, 0, 0, 0, 0, 0, 1, 2);
     DAT_0071f150 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
     DAT_0071f160 = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
     DAT_0071f170 = idol_draw::PackCmd(0, 1, 2, 1, 0x80);
@@ -4619,8 +4619,8 @@ void ____Draw_InitGsRegPresets_777d0(void)
     DAT_0071f190 = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
     DAT_0071f1a0 = idol_draw::PackCmd(0, 1, 2, 1, 0x60);
     DAT_0071f1b0 = SCE_GIF_SET_TAG(1, 1, 0, 0, 0, 8);
-    DAT_0071f1c0 = FUN_00502f98(0, 0, 0, 0, 0, 0, 1, 2);
-    DAT_0071f1d0 = FUN_00502f98(0, 0, 0, 0, 0, 0, 1, 2);
+    DAT_0071f1c0 = GsPackTest(0, 0, 0, 0, 0, 0, 1, 2);
+    DAT_0071f1d0 = GsPackTest(0, 0, 0, 0, 0, 0, 1, 2);
     DAT_0071f1e0 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
     DAT_0071f1f0 = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
     DAT_0071f200 = idol_draw::PackCmd(0, 1, 2, 1, 0x20);

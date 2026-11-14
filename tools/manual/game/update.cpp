@@ -936,7 +936,7 @@ void UpdateCinematic(void)
 
     RunBink(GetBinkPlayer());
 
-    FUN_00503128_RET_0(0);
+    STUB_00503128_RET_0(0);
     mode_movieUnInit();
 }
 

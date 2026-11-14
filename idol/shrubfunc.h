@@ -29,8 +29,8 @@ extern undefined4 _DAT_0050a520; /* direct read */
 
 // ---- functions
 void DrawShrub(int param_1,ulonglong param_2);
-void FUN_00509d60(int param_1);
-void FUN_0050a4ec(int param_1);
+void DrawSky(int param_1);
+void DrawSkyIfLoaded(int param_1);
 namespace idol_draw { void DrawSkyShell(SKY *sky,int shell,Mtx4 mtx); } 
-void FUN_0050ad78(undefined4 *param_1,int param_2,int *param_3);
-void FUN_0050b08c(int param_1,undefined8 param_2);
+void CullTerrainChunks(undefined4 *param_1,int param_2,int *param_3);
+void CullTerrain(int param_1,undefined8 param_2);

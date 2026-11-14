@@ -1211,8 +1211,8 @@ void Water_StaticInitGsPackets(void)
     DAT_0073ae60 = STUB_005030ec_RET_0(0);
 
     DAT_0073b430 = SCE_GIF_SET_TAG(1, 1, 0, 0, 0, 8);
-    DAT_0073b440 = FUN_00502f98(0, 0, 0, 0, 0, 0, 1, 2);
-    DAT_0073b450 = FUN_00502f98(0, 0, 0, 0, 0, 0, 1, 2);
+    DAT_0073b440 = GsPackTest(0, 0, 0, 0, 0, 0, 1, 2);
+    DAT_0073b450 = GsPackTest(0, 0, 0, 0, 0, 0, 1, 2);
     DAT_0073b460 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
     DAT_0073b470 = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
     DAT_0073b480 = idol_draw::PackCmd(0, 1, 2, 1, 0x80);

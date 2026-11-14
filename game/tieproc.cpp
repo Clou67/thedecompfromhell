@@ -19,11 +19,11 @@ static inline void TieInitGsRegGroup(u64 *regs)
 {
     regs[0] = SCE_GS_SET_PRIM(0x29, 0, 0, 0, 0, 0, 1, 0);
     regs[1] = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
-    regs[2] = FUN_00502f74_RET_0(0x80, 0x80, 0x80, 0x80, 0);
+    regs[2] = STUB_00502f74_RET_0(0x80, 0x80, 0x80, 0x80, 0);
     regs[3] = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
     regs[4] = STUB_00502e48_RET_0(0);
     regs[5] = SCE_GS_SET_XYZ(0, 0, 0);
-    regs[6] = FUN_00502f74_RET_0(0x80, 0x80, 0x80, 0x80, 0);
+    regs[6] = STUB_00502f74_RET_0(0x80, 0x80, 0x80, 0x80, 0);
     regs[7] = SCE_GS_SET_CLAMP(1, 1, 0, 0, 0, 0);
     regs[8] = STUB_00502e48_RET_0(1);
     regs[9] = SCE_GS_SET_XYZ(0, 0, 0);
