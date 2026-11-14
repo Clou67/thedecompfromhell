@@ -500,69 +500,69 @@ extern char *g_pSaveBuffer; /* 0x8fabb4 */ /* type set in global_types.tsv */
 
 // ---- functions
 namespace idol_draw { void DrawGalacticMapFrame(int param_1,int param_2,int param_3,int param_4); } 
-void FUN_004d2e1c(void);
+void SECTION_HEADER_004d2e1c(void);
 void UnlockPurchasableItem(void);
-void FUN_004d3044(void);
-void FUN_004d3198(void);
+void InitLevelCommon(void);
+void SECTION_HEADER_004d3198(void);
 void Dialog_Advance(undefined8 param_1,int param_2,int param_3);
 int FUN_004d3698(int param_1);
 ulonglong FUN_004d3720(int param_1,int param_2);
 undefined8 FUN_004d3870(int param_1,int param_2);
-void FUN_004d407c(int param_1,undefined4 param_2);
-void FUN_004d4118(void);
-MobyInstance * FUN_004d4138(double param_1,undefined4 param_2,f32 *param_3,undefined4 *param_4,undefined8 param_5, undefined4 param_6,ulonglong param_7,ulonglong param_8,ulonglong param_9);
+void MissionTarget_SetUnkC(int param_1,undefined4 param_2);
+void SECTION_HEADER_004d4118(void);
+MobyInstance * SpawnExplosionMoby(double param_1,undefined4 param_2,f32 *param_3,undefined4 *param_4,undefined8 param_5, undefined4 param_6,ulonglong param_7,ulonglong param_8,ulonglong param_9);
 void FUN_004d4328(undefined8 param_1);
 void FUN_004d4404(undefined8 param_1,int param_2);
-void FUN_004d441c(byte *param_1,undefined4 *param_2);
-bool FUN_004d44a0(undefined2 param_1,int param_2,undefined4 *param_3,int param_4,int param_5);
-void FUN_004d453c(int param_1,int *param_2,int *param_3,int *param_4,int *param_5,uint *param_6, int *param_7);
-undefined8 FUN_004d46cc(int param_1,undefined8 param_2,int *param_3);
-void FUN_004d4b40(int param_1);
-void FUN_004d4b94(undefined4 *param_1);
-void FUN_004d4c88(undefined4 *param_1);
+void BinkPlayer_SetupTexHeader(byte *param_1,undefined4 *param_2);
+bool BinkPlayer_InitTexture(undefined2 param_1,int param_2,undefined4 *param_3,int param_4,int param_5);
+void BinkPlayer_GetFrameBufferSizes(int param_1,int *param_2,int *param_3,int *param_4,int *param_5,uint *param_6, int *param_7);
+undefined8 BinkPlayer_AllocTextures(int param_1,undefined8 param_2,int *param_3);
+void BinkPlayer_FreeTextures(int param_1);
+void BinkPlayer_ReleaseTextures(undefined4 *param_1);
+void BinkPlayer_FreeAllTextures(undefined4 *param_1);
 int BinkPlayer_Open(BinkPlayer *param_1,char *param_2,int param_3);
-void FUN_004d525c(int param_1,undefined8 param_2,ulonglong param_3);
-undefined4 FUN_004d5310(int param_1,undefined8 param_2,int param_3,ulonglong param_4);
+void BinkPlayer_OpenMovie(int param_1,undefined8 param_2,ulonglong param_3);
+undefined4 BinkPlayer_OpenMovieTrack(int param_1,undefined8 param_2,int param_3,ulonglong param_4);
 int BinkPlayer_Start(BinkPlayer *param_1,char *param_2,int param_3,int param_4);
-undefined4 FUN_004d551c(int param_1);
+undefined4 BinkPlayer_GetBink(int param_1);
 int BinkPlayer_GetState(BinkPlayer *param_1);
-void FUN_004d5530(undefined8 param_1,undefined8 param_2);
-undefined4 * FUN_004d5558(undefined8 param_1,int param_2);
-void FUN_004d5594(undefined8 param_1,uint param_2);
-void FUN_004d5880(undefined8 param_1);
-void FUN_004d5934(undefined8 param_1);
+void BinkPlayer_Close(undefined8 param_1,undefined8 param_2);
+undefined4 * BinkPlayer_FrameTexture(undefined8 param_1,int param_2);
+void BinkPlayer_DrawFrame(undefined8 param_1,uint param_2);
+void BinkPlayer_Draw(undefined8 param_1);
+void BinkPlayer_Draw_2(undefined8 param_1);
 int BinkPlayer_DrawFrame(BinkPlayer *param_1);
 void BinkPlayer_Stop(BinkPlayer *param_1);
 void BinkPlayer_Init(BinkPlayer *param_1);
-void FUN_004d5d80(int param_1);
+void BinkPlayer_InitScreen(int param_1);
 void STUB_004d5da4(BinkPlayer *param_1,int param_2);
 void STUB_004d5da8(void);
-void FUN_004d5dac(undefined8 param_1,uint param_2);
-void FUN_004d5df0(void);
-void FUN_004d5e48(int param_1);
-undefined8 FUN_004d5fac(int *param_1,int *param_2);
+void BinkPlayer_ClearTexUnit(undefined8 param_1,uint param_2);
+void WaitForRsxIdle(void);
+void WaitForRsxLabel(int param_1);
+undefined8 Vec3iEqual(int *param_1,int *param_2);
 namespace idol_draw { void DrawDepth(RenderingStep *param_1,ulonglong param_2); } 
-void FUN_004d65c8(int param_1,ulonglong param_2);
-void FUN_004d6634(int param_1,ulonglong param_2);
-void FUN_004d6704(ulonglong param_1,int *param_2,int *param_3);
-void FUN_004d676c(RenderingStep *param_1,int param_2,u8 *param_3,int param_4,int param_5);
-void FUN_004d6888(int param_1,undefined8 param_2,undefined8 param_3,ulonglong param_4);
+void GcmSetDepthMask(int param_1,ulonglong param_2);
+void GcmSetAlphaFuncMode(int param_1,ulonglong param_2);
+void DecodeTexWrapModes(ulonglong param_1,int *param_2,int *param_3);
+void IdolDraw_SetTexture(RenderingStep *param_1,int param_2,u8 *param_3,int param_4,int param_5);
+void IdolDraw_SetTextureWithFlags(int param_1,undefined8 param_2,undefined8 param_3,ulonglong param_4);
 namespace idol_draw { void ResetPassState(RenderingStep *param_1); } 
-void FUN_004d6bb0(RenderingStep *param_1,ulonglong param_2,RsxCmd *param_3);
+void IdolDraw_SetTextureRegs(RenderingStep *param_1,ulonglong param_2,RsxCmd *param_3);
 namespace idol_draw { void SetTextureUnitRegs(int param_1,ulonglong param_2,int *param_3); } 
 namespace idol_draw { void BindTexture(RenderingStep *param_1,int param_2,void *param_3,u64 param_4); } 
 void FUN_004d6f50(int param_1,int param_2);
-void FUN_004d7088(u8 *param_1);
-void FUN_004d71a0(void);
-void * FUN_004d71c0(int param_1);
+void IdolDraw_Ctor(u8 *param_1);
+void IdolDraw_Ctor_2(void);
+void * IdolDraw_AllocLabels(int param_1);
 void STUB_004d72d4(void);
 void FUN_004d72d8(int param_1);
-void FUN_004d7464(int param_1,undefined8 param_2);
-void * FUN_004d8148(int *param_1);
+void IdolDraw_InitVideoOut(int param_1,undefined8 param_2);
+void * IdolDraw_Init(int *param_1);
 namespace idol_draw { void BindFragmentProgram(undefined8 param_1,int param_2,longlong param_3); } 
 namespace idol_draw { void BindVertexProgram(undefined8 param_1,int param_2,int param_3); } 
 void FUN_004d86b0(int param_1);
-void FUN_004d8774(int *param_1);
+void IdolDraw_SetupShadowPass(int *param_1);
 void FUN_004d8b50(int param_1,longlong param_2);
 void FUN_004d8db8(int param_1);
 namespace idol_draw { void Render_SetupPasses(int *param_1); } 

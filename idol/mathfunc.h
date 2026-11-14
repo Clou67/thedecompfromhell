@@ -134,7 +134,7 @@ void STUB_005e91b0(void);
 void STUB_005e91b4(void);
 void FUN_005e91b8(undefined4 *param_1);
 void FUN_005e91f0(int param_1);
-void Vtbl00661710_DeletingDtor(undefined4 *param_1);
+void IdolDraw_DeletingDtor(undefined4 *param_1);
 void Vtbl00661748_DeletingDtor(undefined4 *param_1);
 void Vtbl00666410_DeletingDtor(undefined4 *param_1);
 void Vtbl006618e0_Ctor(undefined4 *param_1);
