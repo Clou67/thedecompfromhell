@@ -8,7 +8,6 @@
 #include <stdlib.h>
 #include "game/crt0.h"
 #include "game/boot.h"
-#include "idol/sUnk.h"
 #include "sdk/linked.h"
 #include "sdk/mUnk3.h"
 #include "sdk/sys.h"

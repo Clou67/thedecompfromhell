@@ -1737,7 +1737,7 @@ void StaticInit_BootGlobals(void)
 
     /* trophies */
     DAT_009265a0 = (u32)&PTR_PTR_00661790;
-    FUN_004f0c98((u8 *)&DAT_00926734);
+    TrophyQueue_Init((u8 *)&DAT_00926734);
     DAT_0092674c = 0;
     DAT_00926750 = 0;
     memset(&DAT_00926754, 0, 0x498);
@@ -1751,7 +1751,7 @@ void StaticInit_BootGlobals(void)
     DAT_00926728 = 0xffffffff;
     DAT_0092672c = 1;
     TrophyMgr = (u32)&DAT_009265a0;
-    FUN_004f0df4((u8 *)&DAT_00926734);
+    TrophyQueue_Reset((u8 *)&DAT_00926734);
 
     FUN_004e7388((u8 *)&DAT_00926c00);
     BinkPlayer_Init(&g_BinkPlayerObject);

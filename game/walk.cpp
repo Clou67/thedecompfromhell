@@ -8,7 +8,6 @@
 #include "game/mobyutil.h"
 #include "game/partupd.h"
 #include "idol/fastfunc.h"
-#include "idol/mathfunc.h"
 #include "idol/xUnk.h"
 #include "idol/fastinline.h"
 // game/walk.cpp -- reconstructed from NPEA00385 EBOOT
