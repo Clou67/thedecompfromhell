@@ -32,9 +32,9 @@ errors	file
 445	game/partupd.cpp
 0	game/path.cpp
 607	game/pause.cpp
-4	game/rUnk.cpp
 0	game/respawn.cpp
 4	game/sUnk.cpp
+0	game/shadow.cpp
 0	game/skyfunc.cpp
 0	game/skyproc.cpp
 0	game/sound.cpp

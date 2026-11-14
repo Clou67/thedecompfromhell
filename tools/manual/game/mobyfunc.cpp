@@ -953,7 +953,7 @@ void DrawMobyShadows(void)
     g_pMobyShadowTag[3] = 0;
 
     STUB_001534fc();
-    DrawScreenEffect_152df8(g_MobyShadowList);
+    DrawMobyShadows((ShadowMoby *)g_MobyShadowList);
 
     g_pPacket[0] = 0;
     g_pPacket[1] = (u8)((u32)g_pMobyShadowTag + 16);

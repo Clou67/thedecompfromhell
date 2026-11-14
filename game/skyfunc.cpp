@@ -22,7 +22,7 @@
 #include "game/mesh.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
-#include "game/rUnk.h"
+#include "game/shadow.h"
 #include "game/skyproc.h"
 #include "game/space.h"
 #include "game/update.h"

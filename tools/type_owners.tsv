@@ -131,3 +131,5 @@ WeaponAmmoInfo	game/vendor
 VendorCopyView	game/vendor
 GadgetInfo	game/vendor
 VendorScreenPart	game/vendor
+ShadowGsRegs	game/shadow
+ShadowMoby	game/shadow

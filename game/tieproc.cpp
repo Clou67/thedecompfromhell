@@ -4,7 +4,7 @@
 #include "game/debug.h"
 #include "game/loaders.h"
 #include "game/pause.h"
-#include "game/rUnk.h"
+#include "game/shadow.h"
 #include "game/update.h"
 #include "game/vuchain.h"
 #include "idol/fastfunc.h"

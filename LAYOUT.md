@@ -46,7 +46,7 @@ Shared update functions are named `UpdateMoby_<first oClass>`, with every regist
 | game/path.cpp | 39 | 0x136368 | 0x13a9c4 |
 | game/pause.cpp | 145 | 0x13a9c4 | 0x151d48 |
 | game/respawn.cpp | 10 | 0x151d48 | 0x15251c |
-| game/rUnk.cpp | 17 | 0x15251c | 0x15350c |
+| game/shadow.cpp | 17 | 0x15251c | 0x15350c |
 | game/skyfunc.cpp | 33 | 0x15350c | 0x15aa0c |
 | game/skyproc.cpp | 6 | 0x15aa0c | 0x15b574 |
 | game/sound.cpp | 30 | 0x15b590 | 0x15da00 |

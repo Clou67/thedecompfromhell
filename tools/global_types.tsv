@@ -149,7 +149,7 @@ g_pMobyShadowTag	u8 *NAME /* 0xa49f54: the shadow pass's packet tag */
 g_MobySkinCount	int NAME /* 0xa49b44 (guess: skinned mobys queued for STUB_000f5a7c) */
 g_MobyDrawListStart	u8 *NAME /* 0xa3909c: draw entries, 0xb0 bytes each */
 g_MobyDrawListEnd	u8 *NAME /* 0xa39098 */
-g_MobyShadowList	int NAME[] /* 0xa4a0e0: the shadow list DrawScreenEffect_152df8 draws (Ghidra label "____oClassInstanceList") */
+g_MobyShadowList	int NAME[] /* 0xa4a0e0: the shadow list DrawMobyShadows draws (Ghidra label "____oClassInstanceList") */
 g_pBinkPlayer	struct BinkPlayer *NAME /* 0x8fa410 */
 g_BinkPlayerObject	struct BinkPlayer NAME /* 0x927078: what g_pBinkPlayer normally points at */
 g_BootSoundDefs	SoundDef NAME[13] /* 0x71c984: the boot sound bank's defs; [7..11] belong to the frame class */
@@ -586,3 +586,9 @@ g_GsRegTex1	u64 NAME /* 0x10ee300: SetGSReg id 0x1a (SCE_GS_SET_TEX1) */
 g_GsRegZbuf	u64 NAME /* 0x10ee308: SetGSReg id 0x21 (VU1_addGSregister of the z buffer) */
 g_GsReg8	u64 NAME /* 0x10ee310: SetGSReg id 8 */
 g_GsRegTest	u64 NAME /* 0x10ee318: SetGSReg id 3, the alpha/depth test (idol_draw::PackCmd) */
+shadow_gs_regs	ShadowGsRegs NAME /* 0x731800: the GS register blocks the shadow passes send (DL name) */
+ShadowDir	Vec4 NAME /* 0xa54ed0: the shadow's light direction, normalized (DL name) */
+ShadowVec1	Vec4 NAME /* 0xa54ee0: a unit vector across ShadowDir (DL name) */
+ShadowVec2	Vec4 NAME /* 0xa54ef0: ShadowDir times the extrusion length (DL name) */
+g_ShadowUnkA54f00	int NAME /* 0xa54f00: passed to a stubbed shadow function */
+g_ShadowSectionWord	int NAME /* 0x7317dc: set by SECTION_HEADER_SHADOW */

@@ -25,8 +25,8 @@
 #include "game/mobyutil.h"
 #include "game/music.h"
 #include "game/pause.h"
-#include "game/rUnk.h"
 #include "game/respawn.h"
+#include "game/shadow.h"
 #include "game/sound.h"
 #include "game/update.h"
 #include "idol/fastfunc.h"
@@ -978,7 +978,7 @@ void DrawMobyShadows(void)
     g_pMobyShadowTag[3] = 0;
 
     STUB_001534fc();
-    DrawScreenEffect_152df8(g_MobyShadowList);
+    DrawMobyShadows((ShadowMoby *)g_MobyShadowList);
 
     g_pPacket[0] = 0;
     g_pPacket[1] = (u8)((u32)g_pMobyShadowTag + 16);

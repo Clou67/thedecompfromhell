@@ -2686,6 +2686,27 @@ extern undefined4 DAT_00724870; /* 0x724870 */
 extern undefined2 DAT_0072b33c; /* 0x72b33c */
 extern undefined2 DAT_0072b348; /* 0x72b348 */
 extern undefined2 DAT_0072b354; /* 0x72b354 */
+extern undefined4 DAT_00731804; /* 0x731804 */
+extern undefined8 DAT_00731810; /* 0x731810 */
+extern undefined8 DAT_00731820; /* 0x731820 */
+extern undefined8 DAT_00731840; /* 0x731840 */
+extern undefined8 DAT_00731850; /* 0x731850 */
+extern undefined8 DAT_00731870; /* 0x731870 */
+extern undefined8 DAT_00731880; /* 0x731880 */
+extern undefined8 DAT_007318a0; /* 0x7318a0 */
+extern undefined8 DAT_007318b0; /* 0x7318b0 */
+extern undefined8 DAT_007318d0; /* 0x7318d0 */
+extern undefined8 DAT_007318f0; /* 0x7318f0 */
+extern undefined8 DAT_00731900; /* 0x731900 */
+extern undefined8 DAT_00731910; /* 0x731910 */
+extern undefined8 DAT_00731920; /* 0x731920 */
+extern undefined8 DAT_00731930; /* 0x731930 */
+extern undefined8 DAT_00731940; /* 0x731940 */
+extern undefined8 DAT_00731960; /* 0x731960 */
+extern undefined8 DAT_00731970; /* 0x731970 */
+extern undefined8 DAT_00731980; /* 0x731980 */
+extern undefined8 DAT_00731990; /* 0x731990 */
+extern undefined8 DAT_007319a0; /* 0x7319a0 */
 extern undefined4 DAT_00731d90; /* 0x731d90 */
 extern undefined4 DAT_00731e40; /* 0x731e40 */
 extern undefined4 DAT_00731ed0; /* no defined data */
@@ -3014,6 +3035,14 @@ extern undefined4 DAT_00a20450; /* no defined data */
 extern undefined4 DAT_00a20460; /* no defined data */
 extern undefined1 DAT_00a2c444; /* 0xa2c444 */
 extern undefined4 DAT_00a354cc; /* no defined data */
+extern undefined4 DAT_00a54ed4; /* 0xa54ed4 */
+extern undefined4 DAT_00a54ed8; /* 0xa54ed8 */
+extern undefined4 DAT_00a54edc; /* 0xa54edc */
+extern undefined4 DAT_00a54ee4; /* 0xa54ee4 */
+extern undefined4 DAT_00a54ee8; /* 0xa54ee8 */
+extern undefined4 DAT_00a54eec; /* 0xa54eec */
+extern undefined4 DAT_00a54ef4; /* 0xa54ef4 */
+extern undefined4 DAT_00a54ef8; /* 0xa54ef8 */
 extern undefined4 DAT_00a56184; /* 0xa56184 */
 extern undefined4 DAT_00a56188; /* 0xa56188 */
 extern undefined4 DAT_00a5618c; /* 0xa5618c */

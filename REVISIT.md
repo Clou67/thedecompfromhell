@@ -282,3 +282,28 @@ All 29 functions are checked against the asm; 16 of them are empty stubs.
   VecByte.
 - **Packet bytes:** the packet writers store one byte per PS2 word (`stb`), as the port's code
   does. That looks like a leftover from the port, but it's what the code does.
+
+## game/shadow.cpp (was rUnk.cpp)
+
+All 17 functions are checked against the asm; 9 of them are empty stubs. The file is the
+stencil shadow volume code: DL has the same Shadow* functions, the globals ShadowDir/Vec1/Vec2,
+and shadow_init_gs_regs/shadow_gs_regs. The stubbed functions are the volume builders and
+drawers (DL's ShadowCreatePillVolume, ShadowDrawVolume, ...); which stub is which is not known.
+
+- **Renamed by role** (DL names where the role matches): ShadowSetupVectors (was
+  ___DrawScreenEffect_BuildPacketA), ShadowClearStencil (BuildPacketB), ShadowDrawStencil
+  (BuildBlendPacket; DL takes two ints, this takes one rgba), shadow_init_gs_regs
+  (InitGsRegPresets_153194). Invented: ShadowCreateVolume (DispatchCmd), ShadowSendGsRegs
+  (WriteGifTag, no callers) and DrawMobyShadows (DrawScreenEffect_152df8).
+- **ShadowVec1 and ShadowVec2:** which of DL's two vectors is which is a guess. ShadowVec2 is the
+  extruded direction and ShadowVec1 the perpendicular.
+- **Types:** ShadowMoby (DL's name for the list entry, RaC1's layout; unk08/unk0c are only passed
+  to a stub) and ShadowGsRegs (layout from the init stores). g_MobyShadowList stays `int[]`
+  because loaders.cpp uses the same buffer as a short table; mobyfunc.cpp casts it.
+- **Left raw / unknown:** `g_ShadowUnkA54f00`, `DAT_007319fc` (set to 0x10000 in
+  shadow_init_gs_regs, like a section header word), FUN_00502e50 (called with 0 although declared
+  void), and FUN_00502f98 / FUN_00502f74_RET_0 (GS register builders).
+- **Scalar stand-in:** FastRSqrtInline is `1/sqrtf` (as in water.cpp); the binary uses frsqrte
+  and three Newton steps.
+- **Signature:** ShadowSetupVectors takes (Vec4 dir, float length). The Vec4 arrives in r3/r4,
+  so it comes first.

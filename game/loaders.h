@@ -107,7 +107,7 @@ extern undefined4 g_IsPal; /* 0x966ae8 */
 extern int g_LevelLoadPending; /* 0xa204b0: 1 while LoadAssetAsync runs, 2 when it is done */ /* type set in global_types.tsv */
 extern u32 g_LevelSoundBank; /* 0xa4dae0 */ /* type set in global_types.tsv */
 extern undefined2 g_LoadingStage; /* 0x964560 */
-extern int g_MobyShadowList[]; /* 0xa4a0e0: the shadow list DrawScreenEffect_152df8 draws (Ghidra label "____oClassInstanceList") */ /* type set in global_types.tsv */
+extern int g_MobyShadowList[]; /* 0xa4a0e0: the shadow list DrawMobyShadows draws (Ghidra label "____oClassInstanceList") */ /* type set in global_types.tsv */
 extern int g_MobyTexAddrs[]; /* 0xa37390: per slot, texture address + a tag */ /* type set in global_types.tsv */
 extern int g_MobyTexDefCnt; /* 0xa37388 */ /* type set in global_types.tsv */
 extern short g_MobyTexDefs[][8]; /* 0xa4c540: tex_def per moby texture slot */ /* type set in global_types.tsv */

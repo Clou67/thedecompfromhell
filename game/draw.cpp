@@ -23,7 +23,7 @@
 #include "game/mobyutil.h"
 #include "game/partproc.h"
 #include "game/pause.h"
-#include "game/rUnk.h"
+#include "game/shadow.h"
 #include "game/skyfunc.h"
 #include "game/space.h"
 #include "game/update.h"

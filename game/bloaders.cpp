@@ -12,7 +12,7 @@
 #include "game/draw.h"
 #include "game/loaders.h"
 #include "game/music.h"
-#include "game/rUnk.h"
+#include "game/shadow.h"
 #include "game/sound.h"
 #include "game/vuchain.h"
 #include "idol/fastfunc.h"
