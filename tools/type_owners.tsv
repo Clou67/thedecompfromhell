@@ -133,6 +133,6 @@ GadgetInfo	game/vendor
 VendorScreenPart	game/vendor
 ShadowGsRegs	game/shadow
 ShadowMoby	game/shadow
-IopStore	game/store
-SifDmaData	game/store
-IopStoreSlot	game/store
+BufferStore	game/store
+CopyRequest	game/store
+BufferStoreSlot	game/store

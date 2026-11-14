@@ -237,7 +237,7 @@ void STUB_005031a4(...);
 int FUN_005031a8(int param_1);
 undefined8 FUN_005031b0(void);
 void STUB_005031b8(...);
-int SifSetDma(void *param_1,int param_2);
+int RunCopy(void *param_1,int param_2);
 void FUN_005031f4(void);
 void STUB_005031f8(...);
 void STUB_005031fc(...);
