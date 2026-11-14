@@ -99,8 +99,8 @@ Shared update functions are named `UpdateMoby_<first oClass>`, with every regist
 | sdk/libscream/loader.cpp | 4 | 0x53c1f0 | 0x53c4e0 |
 | sdk/lUnk.cpp | 1000 | 0x53c4e0 | 0x57f9d0 |
 | sdk/CMediusManager.cpp | 1102 | 0x57f9d0 | 0x5c4800 |
-| sdk/libc/abort.cpp | 5 | 0x5c4800 | 0x5c4b94 |
-| sdk/libc/atexit.cpp | 3 | 0x5c4b94 | 0x5c4d8c |
+| sdk/libc/abort.cpp | 4 | 0x5c4800 | 0x5c49c8 |
+| sdk/libc/atexit.cpp | 4 | 0x5c49c8 | 0x5c4d8c |
 | sdk/libc/bsearch.cpp | 2 | 0x5c4d8c | 0x5c4ec8 |
 | sdk/libc/exit.cpp | 1 | 0x5c4ec8 | 0x5c4f10 |
 | sdk/libc/fclose.cpp | 2 | 0x5c4f10 | 0x5c50cc |

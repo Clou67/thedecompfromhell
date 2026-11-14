@@ -343,3 +343,23 @@ All 5 functions are checked against the asm. The file is named after Global_Quic
   asm, but are declared `(void)` and called without them. FUN_005084c0 is passed a second
   argument (2) that it doesn't read.
 - **Invented names:** g_QuickMovieUsed, g_GlobalSectionWord and g_GlobalSectionWord2.
+
+## SDK matching against SDK 4.00
+
+The EBOOT's libraries carry `GCC 4.1.1 (SDK400, $Rev: 3538 $)`, so the match was rerun against the
+SDK 4.00 `target/ppu/lib`. `sdkmatch.py` now points at it; the SDK 4.20 results are kept in
+`tools/sdk420_results/`. Exact matches went from 866 to 950, and the kept list from 440 to 490
+(+49 libfios: fios_scheduler, fios_dearchive, fios_caching, ...; +1 libc: atexit).
+
+- **libscream still matches only 5 functions**, even against the same SDK revision. The game's
+  SCREAM is not the SDK's libscream build: the EBOOT has `common/989snd.cpp`, so Insomniac built
+  their own copy from source, and with SNC rather than GCC. sdk/libscream/989snd.cpp (524
+  functions) and sndhost.cpp therefore need decompiling like game code. They probably belong
+  under game/.
+- **loaders.cpp:** the fios calls now use the SDK's names, cell::fios::scheduler::readFile and
+  closeFile (were read_req_setup / filehandle_close_setup). readFile takes
+  (attr, fh, buf, offset, length); loaders passes the local it calls `fileSize` as the offset
+  and -1 as the length. Recheck what that local really holds.
+- **Files a little worse:** idol/idol.cpp, sdk/fios.cpp, sdk/libc/atexit.cpp and
+  fios_scheduler.cpp, where newly matched functions moved between files (sdk/ files are
+  reference only).

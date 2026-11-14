@@ -991,10 +991,10 @@ u8 *LoadGameplayFile(int reload)
         g_pGameplayFile = (u32)file;
     }
 
-    if (_ZN4cell4fios2op8syncWaitEPx(read_req_setup(fs, 0, fileHandle, (u32)file, fileSize, -1), NULL) != 0) {
+    if (_ZN4cell4fios2op8syncWaitEPx(_ZN4cell4fios9scheduler8readFileEPKNS0_8opattr_tEPNS0_10filehandleEPvxx(fs, 0, fileHandle, (u32)file, fileSize, -1), NULL) != 0) {
         HangForever();
     }
-    if (_ZN4cell4fios2op8syncWaitEPx((int)filehandle_close_setup(fs, 0, fileHandle), NULL) != 0) {
+    if (_ZN4cell4fios2op8syncWaitEPx((int)_ZN4cell4fios9scheduler9closeFileEPKNS0_8opattr_tEPNS0_10filehandleE(fs, 0, fileHandle), NULL) != 0) {
         HangForever();
     }
 

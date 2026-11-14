@@ -1026,7 +1026,7 @@ errors	file
 23	idol/9Unk.cpp
 3	idol/fUnk.cpp
 135	idol/fastfunc.cpp
-146	idol/idol.cpp
+148	idol/idol.cpp
 437	idol/idol_draw.cpp
 1774	idol/mUnk.cpp
 41	idol/mUnk2.cpp
@@ -1043,13 +1043,13 @@ errors	file
 1	sdk/fUnk.cpp
 14	sdk/fUnk2.cpp
 34	sdk/fUnk3.cpp
-49	sdk/fios.cpp
+51	sdk/fios.cpp
 3061	sdk/lUnk.cpp
 104	sdk/lUnk2.cpp
 12	sdk/libc.cpp
-25	sdk/libc/abort.cpp
+11	sdk/libc/abort.cpp
 1	sdk/libc/asctime.cpp
-14	sdk/libc/atexit.cpp
+28	sdk/libc/atexit.cpp
 4	sdk/libc/bsearch.cpp
 8	sdk/libc/exit.cpp
 11	sdk/libc/fclose.cpp
@@ -1148,7 +1148,7 @@ errors	file
 9	sdk/libfios/fios_paths.cpp
 172	sdk/libfios/fios_platform_ps3ppu.cpp
 5	sdk/libfios/fios_ps3ppu.cpp
-521	sdk/libfios/fios_scheduler.cpp
+522	sdk/libfios/fios_scheduler.cpp
 98	sdk/libfios/fios_watch.cpp
 12	sdk/libfios/psarclib_md5.cpp
 31	sdk/libfios/psarclib_parser.cpp

@@ -9,7 +9,7 @@
 #include "game/crt0.h"
 #include "game/boot.h"
 #include "idol/sUnk.h"
-#include "sdk/libc/abort.h"
+#include "sdk/libc/atexit.h"
 #include "sdk/libc/fclose.h"
 #include "sdk/libc/fs_init.h"
 #include "sdk/libc/xlv2mtx.h"

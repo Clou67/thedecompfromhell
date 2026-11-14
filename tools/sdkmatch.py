@@ -10,7 +10,7 @@ in the game's function list of the same size.  Output: sdk_matches.tsv
 """
 import struct, os, sys, glob, re, collections, json
 
-SDK = os.path.join(os.environ.get('SDK', 'cell'), 'target/ppu/lib')   # SDK=/path/to/cell
+SDK = '/home/claude/sdk400/cell/target/ppu/lib'
 EBOOT = os.environ.get('EBOOT', 'EBOOT.ELF')   # decrypted NPEA00385 EBOOT
 FUNCS = os.path.join(DATA, 'rc1funcs.txt')
 OUT = os.path.join(TOOLS, 'sdk_matches.tsv')
