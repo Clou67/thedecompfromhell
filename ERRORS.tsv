@@ -1032,10 +1032,11 @@ errors	file
 16	idol/fileio.cpp
 118	idol/gamecontent.cpp
 48	idol/hwsystem.cpp
+66	idol/hwsystem_ps3.cpp
 1	idol/idm.cpp
-0	idol/idol.cpp
+1	idol/idol.cpp
 57	idol/idol_draw.cpp
-1150	idol/idoldraw_ps3.cpp
+1084	idol/idoldraw_ps3.cpp
 20	idol/idtable.cpp
 50	idol/lightjobs.cpp
 3	idol/linearheap.cpp
@@ -1046,7 +1047,7 @@ errors	file
 0	idol/packet.cpp
 21	idol/pad.cpp
 4	idol/perfcounter.cpp
-8	idol/ps2shim.cpp
+7	idol/ps2shim.cpp
 217	idol/savesystem.cpp
 157	idol/shrubfunc.cpp
 33	idol/sound.cpp
@@ -1106,7 +1107,9 @@ errors	file
 12	sdk/libscream/loader.cpp
 451	sdk/libscream/sndhost.cpp
 7	sdk/libstdcxx/bad_alloc.cpp
-103	sdk/libwwsjob/audit.cpp
+92	sdk/libwwsjob/audit.cpp
+3	sdk/libwwsjob/audit_tables.cpp
+11	sdk/libwwsjob/commandlistchecker.cpp
 139	sdk/libwwsjob/jobapi.cpp
 19	sdk/libwwsjob/spumodule.cpp
 0	sdk/mUnk.cpp

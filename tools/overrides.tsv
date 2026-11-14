@@ -36,7 +36,7 @@ boot::_start	game/crt0.cpp
 # --- idol/sdk split by library (contiguous ranges, named from their strings and functions) ---
 0x4d441c-0x4d5fac	idol/binkplayer.cpp
 0x4d5fac-0x4e5f40	idol/idoldraw_ps3.cpp
-0x4e5f40-0x4e6eac	idol/hwsystem.cpp
+0x4e5f40-0x4e6eac	idol/hwsystem_ps3.cpp
 0x4e6eac-0x4eacd4	idol/savesystem.cpp
 0x4eacd4-0x4eb3b8	idol/msgdialog.cpp
 0x4eb3b8-0x4ec568	idol/pad.cpp
@@ -49,7 +49,7 @@ boot::_start	game/crt0.cpp
 0x4f5a98-0x4f9460	idol/netmanager.cpp
 0x4f9460-0x4fb500	sdk/libwwsjob/audit.cpp
 0x4fb500-0x4fd358	sdk/libwwsjob/commandlistchecker.cpp
-0x4fd358-0x4fe048	sdk/libwwsjob/audit.cpp
+0x4fd358-0x4fe048	sdk/libwwsjob/audit_tables.cpp
 0x4fe048-0x4ff480	idol/IMSeqMem.cpp
 0x4ff480-0x4fff60	idol/debugprint.cpp
 0x5e9414-0x5f3984	sdk/libbink/binkread.cpp
@@ -99,3 +99,4 @@ boot::_start	game/crt0.cpp
 0x507148-0x507f68	idol/worldload.cpp
 0x50e390-0x50e794	idol/idm.cpp
 0x50e794-0x50e7f8	idol/linearheap.cpp
+0x503404-0x5038c4	idol/idol.cpp

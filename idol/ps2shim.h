@@ -194,6 +194,3 @@ void SetWord(undefined4 *param_1,undefined4 param_2);
 undefined8 STUB_005033f0_RET_0(void);
 void STUB_005033f8(void);
 undefined8 STUB_005033fc_RET_0(void);
-void m_LoadLevelFileS(u32 param_1,const char *param_2);
-undefined8 m_LoadLevelFile(void);
-undefined8 m_LoadLevelFileB(void);

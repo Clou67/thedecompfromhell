@@ -22,6 +22,9 @@ typedef struct Localizer {
 typedef char Localizer_size_check[sizeof(Localizer) == 0x1c ? 1 : -1];
 
 // ---- functions
+void m_LoadLevelFileS(u32 param_1,const char *param_2);
+undefined8 m_LoadLevelFile(void);
+undefined8 m_LoadLevelFileB(void);
 namespace idol { undefined8 m_LoadGameFileS(uint arg1,char *str); } 
 namespace idol { undefined8 PRINT_m_LoadGameFile(uint arg2,char *arg1); } 
 namespace idol { void *m_LoadGameFileB(void *param_1,const char *param_2); } 

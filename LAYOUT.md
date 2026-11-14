@@ -5,7 +5,7 @@ Evidence: SECTION_HEADER_* starts a file; moby helpers come first and the `Updat
 Unknown objects are named `<first letter of the previous linked object>Unk.cpp`. Folders follow link position: everything up to the end of the moby sea is `game/`; game-labelled code after it is `idol/`.
 Shared update functions are named `UpdateMoby_<first oClass>`, with every registered oClass in a comment.
 
-11433 functions, 1249 files: 947 `game/update/moby*.cpp`, 24 `game/update/camera*.cpp`.
+11433 functions, 1252 files: 947 `game/update/moby*.cpp`, 24 `game/update/camera*.cpp`.
 
 | file | funcs | start | end |
 |---|---|---|---|
@@ -61,7 +61,8 @@ Shared update functions are named `UpdateMoby_<first oClass>`, with every regist
 | *update files* | 3377 | 0x17f7d0 | 0x4d27a4 |
 | idol/mUnk.cpp | 14 | 0x4d27b0 | 0x4d441c |
 | idol/binkplayer.cpp | 27 | 0x4d441c | 0x4d5fac |
-| idol/idoldraw_ps3.cpp | 97 | 0x4d5fac | 0x4e6eac |
+| idol/idoldraw_ps3.cpp | 80 | 0x4d5fac | 0x4e5f40 |
+| idol/hwsystem_ps3.cpp | 17 | 0x4e5f40 | 0x4e6eac |
 | idol/savesystem.cpp | 49 | 0x4e6eac | 0x4eacd4 |
 | idol/msgdialog.cpp | 10 | 0x4eacd4 | 0x4eb3b4 |
 | idol/pad.cpp | 6 | 0x4eb3b8 | 0x4ec564 |
@@ -72,13 +73,15 @@ Shared update functions are named `UpdateMoby_<first oClass>`, with every regist
 | sdk/libwwsjob/jobapi.cpp | 109 | 0x4f14c8 | 0x4f4e3c |
 | sdk/libwwsjob/spumodule.cpp | 22 | 0x4f4e40 | 0x4f5a98 |
 | idol/netmanager.cpp | 50 | 0x4f5a98 | 0x4f9460 |
-| sdk/libwwsjob/audit.cpp | 41 | 0x4f9460 | 0x4fd3f4 |
+| sdk/libwwsjob/audit.cpp | 34 | 0x4f9460 | 0x4fb394 |
+| sdk/libwwsjob/commandlistchecker.cpp | 2 | 0x4fb500 | 0x4fcd80 |
+| sdk/libwwsjob/audit_tables.cpp | 5 | 0x4fd358 | 0x4fd3f4 |
 | idol/IMSeqMem.cpp | 39 | 0x4fe048 | 0x4ff47c |
 | idol/debugprint.cpp | 29 | 0x4ff480 | 0x4fff5c |
 | idol/fastfunc.cpp | 101 | 0x4fff60 | 0x502ccc |
 | idol/perfcounter.cpp | 3 | 0x502cd0 | 0x502dcc |
-| idol/ps2shim.cpp | 194 | 0x502dcc | 0x503494 |
-| idol/idol.cpp | 10 | 0x503494 | 0x5038c4 |
+| idol/ps2shim.cpp | 191 | 0x502dcc | 0x503404 |
+| idol/idol.cpp | 13 | 0x503404 | 0x5038c4 |
 | idol/idtable.cpp | 12 | 0x5038c4 | 0x503e00 |
 | idol/fileio.cpp | 5 | 0x503e00 | 0x50436c |
 | idol/hwsystem.cpp | 21 | 0x50436c | 0x504dc4 |

@@ -3,17 +3,9 @@
 #include "types.h"
 
 // ---- globals
-extern undefined4 DAT_0071a800; /* 0x71a800 */
-extern undefined4 DAT_0071a808; /* 0x71a808 */
 extern pointer PTR_DAT_0071a614; /* 0x71a614 */
-extern undefined * PTR_DAT_0071a654; /* 0x71a654 */
-extern undefined * PTR_DAT_0071a7b0; /* 0x71a7b0 */
-extern pointer PTR_DAT_0071a7fc; /* 0x71a7fc */
-extern pointer PTR_DAT_0071a804; /* 0x71a804 */
 extern pointer PTR_PTR_0071a5e4; /* 0x71a5e4 */
 extern pointer PTR_s_WwsJob__0071a5e0; /* 0x71a5e0 */
-extern undefined * PTR_s_false_0071a690; /* 0x71a690 */
-extern pointer PTR_s_validSpuReadLoadCommands_0071a648; /* 0x71a648 */
 
 // ---- functions
 void SpuAudit_Ctor(undefined4 *param_1);
@@ -50,10 +42,3 @@ void SpuAudit_Reset(undefined4 *param_1);
 void SpuAudit_Reset_2(undefined4 *param_1);
 void SpuAudit_Reset_3(undefined4 *param_1);
 void SpuAudit_Print(int param_1,undefined4 param_2,ulonglong param_3,undefined4 param_4,uint param_5, ushort param_6,uint param_7,ulonglong *param_8);
-void CommandListChecker_Check(ulonglong *param_1,uint param_2,uint param_3);
-void CommandListChecker_Fail(ulonglong param_1);
-undefined * GetDefaultAuditFormats(void);
-uint SpuAudit_BufferSize(void);
-undefined * SpuAudit_Buffer(void);
-uint SpuAudit_BufferSize_2(void);
-void SpuAudit_PrintSeparator(void);

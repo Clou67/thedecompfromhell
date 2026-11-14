@@ -60,6 +60,7 @@
 #include "idol/fileio.h"
 #include "idol/gamecontent.h"
 #include "idol/hwsystem.h"
+#include "idol/hwsystem_ps3.h"
 #include "idol/idol.h"
 #include "idol/idoldraw_ps3.h"
 #include "idol/lightjobs.h"
