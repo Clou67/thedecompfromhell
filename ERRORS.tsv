@@ -6,8 +6,8 @@ errors	file
 0	game/crt0.cpp
 0	game/debug.cpp
 0	game/draw.cpp
-12	game/fUnk.cpp
 0	game/freeze.cpp
+0	game/global.cpp
 0	game/help.cpp
 1533	game/hero.cpp
 558	game/hud.cpp

@@ -704,3 +704,15 @@ DAT_00a56eb0	g_BufferStore
 DAT_00a572c4	g_BufferStorePool
 FUN_005031bc	RunCopy
 DAT_00734adc	g_StoreSectionWord
+InitGsRegPresets_7a350	Global_InitGsRegs
+____ClearFlag_a1073c	Global_QuickMovieFree
+____FreeTexBase	Global_FreeTexBase
+DAT_00a1073c	g_QuickMovieUsed
+DAT_0071f3d8	g_GlobalSectionWord
+DAT_0071fbac	g_GlobalSectionWord2
+DAT_0071f430	g_GsFadeStripsNtsc
+DAT_0071f570	g_GsFadeStripsPal
+DAT_0071f6b0	g_GsRegs6b0
+DAT_0071f760	reset_gs_regs_fixed
+DAT_0071f890	g_GsRegsContext1
+DAT_0071f900	g_GsRegsContext2

@@ -20,7 +20,7 @@ Shared update functions are named `UpdateMoby_<first oClass>`, with every regist
 | game/debug.cpp | 77 | 0x609f0 | 0x6565c |
 | game/draw.cpp | 165 | 0x6565c | 0x78140 |
 | game/freeze.cpp | 5 | 0x78140 | 0x7a338 |
-| game/fUnk.cpp | 5 | 0x7a338 | 0x7b0f4 |
+| game/global.cpp | 5 | 0x7a338 | 0x7b0f4 |
 | game/help.cpp | 17 | 0x7b0f4 | 0x7cf0c |
 | game/hero.cpp | 241 | 0x7cf0c | 0xc8274 |
 | game/hud.cpp | 112 | 0xc8274 | 0xd88e4 |

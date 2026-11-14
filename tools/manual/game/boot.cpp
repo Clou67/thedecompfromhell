@@ -1564,7 +1564,7 @@ int boot(int argc, char **argv, char **envp)
     FUN_004e7f9c(idol::GetSaveData(), 0);
     GetBinkPlayer()->unk5c = 0;
     GetBinkPlayer();
-    FUN_005eae04((u8 *)Global_QuickMovieMalloc, (u8 *)____ClearFlag_a1073c);
+    FUN_005eae04((u8 *)Global_QuickMovieMalloc, (u8 *)Global_QuickMovieFree);
     FUN_0050565c(heap);
     GetBinkPlayer();
     FUN_005ec620((u8 *)&PTR_FUN_007108d0, FUN_005057c4());

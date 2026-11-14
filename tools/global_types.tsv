@@ -595,3 +595,12 @@ g_ShadowSectionWord	int NAME /* 0x7317dc: set by SECTION_HEADER_SHADOW */
 g_BufferStore	BufferStore NAME /* 0xa56eb0: the buffer store: 64 buffers in a 4 MB pool (invented name) */
 g_BufferStorePool	u8 NAME[0x400000] /* 0xa572c4: its 4 MB pool, right after g_BufferStore */
 g_StoreSectionWord	int NAME /* 0x734adc: set by SECTION_HEADER_STORE */
+g_QuickMovieUsed	int NAME /* 0xa1073c: bytes Bink has taken from g_NpcBuffer (reset by Global_QuickMovieFree) */
+g_GlobalSectionWord	int NAME /* 0x71f3d8: set by SECTION_HEADER_GLOBAL */
+g_GlobalSectionWord2	int NAME /* 0x71fbac: set by Global_InitGsRegs, like a section header word */
+g_GsFadeStripsNtsc	u64 NAME[40] /* 0x71f430: PS2 GIF packet, the 512x416 screen in 16 sprites (unused on PS3) */
+g_GsFadeStripsPal	u64 NAME[40] /* 0x71f570: the same for 512x448 */
+g_GsRegs6b0	u64 NAME[22] /* 0x71f6b0: PS2 GIF tag for 10 registers (only the tag is set) */
+reset_gs_regs_fixed	u64 NAME[38] /* 0x71f760: PS2 GS registers reset (DL name, same size) */
+g_GsRegsContext1	u64 NAME[14] /* 0x71f890: PS2 GS registers for drawing context 1 */
+g_GsRegsContext2	u64 NAME[14] /* 0x71f900: the same for context 2 */

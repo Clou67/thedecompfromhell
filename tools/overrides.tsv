@@ -27,3 +27,5 @@ crt0::_init	game/boot.cpp
 0x15251c-0x15350c	game/shadow.cpp
 # store.cpp (was sUnk): the buffer store, 64 buffers in a 4 MB pool (sorts between space and tieproc)
 0x165588-0x1658d8	game/store.cpp
+# global.cpp (was fUnk): Global_QuickMovieMalloc names the file; sorts between freeze and help
+0x7a338-0x7b0f4	game/global.cpp

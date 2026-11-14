@@ -325,3 +325,21 @@ All 8 functions are checked against the asm; 2 are empty stubs.
 - **Not understood:** BufferStoreSlot.flags is stored but never read here, and BufferStore.unk08 is never
   touched.
 - RunCopy also replaces FUN_005031bc in initonce.cpp (InitOnce_RunSysCallWait).
+
+## game/global.cpp (was fUnk.cpp)
+
+All 5 functions are checked against the asm. The file is named after Global_QuickMovieMalloc
+(the binary's own string), which fits the link order between freeze.cpp and help.cpp.
+
+- **Live code:** Global_QuickMovieMalloc and Global_QuickMovieFree (was ____ClearFlag_a1073c) are
+  the allocator hooks boot.cpp gives Bink (FUN_005eae04, probably BinkSetMemory); they hand out
+  g_NpcBuffer. The malloc always charges 32 bytes of alignment, even when the address is already
+  aligned. That's what the code does.
+- **Dead PS2 code:** nothing calls Global_InitGsRegs (was InitGsRegPresets_7a350) or
+  Global_FreeTexBase (was ____FreeTexBase). Nothing reads the GS register tables, so they keep
+  PS2-style names: g_GsFadeStripsNtsc/Pal, g_GsRegs6b0, g_GsRegsContext1/2, and
+  reset_gs_regs_fixed (DL's name; its 304 bytes match DL's).
+- **Calls that drop arguments:** FUN_00502e00..e40 and FUN_00502e50 are passed arguments in the
+  asm, but are declared `(void)` and called without them. FUN_005084c0 is passed a second
+  argument (2) that it doesn't read.
+- **Invented names:** g_QuickMovieUsed, g_GlobalSectionWord and g_GlobalSectionWord2.
