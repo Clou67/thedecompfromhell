@@ -122,7 +122,7 @@ void startLevel(void)
             cellSysutilCheckCallback();
             g_pMsgDialog->funcs->update(g_pMsgDialog, MSG_DIALOG_DT);
             if (g_Pad.showReconnectPrompt && g_gameMode != GAME_MODE_FREEZE) DisplayPrompt(9, 0, 0);
-            FUN_00502d80();
+            BumpPerfCounters();
             CollMobyVertCache_Reset();
 
             u32 ticks = *g_pFrameTicks;

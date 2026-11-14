@@ -51,7 +51,7 @@ int InitOnce_RunSysCallWait(int a, int b)
     int args[4];
     int ok = 1;
 
-    int h = FUN_005031a8(b);
+    int h = STUB_005031a8_RET_0(b);
     args[0] = a;
     args[1] = h;
     args[2] = b;
@@ -59,8 +59,8 @@ int InitOnce_RunSysCallWait(int a, int b)
     int t = RunCopy(args, 1);
     if (t != 0) {
         while (FUN_0050315c_RET_0(t) >= 0) {}
-        int r = FUN_00503164(h, 0, 0);
-        FUN_00503214(h);
+        int r = STUB_00503164_RET_0(h, 0, 0);
+        STUB_00503214(h);
         ok = r >= 0;
     }
     return ok;

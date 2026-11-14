@@ -535,8 +535,8 @@ int BinkPlayer_DrawFrame(BinkPlayer *param_1);
 void BinkPlayer_Stop(BinkPlayer *param_1);
 void BinkPlayer_Init(BinkPlayer *param_1);
 void FUN_004d5d80(int param_1);
-void FUN_004d5da4(BinkPlayer *param_1,int param_2);
-void FUN_004d5da8(void);
+void STUB_004d5da4(BinkPlayer *param_1,int param_2);
+void STUB_004d5da8(void);
 void FUN_004d5dac(undefined8 param_1,uint param_2);
 void FUN_004d5df0(void);
 void FUN_004d5e48(int param_1);
@@ -555,7 +555,7 @@ void FUN_004d6f50(int param_1,int param_2);
 void FUN_004d7088(u8 *param_1);
 void FUN_004d71a0(void);
 void * FUN_004d71c0(int param_1);
-void FUN_004d72d4(void);
+void STUB_004d72d4(void);
 void FUN_004d72d8(int param_1);
 void FUN_004d7464(int param_1,undefined8 param_2);
 void * FUN_004d8148(int *param_1);
@@ -584,7 +584,7 @@ void FUN_004ded28(undefined8 param_1,undefined1 *param_2,undefined8 param_3,unde
 void FUN_004defb0(undefined8 param_1,undefined1 *param_2,undefined4 param_3,undefined8 param_4, undefined8 param_5);
 void IdolDraw_SetPerspective(double param_1,double param_2,double param_3,int param_4);
 void IdolDraw_SetView(longlong param_1,uint param_2,undefined8 param_3,undefined8 param_4,uint param_5);
-void FUN_004dfc2c(void);
+void STUB_004dfc2c(void);
 void FUN_004dfe70(float param_1,int *param_2,int param_3,Vec4 *param_4);
 void FUN_004e0d50(double param_1,double param_2,int param_3,longlong param_4);
 void FUN_004e1970(int param_1,longlong param_2,undefined4 param_3,undefined4 param_4,void *param_5, longlong param_6);
@@ -597,7 +597,7 @@ void FUN_004e3178(int param_1);
 void FUN_004e31c8(void);
 void FUN_004e3348(undefined8 param_1,int param_2,int param_3,int param_4);
 longlong FUN_004e3538(undefined8 param_1,undefined8 param_2,undefined4 *param_3,undefined8 param_4);
-void FUN_004e3698(void);
+void STUB_004e3698(void);
 void FUN_004e369c(void);
 void FUN_004e36e8(void);
 void FUN_004e3d20(int param_1,undefined4 *param_2,undefined4 *param_3);
@@ -656,7 +656,7 @@ void FUN_004e7920(void);
 void FUN_004e79a4(void);
 namespace idol { namespace SaveSystem_PS { void RunSaveSystem(SaveDataInfo *param_1,int saveArg,char *param_3,int param_4,int (*param_5)(int),int (*param_6)(int),int (*param_7)(int,char *),int (*param_8)(int)); } } 
 namespace idol { int registerSavesystemCallback(void); } 
-void FUN_004e7d14(void);
+void STUB_004e7d14(void);
 int SaveData_FatalExit(SaveDataInfo *param_1,int param_2);
 int SaveData_CallOnSave(SaveDataInfo *param_1);
 undefined4 FUN_004e7e04(int param_1);
@@ -684,7 +684,7 @@ void FUN_004ea1e0(undefined4 *param_1,uint *param_2,undefined4 *param_3);
 namespace idol { void cb_data_status_load(undefined4 *param_1,int param_2,int *param_3); } 
 namespace idol { void cb_file_operation_load(undefined4 *param_1,undefined8 param_2,undefined4 *param_3); } 
 void FUN_004eab50(undefined4 *param_1,uint *param_2);
-void FUN_004eacb8(void);
+void STUB_004eacb8(void);
 void FUN_004eacbc(void);
 undefined8 FUN_004eacd4(double param_1,int *param_2);
 undefined4 * FUN_004eaddc(undefined8 param_1);
@@ -727,7 +727,7 @@ void FUN_004ee5e8(undefined4 *param_1,undefined4 param_2,undefined4 param_3,unde
 int FUN_004ee640(int param_1);
 bool FUN_004ee65c(int param_1,uint param_2,char param_3);
 void FUN_004ee818(longlong param_1);
-void FUN_004ee954(void);
+void STUB_004ee954(void);
 void FUN_004ee958(int param_1);
 void FUN_004eebfc(int param_1);
 void FUN_004eedc8(int param_1);

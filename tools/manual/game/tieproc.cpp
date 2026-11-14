@@ -12,26 +12,26 @@ static inline void TieInitGsRegGroup(u64 *regs)
     regs[1] = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
     regs[2] = FUN_00502f74_RET_0(0x80, 0x80, 0x80, 0x80, 0);
     regs[3] = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
-    regs[4] = FUN_00502e48(0);
+    regs[4] = STUB_00502e48_RET_0(0);
     regs[5] = SCE_GS_SET_XYZ(0, 0, 0);
     regs[6] = FUN_00502f74_RET_0(0x80, 0x80, 0x80, 0x80, 0);
     regs[7] = SCE_GS_SET_CLAMP(1, 1, 0, 0, 0, 0);
-    regs[8] = FUN_00502e48(1);
+    regs[8] = STUB_00502e48_RET_0(1);
     regs[9] = SCE_GS_SET_XYZ(0, 0, 0);
 }
 
 /* one 0x90-byte shell template of g_TieShellVif */
 static inline void TieInitShellVif(u32 *vif, int unpackNum)
 {
-    vif[0x00] = FUN_005030f4(0, 0);
+    vif[0x00] = STUB_005030f4_RET_0(0, 0);
     vif[0x01] = SCE_VIF1_SET_UNPACK(0x3c6, unpackNum, 0xc, 0);
-    vif[0x04] = FUN_005030cc(8, 0);
-    vif[0x09] = FUN_005030fc(0);
-    vif[0x0e] = FUN_005030ac(0, 0);
-    vif[0x0f] = FUN_005030d4(0x2c, 0);
-    vif[0x10] = FUN_005030f4(0, 0);
+    vif[0x04] = STUB_005030cc_RET_0(8, 0);
+    vif[0x09] = STUB_005030fc_RET_0(0);
+    vif[0x0e] = STUB_005030ac_RET_0(0, 0);
+    vif[0x0f] = STUB_005030d4_RET_0(0x2c, 0);
+    vif[0x10] = STUB_005030f4_RET_0(0, 0);
     vif[0x11] = SCE_VIF1_SET_STCYCL(4, 4, 0);
-    vif[0x14] = FUN_005030b4(0);
+    vif[0x14] = STUB_005030b4_RET_0(0);
 }
 
 void TieInitPackets(void)
@@ -87,33 +87,33 @@ void TieInitPackets(void)
     g_TieGifTags[0x38] = SCE_GS_SET_TEX0(0, 1, 0x13, 4, 4, 1, 0, 0, 0x12, 0, 0, 4);
 
     /* 0x736738: the draw packet */
-    g_TieDrawVif[0x00] = FUN_005030f4(0, 0);
+    g_TieDrawVif[0x00] = STUB_005030f4_RET_0(0, 0);
     g_TieDrawVif[0x01] = SCE_VIF1_SET_UNPACK(0, 1, 0xc, 0);
-    g_TieDrawVif[0x04] = FUN_005030bc(4, 0);
+    g_TieDrawVif[0x04] = STUB_005030bc_RET_0(4, 0);
     g_TieDrawVif[0x05] = SCE_VIF1_SET_UNPACK(0x4000, 0, 0xe, 0);
     g_TieDrawVif[0x09] = SCE_VIF1_SET_UNPACK(0x32, 0, 0xd, 0);
-    g_TieDrawVif[0x0c] = FUN_005030f4(0, 0);
+    g_TieDrawVif[0x0c] = STUB_005030f4_RET_0(0, 0);
     g_TieDrawVif[0x0d] = SCE_VIF1_SET_UNPACK(0x40cc, 0, 0xe, 0);
     g_TieDrawVif[0x11] = SCE_VIF1_SET_UNPACK(0x80c6, 6, 0xc, 0);
-    g_TieDrawVif[0x14] = FUN_005030f4(1, 0);
+    g_TieDrawVif[0x14] = STUB_005030f4_RET_0(1, 0);
     g_TieDrawVif[0x15] = SCE_VIF1_SET_UNPACK(0x4346, 0x40, 0xe, 0);
-    g_TieDrawVif[0x18] = FUN_005030f4(0, 0);
-    g_TieDrawVif[0x19] = FUN_005030bc(0, 0);
+    g_TieDrawVif[0x18] = STUB_005030f4_RET_0(0, 0);
+    g_TieDrawVif[0x19] = STUB_005030bc_RET_0(0, 0);
     g_TieDrawVif[0x1d] = SCE_VIF1_SET_UNPACK(0x1e, 0, 0xe, 0);
-    g_TieDrawVif[0x21] = FUN_005030fc(0);
+    g_TieDrawVif[0x21] = STUB_005030fc_RET_0(0);
     g_TieDrawVif[0x45] = Gs_DmaTagByte(4, 0);
     g_TieDrawVif[0x4d] = Gs_DmaTagByte(0xd, 0);
     *(u64 *)&g_TieDrawVif[0x4e] = SCE_GIF_SET_TAG(1, 1, 1, 0x7c, 0, 0xc);
     g_TieDrawVif[0x54] = SCE_VIF1_SET_STCYCL(4, 4, 0);
     g_TieDrawVif[0x55] = SCE_VIF1_SET_UNPACK(0, 4, 0xc, 0);
-    g_TieDrawVif[0x59] = FUN_005030c4(10, 0);
+    g_TieDrawVif[0x59] = STUB_005030c4_RET_0(10, 0);
 
     /* 0x737c48: the texture packet */
     g_TieTexVif[0x00] = SCE_VIF1_SET_STCYCL(4, 4, 0);
-    g_TieTexVif[0x0b] = (u32)FUN_005030dc(0);
+    g_TieTexVif[0x0b] = (u32)STUB_005030dc_RET_0(0);
     g_TieTexVif[0x10] = SCE_VIF1_SET_STCYCL(1, 3, 0);
-    g_TieTexVif[0x16] = (u32)FUN_005030ec(0);
-    g_TieTexVif[0x26] = (u32)FUN_005030ec(0);
+    g_TieTexVif[0x16] = (u32)STUB_005030ec_RET_0(0);
+    g_TieTexVif[0x26] = (u32)STUB_005030ec_RET_0(0);
 }
 
 /* a DMA tag as this port writes it: only the low byte of the address it points to */

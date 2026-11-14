@@ -3308,7 +3308,7 @@ void ____Draw_FogBlendPass(void)
     SetGSReg(6, SCE_GS_SET_CLAMP(1, 1, 0, 0, 0, 0));
     SetGSReg(0x1a, SCE_GS_SET_TEX1(1, 0, 1, 1, 0, 0, 0));
     SetGSReg(0x16, idol_draw::Blend(1, 0, 0x3f, 1, 0, 0, 1, 2));
-    SetGSReg(8, FUN_0050302c(1));
+    SetGSReg(8, STUB_0050302c_RET_0(1));
 
     STUB_00074cec();
 
@@ -3318,7 +3318,7 @@ void ____Draw_FogBlendPass(void)
     STUB_00074ce8();
     DAT_0095cd40 = 0;
 
-    SetGSReg(8, FUN_0050302c(0));
+    SetGSReg(8, STUB_0050302c_RET_0(0));
 }
 
 // 0x00720a0 (0x88 bytes)
@@ -4427,7 +4427,7 @@ void DrawWater(void)
     g_ViewContext.fogFarDist = farDist;
     g_ViewContext.fogNearIntensity = nearIntensity;
     g_ViewContext.fogFarIntensity = farIntensity;
-    SetGSReg(10, FUN_00503024(g_ViewContext.fogR, g_ViewContext.fogG, g_ViewContext.fogB));
+    SetGSReg(10, STUB_00503024_RET_0(g_ViewContext.fogR, g_ViewContext.fogG, g_ViewContext.fogB));
     UpdateViewContext();
     ComposeCameraMatrix();
 }
@@ -4440,9 +4440,9 @@ static inline u64 *SkyStripLayer(u64 *out, u32 qBits, float texQ, float texLeft,
 
     for (int i = 0; i < 16; i++) {
         out[0] = FUN_00502f74_RET_0(0x80, 0x80, 0x80, 0x60, qBits);
-        out[1] = FUN_00503034(((float)i * 0.0625f + texLeft) * texQ, -(camZ * texQ));
+        out[1] = STUB_00503034_RET_0(((float)i * 0.0625f + texLeft) * texQ, -(camZ * texQ));
         out[2] = SCE_GS_SET_XYZ(posX + 0x7000, 0x7200, 0);
-        out[3] = FUN_00503034(((float)(i + 1) * 0.0625f + texLeft) * texQ, camFar * texQ);
+        out[3] = STUB_00503034_RET_0(((float)(i + 1) * 0.0625f + texLeft) * texQ, camFar * texQ);
         out[4] = SCE_GS_SET_XYZ(posX + 0x7200, 0x8df0, posZ);
         out += 5;
         posX += 0x200;

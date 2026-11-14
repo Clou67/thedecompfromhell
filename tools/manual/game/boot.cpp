@@ -1464,7 +1464,7 @@ int boot(int argc, char **argv, char **envp)
 
     /* run as RC1.ppu.self (a dev build) the content path is the first argument */
     contentArg = strstr(argv[0], "RC1.ppu.self") != NULL ? 1 : 0;
-    FUN_00502cd0();
+    InitPerfCounterPtrs();
     MapVTables();
 
     hwSystem = (u8 *)g_pHWSystem;
@@ -1598,7 +1598,7 @@ int boot(int argc, char **argv, char **envp)
 /* static destructors: put back the base class vtables */
 void StaticDestroy_BootGlobals(void)
 {
-    FUN_004d5da4(&g_BinkPlayerObject, 2);
+    STUB_004d5da4(&g_BinkPlayerObject, 2);
     FUN_004e7738((u8 *)&DAT_00926c00, 2);
     DAT_009265a0 = (u32)&PTR_PTR_00661790;
     DAT_009260d0 = (u32)&PTR_PTR_00661760;

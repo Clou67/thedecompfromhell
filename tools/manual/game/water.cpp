@@ -1205,10 +1205,10 @@ void Water_StaticInitGsPackets(void)
     DAT_0073a9d0 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
     DAT_0073a9e0 = SCE_GS_SET_TEX1(0, 0, 1, 1, 1, 0, 0xff90);
     DAT_0073adc8 = SCE_VIF1_SET_STCYCL(4, 4, 0);
-    DAT_0073adf4 = FUN_005030dc(0);
+    DAT_0073adf4 = STUB_005030dc_RET_0(0);
     DAT_0073ae08 = SCE_VIF1_SET_STCYCL(1, 3, 0);
-    DAT_0073ae20 = FUN_005030ec(0);
-    DAT_0073ae60 = FUN_005030ec(0);
+    DAT_0073ae20 = STUB_005030ec_RET_0(0);
+    DAT_0073ae60 = STUB_005030ec_RET_0(0);
 
     DAT_0073b430 = SCE_GIF_SET_TAG(1, 1, 0, 0, 0, 8);
     DAT_0073b440 = FUN_00502f98(0, 0, 0, 0, 0, 0, 1, 2);

@@ -270,14 +270,14 @@ void shadow_init_gs_regs(void)
     }
 
     shadow_gs_regs.stencils[0][0] = SCE_GIF_SET_TAG(6, 1, 0, 0, 0, 1);
-    shadow_gs_regs.stencils[0][4] = FUN_00502e50();
+    shadow_gs_regs.stencils[0][4] = STUB_00502e50_RET_0();
     shadow_gs_regs.stencils[0][6] = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
     shadow_gs_regs.stencils[0][8] = SCE_GS_SET_TEX1(1, 0, 0, 0, 0, 0, 0);
     shadow_gs_regs.stencils[0][10] = SCE_GS_SET_TEX0(0xe00, 8, 0x12, 9, 9, 1, 0, 0, 0, 0, 0, 0);
     shadow_gs_regs.stencils[0][12] = idol_draw::PackCmd(0, 1, 0, 1, 0x80);
 
     shadow_gs_regs.stencils[1][0] = SCE_GIF_SET_TAG(6, 1, 0, 0, 0, 1);
-    shadow_gs_regs.stencils[1][4] = FUN_00502e50();
+    shadow_gs_regs.stencils[1][4] = STUB_00502e50_RET_0();
     shadow_gs_regs.stencils[1][6] = SCE_GS_SET_CLAMP(0, 0, 0, 0, 0, 0);
     shadow_gs_regs.stencils[1][8] = SCE_GS_SET_TEX1(1, 0, 0, 0, 0, 0, 0);
     shadow_gs_regs.stencils[1][10] = SCE_GS_SET_TEX0(0x1000, 8, 0x12, 9, 9, 1, 0, 0, 0, 0, 0, 0);

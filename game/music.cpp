@@ -418,7 +418,7 @@ void music_Stop(void)
     snd_StopAllStreams();
     while (STUB_00505d20() != 0) {
     }
-    FUN_005066c4(1);
+    STUB_005066c4(1);
 
     g_MusicPlaying.status = MUSIC_IDLE;
     g_MusicPlaying.flags = 0;

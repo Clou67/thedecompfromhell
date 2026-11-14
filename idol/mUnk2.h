@@ -18,8 +18,8 @@ namespace idol { void NPTrophyUnlock(int param_1,TROPHIES_ENUM param_2); }
 void FUN_004f03dc(int param_1,undefined8 param_2);
 undefined1 FUN_004f04fc(int param_1,undefined8 param_2);
 ulonglong FUN_004f0620(longlong param_1);
-void FUN_004f06a4(void);
-void FUN_004f06a8(void);
+void STUB_004f06a4(void);
+void STUB_004f06a8(void);
 void FUN_004f06ac(void);
 void FUN_004f0828(void);
 undefined8 FUN_004f0ac8(undefined8 param_1,int param_2,int param_3,int param_4);
