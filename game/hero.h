@@ -1021,7 +1021,6 @@ extern undefined4 DAT_00a1de0c; /* 0xa1de0c */
 extern undefined4 DAT_00a1de10; /* no defined data */
 extern undefined4 DAT_00a354c1; /* no defined data */
 extern undefined4 DAT_00a3563d; /* no defined data */
-extern undefined4 DAT_00a49344; /* 0xa49344 */
 extern undefined4 DAT_00a49348; /* 0xa49348 */
 extern undefined4 DAT_00a4c4f0; /* 0xa4c4f0 */
 extern undefined4 DAT_00a4c4f4; /* 0xa4c4f4 */
@@ -1079,6 +1078,7 @@ extern int g_RacePlace; /* 0x96a5a0: finishing place, 1 = first */ /* type set i
 extern undefined4 g_RaceScore; /* 0x96a588 */
 extern undefined4 g_RaceTime; /* 0x96a574 */
 extern undefined2 g_SwingshotReleasedTimer; /* 0x969ec6 */
+extern MobyInstance *g_TargetableMobys; /* 0xa49344: the first of the auto-targetable mobys BuildMobyUpdateChain found this frame, NULL-terminated (invented name) */ /* type set in global_types.tsv */
 extern undefined4 g_WeaponToSwapTo; /* 0x96bdb4 */
 extern undefined g_atanQuadrantTable; /* 0x735900 */
 extern undefined4 g_clankMaxNanotech; /* 0x96bf8c */

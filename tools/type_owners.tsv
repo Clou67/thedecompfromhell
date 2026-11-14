@@ -140,3 +140,4 @@ MapBounds	game/map
 MapTransform	game/map
 JointPose	game/mobyproc
 AnimLayerJoint	game/mobyproc
+MobyDrawEntry	game/mobyproc

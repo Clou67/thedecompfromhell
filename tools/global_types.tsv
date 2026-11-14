@@ -635,3 +635,4 @@ MobyGridAlloc	u32 NAME[24] /* 0xa49120: which blocks of g_MobyGridLists are used
 g_MobyGridLists	short NAME[1536][16] /* 0xa3d120: the moby grid cells' lists, 32-byte blocks of 16 moby indices */
 g_AnimJointMats	Mtx4 NAME[128] /* 0xa4db40: joint matrices from AnimResolveMats */
 g_AnimPoses	JointPose NAME[129] /* 0xa4fb80: joint poses from AnimDecompInterp, changed by the anim layers and manipulators */
+g_TargetableMobys	MobyInstance *NAME /* 0xa49344: the first of the auto-targetable mobys BuildMobyUpdateChain found this frame, NULL-terminated (invented name) */

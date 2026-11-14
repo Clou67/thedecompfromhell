@@ -298,6 +298,7 @@ extern undefined2 DAT_00966b96; /* 0x966b96 */
 extern undefined2 DAT_00966b98; /* 0x966b98 */
 extern undefined4 DAT_00966b9c; /* 0x966b9c */
 extern undefined4 DAT_00966bc0; /* 0x966bc0 */
+extern undefined4 DAT_00a15f64; /* 0xa15f64 */
 extern undefined4 DAT_01111700; /* no defined data */
 extern undefined4 DAT_70001000; /* no defined data */
 extern undefined4 DAT_70002000; /* no defined data */

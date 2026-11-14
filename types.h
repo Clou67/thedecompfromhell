@@ -3325,6 +3325,17 @@ extern undefined4 _DAT_000e9420; /* direct read */
 extern undefined4 _DAT_000e9430; /* direct read */
 extern undefined4 _DAT_000e9450; /* direct read */
 extern undefined4 _DAT_000f3fc0; /* direct read */
+extern undefined4 _DAT_000f5ad0; /* direct read */
+extern undefined4 _DAT_000f5af0; /* direct read */
+extern undefined4 _DAT_000f5b00; /* direct read */
+extern undefined4 _DAT_000f5b10; /* direct read */
+extern undefined4 _DAT_000f5b20; /* direct read */
+extern undefined4 _DAT_000f5b30; /* direct read */
+extern undefined4 _DAT_000f5b40; /* direct read */
+extern undefined4 _DAT_000f5b50; /* direct read */
+extern undefined4 _DAT_000f5b60; /* direct read */
+extern undefined4 _DAT_000f5b70; /* direct read */
+extern undefined4 _DAT_000f7ae0; /* direct read */
 extern undefined4 _DAT_0011e860; /* direct read */
 extern undefined4 _DAT_0011e880; /* direct read */
 extern undefined4 _DAT_0011e890; /* direct read */

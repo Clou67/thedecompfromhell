@@ -53,25 +53,46 @@ typedef struct JointPose {
 } JointPose;
 typedef char JointPose_size_check[sizeof(JointPose) == 0x40 ? 1 : -1];
 
+/* a moby queued for drawing with its skeleton (MB_BuildDrawEntry fills it, MB_DrawEntries builds
+   its joint matrices); 0xb0 bytes. Only what this code reads is named. */
+typedef struct MobyDrawEntry {
+    Mtx4 world;              /* 0x00 */
+    Vec4 unk40;              /* 0x40 */
+    u16 unk50;               /* 0x50 */
+    u16 unk52;               /* 0x52 */
+    u16 unk54;               /* 0x54 */
+    u8 _pad56[2];
+    float scale;             /* 0x58 */
+    u32 unk5c;               /* 0x5c */
+    void *unk60;             /* 0x60 */
+    Mtx4 *jointMats;         /* 0x64  jointCount of them (or one, identity, with no joints) */
+    u32 jointCount;          /* 0x68 */
+    u32 lights[2];           /* 0x6c  the moby's colour/light words */
+    float unk74;             /* 0x74 */
+    float blend;             /* 0x78  between from and to */
+    AnimLayer *layers;       /* 0x7c */
+    Manipulator *manipulators; /* 0x80 */
+    Vec4 *bindTrans;         /* 0x84  MobyClass.common_trans */
+    Mtx4 *bindMats;          /* 0x88  MobyClass.skeleton: applied last to each joint matrix */
+    MobyFrame *from;         /* 0x8c */
+    MobyFrame *to;           /* 0x90 */
+    u8 linearRot;            /* 0x94  the frames are neighbours: rotations blended plainly */
+    u8 unk95;                /* 0x95 */
+    s16 unk96;               /* 0x96 */
+    float unk98;             /* 0x98 */
+    float unk9c;             /* 0x9c */
+    MobyInstance *moby;      /* 0xa0 */
+    u8 _padA4[12];
+} MobyDrawEntry;
+typedef char MobyDrawEntry_size_check[sizeof(MobyDrawEntry) == 0xb0 ? 1 : -1];
+
 // ---- globals
-extern undefined4 DAT_00a15f64; /* 0xa15f64 */
 extern undefined4 DAT_00a34600; /* no defined data */
 extern undefined1 DAT_00a34700; /* 0xa34700 */
 extern undefined1 DAT_00a3477f; /* 0xa3477f */
 extern undefined1 DAT_00a34780; /* 0xa34780 */
 extern DirectionalLight DirectionalLights[16]; /* 0xa1db00 */ /* type set in global_types.tsv */
 extern u32 MobyGridAlloc[24]; /* 0xa49120: which blocks of g_MobyGridLists are used, a bit each */ /* type set in global_types.tsv */
-extern undefined4 _DAT_000f5ad0; /* direct read */
-extern undefined4 _DAT_000f5af0; /* direct read */
-extern undefined4 _DAT_000f5b00; /* direct read */
-extern undefined4 _DAT_000f5b10; /* direct read */
-extern undefined4 _DAT_000f5b20; /* direct read */
-extern undefined4 _DAT_000f5b30; /* direct read */
-extern undefined4 _DAT_000f5b40; /* direct read */
-extern undefined4 _DAT_000f5b50; /* direct read */
-extern undefined4 _DAT_000f5b60; /* direct read */
-extern undefined4 _DAT_000f5b70; /* direct read */
-extern undefined4 _DAT_000f7ae0; /* direct read */
 extern Mtx4 g_AnimJointMats[128]; /* 0xa4db40: joint matrices from AnimResolveMats */ /* type set in global_types.tsv */
 extern JointPose g_AnimPoses[129]; /* 0xa4fb80: joint poses from AnimDecompInterp, changed by the anim layers and manipulators */ /* type set in global_types.tsv */
 extern Blender g_Blenders[32]; /* 0xa1cb00 */
@@ -106,10 +127,10 @@ JointPose *ComputeAnimation(MobyInstance *moby);
 void Moby_BuildJointMatrices(MobyInstance *moby, int unused, Vec4 *out);
 int STUB_000f5a74(...);
 void STUB_000f5a7c(...);
-void MB_DrawEntries(int param_1,uint param_2);
-void MB_DrawEntryList(u8 *param_1,int param_2);
-u8 *MB_BuildDrawEntry(MobyInstance *param_1,u8 *param_2,int param_3,int param_4);
-int FindMobysCloseToUpdate(void);
+void MB_DrawEntries(MobyDrawEntry *entry, u32 count);
+void MB_DrawEntryList(u8 *entries, int count);
+u8 *MB_BuildDrawEntry(MobyInstance *moby, u8 *entryList, int count, int unused);
+MobyInstance *BuildMobyUpdateChain(void);
 void UpdateMobyAnimFrame(MobyInstance *param_1);
 void MB_ProcessJoints(int param_1,undefined8 param_2);
 void MB_ComputeSelectedJoints(MobyInstance *param_1,int param_2,int *param_3,Mtx4 *param_4);

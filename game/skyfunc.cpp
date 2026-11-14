@@ -18,9 +18,9 @@
 #include <time.h>
 #include "game/skyfunc.h"
 #include "game/boot.h"
+#include "game/draw.h"
 #include "game/loaders.h"
 #include "game/mesh.h"
-#include "game/mobyproc.h"
 #include "game/mobyutil.h"
 #include "game/shadow.h"
 #include "game/skyproc.h"

@@ -127,6 +127,7 @@ extern undefined4 DAT_00a15f80; /* 0xa15f80 */
 extern undefined4 DAT_00a1a7b8; /* 0xa1a7b8 */
 extern undefined4 DAT_00a1a7bc; /* 0xa1a7bc */
 extern undefined4 DAT_00a1bfd8; /* 0xa1bfd8 */
+extern undefined4 DAT_00a49344; /* 0xa49344 */
 extern undefined1 DAT_00a52e60; /* 0xa52e60 */
 extern undefined4 DAT_00a561c0; /* 0xa561c0 */
 extern undefined4 DAT_00cd4000; /* no defined data */

@@ -585,10 +585,10 @@ void FUN_004defb0(undefined8 param_1,undefined1 *param_2,undefined4 param_3,unde
 void IdolDraw_SetPerspective(double param_1,double param_2,double param_3,int param_4);
 void IdolDraw_SetView(longlong param_1,uint param_2,undefined8 param_3,undefined8 param_4,uint param_5);
 void FUN_004dfc2c(void);
-void FUN_004dfe70(double param_1,int *param_2,int param_3,undefined8 param_4);
+void FUN_004dfe70(float param_1,int *param_2,int param_3,Vec4 *param_4);
 void FUN_004e0d50(double param_1,double param_2,int param_3,longlong param_4);
 void FUN_004e1970(int param_1,longlong param_2,undefined4 param_3,undefined4 param_4,void *param_5, longlong param_6);
-void FUN_004e1b80(undefined8 param_1,undefined8 param_2,int *param_3,int param_4,undefined8 param_5);
+void FUN_004e1b80(float param_1,float param_2,int *param_3,int param_4,Vec4 *param_5);
 void FUN_004e2860(double param_1,int param_2);
 void FUN_004e2a60(double param_1,int param_2);
 void FUN_004e2de0(double param_1,undefined8 param_2,undefined8 param_3,int param_4);

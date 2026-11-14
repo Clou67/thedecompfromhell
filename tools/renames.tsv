@@ -747,3 +747,5 @@ FastVecMtx4MultBatch4VMX	FastQSTToMtx4
 DAT_00a4db40	g_AnimJointMats
 MB_BlendJointFrames	AnimDecompInterp
 DAT_00a4fb80	g_AnimPoses
+FindMobysCloseToUpdate	BuildMobyUpdateChain
+DAT_00a49344	g_TargetableMobys
