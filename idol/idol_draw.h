@@ -115,366 +115,169 @@ struct IdolDrawVTable {
 };
 
 // ---- globals
-extern undefined4 DAT_0065f438; /* no defined data */
-extern undefined4 DAT_0065f620; /* no defined data */
-extern undefined4 DAT_0071a800; /* 0x71a800 */
-extern undefined4 DAT_0071a808; /* 0x71a808 */
-extern undefined4 DAT_00902e94; /* 0x902e94 */
-extern undefined4 DAT_00902ea0; /* 0x902ea0 */
-extern undefined4 DAT_00902ea4; /* 0x902ea4 */
-extern undefined4 DAT_00902eb8; /* 0x902eb8 */
-extern undefined4 DAT_00902ebc; /* 0x902ebc */
-extern undefined4 DAT_015932cc; /* 0x15932cc */
-extern undefined4 DAT_015932d0; /* 0x15932d0 */
-extern undefined4 DAT_015932d4; /* 0x15932d4 */
-extern undefined1 DAT_015932dc; /* 0x15932dc */
-extern undefined4 DAT_015932e0; /* 0x15932e0 */
-extern undefined4 DAT_015932e4; /* 0x15932e4 */
-extern undefined4 DAT_015932e8; /* no defined data */
-extern undefined4 DAT_0159331c; /* 0x159331c */
-extern undefined4 DAT_01593320; /* 0x1593320 */
-extern undefined4 DAT_01593324; /* 0x1593324 */
-extern undefined4 DAT_01593328; /* 0x1593328 */
-extern undefined4 DAT_01593348; /* no defined data */
-extern undefined1 DAT_0159334c; /* 0x159334c */
-extern undefined4 DAT_01593358; /* no defined data */
 extern IMSeqMem *MemSlots_IMSeqMem_descriptor; /* 0xa1091c: the pool InitMemSlots allocates from (DL keeps these pointers in a MEMSLOTS struct, MemSlots) */ /* type set in global_types.tsv */
-extern pointer PTR_DAT_0071a3b8; /* 0x71a3b8 */
-extern pointer PTR_DAT_0071a614; /* 0x71a614 */
-extern undefined * PTR_DAT_0071a654; /* 0x71a654 */
-extern undefined * PTR_DAT_0071a7b0; /* 0x71a7b0 */
-extern pointer PTR_DAT_0071a7fc; /* 0x71a7fc */
-extern pointer PTR_DAT_0071a804; /* 0x71a804 */
-extern pointer32 PTR_FUN_00710ef8; /* 0x710ef8 */
-extern pointer32 PTR_FUN_00710f08; /* 0x710f08 */
-extern pointer32 PTR_FUN_00710f10; /* 0x710f10 */
-extern pointer32 PTR_FUN_00710f18; /* 0x710f18 */
-extern pointer32 PTR_FUN_00710f20; /* 0x710f20 */
-extern pointer32 PTR_FUN_00710f28; /* 0x710f28 */
-extern pointer32 PTR_FUN_00710f30; /* 0x710f30 */
-extern pointer32 PTR_FUN_00710f38; /* 0x710f38 */
-extern pointer32 PTR_FUN_00710f40; /* 0x710f40 */
-extern pointer32 PTR_FUN_00710f50; /* 0x710f50 */
-extern pointer32 PTR_FUN_00710f58; /* 0x710f58 */
-extern pointer32 PTR_FUN_00710f60; /* 0x710f60 */
-extern pointer32 PTR_FUN_00710f80; /* 0x710f80 */
-extern pointer32 PTR_FUN_00710f88; /* 0x710f88 */
-extern pointer32 PTR_FUN_00710f90; /* 0x710f90 */
-extern pointer32 PTR_FUN_00710f98; /* 0x710f98 */
-extern pointer32 PTR_FUN_00710fa8; /* 0x710fa8 */
-extern pointer PTR_PTR_006663fc; /* 0x6663fc */
-extern pointer PTR_PTR_0071a5e4; /* 0x71a5e4 */
-extern pointer PTR_PTR_00902ea8; /* 0x902ea8 */
-extern pointer PTR_PTR_00902eac; /* 0x902eac */
-extern pointer PTR_PTR_00902eb0; /* 0x902eb0 */
-extern pointer PTR_PTR_00902eb4; /* 0x902eb4 */
-extern undefined * PTR_s_Application_thinks_baseAddr_is_0_0071a390; /* 0x71a390 */
-extern pointer PTR_s_No_name_0071a3bc; /* 0x71a3bc */
-extern pointer PTR_s_WwsJob__0071a5e0; /* 0x71a5e0 */
-extern undefined * PTR_s_false_0071a690; /* 0x71a690 */
-extern pointer PTR_s_no_name_0071a3a0; /* 0x71a3a0 */
-extern pointer PTR_s_validSpuReadLoadCommands_0071a648; /* 0x71a648 */
-extern undefined4 _DAT_004feb40; /* direct read */
-extern undefined4 _DAT_004feb50; /* direct read */
-extern undefined4 _DAT_004feb70; /* direct read */
-extern undefined4 _DAT_004feb80; /* direct read */
-extern undefined4 _DAT_004ff1d0; /* direct read */
-extern undefined4 _DAT_004ff1e0; /* direct read */
-extern undefined4 _DAT_004ff1f0; /* direct read */
-extern undefined4 _DAT_004ff200; /* direct read */
-extern undefined4 _DAT_004ff2e0; /* direct read */
-extern undefined4 _DAT_004ff2f0; /* direct read */
-extern undefined4 _DAT_004ff300; /* direct read */
-extern undefined4 _DAT_004ff310; /* direct read */
 
 // ---- functions
-namespace idol_draw { void CmdQueue_ResetCounters(int *param_1,int param_2); } 
-void JobList_WaitForProgress(int *param_1,ulonglong param_2,uint param_3);
-ushort JobList_GetProgress(int *param_1,ulonglong param_2);
-namespace idol_draw { bool CmdQueue_HasCapacity(int *param_1,ulonglong param_2,uint param_3); } 
-uint JobList_CountJobs(int *param_1,int param_2);
-uint JobList_CountJobs_2(int *param_1,int param_2);
-uint JobList_RaiseReadyCount(int *param_1,int param_2,uint param_3);
-ulonglong JobArrayContainer_AddJob(int *param_1,ulonglong param_2,undefined4 param_3);
-void JobWorkload_Shutdown(int param_1);
-void JobWorkload_SetPriorities(int param_1,undefined8 param_2);
-uint JobWorkload_IsIdle(int param_1);
-undefined1 JobWorkload_InfoE0(int param_1);
-undefined1 JobWorkload_InfoDD(int param_1);
-namespace idol_draw { void CmdQueue_Submit(int param_1,undefined8 param_2); } 
-void JobWorkload_SetName(int param_1,undefined8 param_2);
-void Job_CheckBaseAddr(undefined4 *param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4, int param_5,undefined4 *param_6);
-void JobList_ResetArray(int *param_1,ulonglong param_2,undefined4 *param_3);
-void JobList_ResetArray_2(int *param_1,ulonglong param_2,undefined4 *param_3);
-void JobList_CountToEnd(int *param_1,int param_2);
-void JobList_Init(int *param_1,undefined4 *param_2,int param_3);
-namespace idol_draw { void Spurs_WaitWorkloadIdle(int param_1); } 
-uint JobList_IsArrayDone(int *param_1,uint param_2);
-void JobList_WaitArrayDone(int *param_1,uint param_2);
-void JobList_SubmitArray(int *param_1,ulonglong param_2,undefined4 param_3);
-void JobList_SubmitArray_2(int *param_1,ulonglong param_2,undefined4 param_3);
-void JobArray_Reset(undefined4 *param_1);
-namespace idol_draw { ulonglong CmdQueue_ZeroCacheLines(uint *param_1); } 
-namespace idol_draw { int RingBuffer_PushEntry(int *param_1,undefined8 param_2); } 
-int JobArray_Push(int *param_1,undefined8 param_2);
-void JobArray_SetRange(int param_1,undefined4 param_2,undefined4 param_3);
-void JobArray_ClearRange(int param_1);
-void JobArray_Reset_2(undefined4 *param_1);
-ulonglong MemRegion_ZeroCacheLines(uint *param_1);
-int JobArray_TryInsert(int *param_1,undefined8 param_2,int param_3);
-int JobArray_TryInsert_2(int *param_1,undefined8 param_2,int param_3);
-int JobArray_FindEnd(int *param_1,int param_2);
-void JobArray_SetRange_2(int param_1,undefined4 param_2,undefined4 param_3);
-void JobArray_ClearRange_2(int param_1);
-ulonglong JobArray_AppendAtomic(uint *param_1,undefined8 param_2,ulonglong param_3);
-int JobArray_AddJob(int *param_1,ulonglong param_2,ulonglong param_3);
-int JobArray_AddCmd5(int *param_1,longlong param_2);
-int JobArray_AddCmd2(int *param_1,ulonglong param_2);
-int JobArray_AddJobFlagged(int *param_1,ulonglong param_2,ulonglong param_3);
-int JobArray_AddRaw10(int *param_1,ulonglong param_2);
-int JobArray_AddCmd4(int *param_1,ulonglong param_2);
-int JobArray_AddEnd(int *param_1);
-int JobArray_InsertJob(int *param_1,ulonglong param_2,ulonglong param_3,int param_4);
-int JobArray_InsertCmd5(int *param_1,longlong param_2,int param_3);
-int JobArray_InsertCmd2(int *param_1,ulonglong param_2,int param_3);
-int JobArray_InsertCmd4(int *param_1,ulonglong param_2,int param_3);
-int JobArray_InsertEnd(int *param_1,int param_2);
-void JobArray_Init(undefined4 *param_1,longlong param_2,longlong param_3);
-void JobArray_Init_2(undefined4 *param_1,longlong param_2,longlong param_3);
-ulonglong JobArray_AppendAtomic_2(uint *param_1,ulonglong param_2);
-ulonglong JobArray_AppendAtomic_3(uint *param_1,undefined8 param_2,ulonglong param_3);
-ulonglong JobArray_AppendAtomic_4(uint *param_1,ulonglong param_2,ulonglong param_3);
-ulonglong JobArray_AppendAtomic_5(uint *param_1,longlong param_2,ulonglong param_3);
-ulonglong JobArray_AppendAtomic_6(uint *param_1,ulonglong param_2,ulonglong param_3);
-ulonglong JobArray_AppendAtomic_7(uint *param_1,ulonglong param_2,ulonglong param_3,ulonglong param_4);
-ulonglong JobArray_AppendAtomic_8(uint *param_1,ulonglong param_2,ulonglong param_3,ulonglong param_4);
-ulonglong JobArray_AppendAtomic_9(uint *param_1,ulonglong param_2,ulonglong param_3);
-undefined2 * JobHandle_Make(undefined2 *param_1,int param_2);
-void JobList_CountActive(undefined8 param_1);
-void JobList_CountActive_2(undefined8 param_1);
-void JobList_WaitActive(undefined8 param_1);
-undefined1 JobList_IsActiveDone(undefined8 param_1);
-undefined2 * JobList_AddEnd(undefined2 *param_1,int param_2);
-undefined2 * JobList_AddJobFlagged(undefined2 *param_1,int param_2,undefined8 param_3,undefined8 param_4);
-namespace idol_draw { void CmdQueue_Reset(int param_1); } 
-void JobList_ResetPacket(void);
-void JobList_Disassemble(undefined4 *param_1,uint param_2);
-undefined2 * JobList_EndHandle(undefined2 *param_1,int *param_2);
-undefined2 * JobList_InsertCmd2(undefined2 *param_1,int param_2,undefined8 param_3,undefined8 param_4);
-undefined2 * JobList_AppendJob(undefined2 *param_1,int *param_2,undefined8 param_3,undefined8 param_4);
-undefined2 * JobList_AddCmd5(undefined2 *param_1,int param_2,undefined8 param_3);
-undefined2 * JobList_AddCmd2(undefined2 *param_1,int param_2,undefined8 param_3);
-namespace idol_draw { undefined2 * CmdQueue_PushEntry_Blocking(undefined2 *param_1,int param_2,undefined8 param_3); } 
-namespace idol_draw { undefined2 * CmdQueue_PushEntry(undefined2 *param_1,int param_2,undefined8 param_3); } 
-undefined2 * JobList_AppendAtomic(undefined2 *param_1,int *param_2);
-undefined2 * JobList_AppendAtomic5(undefined2 *param_1,int *param_2,undefined8 param_3);
-undefined2 * JobList_AppendAtomic6(undefined2 *param_1,int *param_2,undefined8 param_3);
-undefined2 * JobList_AppendAtomic7Kick(undefined2 *param_1,int *param_2,undefined8 param_3,undefined8 param_4, undefined4 param_5);
-undefined2 * JobList_AppendAtomic9(undefined2 *param_1,int *param_2,undefined8 param_3);
-undefined2 * JobList_AppendAtomic3(undefined2 *param_1,int *param_2,undefined8 param_3);
-undefined2 * JobList_AppendAtomic7(undefined2 *param_1,int *param_2,undefined8 param_3,undefined8 param_4);
-undefined2 * JobList_TryInsert(undefined2 *param_1,int param_2,undefined8 param_3,undefined8 param_4);
-undefined2 * JobList_InsertJob(undefined2 *param_1,int param_2,undefined8 param_3,undefined8 param_4, undefined8 param_5);
-undefined2 * JobList_InsertEnd(undefined2 *param_1,int param_2,undefined8 param_3);
-undefined2 * JobList_InsertCmd5(undefined2 *param_1,int param_2,undefined8 param_3,undefined8 param_4);
-undefined1 JobList_HasCapacity(int param_1);
-undefined2 * JobList_AppendJobKick(undefined2 *param_1,int *param_2,undefined8 param_3,undefined8 param_4, undefined4 param_5);
-undefined2 * JobList_AddCmd5Kick(undefined2 *param_1,int param_2,undefined8 param_3,undefined4 param_4);
-undefined2 * JobList_AddCmd2Kick(undefined2 *param_1,int param_2,undefined8 param_3,undefined4 param_4);
-undefined2 * JobList_AddRaw10Kick(undefined2 *param_1,int param_2,undefined8 param_3,undefined4 param_4);
-undefined2 * JobList_PushEntryKick(undefined2 *param_1,int param_2,undefined8 param_3,undefined4 param_4);
-undefined2 * JobList_AddJobFlaggedKick(undefined2 *param_1,int param_2,undefined8 param_3,undefined8 param_4, undefined4 param_5);
-undefined2 * JobList_AddJobKick(undefined2 *param_1,int param_2,undefined8 param_3,undefined8 param_4, undefined4 param_5);
-undefined2 * JobList_AppendAtomic5Kick(undefined2 *param_1,int *param_2,undefined8 param_3,undefined4 param_4);
-undefined2 * JobList_AppendAtomic6Kick(undefined2 *param_1,int *param_2,undefined8 param_3,undefined4 param_4);
-undefined2 * JobList_AppendAtomic9Kick(undefined2 *param_1,int *param_2,undefined8 param_3,undefined4 param_4);
-undefined2 * JobList_AppendAtomic3Kick(undefined2 *param_1,int *param_2,undefined8 param_3,undefined4 param_4);
-void JobList_ResetActive(int param_1);
-namespace idol_draw { void CmdQueue_WaitForSpaceAndSync(int param_1); } 
-void JobList_Reset(int param_1);
-void JobList_Reset_2(int param_1);
-int JobList_AllocCommands(int param_1,int param_2);
-void JobList_Create(int *param_1,int param_2,int param_3,undefined8 param_4);
-void JobList_Create_2(int *param_1,int param_2,int param_3,undefined8 param_4);
-void SpuAudit_DefaultPrintf(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4, undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
-void SpuModule_Init(undefined4 *param_1);
-void SpuModule_Init_2(undefined4 *param_1);
-int SpuModule_End(int *param_1);
-uint SpuModule_IsValid(int *param_1);
-void STUB_004f4f84(void);
-ulonglong SpuModule_Guid(int *param_1);
-int * SpuModuleCache_Find(int param_1);
-int * SpuModuleCache_FindByGuid(ulonglong param_1);
-int * SpuModuleCache_FindFree(void);
-void SpuModuleCache_Release(int param_1);
-void SpuModuleCache_Register(int param_1,undefined *param_2);
-undefined4 SpuModuleCache_Load(uint param_1,ulonglong *param_2,undefined1 *param_3,undefined4 param_4,int *param_5);
-ulonglong SpuModule_SizeKB(int *param_1);
-void SpuModule_Release(int *param_1);
-void SpuModule_Release_2(int *param_1);
-uint * SpuModuleCache_Lock(ulonglong param_1);
-undefined4 SpuModuleCache_GetName(ulonglong param_1,undefined1 *param_2,undefined4 param_3);
-int * SpuModule_Assign(int *param_1,int *param_2);
-void SpuModule_Copy(int *param_1,int *param_2);
-void SpuModule_Copy_2(int *param_1,int *param_2);
-void SpuModule_Create(int *param_1,int param_2,int param_3,undefined *param_4);
-void SpuModule_Create_2(int *param_1,int param_2,int param_3,undefined *param_4);
-void Medius_Ctor(undefined4 *param_1);
-void Medius_Ctor_2(undefined4 *param_1);
-undefined4 * Medius_GetInstance(undefined8 param_1);
-void Medius_Init(int param_1);
-void Medius_Disconnect(int param_1);
-void Medius_RequestState12(int param_1);
-void Medius_ConnectToMLS(int param_1);
-void Medius_DisconnectFromMAS(int param_1);
-void Medius_RequestStateD(int param_1);
-void Medius_BeginAuthentication(int param_1);
-void Medius_RequestSessionMAS(int param_1);
-void Medius_ConnectToMAS(int param_1);
-void Medius_Update(int param_1);
-void Medius_ResolveHostServer(int param_1);
-void Medius_Connect(int param_1);
-void SetWord_2(undefined4 *param_1,undefined4 param_2);
-undefined8 STUB_004f7120_RET_0(void);
-void NetGetHostByNameCallback(int param_1);
-void Medius_OnConnectResult(int param_1);
-void Medius_SetState8(void);
-void Medius_OnLoginResult(undefined4 *param_1);
-void Medius_SetState11(void);
-void NetUpdateErrorCallback(int param_1);
-void Medius_OnResolveResult(int param_1);
-void Medius_OnSessionResult(int param_1);
-void MASTicketLoginCallback(int param_1,int *param_2,int param_3);
-void MASAnonymousLoginCallback(int param_1,int *param_2,int param_3);
-void Medius_OnAccountResult(int param_1);
-void Medius_OnPolicyResult(int param_1);
-void MASSessionEndCallback(int param_1);
-void NetManager_Ctor(undefined4 *param_1);
-void NetManager_Ctor_2(undefined4 *param_1);
-undefined4 * NetManager_GetInstance(undefined8 param_1);
-void NpManagerCallback(int param_1);
-undefined8 NpBasicCallback(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4);
-void NetManager_UnloadNetStartDialog(longlong param_1);
-void NPTicketCallback(undefined8 param_1);
-void NetManager_Shutdown(undefined4 *param_1);
-void NetManager_Shutdown_2(int param_1);
-void NetManager_InitNp(undefined4 *param_1,char param_2);
-void NetManager_GetServiceId(int param_1,undefined4 param_2);
-void NetManager_Update(undefined4 *param_1);
-int NetManager_LookupNpId(undefined8 param_1,undefined8 param_2,undefined8 param_3);
-undefined * NetManager_FindPlayer(int param_1,int param_2);
-undefined4 NetManager_AddPlayer(int param_1,int param_2);
-void NetManager_SetPresence(undefined4 *param_1,undefined8 param_2);
-undefined8 NetManager_SetChatPresence(int param_1,int param_2);
-bool NetManager_AddFriend(int param_1,int param_2);
-bool NetManager_AddBlockListEntry(int param_1,int param_2);
-undefined1 NetManager_IsConnected(int param_1);
-void SpuAudit_Ctor(undefined4 *param_1);
-void SpuAudit_Init(undefined4 *param_1,undefined4 *param_2,longlong param_3,int param_4,int param_5);
-void SpuAudit_SetHeader0(undefined4 *param_1,undefined4 param_2);
-void SpuAudit_SetHeader10(int *param_1,undefined4 param_2);
-void SpuAudit_SetSize(int *param_1,int param_2);
-void SpuAudit_ClearSlot(int *param_1,int param_2,longlong param_3);
-void SpuAudit_WaitClearSlot(int *param_1,int param_2,longlong param_3);
-int SpuAudit_SlotIndex(int *param_1,int param_2,int param_3);
-undefined4 SpuAudit_GetSlot(int *param_1,int param_2,longlong param_3);
-void SpuAudit_WaitSlot(int *param_1,int param_2,longlong param_3);
-void SpuAudit_ClearSpu(int *param_1,int param_2);
-uint SpuAudit_RegisterId(int param_1,int param_2);
-void SpuAudit_AddFormat(int param_1,undefined2 param_2,short param_3,undefined4 param_4,undefined4 param_5 );
-void SpuAudit_FindFormat(int param_1,ulonglong param_2,undefined4 *param_3,undefined4 *param_4);
-void TextBuf_PutChar(int param_1,undefined1 param_2);
-void TextBuf_PutHex(int param_1,uint param_2);
-void TextBuf_PutPadding(int param_1,int param_2);
-void SpuAudit_FormatEntry(ulonglong param_1,undefined8 param_2,ulonglong param_3,undefined4 *param_4);
-void SpuAudit_AddHandler(int param_1,int param_2);
-void SpuAudit_CheckOverflow(uint *param_1,int param_2,ulonglong param_3,int param_4,undefined4 *param_5, int param_6);
-void SpuAudit_Process(undefined4 *param_1,undefined4 param_2,undefined4 param_3,int param_4, undefined4 param_5);
-void TextBuf_Flush(int param_1);
-void SpuAudit_PrintfThunk(void);
-int TextBuf_Printf(int param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4, undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
-void SpuAudit_ResetSpu(int *param_1,int param_2);
-void SpuAudit_ProcessAll(int *param_1,undefined4 param_2,undefined4 param_3);
-uint SpuAudit_RegisterIdWithFormat(int param_1,int param_2,undefined4 param_3,undefined4 param_4);
-void SpuAudit_FormatEntry_2(ulonglong param_1,undefined4 param_2,ulonglong param_3,undefined4 *param_4);
-void SpuAudit_Init_2(undefined4 *param_1,undefined4 *param_2,longlong param_3,int param_4,int param_5);
-void SpuAudit_Init_3(undefined4 *param_1,undefined4 *param_2,longlong param_3,int param_4,int param_5);
-void SpuAudit_Reset(undefined4 *param_1);
-void SpuAudit_Reset_2(undefined4 *param_1);
-void SpuAudit_Reset_3(undefined4 *param_1);
-void SpuAudit_Print(int param_1,undefined4 param_2,ulonglong param_3,undefined4 param_4,uint param_5, ushort param_6,uint param_7,ulonglong *param_8);
-void CommandListChecker_Check(ulonglong *param_1,uint param_2,uint param_3);
-void CommandListChecker_Fail(ulonglong param_1);
-undefined * GetDefaultAuditFormats(void);
-uint SpuAudit_BufferSize(void);
-undefined * SpuAudit_Buffer(void);
-uint SpuAudit_BufferSize_2(void);
-void SpuAudit_PrintSeparator(void);
-int IMSeqMem_BytesLeft(int param_1);
-longlong IMSeqMem_BytesLeftClamped(int param_1);
-namespace idol { ulonglong AllocateMemAlign(int param_1,longlong param_2,longlong param_3); } 
-void IMSeqMem_Alloc16(undefined4 param_1,undefined8 param_2);
-void IMSeqMem_AllocAligned(undefined4 param_1,undefined4 param_2,undefined8 param_3);
-void *IMSeqMem_Alloc(int param_1,void *param_2,int param_3);
-void IMSeqMem_Alloc16_2(undefined4 param_1,undefined8 param_2);
-void IMSeqMem_AllocAligned_2(undefined4 param_1,undefined4 param_2,undefined8 param_3);
-void IMSeqMem_Alloc_2(undefined4 param_1,undefined8 param_2);
-void STUB_004fe338(void);
-void STUB_004fe33c(void);
-void STUB_004fe340(void);
-void STUB_004fe344(void);
-void IMSeqMem_Release(int *param_1);
-void IMSeqMem_Init(IMSeqMem *param_1,void *param_2,int param_3,const char *param_4,int param_5,void *param_6);
-ulonglong IMSeqMem_InitFromParent(int *param_1,ulonglong param_2,int param_3,int param_4,int param_5);
-int IMSeqMem_AllocBytes(int param_1,int param_2);
-double IMSeqMem_FreeMB(int param_1);
-undefined4 IMSeqMem_GetBase(undefined4 *param_1);
-namespace idol { ulonglong kalloc(int param_1,longlong param_2); } 
-void IMSeqMem_AlignCur(int param_1,int param_2);
-void *IMSeqMem_GetCur(IMSeqMem *param_1);
-uint IMSeqMem_AlignUp(int param_1,int param_2);
-void IMSeqMem_SetCur(IMSeqMem *param_1,u32 param_2);
-ulonglong IMSeqMem_SetCurChecked(int param_1,ulonglong param_2);
-void IMSeqMem_Advance(int param_1,int param_2);
-int IMSeqMem_TotalFree(int *param_1);
-void IMSeqMem_Lock(int param_1);
-void IMSeqMem_Unlock(int param_1);
-void IMSeqMem_PrintInfo(u8 *param_1,const char *param_2);
-void TempPool_Init(void);
-undefined4 FUN_004fe898(void);
-void FUN_004fe97c(int param_1);
-void FUN_004fea60(undefined4 param_1,longlong param_2);
-void SetDefaultAllocator(void);
-void SetAltAllocator(void);
-void FUN_004feb98(uint param_1,uint param_2);
-bool FUN_004ff210(double param_1,uint param_2);
-int FastCheckBsphere(u8 *param_1,float param_2,float param_3,Vec4 param_4);
-int32_t Debug_PostBreak(void);
-void Debug_VPrintLevel1(undefined8 param_1,undefined8 param_2);
-namespace idol { int32_t print_mem_error (undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4, undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8); } 
-void Debug_SetAssertHandler(undefined4 param_1);
-void Debug_SetHandlerEb4(undefined *param_1);
-void Debug_SetHandlerEb0(undefined *param_1);
-void Debug_SetHandlerEac(undefined *param_1);
-void Debug_SetPrintHandler(undefined *param_1);
-void Debug_SetHandlers(undefined *param_1,undefined *param_2,undefined *param_3,undefined4 param_4);
-void Debug_SetHandlers_2(undefined *param_1,undefined *param_2,undefined *param_3,undefined *param_4, undefined4 param_5);
-void Debug_CallAssertHandler(undefined8 param_1,undefined8 param_2,undefined8 param_3);
-void print_tty(const char *param_1,...);
-void Debug_Printf(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4, undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
-void Debug_VPrintLevel3(undefined8 param_1,undefined8 param_2);
-void Debug_PrintfLevel3(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4, undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
-int32_t Idol_Break(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4, undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
-void Debug_VPrintEb0(undefined8 param_1);
-int32_t Debug_BreakPrintf(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4, undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
-void Debug_VPrintEb4(undefined1 param_1);
-void Debug_PrintfEb4(undefined1 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4, undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
-void print_tty2(char *format,...);
-void Debug_PrintfEb0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4, undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
-void Debug_PrintfEb0_2(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4, undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
-undefined4 Debug_GetLevelA0(void);
-undefined4 Debug_GetLevelA4(void);
-void Debug_SetLevelA0(undefined4 param_1);
-void Debug_SetLevelA4(undefined4 param_1);
-int32_t Debug_PutsA(undefined8 param_1,char *param_2);
-int32_t Debug_PutsB(undefined8 param_1,char *param_2);
+namespace idol_draw { ulonglong PackCmd(ulonglong param_1,ulonglong param_2,ulonglong param_3,ulonglong param_4 ,longlong depth); } 
+ulonglong GsPackAlpha(ulonglong param_1,ulonglong param_2,ulonglong param_3,ulonglong param_4, longlong param_5);
+u64 SCE_GS_SET_CLAMP(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6);
+undefined8 STUB_00502f5c_RET_0(void);
+undefined8 STUB_00502f64_RET_0(void);
+u64 SCE_GS_SET_MIPTBP1(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6);
+u64 STUB_00502f74_RET_0(int param_1,int param_2,int param_3,int param_4,int param_5);
+namespace idol_draw { uint Blend(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6,int param_7,int param_8); } 
+u64 GsPackTest(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6,int param_7,int param_8);
+undefined8 STUB_00502fb4_RET_0(void);
+u64 SCE_GS_SET_TEX0(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6,int param_7,int param_8,int param_9,int param_10,int param_11,int param_12);
+undefined8 STUB_00502fc4_RET_0(void);
+undefined8 STUB_00502fcc_RET_0(void);
+u64 SCE_GS_SET_TEX1(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6,int param_7);
+undefined8 STUB_00502fdc_RET_0(void);
+undefined8 STUB_00502fe4_RET_0(void);
+u64 SCE_GS_SET_XYZ(int param_1,int param_2,int param_3);
+undefined8 STUB_00502ff4_RET_0(void);
+u64 VU1_addGSregister(int param_1,int param_2,int param_3);
+undefined8 STUB_00503004_RET_0(void);
+u8 Gs_DmaTagByte(int param_1,int param_2);
+undefined8 STUB_00503014_RET_0(void);
+undefined8 STUB_0050301c_RET_0(void);
+undefined8 STUB_00503024_RET_0(int param_1,int param_2,int param_3);
+undefined8 STUB_0050302c_RET_0(int param_1);
+undefined8 STUB_00503034_RET_0(float param_1,float param_2);
+undefined8 STUB_0050303c_RET_0(void);
+u64 SCE_GS_SET_BITBLTBUF(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6);
+undefined8 STUB_0050304c_RET_0(void);
+void STUB_00503054(void);
+undefined8 STUB_00503058_RET_0(void);
+undefined8 STUB_00503060_RET_0(void);
+void STUB_00503068(void);
+void sceGsExecLoadImage(void *param_1,void *param_2);
+void STUB_00503070(...);
+void sceGsSyncPath(int param_1,int param_2);
+void STUB_00503078(...);
+void STUB_0050307c(...);
+void STUB_00503080(...);
+void sceGsSetDefLoadImage(void *param_1,int param_2,int param_3,int param_4,int param_5,int param_6,int param_7,int param_8);
+void STUB_00503088(void);
+void STUB_0050308c(void);
+void STUB_00503090(void);
+undefined8 STUB_00503094_RET_0(void);
+undefined8 STUB_0050309c_RET_0(void);
+undefined8 STUB_005030a4_RET_2(void);
+u32 STUB_005030ac_RET_0(int param_1,int param_2);
+u32 STUB_005030b4_RET_0(int param_1);
+u32 STUB_005030bc_RET_0(int param_1,int param_2);
+u32 STUB_005030c4_RET_0(int param_1,int param_2);
+u32 STUB_005030cc_RET_0(int param_1,int param_2);
+u32 STUB_005030d4_RET_0(int param_1,int param_2);
+u64 STUB_005030dc_RET_0(int param_1);
+undefined8 STUB_005030e4_RET_0(void);
+u64 STUB_005030ec_RET_0(int param_1);
+u32 STUB_005030f4_RET_0(int param_1,int param_2);
+u32 STUB_005030fc_RET_0(int param_1);
+u32 SCE_VIF1_SET_UNPACK(int param_1,int param_2,int param_3,int param_4);
+undefined8 STUB_0050310c_RET_0(void);
+void STUB_00503114(...);
+void STUB_00503118(...);
+void STUB_0050311c(void);
+undefined8 STUB_00503120_RET_0(void);
+int STUB_00503128_RET_0(int param_1);
+undefined8 STUB_00503130_RET_3(void);
+undefined8 STUB_00503138_RET_0(void);
+void STUB_00503140(void);
+undefined8 STUB_00503144_RET_0(void);
+undefined8 STUB_0050314c_SET_1(undefined4 *param_1);
+int STUB_0050315c_RET_0(int param_1);
+int STUB_00503164_RET_0(int param_1,int param_2,int param_3);
+undefined8 STUB_0050316c_RET_1(void);
+void STUB_00503174(void);
+void STUB_00503178(void);
+void STUB_0050317c(void);
+undefined8 STUB_00503180_RET_1(void);
+void STUB_00503188(void);
+undefined8 STUB_0050318c_RET_0(void);
+undefined8 STUB_00503194_RET_0(void);
+undefined8 STUB_0050319c_RET_0(void);
+void STUB_005031a4(...);
+int STUB_005031a8_RET_0(int param_1);
+undefined8 STUB_005031b0_RET_0(void);
+void STUB_005031b8(...);
+int RunCopy(void *param_1,int param_2);
+void STUB_005031f4(void);
+void STUB_005031f8(...);
+void STUB_005031fc(...);
+void STUB_00503200(void);
+void STUB_00503204(...);
+void STUB_00503208(...);
+undefined8 STUB_0050320c_RET_0(void);
+void STUB_00503214(int param_1);
+void STUB_00503218(...);
+void STUB_0050321c(...);
+undefined8 STUB_00503220_RET_0(void);
+undefined8 STUB_00503228_RET_0(void);
+undefined8 STUB_00503230_RET_0(void);
+undefined8 STUB_00503238_RET_0(void);
+void STUB_00503240(void);
+void FlushCache(int param_1);
+void STUB_00503248(void);
+void STUB_0050324c(void);
+undefined8 STUB_00503250_RET_0(void);
+undefined8 STUB_00503258_RET_0(void);
+undefined8 STUB_00503260_RET_0(void);
+void STUB_00503268(void);
+void STUB_0050326c(void);
+void STUB_00503270(void);
+undefined8 STUB_00503274_RET_0(void);
+void STUB_0050327c(void);
+void STUB_00503280(void);
+undefined8 STUB_00503284_RET_0(void);
+void STUB_0050328c(void);
+undefined8 STUB_00503290_RET_0(void);
+void STUB_00503298(void);
+undefined8 STUB_0050329c_RET_0(void);
+void STUB_005032a4(void);
+undefined8 STUB_005032a8_RET_0(void);
+undefined8 STUB_005032b0_RET_0(void);
+void STUB_005032b8(void);
+undefined8 STUB_005032bc_RET_0(void);
+undefined8 STUB_005032c4_RET_0(void);
+undefined8 STUB_005032cc_RET_0(void);
+undefined8 STUB_005032d4_RET_0(void);
+undefined8 STUB_005032dc_RET_0(void);
+undefined8 STUB_005032e4_RET_0(void);
+undefined8 STUB_005032ec_RET_0(void);
+undefined8 STUB_005032f4_RET_0(void);
+undefined8 STUB_005032fc_RET_0(void);
+undefined8 STUB_00503304_RET_0(void);
+undefined8 STUB_0050330c_RET_0(void);
+undefined8 STUB_00503314_RET_0(void);
+void STUB_0050331c(void);
+void STUB_00503320(void);
+void STUB_00503324(void);
+void STUB_00503328(void);
+void STUB_0050332c(void);
+void SysUsleep(void);
+undefined8 STUB_00503354_RET_0(void);
+undefined8 STUB_0050335c_RET_0(void);
+undefined8 STUB_00503364_RET_0(void);
+void STUB_0050336c(void);
+undefined8 STUB_00503370_RET_0(void);
+void STUB_00503378(void);
+undefined8 STUB_0050337c_RET_0(void);
+void STUB_00503384(void);
+undefined8 STUB_00503388_RET_0(void);
+undefined4 SysGetSystemTime(void);
+undefined8 STUB_005033b8_RET_0(void);
+undefined8 STUB_005033c0_RET_0(void);
+undefined8 STUB_005033c8_RET_0(void);
+void STUB_005033d0(void);
+undefined8 STUB_005033d4_RET_0(void);
+undefined8 STUB_005033dc_RET_0(void);
+void STUB_005033e4(void);
+void SetWord(undefined4 *param_1,undefined4 param_2);
+undefined8 STUB_005033f0_RET_0(void);
+void STUB_005033f8(void);
+undefined8 STUB_005033fc_RET_0(void);
+void m_LoadLevelFileS(u32 param_1,const char *param_2);
+undefined8 m_LoadLevelFile(void);
+undefined8 m_LoadLevelFileB(void);

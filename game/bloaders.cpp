@@ -17,8 +17,9 @@
 #include "game/vuchain.h"
 #include "idol/fastfunc.h"
 #include "idol/idol.h"
+#include "idol/idol_draw.h"
 #include "idol/sound.h"
-#include "sdk/mUnk4.h"
+#include "sdk/rUnk2.h"
 
 enum {                      /* PifHeader.texFormat / clutFormat */
     PIF_FMT_32 = 0x12,      /* 32 bits per pixel (clut entries: 32-bit) */

@@ -1,5 +1,5 @@
 #pragma once
-// idol/sUnk.h
+// sdk/libbrb/brb.h
 #include "types.h"
 
 // ---- globals
@@ -12,8 +12,6 @@ extern pointer PTR_PTR_0071b0a0; /* 0x71b0a0 */
 extern pointer PTR_PTR_0071b0a4; /* 0x71b0a4 */
 extern pointer PTR_PTR_0071b0a8; /* 0x71b0a8 */
 extern pointer PTR_PTR_0071b0b4; /* 0x71b0b4 */
-extern pointer PTR_PTR_0071c774; /* 0x71c774 */
-extern pointer PTR_s_bad_allocation_0071c768; /* 0x71c768 */
 
 // ---- functions
 namespace idol { undefined4 brbVoice_ConnectPort(int param_1,int param_2,int param_3); } 
@@ -102,8 +100,3 @@ void brbFormat_Set(undefined1 *param_1,undefined1 param_2,undefined1 param_3,und
 undefined4 brbFormat_Compatible(int param_1,uint *param_2,int param_3);
 undefined8 brbClock_Init(int *param_1,longlong param_2,longlong param_3);
 void brbClock_Reset(undefined4 *param_1);
-undefined * bad_alloc_what(void);
-void bad_alloc_Throw(void);
-void bad_alloc_DeletingDtor(undefined4 *param_1);
-void bad_alloc_Dtor(undefined4 *param_1);
-void CallGlobalDtors(void);

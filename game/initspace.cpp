@@ -14,6 +14,7 @@
 #include "game/partupd.h"
 #include "game/space.h"
 #include "idol/fastfunc.h"
+#include "idol/idol_draw.h"
 
 #define SHIP_TILT       (-0.34906584f)  /* -20 degrees */
 #define TRAIL_HALFWIDTH 0.25f

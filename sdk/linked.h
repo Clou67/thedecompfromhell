@@ -287,6 +287,7 @@ extern pointer PTR_PTR_0071c74c; /* 0x71c74c */
 extern pointer PTR_PTR_0071c750; /* 0x71c750 */
 extern pointer PTR_PTR_0071c754; /* 0x71c754 */
 extern pointer PTR_PTR_0071c760; /* 0x71c760 */
+extern pointer PTR_PTR_0071c774; /* 0x71c774 */
 extern pointer PTR_PTR_0071c778; /* 0x71c778 */
 extern pointer PTR_PTR_0071c788; /* 0x71c788 */
 extern pointer PTR_PTR_0071c78c; /* 0x71c78c */

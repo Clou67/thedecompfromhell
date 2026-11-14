@@ -147,6 +147,7 @@ extern undefined * PTR_PTR_00661878; /* 0x661878 */
 extern undefined * PTR_PTR_00661898; /* 0x661898 */
 extern undefined * PTR_PTR_00661940; /* 0x661940 */
 extern pointer PTR_PTR_00661960; /* 0x661960 */
+extern undefined * PTR_PTR_00666410; /* 0x666410 */
 extern ShrubInstance *ShrubInstanceBase; /* 0xa1a794 */ /* type set in global_types.tsv */
 extern undefined4 ShrubInstanceCnt; /* 0xa1a798 */
 extern ShrubInstance *ShrubInstanceEnd; /* type set in global_types.tsv */

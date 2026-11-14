@@ -15,7 +15,7 @@
 #include "idol/fastfunc.h"
 #include "idol/idol.h"
 #include "idol/sound.h"
-#include "sdk/mUnk4.h"
+#include "sdk/rUnk2.h"
 #include "idol/fastinline.h"
 
 /* SoundData.state */

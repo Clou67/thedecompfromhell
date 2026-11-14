@@ -33,3 +33,29 @@ boot::_start	game/crt0.cpp
 0x7a338-0x7b0f4	game/global.cpp
 # keep the old sdk/xUnk5.cpp (collproc helpers, partly cleaned in manual/) where it was before the SDK object cap renumbered the unknown files
 0x5e6a10-0x5e7e0c	sdk/xUnk5.cpp
+# --- idol/sdk split by library (contiguous ranges, named from their strings and functions) ---
+0x4d441c-0x4d5fac	idol/binkplayer.cpp
+0x4e5f40-0x4e6eac	idol/hwsystem.cpp
+0x4e6eac-0x4eacd4	idol/savesystem.cpp
+0x4eacd4-0x4eb3b8	idol/msgdialog.cpp
+0x4eb3b8-0x4ec568	idol/pad.cpp
+0x4ec568-0x4ee1e0	idol/lightjobs.cpp
+0x4ee1e0-0x4efdf4	idol/gamecontent.cpp
+0x4efdf4-0x4f0e28	idol/trophy.cpp
+0x4f0e28-0x4f14c8	idol/packet.cpp
+0x4f14c8-0x4f4e40	sdk/libwwsjob/jobapi.cpp
+0x4f4e40-0x4f5a98	sdk/libwwsjob/spumodule.cpp
+0x4f5a98-0x4f9460	idol/netmanager.cpp
+0x4f9460-0x4fb500	sdk/libwwsjob/audit.cpp
+0x4fb500-0x4fd358	sdk/libwwsjob/commandlistchecker.cpp
+0x4fd358-0x4fe048	sdk/libwwsjob/audit.cpp
+0x4fe048-0x4ff480	idol/IMSeqMem.cpp
+0x4ff480-0x4fff60	idol/debugprint.cpp
+0x5e9414-0x5f3984	sdk/libbink/binkread.cpp
+0x5f3984-0x5f5090	sdk/libbink/binkfile.cpp
+0x5f5090-0x5fbd88	sdk/libbink/binkaudio.cpp
+0x5fbd88-0x5fd9f8	sdk/libbink/rrthreads.cpp
+0x5fd9f8-0x604050	sdk/libbink/binkdecode.cpp
+0x604050-0x604574	sdk/libbink/rrstring.cpp
+0x648b10-0x64ece0	sdk/libbrb/brb.cpp
+0x64ece0-0x64eda4	sdk/libstdcxx/bad_alloc.cpp

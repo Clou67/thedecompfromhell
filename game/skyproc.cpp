@@ -9,8 +9,8 @@
 #include "game/boot.h"
 #include "game/draw.h"
 #include "game/skyfunc.h"
-#include "idol/idol_draw.h"
-#include "idol/mUnk.h"
+#include "idol/IMSeqMem.h"
+#include "idol/binkplayer.h"
 #include "idol/tiefunc.h"
 #include <cell/gcm/gcm_macros.h>
 #include <cell/gcm/gcm_enum.h>

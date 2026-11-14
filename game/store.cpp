@@ -1,6 +1,6 @@
 #include <string.h>
 #include "game/store.h"
-#include "idol/fastfunc.h"
+#include "idol/idol_draw.h"
 // game/store.cpp -- reconstructed from NPEA00385 EBOOT (was sUnk.cpp; the name is invented)
 // 8 functions, 0x165588-0x1658d8: a store of up to 64 buffers in a 4 MB pool in main memory,
 // filled through RunCopy and read with memcpy. Sizes and offsets are in qwords. Errors: -1 too

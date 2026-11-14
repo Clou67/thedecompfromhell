@@ -16,8 +16,8 @@
 #include "game/mobyproc.h"
 #include "game/pad.h"
 #include "game/partupd.h"
-#include "idol/idol_draw.h"
-#include "idol/mUnk.h"
+#include "idol/IMSeqMem.h"
+#include "idol/binkplayer.h"
 #include <cell/gcm/gcm_macros.h>
 #include <cell/gcm/gcm_enum.h>
 

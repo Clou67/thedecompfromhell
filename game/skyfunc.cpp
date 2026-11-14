@@ -28,6 +28,7 @@
 #include "game/update.h"
 #include "game/vuchain.h"
 #include "idol/fastfunc.h"
+#include "idol/idol_draw.h"
 #include "idol/shrubfunc.h"
 #include "idol/tiefunc.h"
 #include "sdk/rUnk.h"

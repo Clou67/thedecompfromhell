@@ -1880,7 +1880,6 @@ extern pointer32 PTR_PromptHud_Init_00705750; /* 0x705750 */
 extern pointer32 PTR_PromptHud_Update_00705758; /* 0x705758 */
 extern Sphere * Spheres; /* 0xa51bc8 */
 extern Spline * Splines[176]; /* 0xa51be0 */
-extern undefined4 TrophyMgr; /* 0x8fabdc */
 extern undefined4 _DAT_00107810; /* direct read */
 extern undefined4 _DAT_00107830; /* direct read */
 extern undefined4 _DAT_00107840; /* direct read */

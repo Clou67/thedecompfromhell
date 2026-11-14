@@ -7,7 +7,7 @@
 #include "game/mobyfunc.h"
 #include "game/mobyproc.h"
 #include "game/mobyutil.h"
-#include "idol/idol_draw.h"
+#include "idol/debugprint.h"
 #include "sdk/xUnk5.h"
 // game/collproc.cpp -- reconstructed from NPEA00385 EBOOT
 // 27 functions, 0x55aa4-0x609e8: the collision queries. Lines, spheres and pills against the env

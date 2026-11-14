@@ -2,6 +2,7 @@
 #include "game/global.h"
 #include "game/loaders.h"
 #include "game/pause.h"
+#include "idol/debugprint.h"
 #include "idol/fastfunc.h"
 #include "idol/idol_draw.h"
 #include "sdk/fios.h"

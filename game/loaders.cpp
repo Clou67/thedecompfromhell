@@ -40,14 +40,15 @@
 #include "game/tieproc.h"
 #include "game/update.h"
 #include "game/vuchain.h"
+#include "idol/IMSeqMem.h"
 #include "idol/fastfunc.h"
 #include "idol/idol.h"
 #include "idol/idol_draw.h"
 #include "idol/shrubfunc.h"
 #include "idol/tfragfunc.h"
 #include "sdk/fios.h"
-#include "sdk/mUnk4.h"
 #include "sdk/rUnk.h"
+#include "sdk/rUnk2.h"
 #include "sdk/sce.h"
 #include <cell/fios.h>
 #include <sys/timer.h>

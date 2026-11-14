@@ -5,7 +5,7 @@ Evidence: SECTION_HEADER_* starts a file; moby helpers come first and the `Updat
 Unknown objects are named `<first letter of the previous linked object>Unk.cpp`. Folders follow link position: everything up to the end of the moby sea is `game/`; game-labelled code after it is `idol/`.
 Shared update functions are named `UpdateMoby_<first oClass>`, with every registered oClass in a comment.
 
-11433 functions, 1200 files: 947 `game/update/moby*.cpp`, 24 `game/update/camera*.cpp`.
+11433 functions, 1220 files: 947 `game/update/moby*.cpp`, 24 `game/update/camera*.cpp`.
 
 | file | funcs | start | end |
 |---|---|---|---|
@@ -59,11 +59,24 @@ Shared update functions are named `UpdateMoby_<first oClass>`, with every regist
 | game/walk.cpp | 15 | 0x175558 | 0x17b214 |
 | game/water.cpp | 37 | 0x17b214 | 0x17f7c0 |
 | *update files* | 3377 | 0x17f7d0 | 0x4d27a4 |
-| idol/mUnk.cpp | 245 | 0x4d27b0 | 0x4efdf4 |
-| sdk/mUnk.cpp | 2 | 0x4efdf4 | 0x4eff54 |
-| idol/mUnk2.cpp | 47 | 0x4eff54 | 0x4f14c8 |
-| idol/idol_draw.cpp | 290 | 0x4f14c8 | 0x4fff5c |
-| idol/fastfunc.cpp | 298 | 0x4fff60 | 0x503494 |
+| idol/mUnk.cpp | 14 | 0x4d27b0 | 0x4d441c |
+| idol/binkplayer.cpp | 107 | 0x4d441c | 0x4e5f40 |
+| idol/hwsystem.cpp | 17 | 0x4e5f40 | 0x4e6eac |
+| idol/savesystem.cpp | 49 | 0x4e6eac | 0x4eacd4 |
+| idol/msgdialog.cpp | 10 | 0x4eacd4 | 0x4eb3b4 |
+| idol/pad.cpp | 6 | 0x4eb3b8 | 0x4ec564 |
+| idol/lightjobs.cpp | 16 | 0x4ec568 | 0x4ee1e0 |
+| idol/gamecontent.cpp | 26 | 0x4ee1e0 | 0x4efdf4 |
+| idol/trophy.cpp | 21 | 0x4efdf4 | 0x4f0e24 |
+| idol/packet.cpp | 28 | 0x4f0e28 | 0x4f14c8 |
+| sdk/libwwsjob/jobapi.cpp | 109 | 0x4f14c8 | 0x4f4e3c |
+| sdk/libwwsjob/spumodule.cpp | 22 | 0x4f4e40 | 0x4f5a98 |
+| idol/netmanager.cpp | 50 | 0x4f5a98 | 0x4f9460 |
+| sdk/libwwsjob/audit.cpp | 41 | 0x4f9460 | 0x4fd3f4 |
+| idol/IMSeqMem.cpp | 39 | 0x4fe048 | 0x4ff47c |
+| idol/debugprint.cpp | 29 | 0x4ff480 | 0x4fff5c |
+| idol/fastfunc.cpp | 135 | 0x4fff60 | 0x502ea8 |
+| idol/idol_draw.cpp | 163 | 0x502ea8 | 0x503494 |
 | idol/idol.cpp | 94 | 0x503494 | 0x505f54 |
 | idol/sound.cpp | 45 | 0x505f58 | 0x507f60 |
 | sdk/fios.cpp | 12 | 0x507f68 | 0x508b80 |
@@ -73,7 +86,7 @@ Shared update functions are named `UpdateMoby_<first oClass>`, with every regist
 | sdk/libgcm_cmd/flip_safe.cpp | 1 | 0x50e7f8 | 0x50e8dc |
 | idol/fUnk.cpp | 1 | 0x50e8dc | 0x50e998 |
 | sdk/libgcm_cmd/marker.cpp | 8 | 0x50e998 | 0x50ef38 |
-| sdk/mUnk2.cpp | 4 | 0x50ef38 | 0x50efcc |
+| sdk/mUnk.cpp | 4 | 0x50ef38 | 0x50efcc |
 | sdk/libgcm_cmd/gcminit.cpp | 3 | 0x50efcc | 0x50f074 |
 | sdk/libgcm_cmd/SetWriteCommandLabel.safe.cpp | 1 | 0x50f074 | 0x50f130 |
 | sdk/libcgb/cgb.cpp | 18 | 0x50f130 | 0x50fb6c |
@@ -173,7 +186,7 @@ Shared update functions are named `UpdateMoby_<first oClass>`, with every regist
 | sdk/xUnk4.cpp | 1 | 0x5d0d34 | 0x5d0d68 |
 | sdk/libc/malloc_lv2.cpp | 32 | 0x5d0d68 | 0x5d56f4 |
 | sdk/libc/malloc.cpp | 4 | 0x5d56f4 | 0x5d57d4 |
-| sdk/mUnk3.cpp | 6 | 0x5d57d4 | 0x5d58bc |
+| sdk/mUnk2.cpp | 6 | 0x5d57d4 | 0x5d58bc |
 | sdk/libc/asctime.cpp | 2 | 0x5d58bc | 0x5d5914 |
 | sdk/libc/fputc.cpp | 1 | 0x5d5914 | 0x5d5a08 |
 | sdk/libc/fputs.cpp | 1 | 0x5d5a08 | 0x5d5c24 |
@@ -223,15 +236,22 @@ Shared update functions are named `UpdateMoby_<first oClass>`, with every regist
 | sdk/xUnk11.cpp | 3 | 0x5e6980 | 0x5e6a0c |
 | sdk/xUnk5.cpp | 54 | 0x5e6a10 | 0x5e7e0c |
 | idol/xUnk.cpp | 8 | 0x5e7e18 | 0x5e8058 |
-| idol/mathfunc.cpp | 258 | 0x5e8078 | 0x604574 |
-| sdk/mUnk4.cpp | 290 | 0x604574 | 0x6169e4 |
+| idol/mathfunc.cpp | 57 | 0x5e8078 | 0x5e9414 |
+| sdk/libbink/binkread.cpp | 78 | 0x5e9414 | 0x5f3984 |
+| sdk/libbink/binkfile.cpp | 9 | 0x5f3984 | 0x5f508c |
+| sdk/libbink/binkaudio.cpp | 18 | 0x5f5090 | 0x5fbd84 |
+| sdk/libbink/rrthreads.cpp | 56 | 0x5fbd88 | 0x5fd9f4 |
+| sdk/libbink/binkdecode.cpp | 22 | 0x5fd9f8 | 0x60404c |
+| sdk/libbink/rrstring.cpp | 18 | 0x604050 | 0x604574 |
+| sdk/rUnk2.cpp | 290 | 0x604574 | 0x6169e4 |
 | sdk/libscream/LFO.cpp | 13 | 0x6169e4 | 0x61768c |
 | sdk/lUnk2.cpp | 42 | 0x61768c | 0x61948c |
 | sdk/libscream/989snd.cpp | 524 | 0x61948c | 0x63fb20 |
 | idol/9Unk.cpp | 12 | 0x63fb20 | 0x63ff34 |
 | sdk/libscream/sndhost.cpp | 161 | 0x63ff34 | 0x648b10 |
-| idol/sUnk.cpp | 91 | 0x648b10 | 0x64eda4 |
-| sdk/sUnk2.cpp | 6 | 0x64eda4 | 0x64ee64 |
+| sdk/libbrb/brb.cpp | 86 | 0x648b10 | 0x64ece0 |
+| sdk/libstdcxx/bad_alloc.cpp | 5 | 0x64ece0 | 0x64eda4 |
+| sdk/bUnk2.cpp | 6 | 0x64eda4 | 0x64ee64 |
 | sdk/sce.cpp | 87 | 0x64ee64 | 0x64f944 |
 | sdk/cell.cpp | 67 | 0x64f944 | 0x6501a4 |
 | sdk/sys.cpp | 54 | 0x6501a4 | 0x650864 |

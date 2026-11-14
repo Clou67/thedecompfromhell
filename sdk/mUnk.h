@@ -3,5 +3,7 @@
 #include "types.h"
 
 // ---- functions
-void sceNpTrophyDestroyHandle(u32 param_1);
-undefined8 TrophyMgr_DestroyContext(int param_1,undefined8 param_2,undefined8 param_3,char param_4);
+void FUN_0050ef38(int param_1);
+ulonglong FUN_0050ef48(longlong param_1,char *param_2);
+ulonglong FUN_0050ef84(longlong param_1,char *param_2);
+int FUN_0050efc0(int param_1);

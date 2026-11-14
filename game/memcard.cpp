@@ -31,10 +31,14 @@
 #include "game/space.h"
 #include "game/update/moby1118.h"
 #include "game/vendor.h"
+#include "idol/binkplayer.h"
+#include "idol/debugprint.h"
 #include "idol/fastfunc.h"
+#include "idol/hwsystem.h"
 #include "idol/idol.h"
-#include "idol/idol_draw.h"
 #include "idol/mUnk.h"
+#include "idol/savesystem.h"
+#include "idol/trophy.h"
 #include "sdk/sce.h"
 
 #ifndef CELL_MSGDIALOG_TYPE_SE_TYPE_NORMAL
