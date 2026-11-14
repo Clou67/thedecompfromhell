@@ -12,7 +12,7 @@ extern pointer PTR_PTR_0071c3d0; /* 0x71c3d0 */
 extern undefined1 stack0x00000048[16]; /* stack slot, not a real global */
 
 // ---- functions
-uint FUN_005cd028(uint param_1,undefined8 param_2,uint param_3);
-uint FUN_005cd128(uint param_1,undefined8 param_2,uint param_3);
-int * FUN_005cd224(int *param_1,void *param_2,uint param_3);
-int FUN_005cd324(void *param_1,void *param_2,size_t param_3);
+uint _FPrintfWrite(uint param_1,undefined8 param_2,uint param_3);
+uint _FPrintfWrite_2(uint param_1,undefined8 param_2,uint param_3);
+int * _SnprintfWrite(int *param_1,void *param_2,uint param_3);
+int _SprintfWrite(void *param_1,void *param_2,size_t param_3);
