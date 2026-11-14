@@ -33,6 +33,7 @@
 #include "idol/binkplayer.h"
 #include "idol/fastfunc.h"
 #include "idol/idol_draw.h"
+#include "idol/idoldraw_ps3.h"
 #include "idol/lightjobs.h"
 #include "idol/mathfunc.h"
 #include "idol/shrubfunc.h"

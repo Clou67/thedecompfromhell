@@ -60,6 +60,7 @@
 #include "idol/hwsystem.h"
 #include "idol/idol.h"
 #include "idol/idol_draw.h"
+#include "idol/idoldraw_ps3.h"
 #include "idol/lightjobs.h"
 #include "idol/mUnk.h"
 #include "idol/pad.h"

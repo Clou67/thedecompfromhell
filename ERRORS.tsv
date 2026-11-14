@@ -1025,7 +1025,7 @@ errors	file
 0	game/water.cpp
 23	idol/9Unk.cpp
 72	idol/IMSeqMem.cpp
-1192	idol/binkplayer.cpp
+108	idol/binkplayer.cpp
 56	idol/debugprint.cpp
 3	idol/fUnk.cpp
 132	idol/fastfunc.cpp
@@ -1033,6 +1033,7 @@ errors	file
 66	idol/hwsystem.cpp
 135	idol/idol.cpp
 7	idol/idol_draw.cpp
+1084	idol/idoldraw_ps3.cpp
 50	idol/lightjobs.cpp
 21	idol/mUnk.cpp
 89	idol/mathfunc.cpp

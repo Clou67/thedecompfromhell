@@ -5,7 +5,7 @@ Evidence: SECTION_HEADER_* starts a file; moby helpers come first and the `Updat
 Unknown objects are named `<first letter of the previous linked object>Unk.cpp`. Folders follow link position: everything up to the end of the moby sea is `game/`; game-labelled code after it is `idol/`.
 Shared update functions are named `UpdateMoby_<first oClass>`, with every registered oClass in a comment.
 
-11433 functions, 1220 files: 947 `game/update/moby*.cpp`, 24 `game/update/camera*.cpp`.
+11433 functions, 1221 files: 947 `game/update/moby*.cpp`, 24 `game/update/camera*.cpp`.
 
 | file | funcs | start | end |
 |---|---|---|---|
@@ -60,7 +60,8 @@ Shared update functions are named `UpdateMoby_<first oClass>`, with every regist
 | game/water.cpp | 37 | 0x17b214 | 0x17f7c0 |
 | *update files* | 3377 | 0x17f7d0 | 0x4d27a4 |
 | idol/mUnk.cpp | 14 | 0x4d27b0 | 0x4d441c |
-| idol/binkplayer.cpp | 107 | 0x4d441c | 0x4e5f40 |
+| idol/binkplayer.cpp | 27 | 0x4d441c | 0x4d5fac |
+| idol/idoldraw_ps3.cpp | 80 | 0x4d5fac | 0x4e5f40 |
 | idol/hwsystem.cpp | 17 | 0x4e5f40 | 0x4e6eac |
 | idol/savesystem.cpp | 49 | 0x4e6eac | 0x4eacd4 |
 | idol/msgdialog.cpp | 10 | 0x4eacd4 | 0x4eb3b4 |

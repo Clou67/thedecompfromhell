@@ -35,6 +35,7 @@ boot::_start	game/crt0.cpp
 0x5e6a10-0x5e7e0c	sdk/xUnk5.cpp
 # --- idol/sdk split by library (contiguous ranges, named from their strings and functions) ---
 0x4d441c-0x4d5fac	idol/binkplayer.cpp
+0x4d5fac-0x4e5f40	idol/idoldraw_ps3.cpp
 0x4e5f40-0x4e6eac	idol/hwsystem.cpp
 0x4e6eac-0x4eacd4	idol/savesystem.cpp
 0x4eacd4-0x4eb3b8	idol/msgdialog.cpp

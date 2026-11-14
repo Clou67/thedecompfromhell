@@ -7,9 +7,9 @@
 #include "game/pause.h"
 #include "game/shadow.h"
 #include "game/space.h"
-#include "idol/binkplayer.h"
 #include "idol/fastfunc.h"
 #include "idol/idol_draw.h"
+#include "idol/idoldraw_ps3.h"
 #include "idol/fastinline.h"
 #include <cell/gcm/gcm_macros.h>
 #include <cell/gcm/gcm_enum.h>

@@ -26,11 +26,11 @@
 #include "game/update/moby998.h"
 #include "game/vuchain.h"
 #include "idol/IMSeqMem.h"
-#include "idol/binkplayer.h"
 #include "idol/fastfunc.h"
 #include "idol/hwsystem.h"
 #include "idol/idol.h"
 #include "idol/idol_draw.h"
+#include "idol/idoldraw_ps3.h"
 #include "sdk/fios.h"
 #include "sdk/sce.h"
 
