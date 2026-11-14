@@ -50,7 +50,7 @@ uint * FUN_0061a418(uint *param_1,uint param_2,int param_3);
 int FUN_0061a4f8(void);
 uint FUN_0061a5b8(int param_1,uint param_2);
 int FUN_0061a6e0(int param_1,int param_2);
-ulonglong FUN_0061a790(ulonglong param_1);
+ulonglong snd_GetHandlerPtr(ulonglong param_1);
 void FUN_0061a8d0(int param_1,int param_2);
 void FUN_0061aa54(uint *param_1);
 void FUN_0061ac6c(int *param_1);

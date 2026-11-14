@@ -74,7 +74,7 @@ void InitMemSlots(void)
 
     if (!g_MemSlotsCreated) {
         void *heap = HWSystem_MainHeap(game);
-        IMSeqMem *pool = (IMSeqMem *)FUN_004fe27c(sizeof(IMSeqMem), heap, 16);   /* operator new */
+        IMSeqMem *pool = (IMSeqMem *)IMSeqMem_Alloc(sizeof(IMSeqMem), heap, 16);   /* operator new */
         if (pool) {
             pool->unk00[0] = pool->unk00[1] = pool->unk00[2] = pool->unk00[3] = 0;
             pool->unk10 = 0;
@@ -86,12 +86,12 @@ void InitMemSlots(void)
         }
         MemSlots_IMSeqMem_descriptor = pool;
         void *mem = Alloc(heap, MEMSLOTS_SIZE, 16);
-        FUN_004fe39c(pool, mem, MEMSLOTS_SIZE, "MemSlots", 0, HWSystem_MainHeap(game));
+        IMSeqMem_Init(pool, mem, MEMSLOTS_SIZE, "MemSlots", 0, HWSystem_MainHeap(game));
         g_MemSlotsCreated = true;
     }
     IMSeqMem *pool = MemSlots_IMSeqMem_descriptor;
-    FUN_004fe61c(pool, pool->unk00[0]);       /* reset */
-    g_MemSlotsBase = FUN_004fe5ec(pool);
+    IMSeqMem_SetCur(pool, pool->unk00[0]);       /* reset */
+    g_MemSlotsBase = IMSeqMem_GetCur(pool);
     g_HudBuffer = (u8 *)Alloc(pool, 0x64000, 128);
     g_MobyClassBuffer = (u8 *)Alloc(pool, 0x60000, 128);
     g_GameplayBuffer = (u8 *)Alloc(pool, 0x200000, 128);

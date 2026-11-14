@@ -24,7 +24,7 @@ void FUN_00617ea8(int param_1,int *param_2);
 undefined8 FUN_00617f6c(int param_1);
 int snd_CheckBankFile(int *param_1,undefined8 param_2,undefined8 param_3);
 short FUN_00618098(int *param_1,int param_2,ulonglong param_3,int *param_4);
-void FUN_0061838c(undefined4 param_1,undefined8 param_2,undefined4 param_3);
+void snd_FindSoundIndexByName(undefined4 param_1,undefined8 param_2,undefined4 param_3);
 undefined4 FUN_006183e4(int param_1,undefined1 *param_2);
 int FUN_00618548(int param_1);
 int FUN_00618640(char *param_1);

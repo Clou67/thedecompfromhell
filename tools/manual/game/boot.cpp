@@ -1537,9 +1537,9 @@ int boot(int argc, char **argv, char **envp)
 
     /* graphics */
     heap = (u8 *)HWSystem_MainHeap(game);
-    FUN_004fe778(heap, "Before InitGameGraphics");
+    IMSeqMem_PrintInfo(heap, "Before InitGameGraphics");
     idol::InitGameGraphics(game);
-    FUN_004fe778(heap, "After InitGameGraphics");
+    IMSeqMem_PrintInfo(heap, "After InitGameGraphics");
     cellSysutilCheckCallback();
     HWSystem_InitScratchHeap(game);
     LoadDialogMessages(game);

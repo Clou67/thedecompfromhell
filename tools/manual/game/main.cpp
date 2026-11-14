@@ -103,8 +103,8 @@ void startLevel(void)
 
     /* memory report */
     STUB_00505f50();
-    int avail = (int)FUN_004fe06c(TEX_BASE);
-    int total = *(int *)(TEX_BASE + 0xc) - FUN_004fe524((undefined4 *)TEX_BASE);
+    int avail = (int)IMSeqMem_BytesLeftClamped(TEX_BASE);
+    int total = *(int *)(TEX_BASE + 0xc) - IMSeqMem_GetBase((undefined4 *)TEX_BASE);
     int used = total - avail;
     printf("Memory stats:\n");
     printf("Total: %8.4f\n", BytesToMB(total));

@@ -1782,10 +1782,10 @@ int LoadLevelFiles(void)
         if (STUB_00505d20() == 0) {
             g_BootSoundBank = -1;
             sprintf(bankPath, "rc1/ps3data/level%d/sound.bnk", Level);
-            FUN_004fe5c8(TEX_BASE, 0x10);
-            void *bank = FUN_004fe5ec((IMSeqMem *)TEX_BASE);
+            IMSeqMem_AlignCur(TEX_BASE, 0x10);
+            void *bank = IMSeqMem_GetCur((IMSeqMem *)TEX_BASE);
             int size = LoadAssetFromFile(bankPath, bank, -1);
-            FUN_004fe6ec(TEX_BASE, size);
+            IMSeqMem_Advance(TEX_BASE, size);
             Sound_LoadBank((u8 *)bank, (u8 *)sound_BasicCB, &g_BootSoundBank);
             stage = g_LoadingStage + 1;
         }
@@ -2017,10 +2017,10 @@ int LoadAllMobys(int reload, int restoreCheckpoint)
 
         u8 *texHeaders = buffer + texOffset;
         int texCnt = (shipSize - texOffset) / RSX_TEX_SIZE;
-        FUN_004fe5c8(DAT_00a15f50, 0x80);
-        u8 *vram = (u8 *)FUN_004fe5f4(DAT_00a15f50, 0x80);
+        IMSeqMem_AlignCur(DAT_00a15f50, 0x80);
+        u8 *vram = (u8 *)IMSeqMem_AlignUp(DAT_00a15f50, 0x80);
         int vramSize = LoadAssetFromFile(vramPath, vram, -1);
-        FUN_004fe6ec(DAT_00a15f50, vramSize);
+        IMSeqMem_Advance(DAT_00a15f50, vramSize);
 
         int vramBase = *(int *)(g_pIdolDrawBase + 0x4ac);
         for (int i = 0; i < texCnt; i++) {
