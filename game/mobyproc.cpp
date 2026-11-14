@@ -1185,11 +1185,11 @@ void MB_DrawEntries(MobyDrawEntry *entry, u32 count)
 }
 
 // 0x00f7a44 (0x50 bytes)
-/* the draw entries' joint matrices, then the entries to 0x1111700 (FUN_004ed52c) */
+/* the draw entries' joint matrices, then the entries to 0x1111700 (LightJobs_KickShrubs) */
 void MB_DrawEntryList(u8 *entries, int count)
 {
     MB_DrawEntries((MobyDrawEntry *)entries, count);
-    FUN_004ed52c((int *)&DAT_01111700, (u64)(uintptr_t)entries, (u64)count);
+    LightJobs_KickShrubs((int *)&DAT_01111700, (u64)(uintptr_t)entries, (u64)count);
 }
 
 /* one word into the pass's command buffer */

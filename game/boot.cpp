@@ -1336,7 +1336,7 @@ void GameShutDown(void)
         }
 
         printf("!!! Shutdown GameSave !!!\n");
-        FUN_004e7710(idol::GetSaveData());
+        SaveSystem_UnloadModule(idol::GetSaveData());
     }
 
     printf("!!! Shutdown Scream !!!\n");
@@ -1539,7 +1539,7 @@ int boot(int argc, char **argv, char **envp)
         printf("ERROR: (boot.cpp) Error Registering Exit callback function\n");
     }
 
-    FUN_004ee594((u8 *)&DAT_009260d8, discBoot, 0, 0);
+    GameContent_Start((u8 *)&DAT_009260d8, discBoot, 0, 0);
     cellSysutilCheckCallback();
 
     game = (u8 *)g_pGame;
@@ -1656,7 +1656,7 @@ int boot(int argc, char **argv, char **envp)
 void StaticDestroy_BootGlobals(void)
 {
     STUB_004d5da4(&g_BinkPlayerObject, 2);
-    FUN_004e7738((u8 *)&DAT_00926c00, 2);
+    SaveSystem_Dtor((u8 *)&DAT_00926c00, 2);
     DAT_009265a0 = (u32)&PTR_PTR_00661790;
     DAT_009260d0 = (u32)&PTR_PTR_00661760;
     DAT_0090dad0 = (u32)&PTR_PTR_00661710;
@@ -1733,7 +1733,7 @@ void StaticInit_BootGlobals(void)
     /* pad driver */
     g_pPadDriver = (PadDriver *)&DAT_009260d0;
     DAT_009260d0 = (u32)&PTR_PTR_00661940;
-    FUN_004ee1e0((u8 *)&DAT_009260d8);
+    GameContent_Ctor((u8 *)&DAT_009260d8);
 
     /* trophies */
     DAT_009265a0 = (u32)&PTR_PTR_00661790;
@@ -1753,6 +1753,6 @@ void StaticInit_BootGlobals(void)
     TrophyMgr = (u32)&DAT_009265a0;
     TrophyQueue_Reset((u8 *)&DAT_00926734);
 
-    FUN_004e7388((u8 *)&DAT_00926c00);
+    SaveSystem_Ctor((u8 *)&DAT_00926c00);
     BinkPlayer_Init(&g_BinkPlayerObject);
 }

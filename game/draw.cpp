@@ -1881,18 +1881,18 @@ void DefaultDraw(void)
 
     if (g_RenderFlags & RENDER__Tfrags) {
         CullTerrain(texBase, (uintptr_t)tfragInfo);
-        FUN_004ec8a4(renderState, tfragInfo[1], (int)tfragInfo[0]);
+        LightJobs_KickTfrag(renderState, tfragInfo[1], (int)tfragInfo[0]);
         SortTerrainMaterials((int)(uintptr_t)tfragInfo);
     }
 
     if (g_RenderFlags & Ties) {
         CullTieInstances(texBase, (undefined4 *)tieInfo);
-        FUN_004ecc84(renderState, tieInfo[1], (int)tieInfo[2]);
+        LightJobs_KickTie(renderState, tieInfo[1], (int)tieInfo[2]);
     }
 
     if (g_RenderFlags & Shrubs) {
         FUN_00508738(texBase, (undefined4 *)shrubInfo);
-        FUN_004ed144(renderState, shrubInfo[1], (int)shrubInfo[2]);
+        LightJobs_KickMoby(renderState, shrubInfo[1], (int)shrubInfo[2]);
     }
 
     if (g_RenderFlags & RENDER__Sky) {
@@ -2617,7 +2617,7 @@ void FadeToBlack(int frames)
     }
 
     idol_draw::Spurs_FlushAndSwapQueue(&DAT_01111700);
-    FUN_004edcfc((int)(uintptr_t)&DAT_01111700);
+    LightJobs_Sync((int)(uintptr_t)&DAT_01111700);
 
     if (idol->stereo == 1 && (idol->unk1a6c & 1)) {
         idol->vtable->BuildAndFlipFrame(idol);
@@ -2661,7 +2661,7 @@ void Draw_FlushAndPresent(void)
     IdolDraw *idol = Idol();
 
     idol_draw::Spurs_FlushAndSwapQueue(&DAT_01111700);
-    FUN_004edcfc((int)(uintptr_t)&DAT_01111700);
+    LightJobs_Sync((int)(uintptr_t)&DAT_01111700);
     idol_draw::Gfx_Present((int *)idol, (int)(uintptr_t)&idol->presentInfo);
     WaitForRsxLabel(idol->unk1a74);
 }
