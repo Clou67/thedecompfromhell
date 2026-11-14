@@ -20,9 +20,9 @@
 #include "game/pad.h"
 #include "game/pause.h"
 #include "game/respawn.h"
-#include "game/sUnk.h"
 #include "game/sound.h"
 #include "game/space.h"
+#include "game/store.h"
 #include "game/update/moby998.h"
 #include "game/vuchain.h"
 #include "idol/fastfunc.h"
@@ -82,7 +82,7 @@ int InitOnce_RunSysCallWait(int a, int b)
     args[1] = h;
     args[2] = b;
     args[3] = 0;
-    int t = FUN_005031bc(args, 1);
+    int t = SifSetDma(args, 1);
     if (t != 0) {
         while (FUN_0050315c_RET_0(t) >= 0) {}
         int r = FUN_00503164(h, 0, 0);

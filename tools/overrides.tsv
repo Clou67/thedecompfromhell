@@ -25,3 +25,5 @@ crt0::_init	game/boot.cpp
 0xe64fc-0xe6b08	game/mcstate.cpp
 # shadow.cpp (was rUnk): the stencil shadow volumes (DL's Shadow* functions; most of them stubbed on PS3)
 0x15251c-0x15350c	game/shadow.cpp
+# store.cpp (was sUnk): the buffer store that stands in for PS2 IOP memory (sorts between space and tieproc)
+0x165588-0x1658d8	game/store.cpp

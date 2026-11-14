@@ -592,3 +592,6 @@ ShadowVec1	Vec4 NAME /* 0xa54ee0: a unit vector across ShadowDir (DL name) */
 ShadowVec2	Vec4 NAME /* 0xa54ef0: ShadowDir times the extrusion length (DL name) */
 g_ShadowUnkA54f00	int NAME /* 0xa54f00: passed to a stubbed shadow function */
 g_ShadowSectionWord	int NAME /* 0x7317dc: set by SECTION_HEADER_SHADOW */
+g_IopStore	IopStore NAME /* 0xa56eb0: the buffer store that stands in for PS2 IOP memory (invented name) */
+g_IopStorePool	u8 NAME[0x400000] /* 0xa572c4: its 4 MB pool, right after g_IopStore */
+g_StoreSectionWord	int NAME /* 0x734adc: set by SECTION_HEADER_STORE */

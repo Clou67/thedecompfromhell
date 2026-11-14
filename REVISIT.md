@@ -307,3 +307,22 @@ drawers (DL's ShadowCreatePillVolume, ShadowDrawVolume, ...); which stub is whic
   and three Newton steps.
 - **Signature:** ShadowSetupVectors takes (Vec4 dir, float length). The Vec4 arrives in r3/r4,
   so it comes first.
+
+## game/store.cpp (was sUnk.cpp)
+
+All 8 functions are checked against the asm; 2 are empty stubs.
+
+- **Invented file name.** No Deadlocked file or symbol matches; DL keeps this kind of data on the
+  IOP through other code. "store" was chosen to fit the link order between space.cpp and
+  tieproc.cpp. The globals g_IopStore, g_IopStorePool and g_StoreSectionWord and the types
+  IopStore and IopStoreSlot are invented too. SifSetDma (was FUN_005031bc) is named for what it
+  replaces: sceSifSetDma, done as a memcpy of a sceSifDmaData-shaped struct.
+- **Function names kept as they were** (InitIndexedBuffers, AllocIndexedBuffer,
+  WriteIndexedBuffer, GetIndexedBufferSize, ReadIndexedBuffer). They describe what the
+  functions do.
+- **Signatures from the asm:** AllocIndexedBuffer(data, copyQwc, qwc, flags) copies copyQwc
+  qwords into a new buffer of qwc; Write/Read take (data, slot, offset, qwc). The raw callers in
+  map.cpp and pause.cpp pass a fifth argument that is not read.
+- **Not understood:** IopStoreSlot.flags is stored but never read here, and IopStore.unk08 is never
+  touched.
+- SifSetDma also replaces FUN_005031bc in initonce.cpp (InitOnce_RunSysCallWait, which does a SIF DMA and waits for it).

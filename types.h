@@ -3066,6 +3066,11 @@ extern undefined4 DAT_00a561f8; /* 0xa561f8 */
 extern undefined4 DAT_00a561fc; /* 0xa561fc */
 extern undefined4 DAT_00a56854; /* 0xa56854 */
 extern undefined4 DAT_00a56b84; /* 0xa56b84 */
+extern undefined4 DAT_00a56eb4; /* 0xa56eb4 */
+extern undefined4 DAT_00a56ebc; /* 0xa56ebc */
+extern undefined4 DAT_00a56ec0; /* 0xa56ec0 */
+extern undefined4 DAT_00a56ec8; /* 0xa56ec8 */
+extern undefined4 DAT_00a56ecc; /* no defined data */
 extern undefined4 DAT_00e572d0; /* 0xe572d0 */
 extern undefined4 DAT_00e572d4; /* 0xe572d4 */
 extern undefined4 DAT_00e572d8; /* 0xe572d8 */
@@ -3206,6 +3211,7 @@ extern undefined4 _DAT_00736040; /* direct read */
 extern undefined4 _DAT_00736050; /* direct read */
 extern undefined4 _DAT_00e5a970; /* direct read */
 extern undefined4 _DAT_00e5a980; /* direct read */
+extern undefined4 g_IndexedBufferSlots; /* 0xa56ec4 */
 extern undefined4 japanese_mode; /* 0xd9208 */
 extern char s_MESSAGE_DOES_NOT_EXIST_00720b94[23]; /* 0x720b94 */
 extern undefined4 skip_directionalLightCopy; /* 0x118a8 */
