@@ -73,7 +73,7 @@ void InitMemSlots(void)
     void *game = g_pGame;
 
     if (!g_MemSlotsCreated) {
-        void *heap = FUN_0050436c(game);
+        void *heap = HWSystem_MainHeap(game);
         IMSeqMem *pool = (IMSeqMem *)FUN_004fe27c(sizeof(IMSeqMem), heap, 16);   /* operator new */
         if (pool) {
             pool->unk00[0] = pool->unk00[1] = pool->unk00[2] = pool->unk00[3] = 0;
@@ -86,7 +86,7 @@ void InitMemSlots(void)
         }
         MemSlots_IMSeqMem_descriptor = pool;
         void *mem = Alloc(heap, MEMSLOTS_SIZE, 16);
-        FUN_004fe39c(pool, mem, MEMSLOTS_SIZE, "MemSlots", 0, FUN_0050436c(game));
+        FUN_004fe39c(pool, mem, MEMSLOTS_SIZE, "MemSlots", 0, HWSystem_MainHeap(game));
         g_MemSlotsCreated = true;
     }
     IMSeqMem *pool = MemSlots_IMSeqMem_descriptor;
@@ -193,9 +193,9 @@ void InitOnce(void)
     cellSysutilCheckCallback();
 
     void *heap2 = (u8 *)game + 0x7c;
-    g_pLocaleBuffer = (int *)Alloc(FUN_0050436c(game), 0x40000, 128);
-    DAT_00a10920 = (u32)Alloc(FUN_0050436c(game), 0x300000, 128);
-    SaveDataPtr = (char *)Alloc(FUN_0050436c(game), 0x300000, 128);
+    g_pLocaleBuffer = (int *)Alloc(HWSystem_MainHeap(game), 0x40000, 128);
+    DAT_00a10920 = (u32)Alloc(HWSystem_MainHeap(game), 0x300000, 128);
+    SaveDataPtr = (char *)Alloc(HWSystem_MainHeap(game), 0x300000, 128);
     DAT_00a10924 = (u32)Alloc(heap2, 0x300000, 128);
     g_FontVram = (u8 *)Alloc(heap2, 0x100000, 128);
     DAT_00a2080c = 0;
@@ -203,10 +203,10 @@ void InitOnce(void)
     DAT_00a20814 = (u32)Alloc(heap2, 0x40000, 128);
     DAT_00a20818 = 0;
     DAT_00a2081c = 0;
-    g_MapRevealMask = (u8 *)Alloc(FUN_0050436c(game), 0x8000, 32);
+    g_MapRevealMask = (u8 *)Alloc(HWSystem_MainHeap(game), 0x8000, 32);
     g_totalBoltsCollected = 0;
     DAT_0096ca08 = 0;
-    FUN_00508578(&TEX_BASE, FUN_0050436c(game), heap2);
+    FUN_00508578(&TEX_BASE, HWSystem_MainHeap(game), heap2);
     memcard_InitSaveMsg();
     InitMenuTextIds();
 }

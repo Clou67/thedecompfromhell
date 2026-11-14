@@ -2141,9 +2141,9 @@ int PreLoadNpcChunk(int chunk_id)
 
     if (GetFileSize(path) != 0) {
         if (g_NpcChunkLoadHandle != 0) {
-            FUN_005040f4(g_NpcChunkLoadHandle);
+            FiosCloseAndDeleteOp(g_NpcChunkLoadHandle);
         }
-        g_NpcChunkLoadHandle = FUN_00503f8c(path, dest, NPC_BUFFER_SIZE);
+        g_NpcChunkLoadHandle = LoadFileBlocking(path, dest, NPC_BUFFER_SIZE);
     }
     return 1;
 }
@@ -2154,7 +2154,7 @@ int PreLoadNpcChunk(int chunk_id)
 void ParseNpcChunk(void)
 {
     if (g_NpcChunkLoadHandle != 0) {
-        FUN_005040f4(g_NpcChunkLoadHandle);
+        FiosCloseAndDeleteOp(g_NpcChunkLoadHandle);
         g_NpcChunkLoadHandle = 0;
     }
 

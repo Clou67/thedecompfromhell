@@ -131,7 +131,7 @@ static float Walk_ProbeAhead(float angle, float stride, vec4 *from, float raise,
     probe->x = cosf(angle) * stride * 0.5f;
     probe->y = sinf(angle) * stride * 0.5f;
     probe->z = 0.0f;
-    FUN_005e7f54(&probe->x, &probe->x, &from->m.x);
+    Vec3Add(&probe->x, &probe->x, &from->m.x);
     probe->z += raise;
 
     return GetGroundZ(0.5f, probe, 0);

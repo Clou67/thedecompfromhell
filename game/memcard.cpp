@@ -725,7 +725,7 @@ char *memcard_ConstructSaveString(char *buf)
         sprintf(place, "%s - %s", help_msg_string_by_index((StringId)(STR_KYZIL_PLATEAU + level)), planet);
         title = memcard_ConvertSaveMsgString(memcard_FixupAccentChars(place), &len);
 
-        noDigitalLine = FUN_00504d90(g_pHWSystem);
+        noDigitalLine = HWSystem_SkuUnk24(g_pHWSystem);
 
         language = g_Language;
 

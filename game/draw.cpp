@@ -1880,13 +1880,13 @@ void DefaultDraw(void)
     idol_draw::InitFrameRenderState((int)(uintptr_t)renderState, DirectionalLights, 16, PointLights, 8, &g_HeroLightDir, 4);
 
     if (g_RenderFlags & RENDER__Tfrags) {
-        FUN_0050b08c(texBase, (uintptr_t)tfragInfo);
+        CullTerrain(texBase, (uintptr_t)tfragInfo);
         FUN_004ec8a4(renderState, tfragInfo[1], (int)tfragInfo[0]);
-        FUN_0050bfd4((int)(uintptr_t)tfragInfo);
+        SortTerrainMaterials((int)(uintptr_t)tfragInfo);
     }
 
     if (g_RenderFlags & Ties) {
-        FUN_0050c020(texBase, (undefined4 *)tieInfo);
+        CullTieInstances(texBase, (undefined4 *)tieInfo);
         FUN_004ecc84(renderState, tieInfo[1], (int)tieInfo[2]);
     }
 

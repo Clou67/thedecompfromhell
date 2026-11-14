@@ -1200,11 +1200,11 @@ void GameStart(void)
     STUB_00078100();
     STUB_000d88f8(&DAT_00cd4000 + DAT_00cd4070);
 
-    if (FUN_00504d90(g_pHWSystem) == 0) {
+    if (HWSystem_SkuUnk24(g_pHWSystem) == 0) {
         ShowWarningScreen();
     }
 
-    if (FUN_00504d90(g_pHWSystem) == 0) {
+    if (HWSystem_SkuUnk24(g_pHWSystem) == 0) {
         int region = *(int *)((u8 *)g_pHWSystem + 0xc0);
 
         if (region == REGION_SCEA) {
@@ -1308,7 +1308,7 @@ void GameShutDown(void)
     sys_timer_usleep(16000);
     sys_timer_usleep(16000);
     pad_Shutdown();
-    FUN_005057a0();
+    AudioShutdown();
 
     if (g_pIdolDraw != 0) {
         printf("!!! Shutdown Graphics !!!\n");
@@ -1340,7 +1340,7 @@ void GameShutDown(void)
     }
 
     printf("!!! Shutdown Scream !!!\n");
-    FUN_005066e0();
+    SndShutdownThunk();
     printf("!!! Calling exit() !!!\n");
     exit(0);
 
@@ -1529,7 +1529,7 @@ int boot(int argc, char **argv, char **envp)
     idol::CheckLicense((int *)hwSystem, "NPEA", "NPEA00385", "EP9000-NPEA00385_00", false, -1);
     idol::CheckLicense((int *)hwSystem, "BCUS", "BCUS98212", "UP9000-BCUS98212_00", true, -1);
     idol::CheckLicense((int *)hwSystem, "BCES", "BCES01503", "EP9000-BCES01503_00", true, -1);
-    FUN_00504988(hwSystem, argv[contentArg], 0);
+    HWSystem_ActivateSku(hwSystem, argv[contentArg], 0);
     FUN_004e68bc(hwSystem, 11, 8, 16);
     DAT_008fa630 = &DAT_0071cce4;
 
@@ -1593,13 +1593,13 @@ int boot(int argc, char **argv, char **envp)
     cellSysutilCheckCallback();
 
     /* graphics */
-    heap = (u8 *)FUN_0050436c(game);
+    heap = (u8 *)HWSystem_MainHeap(game);
     FUN_004fe778(heap, "Before InitGameGraphics");
     idol::InitGameGraphics(game);
     FUN_004fe778(heap, "After InitGameGraphics");
     cellSysutilCheckCallback();
-    FUN_005043b0(game);
-    FUN_00504468(game);
+    HWSystem_InitScratchHeap(game);
+    LoadDialogMessages(game);
     cellSysutilCheckCallback();
     VirtualMethod(DAT_009030e4, 8)(DAT_009030e4, heap, 0, (u8 *)g_pGame + 4);
 
@@ -1608,10 +1608,10 @@ int boot(int argc, char **argv, char **envp)
     GetBinkPlayer()->unk5c = 0;
     GetBinkPlayer();
     FUN_005eae04((u8 *)Global_QuickMovieMalloc, (u8 *)Global_QuickMovieFree);
-    FUN_0050565c(heap);
+    AudioInit(heap);
     GetBinkPlayer();
-    FUN_005ec620((u8 *)&PTR_FUN_007108d0, FUN_005057c4());
-    FUN_0050565c(heap);
+    FUN_005ec620((u8 *)&PTR_FUN_007108d0, AudioGetChannelCount());
+    AudioInit(heap);
     FUN_004ec568((u8 *)&DAT_01111700, 8);
     cellSysutilCheckCallback();
 

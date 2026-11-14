@@ -9,6 +9,7 @@
 #include "game/partupd.h"
 #include "idol/fastfunc.h"
 #include "idol/mathfunc.h"
+#include "idol/xUnk.h"
 #include "idol/fastinline.h"
 // game/walk.cpp -- reconstructed from NPEA00385 EBOOT
 // 15 functions, 0x175558-0x17b214: the two-legged walker (w_2legData). Each frame the planted
@@ -141,7 +142,7 @@ static float Walk_ProbeAhead(float angle, float stride, vec4 *from, float raise,
     probe->x = cosf(angle) * stride * 0.5f;
     probe->y = sinf(angle) * stride * 0.5f;
     probe->z = 0.0f;
-    FUN_005e7f54(&probe->x, &probe->x, &from->m.x);
+    Vec3Add(&probe->x, &probe->x, &from->m.x);
     probe->z += raise;
 
     return GetGroundZ(0.5f, probe, 0);
