@@ -9,8 +9,8 @@ Shared update functions are named `UpdateMoby_<first oClass>`, with every regist
 
 | file | funcs | start | end |
 |---|---|---|---|
-| game/boot.cpp | 31 | 0x10200 | 0x14b7c |
-| game/crt0.cpp | 10 | 0x14b7c | 0x14fc8 |
+| game/boot.cpp | 30 | 0x10200 | 0x14b58 |
+| game/crt0.cpp | 11 | 0x14b58 | 0x14fc8 |
 | *update files* | 40 | 0x14fd0 | 0x213b8 |
 | game/mUnk.cpp | 6 | 0x213b8 | 0x2bac4 |
 | *update files* | 285 | 0x2bac4 | 0x4efe4 |

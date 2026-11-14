@@ -638,3 +638,23 @@ g_AnimPoses	JointPose NAME[129] /* 0xa4fb80: joint poses from AnimDecompInterp, 
 g_TargetableMobys	MobyInstance *NAME /* 0xa49344: the first of the auto-targetable mobys BuildMobyUpdateChain found this frame, NULL-terminated (invented name) */
 g_SelectedJoints	u8 NAME[256] /* 0xa34700: MB_ComputeSelectedJoints' posed mask (128 bytes) and joint list */
 g_BlenderSpheres	Vec4 NAME[32] /* 0xa1c900: each blender's bounding sphere (radius squared in w) */
+g_HudSectionWord	int NAME /* 0x72390c */
+g_HudNextId	int NAME /* 0xa1bfc0: the next RegisterHUDCallback handle */
+g_HudHideCounter	int NAME /* 0xa1bfc4 */
+g_HudScratchPtr	u8 *NAME /* 0xa1bfd0: HudScratch_Alloc's next free byte in g_HudBuffer */
+g_HudScratchEnd	u8 *NAME /* 0xa1bfd4 */
+g_HudMobys	MobyInstance *NAME /* 0xa1bfec: the other moby bank (40 mobys, Hud_SwapMobyBank swaps it with g_MobyInstance) */
+g_HudMobysPermEnd	MobyInstance *NAME /* 0xa1bff0 */
+g_HudMobysEnd	MobyInstance *NAME /* 0xa1bff4 */
+g_HudMobyVars	u8 *NAME /* 0xa1bff8: its moby vars (0x1400 bytes) */
+g_HudMobyBankActive	u8 NAME /* 0xa1bffc: 1 while the other bank is swapped in */
+g_HudSlideBounce	float NAME[24] /* 0x724260: slide-in curve, overshooting (invented name) */
+g_HudSlideEase	float NAME[24] /* 0x7242c0: slide curve, smooth (invented name) */
+g_OxygenBubbles	Vec4 NAME[100] /* 0xa1c1a0: the oxygen meter's bubbles: x, y, x speed, y speed (invented name) */
+g_OxygenBubbleSize	float NAME[3] /* 0x724320: bubble radius for bubbles 0-9, 10-19 (10-29 when moving), the rest */
+g_OxygenBubbleRows	int NAME /* 0x72432c: the bubbles start spread over this many rows */
+g_OxygenMeterSize	int NAME[2] /* 0x724330: the oxygen meter's width and height (42, 192) */
+g_OxygenTankScale	float NAME[2] /* 0x724338: how much of the meter the bubbles fill, x and y (0.5, 0.9) */
+g_PromptText	char NAME[128] /* 0xa1c020: the prompt message (GetHelpLen); a 1 byte splits it in two lines */
+g_PromptY	int NAME /* 0x724340: the prompt box's y (32) */
+g_PromptBottom	int NAME /* 0xa15c88: where the race best-time boxes end (invented name) */

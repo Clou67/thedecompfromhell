@@ -12,6 +12,7 @@ typedef void (*PtrFunc)(void);   /* a constructor/destructor list entry (crtstuf
 
 // ---- globals
 extern undefined4 DAT_0071a374; /* 0x71a374 */
+extern pointer32 PTR_TOC_BASE_0070379c; /* 0x70379c */
 extern PtrFunc __CTOR_END__[1]; /* 0x700b98 */ /* type set in global_types.tsv */
 extern void *__JCR_LIST__[1]; /* 0x700bc8 */ /* type set in global_types.tsv */
 extern u8 __dtors_completed; /* 0x9270f4: crtstuff's completed.N */ /* type set in global_types.tsv */
@@ -25,6 +26,7 @@ extern u64 g_ProcessStartTime; /* 0x16062f0 */ /* type set in global_types.tsv *
 extern int g_PrxLibraries[3]; /* 0x9270e8: non-zero: register that PRX library at start-up */ /* type set in global_types.tsv */
 
 // ---- functions
+u32 _start(u64 argc, u32 *argv, u32 *envp, u64 envc, u64 tls0, u32 tls1, u32 tls2, u32 tls3);
 int GetArgc(void);
 char **GetArgv(void);
 namespace idol { void ExitToSystem(void); } 

@@ -1,7 +1,7 @@
 // game/boot.cpp -- start-up: the PS3 port's boot(), the warning and logo screens, the title
 // screen (front end) and loading its data, level resets and shut-down
 // STATUS: CLEAN (checked against the asm; local names are mine)
-// 31 functions, 0x10200-0x14b7c
+// 30 functions, 0x10200-0x14b58
 //
 // boot() brings up Idol (licence checks, the game system, FIOS and the psarc, graphics, saves,
 // Bink, trophies), then runs one "main function" after another: GameStart (warnings, logo movie,
@@ -1419,13 +1419,13 @@ void ResetLevelGlobals(void)
     }
 
     g_loadingPlanet = 0;
-    HudBankMain = NULL;
-    DAT_00a49344 = 0;
+    g_HudMobys = NULL;
+    g_TargetableMobys = 0;
     g_newlevelnum = 0;
     oClass_to_mClass_lookup = 0;
     memset(g_MobyClassUpdates, 0, sizeof(g_MobyClassUpdates));
-    DAT_00a1bffc = 0;
-    DAT_00a1bfd0 = 0;
+    g_HudMobyBankActive = 0;
+    g_HudScratchPtr = 0;
 
     DAT_00731f40 = 0x3880a0c0;
     DAT_00731f44 = 0x2058b0;
@@ -1452,7 +1452,7 @@ void ResetLevelGlobals(void)
     g_Help.message_id = -1;
 
     for (element = HudEntries, i = 0; i < 13; i++, element++) {
-        element->value = 0;
+        element->flags = 0;
         element->iconId = 0xffff;
         element->maxValue = 0;
         element->pValue = NULL;
@@ -1755,14 +1755,4 @@ void StaticInit_BootGlobals(void)
 
     FUN_004e7388((u8 *)&DAT_00926c00);
     BinkPlayer_Init(&g_BinkPlayerObject);
-}
-
-// 0x0014b58 (0x24 bytes)
-/* the ELF entry: crt0's entry, then the value at TOC - 0x8000 */
-u32 _start(u64 argc, u32 *argv, u32 *envp, u64 envc, u64 tls0, u32 tls1, u32 tls2, u32 tls3)
-{
-    u8 *toc = (u8 *)PTR_TOC_BASE_0070379c;
-
-    entry(argc, argv, envp, envc, tls0, tls1, tls2, tls3);     /* the loader's registers pass through */
-    return **(u32 **)(toc - 0x8000);
 }

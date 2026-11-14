@@ -2,6 +2,8 @@
 # first function of the sky asm section is skyproc.s, even though it is labelled skyfunc::
 skyfunc::SkySpriteProc	game/skyproc.cpp
 crt0::_init	game/boot.cpp
+# _start (the ELF entry, before crt0's entry) belongs with crt0
+boot::_start	game/crt0.cpp
 # SCREAM keeps the 989 Sound core as libscream.a(989snd.ppu.o)
 989snd::	sdk/libscream/989snd.cpp
 # sndHost_* : SCREAM host file-I/O hooks (object name inferred from the function names)

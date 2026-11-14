@@ -10,7 +10,7 @@ errors	file
 0	game/global.cpp
 0	game/help.cpp
 1529	game/hero.cpp
-558	game/hud.cpp
+460	game/hud.cpp
 0	game/initonce.cpp
 0	game/initsky.cpp
 0	game/initspace.cpp
@@ -31,7 +31,7 @@ errors	file
 0	game/partproc.cpp
 445	game/partupd.cpp
 0	game/path.cpp
-610	game/pause.cpp
+606	game/pause.cpp
 0	game/respawn.cpp
 0	game/shadow.cpp
 0	game/skyfunc.cpp
@@ -936,7 +936,7 @@ errors	file
 2	game/update/moby854.cpp
 3	game/update/moby855.cpp
 6	game/update/moby856.cpp
-126	game/update/moby857.cpp
+127	game/update/moby857.cpp
 12	game/update/moby859.cpp
 5	game/update/moby86.cpp
 10	game/update/moby860.cpp

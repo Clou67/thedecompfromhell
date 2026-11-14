@@ -308,6 +308,42 @@ struct ABGR {
     u8 R;
 };
 
+struct astruct {
+    undefined field0_0x0;
+    undefined field1_0x1;
+    undefined field2_0x2;
+    undefined field3_0x3;
+    undefined field4_0x4;
+    undefined field5_0x5;
+    undefined field6_0x6;
+    undefined field7_0x7;
+    undefined field8_0x8;
+    undefined field9_0x9;
+    undefined field10_0xa;
+    undefined field11_0xb;
+    undefined field12_0xc;
+    undefined field13_0xd;
+    undefined field14_0xe;
+    undefined field15_0xf;
+    undefined field16_0x10;
+    undefined field17_0x11;
+    undefined field18_0x12;
+    undefined field19_0x13;
+    undefined field20_0x14;
+    undefined field21_0x15;
+    undefined field22_0x16;
+    undefined field23_0x17;
+    undefined field24_0x18;
+    undefined field25_0x19;
+    undefined field26_0x1a;
+    undefined field27_0x1b;
+    undefined field28_0x1c;
+    undefined field29_0x1d;
+    undefined field30_0x1e;
+    undefined field31_0x1f;
+    undefined1 field32_0x20;
+};
+
 typedef uint u32;
 
 struct Mtx4 {
@@ -2667,6 +2703,8 @@ extern undefined4 DAT_006517dc; /* no defined data */
 extern undefined4 DAT_0065180c; /* no defined data */
 extern undefined4 DAT_0065183c; /* no defined data */
 extern undefined4 DAT_00651c88; /* no defined data */
+extern undefined4 DAT_006520d0; /* no defined data */
+extern undefined4 DAT_006520d8; /* no defined data */
 extern undefined4 DAT_00652bf8; /* no defined data */
 extern undefined4 DAT_00652c00; /* no defined data */
 extern undefined4 DAT_00653fa4; /* no defined data */
@@ -2801,6 +2839,10 @@ extern undefined4 DAT_0071fa98; /* 0x71fa98 */
 extern undefined4 DAT_0071fab4; /* 0x71fab4 */
 extern undefined4 DAT_0071fad8; /* no defined data */
 extern undefined4 DAT_0071fbec; /* no defined data */
+extern undefined4 DAT_00724324; /* 0x724324 */
+extern undefined4 DAT_00724328; /* 0x724328 */
+extern undefined4 DAT_00724334; /* 0x724334 */
+extern undefined4 DAT_0072433c; /* 0x72433c */
 extern undefined2 DAT_007247ca; /* 0x7247ca */
 extern undefined2 DAT_007247cc; /* 0x7247cc */
 extern undefined2 DAT_007247ce; /* 0x7247ce */
@@ -3160,6 +3202,9 @@ extern undefined4 DAT_00a15c64; /* 0xa15c64 */
 extern undefined4 DAT_00a15c68; /* 0xa15c68 */
 extern undefined4 DAT_00a15c6c; /* 0xa15c6c */
 extern undefined4 DAT_00a15c70; /* 0xa15c70 */
+extern undefined4 DAT_00a1c1a4; /* 0xa1c1a4 */
+extern undefined4 DAT_00a1c1a8; /* 0xa1c1a8 */
+extern undefined4 DAT_00a1c1ac; /* 0xa1c1ac */
 extern undefined4 DAT_00a1de40; /* 0xa1de40 */
 extern undefined4 DAT_00a1de44; /* 0xa1de44 */
 extern undefined4 DAT_00a1de48; /* 0xa1de48 */

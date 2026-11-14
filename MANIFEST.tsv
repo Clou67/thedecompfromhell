@@ -42,7 +42,6 @@ addr	size	ghidra_name	c_name	file	basis
 001401c	0x838	boot::boot	boot	game/boot.cpp	ns
 0014854	0xa4	boot::StaticDestroy_BootGlobals	StaticDestroy_BootGlobals	game/boot.cpp	ns
 00148f8	0x260	boot::StaticInit_BootGlobals	StaticInit_BootGlobals	game/boot.cpp	ns
-0014b58	0x24	boot::_start	_start	game/boot.cpp	ns
 004fee8	0x14	SECTION_HEADER_CAMERA	SECTION_HEADER_CAMERA	game/camera.cpp	header
 004ff00	0xc	camera::???_Cam_SetTweak_71ea50	???_Cam_SetTweak_71ea50	game/camera.cpp	ns
 004ff0c	0x1c	camera::Camera_ClearPolar	Camera_ClearPolar	game/camera.cpp	ns
@@ -120,6 +119,7 @@ addr	size	ghidra_name	c_name	file	basis
 00607b4	0x38	collproc::CollSoundSurface	CollSoundSurface	game/collproc.cpp	ns
 0060800	0x1e4	collproc::CollLineVsSphere_Out	CollLineVsSphere_Out	game/collproc.cpp	ns
 00609e4	0x4	stub::STUB_000609e4	STUB_000609e4	game/collproc.cpp	fill
+0014b58	0x24	boot::_start	_start	game/crt0.cpp	override
 0014b7c	0x10	crt0::GetArgc	GetArgc	game/crt0.cpp	ns
 0014b8c	0xc	crt0::GetArgv	GetArgv	game/crt0.cpp	ns
 0014b98	0x28	idol::ExitToSystem	idol::ExitToSystem	game/crt0.cpp	absorbed

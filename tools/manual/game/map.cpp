@@ -640,14 +640,14 @@ void DrawMapFrame(void)
 
     float leftF = (float)left;
     float topF = (float)top;
-    int overlapX16 = (int)(leftF * 0.0625f);
+    int left16 = (int)(leftF * 0.0625f);
     int top16 = (int)(topF * 0.0625f);
-    int overlapX26 = (int)((float)right * 0.0625f);
+    int right16 = (int)((float)right * 0.0625f);
     int bottom16 = (int)((float)bottom * 0.0625f);
-    int width16 = overlapX26 - overlapX16;
+    int width16 = right16 - left16;
     int height16 = bottom16 - top16;
 
-    Hud_DrawTexQuadF((float)(overlapX16 - width16), (float)(top16 - height16), (float)(overlapX26 + width16), (float)(bottom16 + height16), -1024.0f, -1024.0f, 2048.0f, 2048.0f, header, 0x80);
+    Hud_DrawTexQuadF((float)(left16 - width16), (float)(top16 - height16), (float)(right16 + width16), (float)(bottom16 + height16), -1024.0f, -1024.0f, 2048.0f, 2048.0f, header, 0x80);
 
     /* the map through the reveal mask */
     u32 idol = g_pIdolDrawBase;
@@ -668,10 +668,10 @@ void DrawMapFrame(void)
     MapEmit(0);
     MapEmit(CELL_GCM_METHOD(CELL_GCM_NV4097_SET_BEGIN_END, 1));
     MapEmit(CELL_GCM_PRIMITIVE_QUADS);
-    MapVertexF(0.0f, 0.0f, (float)overlapX16, (float)top16);
-    MapVertexF(0.0f, 1024.0f, (float)overlapX16, (float)bottom16);
-    MapVertexF(1024.0f, 1024.0f, (float)overlapX26, (float)bottom16);
-    MapVertexF(1024.0f, 0.0f, (float)overlapX26, (float)top16);
+    MapVertexF(0.0f, 0.0f, (float)left16, (float)top16);
+    MapVertexF(0.0f, 1024.0f, (float)left16, (float)bottom16);
+    MapVertexF(1024.0f, 1024.0f, (float)right16, (float)bottom16);
+    MapVertexF(1024.0f, 0.0f, (float)right16, (float)top16);
     MapEmit(CELL_GCM_METHOD(CELL_GCM_NV4097_SET_BEGIN_END, 1));
     MapEmit(0);
 

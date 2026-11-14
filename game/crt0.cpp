@@ -1,6 +1,6 @@
 // game/crt0.cpp -- the C runtime start-up: entry point, exit, and GCC's constructor/destructor glue
 // STATUS: CLEAN (checked against the asm; local names are mine)
-// 10 functions, 0x14b7c-0x14fc8
+// 11 functions, 0x14b58-0x14fc8
 //
 // SDK code (Sony's crt0 plus GCC's crtstuff: __do_global_dtors_aux, frame_dummy,
 // __do_global_ctors_aux), linked at the start of the game's text. entry() is where lv2 starts the
@@ -26,6 +26,16 @@ static inline void NarrowPointers(u32 *array, u64 count)
         *dst++ = *src;
         src += 2;
     }
+}
+
+// 0x0014b58 (0x24 bytes)
+/* the ELF entry: crt0's entry, then the value at TOC - 0x8000 */
+u32 _start(u64 argc, u32 *argv, u32 *envp, u64 envc, u64 tls0, u32 tls1, u32 tls2, u32 tls3)
+{
+    u8 *toc = (u8 *)PTR_TOC_BASE_0070379c;
+
+    entry(argc, argv, envp, envc, tls0, tls1, tls2, tls3);     /* the loader's registers pass through */
+    return **(u32 **)(toc - 0x8000);
 }
 
 // 0x0014b7c (0x10 bytes)

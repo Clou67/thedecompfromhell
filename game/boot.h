@@ -127,7 +127,6 @@ extern undefined4 DAT_00a15f80; /* 0xa15f80 */
 extern undefined4 DAT_00a1a7b8; /* 0xa1a7b8 */
 extern undefined4 DAT_00a1a7bc; /* 0xa1a7bc */
 extern undefined4 DAT_00a1bfd8; /* 0xa1bfd8 */
-extern undefined4 DAT_00a49344; /* 0xa49344 */
 extern undefined1 DAT_00a52e60; /* 0xa52e60 */
 extern undefined4 DAT_00a561c0; /* 0xa561c0 */
 extern undefined4 DAT_00cd4000; /* no defined data */
@@ -146,7 +145,6 @@ extern undefined * PTR_PTR_00661878; /* 0x661878 */
 extern undefined * PTR_PTR_00661898; /* 0x661898 */
 extern undefined * PTR_PTR_00661940; /* 0x661940 */
 extern pointer PTR_PTR_00661960; /* 0x661960 */
-extern pointer32 PTR_TOC_BASE_0070379c; /* 0x70379c */
 extern ShrubInstance *ShrubInstanceBase; /* 0xa1a794 */ /* type set in global_types.tsv */
 extern undefined4 ShrubInstanceCnt; /* 0xa1a798 */
 extern ShrubInstance *ShrubInstanceEnd; /* type set in global_types.tsv */
@@ -207,4 +205,3 @@ void ResetLevelGlobals(void);
 int boot(int argc, char **argv, char **envp);
 void StaticDestroy_BootGlobals(void);
 void StaticInit_BootGlobals(void);
-u32 _start(u64 argc, u32 *argv, u32 *envp, u64 envc, u64 tls0, u32 tls1, u32 tls2, u32 tls3);

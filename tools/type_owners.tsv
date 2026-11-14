@@ -141,3 +141,6 @@ MapTransform	game/map
 JointPose	game/mobyproc
 AnimLayerJoint	game/mobyproc
 MobyDrawEntry	game/mobyproc
+HudElement	game/hud
+IconTableEntries	game/hud
+HudIconAnim	game/hud
