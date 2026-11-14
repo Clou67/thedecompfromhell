@@ -16,7 +16,7 @@ extern undefined1 stack0xfffffe64[16]; /* stack slot, not a real global */
 extern undefined1 stack0xffffff14[16]; /* stack slot, not a real global */
 
 // ---- functions
-void FUN_0053562c(undefined4 *param_1);
+void fios_SchedulerCacheInit(undefined4 *param_1);
 undefined4 _ZN4cell4fios14schedulercache13getCacheBlockEPNS0_13mediaioparamsEiPhPNS0_5cache12blockrequestE(int param_1,int param_2,uint param_3,int param_4,int param_5);
 undefined4 _ZN4cell4fios14schedulercache19fillCacheAndCopyOutEPNS0_13mediaioparamsEPNS0_5cache12blockrequestEPh(int *param_1,int param_2,undefined4 *param_3,uint param_4);
 undefined4 _ZN4cell4fios8ramcache13getCacheBlockEPNS0_13mediaioparamsEiPhPNS0_5cache12blockrequestE(int param_1,int param_2,uint param_3,int param_4,int param_5);

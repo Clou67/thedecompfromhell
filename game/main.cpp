@@ -27,7 +27,6 @@
 #include "game/vuchain.h"
 #include "idol/fastfunc.h"
 #include "idol/idol.h"
-#include "idol/idol_draw.h"
 #include "idol/mUnk.h"
 #include "sdk/sce.h"
 
