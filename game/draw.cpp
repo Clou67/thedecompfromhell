@@ -36,6 +36,7 @@
 #include "idol/idoldraw_ps3.h"
 #include "idol/lightjobs.h"
 #include "idol/mathfunc.h"
+#include "idol/ps2shim.h"
 #include "idol/shrubfunc.h"
 #include "idol/tfragfunc.h"
 #include "idol/tiefunc.h"

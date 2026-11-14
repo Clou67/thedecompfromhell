@@ -1,7 +1,7 @@
 #include "game/mcstate.h"
 #include "game/memcard.h"
 #include "game/pause.h"
-#include "idol/idol_draw.h"
+#include "idol/ps2shim.h"
 
 /* g_CardState: index into g_CardStateFuncs */
 enum {

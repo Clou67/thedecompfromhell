@@ -88,6 +88,7 @@ extern undefined4 DAT_0090283f; /* 0x90283f */
 extern undefined4 DAT_00902b46; /* 0x902b46 */
 extern undefined4 DAT_00902d01; /* 0x902d01 */
 extern undefined4 DAT_00902e8f; /* 0x902e8f */
+extern undefined4 DAT_00905738; /* no defined data */
 extern undefined4 DAT_01012000; /* no defined data */
 extern undefined1 DAT_010ee328; /* 0x10ee328 */
 extern undefined4 DAT_010ee330; /* no defined data */
@@ -167,12 +168,14 @@ extern undefined4 DAT_010ef520; /* 0x10ef520 */
 extern undefined4 DAT_010ef528; /* 0x10ef528 */
 extern undefined4 DAT_010ef52c; /* 0x10ef52c */
 extern undefined4 DAT_010ef530; /* 0x10ef530 */
+extern undefined4 DAT_01111580; /* no defined data */
 extern RenderingStep * DL_Pass; /* 0x8fa438 */
 extern RenderingStep * MobyDepth; /* 0x8fa42c */
 extern RenderingStep * MobyPass; /* 0x8fa430 */
 extern RenderingStep * OceanForwardPass; /* 0x8fa418 */
 extern pointer PTR_DAT_008fa448; /* 0x8fa448 */
 extern pointer PTR_DAT_008fa488; /* 0x8fa488 */
+extern pointer PTR_DAT_008fa624; /* 0x8fa624 */
 extern pointer32 PTR_FUN_0070fd60; /* 0x70fd60 */
 extern undefined * PTR_PTR_00661840; /* 0x661840 */
 extern RenderingStep * ShadowPass; /* 0x8fa428 */
@@ -370,3 +373,20 @@ undefined8 IdolDraw_AllocLocalMem(undefined8 param_1,undefined8 param_2);
 undefined8 FUN_004e5d38(int param_1);
 undefined8 FUN_004e5d70(int param_1);
 ulonglong IdolDraw_ReconfigureVideo(undefined4 *param_1,int param_2,undefined2 param_3);
+void HWSystem_InitMainHeap(int param_1);
+void HWSystem_GetSystemTime(void);
+int HWSystem_GetSystemLanguage(int param_1);
+void HWSystem_GetVideoModeName(ulonglong param_1);
+undefined8 FUN_004e63c8(void);
+undefined8 FUN_004e63d0(void);
+int32_t HWSystem_PrintMemInfo(undefined8 param_1,undefined8 param_2);
+undefined4 FUN_004e642c(void);
+void HWSystem_GetHeap(int *param_1,int *param_2,int *param_3);
+void HWSystem_InitSpurs(void);
+void HWSystem_InitNetwork(void);
+void HWSystem_ShutdownSpurs(void);
+void HWSystem_MapMemory(int param_1);
+void HWSystem_AllocAddressSpace(u8 *param_1,int param_2,int param_3,int param_4);
+void HWSystem_FreeTempMemory(int param_1);
+undefined4 HWSystem_CreateMemContainer(int param_1,int param_2);
+void HWSystem_DestroyMemContainer(int param_1,int param_2);

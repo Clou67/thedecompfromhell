@@ -8,7 +8,7 @@
 #include "game/update.h"
 #include "game/vuchain.h"
 #include "idol/fastfunc.h"
-#include "idol/idol_draw.h"
+#include "idol/ps2shim.h"
 
 /* The PS2 packet templates the tie renderer patches each frame. The GS / GIF / VIF code
    builders are stubs that return 0 in this port, so this only clears the templates. */

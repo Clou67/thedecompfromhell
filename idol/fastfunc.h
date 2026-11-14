@@ -4,12 +4,6 @@
 
 // ---- globals
 extern undefined4 DAT_00902ec0; /* 0x902ec0 */
-extern undefined4 DAT_0159b35c; /* 0x159b35c */
-extern undefined4 DAT_0159b374; /* no defined data */
-extern undefined4 DAT_0159b378; /* 0x159b378 */
-extern undefined4 DAT_0159b37c; /* no defined data */
-extern undefined4 DAT_0159b380; /* 0x159b380 */
-extern undefined4 DAT_0159b384; /* no defined data */
 extern undefined4 _DAT_00502210; /* direct read */
 extern undefined4 _DAT_00502220; /* direct read */
 extern undefined4 _DAT_005028f0; /* direct read */
@@ -119,37 +113,3 @@ void FastVecSubSelf(float *param_1,float *param_2,float *param_3);
 void FastVecScaleSelf(double param_1,float *param_2,float *param_3);
 void FastVecMul(float *param_1,float *param_2,float *param_3);
 void FastVecMulSelf(float *param_1,float *param_2,float *param_3);
-void InitPerfCounterPtrs(void);
-void BumpPerfCounter(uint param_1,int *param_2);
-void BumpPerfCounters(void);
-int HostOpen(const char *param_1,int param_2);
-int HostRead(int param_1,void *param_2,int param_3);
-void HostClose(int param_1);
-int HostSeek(int param_1,int param_2,int param_3);
-int HostWrite(int param_1,const void *param_2,int param_3);
-void STUB_00502dec(void);
-void STUB_00502df0(void);
-void STUB_00502df4(void);
-void sceGsExecStoreImage(void *param_1,u32 param_2);
-void sceGsSetDefStoreImage(void *param_1,int param_2,int param_3,int param_4,int param_5,int param_6,int param_7,int param_8);
-undefined8 STUB_00502e00_RET_0(void);
-undefined8 STUB_00502e08_RET_0(void);
-undefined8 STUB_00502e10_RET_0(void);
-undefined8 STUB_00502e18_RET_0(void);
-undefined8 STUB_00502e20_RET_0(void);
-undefined8 STUB_00502e28_RET_0(void);
-undefined8 STUB_00502e30_RET_0(void);
-undefined8 STUB_00502e38_RET_0(void);
-undefined8 STUB_00502e40_RET_0(void);
-u64 STUB_00502e48_RET_0(int param_1);
-undefined8 STUB_00502e50_RET_0(void);
-undefined8 STUB_00502e58_RET_0(void);
-undefined8 STUB_00502e60_RET_0(void);
-undefined8 STUB_00502e68_RET_0(void);
-u64 SCE_GS_SET_PRIM(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6,int param_7,int param_8);
-undefined8 STUB_00502e78_RET_0(void);
-undefined8 STUB_00502e80_RET_0(void);
-undefined8 STUB_00502e88_RET_0(void);
-undefined8 STUB_00502e90_RET_0(void);
-u32 SCE_VIF1_SET_STCYCL(int param_1,int param_2,int param_3);
-u64 SCE_GIF_SET_TAG(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6);

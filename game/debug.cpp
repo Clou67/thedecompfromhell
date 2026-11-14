@@ -29,6 +29,7 @@
 #include "game/update/camera0.h"
 #include "game/vendor.h"
 #include "idol/fastfunc.h"
+#include "idol/ps2shim.h"
 #include "idol/fastinline.h"
 #include <stdarg.h>
 #include <sys/timer.h>

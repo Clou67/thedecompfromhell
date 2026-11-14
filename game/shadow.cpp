@@ -4,8 +4,7 @@
 #include "game/draw.h"
 #include "game/mobyfunc.h"
 #include "game/vuchain.h"
-#include "idol/fastfunc.h"
-#include "idol/idol_draw.h"
+#include "idol/ps2shim.h"
 // game/shadow.cpp -- reconstructed from NPEA00385 EBOOT (was rUnk.cpp)
 // 17 functions, 0x15251c-0x15350c: what is left of the PS2 stencil shadow volumes (DL's Shadow*
 // functions). The light vectors, the stencil clear and darkening passes, and the list walk;

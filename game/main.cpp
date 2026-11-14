@@ -26,10 +26,11 @@
 #include "game/vendor.h"
 #include "game/vuchain.h"
 #include "idol/IMSeqMem.h"
+#include "idol/audio.h"
 #include "idol/fastfunc.h"
-#include "idol/idol.h"
-#include "idol/idol_draw.h"
 #include "idol/mUnk.h"
+#include "idol/perfcounter.h"
+#include "idol/ps2shim.h"
 #include "sdk/sce.h"
 
 #define FRAME_TICKS_NTSC      9600      /* *g_pFrameTicks for one frame */

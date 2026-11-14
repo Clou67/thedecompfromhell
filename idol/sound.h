@@ -50,9 +50,3 @@ undefined8 SndFileWaitRead(undefined8 param_1,undefined8 param_2,longlong param_
 undefined8 STUB_00507084_RET_0(void);
 undefined8 SndFileCancelAll(undefined8 param_1,undefined8 param_2,longlong param_3);
 void SndCopyFsConfig(void);
-void * ResolveTieInstances(undefined4 *param_1);
-void InitTieClassTable(int param_1);
-void * ResolveShrubInstances(undefined4 *param_1);
-void InitShrubClassTable(int param_1);
-void RelocateWorldBlock3c(undefined4 *param_1);
-void RelocateWorldBlock10(undefined4 *param_1);

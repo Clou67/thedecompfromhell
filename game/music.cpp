@@ -25,8 +25,10 @@
 #include "game/loaders.h"
 #include "game/pause.h"
 #include "game/space.h"
+#include "idol/audio.h"
 #include "idol/fastfunc.h"
-#include "idol/idol.h"
+#include "idol/fileio.h"
+#include "idol/ps2shim.h"
 #include "idol/sound.h"
 #include "sdk/libscream/common/snd_stream.h"
 #include <ctype.h>

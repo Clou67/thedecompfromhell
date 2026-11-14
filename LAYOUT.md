@@ -5,7 +5,7 @@ Evidence: SECTION_HEADER_* starts a file; moby helpers come first and the `Updat
 Unknown objects are named `<first letter of the previous linked object>Unk.cpp`. Folders follow link position: everything up to the end of the moby sea is `game/`; game-labelled code after it is `idol/`.
 Shared update functions are named `UpdateMoby_<first oClass>`, with every registered oClass in a comment.
 
-11433 functions, 1240 files: 947 `game/update/moby*.cpp`, 24 `game/update/camera*.cpp`.
+11433 functions, 1249 files: 947 `game/update/moby*.cpp`, 24 `game/update/camera*.cpp`.
 
 | file | funcs | start | end |
 |---|---|---|---|
@@ -61,8 +61,7 @@ Shared update functions are named `UpdateMoby_<first oClass>`, with every regist
 | *update files* | 3377 | 0x17f7d0 | 0x4d27a4 |
 | idol/mUnk.cpp | 14 | 0x4d27b0 | 0x4d441c |
 | idol/binkplayer.cpp | 27 | 0x4d441c | 0x4d5fac |
-| idol/idoldraw_ps3.cpp | 80 | 0x4d5fac | 0x4e5f40 |
-| idol/hwsystem.cpp | 17 | 0x4e5f40 | 0x4e6eac |
+| idol/idoldraw_ps3.cpp | 97 | 0x4d5fac | 0x4e6eac |
 | idol/savesystem.cpp | 49 | 0x4e6eac | 0x4eacd4 |
 | idol/msgdialog.cpp | 10 | 0x4eacd4 | 0x4eb3b4 |
 | idol/pad.cpp | 6 | 0x4eb3b8 | 0x4ec564 |
@@ -76,14 +75,24 @@ Shared update functions are named `UpdateMoby_<first oClass>`, with every regist
 | sdk/libwwsjob/audit.cpp | 41 | 0x4f9460 | 0x4fd3f4 |
 | idol/IMSeqMem.cpp | 39 | 0x4fe048 | 0x4ff47c |
 | idol/debugprint.cpp | 29 | 0x4ff480 | 0x4fff5c |
-| idol/fastfunc.cpp | 135 | 0x4fff60 | 0x502ea8 |
-| idol/idol_draw.cpp | 163 | 0x502ea8 | 0x503494 |
-| idol/idol.cpp | 94 | 0x503494 | 0x505f54 |
-| idol/sound.cpp | 45 | 0x505f58 | 0x507f60 |
+| idol/fastfunc.cpp | 101 | 0x4fff60 | 0x502ccc |
+| idol/perfcounter.cpp | 3 | 0x502cd0 | 0x502dcc |
+| idol/ps2shim.cpp | 194 | 0x502dcc | 0x503494 |
+| idol/idol.cpp | 10 | 0x503494 | 0x5038c4 |
+| idol/idtable.cpp | 12 | 0x5038c4 | 0x503e00 |
+| idol/fileio.cpp | 5 | 0x503e00 | 0x50436c |
+| idol/hwsystem.cpp | 21 | 0x50436c | 0x504dc4 |
+| idol/textfmt.cpp | 14 | 0x504dc8 | 0x5055e8 |
+| idol/audio.cpp | 32 | 0x5055e8 | 0x505f54 |
+| idol/sound.cpp | 39 | 0x505f58 | 0x507140 |
+| idol/worldload.cpp | 6 | 0x507148 | 0x507f60 |
 | sdk/fios.cpp | 12 | 0x507f68 | 0x508b80 |
-| idol/shrubfunc.cpp | 6 | 0x508c10 | 0x50b0bc |
+| idol/shrubfunc.cpp | 3 | 0x508c10 | 0x50a518 |
+| idol/idol_draw.cpp | 3 | 0x50a538 | 0x50b0bc |
 | idol/tfragfunc.cpp | 5 | 0x50b0bc | 0x50c5b0 |
-| idol/tiefunc.cpp | 24 | 0x50c5e0 | 0x50e7f8 |
+| idol/tiefunc.cpp | 2 | 0x50c5e0 | 0x50e38c |
+| idol/idm.cpp | 18 | 0x50e390 | 0x50e794 |
+| idol/linearheap.cpp | 4 | 0x50e794 | 0x50e7f8 |
 | sdk/libgcm_cmd/flip_safe.cpp | 1 | 0x50e7f8 | 0x50e8dc |
 | idol/fUnk.cpp | 1 | 0x50e8dc | 0x50e998 |
 | sdk/libgcm_cmd/marker.cpp | 8 | 0x50e998 | 0x50ef38 |

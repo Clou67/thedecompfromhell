@@ -15,9 +15,10 @@
 #include "game/shadow.h"
 #include "game/sound.h"
 #include "game/vuchain.h"
+#include "idol/audio.h"
 #include "idol/fastfunc.h"
 #include "idol/idol.h"
-#include "idol/idol_draw.h"
+#include "idol/ps2shim.h"
 #include "idol/sound.h"
 #include "sdk/libscream/common/api.h"
 

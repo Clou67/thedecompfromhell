@@ -20,10 +20,10 @@
 #include "game/update/moby1118.h"
 #include "game/vuchain.h"
 #include "idol/fastfunc.h"
-#include "idol/idol.h"
-#include "idol/idol_draw.h"
+#include "idol/fileio.h"
 #include "idol/idoldraw_ps3.h"
 #include "idol/mUnk.h"
+#include "idol/ps2shim.h"
 #include "sdk/linked.h"
 #include "idol/fastinline.h"
 #include <cell/gcm/gcm_macros.h>

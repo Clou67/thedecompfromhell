@@ -6,7 +6,7 @@
 #include "game/hero.h"
 #include "game/skyfunc.h"
 #include "game/vuchain.h"
-#include "idol/idol_draw.h"
+#include "idol/ps2shim.h"
 #include "idol/tiefunc.h"
 #include "sdk/linked.h"
 

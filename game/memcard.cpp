@@ -36,6 +36,7 @@
 #include "idol/hwsystem.h"
 #include "idol/idol.h"
 #include "idol/idoldraw_ps3.h"
+#include "idol/idtable.h"
 #include "idol/savesystem.h"
 #include "idol/trophy.h"
 #include "sdk/sce.h"

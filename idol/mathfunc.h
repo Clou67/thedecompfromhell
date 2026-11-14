@@ -4,7 +4,6 @@
 #include "idol/idol_draw.h"
 
 // ---- globals
-extern undefined1 DAT_01593350; /* 0x1593350 */
 extern undefined * PTR_PTR_006618e0; /* 0x6618e0 */
 extern undefined4 _DAT_005e8fa0; /* direct read */
 extern undefined4 _DAT_005e8fb0; /* direct read */

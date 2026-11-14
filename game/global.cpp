@@ -3,8 +3,7 @@
 #include "game/loaders.h"
 #include "game/pause.h"
 #include "idol/debugprint.h"
-#include "idol/fastfunc.h"
-#include "idol/idol_draw.h"
+#include "idol/ps2shim.h"
 #include "sdk/fios.h"
 // game/global.cpp -- reconstructed from NPEA00385 EBOOT (was fUnk.cpp; named after
 // Global_QuickMovieMalloc)

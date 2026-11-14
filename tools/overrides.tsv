@@ -88,3 +88,14 @@ boot::_start	game/crt0.cpp
 0x63753c-0x63a208	sdk/libscream/common/snd_stream_scream.cpp
 0x63a208-0x63c564	sdk/libscream/common/snd_stream_threading.cpp
 0x63c564-0x63ff34	sdk/libscream/common/snd_stream_parsing.cpp
+# idol: the rest of the mixed files by subsystem
+0x502cd0-0x502dcc	idol/perfcounter.cpp
+0x502dcc-0x503404	idol/ps2shim.cpp
+0x5038c4-0x503e00	idol/idtable.cpp
+0x503e00-0x50436c	idol/fileio.cpp
+0x50436c-0x504dc8	idol/hwsystem.cpp
+0x504dc8-0x5055e8	idol/textfmt.cpp
+0x5055e8-0x505f58	idol/audio.cpp
+0x507148-0x507f68	idol/worldload.cpp
+0x50e390-0x50e794	idol/idm.cpp
+0x50e794-0x50e7f8	idol/linearheap.cpp
