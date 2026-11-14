@@ -105,7 +105,6 @@ extern undefined1 DAT_0065b51d; /* 0x65b51d */
 extern undefined4 DAT_00737bf0; /* 0x737bf0 */
 extern undefined4 DAT_00737d30; /* no defined data */
 extern undefined4 DAT_00737d44; /* no defined data */
-extern undefined4 DAT_00738138; /* no defined data */
 extern undefined4 DAT_0073813c; /* no defined data */
 extern undefined4 DAT_00800b80; /* no defined data */
 extern undefined4 DAT_008f9330; /* 0x8f9330 */
@@ -492,6 +491,7 @@ extern u64 g_GsRegTex1; /* 0x10ee300: SetGSReg id 0x1a (SCE_GS_SET_TEX1) */ /* t
 extern u32 g_GsRegTexHeader0; /* 0x10ee2f8: SetGSReg id 0x18, the effect texture header for unit 0 (address) */ /* type set in global_types.tsv */
 extern u32 g_GsRegTexHeader1; /* 0x10ee2fc: SetGSReg id 0x19, the same for unit 1 */ /* type set in global_types.tsv */
 extern u64 g_GsRegZbuf; /* 0x10ee308: SetGSReg id 0x21 (VU1_addGSregister of the z buffer) */ /* type set in global_types.tsv */
+extern int g_LevelTargetStart[20]; /* 0x738138: each level's first entry in g_MissionTargets/g_MissionMobys (the next level's start ends it) */ /* type set in global_types.tsv */
 extern u8 g_PartNoShrink; /* 0x8fa54c: set: DrawParts does not shrink big particles */ /* type set in global_types.tsv */
 extern void *g_pGame; /* 0x902ecc: Idol's game object (0x90d770) */ /* type set in global_types.tsv */
 extern void * g_pHWSystem; /* 0x902ed0 */

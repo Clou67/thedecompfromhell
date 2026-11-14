@@ -2645,6 +2645,8 @@ extern undefined4 DAT_0065183c; /* no defined data */
 extern undefined4 DAT_00651c88; /* no defined data */
 extern undefined4 DAT_00652bf8; /* no defined data */
 extern undefined4 DAT_00652c00; /* no defined data */
+extern undefined4 DAT_00653fa4; /* no defined data */
+extern undefined4 DAT_00653fac; /* no defined data */
 extern undefined4 DAT_0071a32c; /* 0x71a32c */
 extern undefined4 DAT_0071a364; /* 0x71a364 */
 extern undefined4 DAT_0071c9a0; /* 0x71c9a0 */
@@ -2781,6 +2783,17 @@ extern undefined2 DAT_007247ce; /* 0x7247ce */
 extern undefined2 DAT_007247da; /* 0x7247da */
 extern undefined4 DAT_0072486c; /* 0x72486c */
 extern undefined4 DAT_00724870; /* 0x724870 */
+extern undefined4 DAT_00724af4; /* 0x724af4 */
+extern undefined4 DAT_00724af8; /* 0x724af8 */
+extern undefined4 DAT_00724afc; /* 0x724afc */
+extern undefined4 DAT_00724b00; /* 0x724b00 */
+extern undefined4 DAT_00724b04; /* 0x724b04 */
+extern undefined4 DAT_00724b08; /* 0x724b08 */
+extern undefined4 DAT_00724b0c; /* 0x724b0c */
+extern undefined4 DAT_00724d54; /* 0x724d54 */
+extern undefined4 DAT_00724d58; /* 0x724d58 */
+extern undefined4 DAT_00724d5c; /* 0x724d5c */
+extern undefined4 DAT_007261d0; /* 0x7261d0 */
 extern undefined2 DAT_0072b33c; /* 0x72b33c */
 extern undefined2 DAT_0072b348; /* 0x72b348 */
 extern undefined2 DAT_0072b354; /* 0x72b354 */
@@ -3131,6 +3144,15 @@ extern undefined4 DAT_00a1e128; /* no defined data */
 extern undefined4 DAT_00a1e12c; /* no defined data */
 extern undefined4 DAT_00a20450; /* no defined data */
 extern undefined4 DAT_00a20460; /* no defined data */
+extern undefined4 DAT_00a207ac; /* 0xa207ac */
+extern undefined4 DAT_00a207b0; /* 0xa207b0 */
+extern undefined4 DAT_00a207b4; /* 0xa207b4 */
+extern undefined4 DAT_00a207b8; /* 0xa207b8 */
+extern undefined4 DAT_00a207c0; /* 0xa207c0 */
+extern undefined4 DAT_00a207c4; /* 0xa207c4 */
+extern undefined4 DAT_00a207c8; /* 0xa207c8 */
+extern undefined4 DAT_00a207cc; /* 0xa207cc */
+extern undefined4 DAT_00a207d8; /* 0xa207d8 */
 extern undefined1 DAT_00a2c444; /* 0xa2c444 */
 extern undefined4 DAT_00a354cc; /* no defined data */
 extern undefined4 DAT_00a54ed4; /* 0xa54ed4 */

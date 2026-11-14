@@ -181,3 +181,37 @@ static inline u8 VecByte(vector unsigned char v, int index)
 
     return out.b[0];
 }
+
+/* a float at any address into all four words: SNC loads it with lvlx|lvrx (the Cell's unaligned
+   loads) and uses element 0; the other compilers splat it */
+static inline VecF VecLoadUnalignedF(const float *p)
+{
+#if defined(__SNC__)
+    return vec_or(vec_lvlx(0, p), vec_lvrx(16, p));
+#else
+    return VecSplatF(*p);
+#endif
+}
+
+static inline vector signed int VecLoadUnalignedS(const int *p)
+{
+#if defined(__SNC__)
+    return vec_or(vec_lvlx(0, p), vec_lvrx(16, p));
+#else
+    union { int i[4]; vector signed int v; } splat = { { *p, *p, *p, *p } };
+
+    return splat.v;
+#endif
+}
+
+/* 1/x: vrefp and three Newton steps */
+static inline VecF VecRecip(VecF x)
+{
+    VecF two = VecSplatF(2.0f);
+    VecF estimate = vec_re(x);
+
+    estimate = vec_madd(estimate, vec_nmsub(estimate, x, two), VecNegZero());
+    estimate = vec_madd(estimate, vec_nmsub(estimate, x, two), VecNegZero());
+    estimate = vec_madd(estimate, vec_nmsub(estimate, x, two), VecNegZero());
+    return estimate;
+}

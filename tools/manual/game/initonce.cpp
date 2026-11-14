@@ -203,7 +203,7 @@ void InitOnce(void)
     DAT_00a20814 = (u32)Alloc(heap2, 0x40000, 128);
     DAT_00a20818 = 0;
     DAT_00a2081c = 0;
-    g_MapRevealMask = (int)Alloc(FUN_0050436c(game), 0x8000, 32);
+    g_MapRevealMask = (u8 *)Alloc(FUN_0050436c(game), 0x8000, 32);
     g_totalBoltsCollected = 0;
     DAT_0096ca08 = 0;
     FUN_00508578(&TEX_BASE, FUN_0050436c(game), heap2);

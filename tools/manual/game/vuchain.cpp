@@ -222,8 +222,6 @@ void VU1_addDataInLine(int qwc)
    a time in vector registers. */
 void VU1_setScissor(int left, int right, int top, int bot)
 {
-    /* the literal pool at 0x1750b8 isn't in the dump: a 16-bit mask, the half scale and the
-       flipped half scale, as BeginAuxDrawMode uses */
     const u32 mask = 0xffff;
     const float half = 0.5f;
     const float negHalf = -0.5f;

@@ -233,7 +233,6 @@ extern undefined4 DAT_00a20774; /* 0xa20774 */
 extern undefined4 DAT_00a20778; /* 0xa20778 */
 extern undefined4 DAT_00a2077c; /* 0xa2077c */
 extern undefined4 DAT_00a20780; /* 0xa20780 */
-extern undefined4 DAT_00a207d0; /* 0xa207d0 */
 extern undefined4 DAT_00a207ec; /* 0xa207ec */
 extern undefined4 DAT_00a207f0; /* 0xa207f0 */
 extern undefined4 DAT_00a207f4; /* 0xa207f4 */
@@ -283,7 +282,6 @@ extern undefined4 DAT_00a52c8c; /* 0xa52c8c */
 extern undefined4 DAT_00a52c90; /* 0xa52c90 */
 extern undefined4 DAT_00a52c94; /* 0xa52c94 */
 extern undefined1 DAT_00a52ca4; /* 0xa52ca4 */
-extern undefined4 DAT_00a52cac; /* 0xa52cac */
 extern undefined4 DAT_00a52cb0; /* 0xa52cb0 */
 extern undefined4 DAT_00a52cb4; /* 0xa52cb4 */
 extern undefined4 DAT_00a52cb8; /* 0xa52cb8 */
@@ -438,6 +436,8 @@ extern Planets32 g_MaxBoltsPerLevel; /* 0x738608 */
 extern undefined4 g_MenuScreen; /* 0xa52bb0 */
 extern int g_MoviePlayState; /* 0x969cd4 */
 extern undefined4 g_NpcBuffer; /* 0xa10918 */
+extern u8 *g_PauseAllocTop; /* 0xa52ca8: next free byte of the pause menu's memory (invented name) */ /* type set in global_types.tsv */
+extern u8 *g_PauseAllocTop2; /* 0xa52cac: the same for a second area (invented name) */ /* type set in global_types.tsv */
 extern int g_SaveCurFile; /* 0x71fa38: the save list entry selected */ /* type set in global_types.tsv */
 extern u8 *g_ScratchBuf; /* 0x902ec8: scratch memory shared by the drawing code (water uses it as a WaterStage) */ /* type set in global_types.tsv */
 extern undefined4 g_SelectedLevel; /* 0xa206e4 */

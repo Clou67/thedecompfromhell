@@ -50,7 +50,7 @@ extern char *SaveDataPtr; /* 0xa10928: the save buffer; the save data is built 1
 extern undefined1 g_FrontEnd; /* 0xa15f38 */
 extern HelpMenuEntry g_HelpMenuList[151]; /* 0x72b330 (pause.cpp still uses DAT_0072b330) */ /* type set in global_types.tsv */
 extern char g_LevelFlags2[20][16]; /* 0xa0cbc4: follows g_LevelFlags (moby585/605 still use DAT_00a0cbc4) */ /* type set in global_types.tsv */
-extern char g_MapRevealMasks[20][0x8000]; /* 0x96ca34: per level map reveal masks (map.cpp/pause.cpp still use DAT_0096ca34) */ /* type set in global_types.tsv */
+extern char g_MapRevealMasks[20][0x8000]; /* 0x96ca34: per level map reveal masks  */ /* type set in global_types.tsv */
 extern char g_McDir[21]; /* 0x71f970: "/BASCUS-97199RATCHET", the title id is patched in by memcard_GetName */ /* type set in global_types.tsv */
 extern char g_McDirAll[23]; /* 0x71f985: ".../*" */ /* type set in global_types.tsv */
 extern char g_McIconSys[30]; /* 0x71f99c: ".../icon.sys" */ /* type set in global_types.tsv */

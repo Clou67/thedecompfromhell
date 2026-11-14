@@ -1971,7 +1971,7 @@ void DrawExitButton(MobyInstance *moby)
 
 // 0x01711a8 (0x5ec bytes)
 /* The purchase box's text (width x height): "YOU'RE MAXED OUT", "YOU CAN'T AFFORD IT", or for
-   ammo "HOW MANY?" with the quantity (shifted for its digits) between two markers, preview moby 5
+   ammo "HOW MANY?" with the quantity (shifted for its digits) between "<" and ">", preview moby 5
    and the total price; for a weapon "PURCHASE" with the BUY/NO choices (85% on Languages 2, 4
    and 5). */
 void Vendor_DrawItemInfo(MobyInstance *moby, int width, int height)
@@ -2005,8 +2005,8 @@ void Vendor_DrawItemInfo(MobyInstance *moby, int width, int height)
         int x = g_VendorQuantity >= 100 ? 0x17 : g_VendorQuantity >= 10 ? 0x1e : 0x25;
 
         FontPrintSmallLeft(x, 0x32, 0x80f0f0f0, text, -1);
-        FontPrintSmallLeft(0xc, 0x32, 0x80f0f0f0, (const char *)&DAT_00653fa4, -1);
-        FontPrintSmallLeft(0x40, 0x32, 0x80f0f0f0, (const char *)&DAT_00653fac, -1);
+        FontPrintSmallLeft(0xc, 0x32, 0x80f0f0f0, "<", -1);
+        FontPrintSmallLeft(0x40, 0x32, 0x80f0f0f0, ">", -1);
 
         sprintf(text, "%d", g_VendorQuantity * VendorUnitPrice(g_VendorItems[g_VendorSelected].item));
         FontPrintSmallRight(0x40, 0x4c, 0x80f0f0f0, text, -1);
@@ -2492,13 +2492,12 @@ void Vendor_HudUpdate(MobyInstance *moby)
 
 // 0x0173690 (0x4bc bytes)
 /* Glows over screens 1-5 of the vendor moby (posted while a vendor state is young): each
-   part's box (as in Vendor_HudUpdate) as a quad of effect texture 0x19, added. The corners' w
-   and the texture's far edge come from literals at 0x173684/0x173688 the dump does not have. */
+   part's box (as in Vendor_HudUpdate) as a quad of effect texture 0x19, added. */
 void Vendor_DrawMobyHighlight(MobyInstance *moby)
 {
     VendorScreenPart *parts = g_VendorScreenParts;
-    float cornerW = *(float *)&DAT_00173684;
-    float edge = *(float *)&DAT_00173688;
+    float cornerW = 1.0f;
+    float edge = 0.984375f;
 
     for (int screen = 1; screen < 6; screen++) {
         int joints[3] = { screen * 4, screen * 4 + 1, screen * 4 + 2 };

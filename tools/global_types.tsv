@@ -120,7 +120,7 @@ g_SaveCurCard	int NAME /* 0x71faf0 */
 g_SaveRealLevel	int NAME /* 0x71faf4: Level while memcard_Save pretends to be on another */
 g_SaveCards	SaveCardInfo NAME[] /* 0x71fa44 (pause.cpp still uses the DAT_0071fa44.. names) */
 g_HelpMenuList	HelpMenuEntry NAME[151] /* 0x72b330 (pause.cpp still uses DAT_0072b330) */
-g_MapRevealMasks	char NAME[20][0x8000] /* 0x96ca34: per level map reveal masks (map.cpp/pause.cpp still use DAT_0096ca34) */
+g_MapRevealMasks	char NAME[20][0x8000] /* 0x96ca34: per level map reveal masks  */
 g_LevelFlags2	char NAME[20][16] /* 0xa0cbc4: follows g_LevelFlags (moby585/605 still use DAT_00a0cbc4) */
 g_memcardHadBoltTrophy	u8 NAME /* 0xa2308d: the loaded save already had over 1,000,000 bolts */
 g_memcardHadMidasTrophy	u8 NAME /* 0xa2308e: the loaded save already had all 10 gold weapons */
@@ -604,3 +604,25 @@ g_GsRegs6b0	u64 NAME[22] /* 0x71f6b0: PS2 GIF tag for 10 registers (only the tag
 reset_gs_regs_fixed	u64 NAME[38] /* 0x71f760: PS2 GS registers reset (DL name, same size) */
 g_GsRegsContext1	u64 NAME[14] /* 0x71f890: PS2 GS registers for drawing context 1 */
 g_GsRegsContext2	u64 NAME[14] /* 0x71f900: the same for context 2 */
+g_MapSectionWord	int NAME /* 0x724acc: set by SECTION_HEADER_MAP */
+g_MapDefaultHeroPos	int NAME[20][2] /* 0x7261cc: g_MapHeroU/V's starting values per level */
+g_MapUnkA204d0	int NAME /* 0xa204d0: set by Map_LoadPlanetMap */
+g_MapRevealDisc	u8 NAME[32][4] /* 0xa20664: 32x32 bits, a disc of radius 16 (what Map_RevealAroundPos stamps) */
+g_MapUnkA204c0	int NAME /* 0xa204c0 */
+g_MapUnkA204c4	int NAME /* 0xa204c4 */
+g_MapUnkA204c8	int NAME /* 0xa204c8 */
+g_MapImageBuf	u8 *NAME /* 0xa206fc: start of the map's memory in the pause allocator */
+g_PauseAllocTop	u8 *NAME /* 0xa52ca8: next free byte of the pause menu's memory (invented name) */
+g_PauseAllocTop2	u8 *NAME /* 0xa52cac: the same for a second area (invented name) */
+g_MapPinnedSlot	int NAME /* 0xa207d0: a cache slot Map_ChooseCacheSlotToEvict never picks */
+g_MapCacheBuf	u8 *NAME[5] /* 0xa207a8: map cache slots' buffers (0 = slot unused) */
+g_MapCacheId	int NAME[5] /* 0xa207bc: the map in each slot (level, + 0x100 for Map-O-Matic), -1 free */
+g_MapCacheSize	int NAME[5] /* 0xa207d4: its size in qwords */
+g_MapRevealMask	u8 *NAME /* 0xa204cc: the shown level's reveal mask, 256x256 bits */
+g_MapWorldBounds	MapBounds NAME[19] /* 0x724af0 */
+g_MapWorldToMap	MapTransform NAME[19] /* 0x724d50 */
+g_MapZoom	float NAME[20] /* 0xa20574: per level */
+ptr_GalacticMap	int *NAME /* 0x729970: levels in galactic map order, 0 ends */
+g_LevelTargetStart	int NAME[20] /* 0x738138: each level's first entry in g_MissionTargets/g_MissionMobys (the next level's start ends it) */
+g_MapIconSource	void *NAME /* 0xa204dc: set by Map_SetIconSource (nothing calls it) */
+g_MapIconSourceArg	int NAME /* 0xa20570 */

@@ -84,11 +84,7 @@ struct WeaponAmmoInfo {
 _Static_assert(sizeof(struct WeaponAmmoInfo) == 0x18, "WeaponAmmoInfo");
 
 // ---- globals
-extern undefined4 DAT_00173684; /* 0x173684 */
-extern undefined4 DAT_00173688; /* 0x173688 */
 extern undefined4 DAT_00653f08; /* no defined data */
-extern undefined4 DAT_00653fa4; /* no defined data */
-extern undefined4 DAT_00653fac; /* no defined data */
 extern undefined4 DAT_0071efb4; /* 0x71efb4 */
 extern undefined4 DAT_00721000; /* no defined data */
 extern undefined4 DAT_00735580; /* 0x735580 */

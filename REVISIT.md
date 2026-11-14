@@ -214,10 +214,8 @@ All 33 functions are written against the asm. The control flow and calls were ch
 the arithmetic of the big ones (Vendor_PreUpdate, Vendor_HudUpdate) was read through Ghidra and
 spot-checked, not traced instruction by instruction.
 
-- **Literal values the dump doesn't have.** Vendor_DrawMobyHighlight reads the corner w and the
-  far texture edge from `DAT_00173684`/`DAT_00173688` (probably 1.0 and 0.984375). Vendor_DrawItemInfo
-  prints two short strings at `DAT_00653fa4`/`DAT_00653fac` (the arrows beside the quantity?).
-  Replace them with the real constants once the EBOOT bytes are at hand.
+- Literal values read from the EBOOT: the highlight's corner w is 1.0 and its far edge 0.984375;
+  the quantity markers are "<" and ">".
 - **Signatures set from the callers' registers:** DrawWeaponIcons, DrawWeaponStrings, DrawVendorDude,
   DrawExitButton take the screen moby (unused); DrawBuyButton and Vendor_DrawItemInfo take
   (moby, width, height); Vendor_DrawFlickerText (screen, width, height) and
@@ -274,9 +272,7 @@ All 29 functions are checked against the asm; 16 of them are empty stubs.
 - **Signatures:** VU0_loadMicroProgram takes (program, dest), where DL has one parameter;
   VU1_addDataRefToLoc and VU1_addDataDirect take (vuAddr, data, qwc). DMAC_BEIS_Handler is `void`
   here; DL gives it an int, but the asm reads nothing.
-- **Guessed literals:** VU1_setScissor's literal pool (0x1750b8, three words) isn't in the dump. It
-  is written as the mask 0xffff, 0.5 and -0.5, matching BeginAuxDrawMode's viewport. Check these
-  against the EBOOT.
+- VU1_setScissor's literal pool (0xffff, 0.5, -0.5) was checked against the EBOOT.
 - **AltiVec:** VU1_setScissor (vsubuwm, vadduwm, vand, vcfux, vmaddfp, vaddfp, stvewx) and
   VU1_dumpChain (lvx, vspltb) use intrinsics. The new fastinline.h helpers are VecSplatU and
   VecByte.

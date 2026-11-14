@@ -18,7 +18,7 @@ errors	file
 0	game/loaders.cpp
 2196	game/mUnk.cpp
 0	game/main.cpp
-92	game/map.cpp
+56	game/map.cpp
 0	game/mcstate.cpp
 0	game/memcard.cpp
 0	game/mesh.cpp
@@ -31,7 +31,7 @@ errors	file
 0	game/partproc.cpp
 445	game/partupd.cpp
 0	game/path.cpp
-607	game/pause.cpp
+610	game/pause.cpp
 0	game/respawn.cpp
 0	game/shadow.cpp
 0	game/skyfunc.cpp

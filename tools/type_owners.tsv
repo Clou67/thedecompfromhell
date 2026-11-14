@@ -136,3 +136,5 @@ ShadowMoby	game/shadow
 BufferStore	game/store
 CopyRequest	game/store
 BufferStoreSlot	game/store
+MapBounds	game/map
+MapTransform	game/map
