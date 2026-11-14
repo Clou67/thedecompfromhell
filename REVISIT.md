@@ -363,3 +363,22 @@ SDK 4.00 `target/ppu/lib`. `sdkmatch.py` now points at it; the SDK 4.20 results 
 - **Files a little worse:** idol/idol.cpp, sdk/fios.cpp, sdk/libc/atexit.cpp and
   fios_scheduler.cpp, where newly matched functions moved between files (sdk/ files are
   reference only).
+
+## Linked SDK code out of the tree
+
+The 119 SDK objects the game links are no longer generated (sdklink.py, run by generate.py).
+Code uses the SDK 4.00 headers instead; the checker now compiles against SDK 4.00, plus
+ppu_intrinsics.h and vec_types_gcc.h copied from 4.20 into cell/extra_include/. No game/ or idol/
+file's error count changed.
+
+- **sdk/linked.h** holds what is still used but not declared by an SDK header: SDK-internal
+  types and globals that Ghidra exported, plus 106 prototypes. These are mostly libfios C++
+  methods under their mangled names, the libc/crt internals (`__finalize_libc`, `_Tlsalloc`, ...)
+  and libgcm_cmd's `cellGcmSetWriteCommandLabel`. As files get cleaned, fios calls should become
+  real `cell::fios::scheduler` calls through `<cell/fios.h>`, and linked.h should shrink.
+- **SDK object size cap.** partition.py now never puts more functions in an SDK object file than
+  the library object really has (sdk_objfuncs.json, from nm). Before, up to 3 trailing functions
+  of the next, unmatched object were swept in. Those now land in new unknown files
+  (sdk/aUnk, bUnk, fUnk4-7, xUnk6-11, ...). libscream is exempt (see above).
+- **sdk/xUnk5.cpp is pinned in overrides.tsv** (it has hand-cleaned collproc helpers); the cap
+  renumbered the other unknown sdk files.

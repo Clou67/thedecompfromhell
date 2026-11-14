@@ -33,7 +33,7 @@
 #include "idol/idol_draw.h"
 #include "idol/mUnk.h"
 #include "idol/tiefunc.h"
-#include "sdk/libgcm_cmd/marker.h"
+#include "sdk/linked.h"
 #include "idol/fastinline.h"
 
 #define MOBY_STATE_FREED_PERM   0xfd

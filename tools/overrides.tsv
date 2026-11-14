@@ -29,3 +29,5 @@ crt0::_init	game/boot.cpp
 0x165588-0x1658d8	game/store.cpp
 # global.cpp (was fUnk): Global_QuickMovieMalloc names the file; sorts between freeze and help
 0x7a338-0x7b0f4	game/global.cpp
+# keep the old sdk/xUnk5.cpp (collproc helpers, partly cleaned in manual/) where it was before the SDK object cap renumbered the unknown files
+0x5e6a10-0x5e7e0c	sdk/xUnk5.cpp

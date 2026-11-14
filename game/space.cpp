@@ -1,3 +1,4 @@
+#include <cell/gcm.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -44,7 +45,7 @@
 #include "idol/mathfunc.h"
 #include "idol/sound.h"
 #include "idol/tiefunc.h"
-#include "sdk/libcgc/libcgc_cell_localize.h"
+#include "sdk/linked.h"
 #include "sdk/mUnk4.h"
 #include "sdk/sce.h"
 #include "sdk/xUnk5.h"

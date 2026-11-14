@@ -38,7 +38,7 @@
 #include "idol/tfragfunc.h"
 #include "idol/tiefunc.h"
 #include "sdk/fios.h"
-#include "sdk/libgcm_cmd/marker.h"
+#include "sdk/linked.h"
 #include "idol/fastinline.h"
 #include <cell/gcm/gcm_macros.h>
 #include <cell/gcm/gcm_enum.h>

@@ -3,4 +3,4 @@
 #include "types.h"
 
 // ---- functions
-void FUN_005da554(void);
+uint * FUN_005d0d34(int param_1,uint param_2);

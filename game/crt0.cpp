@@ -9,12 +9,7 @@
 #include "game/crt0.h"
 #include "game/boot.h"
 #include "idol/sUnk.h"
-#include "sdk/libc/atexit.h"
-#include "sdk/libc/fclose.h"
-#include "sdk/libc/fs_init.h"
-#include "sdk/libc/xlv2mtx.h"
-#include "sdk/libc/xsyslock.h"
-#include "sdk/libcgc/libcgc_cell_localize.h"
+#include "sdk/linked.h"
 #include "sdk/mUnk3.h"
 #include "sdk/sys.h"
 

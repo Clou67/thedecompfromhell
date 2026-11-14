@@ -346,7 +346,7 @@ SDK=${SDK:?set SDK=/path/to/cell (your PS3 SDK folder)}
 cd "$(dirname "$0")"
 for f in "$@"; do
   n=$(clang++ --target=powerpc64-unknown-lv2 -D__LP32__ -ffreestanding -nostdinc -fsyntax-only -ferror-limit=0 -w \\
-      -isystem $SDK/target/ppu/include -isystem $SDK/target/common/include -isystem "$(clang -print-resource-dir)/include" \\
+      -isystem $SDK/target/ppu/include -isystem $SDK/target/common/include -isystem $SDK/extra_include -isystem "$(clang -print-resource-dir)/include" \\
       -D__PPU__ -D__CELLOS_LV2__ -I. "$f" 2>&1 | grep -c "error:")
   echo "$n	$f"
 done
@@ -359,3 +359,5 @@ subprocess.run(['python3', os.path.join(os.path.dirname(os.path.abspath(__file__
 _dis = os.path.join(DATA, 'eboot.dis')   # optional: llvm-objdump -d --no-show-raw-insn --triple=powerpc64-unknown-linux-gnu --mattr=+altivec EBOOT.ELF > data/eboot.dis; python3 fixdis.py EBOOT.ELF data/eboot.dis
 if os.path.exists(_dis):
     subprocess.run(['python3', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'asmlist.py'), out, _dis], check=True)
+# SDK objects the game links: drop their decompiled files, keep what the tree uses in sdk/linked.h
+subprocess.run(['python3', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sdklink.py'), out], check=True)

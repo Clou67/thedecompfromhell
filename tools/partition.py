@@ -44,6 +44,8 @@ if os.path.exists(os.path.join(DATA, 'sdk_final.tsv')):
         _a, _lib, _obj, _sym, _dem, _basis = _l.split('\t')
         SDKMATCH[int(_a, 16)] = (_lib, _obj, _sym, _dem, _basis)
 SDK_TAIL = 3   # unmatched functions allowed after an SDK object's last match
+# functions per SDK object (nm of the SDK 4.00 libraries): an object file never takes more
+SDK_OBJN = json.load(open(os.path.join(DATA, 'sdk_objfuncs.json'))) if os.path.exists(os.path.join(DATA, 'sdk_objfuncs.json')) else {}
 def is_sdk_obj(d): return d.startswith('sdk/') and d.count('/') == 2
 def sdk_file(lib, obj):
     lib = re.sub(r'\.a$', '', lib); obj = re.sub(r'(\.ppu)?\.o$', '', obj)
@@ -167,9 +169,9 @@ def assign(rows):
     # ---- 4. unnamed functions and stubs belong to the object they sit in.
     #      Named functions with no namespace (e.g. MapVTables) are their own object.
     #      An SDK object only extends a little past its last matched function.
-    sdk_last = {}
+    sdk_last = {}; sdk_cnt = collections.Counter()
     for i in range(n):
-        if why[i] == 'sdk': sdk_last[dest[i]] = i
+        if why[i] == 'sdk': sdk_last[dest[i]] = i; sdk_cnt[dest[i]] += 1
     for i, (a, sz, nm) in enumerate(rows):
         if dest[i] is None:
             if '::' not in nm and not re.match(r'(FUN|STUB|thunk)_', nm):
@@ -177,7 +179,8 @@ def assign(rows):
             else:
                 k = next((k for k in range(i - 1, -1, -1) if dest[k]), None)
                 p = dest[k] if k is not None else '?'
-                if is_sdk_obj(p) and i - sdk_last.get(p, i) > SDK_TAIL: p = '?'
+                if is_sdk_obj(p) and (i - sdk_last.get(p, i) > SDK_TAIL or (sdk_cnt[p] >= SDK_OBJN.get(p, 1 << 30) and not p.startswith('sdk/libscream/'))): p = '?'
+                if is_sdk_obj(p): sdk_cnt[p] += 1
                 dest[i] = p; why[i] = 'fill'
     # ---- 5. game code after the moby sea is Idol's
     for i, (a, sz, nm) in enumerate(rows):

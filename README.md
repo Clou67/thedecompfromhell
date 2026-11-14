@@ -9,9 +9,13 @@ hand-maintained tables, so fixes go into those tables (or Ghidra) and the tree i
   hold per-class update code: helpers first, `UpdateMoby_*` last. Shared update functions are
   named after their first oClass; every oClass registered in `MapVTables` is listed in a comment.
 - `idol/` — code after the moby sea (Idol's PS3 port layer: draw, fastfunc, fios glue, ...).
-- `sdk/<lib>/<object>.cpp` — functions matched against the PS3 SDK static libraries
-  (exact, or fuzzy inside a run of matches from the same library). Linked from the SDK, so they
-  are reference only and do not need decompiling. `sdk/*.cpp` without a library folder are
+- SDK code the game links (objects matched against the SDK 4.00 static libraries by
+  `tools/sdkmatch.py`/`fuzzy.py`) is not in the tree: it comes from the SDK's `.a` files, and code
+  calls it through the SDK's own headers (`<stdio.h>`, `<cell/gcm.h>`, `<cell/cgb.h>`, ...).
+  `sdk/linked.h` keeps only what those headers don't give: SDK-internal types and globals, and
+  functions called by symbol, such as fios C++ methods under their mangled names until those call
+  sites are cleaned. `sdk/libscream/` stays: the game's SCREAM is its own build, not the SDK's.
+  `sdk/*.cpp` without a library folder are
   unmatched (Medius, older libflash, libc objects with no match, ...).
 - Unknown objects are named `<first letter of the previous linked object>Unk.cpp`.
 - Every module has its own header: the types it owns, its globals (`extern`) and its prototypes.
@@ -34,7 +38,9 @@ hand-maintained tables, so fixes go into those tables (or Ghidra) and the tree i
 ## Checking
 `SDK=/path/to/cell ./check.sh game/lights.cpp ...` prints the error count per file. It compiles with clang against
 the SDK's own headers using the PS3 PPU data layout (`--target=powerpc64-unknown-lv2 -D__LP32__`:
-32-bit pointers and longs, big-endian), so struct offsets match the game. Set `SDK=` to your
+32-bit pointers and longs, big-endian), so struct offsets match the game. Use the SDK 4.00 `cell`
+folder (the version the EBOOT was built with); its headers need `ppu_intrinsics.h` and
+`vec_types_gcc.h` from a later SDK in `cell/extra_include/`. Set `SDK=` to your
 `cell` folder if it is not in the default place.
 
 ## ABI notes (PS3 PPU, from the asm)

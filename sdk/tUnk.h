@@ -3,6 +3,7 @@
 #include "types.h"
 
 // ---- globals
+extern pointer PTR_DAT_0071c7a4; /* 0x71c7a4 */
 extern pointer PTR_DAT_0071c7ac; /* 0x71c7ac */
 extern pointer PTR_DAT_0071c7c4; /* 0x71c7c4 */
 extern pointer PTR_PTR_0071c7a8; /* 0x71c7a8 */
@@ -13,6 +14,8 @@ extern pointer PTR_PTR_0071c7bc; /* 0x71c7bc */
 extern pointer PTR_PTR_0071c7c8; /* 0x71c7c8 */
 
 // ---- functions
+undefined * FUN_005e3bf8(void);
+void FUN_005e3c00(void);
 void FUN_005e3c04(int *param_1);
 void FUN_005e3c98(undefined4 *param_1);
 void FUN_005e3cc8(undefined4 *param_1);

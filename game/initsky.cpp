@@ -8,7 +8,7 @@
 #include "game/vuchain.h"
 #include "idol/fastfunc.h"
 #include "idol/tiefunc.h"
-#include "sdk/libgcm_cmd/marker.h"
+#include "sdk/linked.h"
 
 // 0x00d93a8 (0x14 bytes)
 void SECTION_HEADER_INITSKY(void)

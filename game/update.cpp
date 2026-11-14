@@ -36,7 +36,7 @@
 #include "idol/idol.h"
 #include "idol/mUnk.h"
 #include "idol/sound.h"
-#include "sdk/libcgc/libcgc_cell_localize.h"
+#include "sdk/linked.h"
 #include "sdk/sce.h"
 // game/update.cpp -- reconstructed from NPEA00385 EBOOT
 // 22 functions, 0x166e08-0x16a0d8: the per-frame update of gameplay, scenes, movies and credits
