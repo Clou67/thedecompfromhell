@@ -4,6 +4,7 @@
 #include <string.h>
 #include <time.h>
 #include "game/vendor.h"
+#include "game/boot.h"
 #include "game/camera.h"
 #include "game/collproc.h"
 #include "game/crt0.h"

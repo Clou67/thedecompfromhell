@@ -10,7 +10,7 @@ errors	file
 0	game/global.cpp
 0	game/help.cpp
 1529	game/hero.cpp
-460	game/hud.cpp
+279	game/hud.cpp
 0	game/initonce.cpp
 0	game/initsky.cpp
 0	game/initspace.cpp

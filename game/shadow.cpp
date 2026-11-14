@@ -1,7 +1,7 @@
 #include <math.h>
 #include "game/shadow.h"
+#include "game/boot.h"
 #include "game/draw.h"
-#include "game/hud.h"
 #include "game/mobyfunc.h"
 #include "game/vuchain.h"
 #include "idol/fastfunc.h"

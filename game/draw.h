@@ -302,6 +302,7 @@ extern undefined4 DAT_00a15f64; /* 0xa15f64 */
 extern undefined4 DAT_01111700; /* no defined data */
 extern undefined4 DAT_70001000; /* no defined data */
 extern undefined4 DAT_70002000; /* no defined data */
+extern undefined4 EffectTexHeaders; /* 0xa15f68 */
 extern undefined4 FrameHeap; /* 0x8fa440 */
 extern undefined Glyphs; /* 0x736c50 */
 extern undefined JapaneseGlyphs; /* 0x737390 */

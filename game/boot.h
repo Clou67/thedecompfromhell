@@ -14,6 +14,7 @@ typedef struct SceneSound {
 } SceneSound;
 
 // ---- globals
+extern undefined4 Cutscene; /* 0x966aec */
 extern undefined4 DAT_00651080; /* no defined data */
 extern undefined4 DAT_0066173c; /* no defined data */
 extern undefined4 DAT_0071c980; /* 0x71c980 */
@@ -155,6 +156,7 @@ extern undefined4 TieCnt; /* 0xe583fc */
 extern undefined4 TieCntBase; /* 0xa18388 */
 extern TieInstance *TieInstanceBase; /* 0xa18384 */ /* type set in global_types.tsv */
 extern TieInstance * TieInstanceEnd; /* 0xe583f8 */
+extern uint UINT_ARRAY_0096c1dc[2]; /* 0x96c1dc */
 extern struct BinkPlayer g_BinkPlayerObject; /* 0x927078: what g_pBinkPlayer normally points at */ /* type set in global_types.tsv */
 extern u32 g_BootSoundBank; /* 0x71f404 */ /* type set in global_types.tsv */
 extern SoundDef g_BootSoundDefs[13]; /* 0x71c984: the boot sound bank's defs; [7..11] belong to the frame class */ /* type set in global_types.tsv */

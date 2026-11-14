@@ -8,7 +8,6 @@
 #include "game/skyproc.h"
 #include "game/boot.h"
 #include "game/draw.h"
-#include "game/hud.h"
 #include "game/skyfunc.h"
 #include "idol/idol_draw.h"
 #include "idol/mUnk.h"

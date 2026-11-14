@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "game/vuchain.h"
+#include "game/draw.h"
 #include "game/hero.h"
 #include "game/hud.h"
 #include "game/pause.h"

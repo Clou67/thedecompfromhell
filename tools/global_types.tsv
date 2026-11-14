@@ -658,3 +658,80 @@ g_OxygenTankScale	float NAME[2] /* 0x724338: how much of the meter the bubbles f
 g_PromptText	char NAME[128] /* 0xa1c020: the prompt message (GetHelpLen); a 1 byte splits it in two lines */
 g_PromptY	int NAME /* 0x724340: the prompt box's y (32) */
 g_PromptBottom	int NAME /* 0xa15c88: where the race best-time boxes end (invented name) */
+g_QuickSelectSlotCnt	int NAME /* 0xa1c080: slots on the ring (8) */
+g_QuickSelectPage	int NAME /* 0xa1c084: index into g_QuickSelectPages */
+g_QuickSelectPages	QuickSelectSlot **NAME /* 0xa1c190: = g_QuickSelectPageTable */
+g_QuickSelectCloseTime	int NAME /* 0xa1c088: g_MainLoopFrames when the quick select closed */
+g_QuickSelectSavedTimer	int NAME /* 0xa1c08c: the entry's targetValue when it closed */
+g_QuickSelectSavedSlot	int NAME /* 0xa1c090: the slot selected when it closed */
+g_QuickSelectSize	int NAME[2] /* 0x723930: the quick select width and height */
+g_QuickSelectSlots	QuickSelectSlot NAME[2][8] /* 0x723980: the quick select page and the clank command page (slots 0-3); [1][4] and [1][5] are their d-pad tables from no selection */
+g_QuickSelectPageTable	QuickSelectSlot *NAME[2] /* 0x723b08 */
+g_HudFadeSteps	int NAME /* 0x724344: frames for the HUD fades (8) */
+g_QuickSelectSnap	float NAME /* 0x724348: how far into the next slot the stick must be (0.2) */
+g_QuickSelectItems	u32 NAME[8] /* 0x96c1dc: the items the player put on the quick select (saved) */
+g_QuickSelectAngleDelta	float NAME /* 0xa1c7e0: the stick angle to the selected slot's centre */
+g_QuickSelectCentre	int NAME[2] /* 0x723938: the ring's centre in the quick select (105, 100) */
+g_QuickSelectRadius	float NAME /* 0x72434c: the ring's radius (74) */
+g_QuickSelectColors	u32 NAME[7] /* 0x724350: the colours lerped by the fades: name from/to, shadow to, empty ammo from/to, ammo from/to */
+g_QuickSelectPulsePeriod	int NAME /* 0x72436c: frames per pulse of the highlight (30) */
+g_QuickSelectNameY	int NAME[2] /* 0x724370: the name's y offset with ammo (-25) and on two lines without (-15) */
+g_QuickSelectDim	float NAME /* 0x724378: alpha factor of the slots not selected (0.5) */
+g_QuickSelectAspect	float NAME /* 0x72437c: the ring's x stretch (1.05) */
+g_QuickSelectShadowColor	u32 NAME /* 0xa1c7e4: the text shadow colour at no fade (never set, 0) */
+g_QuickSelectNameYOneLine	int NAME /* 0xa1c7e8: the name's y offset on one line without ammo (never set, 0) */
+g_ClankCommand	int NAME /* 0x96bfa0: the command picked on the clank command ring (hero.cpp plays sound + 0x10 for it) */
+g_ClankCommandReady	int NAME /* 0xa1bfe4: the clank command ring only opens while set; cleared by ResetGameCounters (REVISIT: who sets it) */
+g_ClankCommandColors	u32 NAME[2] /* 0x724384: the command name colour from/to */
+g_ClankCommandNameY	int NAME /* 0x72438c: the command name's y offset (-8) */
+g_HealthPulse	HudPulse NAME /* 0xa1c180: the health entry's throb (HudElement.data) */
+g_HealthFadeSteps	int NAME /* 0x724390: the health entry's fade steps (8) */
+g_NanotechCellPos	s16 NAME[17][2] /* 0x724394: the nanotech cell offsets for 4 (from 0), 5 (from 4) and 8 (from 9) cells */
+g_NanotechY	int NAME /* 0x7243d8: the nanotech cells' y (14) */
+g_NanotechBoxRowStep	int NAME /* 0x7243dc: the second box row's y step (16) */
+g_NanotechBoxY	int NAME /* 0x7243e0: the box's y from the cells (-16) */
+g_NanotechBoxTile	int NAME /* 0x7243ec: the box tile size (32) */
+g_NanotechBoxAlpha	int NAME /* 0x7243f0: the box's alpha at full fade (20) */
+g_BoltTick	s16 NAME /* 0xa1c188: the bolt entry's 0..59 tick (HudElement.data), animates BOLTS_ANIMATION */
+g_BoltFadeSteps	int NAME[2] /* 0x7243f4: the bolt entry's animA and animB steps (8, 8) */
+g_BoltTextColors	u32 NAME[2] /* 0x7243fc: the bolt count colour from/to */
+g_BoltTextPos	int NAME[2] /* 0x724404: the bolt count's right end from the entry (-32, 8) */
+g_BoltSeparatorPos	int NAME[2] /* 0x72440c: the thousands apostrophe's offset (-30, 21) */
+g_BoltDotPos	int NAME[2] /* 0x724414: the thousands dot's offset, languages 3 and 5 (-29, 10) */
+g_BoltDigitWidth	int NAME /* 0x72441c: a digit's width (13) */
+g_UnusedIconState	HudLevelIcon NAME /* 0xa1c170: UnusedIconHud's data */
+g_HudLevelFadeStep	int NAME /* 0x724420: HudLevelIcon fade step (4) */
+g_HudLevelPhaseStep	int NAME /* 0x724424: HudLevelIcon glow step (2) */
+g_TrickShowFrames	int NAME /* 0x724428: frames the trick entry's text stays up (20) */
+g_TrickBest	int NAME /* 0xa1c7ec: the trick entry's copy of the best score this jump (DAT_0096a3ec) */
+g_TrickCount	int NAME /* 0xa1c7f0: its copy of the trick count (DAT_0096a3d0) */
+g_TrickParts	int NAME[4] /* 0xa1c7f4: its copies of DAT_0096a3c0..cc */
+g_TrickHistory	int NAME[4] /* 0xa1c804: shifted along on each hoverboard landing after 3+ tricks, newest -1 */
+g_TrickPoints	int NAME /* 0xa1c814: added to g_RaceScore when the landing text runs out (never set here) */
+g_TrickColors	u32 NAME[2] /* 0x724440: the trick text colour from/to while it fades after a new best */
+g_TrickColorStill	u32 NAME /* 0x72444c: the trick text colour otherwise */
+g_WrongWayPos	int NAME[2] /* 0x724450: the WRONG WAY text's centre (256, 180) */
+g_WrongWayColors	u32 NAME[2] /* 0x724458: the WRONG WAY text's pulse colours */
+g_TrickScorePos	int NAME[2] /* 0x724460: the degrees text's centre in the air (350, 27) */
+g_TrickPosePos	int NAME[2] /* 0x724468: the pose count text's centre (350, 47) */
+g_TrickLandingPos	int NAME[2] /* 0x724470: the landing score and name text's centre (250, 125) */
+g_TrickComboPoints	int NAME[15] /* 0x724478: points per combo (5 combos x 3 flip tiers) */
+g_WrongWayFrames	u8 NAME /* 0x96a58e: counts up while going the wrong way */
+g_BossBarX	int NAME /* 0x7244b4: the moby health bar's centre x (276) */
+g_BossBarEndScale	float NAME /* 0x7244bc: how much of the last segment the bar uses (0.7) */
+g_BossBarStartScale	float NAME /* 0x7244c0: how much of the first segment it uses (0.7) */
+g_DetectorBoxAlpha	int NAME /* 0x7244c4: the metal detector box's alpha (80) */
+g_DetectorBoxWidth	int NAME /* 0x7244c8: its middle's width at full fade (16) */
+g_DetectorBoxX	int NAME /* 0x7244cc: its x from the entry (-28) */
+g_DetectorTextPos	int NAME[2] /* 0x7244d0: the blinking "!" from the entry (-44, 6) */
+g_DetectorTextColors	u32 NAME[2] /* 0x7244d8: the "!" colour from/to */
+g_DetectorBlinkPeriod	int NAME /* 0x7244e0: frames per blink of the "!" (45) */
+g_AmmoFadeSteps	int NAME[2] /* 0x7244e4: the ammo entry's animA and animB steps (8, 8) */
+g_AmmoBoxWidths	int NAME[2] /* 0x7244ec: the ammo box's width for a max under 100 (70) and otherwise (95) */
+g_AmmoTextColors	u32 NAME[2] /* 0x7244f4: the ammo text colour from/to */
+g_AmmoEmptyColors	u32 NAME[2] /* 0x7244fc: the ammo text colour from/to when empty */
+g_AmmoTextPos	int NAME[2] /* 0x724504: the ammo text's right end from the box (25, 8) */
+g_MobyCounterX	int NAME[2] /* 0x72450c: the moby counter's x on the left (24) and right (480) half */
+g_MobyCounterColors	u32 NAME[2] /* 0x724518: the moby counter text colour from/to */
+g_MobyCounterBoxWidths	int NAME[2] /* 0x724520: the moby counter box's width for a max under 10 (48) and otherwise (70) */
+g_HudAmmoWeapon	int NAME /* 0x72452c: the weapon the ammo entry was last registered for */

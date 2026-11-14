@@ -44,6 +44,34 @@ typedef struct HudElement {
     int displayedValue;      /* 0x74 */
     int targetValue;         /* 0x78 */
     int showTimer;           /* 0x7c  frames left on screen; also picks the slide curve */
-    u8 unk80[16];            /* 0x80 */
+    void *data;              /* 0x80  per-entry data (HealthHud: a HudPulse) */
+    u8 unk84[12];            /* 0x84 */
 } HudElement;
 typedef char HudElement_size_check[sizeof(HudElement) == 0x90 ? 1 : -1];
+
+/* one quick select slot; the neighbours are slot indices for the d-pad */
+typedef struct QuickSelectSlot {
+    u32 iconId;              /* 0x00  the item's HUD icon */
+    int unk04;               /* 0x04 */
+    int up;                  /* 0x08  pad 0x8000 */
+    int right;               /* 0x0c  pad 0x2000 */
+    int down;                /* 0x10  pad 0x1000 */
+    int left;                /* 0x14  pad 0x4000 */
+    int item;                /* 0x18  0 = empty */
+} QuickSelectSlot; // 0x1c
+
+/* a slow throb: value climbs to 0xfff and back with speed (+-60) pushed by accel (+-1) */
+typedef struct HudPulse {
+    s16 tick;                /* 0x00  0..59 */
+    s16 value;               /* 0x02  0..0xfff */
+    s16 speed;               /* 0x04 */
+    s16 accel;               /* 0x06 */
+} HudPulse;
+
+/* UnusedIconHud's data: an icon whose level steps through 3-frame groups, with a cross fade */
+typedef struct HudLevelIcon {
+    int value;               /* 0x00  the level being faded */
+    int fadeOut;             /* 0x04  0x80 down by g_HudLevelFadeStep */
+    int fadeIn;              /* 0x08 */
+    int phase;               /* 0x0c  the glow, up by g_HudLevelPhaseStep */
+} HudLevelIcon;

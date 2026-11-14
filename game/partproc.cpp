@@ -11,7 +11,6 @@
 #include "game/partproc.h"
 #include "game/boot.h"
 #include "game/draw.h"
-#include "game/hud.h"
 #include "game/main.h"
 #include "game/mission.h"
 #include "game/mobyproc.h"

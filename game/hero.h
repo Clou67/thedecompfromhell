@@ -676,7 +676,6 @@ extern undefined2 DAT_0096a57e; /* 0x96a57e */
 extern undefined4 DAT_0096a580; /* 0x96a580 */
 extern undefined4 DAT_0096a584; /* 0x96a584 */
 extern undefined2 DAT_0096a58c; /* 0x96a58c */
-extern undefined1 DAT_0096a58e; /* 0x96a58e */
 extern undefined1 DAT_0096a58f; /* 0x96a58f */
 extern undefined2 DAT_0096a590; /* 0x96a590 */
 extern undefined2 DAT_0096a592; /* 0x96a592 */
@@ -955,7 +954,6 @@ extern undefined2 DAT_0096bf90; /* 0x96bf90 */
 extern undefined2 DAT_0096bf92; /* 0x96bf92 */
 extern undefined4 DAT_0096bf94; /* 0x96bf94 */
 extern undefined4 DAT_0096bf98; /* 0x96bf98 */
-extern undefined4 DAT_0096bfa0; /* 0x96bfa0 */
 extern undefined4 DAT_0096bfa4; /* 0x96bfa4 */
 extern undefined2 DAT_0096bfa8; /* 0x96bfa8 */
 extern undefined1 DAT_0096bfaa; /* 0x96bfaa */
@@ -1059,6 +1057,7 @@ extern pointer32 PTR_UpdateQuickSelect_007057c0; /* 0x7057c0 */
 extern Items UnlockableItems; /* 0x96c140 */
 extern float animationSpeed; /* 0x71f410 */
 extern Items32 currentAmmoArray; /* 0x96c0ac */
+extern int g_ClankCommand; /* 0x96bfa0: the command picked on the clank command ring (hero.cpp plays sound + 0x10 for it) */ /* type set in global_types.tsv */
 extern MobyInstance *g_CollMobyHits[256]; /* 0xa14a00: the mobys CollMobySphere/CollHeroSphere hit, NULL ended (the real length is unknown) */ /* type set in global_types.tsv */
 extern undefined4 g_CurrentWeapon; /* 0x96ad98 */
 extern undefined4 g_DustHoverState; /* 0x96a0f8 */
@@ -1080,6 +1079,7 @@ extern undefined4 g_RaceTime; /* 0x96a574 */
 extern undefined2 g_SwingshotReleasedTimer; /* 0x969ec6 */
 extern MobyInstance *g_TargetableMobys; /* 0xa49344: the first of the auto-targetable mobys BuildMobyUpdateChain found this frame, NULL-terminated (invented name) */ /* type set in global_types.tsv */
 extern undefined4 g_WeaponToSwapTo; /* 0x96bdb4 */
+extern u8 g_WrongWayFrames; /* 0x96a58e: counts up while going the wrong way */ /* type set in global_types.tsv */
 extern undefined g_atanQuadrantTable; /* 0x735900 */
 extern undefined4 g_clankMaxNanotech; /* 0x96bf8c */
 extern MobyInstance * g_currentWeaponMoby; /* 0x96ad70 */

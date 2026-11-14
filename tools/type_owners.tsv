@@ -144,3 +144,7 @@ MobyDrawEntry	game/mobyproc
 HudElement	game/hud
 IconTableEntries	game/hud
 HudIconAnim	game/hud
+QuickSelectSlot	game/hud
+UsageRecord	game/update
+HudPulse	game/hud
+HudLevelIcon	game/hud

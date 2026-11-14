@@ -67,6 +67,7 @@ extern undefined4 DAT_00721008; /* 0x721008 */
 extern undefined4 DAT_00721010; /* 0x721010 */
 extern undefined4 DAT_00721038; /* no defined data */
 extern undefined4 DAT_0072103a; /* no defined data */
+extern undefined4 DAT_00721044; /* 0x721044 */
 extern undefined4 DAT_00729818; /* 0x729818 */
 extern undefined4 DAT_00729840; /* 0x729840 */
 extern undefined4 DAT_00729844; /* 0x729844 */
@@ -419,7 +420,6 @@ extern pointer32 PTR_STUB_UpdateMoby_1957_HelpdeskLady_00707940; /* 0x707940 */
 extern pointer PTR_UpdateMoby_1138_00708f30; /* 0x708f30 */
 extern pointer32 PTR_WeaponView_MobyUpdate_00707708; /* 0x707708 */
 extern PlanetsPage g_PlanetsPage[19]; /* 0x7352b0 */
-extern uint UINT_ARRAY_0096c1dc[2]; /* 0x96c1dc */
 extern short g_AuxHeight; /* 0x966b8e */ /* type set in global_types.tsv */
 extern short g_AuxWidth; /* 0x966b8c */ /* type set in global_types.tsv */
 extern undefined4 g_BackpackMobyClass; /* 0x72105c */
@@ -438,6 +438,7 @@ extern int g_MoviePlayState; /* 0x969cd4 */
 extern undefined4 g_NpcBuffer; /* 0xa10918 */
 extern u8 *g_PauseAllocTop; /* 0xa52ca8: next free byte of the pause menu's memory (invented name) */ /* type set in global_types.tsv */
 extern u8 *g_PauseAllocTop2; /* 0xa52cac: the same for a second area (invented name) */ /* type set in global_types.tsv */
+extern u32 g_QuickSelectItems[8]; /* 0x96c1dc: the items the player put on the quick select (saved) */ /* type set in global_types.tsv */
 extern int g_SaveCurFile; /* 0x71fa38: the save list entry selected */ /* type set in global_types.tsv */
 extern u8 *g_ScratchBuf; /* 0x902ec8: scratch memory shared by the drawing code (water uses it as a WaterStage) */ /* type set in global_types.tsv */
 extern undefined4 g_SelectedLevel; /* 0xa206e4 */

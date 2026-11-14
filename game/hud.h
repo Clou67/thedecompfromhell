@@ -49,9 +49,37 @@ typedef struct HudElement {
     int displayedValue;      /* 0x74 */
     int targetValue;         /* 0x78 */
     int showTimer;           /* 0x7c  frames left on screen; also picks the slide curve */
-    u8 unk80[16];            /* 0x80 */
+    void *data;              /* 0x80  per-entry data (HealthHud: a HudPulse) */
+    u8 unk84[12];            /* 0x84 */
 } HudElement;
 typedef char HudElement_size_check[sizeof(HudElement) == 0x90 ? 1 : -1];
+
+/* one quick select slot; the neighbours are slot indices for the d-pad */
+typedef struct QuickSelectSlot {
+    u32 iconId;              /* 0x00  the item's HUD icon */
+    int unk04;               /* 0x04 */
+    int up;                  /* 0x08  pad 0x8000 */
+    int right;               /* 0x0c  pad 0x2000 */
+    int down;                /* 0x10  pad 0x1000 */
+    int left;                /* 0x14  pad 0x4000 */
+    int item;                /* 0x18  0 = empty */
+} QuickSelectSlot; // 0x1c
+
+/* a slow throb: value climbs to 0xfff and back with speed (+-60) pushed by accel (+-1) */
+typedef struct HudPulse {
+    s16 tick;                /* 0x00  0..59 */
+    s16 value;               /* 0x02  0..0xfff */
+    s16 speed;               /* 0x04 */
+    s16 accel;               /* 0x06 */
+} HudPulse;
+
+/* UnusedIconHud's data: an icon whose level steps through 3-frame groups, with a cross fade */
+typedef struct HudLevelIcon {
+    int value;               /* 0x00  the level being faded */
+    int fadeOut;             /* 0x04  0x80 down by g_HudLevelFadeStep */
+    int fadeIn;              /* 0x08 */
+    int phase;               /* 0x0c  the glow, up by g_HudLevelPhaseStep */
+} HudLevelIcon;
 
 struct HudEntry {
     dword ctx;
@@ -74,96 +102,8 @@ typedef struct IconTableEntries {
 } IconTableEntries;
 
 // ---- globals
-extern undefined4 Cutscene; /* 0x966aec */
-extern undefined4 DAT_00721044; /* 0x721044 */
-extern undefined4 DAT_00721048; /* no defined data */
-extern undefined4 DAT_00723930; /* 0x723930 */
-extern undefined4 DAT_00723934; /* 0x723934 */
-extern undefined4 DAT_00723938; /* 0x723938 */
-extern undefined4 DAT_0072393c; /* 0x72393c */
-extern undefined4 DAT_00723980; /* 0x723980 */
-extern undefined4 DAT_00723998; /* 0x723998 */
-extern undefined4 DAT_00723ad8; /* 0x723ad8 */
-extern undefined4 DAT_00723adc; /* 0x723adc */
-extern undefined4 DAT_00723ae0; /* 0x723ae0 */
-extern undefined4 DAT_00723ae4; /* 0x723ae4 */
-extern undefined4 DAT_00723af4; /* 0x723af4 */
-extern undefined4 DAT_00723af8; /* 0x723af8 */
-extern undefined4 DAT_00723afc; /* 0x723afc */
-extern undefined4 DAT_00723b00; /* 0x723b00 */
-extern undefined4 DAT_00724344; /* 0x724344 */
-extern undefined4 DAT_00724348; /* 0x724348 */
-extern undefined4 DAT_0072434c; /* 0x72434c */
-extern undefined4 DAT_00724354; /* 0x724354 */
-extern undefined4 DAT_00724358; /* 0x724358 */
-extern undefined4 DAT_0072435c; /* 0x72435c */
-extern undefined4 DAT_00724360; /* 0x724360 */
-extern undefined4 DAT_00724364; /* 0x724364 */
-extern undefined4 DAT_00724368; /* 0x724368 */
-extern undefined4 DAT_0072436c; /* 0x72436c */
-extern undefined4 DAT_00724370; /* 0x724370 */
-extern undefined4 DAT_00724374; /* 0x724374 */
-extern undefined4 DAT_00724378; /* 0x724378 */
-extern undefined4 DAT_0072437c; /* 0x72437c */
-extern undefined4 DAT_00724388; /* 0x724388 */
-extern undefined4 DAT_0072438c; /* 0x72438c */
-extern undefined4 DAT_00724390; /* 0x724390 */
-extern undefined2 DAT_007243b8; /* 0x7243b8 */
-extern undefined4 DAT_007243d8; /* 0x7243d8 */
-extern undefined4 DAT_007243dc; /* 0x7243dc */
-extern undefined4 DAT_007243e0; /* 0x7243e0 */
-extern undefined4 DAT_007243ec; /* 0x7243ec */
-extern undefined4 DAT_007243f0; /* 0x7243f0 */
-extern undefined4 DAT_007243f4; /* 0x7243f4 */
-extern undefined4 DAT_007243f8; /* 0x7243f8 */
-extern undefined4 DAT_00724400; /* 0x724400 */
-extern undefined4 DAT_00724404; /* 0x724404 */
-extern undefined4 DAT_00724408; /* 0x724408 */
-extern undefined4 DAT_0072440c; /* 0x72440c */
-extern undefined4 DAT_00724410; /* 0x724410 */
-extern undefined4 DAT_00724414; /* 0x724414 */
-extern undefined4 DAT_00724418; /* 0x724418 */
-extern undefined4 DAT_0072441c; /* 0x72441c */
-extern undefined4 DAT_00724420; /* 0x724420 */
-extern undefined4 DAT_00724424; /* 0x724424 */
-extern undefined4 DAT_00724428; /* 0x724428 */
-extern undefined4 DAT_0072444c; /* 0x72444c */
-extern undefined4 DAT_00724450; /* 0x724450 */
-extern undefined4 DAT_00724454; /* 0x724454 */
-extern undefined4 DAT_00724458; /* 0x724458 */
-extern undefined4 DAT_0072445c; /* 0x72445c */
-extern undefined4 DAT_00724460; /* 0x724460 */
-extern undefined4 DAT_00724464; /* 0x724464 */
-extern undefined4 DAT_00724468; /* 0x724468 */
-extern undefined4 DAT_0072446c; /* 0x72446c */
-extern undefined4 DAT_00724470; /* 0x724470 */
-extern undefined4 DAT_00724474; /* 0x724474 */
-extern undefined4 DAT_00724478; /* no defined data */
-extern undefined4 DAT_007244b4; /* 0x7244b4 */
-extern undefined4 DAT_007244bc; /* 0x7244bc */
-extern undefined4 DAT_007244c0; /* 0x7244c0 */
-extern undefined4 DAT_007244c4; /* 0x7244c4 */
-extern undefined4 DAT_007244c8; /* 0x7244c8 */
-extern undefined4 DAT_007244cc; /* 0x7244cc */
-extern undefined4 DAT_007244d0; /* 0x7244d0 */
-extern undefined4 DAT_007244d4; /* 0x7244d4 */
-extern undefined4 DAT_007244d8; /* 0x7244d8 */
-extern undefined4 DAT_007244dc; /* 0x7244dc */
-extern undefined4 DAT_007244e0; /* 0x7244e0 */
 extern undefined4 DAT_007244e4; /* 0x7244e4 */
 extern undefined4 DAT_007244e8; /* 0x7244e8 */
-extern undefined4 DAT_007244ec; /* 0x7244ec */
-extern undefined4 DAT_007244f0; /* 0x7244f0 */
-extern undefined4 DAT_007244f8; /* 0x7244f8 */
-extern undefined4 DAT_007244fc; /* 0x7244fc */
-extern undefined4 DAT_00724500; /* 0x724500 */
-extern undefined4 DAT_00724504; /* 0x724504 */
-extern undefined4 DAT_00724508; /* 0x724508 */
-extern undefined4 DAT_0072450c; /* 0x72450c */
-extern undefined4 DAT_00724510; /* 0x724510 */
-extern undefined4 DAT_0072451c; /* 0x72451c */
-extern undefined4 DAT_00724520; /* 0x724520 */
-extern undefined4 DAT_00724524; /* 0x724524 */
 extern undefined4 DAT_0072452c; /* 0x72452c */
 extern undefined4 DAT_00724534; /* 0x724534 */
 extern undefined4 DAT_00724538; /* 0x724538 */
@@ -203,54 +143,13 @@ extern undefined4 DAT_0096a3e8; /* 0x96a3e8 */
 extern undefined4 DAT_00a15c84; /* 0xa15c84 */
 extern undefined1 DAT_00a15cdc; /* 0xa15cdc */
 extern undefined4 DAT_00a1bfcc; /* 0xa1bfcc */
-extern undefined4 DAT_00a1bfe4; /* 0xa1bfe4 */
 extern undefined4 DAT_00a1bfe8; /* 0xa1bfe8 */
-extern undefined4 DAT_00a1c080; /* 0xa1c080 */
-extern undefined4 DAT_00a1c084; /* 0xa1c084 */
-extern undefined4 DAT_00a1c088; /* 0xa1c088 */
-extern undefined4 DAT_00a1c08c; /* 0xa1c08c */
-extern undefined4 DAT_00a1c090; /* 0xa1c090 */
-extern undefined4 DAT_00a1c170; /* 0xa1c170 */
-extern undefined4 DAT_00a1c174; /* 0xa1c174 */
-extern undefined4 DAT_00a1c178; /* 0xa1c178 */
-extern undefined4 DAT_00a1c17c; /* 0xa1c17c */
-extern undefined2 DAT_00a1c180; /* 0xa1c180 */
-extern undefined2 DAT_00a1c182; /* 0xa1c182 */
-extern undefined2 DAT_00a1c184; /* 0xa1c184 */
-extern undefined2 DAT_00a1c186; /* 0xa1c186 */
-extern undefined2 DAT_00a1c188; /* 0xa1c188 */
-extern undefined4 DAT_00a1c190; /* 0xa1c190 */
-extern undefined4 DAT_00a1c7e0; /* 0xa1c7e0 */
-extern undefined4 DAT_00a1c7e4; /* 0xa1c7e4 */
-extern undefined4 DAT_00a1c7e8; /* 0xa1c7e8 */
-extern undefined4 DAT_00a1c7ec; /* 0xa1c7ec */
-extern undefined4 DAT_00a1c7f0; /* 0xa1c7f0 */
-extern undefined4 DAT_00a1c7f4; /* 0xa1c7f4 */
-extern undefined4 DAT_00a1c7f8; /* 0xa1c7f8 */
-extern undefined4 DAT_00a1c7fc; /* 0xa1c7fc */
-extern undefined4 DAT_00a1c800; /* 0xa1c800 */
-extern undefined4 DAT_00a1c804; /* 0xa1c804 */
-extern undefined4 DAT_00a1c808; /* 0xa1c808 */
-extern undefined4 DAT_00a1c80c; /* 0xa1c80c */
-extern undefined4 DAT_00a1c810; /* 0xa1c810 */
-extern undefined4 DAT_00a1c814; /* 0xa1c814 */
 extern undefined4 DAT_00a1c818; /* 0xa1c818 */
-extern undefined4 DAT_010000ff; /* no defined data */
-extern undefined4 EffectTexHeaders; /* 0xa15f68 */
 extern RenderingStep * HUD_Pass; /* 0x8fa43c */
 extern HudElement HudEntries[13]; /* 0x723b10 */
 extern IconTableEntries * IconTableEntry; /* 0xa1bfdc */
 extern pointer32 PTR_AmmoHud_Init_00705808; /* 0x705808 */
 extern pointer32 PTR_AmmoHud_Update_007058d8; /* 0x7058d8 */
-extern pointer PTR_DAT_00723b08; /* 0x723b08 */
-extern pointer PTR_DAT_00723b0c; /* 0x723b0c */
-extern pointer PTR_DAT_00724350; /* 0x724350 */
-extern pointer PTR_DAT_00724384; /* 0x724384 */
-extern pointer PTR_DAT_007243fc; /* 0x7243fc */
-extern pointer PTR_DAT_00724440; /* 0x724440 */
-extern pointer PTR_DAT_00724444; /* 0x724444 */
-extern pointer PTR_DAT_007244f4; /* 0x7244f4 */
-extern pointer PTR_DAT_00724518; /* 0x724518 */
 extern pointer32 PTR_Draw_GiantClankHealthHUD_00705880; /* 0x705880 */
 extern pointer32 PTR_Draw_NanotechUI_00705800; /* 0x705800 */
 extern pointer32 PTR_HealthHud_Init_007057f0; /* 0x7057f0 */
@@ -258,9 +157,39 @@ extern pointer32 PTR_HealthHud_Update_007057f8; /* 0x7057f8 */
 extern pointer32 PTR_HudEntry_InitCounter_007056a0; /* 0x7056a0 */
 extern pointer32 PTR_HudEntry_UpdateCounter_007056c8; /* 0x7056c8 */
 extern undefined4 TexturePointerArray; /* 0xa1bfe0 */
+extern int g_AmmoBoxWidths[2]; /* 0x7244ec: the ammo box's width for a max under 100 (70) and otherwise (95) */ /* type set in global_types.tsv */
+extern u32 g_AmmoEmptyColors[2]; /* 0x7244fc: the ammo text colour from/to when empty */ /* type set in global_types.tsv */
+extern int g_AmmoFadeSteps[2]; /* 0x7244e4: the ammo entry's animA and animB steps (8, 8) */ /* type set in global_types.tsv */
+extern u32 g_AmmoTextColors[2]; /* 0x7244f4: the ammo text colour from/to */ /* type set in global_types.tsv */
+extern int g_AmmoTextPos[2]; /* 0x724504: the ammo text's right end from the box (25, 8) */ /* type set in global_types.tsv */
+extern int g_BoltDigitWidth; /* 0x72441c: a digit's width (13) */ /* type set in global_types.tsv */
+extern int g_BoltDotPos[2]; /* 0x724414: the thousands dot's offset, languages 3 and 5 (-29, 10) */ /* type set in global_types.tsv */
+extern int g_BoltFadeSteps[2]; /* 0x7243f4: the bolt entry's animA and animB steps (8, 8) */ /* type set in global_types.tsv */
+extern int g_BoltSeparatorPos[2]; /* 0x72440c: the thousands apostrophe's offset (-30, 21) */ /* type set in global_types.tsv */
+extern u32 g_BoltTextColors[2]; /* 0x7243fc: the bolt count colour from/to */ /* type set in global_types.tsv */
+extern int g_BoltTextPos[2]; /* 0x724404: the bolt count's right end from the entry (-32, 8) */ /* type set in global_types.tsv */
+extern s16 g_BoltTick; /* 0xa1c188: the bolt entry's 0..59 tick (HudElement.data), animates BOLTS_ANIMATION */ /* type set in global_types.tsv */
+extern float g_BossBarEndScale; /* 0x7244bc: how much of the last segment the bar uses (0.7) */ /* type set in global_types.tsv */
+extern float g_BossBarStartScale; /* 0x7244c0: how much of the first segment it uses (0.7) */ /* type set in global_types.tsv */
+extern int g_BossBarX; /* 0x7244b4: the moby health bar's centre x (276) */ /* type set in global_types.tsv */
+extern u32 g_ClankCommandColors[2]; /* 0x724384: the command name colour from/to */ /* type set in global_types.tsv */
+extern int g_ClankCommandNameY; /* 0x72438c: the command name's y offset (-8) */ /* type set in global_types.tsv */
+extern int g_ClankCommandReady; /* 0xa1bfe4: the clank command ring only opens while set; cleared by ResetGameCounters (REVISIT: who sets it) */ /* type set in global_types.tsv */
+extern int g_DetectorBlinkPeriod; /* 0x7244e0: frames per blink of the "!" (45) */ /* type set in global_types.tsv */
+extern int g_DetectorBoxAlpha; /* 0x7244c4: the metal detector box's alpha (80) */ /* type set in global_types.tsv */
+extern int g_DetectorBoxWidth; /* 0x7244c8: its middle's width at full fade (16) */ /* type set in global_types.tsv */
+extern int g_DetectorBoxX; /* 0x7244cc: its x from the entry (-28) */ /* type set in global_types.tsv */
+extern u32 g_DetectorTextColors[2]; /* 0x7244d8: the "!" colour from/to */ /* type set in global_types.tsv */
+extern int g_DetectorTextPos[2]; /* 0x7244d0: the blinking "!" from the entry (-44, 6) */ /* type set in global_types.tsv */
+extern int g_HealthFadeSteps; /* 0x724390: the health entry's fade steps (8) */ /* type set in global_types.tsv */
+extern HudPulse g_HealthPulse; /* 0xa1c180: the health entry's throb (HudElement.data) */ /* type set in global_types.tsv */
 extern int g_HudAmmoEntryId; /* 0x724530 */
+extern int g_HudAmmoWeapon; /* 0x72452c: the weapon the ammo entry was last registered for */ /* type set in global_types.tsv */
 extern u8 *g_HudBuffer; /* 0xa108e4: 0x64000 bytes (guess: HUD) */ /* type set in global_types.tsv */
+extern int g_HudFadeSteps; /* 0x724344: frames for the HUD fades (8) */ /* type set in global_types.tsv */
 extern int g_HudHideCounter; /* 0xa1bfc4 */ /* type set in global_types.tsv */
+extern int g_HudLevelFadeStep; /* 0x724420: HudLevelIcon fade step (4) */ /* type set in global_types.tsv */
+extern int g_HudLevelPhaseStep; /* 0x724424: HudLevelIcon glow step (2) */ /* type set in global_types.tsv */
 extern u8 g_HudMobyBankActive; /* 0xa1bffc: 1 while the other bank is swapped in */ /* type set in global_types.tsv */
 extern u8 *g_HudMobyVars; /* 0xa1bff8: its moby vars (0x1400 bytes) */ /* type set in global_types.tsv */
 extern MobyInstance *g_HudMobys; /* 0xa1bfec: the other moby bank (40 mobys, Hud_SwapMobyBank swaps it with g_MobyInstance) */ /* type set in global_types.tsv */
@@ -272,6 +201,15 @@ extern u8 *g_HudScratchPtr; /* 0xa1bfd0: HudScratch_Alloc's next free byte in g_
 extern int g_HudSectionWord; /* 0x72390c */ /* type set in global_types.tsv */
 extern float g_HudSlideBounce[24]; /* 0x724260: slide-in curve, overshooting (invented name) */ /* type set in global_types.tsv */
 extern float g_HudSlideEase[24]; /* 0x7242c0: slide curve, smooth (invented name) */ /* type set in global_types.tsv */
+extern int g_MobyCounterBoxWidths[2]; /* 0x724520: the moby counter box's width for a max under 10 (48) and otherwise (70) */ /* type set in global_types.tsv */
+extern u32 g_MobyCounterColors[2]; /* 0x724518: the moby counter text colour from/to */ /* type set in global_types.tsv */
+extern int g_MobyCounterX[2]; /* 0x72450c: the moby counter's x on the left (24) and right (480) half */ /* type set in global_types.tsv */
+extern int g_NanotechBoxAlpha; /* 0x7243f0: the box's alpha at full fade (20) */ /* type set in global_types.tsv */
+extern int g_NanotechBoxRowStep; /* 0x7243dc: the second box row's y step (16) */ /* type set in global_types.tsv */
+extern int g_NanotechBoxTile; /* 0x7243ec: the box tile size (32) */ /* type set in global_types.tsv */
+extern int g_NanotechBoxY; /* 0x7243e0: the box's y from the cells (-16) */ /* type set in global_types.tsv */
+extern s16 g_NanotechCellPos[17][2]; /* 0x724394: the nanotech cell offsets for 4 (from 0), 5 (from 4) and 8 (from 9) cells */ /* type set in global_types.tsv */
+extern int g_NanotechY; /* 0x7243d8: the nanotech cells' y (14) */ /* type set in global_types.tsv */
 extern int g_OxygenBubbleRows; /* 0x72432c: the bubbles start spread over this many rows */ /* type set in global_types.tsv */
 extern float g_OxygenBubbleSize[3]; /* 0x724320: bubble radius for bubbles 0-9, 10-19 (10-29 when moving), the rest */ /* type set in global_types.tsv */
 extern Vec4 g_OxygenBubbles[100]; /* 0xa1c1a0: the oxygen meter's bubbles: x, y, x speed, y speed (invented name) */ /* type set in global_types.tsv */
@@ -280,7 +218,42 @@ extern float g_OxygenTankScale[2]; /* 0x724338: how much of the meter the bubble
 extern int g_PromptBottom; /* 0xa15c88: where the race best-time boxes end (invented name) */ /* type set in global_types.tsv */
 extern char g_PromptText[128]; /* 0xa1c020: the prompt message (GetHelpLen); a 1 byte splits it in two lines */ /* type set in global_types.tsv */
 extern int g_PromptY; /* 0x724340: the prompt box's y (32) */ /* type set in global_types.tsv */
+extern float g_QuickSelectAngleDelta; /* 0xa1c7e0: the stick angle to the selected slot's centre */ /* type set in global_types.tsv */
+extern float g_QuickSelectAspect; /* 0x72437c: the ring's x stretch (1.05) */ /* type set in global_types.tsv */
+extern int g_QuickSelectCentre[2]; /* 0x723938: the ring's centre in the quick select (105, 100) */ /* type set in global_types.tsv */
+extern int g_QuickSelectCloseTime; /* 0xa1c088: g_MainLoopFrames when the quick select closed */ /* type set in global_types.tsv */
+extern u32 g_QuickSelectColors[7]; /* 0x724350: the colours lerped by the fades: name from/to, shadow to, empty ammo from/to, ammo from/to */ /* type set in global_types.tsv */
+extern float g_QuickSelectDim; /* 0x724378: alpha factor of the slots not selected (0.5) */ /* type set in global_types.tsv */
+extern int g_QuickSelectNameY[2]; /* 0x724370: the name's y offset with ammo (-25) and on two lines without (-15) */ /* type set in global_types.tsv */
+extern int g_QuickSelectNameYOneLine; /* 0xa1c7e8: the name's y offset on one line without ammo (never set, 0) */ /* type set in global_types.tsv */
+extern int g_QuickSelectPage; /* 0xa1c084: index into g_QuickSelectPages */ /* type set in global_types.tsv */
+extern QuickSelectSlot *g_QuickSelectPageTable[2]; /* 0x723b08 */ /* type set in global_types.tsv */
+extern QuickSelectSlot **g_QuickSelectPages; /* 0xa1c190: = g_QuickSelectPageTable */ /* type set in global_types.tsv */
+extern int g_QuickSelectPulsePeriod; /* 0x72436c: frames per pulse of the highlight (30) */ /* type set in global_types.tsv */
+extern float g_QuickSelectRadius; /* 0x72434c: the ring's radius (74) */ /* type set in global_types.tsv */
+extern int g_QuickSelectSavedSlot; /* 0xa1c090: the slot selected when it closed */ /* type set in global_types.tsv */
+extern int g_QuickSelectSavedTimer; /* 0xa1c08c: the entry's targetValue when it closed */ /* type set in global_types.tsv */
+extern u32 g_QuickSelectShadowColor; /* 0xa1c7e4: the text shadow colour at no fade (never set, 0) */ /* type set in global_types.tsv */
+extern int g_QuickSelectSize[2]; /* 0x723930: the quick select width and height */ /* type set in global_types.tsv */
+extern int g_QuickSelectSlotCnt; /* 0xa1c080: slots on the ring (8) */ /* type set in global_types.tsv */
+extern QuickSelectSlot g_QuickSelectSlots[2][8]; /* 0x723980: the quick select page and the clank command page (slots 0-3); [1][4] and [1][5] are their d-pad tables from no selection */ /* type set in global_types.tsv */
+extern float g_QuickSelectSnap; /* 0x724348: how far into the next slot the stick must be (0.2) */ /* type set in global_types.tsv */
 extern int g_ScreenHeight; /* 0x966b04 */
+extern int g_TrickBest; /* 0xa1c7ec: the trick entry's copy of the best score this jump (DAT_0096a3ec) */ /* type set in global_types.tsv */
+extern u32 g_TrickColorStill; /* 0x72444c: the trick text colour otherwise */ /* type set in global_types.tsv */
+extern u32 g_TrickColors[2]; /* 0x724440: the trick text colour from/to while it fades after a new best */ /* type set in global_types.tsv */
+extern int g_TrickComboPoints[15]; /* 0x724478: points per combo (5 combos x 3 flip tiers) */ /* type set in global_types.tsv */
+extern int g_TrickCount; /* 0xa1c7f0: its copy of the trick count (DAT_0096a3d0) */ /* type set in global_types.tsv */
+extern int g_TrickHistory[4]; /* 0xa1c804: shifted along on each hoverboard landing after 3+ tricks, newest -1 */ /* type set in global_types.tsv */
+extern int g_TrickLandingPos[2]; /* 0x724470: the landing score and name text's centre (250, 125) */ /* type set in global_types.tsv */
+extern int g_TrickParts[4]; /* 0xa1c7f4: its copies of DAT_0096a3c0..cc */ /* type set in global_types.tsv */
+extern int g_TrickPoints; /* 0xa1c814: added to g_RaceScore when the landing text runs out (never set here) */ /* type set in global_types.tsv */
+extern int g_TrickPosePos[2]; /* 0x724468: the pose count text's centre (350, 47) */ /* type set in global_types.tsv */
+extern int g_TrickScorePos[2]; /* 0x724460: the degrees text's centre in the air (350, 27) */ /* type set in global_types.tsv */
+extern int g_TrickShowFrames; /* 0x724428: frames the trick entry's text stays up (20) */ /* type set in global_types.tsv */
+extern HudLevelIcon g_UnusedIconState; /* 0xa1c170: UnusedIconHud's data */ /* type set in global_types.tsv */
+extern u32 g_WrongWayColors[2]; /* 0x724458: the WRONG WAY text's pulse colours */ /* type set in global_types.tsv */
+extern int g_WrongWayPos[2]; /* 0x724450: the WRONG WAY text's centre (256, 180) */ /* type set in global_types.tsv */
 extern u8 *g_pMobyVars; /* 0xa390b0: pVar blocks, 0x80 per moby above MobyInstancePermEnd */ /* type set in global_types.tsv */
 extern int g_toastMsgTimer; /* 0xa15c80 */
 
@@ -342,36 +315,36 @@ void Moby849Hud_Init(HudElement *entry);
 void Moby849Hud_Update(HudElement *entry);
 void DrawFlatOverlay_Fixed(int x0, int y0, int x1, int y1, u32 color, int mode);
 int Draw_Moby849Meter(HudElement *entry);
-void QuickSelectHud_Init(undefined8 param_1);
-void UpdateQuickSelect(undefined8 param_1);
-void HudEntry_DrawIcon (int param_1,longlong param_2,int param_3,int param_4,uint param_5,undefined8 param_6 );
-undefined4 Draw_QuickSelectHud(int param_1);
-void ClankCommandHud_Init(undefined8 param_1);
-void ClankCommandHud_Update(undefined8 param_1);
-undefined4 Draw_ClankCommandHud(int param_1);
-void HealthHud_Init(undefined8 param_1);
-void HealthHud_Update(longlong param_1);
-undefined4 Draw_NanotechUI(int param_1);
-void AmmoHud_Init(undefined8 param_1);
-void BoltHud_Init(undefined8 param_1);
-void BoltHud_Update(undefined8 param_1);
-undefined4 Draw_BoltCountUI(int param_1);
-void UnusedIconHud_Init(undefined8 param_1);
-void UnusedIconHud_Update(longlong param_1);
-undefined4 UnusedIconHud_Draw(int param_1);
-undefined4 Draw_MobyMeterHud(int param_1);
-void TrickHud_Init(undefined8 param_1);
-void TrickHud_Update(undefined8 param_1);
-void Hud_DrawEffectTexQuad(int tex,int x,int y,int w,int h,int alpha);
-undefined4 Draw_HoverboardTrickHud(int param_1);
-undefined4 Draw_MobyHealthBarHud(int param_1);
-void MetalDetectorHud_Update(undefined8 param_1);
-undefined4 Draw_MetalDetectorHud(int param_1);
-undefined4 Draw_GiantClankHealthHUD(int param_1);
-uint Draw_AmmoCounter(uint *param_1);
-void MobyCounterHud_Init(int param_1);
-undefined4 Draw_MobyCounterHud(int param_1);
-int UpdateAllGameplayHUD(int param_1);
+void QuickSelectHud_Init(HudElement *entry);
+void UpdateQuickSelect(HudElement *entry);
+void HudEntry_DrawIcon(HudElement *entry, int tex, int x, int y, u32 flags, int alpha);
+int Draw_QuickSelectHud(HudElement *entry);
+void ClankCommandHud_Init(HudElement *entry);
+void ClankCommandHud_Update(HudElement *entry);
+int Draw_ClankCommandHud(HudElement *entry);
+void HealthHud_Init(HudElement *entry);
+void HealthHud_Update(HudElement *entry);
+int Draw_NanotechUI(HudElement *entry);
+void AmmoHud_Init(HudElement *entry);
+void BoltHud_Init(HudElement *entry);
+void BoltHud_Update(HudElement *entry);
+int Draw_BoltCountUI(HudElement *entry);
+void UnusedIconHud_Init(HudElement *entry);
+void UnusedIconHud_Update(HudElement *entry);
+int UnusedIconHud_Draw(HudElement *entry);
+int Draw_MobyMeterHud(HudElement *entry);
+void TrickHud_Init(HudElement *entry);
+void TrickHud_Update(HudElement *entry);
+void Hud_DrawEffectTexQuad(int tex, int x, int y, int w, int h, int alpha);
+int Draw_HoverboardTrickHud(HudElement *entry);
+int Draw_MobyHealthBarHud(HudElement *entry);
+void MetalDetectorHud_Update(HudElement *entry);
+int Draw_MetalDetectorHud(HudElement *entry);
+int Draw_GiantClankHealthHUD(HudElement *entry);
+int Draw_AmmoCounter(HudElement *entry);
+void MobyCounterHud_Init(HudElement *entry);
+int Draw_MobyCounterHud(HudElement *entry);
+int UpdateAllGameplayHUD(int update);
 void Hud_ClearAmmoEntry(void);
 void Hud_ResetAllEntriesHidden(void);
 void Hud_DecHideCounter(void);

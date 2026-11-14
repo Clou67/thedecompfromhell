@@ -10,6 +10,7 @@
 // sprite drawers the HUD and the menus share.
 
 #define HUD_ENTRY_CNT 13
+#define PI 3.1415927f
 
 /* one word into the HUD pass */
 static inline void HudEmit(u32 word)
@@ -606,7 +607,7 @@ static inline int HudEntryTarget(HudElement *entry)
 
 /* the slide in and out: while showTimer runs the entry grows (animA, then animB), after it
    shrinks back and starts hiding */
-static inline void HudEntryAnimate(HudElement *entry)
+static inline void HudEntryGrow(HudElement *entry)
 {
     if (entry->showTimer < (int)(animationSpeed * 5.5f)) {
         if (entry->animB != 0 || entry->animA != 0) {
@@ -626,7 +627,12 @@ static inline void HudEntryAnimate(HudElement *entry)
     else if (entry->animB < (int)(animationSpeed * 8.5f)) {
         entry->animB++;
     }
+}
 
+/* HudEntryGrow, then the icon's animation */
+static inline void HudEntryAnimate(HudElement *entry)
+{
+    HudEntryGrow(entry);
     HudIcon_GetAnimFrame(&entry->icon);
 }
 
@@ -1481,3 +1487,1826 @@ int Draw_Moby849Meter(HudElement *entry)
     return entry->width;
 }
 
+
+/* the quick select's usage record; 0xa0 is not a multiple of the record size, so this is
+   probably not part of the same record array (REVISIT) */
+#define USAGE_QUICK_SELECT ((UsageRecord *)(CHAR_ARRAY_00a0feec + 0xa0))
+
+/* the 0x4c-byte item record for item, from 0x721000 (+0x38 icon, +0x46/+0x48 name and gold
+   name help strings); only +0x38 has a symbol, so the table is reached from there (REVISIT) */
+static inline u8 *ItemInfo(int item)
+{
+    return (u8 *)&DAT_00721038 + item * 0x4c - 0x38;
+}
+
+/* the per-item ammo info, 24 bytes from 0x737d30: +8 has ammo, +0xe the max */
+static inline u16 *AmmoInfo(int item)
+{
+    return (u16 *)&DAT_00737d38 + item * 12;
+}
+
+// 0x00cd398 (0xec bytes)
+void QuickSelectHud_Init(HudElement *entry)
+{
+    g_QuickSelectSlotCnt = 8;
+
+    entry->icon.offsX = 0;
+    entry->icon.offsY = 0;
+    entry->width = g_QuickSelectSize[0];
+    entry->height = g_QuickSelectSize[1];
+    entry->displayedValue = -2;
+    entry->targetValue = (int)(animationSpeed * 30.5f);
+    *(u32 *)&entry->animA = 0;
+
+    g_QuickSelectPages = g_QuickSelectPageTable;
+    g_QuickSelectPage = 0;
+
+    for (int i = 0; i < 8; i++) {
+        u32 item = g_QuickSelectItems[i];
+
+        g_QuickSelectSlots[0][i].item = item;
+        g_QuickSelectSlots[0][i].iconId = *(u16 *)(ItemInfo(item) + 0x38);
+    }
+}
+
+/* the slot the d-pad moves to from slot; none is the table used from no selection (-1) */
+static inline int HudRingDpad(int slot, int buttons, QuickSelectSlot *none)
+{
+    QuickSelectSlot *page = g_QuickSelectPages[g_QuickSelectPage];
+
+    if (buttons & 0x1000) {
+        slot = (slot == -1) ? none->down : page[slot].down;
+    }
+
+    if (buttons & 0x4000) {
+        slot = (slot == -1) ? none->left : page[slot].left;
+    }
+
+    if (buttons & 0x8000) {
+        slot = (slot == -1) ? none->up : page[slot].up;
+    }
+
+    if (buttons & 0x2000) {
+        slot = (slot == -1) ? none->right : page[slot].right;
+    }
+
+    return slot;
+}
+
+/* the stick's angle (0 when centred) and length */
+static inline float HudRingStick(float *length)
+{
+    float stickLen = sqrtf(g_Pad.stickX * g_Pad.stickX + g_Pad.stickY * g_Pad.stickY);
+    float stickX = g_Pad.stickX;
+    float stickY = g_Pad.stickY;
+
+    if (stickLen != 0.0f) {
+        stickX /= stickLen;
+        stickY /= stickLen;
+    }
+
+    *length = stickLen;
+    return FastAtan2Inline(stickY, stickX);
+}
+
+/* the stick angle as a position around the ring, in slots */
+static inline float HudRingStickPos(float stickAngle, int cnt)
+{
+    float ringAngle = stickAngle + PI + PI + PI / 2 + PI / (float)cnt;
+
+    return ringAngle * ((float)cnt * (1.0f / (2 * PI)));
+}
+
+/* the entry's slot when the fade-out ends, then unregisters it */
+static inline void HudRingClose(HudElement *entry)
+{
+    int index = HudFindEntry(entry->id);
+
+    if (index < HUD_ENTRY_CNT) {
+        RegisterHUDCallback(index, 0xffff, NULL, NULL, NULL, NULL, 0);
+    }
+
+    entry->slideTime = -6;
+    g_QuickSelectCloseTime = g_MainLoopFrames;
+}
+
+/* targetValue: the state in the top byte (0 waiting for the stick, 1 open), a countdown below;
+   displayedValue: the selected slot, -1 for none */
+// 0x00cd4b8 (0xa00 bytes)
+void UpdateQuickSelect(HudElement *entry)
+{
+    entry->showTimer = (int)(animationSpeed * 180.5f);
+    entry->slideTime = 24;
+
+    if (FastDecTimerS16((ushort *)&DAT_0096bfb2) != 0) {
+        DAT_0096560c = 2;
+        DAT_00965b70 = 2;
+        DAT_009660d4 = 2;
+        DAT_00966638 = 2;
+    }
+
+    float stickLen;
+    float stickAngle = HudRingStick(&stickLen);
+
+    int timer = entry->targetValue;
+
+    if ((timer >> 24) == 0) {
+        bool waiting = !(g_Pad.pressedButton & 0xf000) && stickLen >= 0.5f;
+
+        if (waiting) {
+            entry->targetValue = timer - 1;
+        }
+
+        if (waiting && timer != 0) {
+            timer--;
+        } else {
+            timer = 0x10000ff;
+            entry->displayedValue = -1;
+            entry->targetValue = timer;
+        }
+    }
+
+    int oldSlot = entry->displayedValue;
+    int slot = oldSlot;
+    int dir = 0;
+
+    if ((timer >> 24) == 1 && (g_Pad.unk0c0 & 0x10)) {
+        if (stickLen <= 0.9f) {
+            if (g_Pad.unk0d8 == 0 && (g_Pad.pressedButton & 0xf000)) {
+                entry->displayedValue = HudRingDpad(oldSlot, g_Pad.pressedButton, &g_QuickSelectSlots[1][4]);
+            }
+        } else {
+            int cnt = g_QuickSelectSlotCnt;
+            float ringAngle = stickAngle + PI + PI + PI / 2 + PI / (float)cnt;
+            float pos = ringAngle * ((float)cnt * (1.0f / (2 * PI)));
+            float slotAngle = (float)oldSlot * (2 * PI) / (float)FastIntToDouble(cnt) - PI;
+            bool keep = false;
+
+            if (oldSlot != -1) {
+                float diff = FastDiffRots(stickAngle, PI / 2);
+                keep = (float)FastSubRots(slotAngle, diff) <= 0.589049f;
+            }
+
+            if (!keep) {
+                int newSlot = (int)pos % g_QuickSelectSlotCnt;
+
+                /* the even slots only win when the stick is well inside them */
+                if ((newSlot & 1) == 0) {
+                    float frac = pos - (float)FastDoubleToInt(pos);
+
+                    if (frac > 1.0f - g_QuickSelectSnap) {
+                        newSlot++;
+                    } else if (frac < g_QuickSelectSnap) {
+                        newSlot--;
+                    }
+
+                    newSlot = (g_QuickSelectSlotCnt + newSlot) % g_QuickSelectSlotCnt;
+                }
+
+                entry->displayedValue = newSlot;
+                g_QuickSelectAngleDelta = FastAddRots(ringAngle - ((float)newSlot * (PI / 4) + PI / 8));
+                dir = (g_QuickSelectAngleDelta <= 0.0f) ? -1 : 1;
+            }
+        }
+
+        /* an empty slot hands over to its neighbour in the direction of the stick */
+        slot = entry->displayedValue;
+        QuickSelectSlot *page = g_QuickSelectPages[g_QuickSelectPage];
+
+        if (page[slot].iconId == 0 && dir != 0) {
+            int next = (slot + dir) % g_QuickSelectSlotCnt;
+
+            if (page[next].iconId != 0) {
+                entry->displayedValue = next;
+                slot = next;
+            }
+        }
+    }
+
+    if (slot != oldSlot) {
+        entry->animB = 0;
+    } else if (entry->animB < g_HudFadeSteps) {
+        entry->animB++;
+    }
+
+    if (!(g_Pad.unk0c0 & 0x10)) {
+        if (slot >= 0) {
+            int item = g_QuickSelectPages[g_QuickSelectPage][slot].item;
+
+            if (item != 0) {
+                UsageRecord *usage = USAGE_QUICK_SELECT;
+
+                if (g_CurrentWeapon != item && usage->uses != 0xffff) {
+                    usage->uses++;
+                }
+
+                int playTime = (int)(animationSpeed * ((float)g_GameFrameCount + 0.5f)) / 600;
+                if (usage->lastUse < playTime) {
+                    usage->lastUse = (u16)playTime;
+                }
+
+                usage->levels |= 1 << (Level & 0x3f) | 0x80000000;
+
+                if (item == 24) {
+                    DAT_0096bcd5 = 1;
+                } else {
+                    DAT_0096bd98 = item;
+                }
+
+                u16 *ammo = AmmoInfo(item);
+                int *count = &((int *)&currentAmmoArray)[item];
+
+                if (ammo[0] != 0 && *count > ammo[3]) {
+                    *count = ammo[3];
+                }
+            }
+        }
+
+        if (entry->animA != 0) {
+            entry->animA--;
+        }
+    } else if (entry->animA < g_HudFadeSteps) {
+        entry->animA++;
+    }
+
+    if (entry->animA == 0) {
+        g_QuickSelectSavedSlot = entry->displayedValue;
+        g_QuickSelectSavedTimer = entry->targetValue;
+
+        HudRingClose(entry);
+    }
+}
+
+// 0x00cdeb8 (0x270 bytes)
+/* Draws texture frame tex at (x, y) + the icon offset, by default at twice the size the
+   texture header gives; flags 1 anchors the bottom right, 2 draws at the header size moved
+   in by half of it, 4 moves it up and left by the size and draws at double */
+void HudEntry_DrawIcon(HudElement *entry, int tex, int x, int y, u32 flags, int alpha)
+{
+    if (tex < 0) {
+        return;
+    }
+
+    u8 *header = HudTexHeader(tex);
+    u32 size = *(u32 *)(header + 0x18);
+    int width = size >> 18;
+    int height = (size >> 2) & 0x3fff;
+
+    x += entry->icon.offsX;
+    y += entry->icon.offsY;
+
+    int left = (flags & 1) ? x - width : x;
+    int top = (flags & 1) ? y - height : y;
+    int drawWidth = size >> 17;
+    int drawHeight = (size >> 1) & 0x7fff;
+
+    if (flags & 2) {
+        left += size >> 19;
+        top += (size >> 3) & 0x1fff;
+        drawWidth = width;
+        drawHeight = height;
+    }
+
+    if (flags & 4) {
+        left -= width;
+        top -= height;
+        drawWidth *= 2;
+        drawHeight *= 2;
+    }
+
+    Hud_DrawTexHeaderQuad(header, left, top, drawWidth, drawHeight, alpha);
+}
+
+/* a fade counter as 0..1 */
+static inline float HudFade(int counter)
+{
+    float fade = HudIntToFloat(counter) / HudIntToFloat(g_HudFadeSteps);
+
+    if (fade > 1.0f) {
+        return 1.0f;
+    }
+
+    if (fade < 0.0f) {
+        return 0.0f;
+    }
+
+    return fade;
+}
+
+/* what the quick select and clank command rings share while drawing */
+typedef struct HudRing {
+    float fade;              /* animA: the ring fading in */
+    float selectFade;        /* animB: the selection settling */
+    int alpha;
+    int highlightAlpha;      /* alpha pulsing with g_QuickSelectPulsePeriod */
+    int x, y;                /* the ring's top left */
+} HudRing;
+
+/* the fades and position, and the background: frame of QUICK_SELECT, mirrored into the
+   four quarters of g_QuickSelectSize */
+static inline void HudRingBegin(HudElement *entry, HudRing *ring, int frame)
+{
+    ring->fade = HudFade(entry->animA);
+    ring->selectFade = HudFade(entry->animB);
+
+    float phase = HudIntToFloat(worldUpdateTime % g_QuickSelectPulsePeriod) / HudIntToFloat(g_QuickSelectPulsePeriod) * 6.28318f - 3.14159f;
+    float pulse = FastSinInline(phase);
+
+    ring->alpha = FastDoubleToInt(ring->fade * 128.0f);
+    ring->highlightAlpha = FastDoubleToInt(ring->fade * 128.0f * (pulse * 0.125f + 0.875f));
+
+    int x = entry->x;
+    int y = entry->y;
+    u32 align = entry->alignFlags;
+
+    if (!(align & 1) && !(align & 2)) {
+        y -= entry->height >> 1;
+    }
+
+    if (!(align & 4)) {
+        x -= (align & 8) ? entry->width : entry->width >> 1;
+    }
+
+    ring->x = x;
+    ring->y = y;
+
+    int width = g_QuickSelectSize[0];
+    int height = g_QuickSelectSize[1];
+    int halfWidth = width / 2;
+    int halfHeight = height / 2;
+
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(QUICK_SELECT, frame)), x, y, halfWidth, halfHeight, ring->alpha);
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(QUICK_SELECT, frame)), x + width, y + height, -halfWidth, -halfHeight, ring->alpha);
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(QUICK_SELECT, frame)), x + width, y, -halfWidth, halfHeight, ring->alpha);
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(QUICK_SELECT, frame)), x, y + height, halfWidth, -halfHeight, ring->alpha);
+}
+
+/* slot i's centre on the ring, slot 0 at the top */
+static inline void HudRingSlotPos(HudRing *ring, int i, int *x, int *y)
+{
+    float angle = FastWrapRot((float)i * 2.0f * PI / (float)g_QuickSelectSlotCnt - PI, PI / 2);
+    int slotY = (int)(g_QuickSelectRadius * FastSinInline(angle));
+
+    *x = g_QuickSelectCentre[0] + ring->x + (int)(g_QuickSelectRadius * FastCosInline(angle) * g_QuickSelectAspect);
+    *y = g_QuickSelectCentre[1] + ring->y + slotY;
+}
+
+/* the pulsing highlight (icon 0xe99c) behind the selected slot */
+static inline void HudRingHighlight(HudRing *ring, int x, int y)
+{
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0xe99c, 0)), x - 19, y - 19, 38, 38, ring->highlightAlpha);
+}
+
+/* the slots not selected are dimmed */
+static inline int HudRingSlotAlpha(HudElement *entry, HudRing *ring, int i)
+{
+    if (i != entry->displayedValue) {
+        return FastDoubleToInt((float)ring->alpha * g_QuickSelectDim);
+    }
+
+    return ring->alpha;
+}
+
+// 0x00ce170 (0xe4c bytes)
+/* the ring of 8 item icons over the QUICK_SELECT texture; the selected one pulses on a
+   highlight and gets its name and ammo below */
+int Draw_QuickSelectHud(HudElement *entry)
+{
+    HudRing ring;
+
+    HudRingBegin(entry, &ring, 0);
+
+    int x = ring.x;
+    int y = ring.y;
+
+    for (int i = 0; i < g_QuickSelectSlotCnt; i++) {
+        int slotX;
+        int slotY;
+
+        HudRingSlotPos(&ring, i, &slotX, &slotY);
+
+        QuickSelectSlot *slot = &g_QuickSelectPages[g_QuickSelectPage][i];
+
+        if (entry->displayedValue == i && slot->iconId != 0) {
+            HudRingHighlight(&ring, slotX, slotY);
+        }
+
+        if (slot->iconId != 0) {
+            int slotAlpha = HudRingSlotAlpha(entry, &ring, i);
+
+            /* gold weapons use frame 4 */
+            int frame = ((u8 *)&g_goldWeaponsArray)[slot->item] ? 4 : 0;
+
+            HudEntry_DrawIcon(entry, GetIconFrameTex(slot->iconId, frame), slotX, slotY, 1, slotAlpha);
+        }
+    }
+
+    int selected = entry->displayedValue;
+
+    if (selected < 0 || g_QuickSelectPages[g_QuickSelectPage][selected].iconId == 0) {
+        return entry->width;
+    }
+
+    float textFade = ring.fade * ring.selectFade;
+    u32 shadow = FastLerpColor(textFade, g_QuickSelectShadowColor, g_QuickSelectColors[2]);
+    u32 selectedItem = g_QuickSelectItems[selected];
+    int textX = g_QuickSelectCentre[0] + x;
+    int textY = g_QuickSelectCentre[1] + y;
+
+    if (AmmoInfo(selectedItem)[0] != 0) {
+        char ammoText[80];
+        int ammo = ((int *)&currentAmmoArray)[selectedItem];
+
+        sprintf(ammoText, "%d/%d", ammo, AmmoInfo(selectedItem)[3]);
+
+        u32 color = (ammo == 0) ? FastLerpColor(textFade, g_QuickSelectColors[3], g_QuickSelectColors[4])
+                                : FastLerpColor(textFade, g_QuickSelectColors[5], g_QuickSelectColors[6]);
+
+        FontPrintMediumCenter(textX + 1, textY + 13, shadow, ammoText, -1);
+        FontPrintMediumCenter(textX, textY + 12, color, ammoText, -1);
+    }
+
+    u32 nameColor = FastLerpColor(textFade, g_QuickSelectColors[0], g_QuickSelectColors[1]);
+    int item = g_QuickSelectPages[g_QuickSelectPage][selected].item;
+    u8 *itemInfo = ItemInfo(item);
+    char *name;
+
+    if (((u8 *)&g_goldWeaponsArray)[item] == 0) {
+        name = help_msg_string_by_index((StringId)*(s16 *)(itemInfo + 0x46));
+    } else {
+        name = help_msg_string_by_index((StringId)*(s16 *)(itemInfo + 0x48));
+    }
+
+    if (name == NULL || strlen(name) == 0) {
+        return entry->width;
+    }
+
+    /* two lines: after a '-' (kept on the first line), else at the first space */
+    int len = strlen(name);
+    int firstLen = 0;
+    char *rest = name;
+
+    for (int i = 0; i < len; i++) {
+        if (name[i + 1] == '-') {
+            firstLen = i + 2;
+            rest = name + i + 2;
+            break;
+        }
+    }
+
+    if (firstLen == 0) {
+        for (int i = 0; i < len; i++) {
+            if (name[i + 1] == ' ') {
+                firstLen = i + 1;
+                rest = name + i + 2;
+                break;
+            }
+        }
+    }
+
+    int nameY;
+
+    if (AmmoInfo(g_QuickSelectItems[selected])[0] != 0) {
+        nameY = g_QuickSelectNameY[0];
+    } else if (firstLen != 0) {
+        nameY = g_QuickSelectNameY[1];
+    } else {
+        nameY = g_QuickSelectNameYOneLine;
+    }
+
+    nameY += textY;
+
+    if (firstLen == 0) {
+        FontPrintMediumCenter(textX + 1, nameY + 1, shadow, name, -1);
+        FontPrintMediumCenter(textX, nameY, nameColor, name, -1);
+    } else {
+        FontPrintMediumCenter(textX + 1, nameY + 1, shadow, name, firstLen);
+        FontPrintMediumCenter(textX, nameY, nameColor, name, firstLen);
+        FontPrintMediumCenter(textX + 1, nameY + 17, shadow, rest, -1);
+        FontPrintMediumCenter(textX, nameY + 16, nameColor, rest, -1);
+    }
+
+    return entry->width;
+}
+
+// 0x00cefc0 (0x8c bytes)
+/* the clank command ring: 4 slots on the second slot page */
+void ClankCommandHud_Init(HudElement *entry)
+{
+    g_QuickSelectSlotCnt = 4;
+
+    entry->width = g_QuickSelectSize[0];
+    entry->displayedValue = -2;
+    entry->height = g_QuickSelectSize[1];
+    g_QuickSelectPages = &g_QuickSelectPageTable[1];
+    entry->icon.offsX = 0;
+    entry->icon.offsY = 0;
+    entry->targetValue = (int)(animationSpeed * 30.5f);
+    g_QuickSelectPage = 0;
+}
+
+// 0x00cf070 (0x638 bytes)
+/* UpdateQuickSelect for the clank commands: no snapping, and the pick goes to g_ClankCommand */
+void ClankCommandHud_Update(HudElement *entry)
+{
+    entry->slideTime = 24;
+    entry->showTimer = (int)(animationSpeed * 180.5f);
+
+    DAT_0096560c = 2;
+    DAT_00965b70 = 2;
+    DAT_009660d4 = 2;
+    DAT_00966638 = 2;
+
+    float stickLen;
+    float stickAngle = HudRingStick(&stickLen);
+
+    int timer = entry->targetValue;
+
+    if ((timer >> 24) == 0 && g_ClankCommandReady != 0) {
+        bool waiting = !(g_Pad.pressedButton & 0xf000) && stickLen >= 0.5f;
+
+        if (waiting) {
+            entry->targetValue = timer - 1;
+        }
+
+        if (waiting && timer != 0) {
+            timer--;
+        } else {
+            timer = 0x10000ff;
+            entry->displayedValue = -1;
+            entry->targetValue = timer;
+        }
+    }
+
+    int oldSlot = entry->displayedValue;
+    int slot = oldSlot;
+
+    if ((timer >> 24) == 1) {
+        if (stickLen > 0.9f) {
+            int cnt = g_QuickSelectSlotCnt;
+
+            slot = (int)HudRingStickPos(stickAngle, cnt) % cnt;
+            entry->displayedValue = slot;
+        }
+
+        if (g_Pad.pressedButton & 0xf000) {
+            slot = HudRingDpad(slot, g_Pad.pressedButton, &g_QuickSelectSlots[1][5]);
+            entry->displayedValue = slot;
+        }
+    }
+
+    if (slot != oldSlot) {
+        entry->animB = 0;
+    } else if (entry->animB < g_HudFadeSteps) {
+        entry->animB++;
+    }
+
+    if (!(g_Pad.unk0c0 & 0x10)) {
+        g_ClankCommand = 0;
+
+        if (slot != -1) {
+            g_ClankCommand = g_QuickSelectPages[g_QuickSelectPage][slot].item;
+        }
+
+        if (entry->animA != 0) {
+            entry->animA--;
+        }
+    } else if (entry->animA < g_HudFadeSteps) {
+        entry->animA++;
+    }
+
+    if (entry->animA == 0) {
+        g_QuickSelectSavedTimer = entry->targetValue;
+        g_QuickSelectSavedSlot = slot;
+        HudRingClose(entry);
+    }
+}
+
+// 0x00cf6f0 (0xba4 bytes)
+/* the clank command ring (frame 1 of QUICK_SELECT); until g_ClankCommandReady the icons show
+   their frame + 4 at full alpha */
+int Draw_ClankCommandHud(HudElement *entry)
+{
+    HudRing ring;
+
+    HudRingBegin(entry, &ring, 1);
+
+    for (int i = 0; i < g_QuickSelectSlotCnt; i++) {
+        int slotX;
+        int slotY;
+
+        HudRingSlotPos(&ring, i, &slotX, &slotY);
+
+        QuickSelectSlot *slot = &g_QuickSelectPages[g_QuickSelectPage][i];
+
+        if (entry->displayedValue == i && slot->iconId != 0) {
+            HudRingHighlight(&ring, slotX, slotY);
+        }
+
+        if (slot->iconId != 0) {
+            int slotAlpha = HudRingSlotAlpha(entry, &ring, i);
+
+            if (g_ClankCommandReady == 0) {
+                HudEntry_DrawIcon(entry, GetIconFrameTex(slot->iconId, slot->unk04 + 4), slotX, slotY, 1, ring.alpha);
+            } else {
+                HudEntry_DrawIcon(entry, GetIconFrameTex(slot->iconId, slot->unk04), slotX, slotY, 1, slotAlpha);
+            }
+        }
+    }
+
+    int selected = entry->displayedValue;
+
+    if (selected < 0 || g_QuickSelectPages[g_QuickSelectPage][selected].iconId == 0) {
+        return entry->width;
+    }
+
+    StringId names[4];
+
+    names[0] = STR_WAIT;
+    names[3] = STR_ENTER;
+    names[2] = STR_ATTACK;
+    names[1] = STR_FOLLOW;
+
+    char *name = help_msg_string_by_index(names[selected]);
+
+    if (name == NULL || strlen(name) == 0) {
+        return entry->width;
+    }
+
+    float textFade = ring.fade * ring.selectFade;
+    u32 color = FastLerpColor(textFade, g_ClankCommandColors[0], g_ClankCommandColors[1]);
+    u32 shadow = FastLerpColor(textFade, 0, 0x80000000);
+    int textX = g_QuickSelectCentre[0] + ring.x;
+    int textY = g_ClankCommandNameY + ring.y + g_QuickSelectCentre[1];
+
+    FontPrintMediumCenter(textX - 1, textY - 1, shadow, name, -1);
+    FontPrintMediumCenter(textX, textY, color, name, -1);
+
+    return entry->width;
+}
+
+// 0x00d02a0 (0xb8 bytes)
+void HealthHud_Init(HudElement *entry)
+{
+    entry->showTimer = (int)(animationSpeed * 180.5f) + 30;
+    entry->width = 64;
+    entry->height = 64;
+    entry->icon.offsX = 32;
+    entry->icon.offsY = 0;
+
+    HudEntry_CalcNumberSize(entry);
+
+    g_HealthPulse.tick = 0;
+    entry->data = &g_HealthPulse;
+    g_HealthPulse.value = 0;
+    g_HealthPulse.accel = 1;
+    g_HealthPulse.speed = 0;
+}
+
+/* while showTimer runs, animA then animB count up to their steps; after, they count back
+   down and the entry starts hiding */
+static inline void HudEntryFade(HudElement *entry, int showTimer, int stepsA, int stepsB)
+{
+    if (showTimer < (int)(animationSpeed * 5.5f)) {
+        entry->slideTime = 1;
+
+        if (entry->animB != 0) {
+            entry->animB--;
+        } else if (entry->animA != 0) {
+            entry->animA--;
+        } else {
+            entry->slideTime = -6;
+        }
+    } else if (entry->animA < stepsA) {
+        entry->animA++;
+    } else if (entry->animB < stepsB) {
+        entry->animB++;
+    }
+}
+
+// 0x00d0360 (0x264 bytes)
+void HealthHud_Update(HudElement *entry)
+{
+    int target = entry->targetValue;
+
+    if (entry->pValue != NULL) {
+        target = *entry->pValue;
+        entry->targetValue = target < 0 ? 0 : target;
+
+        HudPulse *pulse = (HudPulse *)entry->data;
+        s16 value = pulse->value + pulse->speed;
+
+        pulse->value = value;
+
+        s16 speed = pulse->speed + pulse->accel;
+
+        pulse->tick = (pulse->tick + 1) % 60;
+        pulse->speed = speed;
+
+        if (speed > 60) {
+            speed = 60;
+            pulse->speed = 60;
+        } else if (speed < -60) {
+            speed = -60;
+            pulse->speed = -60;
+        }
+
+        if (value > 0x7ff && speed > 0) {
+            pulse->accel = -1;
+        }
+
+        if (value > 0xfff) {
+            value = 0xfff;
+            pulse->value = 0xfff;
+        }
+
+        if (value < 0x7ff && speed < 0) {
+            pulse->accel = 1;
+        }
+
+        if (value < 0) {
+            pulse->value = 0;
+        }
+
+        target = entry->targetValue;
+        target = target > entry->maxValue ? entry->maxValue : target;
+        entry->targetValue = target;
+    }
+
+    if (entry->displayedValue != target || entry->displayedValue == 1) {
+        entry->showTimer = (int)(animationSpeed * 120.5f);
+        entry->displayedValue = target;
+    }
+
+    HudEntryFade(entry, entry->showTimer, g_HealthFadeSteps, g_HealthFadeSteps);
+    HudIcon_GetAnimFrame(&entry->icon);
+}
+
+/* a box row behind the nanotech cells: the middle of the text box icon (0x7580) halfWidth
+   either side of x, its end caps (frame 1, the right one turned) outside */
+static inline void NanotechBoxRow(int x, int y, int halfWidth, int alpha)
+{
+    int capTex = GetIconFrameTex(0x7580, 1);
+    int middleTex = GetIconFrameTex(0x7580, 0);
+
+    Hud_DrawTexQuad(capTex, halfWidth + x, y, g_NanotechBoxTile, g_NanotechBoxTile, alpha);
+    Hud_DrawTexHeaderQuad(HudTexHeader(middleTex), x - halfWidth, y, halfWidth * 2, g_NanotechBoxTile, alpha);
+    Hud_DrawTexHeaderQuad(HudTexHeader(capTex), x - halfWidth - g_NanotechBoxTile, y, g_NanotechBoxTile, g_NanotechBoxTile, alpha);
+}
+
+// 0x00d05e0 (0x898 bytes)
+/* The nanotech cells (NANOTECH_ANIMATION) in a box: each full cell plays frames 0-29 offset by
+   6 per cell from the pulse's tick, under the empty cell (frame 30) and a glow (frame 31)
+   throbbing with the pulse; the cells past health show frame 30 alone. Not drawn for
+   g_heroType 2 or on the turret plane. */
+int Draw_NanotechUI(HudElement *entry)
+{
+    if (g_heroType == 2 || g_heroState == TURRET_PLANE_UI) {
+        return entry->width;
+    }
+
+    int x = entry->x;
+    int health = entry->targetValue;
+    int y = g_NanotechY + (Cutscene == 0 ? 8 : 0) + 10;
+
+    if (entry->animA == 0) {
+        return entry->width;
+    }
+
+    float boxFade = HudIntToFloat(entry->animA) / HudIntToFloat(g_HealthFadeSteps);
+    boxFade = boxFade > 1.0f ? 1.0f : (boxFade < 0.0f ? 0.0f : boxFade);
+
+    float cellFade = HudIntToFloat(entry->animB) / HudIntToFloat(g_HealthFadeSteps);
+    cellFade = cellFade > 1.0f ? 1.0f : (cellFade < 0.0f ? 0.0f : cellFade);
+
+    int cellAlpha = FastDoubleToInt(cellFade * 128.0f);
+    int boxAlpha = FastDoubleToInt((float)g_NanotechBoxAlpha * boxFade);
+    HudPulse *pulse = (HudPulse *)entry->data;
+    int frame = (health == 0) ? 30 : pulse->tick >> 1;
+    int cellCnt = (g_heroType == 1) ? g_clankMaxNanotech : g_heroMaxNanotech;
+    s16 (*cellPos)[2];
+    int rowWidth;
+    int row2Width;
+
+    if (cellCnt == 8) {
+        cellPos = &g_NanotechCellPos[9];
+        rowWidth = FastDoubleToInt(boxFade * 48.0f);
+        row2Width = FastDoubleToInt(boxFade * 48.0f);
+    } else if (cellCnt == 5) {
+        cellPos = &g_NanotechCellPos[4];
+        rowWidth = FastDoubleToInt(boxFade * 32.0f);
+        row2Width = FastDoubleToInt(boxFade * 16.0f);
+    } else {
+        cellPos = &g_NanotechCellPos[0];
+        rowWidth = FastDoubleToInt(boxFade * 48.0f);
+        row2Width = 0;
+    }
+
+    int boxY = g_NanotechBoxY + y;
+
+    NanotechBoxRow(x, boxY, rowWidth, boxAlpha);
+
+    if (row2Width != 0) {
+        NanotechBoxRow(x, g_NanotechBoxRowStep + boxY, row2Width, boxAlpha);
+    }
+
+    for (int i = 0; i < cellCnt; i++) {
+        int cellX = cellPos[i][0] + x;
+        int cellY = cellPos[i][1] + y;
+        int next = frame;
+
+        HudEntry_DrawIcon(entry, GetIconFrameTex(NANOTECH_ANIMATION, frame), cellX, cellY, 1, cellAlpha);
+
+        if (frame != 30) {
+            HudEntry_DrawIcon(entry, GetIconFrameTex(NANOTECH_ANIMATION, 30), cellX, cellY, 1, cellAlpha);
+
+            int glowAlpha = FastDoubleToInt((float)(pulse->value >> 4) * cellFade);
+
+            Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(NANOTECH_ANIMATION, 31)), cellPos[i][0] + x + 14, cellPos[i][1] + y - 17, 34, 34, glowAlpha);
+
+            next = (health == i + 1) ? 30 : (frame + 6) % 30;
+        }
+
+        frame = next;
+    }
+
+    return entry->width;
+}
+
+// 0x00d0e80 (0x74 bytes)
+void AmmoHud_Init(HudElement *entry)
+{
+    entry->showTimer = (int)(animationSpeed * 120.5f) + 30;
+    entry->width = 32;
+    entry->height = 32;
+
+    HudEntry_CalcNumberSize(entry);
+}
+
+// 0x00d0f00 (0x94 bytes)
+void BoltHud_Init(HudElement *entry)
+{
+    entry->showTimer = (int)(animationSpeed * 120.5f) + 30;
+    entry->width = 32;
+    entry->height = 32;
+
+    HudEntry_CalcNumberSize(entry);
+
+    g_BoltTick = 0;
+    entry->data = &g_BoltTick;
+}
+
+// 0x00d0fa0 (0x15c bytes)
+/* shows the bolts for 90.5 frames after g_boltCount changes */
+void BoltHud_Update(HudElement *entry)
+{
+    int bolts = g_boltCount;
+    s16 *tick = (s16 *)entry->data;
+    int showTimer = entry->showTimer;
+
+    *tick = (*tick + 1) % 60;
+
+    if (entry->displayedValue != bolts) {
+        entry->displayedValue = bolts;
+        showTimer = (int)(animationSpeed * 90.5f);
+        entry->showTimer = showTimer;
+    }
+
+    HudEntryFade(entry, showTimer, g_BoltFadeSteps[0], g_BoltFadeSteps[1]);
+}
+
+// 0x00d1110 (0x6bc bytes)
+/* the bolt count in a text box sized to its digits, the spinning bolt (BOLTS_ANIMATION) on
+   the left, and a thousands separator every 3 digits */
+int Draw_BoltCountUI(HudElement *entry)
+{
+    s16 *tick = (s16 *)entry->data;
+
+    if (g_heroState == TURRET_PLANE_UI || entry->animA == 0) {
+        return entry->width;
+    }
+
+    int x = entry->x;
+    int y = (Cutscene == 0 ? 8 : 0) + 10;
+
+    float boxFade = HudIntToFloat(entry->animA) / HudIntToFloat(g_BoltFadeSteps[0]);
+    boxFade = boxFade > 1.0f ? 1.0f : (boxFade < 0.0f ? 0.0f : boxFade);
+
+    float textFade = HudIntToFloat(entry->animB) / HudIntToFloat(g_BoltFadeSteps[1]);
+    textFade = textFade > 1.0f ? 1.0f : (textFade < 0.0f ? 0.0f : textFade);
+
+    int boxAlpha = FastDoubleToInt((float)FastDoubleToInt(boxFade * 128.0f) * 0.7f);
+    int digits = 1;
+
+    for (int bolts = g_boltCount; bolts > 9; bolts /= 10) {
+        digits++;
+    }
+
+    int textWidth = FastDoubleToInt((float)(g_BoltDigitWidth * digits) * boxFade);
+
+    Hud_DrawTexQuad(GetIconFrameTex(0x7580, 1), x - 12, y, 32, 32, boxAlpha);
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7580, 0)), x - textWidth - 28, y, textWidth + 16, 32, boxAlpha);
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7580, 1)), x - textWidth - 60, y, 32, 32, boxAlpha);
+
+    HudEntry_DrawIcon(entry, GetIconFrameTex(BOLTS_ANIMATION, *tick >> 1), x - 32, y, 0, 0x80);
+
+    u32 color = FastLerpColor(textFade, g_BoltTextColors[0], g_BoltTextColors[1]);
+    u32 shadow = FastLerpColor(textFade, 0, 0x80000000);
+    char text[128];
+
+    sprintf(text, "%d", g_boltCount);
+    FontPrintMediumRight(g_BoltTextPos[0] + x + 1, g_BoltTextPos[1] + y + 1, shadow, text, -1);
+    FontPrintMediumRight(g_BoltTextPos[0] + x, g_BoltTextPos[1] + y, color, text, -1);
+
+    bool apostrophe = false;
+
+    if (g_Language == 3 || g_Language == 5) {
+        sprintf(text, ".");
+    } else {
+        apostrophe = true;
+        sprintf(text, "'");
+    }
+
+    int sepX = g_BoltDotPos[0];
+    int sepY = g_BoltDotPos[1];
+
+    if (apostrophe) {
+        sepX = g_BoltSeparatorPos[0];
+        sepY = g_BoltSeparatorPos[1];
+    }
+
+    for (int i = 3; i < digits; i += 3) {
+        FontPrintMediumRight(sepX + x - g_BoltDigitWidth * i + 2, sepY + y + 2, shadow, text, -1);
+        FontPrintMediumRight(sepX + x - g_BoltDigitWidth * i, sepY + y, color, text, -1);
+    }
+
+    return entry->width;
+}
+
+// 0x00d17d8 (0xb4 bytes)
+void UnusedIconHud_Init(HudElement *entry)
+{
+    entry->showTimer = (int)(animationSpeed * 180.5f) + 30;
+    entry->width = 64;
+    entry->height = 64;
+    entry->icon.offsX = 32;
+    entry->icon.offsY = 0;
+
+    HudEntry_CalcNumberSize(entry);
+
+    g_UnusedIconState.value = 0;
+    entry->data = &g_UnusedIconState;
+    g_UnusedIconState.phase = 0;
+    g_UnusedIconState.fadeOut = 0;
+    g_UnusedIconState.fadeIn = 0;
+}
+
+// 0x00d1898 (0x2f4 bytes)
+/* a new value fades the old level out (once slid in) and the new one in */
+void UnusedIconHud_Update(HudElement *entry)
+{
+    HudLevelIcon *state = (HudLevelIcon *)entry->data;
+    int target = entry->targetValue;
+    int shown = entry->displayedValue;
+    int slide = entry->slideTime;
+
+    if (entry->pValue != NULL) {
+        target = *entry->pValue;
+        target = target < 0 ? 0 : target;
+        target = target > entry->maxValue ? entry->maxValue : target;
+        entry->targetValue = target;
+    }
+
+    if (shown != target && state->fadeOut == 0) {
+        entry->showTimer = (int)(animationSpeed * 120.5f);
+
+        if (slide < 0) {
+            state->value = target > shown ? target : shown;
+            entry->displayedValue = entry->targetValue;
+            state->fadeIn = 0x80;
+            slide = entry->slideTime;
+        }
+
+        if (slide > 23) {
+            state->fadeOut = 0x80;
+            target = entry->targetValue;
+            state->value = target > entry->displayedValue ? target : entry->displayedValue;
+        }
+    }
+
+    state->phase += g_HudLevelPhaseStep;
+
+    if (state->fadeOut != 0) {
+        entry->showTimer = (int)(animationSpeed * 120.5f);
+
+        int fadeOut = state->fadeOut;
+
+        state->fadeIn = 0;
+        state->fadeOut = fadeOut - g_HudLevelFadeStep;
+
+        if (fadeOut - g_HudLevelFadeStep < 1) {
+            state->fadeOut = 0;
+            state->fadeIn = 0x80;
+            entry->displayedValue = entry->targetValue;
+        }
+    }
+
+    if (state->fadeIn != 0) {
+        slide = entry->slideTime;
+        entry->showTimer = (int)(animationSpeed * 60.5f);
+
+        int fadeIn = state->fadeIn;
+
+        if (slide > 24) {
+            fadeIn -= g_HudLevelFadeStep;
+        }
+
+        state->fadeIn = fadeIn > 0 ? fadeIn : 0;
+    }
+
+    if (entry->showTimer < (int)(animationSpeed * 5.5f)) {
+        if (entry->animB != 0) {
+            entry->animB--;
+        } else if (entry->animA != 0) {
+            entry->animA--;
+        } else {
+            entry->slideTime = -6;
+        }
+    } else if (entry->animA < g_BoltFadeSteps[0]) {
+        entry->animA++;
+    } else if (entry->animB < g_BoltFadeSteps[1]) {
+        entry->animB++;
+    }
+
+    HudIcon_GetAnimFrame(&entry->icon);
+}
+
+// 0x00d1b8c (0x268 bytes)
+/* level n (at least 1) is frames 3n-3 (base) and 3n-2 (glow, throbbing with phase) of the
+   icon, and 3n-1 the cross fade */
+int UnusedIconHud_Draw(HudElement *entry)
+{
+    int shown = entry->displayedValue;
+    HudLevelIcon *state = (HudLevelIcon *)entry->data;
+    int x;
+    int y;
+
+    HudEntryPos(entry, &x, &y);
+    HudEntry_GetSlideOffset(entry, &x, &y, entry->slideTime, 0);
+
+    int level = (shown > 1 ? shown : 1) * 3;
+    int firstFrame = IconTableEntry[entry->icon.iconIdx].firstFrame;
+
+    HudEntry_DrawIcon(entry, firstFrame + level - 3, x, y, 1, 0x80);
+
+    int glow = 0x80 - state->phase % 256;
+
+    HudEntry_DrawIcon(entry, firstFrame + level - 2, x, y, 1, glow < 0 ? -glow : glow);
+
+    int fadeOut = state->fadeOut;
+
+    if (fadeOut != 0 || state->fadeIn != 0) {
+        int alpha = 0x80 - fadeOut;
+
+        if (fadeOut == 0) {
+            alpha = state->fadeIn;
+        }
+
+        HudEntry_DrawIcon(entry, entry->icon.frame + (state->value > 1 ? state->value : 1) * 3 - 1, x, y, 1, alpha);
+    }
+
+    return entry->width;
+}
+
+// 0x00d1df4 (0x1f4 bytes)
+/* a 200x18 bar, displayedValue of maxValue filled, in a white frame */
+int Draw_MobyMeterHud(HudElement *entry)
+{
+    int x;
+    int y;
+
+    entry->width = 200;
+    entry->height = 32;
+
+    HudEntryPos(entry, &x, &y);
+    HudEntry_GetSlideOffset(entry, &x, &y, entry->slideTime, 0);
+
+    DrawFlatOverlay(x, y, entry->width * entry->displayedValue / entry->maxValue + x + 1, y + 18, 0x803030f0, 0);
+    DrawFlatOverlay(x - 1, y - 1, x + 203, y, 0x80ffffff, 0);
+    DrawFlatOverlay(x + 203, y, x + 202, y + 19, 0x80ffffff, 0);
+    DrawFlatOverlay(x + 203, y + 18, x - 1, y + 19, 0x80ffffff, 0);
+    DrawFlatOverlay(x - 1, y + 18, x, y - 1, 0x80ffffff, 0);
+
+    return entry->width;
+}
+
+// 0x00d1ff0 (0x90 bytes)
+void TrickHud_Init(HudElement *entry)
+{
+    entry->showTimer = (int)(animationSpeed * 180.5f) + 30;
+    entry->icon.offsX = 0;
+    entry->icon.offsY = 0;
+
+    g_TrickHistory[3] = -1;
+    g_TrickHistory[2] = -1;
+    g_TrickHistory[1] = -1;
+    g_TrickHistory[0] = -1;
+
+    HudEntry_CalcNumberSize(entry);
+}
+
+/* the trick entry's copy of the trick tally */
+static inline void TrickHudClear(void)
+{
+    g_TrickParts[0] = 0;
+    g_TrickBest = 0;
+    g_TrickCount = 0;
+    g_TrickParts[1] = 0;
+    g_TrickParts[2] = 0;
+    g_TrickParts[3] = 0;
+}
+
+// 0x00d20a0 (0x44c bytes)
+/* unk72 is the state: 0 grounded, 1 in the air with a score (fades in, copies the tally),
+   2 landed, 3 landed on the hoverboard (pays g_TrickPoints when animA reaches 110.5 frames) */
+void TrickHud_Update(HudElement *entry)
+{
+    float shown = (float)entry->displayedValue;
+
+    Delt((float)*entry->pValue, 6.0f, &shown);
+    entry->displayedValue = FastDoubleToInt(shown);
+
+    u8 state = entry->unk72;
+
+    if (state == 0) {
+        if (g_framesNotGrounded > 5 && (float)(int)DAT_0096a3ec >= 1.0f) {
+            g_TrickParts[0] = 0;
+            g_TrickBest = DAT_0096a3ec;
+            g_TrickCount = 0;
+            g_TrickParts[1] = 0;
+            g_TrickParts[2] = 0;
+            g_TrickParts[3] = 0;
+            entry->unk72 = 1;
+            entry->animA = 0;
+            entry->animB = (u8)g_TrickShowFrames;
+        }
+    } else if (state == 1) {
+        if (entry->animA < 10) {
+            entry->animA++;
+        }
+
+        if (entry->animB != 0) {
+            entry->animB--;
+        }
+
+        g_TrickCount = DAT_0096a3d0;
+        g_TrickParts[0] = DAT_0096a3c0;
+        g_TrickParts[1] = DAT_0096a3c4;
+        g_TrickParts[2] = DAT_0096a3c8;
+        g_TrickParts[3] = DAT_0096a3cc;
+
+        if (g_TrickBest < (int)DAT_0096a3ec) {
+            g_TrickBest = DAT_0096a3ec;
+            entry->animB = (u8)g_TrickShowFrames;
+        }
+
+        if (g_framesGroundedCnt != 0 || (g_heroState > 0x6c && g_heroState < 0x70)) {
+            g_TrickPoints = 0;
+            DAT_0096a3d0 = 0;
+            DAT_0096a3ec = 0;
+            DAT_0096a3c0 = 0;
+            DAT_0096a3c4 = 0;
+            DAT_0096a3c8 = 0;
+            DAT_0096a3cc = 0;
+            DAT_0096a3e0 = 0;
+            DAT_0096a3e4 = 0;
+            DAT_0096a3e8 = 0;
+
+            if (g_heroState == HOVERBOARD_RIDING) {
+                if (g_TrickCount > 2) {
+                    g_TrickHistory[3] = g_TrickHistory[2];
+                    g_TrickHistory[2] = g_TrickHistory[1];
+                    g_TrickHistory[1] = g_TrickHistory[0];
+                    g_TrickHistory[0] = -1;
+                }
+
+                entry->unk72 = 3;
+                entry->animB = (u8)g_TrickShowFrames;
+                entry->animA = (u8)(int)(animationSpeed * 120.5f);
+            } else {
+                entry->unk72 = 2;
+                entry->animB = (u8)g_TrickShowFrames;
+                entry->animA = (u8)(int)(animationSpeed * 60.5f);
+            }
+        }
+    } else if (state < 4) {
+        u8 time = entry->animA;
+
+        if (time == 0) {
+            time = 0;
+            g_TrickPoints = 0;
+            TrickHudClear();
+            entry->unk72 = 0;
+        } else if (state == 3 && time == (int)(animationSpeed * 110.5f)) {
+            g_RaceScore += g_TrickPoints;
+
+            int bonus = DAT_0096a544 + g_TrickPoints * 5;
+            int cap = (int)((float)(int)(animationSpeed * 17.5f) * 60.0f);
+
+            DAT_0096a544 = bonus;
+
+            if (cap < bonus) {
+                DAT_0096a544 = cap;
+            }
+        }
+
+        entry->animA = time - 1;
+    }
+}
+
+// 0x00d24ec (0x2d0 bytes)
+/* Hud_DrawTexQuad_v2 with u running to w * 2 */
+void Hud_DrawEffectTexQuad(int tex, int x, int y, int w, int h, int alpha)
+{
+    u8 *header = HudTexHeader(tex);
+
+    HudBindTex(header);
+
+    u32 size = *(u32 *)(header + 0x18);
+    u32 u = (w << 1) & 0xfffe;
+
+    HudBeginQuads(alpha << 24 | 0x808080);
+    HudVertex(0, x, y);
+    HudVertex(size << 16, x, y + h);
+    HudVertex(size << 16 | u, x + w, y + h);
+    HudVertex(u, x + w, y);
+    HudEnd();
+}
+
+/* a line of large text on a text box: a black shadow (the colour's alpha) a pixel down and
+   right, the box from its left edge, the text; the box's alpha is the text's, at most 0x50 */
+static inline void HudTextBoxLine(int x, int y, int boxY, u32 color, char *text)
+{
+    int boxAlpha = (int)color >> 24;
+
+    boxAlpha = boxAlpha > 0x50 ? 0x50 : boxAlpha;
+
+    int left = FontPrintLargeCenter(x + 1, y + 1, color & 0xff000000, text, -1) - 32;
+
+    Hud_DrawTextBox(left, boxY, (x - left) * 2, 32, boxAlpha);
+    FontPrintLargeCenter(x, y, color, text, -1);
+}
+
+/* the landing points over the trick's name */
+static inline void TrickLandingText(char *text, u32 color)
+{
+    sprintf(text, "%d", g_TrickPoints);
+    HudTextBoxLine(g_TrickLandingPos[0], g_TrickLandingPos[1] - 24, g_TrickLandingPos[1] - 32, color, text);
+}
+
+// 0x00d27f8 (0xe00 bytes)
+/* While hoverboarding (g_heroStateType 0x16): in the air the degrees (360 a flip) and pose
+   count; on a hoverboard landing the points and the combo's name (TrickHud_Update pays
+   them). Always the boost meter (icon 0x7558), and WRONG WAY pulsing after 120.5 frames of
+   it. */
+int Draw_HoverboardTrickHud(HudElement *entry)
+{
+    float fade = (float)entry->animA * 0.1f;
+
+    if (1.0f - fade < 0.0f) {
+        fade = 1.0f;
+    }
+
+    if (g_heroStateType != 0x16) {
+        return entry->width;
+    }
+
+    if (entry->unk72 != 0) {
+        char text[64];
+
+        sprintf(text, "%d", g_TrickBest * 360);
+
+        float fadeTime = HudIntToFloat(entry->animB);
+        u8 state = entry->unk72;
+        u32 color = g_TrickColorStill;
+
+        if (state == 1 || state == 3) {
+            color = FastLerpColor(fadeTime / (float)(int)(animationSpeed * ((float)g_TrickShowFrames + 0.5f)), g_TrickColors[0], g_TrickColors[1]);
+        }
+
+        int shadow = FastDoubleToInt(fade * 128.0f) << 24;
+        int count = g_TrickCount;
+        int best = g_TrickBest;
+
+        color += shadow;
+
+        if (state == 1 || state == 2) {
+            FontPrintLargeCenter(g_TrickScorePos[0] + 1, g_TrickScorePos[1] + 1, shadow, text, -1);
+            FontPrintLargeCenter(g_TrickScorePos[0], g_TrickScorePos[1], color, text, -1);
+
+            sprintf(text, "x%d %s", g_TrickCount, help_msg_string_by_index(g_TrickCount == 1 ? STR_POSE : STR_POSES));
+            FontPrintLargeCenter(g_TrickPosePos[0] + 1, g_TrickPosePos[1] + 1, shadow, text, -1);
+            FontPrintLargeCenter(g_TrickPosePos[0], g_TrickPosePos[1], color, text, -1);
+        } else if (state == 3) {
+            int combo = -1;
+
+            if (count == 3) {
+                /* the first of parts 3, 2, 1 that is zero picks combo 0, 1, 2; none 3 */
+                combo = (g_TrickParts[1] == 0) ? 2 : 3;
+
+                if (g_TrickParts[2] == 0) {
+                    combo = 1;
+                }
+
+                if (g_TrickParts[3] == 0) {
+                    combo = 0;
+                }
+            } else if (count == 4) {
+                combo = 4;
+            }
+
+            if (combo >= 0) {
+                int tier = 0;
+
+                if (best >= 4) {
+                    tier = 2;
+                } else if (best > 1) {
+                    tier = 1;
+                }
+
+                combo += tier * 5;
+
+                /* repeating one of the last three combos divides its points */
+                int repeats = 1 + (combo == g_TrickHistory[1]) + (combo == g_TrickHistory[2]) + (combo == g_TrickHistory[3]);
+
+                g_TrickPoints = g_TrickComboPoints[combo] / repeats;
+                g_TrickHistory[0] = combo;
+
+                TrickLandingText(text, color);
+
+                sprintf(text, "%s", help_msg_string_by_index((StringId)(combo + STR_CALL_ME_SALLY)));
+                HudTextBoxLine(g_TrickLandingPos[0], g_TrickLandingPos[1], g_TrickLandingPos[1] - 8, color, text);
+            } else if (count > 0) {
+                int parts[4];
+                int found = 0;
+
+                for (int i = 0; i < 4 && found < count; i++) {
+                    if (g_TrickParts[i] != 0) {
+                        parts[found] = i;
+                        found++;
+                    }
+                }
+
+                if (count == 1) {
+                    g_TrickPoints = best * 10;
+                    TrickLandingText(text, color);
+
+                    /* REVISIT: singular when best is 360, though best counts flips */
+                    sprintf(text, "%s + %d %s", help_msg_string_by_index((StringId)(parts[0] + STR_GONZO)), g_TrickBest,
+                            help_msg_string_by_index(g_TrickBest == 360 ? STR_FLIP : STR_FLIPS));
+                } else {
+                    g_TrickPoints = best * 20;
+                    TrickLandingText(text, color);
+
+                    sprintf(text, "%s + %s + %d Flips", help_msg_string_by_index((StringId)(parts[0] + STR_GONZO)),
+                            help_msg_string_by_index((StringId)(parts[1] + STR_GONZO)), g_TrickBest);
+                }
+
+                HudTextBoxLine(g_TrickLandingPos[0], g_TrickLandingPos[1], g_TrickLandingPos[1] - 8, color, text);
+            }
+        }
+    }
+
+    int x;
+    int y;
+
+    entry->width = 256;
+    entry->height = 64;
+
+    HudEntryPos(entry, &x, &y);
+
+    Hud_DrawEffectTexQuad(GetIconFrameTex(0x7558, 1), x, y, entry->displayedValue * 221 / entry->maxValue + 27, 64, 0x80);
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7558, 0)), x, y, 256, 64, 0x80);
+
+    int wrongWay = g_WrongWayFrames;
+
+    if (wrongWay > (int)(animationSpeed * 120.5f)) {
+        int period = (int)(animationSpeed * 60.5f);
+        float phase = HudIntToFloat(worldUpdateTime % period) / (float)period * 6.28318f - 3.14159f;
+        u32 color = FastLerpColor(FastSinInline(phase) * 0.5f + 0.5f, g_WrongWayColors[0], g_WrongWayColors[1]);
+        char text[64];
+
+        sprintf(text, help_msg_string_by_index(STR_WRONG_WAY_));
+        HudTextBoxLine(g_WrongWayPos[0] + 1, g_WrongWayPos[1] + 1, g_WrongWayPos[1] - 7, 0x80000000, text);
+        HudTextBoxLine(g_WrongWayPos[0], g_WrongWayPos[1], g_WrongWayPos[1] - 8, color, text);
+    }
+
+    return entry->width;
+}
+
+/* the bar's y: 32 above the bottom margin, the top margin on Gemlik */
+static inline int HudBottomMargin(void)
+{
+    return (Cutscene == 0 ? 8 : 0) + 10;
+}
+
+// 0x00d3610 (0x6f8 bytes)
+/* A boss health bar of 32-wide segments (icon 0x7562: 3 under the fill, 1 and 2 the frame,
+   4 and 0 the portrait): 3, 6 on Umbris and Gemlik, 7 on Veldin2. The fill runs red to yellow
+   to green, squeezed into 0.7 of the end segments. */
+int Draw_MobyHealthBarHud(HudElement *entry)
+{
+    int centreX = g_BossBarX;
+    int segments = 3;
+    int margin = HudBottomMargin();
+    int y = g_ScreenHeight - margin - 32;
+
+    if (Level == Umbris || Level == Gemlik) {
+        segments = 6;
+    }
+
+    if (Level == Veldin2) {
+        segments = 7;
+    }
+
+    if (entry->animA == 0) {
+        return entry->width;
+    }
+
+    if (Level == Gemlik) {
+        y = margin;
+    }
+
+    float fade = HudIntToFloat(entry->animA) * 0.125f;
+    fade = fade > 1.0f ? 1.0f : (fade < 0.0f ? 0.0f : fade);
+
+    int alpha = FastDoubleToInt(fade * 128.0f);
+    int frameAlpha = FastDoubleToInt(fade * 128.0f);
+    int left = centreX - segments * 16;
+
+    for (int i = 0; i < segments; i++) {
+        Hud_DrawTexQuad(GetIconFrameTex(0x7562, 3), left + i * 32, y + 6, 32, 18, alpha);
+    }
+
+    int fillWidth = 0;
+    u32 color = 0x800000ff;
+
+    if (entry->displayedValue != 0) {
+        float frac = (float)entry->displayedValue / HudIntToFloat(entry->maxValue);
+        float segment = 1.0f / HudIntToFloat(segments);
+        float last = (float)(segments - 1) * segment;
+
+        if (frac > last) {
+            frac = g_BossBarEndScale * (frac - last) + last;
+        } else if (frac < segment) {
+            frac = g_BossBarStartScale * (frac - segment) + segment;
+        }
+
+        fillWidth = FastDoubleToInt((float)(segments * 32) * frac);
+
+        if (frac <= 0.5f) {
+            color = FastLerpColor(frac * 2.0f, 0x800000ff, 0x8000ffff);
+        } else {
+            color = FastLerpColor(frac * 2.0f - 1.0f, 0x8000ffff, 0x8000ff00);
+        }
+    }
+
+    DrawFlatOverlay(left, y + 8, fillWidth + left, y + 26, color, 0);
+
+    int x = left;
+
+    for (int i = 0; i < segments - 1; i++) {
+        Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7562, 1)), x, y, 32, 32, frameAlpha);
+        x += 32;
+    }
+
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7562, 2)), x, y, 32, 32, frameAlpha);
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7562, 4)), left - 40, y - 8, 48, 48, alpha);
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7562, 0)), left - 40, y - 8, 48, 48, alpha);
+
+    return entry->width;
+}
+
+// 0x00d3d10 (0xd4 bytes)
+/* shown while g_MetalDetectorSpotIsClose */
+void MetalDetectorHud_Update(HudElement *entry)
+{
+    if (g_MetalDetectorSpotIsClose == 0) {
+        entry->showTimer = 0;
+        entry->slideTime = 1;
+
+        if (entry->animB != 0) {
+            entry->animB--;
+        } else if (entry->animA != 0) {
+            entry->animA--;
+        } else {
+            entry->slideTime = -6;
+        }
+    } else {
+        entry->showTimer = (int)(animationSpeed * 10.5f);
+
+        if (entry->animA < g_HealthFadeSteps) {
+            entry->animA++;
+        } else if (entry->animB < g_HealthFadeSteps) {
+            entry->animB++;
+        }
+    }
+}
+
+// 0x00d3e20 (0x6c4 bytes)
+/* the spinning bolt in a text box with a "!" blinking every g_DetectorBlinkPeriod frames */
+int Draw_MetalDetectorHud(HudElement *entry)
+{
+    int x = entry->x;
+    int y = g_ScreenHeight - HudBottomMargin() - 32;
+
+    if (g_heroType == 2 || g_heroState == TURRET_PLANE_UI || entry->animA == 0) {
+        return entry->width;
+    }
+
+    float boxFade = HudIntToFloat(entry->animA) / HudIntToFloat(g_HealthFadeSteps);
+    boxFade = boxFade > 1.0f ? 1.0f : (boxFade < 0.0f ? 0.0f : boxFade);
+
+    float iconFade = HudIntToFloat(entry->animB) / HudIntToFloat(g_HealthFadeSteps);
+    iconFade = iconFade > 1.0f ? 1.0f : (iconFade < 0.0f ? 0.0f : iconFade);
+
+    int iconAlpha = FastDoubleToInt(iconFade * 128.0f);
+    int boxAlpha = FastDoubleToInt((float)g_DetectorBoxAlpha * boxFade);
+    int boxX = g_DetectorBoxX + x;
+    int boxWidth = FastDoubleToInt((float)g_DetectorBoxWidth * boxFade);
+
+    Hud_DrawTexQuad(GetIconFrameTex(0x7580, 1), boxX + 16, y, 32, 32, boxAlpha);
+
+    boxX -= boxWidth;
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7580, 0)), boxX, y, boxWidth + 16, 32, boxAlpha);
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7580, 1)), boxX - 32, y, 32, 32, boxAlpha);
+
+    HudEntry_DrawIcon(entry, GetIconFrameTex(BOLTS_ANIMATION, worldUpdateTime % 60 >> 1), x - 32, y, 0, iconAlpha);
+
+    char text[64];
+
+    sprintf(text, "!");
+
+    int textX = g_DetectorTextPos[0] + x;
+    int textY = g_DetectorTextPos[1] + y;
+    int period = (int)(animationSpeed * ((float)g_DetectorBlinkPeriod + 0.5f));
+    float phase = (float)(worldUpdateTime % period) / HudIntToFloat(period) * 6.28318f - 3.14159f;
+    float blink = FastSinInline(phase) * 4.0f - 3.0f;
+
+    if (blink - 0.0f < 0.0f) {
+        blink = 0.0f;
+    }
+
+    float textFade = iconFade * blink;
+    u32 shadow = FastLerpColor(textFade, 0, 0x80000000);
+    u32 color = FastLerpColor(textFade, g_DetectorTextColors[0], g_DetectorTextColors[1]);
+
+    FontPrintLarge(textX + 1, textY + 1, shadow, text, -1);
+    FontPrintLarge(textX, textY, color, text, -1);
+
+    return entry->width;
+}
+
+// 0x00d44e4 (0x344 bytes)
+/* Giant Clank's health on the hoverboard trick meter's art (icon 0x7558), its corner light
+   (frame 2) lit while DAT_0096b316 runs */
+int Draw_GiantClankHealthHUD(HudElement *entry)
+{
+    int x;
+    int y;
+
+    entry->width = 256;
+    entry->height = 64;
+
+    HudEntryPos(entry, &x, &y);
+    HudEntry_GetSlideOffset(entry, &x, &y, entry->slideTime, 0);
+
+    Hud_DrawEffectTexQuad(GetIconFrameTex(0x7558, 1), x, y, entry->displayedValue * 221 / entry->maxValue + 27, 64, 0x80);
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7558, 0)), x, y, 256, 64, 0x80);
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7558, 2)), x, y, 32, 32, DAT_0096b316 != 0 ? 0x80 : 0);
+
+    return entry->width;
+}
+
+// 0x00d4838 (0x5c8 bytes)
+/* "ammo/max" in a text box right of the weapon's icon (frame 3 of iconId) */
+int Draw_AmmoCounter(HudElement *entry)
+{
+    int x = entry->x;
+    int y = HudBottomMargin();
+
+    if (entry->animA == 0) {
+        return entry->width;
+    }
+
+    float boxFade = HudIntToFloat(entry->animA) / HudIntToFloat(g_AmmoFadeSteps[0]);
+    boxFade = boxFade > 1.0f ? 1.0f : (boxFade < 0.0f ? 0.0f : boxFade);
+
+    float textFade = HudIntToFloat(entry->animB) / HudIntToFloat(g_AmmoFadeSteps[1]);
+    textFade = textFade > 1.0f ? 1.0f : (textFade < 0.0f ? 0.0f : textFade);
+
+    int iconAlpha = FastDoubleToInt(boxFade * 128.0f);
+    int boxAlpha = FastDoubleToInt((float)iconAlpha * 0.7f);
+    int boxWidth = (entry->maxValue < 100) ? g_AmmoBoxWidths[0] : g_AmmoBoxWidths[1];
+    int width = FastDoubleToInt((float)boxWidth * boxFade);
+
+    /* REVISIT: the middle is drawn x + width wide and the right cap past it by x again */
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7580, 1)), x - 28, y, 32, 32, boxAlpha);
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7580, 0)), x + 4, y, x + width, 32, boxAlpha);
+    Hud_DrawTexQuad(GetIconFrameTex(0x7580, 1), x + width + x + 4, y, 32, 32, boxAlpha);
+
+    entry->icon.frame = GetIconFrameTex(entry->iconId, 3);
+    HudEntry_DrawIcon(entry, entry->icon.frame, x, y, 0, iconAlpha);
+
+    char text[128];
+    int ammo = entry->displayedValue;
+
+    sprintf(text, "%d/%d", ammo, entry->maxValue);
+
+    u32 color;
+
+    if (ammo == 0) {
+        color = FastLerpColor(textFade, g_AmmoEmptyColors[0], g_AmmoEmptyColors[1]);
+    } else {
+        color = FastLerpColor(textFade, g_AmmoTextColors[0], g_AmmoTextColors[1]);
+    }
+
+    u32 shadow = FastLerpColor(textFade, 0, 0x80000000);
+
+    FontPrintMediumRight(g_AmmoTextPos[0] + x + boxWidth + 1, g_AmmoTextPos[1] + y + 1, shadow, text, -1);
+    FontPrintMediumRight(g_AmmoTextPos[0] + x + boxWidth, g_AmmoTextPos[1] + y, color, text, -1);
+
+    return entry->width;
+}
+
+// 0x00d4e08 (0xd4 bytes)
+/* (an update despite the name) HudEntryGrow, showing *pValue */
+void MobyCounterHud_Init(HudElement *entry)
+{
+    HudEntryGrow(entry);
+    entry->displayedValue = *entry->pValue;
+}
+
+// 0x00d4ef0 (0x7e4 bytes)
+/* a count in a text box near the bottom, on the left or (an entry past x 256) the right,
+   the box always toward the screen's middle */
+int Draw_MobyCounterHud(HudElement *entry)
+{
+    if (entry->animA == 0) {
+        return entry->width;
+    }
+
+    int left = entry->x;
+    u32 align = entry->alignFlags;
+
+    if (!(align & 4)) {
+        left -= (align & 8) ? entry->width : entry->width >> 1;
+    }
+
+    bool onRight = left > 256;
+    int x = onRight ? g_MobyCounterX[1] : g_MobyCounterX[0];
+    int margin = HudBottomMargin();
+    int y = 384 - margin;
+
+    float boxFade = HudIntToFloat(entry->animA) / HudIntToFloat(g_AmmoFadeSteps[0]);
+    boxFade = boxFade > 1.0f ? 1.0f : (boxFade < 0.0f ? 0.0f : boxFade);
+
+    float textFade = HudIntToFloat(entry->animB) / HudIntToFloat(g_AmmoFadeSteps[1]);
+    textFade = textFade > 1.0f ? 1.0f : (textFade < 0.0f ? 0.0f : textFade);
+
+    char text[128];
+
+    sprintf(text, "%d", entry->displayedValue);
+
+    int boxAlpha = FastDoubleToInt((float)FastDoubleToInt(boxFade * 128.0f) * 0.7f);
+    int boxWidth = (entry->maxValue > 9) ? g_MobyCounterBoxWidths[1] : g_MobyCounterBoxWidths[0];
+    int boxX = x + 4;
+    int width = FastDoubleToInt((float)boxWidth * boxFade);
+
+    if (onRight) {
+        Hud_DrawTexQuad(GetIconFrameTex(0x7580, 1), boxX, y, 32, 32, boxAlpha);
+        boxX -= width;
+        Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7580, 0)), boxX, y, width, 32, boxAlpha);
+        Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7580, 1)), boxX - 32, y, 32, 32, boxAlpha);
+    } else {
+        Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7580, 1)), x - 28, y, 32, 32, boxAlpha);
+        Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7580, 0)), boxX, y, width, 32, boxAlpha);
+        Hud_DrawTexQuad(GetIconFrameTex(0x7580, 1), width + boxX, y, 32, 32, boxAlpha);
+    }
+
+    if (onRight) {
+        HudEntry_DrawIcon(entry, entry->icon.frame, x - 22, y, 0, 0x80);
+    } else {
+        HudEntry_DrawIcon(entry, entry->icon.frame, x, y, 0, 0x80);
+    }
+
+    u32 color = FastLerpColor(textFade, g_MobyCounterColors[0], g_MobyCounterColors[1]);
+    u32 shadow = FastLerpColor(textFade, 0, 0x80000000);
+
+    if (onRight) {
+        FontPrintMediumRight(x - 25, 393 - margin, shadow, text, -1);
+        FontPrintMediumRight(x - 26, 392 - margin, color, text, -1);
+    } else {
+        FontPrintMediumRight(x + 67, 393 - margin, shadow, text, -1);
+        FontPrintMediumRight(x + 66, 392 - margin, color, text, -1);
+    }
+
+    return entry->width;
+}
+
+/* forgets the ammo entry, clearing its flags (and the registered ones) */
+static inline void HudClearAmmoEntry(void)
+{
+    if (g_HudAmmoEntryId == -1) {
+        return;
+    }
+
+    int index = HudFindEntry(g_HudAmmoEntryId);
+
+    if (index < HUD_ENTRY_CNT) {
+        HudEntries[index].regFlags = 0;
+
+        if (HudEntries[index].locked == 0) {
+            HudEntries[index].flags = 0;
+        }
+    }
+
+    g_HudAmmoEntryId = -1;
+}
+
+// 0x00d56d8 (0x3c8 bytes)
+/* Registers the ammo entry for the current weapon (or Giant Clank's health), then ticks
+   every entry: hidden ones (flags 0x10, or while g_HudHideCounter) keep their showTimer
+   under 10.5 frames, showTimer counts down and slideTime toward -6 or up to 30, a locked
+   entry resets once off screen; with update set the update callbacks run. Returns how many
+   entries are showing. */
+int UpdateAllGameplayHUD(int update)
+{
+    if (g_HudHideCounter == 0) {
+        int weapon = g_CurrentWeapon;
+
+        if (AmmoInfo(weapon)[0] == 0) {
+            weapon = 0;
+        }
+
+        if (g_heroType == 0 && weapon != 0) {
+            g_HudAmmoWeapon = weapon;
+            g_HudAmmoEntryId = RegisterHUDCallback(16, weapon + 60000, &PTR_AmmoHud_Init_00705808, &PTR_AmmoHud_Update_007058d8, &PTR_Draw_AmmoCounter_00705888,
+                                                   &((int *)&currentAmmoArray)[weapon], AmmoInfo(weapon)[3]);
+        } else if (g_heroType == 2) {
+            HudClearAmmoEntry();
+            DAT_0096b314 = (u16)RegisterHUDCallback(16, 0xffff, &PTR_HudEntry_InitCounter_007056a0, &PTR_HudEntry_UpdateCounter_007056c8,
+                                                    &PTR_Draw_GiantClankHealthHUD_00705880, (int *)&g_GiantClankHealth, 200);
+        } else {
+            HudClearAmmoEntry();
+        }
+    }
+
+    int showing = 0;
+
+    for (int i = 0; i < HUD_ENTRY_CNT; i++) {
+        HudElement *entry = &HudEntries[i];
+
+        if ((entry->flags & 0x10) || g_HudHideCounter != 0) {
+            if (entry->showTimer < (int)(animationSpeed * 10.5f)) {
+                entry->showTimer = (int)(animationSpeed * 10.5f);
+            }
+        }
+
+        int timer = entry->showTimer;
+
+        if (timer > 0) {
+            timer--;
+            entry->showTimer = timer;
+        }
+
+        int slide;
+
+        if (timer < 1) {
+            slide = entry->slideTime;
+
+            if (slide > -6) {
+                slide--;
+                entry->slideTime = slide;
+            }
+        } else {
+            slide = entry->slideTime;
+            showing++;
+
+            if (slide < 30) {
+                slide++;
+                entry->slideTime = slide;
+            }
+        }
+
+        if (slide == -6 && entry->locked != 0) {
+            HudEntry_Reset(entry);
+        }
+
+        if (update != 0 && entry->updateCb != NULL) {
+            HudCall(entry->updateCb, entry);
+        }
+    }
+
+    return showing;
+}

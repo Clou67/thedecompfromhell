@@ -32,7 +32,7 @@ typedef struct PadState {
     char _pad020[0x8];
     u32 unk028, unk02c;                 /* 0x028 */
     char _pad030[0x18];
-    u32 unk048, unk04c;                 /* 0x048 */
+    float stickX, stickY;               /* 0x048  a stick, -1..1 (the HUD rings read it; which stick is unverified) */
     char _pad050[0x39];
     u8 unk089;                          /* 0x089 */
     char _pad08a[0x4];

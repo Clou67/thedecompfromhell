@@ -20,11 +20,21 @@ typedef struct CreditsState {
     CreditsImage images[2];  /* 0x10  the image on screen, then the one loaded next */
 } CreditsState;
 
+/* the 12-byte usage records in CHAR_ARRAY_00a0feec (0x120 bytes, saved with the game);
+   record 6 is the map's */
+typedef struct UsageRecord {
+    u16 uses;          /* 0x00  saturates at 0xffff */
+    u16 lastUse;       /* 0x02  the play time of the last use, in units of 600 frames */
+    u32 levels;        /* 0x04  bit per level it was used on; bit 31 = used at all */
+    u32 unk08;         /* 0x08 */
+} UsageRecord;
+
 // ---- globals
 extern undefined4 DAT_0073875c; /* 0x73875c */
 extern undefined4 DAT_007387f0; /* no defined data */
 extern undefined4 DAT_0096b2d0; /* 0x96b2d0 */
 extern undefined4 DAT_00a1bf80; /* no defined data */
+extern undefined4 DAT_00a1bfe4; /* 0xa1bfe4 */
 extern undefined4 DAT_00e5a634; /* 0xe5a634 */
 extern int Profile; /* 0x95c5d8 */ /* type set in global_types.tsv */
 extern CreditsState g_Credits; /* 0xa15c1c */ /* type set in global_types.tsv */
