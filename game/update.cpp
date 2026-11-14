@@ -122,7 +122,7 @@ static inline void RunBink(BinkPlayer *player)
     } while (done == 0);
 
     if (skipped) {
-        FUN_004d4c88((undefined4 *)player);
+        BinkPlayer_FreeAllTextures((undefined4 *)player);
     }
 }
 

@@ -1294,7 +1294,7 @@ typedef struct MobyPacket {
     u8 *tex;                 /* 0x00  texture header */
     u32 indexStart;          /* 0x04 */
     u32 indexCount;          /* 0x08 */
-    u8 sampler;              /* 0x0c  & 3, >> 2 & 3: FUN_004d676c's sampler modes */
+    u8 sampler;              /* 0x0c  & 3, >> 2 & 3: IdolDraw_SetTexture's sampler modes */
     u8 _pad0d[3];
 } MobyPacket;
 
@@ -1314,7 +1314,7 @@ typedef struct MobyModel {
 /* one packet: its texture, then its triangles */
 static inline void MobyDrawPacket(RenderingStep *pass, MobyPacket *packet, int samplerA, int samplerB)
 {
-    FUN_004d676c(pass, 0, packet->tex, samplerA, samplerB);
+    IdolDraw_SetTexture(pass, 0, packet->tex, samplerA, samplerB);
     GcmSetBegin(pass, CELL_GCM_PRIMITIVE_TRIANGLES);
     GcmDrawArrays(pass, packet->indexStart, packet->indexCount);
     MobyEmitMethod(pass, CELL_GCM_NV4097_SET_BEGIN_END, 0);

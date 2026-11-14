@@ -1161,7 +1161,7 @@ static inline void HudBindEffectTex(int tex)
 
     words[1] = (header[1] & 0xffff) | 0x14000;
 
-    FUN_004d6bb0(HUD_Pass, 0, (RsxCmd *)words);
+    IdolDraw_SetTextureRegs(HUD_Pass, 0, (RsxCmd *)words);
 }
 
 // 0x006968c (0x378 bytes)
@@ -2663,7 +2663,7 @@ void Draw_FlushAndPresent(void)
     idol_draw::Spurs_FlushAndSwapQueue(&DAT_01111700);
     FUN_004edcfc((int)(uintptr_t)&DAT_01111700);
     idol_draw::Gfx_Present((int *)idol, (int)(uintptr_t)&idol->presentInfo);
-    FUN_004d5e48(idol->unk1a74);
+    WaitForRsxLabel(idol->unk1a74);
 }
 
 static inline void EmitF(RenderingStep *pass, float value)
@@ -3326,7 +3326,7 @@ void EndAuxDrawMode(void)
 
     idol->vtable->unk10(idol, (int)(uintptr_t)HUD_Pass, idol->unk04, idol->unk08);
 
-    /* the pass's caches past its 0x14-byte header: four bound texture headers (FUN_004d6bb0),
+    /* the pass's caches past its 0x14-byte header: four bound texture headers (IdolDraw_SetTextureRegs),
        state words at 0xa8, and the words at 0xc0 and 0xc4 */
     u8 *pass = (u8 *)HUD_Pass;
 
@@ -3502,8 +3502,8 @@ void FastDrawQuad(QuadDef *quad, Mtx4 *mtx, int unused, void *texHeaders, int pa
     int samplerA;
     int samplerB;
 
-    FUN_004d6704(quad->clamp, &samplerA, &samplerB);
-    FUN_004d676c(pass, 0, (u8 *)texHeaders + (int)quad->tex0 * 0x24, samplerA, samplerB);
+    DecodeTexWrapModes(quad->clamp, &samplerA, &samplerB);
+    IdolDraw_SetTexture(pass, 0, (u8 *)texHeaders + (int)quad->tex0 * 0x24, samplerA, samplerB);
     idol_draw::ResetPassState(pass);
 
     u32 offset = (u32)(uintptr_t)vertices - idol->memBase;
@@ -3749,12 +3749,12 @@ void DrawTexturedStrips(int count, Vec3 *pos, u32 *colors, Vec2 *uv0, Vec2 *uv1,
     idol_draw::DrawDepth(DL_Pass, 0);
     EmitMethod(DL_Pass, CELL_GCM_NV4097_SET_ALPHA_TEST_ENABLE, 0);
 
-    FUN_004d676c(DL_Pass, 0, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(baseTex) * 0x24, 1, 1);
+    IdolDraw_SetTexture(DL_Pass, 0, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(baseTex) * 0x24, 1, 1);
     FastDrawStrip_Pass(count, vertices, 9);
     FastDrawStrip_Pass(count, vertices, 8);
 
     idol_draw::DrawDepth(DL_Pass, depth);
-    FUN_004d676c(DL_Pass, 0, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(detailTex) * 0x24, 1, 1);
+    IdolDraw_SetTexture(DL_Pass, 0, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(detailTex) * 0x24, 1, 1);
     FastDrawStrip_DLNoState(count, vertices);
 }
 
@@ -3840,10 +3840,10 @@ void DrawLavaStrips(float texQ, int count, Vec3 *pos, u32 *colors, Vec2 *uv0, Ve
 
     Strip2UVVertex *vertices = (Strip2UVVertex *)(uintptr_t)idol::AllocateMemAlign(FrameHeap, count * 0x28, 0x10);
 
-    FUN_004d676c(PassByIndex(passIndex), 0, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(tex0) * 0x24, 1, 1);
+    IdolDraw_SetTexture(PassByIndex(passIndex), 0, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(tex0) * 0x24, 1, 1);
 
     if (passIndex == 2 || passIndex == 9) {
-        FUN_004d676c(PassByIndex(passIndex), 1, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(tex1) * 0x24, 1, 1);
+        IdolDraw_SetTexture(PassByIndex(passIndex), 1, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(tex1) * 0x24, 1, 1);
     }
 
     Mtx4 mtx = identity;
@@ -4145,7 +4145,7 @@ void ImpactSprite_Draw(void)
     IdolDraw *idol = (IdolDraw *)(uintptr_t)g_pIdolDrawBase;
 
     idol_draw::DrawDepth(DL_Pass, idol_draw::PackCmd(0, 2, 0, 1, 0x80));
-    FUN_004d676c(DL_Pass, 0, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(19) * 0x24, 3, 3);
+    IdolDraw_SetTexture(DL_Pass, 0, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(19) * 0x24, 3, 3);
 
     Mtx4 *view = &idol->viewMtx;
     Vec4 right = { view->v0.x, view->v1.x, view->v2.x, view->v3.x };
@@ -4406,9 +4406,9 @@ void ____Water_ComputeWaveGrid(float startX, float startY, float posZ, int mode,
 /* the water textures: tex0 and tex1 on ForwardPass's units 0 and 1, tex0 on DepthPass */
 void ____Water_SetPassTextures(int tex0, int tex1)
 {
-    FUN_004d676c(ForwardPass, 0, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(tex0) * 0x24, 1, 1);
-    FUN_004d676c(ForwardPass, 1, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(tex1) * 0x24, 1, 1);
-    FUN_004d676c(DepthPass, 0, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(tex0) * 0x24, 1, 1);
+    IdolDraw_SetTexture(ForwardPass, 0, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(tex0) * 0x24, 1, 1);
+    IdolDraw_SetTexture(ForwardPass, 1, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(tex1) * 0x24, 1, 1);
+    IdolDraw_SetTexture(DepthPass, 0, (u8 *)(uintptr_t)EffectTexHeaders + GetEffectTex(tex0) * 0x24, 1, 1);
 }
 
 // 0x0076458 (0x128 bytes)

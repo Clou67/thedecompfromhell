@@ -70,7 +70,7 @@ void startLevel(void)
     InitLevelMusicFileSizes();
     g_gameMode = GAME_MODE_SPACE;
     g_FramesSinceStateChange = 0;
-    FUN_004d3044();
+    InitLevelCommon();
     g_MusicPlaying.track = 0;
     LoadAllMobys(1, 0);
     DebugSelectedCol = 1;

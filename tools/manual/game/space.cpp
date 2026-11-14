@@ -676,8 +676,8 @@ void ____Space_TransitionDrawPass(void)
 
     int sampler0;
     int sampler1;
-    FUN_004d6704(q.clamp, &sampler0, &sampler1);
-    FUN_004d676c(ForwardPass, 0, (u8 *)(*(u32 *)(DAT_00a10920 + 0xc) + (u32)q.tex0 * 0x24), sampler0, sampler1);
+    DecodeTexWrapModes(q.clamp, &sampler0, &sampler1);
+    IdolDraw_SetTexture(ForwardPass, 0, (u8 *)(*(u32 *)(DAT_00a10920 + 0xc) + (u32)q.tex0 * 0x24), sampler0, sampler1);
     idol_draw::ResetPassState(ForwardPass);
 
     EmitMethod(ForwardPass, CELL_GCM_NV4097_SET_VERTEX_DATA_ARRAY_FORMAT + 0 * 4, VTX_FORMAT(3, CELL_GCM_VERTEX_F));
@@ -2101,7 +2101,7 @@ void PlaySpaceMovie(int movie)
         Render_DispatchJob();
 
         if (skip) {
-            FUN_004d4c88((undefined4 *)player);
+            BinkPlayer_FreeAllTextures((undefined4 *)player);
             break;
         }
 

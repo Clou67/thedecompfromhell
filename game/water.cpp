@@ -116,7 +116,7 @@ static inline int DoubledAlpha(int alpha)
 
 static inline void BindEffectTex(RenderingStep *pass, int unit, int tex)
 {
-    FUN_004d676c(pass, unit, (u8 *)EffectTexHeaders + GetEffectTex(tex) * 0x24, 1, 1);
+    IdolDraw_SetTexture(pass, unit, (u8 *)EffectTexHeaders + GetEffectTex(tex) * 0x24, 1, 1);
 }
 
 /* back to normal alpha blending after the water passes */

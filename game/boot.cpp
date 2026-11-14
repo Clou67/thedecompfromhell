@@ -1728,7 +1728,7 @@ void StaticInit_BootGlobals(void)
 
     DAT_0090d98c = (u32)&PTR_PTR_00661960;
     DAT_009030e4 = &DAT_0090d98c;
-    FUN_004d7088((u8 *)&DAT_0090dad0);
+    IdolDraw_Ctor((u8 *)&DAT_0090dad0);
 
     /* pad driver */
     g_pPadDriver = (PadDriver *)&DAT_009260d0;
