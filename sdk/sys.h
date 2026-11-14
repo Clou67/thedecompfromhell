@@ -1,7 +1,7 @@
 #pragma once
 // sdk/sys.h
 #include "types.h"
-#include "sdk/lUnk.h"
+#include "sdk/libdme/rt_socket.h"
 
 // ---- types
 struct hostent {

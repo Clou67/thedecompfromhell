@@ -1048,7 +1048,6 @@ errors	file
 196	idol/tiefunc.cpp
 47	idol/trophy.cpp
 0	idol/xUnk.cpp
-4842	sdk/CMediusManager.cpp
 0	sdk/aUnk.cpp
 4	sdk/bUnk.cpp
 12	sdk/bUnk2.cpp
@@ -1062,8 +1061,7 @@ errors	file
 1	sdk/fUnk6.cpp
 0	sdk/fUnk7.cpp
 45	sdk/fios.cpp
-3061	sdk/lUnk.cpp
-104	sdk/lUnk2.cpp
+104	sdk/lUnk.cpp
 125	sdk/libbink/binkaudio.cpp
 43	sdk/libbink/binkdecode.cpp
 135	sdk/libbink/binkfile.cpp
@@ -1072,6 +1070,16 @@ errors	file
 61	sdk/libbink/rrthreads.cpp
 348	sdk/libbrb/brb.cpp
 12	sdk/libc.cpp
+346	sdk/libdme/rt_cert.cpp
+783	sdk/libdme/rt_comm.cpp
+163	sdk/libdme/rt_crypt.cpp
+157	sdk/libdme/rt_mempool.cpp
+651	sdk/libdme/rt_msg_client.cpp
+383	sdk/libdme/rt_net.cpp
+785	sdk/libdme/rt_socket.cpp
+834	sdk/libdme/rt_udp.cpp
+276	sdk/libdme/rt_upnp.cpp
+3525	sdk/libmedius/medius_client.cpp
 1757	sdk/libscream/989snd.cpp
 25	sdk/libscream/LFO.cpp
 12	sdk/libscream/loader.cpp

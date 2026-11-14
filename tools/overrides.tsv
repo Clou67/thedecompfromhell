@@ -60,3 +60,14 @@ boot::_start	game/crt0.cpp
 0x604050-0x604574	sdk/libbink/rrstring.cpp
 0x648b10-0x64ece0	sdk/libbrb/brb.cpp
 0x64ece0-0x64eda4	sdk/libstdcxx/bad_alloc.cpp
+# Medius/DME network libraries: split at their rt_* ReleaseVersion functions (boundaries approximate)
+0x53c4e0-0x54e8dc	sdk/libdme/rt_comm.cpp
+0x54e8dc-0x55c668	sdk/libdme/rt_udp.cpp
+0x55c668-0x56a810	sdk/libdme/rt_net.cpp
+0x56a810-0x571040	sdk/libdme/rt_upnp.cpp
+0x571040-0x57f9d0	sdk/libdme/rt_socket.cpp
+0x57f9d0-0x5a11c8	sdk/libmedius/medius_client.cpp
+0x5a11c8-0x5ad870	sdk/libdme/rt_msg_client.cpp
+0x5ad870-0x5b2704	sdk/libdme/rt_crypt.cpp
+0x5b2704-0x5c1a58	sdk/libdme/rt_cert.cpp
+0x5c1a58-0x5c4800	sdk/libdme/rt_mempool.cpp

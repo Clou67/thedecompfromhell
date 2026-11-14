@@ -5,7 +5,7 @@ Evidence: SECTION_HEADER_* starts a file; moby helpers come first and the `Updat
 Unknown objects are named `<first letter of the previous linked object>Unk.cpp`. Folders follow link position: everything up to the end of the moby sea is `game/`; game-labelled code after it is `idol/`.
 Shared update functions are named `UpdateMoby_<first oClass>`, with every registered oClass in a comment.
 
-11433 functions, 1221 files: 947 `game/update/moby*.cpp`, 24 `game/update/camera*.cpp`.
+11433 functions, 1229 files: 947 `game/update/moby*.cpp`, 24 `game/update/camera*.cpp`.
 
 | file | funcs | start | end |
 |---|---|---|---|
@@ -113,8 +113,16 @@ Shared update functions are named `UpdateMoby_<first oClass>`, with every regist
 | sdk/libfios/fios_filehandle.cpp | 5 | 0x5392c4 | 0x539920 |
 | sdk/fUnk5.cpp | 19 | 0x539920 | 0x53c1f0 |
 | sdk/libscream/loader.cpp | 4 | 0x53c1f0 | 0x53c4e0 |
-| sdk/lUnk.cpp | 1000 | 0x53c4e0 | 0x57f9d0 |
-| sdk/CMediusManager.cpp | 1102 | 0x57f9d0 | 0x5c4800 |
+| sdk/libdme/rt_comm.cpp | 238 | 0x53c4e0 | 0x54e8dc |
+| sdk/libdme/rt_udp.cpp | 295 | 0x54e8dc | 0x55c668 |
+| sdk/libdme/rt_net.cpp | 145 | 0x55c668 | 0x56a810 |
+| sdk/libdme/rt_upnp.cpp | 75 | 0x56a810 | 0x571040 |
+| sdk/libdme/rt_socket.cpp | 247 | 0x571040 | 0x57f9d0 |
+| sdk/libmedius/medius_client.cpp | 704 | 0x57f9d0 | 0x5a11c8 |
+| sdk/libdme/rt_msg_client.cpp | 150 | 0x5a11c8 | 0x5ad870 |
+| sdk/libdme/rt_crypt.cpp | 39 | 0x5ad870 | 0x5b2704 |
+| sdk/libdme/rt_cert.cpp | 126 | 0x5b2704 | 0x5c1a50 |
+| sdk/libdme/rt_mempool.cpp | 83 | 0x5c1a58 | 0x5c4800 |
 | sdk/libc/abort.cpp | 2 | 0x5c4800 | 0x5c4988 |
 | sdk/aUnk.cpp | 2 | 0x5c4988 | 0x5c49c8 |
 | sdk/libc/atexit.cpp | 4 | 0x5c49c8 | 0x5c4d8c |
@@ -246,7 +254,7 @@ Shared update functions are named `UpdateMoby_<first oClass>`, with every regist
 | sdk/libbink/rrstring.cpp | 18 | 0x604050 | 0x604574 |
 | sdk/rUnk2.cpp | 290 | 0x604574 | 0x6169e4 |
 | sdk/libscream/LFO.cpp | 13 | 0x6169e4 | 0x61768c |
-| sdk/lUnk2.cpp | 42 | 0x61768c | 0x61948c |
+| sdk/lUnk.cpp | 42 | 0x61768c | 0x61948c |
 | sdk/libscream/989snd.cpp | 524 | 0x61948c | 0x63fb20 |
 | idol/9Unk.cpp | 12 | 0x63fb20 | 0x63ff34 |
 | sdk/libscream/sndhost.cpp | 161 | 0x63ff34 | 0x648b10 |
