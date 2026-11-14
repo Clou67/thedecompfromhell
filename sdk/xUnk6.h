@@ -20,10 +20,10 @@ extern pointer PTR_s_diouxXp_0071c520; /* 0x71c520 */
 
 // ---- functions
 undefined8 FUN_005d6920(int param_1);
-undefined4 FUN_005d6d30(undefined4 *param_1);
+undefined4 _Getfloat(undefined4 *param_1);
 undefined4 FUN_005d7d48(undefined4 *param_1);
-undefined4 FUN_005d8490(byte *param_1,byte param_2,uint param_3);
-undefined4 FUN_005d853c(undefined4 *param_1,int param_2);
+undefined4 ranmatch(byte *param_1,byte param_2,uint param_3);
+undefined4 _Getstr(undefined4 *param_1,int param_2);
 undefined2 FUN_005d8b80(void);
-void * FUN_005d8ba8(double *param_1,byte param_2);
+void * _Ldtob(double *param_1,byte param_2);
 undefined2 FUN_005d955c(void);

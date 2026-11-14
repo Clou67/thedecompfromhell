@@ -21,7 +21,6 @@ extern undefined4 DAT_0071cc08; /* 0x71cc08 */
 extern undefined4 DAT_0071cc2c; /* no defined data */
 extern undefined4 DAT_0071ccc0; /* 0x71ccc0 */
 extern undefined4 DAT_0071cce4; /* no defined data */
-extern undefined4 DAT_0071ccf4; /* no defined data */
 extern undefined4 DAT_00731f40; /* 0x731f40 */
 extern undefined4 DAT_00731f44; /* 0x731f44 */
 extern undefined4 DAT_00731f48; /* 0x731f48 */

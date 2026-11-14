@@ -17,10 +17,10 @@ extern undefined1 stack0xffffff14[16]; /* stack slot, not a real global */
 
 // ---- functions
 void FUN_0053562c(undefined4 *param_1);
-undefined4 FUN_00535840(int param_1,int param_2,uint param_3,int param_4,int param_5);
-undefined4 FUN_00535d38(int *param_1,int param_2,undefined4 *param_3,uint param_4);
-undefined4 FUN_0053713c(int param_1,int param_2,uint param_3,int param_4,int param_5);
-undefined1 FUN_0053750c(int *param_1,int param_2,undefined4 *param_3,int param_4);
+undefined4 _ZN4cell4fios14schedulercache13getCacheBlockEPNS0_13mediaioparamsEiPhPNS0_5cache12blockrequestE(int param_1,int param_2,uint param_3,int param_4,int param_5);
+undefined4 _ZN4cell4fios14schedulercache19fillCacheAndCopyOutEPNS0_13mediaioparamsEPNS0_5cache12blockrequestEPh(int *param_1,int param_2,undefined4 *param_3,uint param_4);
+undefined4 _ZN4cell4fios8ramcache13getCacheBlockEPNS0_13mediaioparamsEiPhPNS0_5cache12blockrequestE(int param_1,int param_2,uint param_3,int param_4,int param_5);
+undefined1 _ZN4cell4fios8ramcache19fillCacheAndCopyOutEPNS0_13mediaioparamsEPNS0_5cache12blockrequestEPh(int *param_1,int param_2,undefined4 *param_3,int param_4);
 void FUN_00537bc4(int *param_1,int param_2);
 void handle_destroy(undefined8 param_1);
 void FUN_005390e8(undefined8 param_1);

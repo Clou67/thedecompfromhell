@@ -26,6 +26,7 @@
 #include "game/space.h"
 #include "idol/fastfunc.h"
 #include "idol/idol.h"
+#include "sdk/linked.h"
 #include "sdk/mUnk4.h"
 #include "idol/fastinline.h"
 

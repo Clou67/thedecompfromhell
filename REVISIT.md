@@ -356,10 +356,8 @@ SDK 4.00 `target/ppu/lib`. `sdkmatch.py` now points at it; the SDK 4.20 results 
   their own copy from source, and with SNC rather than GCC. sdk/libscream/989snd.cpp (524
   functions) and sndhost.cpp therefore need decompiling like game code. They probably belong
   under game/.
-- **loaders.cpp:** the fios calls now use the SDK's names, cell::fios::scheduler::readFile and
-  closeFile (were read_req_setup / filehandle_close_setup). readFile takes
-  (attr, fh, buf, offset, length); loaders passes the local it calls `fileSize` as the offset
-  and -1 as the length. Recheck what that local really holds.
+- **loaders.cpp:** resolved. SDK 4.00's readFile is (attr, fh, buf, byteCount, offset = -1), so
+  the gameplay file is read whole. loaders.cpp and boot.cpp now call fios through `<cell/fios.h>`.
 - **Files a little worse:** idol/idol.cpp, sdk/fios.cpp, sdk/libc/atexit.cpp and
   fios_scheduler.cpp, where newly matched functions moved between files (sdk/ files are
   reference only).
@@ -382,3 +380,14 @@ file's error count changed.
   (sdk/aUnk, bUnk, fUnk4-7, xUnk6-11, ...). libscream is exempt (see above).
 - **sdk/xUnk5.cpp is pinned in overrides.tsv** (it has hand-cleaned collproc helpers); the cap
   renumbered the other unknown sdk files.
+- **Callers use SDK names.** Calls to SDK-matched functions were still written with Ghidra's
+  `FUN_xxxxxxxx` names in many places (374 references). generate.py now renames those to the
+  library symbol everywhere, so they resolve to the SDK's declarations and the linked code.
+- **fios through the real API in cleaned files.** boot.cpp (FIOSInit, `new ps3media`, `new dearchiver`,
+  createSchedulerForMedia, openFile) and loaders.cpp (openFile, getFileSize, readFile, closeFile)
+  now use `cell::fios` classes from `<cell/fios.h>` instead of mangled names. Raw files still use
+  the mangled names declared in sdk/linked.h.
+  - In boot.cpp the asm calls ps3media's operator new once, before the branch, and the constructor
+    in each branch. The C++ written here has a `new` in each branch.
+  - The psarc decompressor's constructor (FUN_005e6af0) and allocator (FUN_005e39dc) are not
+    matched yet.

@@ -14,10 +14,10 @@ extern undefined4 _DAT_0071afe8; /* direct read */
 
 // ---- functions
 uint check_magic2(uint *param_1);
-undefined8 FUN_0060459c(int param_1);
-void FUN_006045f8(int param_1);
-void FUN_00604660(int *param_1,int param_2);
-undefined4 FUN_006046b0(int param_1,undefined4 param_2);
+undefined8 _ZN4cell4fios11mediafilter14readIdentifierEv(int param_1);
+void _ZN4cell4fios11mediafilter13registerMediaEv(int param_1);
+void _ZN4cell4fios5media12speculateIOPEPNS0_13mediaioparamsE(int *param_1,int param_2);
+undefined4 _ZNK4cell4fios11mediafilter15getVariableNameEj(int param_1,undefined4 param_2);
 uint FUN_00604710(int param_1);
 uint check_magic(int param_1);
 uint check_magic(uint *param_1);
@@ -27,7 +27,7 @@ uint FUN_006047d8(uint *param_1);
 uint FUN_00604800(uint *param_1);
 uint FUN_00604828(uint *param_1);
 uint FUN_00604850(uint *param_1);
-void FUN_00604878(int *param_1,undefined8 param_2);
+void _ZN4cell4fios5cache9flushFileEPKc(int *param_1,undefined8 param_2);
 void FUN_006048c4(void);
 void FUN_006048c8(void);
 void FUN_006048cc(void);

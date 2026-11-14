@@ -150,6 +150,11 @@ if os.path.exists(os.path.join(TOOLS, 'renames.tsv')):
     for _l in open(os.path.join(TOOLS, 'renames.tsv')):
         _l = _l.split('#')[0].rstrip('\n')
         if '\t' in _l: _k, _v = _l.split('\t', 1); RENAMES[_k.strip()] = _v.strip()
+# callers name SDK-matched functions by the library symbol too (FUN_xxxxxxxx -> fopen, ...)
+for _a, _sz, _nm in rows:
+    if _a in P.SDKMATCH and _a >= 0x4d0000:
+        _short = _nm.split('::')[-1]
+        if _short != P.SDKMATCH[_a][2] and re.match(r'\w+$', _short): RENAMES.setdefault(_short, P.SDKMATCH[_a][2])
 # globals that Ghidra had as byte arrays and that are now arrays of structs: rewrite its
 # .piece<offset,size>() accesses to element fields.  pieces.tsv: name <TAB> stride <TAB> off:field,...
 PIECE_ARRAYS = []

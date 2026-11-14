@@ -55,7 +55,7 @@ void _libc_cleanup(void)
 void crt0_exit(void)
 {
     idol::ExitToSystem();
-    FUN_005c49c8();
+    __call_functions_registered_with_atexit();
     FUN_0064ed80();
 
     _libc_cleanup();

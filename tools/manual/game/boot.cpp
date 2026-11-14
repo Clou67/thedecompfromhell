@@ -9,6 +9,8 @@
 // startLevel for each level. Everything Idol is reached through its singletons (g_pGame,
 // g_pHWSystem, TrophyMgr, the save data, g_pBinkPlayer) built by StaticInit_BootGlobals.
 #include "rc1.h"
+#include <cell/fios.h>
+#include <cell/fios/ps3/ppu/fios_media_ps3ppu.h>
 #include "idol/fastinline.h"
 #include <cell/gcm/gcm_macros.h>
 #include <cell/gcm/gcm_enum.h>
@@ -1436,14 +1438,14 @@ int boot(int argc, char **argv, char **envp)
 {
     u8 *hwSystem;
     u8 *game;
-    u8 *media;
-    u8 *dearchive;
-    u8 *scheduler;
+    cell::fios::ps3media *media;
+    cell::fios::dearchiver *dearchive;
+    cell::fios::scheduler *scheduler;
     u8 *heap;
-    int fileHandle;
-    u8 fiosParams[0x44];
-    int fiosOpenAttr;
-    int fiosAttr;
+    cell::fios::filehandle *fileHandle;
+    cell::fios::fios_parameters fiosParams = FIOS_PARAMETERS_INITIALIZER;
+    cell::fios::Compression::AsyncDecompressor *decompressors[1];
+    const char *extensions[1];
     void *allocator;
     MainFunc mainFunc = GameStart;
     int contentArg;
@@ -1489,57 +1491,41 @@ int boot(int argc, char **argv, char **envp)
     cellSysutilCheckCallback();
 
     /* FIOS: the content directory (/app_home, or the disc path) and the psarc on it */
-    memcpy(fiosParams, &DAT_0071ccf4, sizeof(fiosParams));
     allocator = Idol_New(4);
 
     if (allocator != NULL) {
         *(void **)allocator = &PTR_PTR_00661820;
     }
 
-    *(void **)(fiosParams + 8) = allocator;
-    FUN_005194f0(fiosParams);     /* cell::fios::FIOSInit */
+    fiosParams.pAllocator = (cell::fios::allocator *)allocator;
+    cell::fios::FIOSInit(&fiosParams);
     cellSysutilCheckCallback();
 
-    media = (u8 *)FUN_0051080c(0x430, 0x10000100, 3);     /* new (cell::fios::object) ps3media */
-
     if (*((u8 *)hwSystem + 0x10) == 0) {
-        if (media != NULL) {
-            FUN_00528c7c(media, "/app_home");
-        }
-
+        media = new cell::fios::ps3media("/app_home");
         printf("Setting ps3medius with %d\n", "/app_home");
     }
     else {
-        if (media != NULL) {
-            FUN_00528c7c(media, (const char *)&DAT_00926181);
-        }
-
+        media = new cell::fios::ps3media((const char *)&DAT_00926181);
         printf("Setting ps3medius with %d\n", (char *)&DAT_00926181);
     }
 
     cellSysutilCheckCallback();
 
+    /* the psarc decompressor (its constructor is not part of the SDK objects matched so far) */
     heap = (u8 *)FUN_005e39dc(0x2f00, 0x80);
-    fiosAttr = (int)".psarc";
+    extensions[0] = ".psarc";
 
     if (heap != NULL) {
         FUN_005e6af0(heap, (u8 *)PTR_DAT_008fa62c);
     }
 
-    fiosOpenAttr = (int)heap;
-    dearchive = (u8 *)FUN_0051080c(0xad0, 0x10000100, 3);     /* new dearchiver */
+    decompressors[0] = (cell::fios::Compression::AsyncDecompressor *)heap;
+    dearchive = new cell::fios::dearchiver(media, 1, decompressors, cell::fios::dearchiver::kSearchNewestToOldest, false, 1, extensions);
+    scheduler = cell::fios::scheduler::createSchedulerForMedia(dearchive);
+    cell::fios::scheduler::setDefaultScheduler(scheduler);
 
-    if (dearchive != NULL) {
-        FUN_00511a80(dearchive, media, 1, (u8 *)&fiosOpenAttr, 1, 0, 1, (u8 *)&fiosAttr);
-    }
-
-    scheduler = (u8 *)FUN_0051ef8c(dearchive, NULL);     /* scheduler::createSchedulerForMedia */
-    FUN_0051ced4(scheduler);     /* scheduler::setDefaultScheduler */
-
-    /* scheduler::openFile, then op::syncWait */
-    if (_ZN4cell4fios2op8syncWaitEPx(
-            (int)_ZN4cell4fios9scheduler8openFileEPKNS0_8opattr_tEPKcjPPNS0_10filehandleE((u32)scheduler, 0, (byte *)"rc1/ps3data/PS3arc.psarc", 1, &fileHandle),
-            NULL) != 0) {
+    if (scheduler->openFile(NULL, "rc1/ps3data/PS3arc.psarc", cell::fios::kO_READ, &fileHandle)->syncWait() != 0) {
         /* no archive: nothing to run */
         for (;;) {
             cellSysutilCheckCallback();

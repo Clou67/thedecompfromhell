@@ -18,6 +18,7 @@
 #include "game/update/moby1118.h"
 #include "idol/idol_draw.h"
 #include "idol/mathfunc.h"
+#include "sdk/linked.h"
 
 enum MissionCondType {
     COND_ALWAYS,

@@ -47,10 +47,10 @@
 #include "idol/shrubfunc.h"
 #include "idol/tfragfunc.h"
 #include "sdk/fios.h"
-#include "sdk/linked.h"
 #include "sdk/mUnk4.h"
 #include "sdk/rUnk.h"
 #include "sdk/sce.h"
+#include <cell/fios.h>
 #include <sys/timer.h>
 
 enum {                      /* PifHeader.texFormat / clutFormat */
@@ -958,13 +958,13 @@ static inline u8 *LoadPrims(int *section, void **prims, int *count, u8 *mem)
 u8 *LoadGameplayFile(int reload)
 {
     char localePath[128];
-    u64 fileSize;
-    int fileHandle;
+    cell::fios::off_t fileSize;
+    cell::fios::filehandle *fileHandle;
     char path[64];
 
     u8 *mem = (u8 *)Gameplay;
     u8 *file = (u8 *)g_pGameplayFile;
-    u32 fs = get_default_fs();
+    cell::fios::scheduler *fs = cell::fios::scheduler::getDefaultScheduler();
 
     if (g_IsPal == 0) {
         sprintf(path, "rc1/ps3data/level%d/gameplay_ntsc", Level);
@@ -973,27 +973,21 @@ u8 *LoadGameplayFile(int reload)
         sprintf(path, "rc1/ps3data/level%d/gameplay_pal", Level);
     }
 
-    _ZN4cell4fios2op8syncWaitEPx(
-        (int)_ZN4cell4fios9scheduler8openFileEPKNS0_8opattr_tEPKcjPPNS0_10filehandleE(fs, 0, (byte *)path, 1,
-                                                                                         &fileHandle),
-        NULL);
-    if (fileHandle == 0) {
+    fs->openFile(NULL, path, cell::fios::kO_READ, &fileHandle)->syncWait();
+    if (fileHandle == NULL) {
         HangForever();
     }
 
-    _ZN4cell4fios2op8syncWaitEPx(
-        (int)_ZN4cell4fios9scheduler10statCommonEPKNS0_8opattr_tEPKcPvNS0_2op10e_OPSTAGESE(fs, 0, (byte *)path,
-                                                                                            (int)&fileSize, 3),
-        NULL);
+    fs->getFileSize(NULL, path, &fileSize)->syncWait();
     if (g_pGameplayFile == 0 || reload != 0) {
         file = (u8 *)(u32)idol::kalloc(TEX_BASE, (int)fileSize);
         g_pGameplayFile = (u32)file;
     }
 
-    if (_ZN4cell4fios2op8syncWaitEPx(_ZN4cell4fios9scheduler8readFileEPKNS0_8opattr_tEPNS0_10filehandleEPvxx(fs, 0, fileHandle, (u32)file, fileSize, -1), NULL) != 0) {
+    if (fs->readFile(NULL, fileHandle, file, fileSize)->syncWait() != 0) {
         HangForever();
     }
-    if (_ZN4cell4fios2op8syncWaitEPx((int)_ZN4cell4fios9scheduler9closeFileEPKNS0_8opattr_tEPNS0_10filehandleE(fs, 0, fileHandle), NULL) != 0) {
+    if (fs->closeFile(NULL, fileHandle)->syncWait() != 0) {
         HangForever();
     }
 
