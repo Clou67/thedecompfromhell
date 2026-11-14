@@ -3,6 +3,18 @@
 #include "types.h"
 
 // ---- types
+struct EffectTexHeader { /* Pre-baked RSX texture registers; words 0-6 go to methods 0x1A00+unit*0x20 (OFFSET,FORMAT,ADDRESS,CONTROL0,CONTROL1,FILTER,IMAGE_RECT), word 7 to 0x1840+unit*4 (CONTROL3) */
+    int offset;
+    int format;
+    int address;
+    int control0;
+    int control1;
+    int filter;
+    int imageRect;
+    int control3;
+    int unknown_20;
+};
+
 /* an animated HUD icon (IconTableEntry index, its animation mode and frame) */
 typedef struct HudIconAnim {
     s16 iconIdx;             /* 0x00 */
@@ -102,32 +114,6 @@ typedef struct IconTableEntries {
 } IconTableEntries;
 
 // ---- globals
-extern undefined4 DAT_007244e4; /* 0x7244e4 */
-extern undefined4 DAT_007244e8; /* 0x7244e8 */
-extern undefined4 DAT_0072452c; /* 0x72452c */
-extern undefined4 DAT_00724534; /* 0x724534 */
-extern undefined4 DAT_00724538; /* 0x724538 */
-extern undefined4 DAT_0072453c; /* 0x72453c */
-extern undefined4 DAT_00724540; /* 0x724540 */
-extern undefined4 DAT_00724544; /* 0x724544 */
-extern undefined4 DAT_00724548; /* 0x724548 */
-extern undefined4 DAT_0072454c; /* 0x72454c */
-extern undefined4 DAT_00724550; /* 0x724550 */
-extern undefined4 DAT_0072455c; /* 0x72455c */
-extern undefined4 DAT_0072456c; /* 0x72456c */
-extern undefined4 DAT_00724570; /* 0x724570 */
-extern undefined4 DAT_00724574; /* 0x724574 */
-extern undefined4 DAT_00724580; /* 0x724580 */
-extern undefined4 DAT_00724588; /* 0x724588 */
-extern undefined4 DAT_0072458c; /* 0x72458c */
-extern undefined4 DAT_00724590; /* 0x724590 */
-extern undefined4 DAT_00724594; /* 0x724594 */
-extern undefined4 DAT_00724598; /* 0x724598 */
-extern undefined4 DAT_0072459c; /* 0x72459c */
-extern undefined4 DAT_007245a0; /* 0x7245a0 */
-extern undefined4 DAT_007245a4; /* 0x7245a4 */
-extern undefined4 DAT_007245a8; /* 0x7245a8 */
-extern undefined4 DAT_007245b8; /* 0x7245b8 */
 extern undefined2 DAT_00737d38; /* 0x737d38 */
 extern undefined4 DAT_0096560c; /* 0x96560c */
 extern undefined4 DAT_00965b70; /* 0x965b70 */
@@ -140,11 +126,6 @@ extern undefined4 DAT_0096a3cc; /* 0x96a3cc */
 extern undefined4 DAT_0096a3e0; /* 0x96a3e0 */
 extern undefined4 DAT_0096a3e4; /* 0x96a3e4 */
 extern undefined4 DAT_0096a3e8; /* 0x96a3e8 */
-extern undefined4 DAT_00a15c84; /* 0xa15c84 */
-extern undefined1 DAT_00a15cdc; /* 0xa15cdc */
-extern undefined4 DAT_00a1bfcc; /* 0xa1bfcc */
-extern undefined4 DAT_00a1bfe8; /* 0xa1bfe8 */
-extern undefined4 DAT_00a1c818; /* 0xa1c818 */
 extern RenderingStep * HUD_Pass; /* 0x8fa43c */
 extern HudElement HudEntries[13]; /* 0x723b10 */
 extern IconTableEntries * IconTableEntry; /* 0xa1bfdc */
@@ -186,6 +167,7 @@ extern HudPulse g_HealthPulse; /* 0xa1c180: the health entry's throb (HudElement
 extern int g_HudAmmoEntryId; /* 0x724530 */
 extern int g_HudAmmoWeapon; /* 0x72452c: the weapon the ammo entry was last registered for */ /* type set in global_types.tsv */
 extern u8 *g_HudBuffer; /* 0xa108e4: 0x64000 bytes (guess: HUD) */ /* type set in global_types.tsv */
+extern int g_HudDrawMarker; /* 0xa1bfcc: set to 0xfffff0 before the draw callbacks run; nothing here reads it (REVISIT) */ /* type set in global_types.tsv */
 extern int g_HudFadeSteps; /* 0x724344: frames for the HUD fades (8) */ /* type set in global_types.tsv */
 extern int g_HudHideCounter; /* 0xa1bfc4 */ /* type set in global_types.tsv */
 extern int g_HudLevelFadeStep; /* 0x724420: HudLevelIcon fade step (4) */ /* type set in global_types.tsv */
@@ -199,8 +181,14 @@ extern int g_HudNextId; /* 0xa1bfc0: the next RegisterHUDCallback handle */ /* t
 extern u8 *g_HudScratchEnd; /* 0xa1bfd4 */ /* type set in global_types.tsv */
 extern u8 *g_HudScratchPtr; /* 0xa1bfd0: HudScratch_Alloc's next free byte in g_HudBuffer */ /* type set in global_types.tsv */
 extern int g_HudSectionWord; /* 0x72390c */ /* type set in global_types.tsv */
+extern int g_HudSkipDraw; /* 0xa1bfe8: DrawGameplayHud skips one frame while set, and clears it */ /* type set in global_types.tsv */
 extern float g_HudSlideBounce[24]; /* 0x724260: slide-in curve, overshooting (invented name) */ /* type set in global_types.tsv */
 extern float g_HudSlideEase[24]; /* 0x7242c0: slide curve, smooth (invented name) */ /* type set in global_types.tsv */
+extern int g_LapBoxSize[3]; /* 0x724538: its width, height and alpha (520, 32, 96) */ /* type set in global_types.tsv */
+extern int g_LapBoxX; /* 0xa1c818: the lap/place box's x */ /* type set in global_types.tsv */
+extern int g_LapBoxY; /* 0x724534: the lap/place box's y above the bottom margin (20) */ /* type set in global_types.tsv */
+extern int g_LapTextX; /* 0x72454c: the lap text's x (30) */ /* type set in global_types.tsv */
+extern int g_LapTextY; /* 0x724550: the race text's y above the bottom margin (12) */ /* type set in global_types.tsv */
 extern int g_MobyCounterBoxWidths[2]; /* 0x724520: the moby counter box's width for a max under 10 (48) and otherwise (70) */ /* type set in global_types.tsv */
 extern u32 g_MobyCounterColors[2]; /* 0x724518: the moby counter text colour from/to */ /* type set in global_types.tsv */
 extern int g_MobyCounterX[2]; /* 0x72450c: the moby counter's x on the left (24) and right (480) half */ /* type set in global_types.tsv */
@@ -215,6 +203,7 @@ extern float g_OxygenBubbleSize[3]; /* 0x724320: bubble radius for bubbles 0-9, 
 extern Vec4 g_OxygenBubbles[100]; /* 0xa1c1a0: the oxygen meter's bubbles: x, y, x speed, y speed (invented name) */ /* type set in global_types.tsv */
 extern int g_OxygenMeterSize[2]; /* 0x724330: the oxygen meter's width and height (42, 192) */ /* type set in global_types.tsv */
 extern float g_OxygenTankScale[2]; /* 0x724338: how much of the meter the bubbles fill, x and y (0.5, 0.9) */ /* type set in global_types.tsv */
+extern int g_PlaceRightX; /* 0x72455c: the place text's right end (480) */ /* type set in global_types.tsv */
 extern int g_PromptBottom; /* 0xa15c88: where the race best-time boxes end (invented name) */ /* type set in global_types.tsv */
 extern char g_PromptText[128]; /* 0xa1c020: the prompt message (GetHelpLen); a 1 byte splits it in two lines */ /* type set in global_types.tsv */
 extern int g_PromptY; /* 0x724340: the prompt box's y (32) */ /* type set in global_types.tsv */
@@ -238,7 +227,19 @@ extern int g_QuickSelectSize[2]; /* 0x723930: the quick select width and height 
 extern int g_QuickSelectSlotCnt; /* 0xa1c080: slots on the ring (8) */ /* type set in global_types.tsv */
 extern QuickSelectSlot g_QuickSelectSlots[2][8]; /* 0x723980: the quick select page and the clank command page (slots 0-3); [1][4] and [1][5] are their d-pad tables from no selection */ /* type set in global_types.tsv */
 extern float g_QuickSelectSnap; /* 0x724348: how far into the next slot the stick must be (0.2) */ /* type set in global_types.tsv */
+extern u32 g_RaceLabelColor; /* 0x724544: the race label colour */ /* type set in global_types.tsv */
+extern int g_RaceModeShift; /* 0x724580: the race boxes move up by this in screen modes 4 and 5 (20) */ /* type set in global_types.tsv */
+extern u32 g_RaceValueColor; /* 0x724548: the race value colour */ /* type set in global_types.tsv */
+extern int g_ScoreTextY; /* 0x7245a8: the score text's y above the bottom margin (38) */ /* type set in global_types.tsv */
 extern int g_ScreenHeight; /* 0x966b04 */
+extern int g_TimeBoxSize[3]; /* 0x724590: its width, height and alpha (235, 32, 96) */ /* type set in global_types.tsv */
+extern int g_TimeBoxX; /* 0x724588: the time/score box's x (140) */ /* type set in global_types.tsv */
+extern int g_TimeBoxY; /* 0x72458c: its y above the bottom margin (46) */ /* type set in global_types.tsv */
+extern int g_TimeCentreX; /* 0x7245a4: the time and score text's centre (256) */ /* type set in global_types.tsv */
+extern u32 g_TimeLabelColor; /* 0x72459c */ /* type set in global_types.tsv */
+extern int g_TimeTextY; /* 0x7245b8: the time text's y above the bottom margin (12) */ /* type set in global_types.tsv */
+extern u32 g_TimeValueColor; /* 0x7245a0 */ /* type set in global_types.tsv */
+extern int g_ToastAlpha; /* 0xa15c84: the toast message's alpha, 0..0x80 */ /* type set in global_types.tsv */
 extern int g_TrickBest; /* 0xa1c7ec: the trick entry's copy of the best score this jump (DAT_0096a3ec) */ /* type set in global_types.tsv */
 extern u32 g_TrickColorStill; /* 0x72444c: the trick text colour otherwise */ /* type set in global_types.tsv */
 extern u32 g_TrickColors[2]; /* 0x724440: the trick text colour from/to while it fades after a new best */ /* type set in global_types.tsv */
@@ -254,7 +255,10 @@ extern int g_TrickShowFrames; /* 0x724428: frames the trick entry's text stays u
 extern HudLevelIcon g_UnusedIconState; /* 0xa1c170: UnusedIconHud's data */ /* type set in global_types.tsv */
 extern u32 g_WrongWayColors[2]; /* 0x724458: the WRONG WAY text's pulse colours */ /* type set in global_types.tsv */
 extern int g_WrongWayPos[2]; /* 0x724450: the WRONG WAY text's centre (256, 180) */ /* type set in global_types.tsv */
+extern int g_ZoomeratorBoxPos[2]; /* 0x72456c: the Kalebo count's box on the Zoomerator (110, 55) */ /* type set in global_types.tsv */
+extern int g_ZoomeratorBoxWidth; /* 0x724574: its width (110) */ /* type set in global_types.tsv */
 extern u8 *g_pMobyVars; /* 0xa390b0: pVar blocks, 0x80 per moby above MobyInstancePermEnd */ /* type set in global_types.tsv */
+extern char g_toastMsgBuff2[]; /* 0xa15cdc: a second toast line, shown while g_toastMsgTimer is over 1000 */ /* type set in global_types.tsv */
 extern int g_toastMsgTimer; /* 0xa15c80 */
 
 // ---- functions
@@ -349,24 +353,24 @@ void Hud_ClearAmmoEntry(void);
 void Hud_ResetAllEntriesHidden(void);
 void Hud_DecHideCounter(void);
 void DrawGameplayHud(void);
-void RaceHud_Init(undefined8 param_1);
-void RaceHud_Update(undefined8 param_1);
-void AmmoHud_Update(undefined8 param_1);
-undefined4 Draw_RaceLapPlaceHud(int param_1);
-undefined4 Draw_RaceTimeScoreHud(int param_1);
+void RaceHud_Init(HudElement *entry);
+void RaceHud_Update(HudElement *entry);
+void AmmoHud_Update(HudElement *entry);
+int Draw_RaceLapPlaceHud(HudElement *entry);
+int Draw_RaceTimeScoreHud(HudElement *entry);
 int Hud_GetTexIndex(int idx);
-void Hud_DrawTexQuad4Pt (undefined8 param_1,int param_2,int param_3,int param_4,int param_5,int param_6, int param_7,int param_8);
-void Hud_DrawEffectTexQuad4Pt(longlong param_1);
-void Hud_DrawTexQuadF(float param_1,float param_2,float param_3,float param_4,float param_5,float param_6,float param_7,float param_8,void *param_9,int param_10);
-void Hud_DrawEffectTexQuadUV (longlong param_1,RsxCmd param_2,ulonglong param_3,int param_4,longlong param_5, RsxCmd param_6,ulonglong param_7,int param_8);
-void Hud_DrawTexQuadUV (undefined8 param_1,RsxCmd param_2,ulonglong param_3,uint param_4,uint param_5, int param_6,longlong param_7,RsxCmd param_8);
-void Hud_DrawEffectTexHeaderQuadUV(int param_1);
-void Hud_DrawTexQuadUV_Fixed(undefined8 param_1,int param_2,int param_3);
-void Hud_DrawTexQuadF_v2 (double param_1,double param_2,double param_3,double param_4,double param_5, double param_6,undefined8 param_7,undefined8 param_8,undefined8 param_9, undefined4 param_10,undefined4 param_11);
-void Hud_DrawTexQuadF_v3 (double param_1,double param_2,double param_3,double param_4,double param_5);
-void Hud_DrawTexQuadF_v4(float param_1,float param_2,float param_3,float param_4,float param_5,int param_6,int param_7,int param_8);
-void Hud_DrawTexQuadF_v4_Fixed(float param_1,float param_2,float param_3,float param_4,float param_5,int param_6,int param_7,int param_8);
-void DrawSprite2(longlong param_1,RsxCmd param_2,ulonglong param_3,RsxCmd param_4, ulonglong param_5,RsxCmd param_6,ulonglong param_7,RsxCmd param_8);
+void Hud_DrawTexQuad4Pt(u8 *header, int x0, int y0, int x1, int y1, int u0, int v0, int u1, int v1, int alpha);
+void Hud_DrawEffectTexQuad4Pt(int tex, int x0, int y0, int x1, int y1, int u0, int v0, int u1, int v1, int alpha);
+void Hud_DrawTexQuadF(float x0, float y0, float x1, float y1, float u0, float v0, float u1, float v1, void *header, int alpha);
+void Hud_DrawEffectTexQuadUV(int tex, int x, int y, int w, int h, int u, int v, int alpha);
+void Hud_DrawTexQuadUV(u8 *header, int x, int y, int uLog, int vLog, int w, int h, int u, int v, int alpha);
+void Hud_DrawEffectTexHeaderQuadUV(int index, int x, int y, int uLog, int vLog, int w, int h, int u, int v, int alpha);
+void Hud_DrawTexQuadUV_Fixed(u8 *header, int x, int y, int uLog, int vLog, int w, int h, int u, int v, int alpha);
+void Hud_DrawTexQuadF_v2(float x, float y, float w, float h, float u, float v, u8 *header, int unused2, int unused3, int uLog, int vLog, int unused6, int unused7, int unused8, int unused9, int alpha);
+void Hud_DrawTexQuadF_v3(float x, float y, float w, float h, float angle, int u, int v, u8 *header);
+void Hud_DrawTexQuadF_v4(float x, float y, float w, float h, float angle, int u, int v, int index);
+void Hud_DrawTexQuadF_v4_Fixed(float x, float y, float w, float h, float angle, int u, int v, int index);
+void DrawSprite2(int tex, int x0, int y0, int x1, int y1, int u0, int v0, int u1, int v1, int alpha);
 void STUB_000d8658(...);
-void Hud_DrawEffectTexLine (RsxCmd param_1,ulonglong param_2,RsxCmd param_3,ulonglong param_4,ulonglong param_5, int param_6);
+void Hud_DrawEffectTexLine(int x0, int y0, int x1, int y1, u32 color, int mode);
 void STUB_000d88e0(...);

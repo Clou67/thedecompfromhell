@@ -419,6 +419,53 @@ All 39 functions are written out and checked against the asm. The file covers pe
   - mobyfunc.cpp calls Moby_BuildJointMatrices with a NULL out, which would fault as written.
   - handle (0xa8) is incremented on every PostUpdateMobyBsphere, so "index << 16" is doubtful.
 
+## game/hud.cpp
+
+All 112 functions are written out and checked against the asm. The file is the gameplay HUD:
+- the 13 HUD entries (register, slide in and out, count, draw) and their per-entry callbacks;
+- the quick select and clank command rings;
+- the bolt, nanotech, ammo, oxygen, prompt, race, trick and boss displays and the toast message;
+- the textured quad and sprite drawers the HUD and the menus share.
+
+- **Invented names:**
+  - Types: HudElement (the layout), HudIconAnim, QuickSelectSlot, HudPulse, HudLevelIcon.
+    UsageRecord moved out of update.cpp into a shared type (hud.cpp uses it too).
+  - Fields: HudElement.data (0x80), PadState.stickX/stickY (0x48, floats; which stick is
+    unverified).
+  - Icons: HUD_ICON_HEALTH (0x7535), HUD_ICON_METER_FRAME (0x7558), HUD_ICON_BOSS_BAR (0x7562),
+    HUD_ICON_TEXT_BOX (0x7580), HUD_ICON_RING_HIGHLIGHT (0xe99c). UiTexCategory has no names for
+    these; QUICK_SELECT, NANOTECH_ANIMATION and BOLTS_ANIMATION are used where they match.
+  - Globals: every g_Hud*, g_QuickSelect*, g_ClankCommand*, g_Health*, g_Nanotech*, g_Bolt*,
+    g_Trick*, g_WrongWay*, g_Boss*, g_Detector*, g_Ammo*, g_MobyCounter*, g_Lap*, g_Race*,
+    g_Time*, g_Zoomerator*, g_Oxygen*, g_Prompt* and g_Toast* name in global_types.tsv from this
+    file. Most are layout constants (positions, colours, fade steps) named by where they are used.
+- **Unclear data:**
+  - The quick select's UsageRecord is at CHAR_ARRAY_00a0feec + 0xa0, not on a 12-byte record
+    boundary, so it may not belong to the same record array.
+  - The item table (0x4c-byte records from 0x721000) is reached through DAT_00721038, its only
+    symbol. The ammo info (24-byte records, DAT_00737d38 = +8) is reached the same way.
+  - g_QuickSelectSlots[1][4] and [1][5] are the d-pad tables used when nothing is selected.
+  - g_ClankCommandReady: only ResetGameCounters clears it, and nothing found sets it.
+  - g_HudDrawMarker is set to 0xfffff0 before the draw callbacks run, and nothing reads it.
+  - DAT_0096a3c0..ec (the hero's trick tally) and DAT_0096a544 (capped at 17.5 s of frames when
+    paid) still have no names.
+- **Kept as the asm does it:**
+  - Draw_AmmoCounter draws the box's middle x + width wide and the right cap past it by x again.
+  - AmmoHud_Update clamps to maxValue by comparing it with the unclamped ammo, and while showing
+    it sets showTimer to animationSpeed * 5.5.
+  - Draw_HoverboardTrickHud uses the singular "Flip" when g_TrickBest is 360, though g_TrickBest
+    counts flips.
+  - UpdateQuickSelect's even slots only win when the stick is g_QuickSelectSnap into them.
+- **Calling convention.** The asm reads Hud_DrawTexQuadF_v3/v4(_Fixed)'s u, v and texture from
+  r8-r10 after five floats, Hud_DrawTexQuadF's header from r3 and its alpha from stack slot 9,
+  and Hud_DrawTexQuadF_v2's header, uLog, vLog from r3, r6, r7 and alpha from stack slot 9. No
+  single rule for SNC's float/int argument registers fits all of these and FastLerpColor/Delt,
+  so the C parameter orders follow the existing callers and Hud_DrawTexQuadUV's order. Check
+  them against a matching compile.
+- **Not merged with the rest of the HUD.** The draw callbacks share a lot of drawing (fades,
+  text boxes, shadowed text). These are static inline helpers here (HudRing*, HudTextBoxLine,
+  HudEntryFade, NanotechBoxRow...) rather than the original's code, which inlined everything.
+
 ## SDK matching against SDK 4.00
 
 The EBOOT's libraries carry `GCC 4.1.1 (SDK400, $Rev: 3538 $)`, so the match was rerun against the

@@ -735,3 +735,26 @@ g_MobyCounterX	int NAME[2] /* 0x72450c: the moby counter's x on the left (24) an
 g_MobyCounterColors	u32 NAME[2] /* 0x724518: the moby counter text colour from/to */
 g_MobyCounterBoxWidths	int NAME[2] /* 0x724520: the moby counter box's width for a max under 10 (48) and otherwise (70) */
 g_HudAmmoWeapon	int NAME /* 0x72452c: the weapon the ammo entry was last registered for */
+g_HudSkipDraw	int NAME /* 0xa1bfe8: DrawGameplayHud skips one frame while set, and clears it */
+g_HudDrawMarker	int NAME /* 0xa1bfcc: set to 0xfffff0 before the draw callbacks run; nothing here reads it (REVISIT) */
+g_ToastAlpha	int NAME /* 0xa15c84: the toast message's alpha, 0..0x80 */
+g_toastMsgBuff2	char NAME[] /* 0xa15cdc: a second toast line, shown while g_toastMsgTimer is over 1000 */
+g_LapBoxX	int NAME /* 0xa1c818: the lap/place box's x */
+g_LapBoxY	int NAME /* 0x724534: the lap/place box's y above the bottom margin (20) */
+g_LapBoxSize	int NAME[3] /* 0x724538: its width, height and alpha (520, 32, 96) */
+g_RaceLabelColor	u32 NAME /* 0x724544: the race label colour */
+g_RaceValueColor	u32 NAME /* 0x724548: the race value colour */
+g_LapTextX	int NAME /* 0x72454c: the lap text's x (30) */
+g_LapTextY	int NAME /* 0x724550: the race text's y above the bottom margin (12) */
+g_PlaceRightX	int NAME /* 0x72455c: the place text's right end (480) */
+g_ZoomeratorBoxPos	int NAME[2] /* 0x72456c: the Kalebo count's box on the Zoomerator (110, 55) */
+g_ZoomeratorBoxWidth	int NAME /* 0x724574: its width (110) */
+g_RaceModeShift	int NAME /* 0x724580: the race boxes move up by this in screen modes 4 and 5 (20) */
+g_TimeBoxX	int NAME /* 0x724588: the time/score box's x (140) */
+g_TimeBoxY	int NAME /* 0x72458c: its y above the bottom margin (46) */
+g_TimeBoxSize	int NAME[3] /* 0x724590: its width, height and alpha (235, 32, 96) */
+g_TimeLabelColor	u32 NAME /* 0x72459c */
+g_TimeValueColor	u32 NAME /* 0x7245a0 */
+g_TimeCentreX	int NAME /* 0x7245a4: the time and score text's centre (256) */
+g_ScoreTextY	int NAME /* 0x7245a8: the score text's y above the bottom margin (38) */
+g_TimeTextY	int NAME /* 0x7245b8: the time text's y above the bottom margin (12) */

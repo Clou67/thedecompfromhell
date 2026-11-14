@@ -148,3 +148,4 @@ QuickSelectSlot	game/hud
 UsageRecord	game/update
 HudPulse	game/hud
 HudLevelIcon	game/hud
+UiTexCategory	types

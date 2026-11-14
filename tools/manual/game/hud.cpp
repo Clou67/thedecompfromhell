@@ -1,5 +1,4 @@
 #include "rc1.h"
-// MERGE
 #include "idol/fastinline.h"
 #include <cell/gcm/gcm_macros.h>
 #include <cell/gcm/gcm_enum.h>
@@ -11,6 +10,13 @@
 
 #define HUD_ENTRY_CNT 13
 #define PI 3.1415927f
+
+/* HUD icons (IconTableEntry ids) that UiTexCategory has no name for; the names are invented */
+#define HUD_ICON_HEALTH         0x7535  /* registered for the health entry */
+#define HUD_ICON_METER_FRAME    0x7558  /* the hoverboard / Giant Clank meter: 0 frame, 1 fill, 2 light */
+#define HUD_ICON_BOSS_BAR       0x7562  /* 0 and 4 portrait, 1 and 2 frame, 3 under the fill */
+#define HUD_ICON_TEXT_BOX       0x7580  /* 0 middle, 1 end cap */
+#define HUD_ICON_RING_HIGHLIGHT 0xe99c  /* behind the selected quick select / clank command slot */
 
 /* one word into the HUD pass */
 static inline void HudEmit(u32 word)
@@ -196,7 +202,7 @@ int RegisterHUDCallback(u32 slot, int iconId, void *init, void *update, void *dr
 // 0x00c8578 (0x4c bytes)
 int RegisterHeroHealthHUDCallbacks(void)
 {
-    return RegisterHUDCallback(1, 0x7535, &PTR_HealthHud_Init_007057f0, &PTR_HealthHud_Update_007057f8, &PTR_Draw_NanotechUI_00705800, (int *)&g_heroHealth, 8);
+    return RegisterHUDCallback(1, HUD_ICON_HEALTH, &PTR_HealthHud_Init_007057f0, &PTR_HealthHud_Update_007057f8, &PTR_Draw_NanotechUI_00705800, (int *)&g_heroHealth, 8);
 }
 
 // 0x00c85c4 (0x2c bytes)
@@ -555,22 +561,22 @@ int HudIcon_GetAnimFrame(HudIconAnim *anim)
             frame = icon->firstFrame;
         }
         else if (anim->mode == 1) {
-            int t = (worldUpdateTime - anim->startTime) / icon->frameTime;
+            int step = (worldUpdateTime - anim->startTime) / icon->frameTime;
 
-            frame = icon->firstFrame + t % count;
+            frame = icon->firstFrame + step % count;
         }
         else if (anim->mode == 2) {
-            int t = (worldUpdateTime - anim->startTime) / icon->frameTime;
+            int step = (worldUpdateTime - anim->startTime) / icon->frameTime;
 
-            t %= count * 2 - 2;
-            frame = (t < count ? t : count * 2 - t - 2) + icon->firstFrame;
+            step %= count * 2 - 2;
+            frame = (step < count ? step : count * 2 - step - 2) + icon->firstFrame;
         }
         else if (anim->mode == 3) {
             if (anim->startTime < worldUpdateTime) {
-                int t = (worldUpdateTime - anim->startTime) / icon->frameTime;
+                int step = (worldUpdateTime - anim->startTime) / icon->frameTime;
 
-                if (t < count * 2 - 2) {
-                    frame = (t < count ? t : count * 2 - t - 2) + icon->firstFrame;
+                if (step < count * 2 - 2) {
+                    frame = (step < count ? step : count * 2 - step - 2) + icon->firstFrame;
                 }
                 else {
                     frame = icon->firstFrame;
@@ -1264,12 +1270,12 @@ void DrawSprite(int tex, int x, int y, int w, int h, int alpha)
 }
 
 // 0x00cc148 (0x200 bytes)
-/* the text box (icon 0x7580): a 32-wide end cap (frame 1), the middle (frame 0) and the cap
+/* the text box (icon HUD_ICON_TEXT_BOX): a 32-wide end cap (frame 1), the middle (frame 0) and the cap
    turned round */
 void Hud_DrawTextBox(int x, int y, int w, int h, int alpha)
 {
-    int middle = GetIconFrameTex(0x7580, 0);
-    int cap = GetIconFrameTex(0x7580, 1);
+    int middle = GetIconFrameTex(HUD_ICON_TEXT_BOX, 0);
+    int cap = GetIconFrameTex(HUD_ICON_TEXT_BOX, 1);
 
     Hud_DrawTexHeaderQuad(HudTexHeader(cap), x, y, 32, h, alpha);
     Hud_DrawTexHeaderQuad(HudTexHeader(middle), x + 32, y, w - 64, h, alpha);
@@ -1317,8 +1323,8 @@ int Draw_PromptMsg(HudElement *entry)
     for (split = 0; g_PromptText[split] != 1 && g_PromptText[split] != 0 && split < 128; split++) {
     }
 
-    int middle = GetIconFrameTex(0x7580, 0);
-    int cap = GetIconFrameTex(0x7580, 1);
+    int middle = GetIconFrameTex(HUD_ICON_TEXT_BOX, 0);
+    int cap = GetIconFrameTex(HUD_ICON_TEXT_BOX, 1);
 
     if (g_PromptText[split] == 1) {
         g_PromptText[split] = 0;
@@ -1365,11 +1371,11 @@ int Draw_PromptMsg(HudElement *entry)
             startZ = 100.0f;
         }
 
-        float dz = g_heroPosition.z - startZ;
-        float dx = g_heroPosition.x - startX;
-        float dy = g_heroPosition.y - startY;
+        float deltaZ = g_heroPosition.z - startZ;
+        float deltaX = g_heroPosition.x - startX;
+        float deltaY = g_heroPosition.y - startY;
 
-        if (sqrtf(dz * dz + dx * dx + dy * dy) < 5.0f) {
+        if (sqrtf(deltaZ * deltaZ + deltaX * deltaX + deltaY * deltaY) < 5.0f) {
             g_PromptBottom = y + 100;
 
             int race = Level == Kalebo;
@@ -1851,10 +1857,10 @@ static inline void HudRingSlotPos(HudRing *ring, int i, int *x, int *y)
     *y = g_QuickSelectCentre[1] + ring->y + slotY;
 }
 
-/* the pulsing highlight (icon 0xe99c) behind the selected slot */
+/* the pulsing highlight (icon HUD_ICON_RING_HIGHLIGHT) behind the selected slot */
 static inline void HudRingHighlight(HudRing *ring, int x, int y)
 {
-    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0xe99c, 0)), x - 19, y - 19, 38, 38, ring->highlightAlpha);
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(HUD_ICON_RING_HIGHLIGHT, 0)), x - 19, y - 19, 38, 38, ring->highlightAlpha);
 }
 
 /* the slots not selected are dimmed */
@@ -2242,12 +2248,12 @@ void HealthHud_Update(HudElement *entry)
     HudIcon_GetAnimFrame(&entry->icon);
 }
 
-/* a box row behind the nanotech cells: the middle of the text box icon (0x7580) halfWidth
+/* a box row behind the nanotech cells: the middle of the text box icon (HUD_ICON_TEXT_BOX) halfWidth
    either side of x, its end caps (frame 1, the right one turned) outside */
 static inline void NanotechBoxRow(int x, int y, int halfWidth, int alpha)
 {
-    int capTex = GetIconFrameTex(0x7580, 1);
-    int middleTex = GetIconFrameTex(0x7580, 0);
+    int capTex = GetIconFrameTex(HUD_ICON_TEXT_BOX, 1);
+    int middleTex = GetIconFrameTex(HUD_ICON_TEXT_BOX, 0);
 
     Hud_DrawTexQuad(capTex, halfWidth + x, y, g_NanotechBoxTile, g_NanotechBoxTile, alpha);
     Hud_DrawTexHeaderQuad(HudTexHeader(middleTex), x - halfWidth, y, halfWidth * 2, g_NanotechBoxTile, alpha);
@@ -2404,9 +2410,9 @@ int Draw_BoltCountUI(HudElement *entry)
 
     int textWidth = FastDoubleToInt((float)(g_BoltDigitWidth * digits) * boxFade);
 
-    Hud_DrawTexQuad(GetIconFrameTex(0x7580, 1), x - 12, y, 32, 32, boxAlpha);
-    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7580, 0)), x - textWidth - 28, y, textWidth + 16, 32, boxAlpha);
-    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7580, 1)), x - textWidth - 60, y, 32, 32, boxAlpha);
+    Hud_DrawTexQuad(GetIconFrameTex(HUD_ICON_TEXT_BOX, 1), x - 12, y, 32, 32, boxAlpha);
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(HUD_ICON_TEXT_BOX, 0)), x - textWidth - 28, y, textWidth + 16, 32, boxAlpha);
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(HUD_ICON_TEXT_BOX, 1)), x - textWidth - 60, y, 32, 32, boxAlpha);
 
     HudEntry_DrawIcon(entry, GetIconFrameTex(BOLTS_ANIMATION, *tick >> 1), x - 32, y, 0, 0x80);
 
@@ -2767,7 +2773,7 @@ static inline void TrickLandingText(char *text, u32 color)
 // 0x00d27f8 (0xe00 bytes)
 /* While hoverboarding (g_heroStateType 0x16): in the air the degrees (360 a flip) and pose
    count; on a hoverboard landing the points and the combo's name (TrickHud_Update pays
-   them). Always the boost meter (icon 0x7558), and WRONG WAY pulsing after 120.5 frames of
+   them). Always the boost meter (icon HUD_ICON_METER_FRAME), and WRONG WAY pulsing after 120.5 frames of
    it. */
 int Draw_HoverboardTrickHud(HudElement *entry)
 {
@@ -2885,8 +2891,8 @@ int Draw_HoverboardTrickHud(HudElement *entry)
 
     HudEntryPos(entry, &x, &y);
 
-    Hud_DrawEffectTexQuad(GetIconFrameTex(0x7558, 1), x, y, entry->displayedValue * 221 / entry->maxValue + 27, 64, 0x80);
-    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7558, 0)), x, y, 256, 64, 0x80);
+    Hud_DrawEffectTexQuad(GetIconFrameTex(HUD_ICON_METER_FRAME, 1), x, y, entry->displayedValue * 221 / entry->maxValue + 27, 64, 0x80);
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(HUD_ICON_METER_FRAME, 0)), x, y, 256, 64, 0x80);
 
     int wrongWay = g_WrongWayFrames;
 
@@ -2911,7 +2917,7 @@ static inline int HudBottomMargin(void)
 }
 
 // 0x00d3610 (0x6f8 bytes)
-/* A boss health bar of 32-wide segments (icon 0x7562: 3 under the fill, 1 and 2 the frame,
+/* A boss health bar of 32-wide segments (icon HUD_ICON_BOSS_BAR: 3 under the fill, 1 and 2 the frame,
    4 and 0 the portrait): 3, 6 on Umbris and Gemlik, 7 on Veldin2. The fill runs red to yellow
    to green, squeezed into 0.7 of the end segments. */
 int Draw_MobyHealthBarHud(HudElement *entry)
@@ -2945,7 +2951,7 @@ int Draw_MobyHealthBarHud(HudElement *entry)
     int left = centreX - segments * 16;
 
     for (int i = 0; i < segments; i++) {
-        Hud_DrawTexQuad(GetIconFrameTex(0x7562, 3), left + i * 32, y + 6, 32, 18, alpha);
+        Hud_DrawTexQuad(GetIconFrameTex(HUD_ICON_BOSS_BAR, 3), left + i * 32, y + 6, 32, 18, alpha);
     }
 
     int fillWidth = 0;
@@ -2976,13 +2982,13 @@ int Draw_MobyHealthBarHud(HudElement *entry)
     int x = left;
 
     for (int i = 0; i < segments - 1; i++) {
-        Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7562, 1)), x, y, 32, 32, frameAlpha);
+        Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(HUD_ICON_BOSS_BAR, 1)), x, y, 32, 32, frameAlpha);
         x += 32;
     }
 
-    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7562, 2)), x, y, 32, 32, frameAlpha);
-    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7562, 4)), left - 40, y - 8, 48, 48, alpha);
-    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7562, 0)), left - 40, y - 8, 48, 48, alpha);
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(HUD_ICON_BOSS_BAR, 2)), x, y, 32, 32, frameAlpha);
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(HUD_ICON_BOSS_BAR, 4)), left - 40, y - 8, 48, 48, alpha);
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(HUD_ICON_BOSS_BAR, 0)), left - 40, y - 8, 48, 48, alpha);
 
     return entry->width;
 }
@@ -3035,11 +3041,11 @@ int Draw_MetalDetectorHud(HudElement *entry)
     int boxX = g_DetectorBoxX + x;
     int boxWidth = FastDoubleToInt((float)g_DetectorBoxWidth * boxFade);
 
-    Hud_DrawTexQuad(GetIconFrameTex(0x7580, 1), boxX + 16, y, 32, 32, boxAlpha);
+    Hud_DrawTexQuad(GetIconFrameTex(HUD_ICON_TEXT_BOX, 1), boxX + 16, y, 32, 32, boxAlpha);
 
     boxX -= boxWidth;
-    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7580, 0)), boxX, y, boxWidth + 16, 32, boxAlpha);
-    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7580, 1)), boxX - 32, y, 32, 32, boxAlpha);
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(HUD_ICON_TEXT_BOX, 0)), boxX, y, boxWidth + 16, 32, boxAlpha);
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(HUD_ICON_TEXT_BOX, 1)), boxX - 32, y, 32, 32, boxAlpha);
 
     HudEntry_DrawIcon(entry, GetIconFrameTex(BOLTS_ANIMATION, worldUpdateTime % 60 >> 1), x - 32, y, 0, iconAlpha);
 
@@ -3068,7 +3074,7 @@ int Draw_MetalDetectorHud(HudElement *entry)
 }
 
 // 0x00d44e4 (0x344 bytes)
-/* Giant Clank's health on the hoverboard trick meter's art (icon 0x7558), its corner light
+/* Giant Clank's health on the hoverboard trick meter's art (icon HUD_ICON_METER_FRAME), its corner light
    (frame 2) lit while DAT_0096b316 runs */
 int Draw_GiantClankHealthHUD(HudElement *entry)
 {
@@ -3081,9 +3087,9 @@ int Draw_GiantClankHealthHUD(HudElement *entry)
     HudEntryPos(entry, &x, &y);
     HudEntry_GetSlideOffset(entry, &x, &y, entry->slideTime, 0);
 
-    Hud_DrawEffectTexQuad(GetIconFrameTex(0x7558, 1), x, y, entry->displayedValue * 221 / entry->maxValue + 27, 64, 0x80);
-    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7558, 0)), x, y, 256, 64, 0x80);
-    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7558, 2)), x, y, 32, 32, DAT_0096b316 != 0 ? 0x80 : 0);
+    Hud_DrawEffectTexQuad(GetIconFrameTex(HUD_ICON_METER_FRAME, 1), x, y, entry->displayedValue * 221 / entry->maxValue + 27, 64, 0x80);
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(HUD_ICON_METER_FRAME, 0)), x, y, 256, 64, 0x80);
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(HUD_ICON_METER_FRAME, 2)), x, y, 32, 32, DAT_0096b316 != 0 ? 0x80 : 0);
 
     return entry->width;
 }
@@ -3111,9 +3117,9 @@ int Draw_AmmoCounter(HudElement *entry)
     int width = FastDoubleToInt((float)boxWidth * boxFade);
 
     /* REVISIT: the middle is drawn x + width wide and the right cap past it by x again */
-    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7580, 1)), x - 28, y, 32, 32, boxAlpha);
-    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7580, 0)), x + 4, y, x + width, 32, boxAlpha);
-    Hud_DrawTexQuad(GetIconFrameTex(0x7580, 1), x + width + x + 4, y, 32, 32, boxAlpha);
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(HUD_ICON_TEXT_BOX, 1)), x - 28, y, 32, 32, boxAlpha);
+    Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(HUD_ICON_TEXT_BOX, 0)), x + 4, y, x + width, 32, boxAlpha);
+    Hud_DrawTexQuad(GetIconFrameTex(HUD_ICON_TEXT_BOX, 1), x + width + x + 4, y, 32, 32, boxAlpha);
 
     entry->icon.frame = GetIconFrameTex(entry->iconId, 3);
     HudEntry_DrawIcon(entry, entry->icon.frame, x, y, 0, iconAlpha);
@@ -3184,14 +3190,14 @@ int Draw_MobyCounterHud(HudElement *entry)
     int width = FastDoubleToInt((float)boxWidth * boxFade);
 
     if (onRight) {
-        Hud_DrawTexQuad(GetIconFrameTex(0x7580, 1), boxX, y, 32, 32, boxAlpha);
+        Hud_DrawTexQuad(GetIconFrameTex(HUD_ICON_TEXT_BOX, 1), boxX, y, 32, 32, boxAlpha);
         boxX -= width;
-        Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7580, 0)), boxX, y, width, 32, boxAlpha);
-        Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7580, 1)), boxX - 32, y, 32, 32, boxAlpha);
+        Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(HUD_ICON_TEXT_BOX, 0)), boxX, y, width, 32, boxAlpha);
+        Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(HUD_ICON_TEXT_BOX, 1)), boxX - 32, y, 32, 32, boxAlpha);
     } else {
-        Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7580, 1)), x - 28, y, 32, 32, boxAlpha);
-        Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(0x7580, 0)), boxX, y, width, 32, boxAlpha);
-        Hud_DrawTexQuad(GetIconFrameTex(0x7580, 1), width + boxX, y, 32, 32, boxAlpha);
+        Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(HUD_ICON_TEXT_BOX, 1)), x - 28, y, 32, 32, boxAlpha);
+        Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(HUD_ICON_TEXT_BOX, 0)), boxX, y, width, 32, boxAlpha);
+        Hud_DrawTexQuad(GetIconFrameTex(HUD_ICON_TEXT_BOX, 1), width + boxX, y, 32, 32, boxAlpha);
     }
 
     if (onRight) {
@@ -3309,4 +3315,558 @@ int UpdateAllGameplayHUD(int update)
     }
 
     return showing;
+}
+
+// 0x00d5aa0 (0x98 bytes)
+/* forgets the ammo entry and hides the HUD one more level */
+void Hud_ClearAmmoEntry(void)
+{
+    HudClearAmmoEntry();
+    g_HudAmmoWeapon = 0;
+    g_HudHideCounter++;
+}
+
+// 0x00d5b38 (0xc0 bytes)
+/* unregisters and resets every entry, off screen, and hides the HUD */
+void Hud_ResetAllEntriesHidden(void)
+{
+    for (int i = 0; i < HUD_ENTRY_CNT; i++) {
+        RegisterHUDCallback(i, 0xffff, NULL, NULL, NULL, NULL, 1);
+        HudEntries[i].showTimer = 0;
+        HudEntries[i].slideTime = -6;
+        HudEntry_Reset(&HudEntries[i]);
+    }
+
+    g_HudHideCounter = 1;
+    g_HudAmmoEntryId = -1;
+    g_HudAmmoWeapon = 0;
+}
+
+// 0x00d5bf8 (0x20 bytes)
+void Hud_DecHideCounter(void)
+{
+    if (g_HudHideCounter != 0) {
+        g_HudHideCounter--;
+    }
+}
+
+// 0x00d5c20 (0x330 bytes)
+/* Runs the draw callbacks, then the toast message under the prompt (fading in over 8.5
+   frames while g_toastMsgTimer runs, out after; timer 1000 is where it stops). */
+void DrawGameplayHud(void)
+{
+    if (g_HudSkipDraw != 0 || LetterBoxOn != 0) {
+        g_HudSkipDraw = 0;
+        return;
+    }
+
+    g_HudDrawMarker = 0xfffff0;
+
+    for (int i = 0; i < HUD_ENTRY_CNT; i++) {
+        if (HudEntries[i].drawCb != NULL) {
+            HudCall(HudEntries[i].drawCb, &HudEntries[i]);
+        }
+    }
+
+    int y = g_PromptBottom;
+
+    if ((g_ToastAlpha == 0 && g_toastMsgTimer == 0) || g_gameMode != GAME_MODE_NORMAL) {
+        g_PromptBottom = 100;
+        return;
+    }
+
+    int step = 0x80 / (int)(animationSpeed * 8.5f);
+    int alpha;
+
+    if (g_toastMsgTimer == 0) {
+        alpha = g_ToastAlpha - step;
+        alpha = alpha < 0 ? 0 : alpha;
+    } else {
+        alpha = g_ToastAlpha + step;
+        alpha = alpha > 0x80 ? 0x80 : alpha;
+    }
+
+    g_ToastAlpha = alpha;
+
+    u32 color = (alpha << 24) + 0xf0f0f0;
+
+    HudTextBoxLine(256, y, y - 8, color, &g_toastMsgBuff);
+
+    y = g_PromptBottom;
+
+    if (g_toastMsgBuff2[0] != 0 && g_toastMsgTimer > 1000) {
+        HudTextBoxLine(256, y, y - 8, color, g_toastMsgBuff2);
+    }
+
+    if (g_toastMsgTimer != 0) {
+        g_toastMsgTimer--;
+    }
+
+    if (g_toastMsgTimer == 1000) {
+        g_toastMsgTimer = 0;
+    }
+}
+
+// 0x00d5f58 (0x64 bytes)
+void RaceHud_Init(HudElement *entry)
+{
+    entry->showTimer = (int)(animationSpeed * 180.5f) + 30;
+    entry->width = 128;
+    entry->height = 128;
+    entry->icon.offsX = 0;
+    entry->icon.offsY = 0;
+}
+
+// 0x00d5fc0 (0x5c bytes)
+/* only while hoverboarding */
+void RaceHud_Update(HudElement *entry)
+{
+    int slide = -6;
+
+    if (g_heroStateType == 0x16) {
+        slide = 5;
+        entry->showTimer = (int)(animationSpeed * 30.5f);
+    }
+
+    entry->slideTime = slide;
+}
+
+// 0x00d6020 (0x128 bytes)
+/* the ammo shown is *pValue clamped to 0..maxValue; shows while showTimer holds out */
+void AmmoHud_Update(HudElement *entry)
+{
+    int ammo = *entry->pValue;
+    int shown = ammo < 0 ? 0 : ammo;
+
+    /* REVISIT: the clamp compares the max with the unclamped ammo */
+    entry->displayedValue = (ammo > entry->maxValue) ? entry->maxValue : shown;
+
+    if (entry->showTimer < (int)(animationSpeed * 5.5f)) {
+        entry->slideTime = 1;
+
+        if (entry->animB != 0) {
+            entry->animB--;
+        } else if (entry->animA != 0) {
+            entry->animA--;
+        } else {
+            entry->slideTime = -6;
+        }
+    } else {
+        entry->showTimer = (int)(animationSpeed * 5.5f);
+
+        if (entry->animA < g_AmmoFadeSteps[0]) {
+            entry->animA++;
+        } else if (entry->animB < g_AmmoFadeSteps[1]) {
+            entry->animB++;
+        }
+    }
+}
+
+/* screen modes 4 and 5 move the race boxes up */
+static inline bool HudRaceModeShifted(void)
+{
+    IdolDraw *idol = (IdolDraw *)(uintptr_t)g_pIdolDraw;
+
+    return idol->unk11 == 4 || idol->unk11 == 5;
+}
+
+/* large text with its shadow (offset by shadowX, shadowY) */
+static inline void HudLargeShadowed(int x, int y, int shadowX, int shadowY, u32 color, char *text)
+{
+    FontPrintLarge(x + shadowX, y + shadowY, 0x80000000, text, -1);
+    FontPrintLarge(x, y, color, text, -1);
+}
+
+// 0x00d6148 (0x5c8 bytes)
+/* "Lap: n/3" on the left and "Place: 1st" on the right of a box; on Kalebo also the count
+   DAT_0096a5ae beside frame 2 of icon HUD_ICON_METER_FRAME */
+int Draw_RaceLapPlaceHud(HudElement *entry)
+{
+    bool shifted = HudRaceModeShifted();
+
+    if (entry->slideTime < 1) {
+        return 0;
+    }
+
+    int bottom = g_ScreenHeight - HudBottomMargin();
+    int boxY = bottom - g_LapBoxY;
+    int y = bottom - g_LapTextY;
+
+    if (shifted) {
+        boxY -= g_RaceModeShift;
+        y -= g_RaceModeShift;
+    }
+
+    Hud_DrawTextBox(g_LapBoxX, boxY, g_LapBoxSize[0], g_LapBoxSize[1], g_LapBoxSize[2]);
+
+    char text[64];
+    int x = g_LapTextX;
+
+    sprintf(text, "%s: ", help_msg_string_by_index(STR_LAP));
+    FontPrintLarge(x - 1, y + 1, 0x80000000, text, -1);
+    FontPrintLarge(x, y, g_RaceLabelColor, text, -1);
+
+    int labelWidth = FontLen(text, -1);
+    int lap = (s16)DAT_0096a57a + 1;
+
+    sprintf(text, " %d/3", lap > 3 ? 3 : lap);
+    FontPrintLarge(x + labelWidth - 1, y + 2, 0x80000000, text, -1);
+    FontPrintLarge(x + labelWidth, y, g_RaceValueColor, text, -1);
+
+    int place = g_RacePlace - 1;
+
+    sprintf(text, "%s", help_msg_string_by_index((StringId)((place > 4 ? 4 : place) + STR_ST)));
+    x = g_PlaceRightX - FontLen(text, -1);
+    HudLargeShadowed(x, y, 1, 1, g_RaceValueColor, text);
+
+    sprintf(text, " %s:  ", help_msg_string_by_index(STR_PLACE));
+    x -= FontLen(text, -1);
+    HudLargeShadowed(x, y, 1, 1, g_RaceLabelColor, text);
+
+    if (Level == Kalebo) {
+        char count[8];
+
+        sprintf(count, "%d", DAT_0096a5ae);
+
+        int countY = HudBottomMargin();
+        int countX = entry->x;
+
+        if (g_MiscLevelFlags.Zoomerator) {
+            countY = g_ZoomeratorBoxPos[1];
+            countX = g_ZoomeratorBoxPos[0];
+        }
+
+        Hud_DrawTextBox(countX - 24, countY, g_ZoomeratorBoxWidth, 32, 0x60);
+        Hud_DrawTexHeaderQuad(HudTexHeader(GetIconFrameTex(HUD_ICON_METER_FRAME, 2)), countX, countY, 32, 32, 0x80);
+
+        FontPrintLarge(countX + 41, countY + 8, 0x80000000, count, -1);
+        FontPrintLarge(countX + 40, countY + 7, DAT_0096a5ae == 0 ? 0x80202080 : 0x80e08060, count, -1);
+    }
+
+    return entry->width;
+}
+
+// 0x00d6710 (0x4e8 bytes)
+/* "Time: m:ss:cc" (and on the Zoomerator "Score: n" above it), centred */
+int Draw_RaceTimeScoreHud(HudElement *entry)
+{
+    bool shifted = HudRaceModeShifted();
+
+    if (entry->slideTime < 1) {
+        return 0;
+    }
+
+    int perMinute = (g_IsPal == 0) ? 3600 : 3000;
+    int minutes = g_RaceTime / perMinute;
+    int rest = g_RaceTime - minutes * perMinute;
+    int perSecond = perMinute / 60;
+    int seconds = rest / perSecond;
+    int bottom = g_ScreenHeight - HudBottomMargin();
+    int boxY = bottom - g_TimeBoxY;
+    int scoreY = bottom - g_ScoreTextY;
+    int timeY = bottom - g_TimeTextY;
+
+    if (shifted) {
+        boxY = boxY - g_RaceModeShift - 3;
+        scoreY = scoreY - g_RaceModeShift - 3;
+        timeY = timeY - g_RaceModeShift - 3;
+    }
+
+    char text[64];
+
+    if (g_MiscLevelFlags.Zoomerator) {
+        Hud_DrawTextBox(g_TimeBoxX, boxY, g_TimeBoxSize[0], g_TimeBoxSize[1], g_TimeBoxSize[2]);
+
+        sprintf(text, "%s: %d", help_msg_string_by_index(STR_SCORE), g_RaceScore);
+
+        int x = g_TimeCentreX - (FontLen(text, -1) >> 1);
+
+        sprintf(text, "%s: ", help_msg_string_by_index(STR_SCORE));
+        HudLargeShadowed(x, scoreY, 1, 1, g_TimeLabelColor, text);
+
+        x += FontLen(text, -1);
+        sprintf(text, " %d", g_RaceScore);
+        HudLargeShadowed(x, scoreY, 1, 1, g_TimeValueColor, text);
+    }
+
+    sprintf(text, "%s:  0:00:00", help_msg_string_by_index(STR_TIME));
+
+    int x = g_TimeCentreX - (FontLen(text, -1) >> 1);
+
+    if (g_Language == 2) {
+        x -= 20;
+    }
+
+    sprintf(text, "%s:  ", help_msg_string_by_index(STR_TIME));
+    HudLargeShadowed(x, timeY, 1, 1, g_TimeLabelColor, text);
+
+    x += FontLen(text, -1);
+    sprintf(text, "%d:%02d:%02d", minutes, seconds, (rest - seconds * perSecond) * 100 / perSecond);
+    HudLargeShadowed(x, timeY, 1, 1, g_TimeValueColor, text);
+
+    return entry->width;
+}
+
+// 0x00d6bf8 (0x1c bytes)
+int Hud_GetTexIndex(int idx)
+{
+    return ((int *)(uintptr_t)TexturePointerArray)[idx];
+}
+
+// 0x00d6c14 (0x2c8 bytes)
+/* a quad from (x0, y0) to (x1, y1) with texture coordinates (u0, v0) to (u1, v1), all in
+   1/16ths */
+void Hud_DrawTexQuad4Pt(u8 *header, int x0, int y0, int x1, int y1, int u0, int v0, int u1, int v1, int alpha)
+{
+    HudBindTex(header);
+    HudBeginQuads(alpha << 24 | 0x808080);
+    HudVertex((v0 >> 4) << 16 | ((u0 >> 4) & 0xffff), x0 >> 4, y0 >> 4);
+    HudVertex((v1 >> 4) << 16 | ((u0 >> 4) & 0xffff), x0 >> 4, y1 >> 4);
+    HudVertex((v1 >> 4) << 16 | ((u1 >> 4) & 0xffff), x1 >> 4, y1 >> 4);
+    HudVertex((v0 >> 4) << 16 | ((u1 >> 4) & 0xffff), x1 >> 4, y0 >> 4);
+    HudEnd();
+}
+
+// 0x00d6edc (0x80 bytes)
+void Hud_DrawEffectTexQuad4Pt(int tex, int x0, int y0, int x1, int y1, int u0, int v0, int u1, int v1, int alpha)
+{
+    Hud_DrawTexQuad4Pt(HudTexHeader(tex), x0, y0, x1, y1, u0, v0, u1, v1, alpha);
+}
+
+/* a float word into the HUD pass */
+static inline void HudEmitF(float value)
+{
+    union {
+        float asFloat;
+        u32 asWord;
+    } word;
+
+    word.asFloat = value;
+    HudEmit(word.asWord);
+}
+
+#define HUD_SET_TEXCOORD2F    CELL_GCM_METHOD(CELL_GCM_NV4097_SET_VERTEX_DATA2F_M + 1 * 8, 2)
+#define HUD_SET_POSITION2F    CELL_GCM_METHOD(CELL_GCM_NV4097_SET_VERTEX_DATA2F_M, 2)
+
+/* a vertex in floats */
+static inline void HudVertexF(float u, float v, float x, float y)
+{
+    HudEmit(HUD_SET_TEXCOORD2F);
+    HudEmitF(u);
+    HudEmitF(v);
+    HudEmit(HUD_SET_POSITION2F);
+    HudEmitF(x);
+    HudEmitF(y);
+}
+
+// 0x00d6f5c (0x2c0 bytes)
+/* Hud_DrawTexQuad4Pt in floats */
+void Hud_DrawTexQuadF(float x0, float y0, float x1, float y1, float u0, float v0, float u1, float v1, void *header, int alpha)
+{
+    HudBindTex((u8 *)header);
+    HudBeginQuads(alpha << 24 | 0x808080);
+    HudVertexF(u0, v0, x0, y0);
+    HudVertexF(u0, v1, x0, y1);
+    HudVertexF(u1, v1, x1, y1);
+    HudVertexF(u1, v0, x1, y0);
+    HudEnd();
+}
+
+// 0x00d721c (0x300 bytes)
+/* effect texture tex at (x, y), w by h, its coordinates offset by (u, v); u runs over the
+   low half of the size word and v over the high half */
+void Hud_DrawEffectTexQuadUV(int tex, int x, int y, int w, int h, int u, int v, int alpha)
+{
+    u8 *header = HudTexHeader(tex);
+
+    HudBindTex(header);
+
+    u32 size = *(u32 *)(header + 0x18);
+    u32 u1 = (u + size) & 0xffff;
+    u32 v1 = v + (size >> 16);
+
+    HudBeginQuads(alpha << 24 | 0x808080);
+    HudVertex(v << 16 | (u & 0xffff), x, y);
+    HudVertex(v1 << 16 | (u & 0xffff), x, y + h);
+    HudVertex(v1 << 16 | u1, x + w, y + h);
+    HudVertex(v << 16 | u1, x + w, y);
+    HudEnd();
+}
+
+// 0x00d751c (0x2e0 bytes)
+/* header's texture at (x, y), w by h, coordinates from (u, v) over 1 << uLog by 1 << vLog */
+void Hud_DrawTexQuadUV(u8 *header, int x, int y, int uLog, int vLog, int w, int h, int u, int v, int alpha)
+{
+    HudBindTex(header);
+
+    u32 v1 = v + (1 << vLog);
+    u32 u1 = (u + (1 << uLog)) & 0xffff;
+
+    HudBeginQuads(alpha << 24 | 0x808080);
+    HudVertex(v << 16 | (u & 0xffff), x, y);
+    HudVertex(v1 << 16 | (u & 0xffff), x, y + h);
+    HudVertex(v1 << 16 | u1, x + w, y + h);
+    HudVertex(v << 16 | u1, x + w, y);
+    HudEnd();
+}
+
+// 0x00d77fc (0x68 bytes)
+/* Hud_DrawTexQuadUV with an EffectTexHeaders index (not a TexturePointerArray one) */
+void Hud_DrawEffectTexHeaderQuadUV(int index, int x, int y, int uLog, int vLog, int w, int h, int u, int v, int alpha)
+{
+    Hud_DrawTexQuadUV((u8 *)(uintptr_t)EffectTexHeaders + index * 0x24, x, y, uLog, vLog, w, h, u, v, alpha);
+}
+
+// 0x00d7864 (0x40 bytes)
+/* Hud_DrawTexQuadUV with x and y in 1/16ths */
+void Hud_DrawTexQuadUV_Fixed(u8 *header, int x, int y, int uLog, int vLog, int w, int h, int u, int v, int alpha)
+{
+    Hud_DrawTexQuadUV(header, x >> 4, y >> 4, uLog, vLog, w, h, u, v, alpha);
+}
+
+// 0x00d78a4 (0x378 bytes)
+/* Hud_DrawTexQuadUV in floats. The integer arguments keep Hud_DrawTexQuadUV's order, but
+   only header, uLog, vLog and alpha are read (REVISIT: what callers pass in the rest) */
+void Hud_DrawTexQuadF_v2(float x, float y, float w, float h, float u, float v, u8 *header, int unused2, int unused3,
+                         int uLog, int vLog, int unused6, int unused7, int unused8, int unused9, int alpha)
+{
+    HudBindTex(header);
+    HudBeginQuads(alpha << 24 | 0x808080);
+
+    float v1 = v + (float)(u32)(1 << vLog);
+    float u1 = u + (float)(u32)(1 << uLog);
+
+    HudVertexF(u, v, x, y);
+    HudVertexF(u, v1, x, h + y);
+    HudVertexF(u1, v1, w + x, h + y);
+    HudVertexF(u1, v, w + x, y);
+    HudEnd();
+}
+
+/* the corners of a w by h quad turned by angle about (x, y): (xPlus + w cos, yPlus - w sin),
+   (xMinus + w cos, yMinus - w sin), (xMinus - w cos, yMinus + w sin), (xPlus - w cos,
+   yPlus + w sin) with xPlus, xMinus = x +- h sin and yPlus, yMinus = y +- h cos */
+static inline void HudTurnedCorners(float x, float y, float w, float h, float angle, float corners[4][2])
+{
+    float sine = FastSinInline(angle);
+    float cosine = FastSinInline(angle + 1.5707963f);
+    float xPlus = h * sine + x;
+    float xMinus = -(h * sine - x);
+    float yPlus = h * cosine + y;
+    float yMinus = -(h * cosine - y);
+    float across = -(w * cosine);
+
+    corners[0][0] = xPlus - across;
+    corners[0][1] = -(w * sine - yPlus);
+    corners[1][0] = xMinus - across;
+    corners[1][1] = -(w * sine - yMinus);
+    corners[2][0] = xMinus + across;
+    corners[2][1] = w * sine + yMinus;
+    corners[3][0] = xPlus + across;
+    corners[3][1] = w * sine + yPlus;
+}
+
+/* a vertex with a short texture coordinate and a float position */
+static inline void HudVertexSF(u32 texCoord, float x, float y)
+{
+    HudEmit(HUD_SET_TEXCOORD2S);
+    HudEmit(texCoord);
+    HudEmit(HUD_SET_POSITION2F);
+    HudEmitF(x);
+    HudEmitF(y);
+}
+
+// 0x00d7c38 (0x334 bytes)
+/* header's texture on a quad turned by angle (HudTurnedCorners), coordinates 0..(u, v) */
+void Hud_DrawTexQuadF_v3(float x, float y, float w, float h, float angle, int u, int v, u8 *header)
+{
+    float corners[4][2];
+
+    HudTurnedCorners(x, y, w, h, angle, corners);
+    HudBindTex(header);
+    HudBeginQuads(0x80808080);
+    HudVertexSF(0, corners[0][0], corners[0][1]);
+    HudVertexSF((u32)v << 16, corners[1][0], corners[1][1]);
+    HudVertexSF((u32)v << 16 | (u & 0xffff), corners[2][0], corners[2][1]);
+    HudVertexSF(u & 0xffff, corners[3][0], corners[3][1]);
+    HudEnd();
+}
+
+// 0x00d7f88 (0x39c bytes)
+/* Hud_DrawTexQuadF_v3 with a copy of EffectTexHeaders[index], its coordinates a quarter turn
+   on */
+void Hud_DrawTexQuadF_v4(float x, float y, float w, float h, float angle, int u, int v, int index)
+{
+    float corners[4][2];
+
+    HudTurnedCorners(x, y, w, h, angle, corners);
+
+    EffectTexHeader header = ((EffectTexHeader *)(uintptr_t)EffectTexHeaders)[index];
+
+    HudBindTex((u8 *)&header);
+    HudBeginQuads(0x80808080);
+    HudVertexSF(u & 0xffff, corners[0][0], corners[0][1]);
+    HudVertexSF(0, corners[1][0], corners[1][1]);
+    HudVertexSF((u32)v << 16, corners[2][0], corners[2][1]);
+    HudVertexSF((u32)v << 16 | (u & 0xffff), corners[3][0], corners[3][1]);
+    HudEnd();
+}
+
+// 0x00d8328 (0x3c bytes)
+/* Hud_DrawTexQuadF_v4 with the position and size in 1/16ths */
+void Hud_DrawTexQuadF_v4_Fixed(float x, float y, float w, float h, float angle, int u, int v, int index)
+{
+    Hud_DrawTexQuadF_v4(x * 0.0625f, y * 0.0625f, w * 0.0625f, h * 0.0625f, angle, u, v, index);
+}
+
+// 0x00d8364 (0x2f4 bytes)
+/* effect texture tex from (x0, y0) to (x1, y1), coordinates (u0, v0) to (u1, v1) */
+void DrawSprite2(int tex, int x0, int y0, int x1, int y1, int u0, int v0, int u1, int v1, int alpha)
+{
+    HudBindTex(HudTexHeader(tex));
+    HudBeginQuads(alpha << 24 | 0x808080);
+    HudVertex((u32)v0 << 16 | (u0 & 0xffff), x0, y0);
+    HudVertex((u32)v1 << 16 | (u0 & 0xffff), x0, y1);
+    HudVertex((u32)v1 << 16 | (u1 & 0xffff), x1, y1);
+    HudVertex((u32)v0 << 16 | (u1 & 0xffff), x1, y0);
+    HudEnd();
+}
+
+// 0x00d8658 (0x4 bytes)
+void STUB_000d8658(...)
+{
+}
+
+// 0x00d865c (0x284 bytes)
+/* a line from (x0, y0) to (x1, y1) in color (effect texture 22 bound); mode 0 moves it 8 up
+   and left */
+void Hud_DrawEffectTexLine(int x0, int y0, int x1, int y1, u32 color, int mode)
+{
+    HudBindTex(HudTexHeader(GetEffectTex(22)));
+
+    HudEmit(HUD_SET_COLOR4UB);
+    HudEmit((color >> 24 & 0xff) << 24 | (color >> 16 & 0xff) << 16 | (color >> 8 & 0xff) << 8 | (color & 0xff));
+    HudEmit(HUD_SET_TEXCOORD2S);
+    HudEmit(0);
+    HudEmit(0x400c1714);
+    HudEmit(0);
+    HudEmit(0);
+    HudEmit(0);
+    HudEmit(HUD_SET_BEGIN_END);
+    HudEmit(CELL_GCM_PRIMITIVE_LINES);
+
+    if (mode == 0) {
+        HudPosition(x0 - 8, y0 - 8);
+        HudPosition(x1 - 8, y1 - 8);
+    } else {
+        HudPosition(x0, y0);
+        HudPosition(x1, y1);
+    }
+
+    HudEnd();
+}
+
+// 0x00d88e0 (0x4 bytes)
+void STUB_000d88e0(...)
+{
 }

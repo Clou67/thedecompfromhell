@@ -123,6 +123,7 @@ extern undefined4 DAT_00a10724; /* 0xa10724 */
 extern int *DAT_00a108fc; /* 0xa108fc: the level's gameplay file */ /* type set in global_types.tsv */
 extern undefined4 DAT_00a10908; /* 0xa10908 */
 extern undefined4 DAT_00a15c74; /* 0xa15c74 */
+extern undefined4 DAT_00a15c84; /* 0xa15c84 */
 extern undefined4 DAT_00a15f7c; /* 0xa15f7c */
 extern undefined4 DAT_00a15f80; /* 0xa15f80 */
 extern undefined4 DAT_00a1a7b8; /* 0xa1a7b8 */

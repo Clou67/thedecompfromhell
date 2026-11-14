@@ -10,7 +10,7 @@ errors	file
 0	game/global.cpp
 0	game/help.cpp
 1529	game/hero.cpp
-279	game/hud.cpp
+0	game/hud.cpp
 0	game/initonce.cpp
 0	game/initsky.cpp
 0	game/initspace.cpp
@@ -1028,7 +1028,7 @@ errors	file
 139	idol/fastfunc.cpp
 135	idol/idol.cpp
 434	idol/idol_draw.cpp
-1730	idol/mUnk.cpp
+1724	idol/mUnk.cpp
 41	idol/mUnk2.cpp
 1144	idol/mathfunc.cpp
 355	idol/sUnk.cpp

@@ -417,18 +417,6 @@ struct CollTri { /* Env/moby collision face: 3 vertex indices + collision type (
     char collType;
 };
 
-struct EffectTexHeader { /* Pre-baked RSX texture registers; words 0-6 go to methods 0x1A00+unit*0x20 (OFFSET,FORMAT,ADDRESS,CONTROL0,CONTROL1,FILTER,IMAGE_RECT), word 7 to 0x1840+unit*4 (CONTROL3) */
-    int offset;
-    int format;
-    int address;
-    int control0;
-    int control1;
-    int filter;
-    int imageRect;
-    int control3;
-    int unknown_20;
-};
-
 struct GSMEM_UNUSED {
     int display;
     int draw;
@@ -2876,18 +2864,19 @@ extern undefined4 DAT_0072446c; /* 0x72446c */
 extern undefined4 DAT_00724474; /* 0x724474 */
 extern undefined4 DAT_007244d4; /* 0x7244d4 */
 extern undefined4 DAT_007244dc; /* 0x7244dc */
-extern undefined4 DAT_007244ec; /* 0x7244ec */
+extern undefined4 DAT_007244e8; /* 0x7244e8 */
 extern undefined4 DAT_007244f0; /* 0x7244f0 */
 extern undefined4 DAT_007244f8; /* 0x7244f8 */
-extern undefined4 DAT_007244fc; /* 0x7244fc */
 extern undefined4 DAT_00724500; /* 0x724500 */
-extern undefined4 DAT_00724504; /* 0x724504 */
 extern undefined4 DAT_00724508; /* 0x724508 */
-extern undefined4 DAT_0072450c; /* 0x72450c */
 extern undefined4 DAT_00724510; /* 0x724510 */
 extern undefined4 DAT_0072451c; /* 0x72451c */
-extern undefined4 DAT_00724520; /* 0x724520 */
 extern undefined4 DAT_00724524; /* 0x724524 */
+extern undefined4 DAT_0072453c; /* 0x72453c */
+extern undefined4 DAT_00724540; /* 0x724540 */
+extern undefined4 DAT_00724570; /* 0x724570 */
+extern undefined4 DAT_00724594; /* 0x724594 */
+extern undefined4 DAT_00724598; /* 0x724598 */
 extern undefined2 DAT_007247ca; /* 0x7247ca */
 extern undefined2 DAT_007247cc; /* 0x7247cc */
 extern undefined2 DAT_007247ce; /* 0x7247ce */
@@ -3393,8 +3382,6 @@ extern pointer PTR_DAT_0071a370; /* 0x71a370 */
 extern pointer PTR_DAT_0071a378; /* 0x71a378 */
 extern pointer PTR_DAT_00723b0c; /* 0x723b0c */
 extern pointer PTR_DAT_00724444; /* 0x724444 */
-extern pointer PTR_DAT_007244f4; /* 0x7244f4 */
-extern pointer PTR_DAT_00724518; /* 0x724518 */
 extern pointer32 PTR_DrawSceneShipEffect_007059a8; /* 0x7059a8 */
 extern pointer32 PTR_GameStart_007035d8; /* 0x7035d8 */
 extern pointer32 PTR_Global_QuickMovieMalloc_00704d30; /* 0x704d30 */
