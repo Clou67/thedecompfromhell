@@ -4,10 +4,10 @@ typedef struct MobyFrame {
     float length;            /* 0x00  frames of time this frame lasts (scales the blend step) */
     s16 time;                /* 0x04  start time in 1/16 frames */
     s16 qwords;              /* 0x06  size in 16-byte units */
-    s16 jointBytes;          /* 0x08 */
-    s16 unk0a;               /* 0x0a */
-    s16 unk0c;               /* 0x0c */
-    s16 unk0e;               /* 0x0e */
+    s16 jointBytes;          /* 0x08  the joint rotations' size: the scale keys follow (+ 0x10) */
+    s16 scaleKeys;           /* 0x0a  their count */
+    s16 transOffset;         /* 0x0c  where the translation keys start (+ 0x10) */
+    s16 transKeys;           /* 0x0e  their count */
 } MobyFrame;
 typedef char MobyFrame_size_check[sizeof(MobyFrame) == 0x10 ? 1 : -1];
 

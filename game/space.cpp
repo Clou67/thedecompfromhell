@@ -36,7 +36,6 @@
 #include "game/update/camera5.h"
 #include "game/update/moby1118.h"
 #include "game/update/moby998.h"
-#include "game/vendor.h"
 #include "game/vuchain.h"
 #include "idol/fastfunc.h"
 #include "idol/idol.h"

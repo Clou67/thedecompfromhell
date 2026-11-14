@@ -845,7 +845,7 @@ void Vendor_SpawnPreviewMoby(void)
     preview->rotation.z = g_VendorItemViews[item->item].rotation.z + g_VendorMoby->rotation.z;
     UpdateMobyTransform(preview);
     VendorPreviewPose(preview);
-    MB_SetLights(preview, 0x202020, 0xe, 0xe, 0);
+    SetMobyLights(preview, 0x202020, 0xe, 0xe, 0);
 
     int extraClass = g_VendorItemModels[g_VendorItems[g_VendorSelected].item].extraClass;
 
@@ -853,7 +853,7 @@ void Vendor_SpawnPreviewMoby(void)
         InitMobyInstance(&g_VendorPreviews[2], extraClass);
         g_VendorPreviews[2].drawDistance = 0x40;
         UpdateMobyTransform(&g_VendorPreviews[2]);
-        MB_SetLights(&g_VendorPreviews[2], 0x202020, 0xe, 0xe, 0);
+        SetMobyLights(&g_VendorPreviews[2], 0x202020, 0xe, 0xe, 0);
     }
 
     MobyInstance *copy = &g_VendorPreviews[3];
@@ -862,7 +862,7 @@ void Vendor_SpawnPreviewMoby(void)
     UpdateMobyTransform(copy);
     VendorPreviewPose(copy);
     copy->modeBits |= 0x100;
-    MB_SetLights(copy, 0x202020, 0xe, 0xe, 0);
+    SetMobyLights(copy, 0x202020, 0xe, 0xe, 0);
 
     g_VendorPreviewDirty = 0;
 }
@@ -927,7 +927,7 @@ void PurchaseHandler(void)
         }
 
         UpdateMobyTransform(box);
-        MB_SetLights(box, 0x101010, 0xe, 0xe, 0);
+        SetMobyLights(box, 0x101010, 0xe, 0xe, 0);
 
         VendorItem *item = &g_VendorItems[g_VendorSelected];
 
@@ -1252,7 +1252,7 @@ void Vendor_PreUpdate(void)
                 g_VendorDude->drawDistance = 0x40;
                 g_VendorDude->rotation.z = g_VendorMoby->rotation.z;
                 UpdateMobyTransform(g_VendorDude);
-                MB_SetLights(g_VendorDude, 0x202020, 0xe, 0xe, 0);
+                SetMobyLights(g_VendorDude, 0x202020, 0xe, 0xe, 0);
                 g_VendorDudeActive = 1;
                 g_VendorDudeLoaded = 0;
                 Vendor_PlayDudeSpeech(1);
@@ -2742,11 +2742,11 @@ void Vendor_PostUpdate(void)
         InitMobyInstance(&g_VendorPreviews[0], 0xd);
         g_VendorPreviews[0].drawDistance = 0x40;
         UpdateMobyTransform(&g_VendorPreviews[0]);
-        MB_SetLights(&g_VendorPreviews[0], 0x202020, 0xe, 0xe, 0);
+        SetMobyLights(&g_VendorPreviews[0], 0x202020, 0xe, 0xe, 0);
         InitMobyInstance(&g_VendorPreviews[5], 0xd);
         g_VendorPreviews[5].drawDistance = 0x40;
         UpdateMobyTransform(&g_VendorPreviews[5]);
-        MB_SetLights(&g_VendorPreviews[5], 0x202020, 0xe, 0xe, 0);
+        SetMobyLights(&g_VendorPreviews[5], 0x202020, 0xe, 0xe, 0);
 
         IdolDraw *idol = (IdolDraw *)(uintptr_t)g_pIdolDraw;
 

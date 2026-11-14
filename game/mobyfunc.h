@@ -759,7 +759,7 @@ typedef struct AnimLayer {
     u8 stepped;              /* 0x05  set by MB_UpdateAnimLayer: 1 moved a frame, 3 also wrapped */
     u8 prevFromBuffer;       /* 0x06  build the previous frame into prevFrameData */
     u8 curFromBuffer;        /* 0x07  build the current frame into curFrameData */
-    u8 _pad08[4];
+    float weight;            /* 0x08  ProcessAnimLayers blends the layer in by this */
     u8 *jointMap;            /* 0x0c */
     void *jointBuf;          /* 0x10  0x1500 bytes */
     struct MobyClass *pClass;     /* 0x14  the moby's class */
@@ -906,10 +906,10 @@ typedef struct MobyFrame {
     float length;            /* 0x00  frames of time this frame lasts (scales the blend step) */
     s16 time;                /* 0x04  start time in 1/16 frames */
     s16 qwords;              /* 0x06  size in 16-byte units */
-    s16 jointBytes;          /* 0x08 */
-    s16 unk0a;               /* 0x0a */
-    s16 unk0c;               /* 0x0c */
-    s16 unk0e;               /* 0x0e */
+    s16 jointBytes;          /* 0x08  the joint rotations' size: the scale keys follow (+ 0x10) */
+    s16 scaleKeys;           /* 0x0a  their count */
+    s16 transOffset;         /* 0x0c  where the translation keys start (+ 0x10) */
+    s16 transKeys;           /* 0x0e  their count */
 } MobyFrame;
 typedef char MobyFrame_size_check[sizeof(MobyFrame) == 0x10 ? 1 : -1];
 
@@ -924,9 +924,6 @@ typedef struct MobySeq {
     void *animInfo;          /* 0x18 */
     MobyFrame *frames[];     /* 0x1c  frameCnt of them */
 } MobySeq;
-
-struct Moby {
-};
 
 struct MobyCollHeader { /* MobyInstance.collision (+0x94). +0x10: CollPrim[primBytes/32] (spheres/pills attached to joints); then at (this+primBytes+0x10): verts float[4][vertBytes/16] (x1024 local), then CollTri[triBytes/4]. primSetA/B = joint counts selecting prim set (COLL_ALT_PRIMSET picks A). Moby collision is in x1024 space like env. */
     short primSetA;
@@ -1096,12 +1093,6 @@ struct MobyAnimLayer {
     char animJointIndexB;
     float blendWeight;
     float blendFade;
-};
-
-struct MobyGridCell { /* Moby broadphase grid cell (64x64, XY, 16 world units). listStart in 32-byte blocks of g_MobyGridLists (16 moby indices per block). */
-    short listStart;
-    char count;
-    char blocks;
 };
 
 struct MobyVTable {

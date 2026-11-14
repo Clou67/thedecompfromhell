@@ -735,3 +735,15 @@ DAT_00a204ec	g_MapCellMarksOn
 DAT_00a204f0	g_MapCellMarks
 DAT_007264cc	g_MapIconSizes
 DAT_007264e4	g_MapSourceDotRadius
+DAT_0072910c	g_MobyProcSectionWord
+MB_SetLights	SetMobyLights
+SetColorOfMoby	SetMobyAmbientLights
+MB_GetLights	GetMobyAmbientLights
+MB_GetLightDirection	GetMobyLightVector
+MB_GetLightColor	GetMobyLightColor
+MB_BSphereGap	DistBetweenMobyBspheres
+MB_TransformJointBatch	AnimResolveMats
+FastVecMtx4MultBatch4VMX	FastQSTToMtx4
+DAT_00a4db40	g_AnimJointMats
+MB_BlendJointFrames	AnimDecompInterp
+DAT_00a4fb80	g_AnimPoses

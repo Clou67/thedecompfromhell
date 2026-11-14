@@ -138,3 +138,5 @@ CopyRequest	game/store
 BufferStoreSlot	game/store
 MapBounds	game/map
 MapTransform	game/map
+JointPose	game/mobyproc
+AnimLayerJoint	game/mobyproc

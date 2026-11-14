@@ -7,7 +7,7 @@ typedef struct AnimLayer {
     u8 stepped;              /* 0x05  set by MB_UpdateAnimLayer: 1 moved a frame, 3 also wrapped */
     u8 prevFromBuffer;       /* 0x06  build the previous frame into prevFrameData */
     u8 curFromBuffer;        /* 0x07  build the current frame into curFrameData */
-    u8 _pad08[4];
+    float weight;            /* 0x08  ProcessAnimLayers blends the layer in by this */
     u8 *jointMap;            /* 0x0c */
     void *jointBuf;          /* 0x10  0x1500 bytes */
     struct MobyClass *pClass;     /* 0x14  the moby's class */

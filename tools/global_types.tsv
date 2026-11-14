@@ -630,3 +630,8 @@ g_MapCellMarksOn	int NAME /* 0xa204ec: draw g_MapCellMarks (invented name; no wr
 g_MapCellMarks	int NAME[8][4] /* 0xa204f0: [i][0] = a cell of the 16x16 map grid to darken, < 0 none (invented name) */
 g_MapIconSizes	float NAME[3][2] /* 0x7264cc: icon sizes (w, h) at zoom 1 for MapIcon flags 0x800, 0x400, 0x1000 */
 g_MapSourceDotRadius	int NAME /* 0x7264e4: half size of a g_MapIconSource dot, 1/16 pixels (32) */
+g_MobyProcSectionWord	int NAME /* 0x72910c */
+MobyGridAlloc	u32 NAME[24] /* 0xa49120: which blocks of g_MobyGridLists are used, a bit each */
+g_MobyGridLists	short NAME[1536][16] /* 0xa3d120: the moby grid cells' lists, 32-byte blocks of 16 moby indices */
+g_AnimJointMats	Mtx4 NAME[128] /* 0xa4db40: joint matrices from AnimResolveMats */
+g_AnimPoses	JointPose NAME[129] /* 0xa4fb80: joint poses from AnimDecompInterp, changed by the anim layers and manipulators */

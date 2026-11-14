@@ -501,6 +501,15 @@ typedef enum LevelId {
     Veldin2=18
 } LevelId;
 
+struct Moby {
+};
+
+struct MobyGridCell { /* Moby broadphase grid cell (64x64, XY, 16 world units). listStart in 32-byte blocks of g_MobyGridLists (16 moby indices per block). */
+    short listStart;
+    char count;
+    char blocks;
+};
+
 typedef unsigned long long u64;
 
 typedef int s32;
@@ -3160,6 +3169,12 @@ extern undefined4 DAT_00a207cc; /* 0xa207cc */
 extern undefined4 DAT_00a207d8; /* 0xa207d8 */
 extern undefined1 DAT_00a2c444; /* 0xa2c444 */
 extern undefined4 DAT_00a354cc; /* no defined data */
+extern undefined4 DAT_00a4db50; /* no defined data */
+extern undefined4 DAT_00a4db60; /* no defined data */
+extern undefined4 DAT_00a4db70; /* no defined data */
+extern undefined4 DAT_00a4fb84; /* 0xa4fb84 */
+extern undefined4 DAT_00a4fb88; /* 0xa4fb88 */
+extern undefined4 DAT_00a4fb8c; /* 0xa4fb8c */
 extern undefined4 DAT_00a54ed4; /* 0xa54ed4 */
 extern undefined4 DAT_00a54ed8; /* 0xa54ed8 */
 extern undefined4 DAT_00a54edc; /* 0xa54edc */
@@ -3309,6 +3324,7 @@ extern undefined4 _DAT_000e93e0; /* direct read */
 extern undefined4 _DAT_000e9420; /* direct read */
 extern undefined4 _DAT_000e9430; /* direct read */
 extern undefined4 _DAT_000e9450; /* direct read */
+extern undefined4 _DAT_000f3fc0; /* direct read */
 extern undefined4 _DAT_0011e860; /* direct read */
 extern undefined4 _DAT_0011e880; /* direct read */
 extern undefined4 _DAT_0011e890; /* direct read */

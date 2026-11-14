@@ -647,10 +647,10 @@ void MB_InitAnimLayerBuffer(AnimLayer *layer, int seq, int frame, MobyFrame *buf
     FastMemSetZero(buf, (jointBytes + 24) & 0xfff0);
 
     buf->jointBytes = jointBytes;
-    buf->unk0a = src->unk0a;
-    buf->unk0e = src->unk0e;
-    buf->unk0c = (dstJoints + src->unk0a) * 8;
-    buf->qwords = (dstJoints + src->unk0a + src->unk0e + 1) >> 1;
+    buf->scaleKeys = src->scaleKeys;
+    buf->transKeys = src->transKeys;
+    buf->transOffset = (dstJoints + src->scaleKeys) * 8;
+    buf->qwords = (dstJoints + src->scaleKeys + src->transKeys + 1) >> 1;
 
     restBytes = src->qwords * 16 - srcJoints * 8;
 
@@ -945,7 +945,7 @@ void UpdateHeroLightAngle(void)
     Vec4 dir;
     float angle;
 
-    MB_GetLightDirection(g_heroMobyPtr, &dir);
+    GetMobyLightVector(g_heroMobyPtr, &dir);
 
     angle = FastAtan2Inline(dir.y, dir.x);
 
@@ -1095,7 +1095,7 @@ void MB_SetLightsFromEnvSample(MobyInstance *moby)
 
     sample = &g_EnvSamples[found];
     moby->colorManipulator = sample->blue * 0x10000 + sample->green * 0x100 + sample->red;
-    MB_SetLights(moby, moby->colorManipulator, 0, 0, 0);
+    SetMobyLights(moby, moby->colorManipulator, 0, 0, 0);
     moby->light = g_EnvSamples[found].light;
 
     sample = &g_EnvSamples[found];

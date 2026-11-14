@@ -3,7 +3,6 @@
 #include "types.h"
 #include "game/mobyfunc.h"
 #include "game/path.h"
-#include "game/vendor.h"
 
 // ---- types
 struct Blender {
@@ -26,23 +25,42 @@ struct Blender {
     undefined4 unk;
 };
 
+struct DirectionalLight {
+    struct Vec4 color1;
+    struct Vec4 direction1;
+    struct Vec4 color2;
+    struct Vec4 direction2;
+};
+
+/* an AnimLayer's joint entry (48 bytes, in its jointBuf) */
+typedef struct AnimLayerJoint {
+    Vec4 rot;                /* 0x00 */
+    float scale[3];          /* 0x10 */
+    int changed;             /* 0x1c */
+    float trans[3];          /* 0x20 */
+    int joint;               /* 0x2c  the joint it poses */
+} AnimLayerJoint;
+typedef char AnimLayerJoint_size_check[sizeof(AnimLayerJoint) == 0x30 ? 1 : -1];
+
+/* a joint's pose (64 bytes a joint in the pose buffers) */
+typedef struct JointPose {
+    Vec4 rot;                /* 0x00  quaternion */
+    float scale[3];          /* 0x10 */
+    int changed;             /* 0x1c  set: the joint is posed this frame */
+    float trans[3];          /* 0x20 */
+    u32 parent;              /* 0x2c  the parent joint's byte offset (index * 64), 0 = root */
+    Vec4 unk30;
+} JointPose;
+typedef char JointPose_size_check[sizeof(JointPose) == 0x40 ? 1 : -1];
+
 // ---- globals
-extern undefined4 DAT_0072910c; /* 0x72910c */
 extern undefined4 DAT_00a15f64; /* 0xa15f64 */
+extern undefined4 DAT_00a34600; /* no defined data */
 extern undefined1 DAT_00a34700; /* 0xa34700 */
 extern undefined1 DAT_00a3477f; /* 0xa3477f */
 extern undefined1 DAT_00a34780; /* 0xa34780 */
-extern undefined4 DAT_00a4db40; /* no defined data */
-extern undefined4 DAT_00a4db50; /* no defined data */
-extern undefined4 DAT_00a4db60; /* no defined data */
-extern undefined4 DAT_00a4db70; /* no defined data */
-extern undefined4 DAT_00a4fb80; /* 0xa4fb80 */
-extern undefined4 DAT_00a4fb84; /* 0xa4fb84 */
-extern undefined4 DAT_00a4fb88; /* 0xa4fb88 */
-extern undefined4 DAT_00a4fb8c; /* 0xa4fb8c */
 extern DirectionalLight DirectionalLights[16]; /* 0xa1db00 */ /* type set in global_types.tsv */
-extern undefined4 MobyGridAlloc; /* 0xa49120 */
-extern undefined4 _DAT_000f3fc0; /* direct read */
+extern u32 MobyGridAlloc[24]; /* 0xa49120: which blocks of g_MobyGridLists are used, a bit each */ /* type set in global_types.tsv */
 extern undefined4 _DAT_000f5ad0; /* direct read */
 extern undefined4 _DAT_000f5af0; /* direct read */
 extern undefined4 _DAT_000f5b00; /* direct read */
@@ -54,37 +72,39 @@ extern undefined4 _DAT_000f5b50; /* direct read */
 extern undefined4 _DAT_000f5b60; /* direct read */
 extern undefined4 _DAT_000f5b70; /* direct read */
 extern undefined4 _DAT_000f7ae0; /* direct read */
+extern Mtx4 g_AnimJointMats[128]; /* 0xa4db40: joint matrices from AnimResolveMats */ /* type set in global_types.tsv */
+extern JointPose g_AnimPoses[129]; /* 0xa4fb80: joint poses from AnimDecompInterp, changed by the anim layers and manipulators */ /* type set in global_types.tsv */
 extern Blender g_Blenders[32]; /* 0xa1cb00 */
 extern undefined4 g_CurrentBlender; /* 0x7291a4 */
-extern MobyGridCell g_MobyGrid[4096]; /* 0xa39120 */
-extern undefined4 g_MobyGridLists; /* 0xa3d120 */
+extern short g_MobyGridLists[1536][16]; /* 0xa3d120: the moby grid cells' lists, 32-byte blocks of 16 moby indices */ /* type set in global_types.tsv */
+extern int g_MobyProcSectionWord; /* 0x72910c */ /* type set in global_types.tsv */
 
 // ---- functions
 void SECTION_HEADER_MOBYPROC(void);
-void MB_SetLights(MobyInstance *param_1,int param_2,int param_3,int param_4,int param_5);
-void SetColorOfMoby (MobyInstance *param_1,longlong param_2,longlong param_3,longlong param_4);
-void MB_GetLights(int param_1,uint *param_2,uint *param_3,uint *param_4);
-void MB_GetLightDirection(MobyInstance *param_1,Vec4 *param_2);
-void MB_GetLightColor(int param_1,float *param_2);
-double MB_BSphereGap(float *param_1,float *param_2);
-void MobyGrid_Free(int start,int count);
+void SetMobyLights(MobyInstance *moby, int ambient, int light1, int light2, int blend);
+void SetMobyAmbientLights(MobyInstance *moby, u64 red, u64 green, u64 blue);
+void GetMobyAmbientLights(MobyInstance *moby, u32 *red, u32 *green, u32 *blue);
+void GetMobyLightVector(MobyInstance *moby, Vec4 *out);
+void GetMobyLightColor(MobyInstance *moby, Vec4 *out);
+float DistBetweenMobyBspheres(BSphere *a, BSphere *b);
+void MobyGrid_Free(int start, int count);
 int MobyGrid_Alloc(int count);
-void FreeMobyGridLists(short *param_1);
-void AllocMobyGridLists(short *param_1);
-undefined4 ByteSwap32(undefined8 param_1);
-undefined8 MB_PointInByteRect(char param_1,char param_2,undefined4 param_3);
-void UpdateMobyGrids(MobyInstance *moby,uint deletion_stamp);
-void PostUpdateMobyBsphere (MobyInstance *moby,undefined8 param_2,undefined8 param_3,undefined8 param_4, longlong param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
-void PostUpdateMobyLockTransform(MobyInstance *pMoby);
-void UpdateMobyTransform(MobyInstance *param_1);
-undefined * MB_TransformJointBatch(int param_1,uint param_2,char *param_3);
-void ProcessManipulators(Manipulator *param_1,int param_2);
-void ProcessAnimLayers(MobyAnimLayer *pAnimLayer,int param_2);
-undefined4 * MB_BlendJointFrames (double param_1,uint param_2,undefined8 param_3,int param_4,int param_5,int param_6);
-undefined8 MB_ComputeAnimDirect(MobyInstance *param_1,char param_2,char param_3);
-undefined8 ComputeAnimation(int param_1);
-void Moby_BuildJointMatrices(MobyInstance *param_1,int param_2,Vec4 *param_3);
-undefined8 STUB_000f5a74(...);
+void FreeMobyGridLists(MobyGridCell *cell);
+void AllocMobyGridLists(MobyGridCell *cell);
+u32 ByteSwap32(u64 value);
+int MB_PointInByteRect(int x, int y, u32 rect);
+void UpdateMobyGrids(MobyInstance *moby, u32 newRect);
+void PostUpdateMobyBsphere(MobyInstance *moby, Mtx4 rot);
+void PostUpdateMobyLockTransform(MobyInstance *moby);
+void UpdateMobyTransform(MobyInstance *moby);
+Mtx4 *AnimResolveMats(JointPose *pose, u32 count, u8 *posed);
+void ProcessManipulators(Manipulator *manip, JointPose *poses);
+void ProcessAnimLayers(AnimLayer *layer, JointPose *poses);
+JointPose *AnimDecompInterp(float t, u32 count, u32 count2, Vec4 *bindTrans, MobyFrame *from, MobyFrame *to);
+JointPose *MB_ComputeAnimDirect(MobyInstance *moby, u8 useLayers, u8 useManipulators);
+JointPose *ComputeAnimation(MobyInstance *moby);
+void Moby_BuildJointMatrices(MobyInstance *moby, int unused, Vec4 *out);
+int STUB_000f5a74(...);
 void STUB_000f5a7c(...);
 void MB_DrawEntries(int param_1,uint param_2);
 void MB_DrawEntryList(u8 *param_1,int param_2);

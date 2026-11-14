@@ -437,7 +437,7 @@ void LoadMobyModel(MobyClass *pClass, void *tex_regs, char *tex_refs, int oClass
 
             for (u32 frameIndex = fix->startFrame; frameIndex < end; frameIndex++) {
                 MobyFrame *frame = seq->frames[frameIndex];
-                u8 *data = (u8 *)frame + (u16)frame->unk0c;
+                u8 *data = (u8 *)frame + (u16)frame->transOffset;
 
                 *(short *)(data + 0x12) += (short)fix->add;
             }
@@ -1235,7 +1235,7 @@ u8 *LoadGameplayFile(int reload)
         }
 
         moby->colorManipulator = rec->blue * 0x10000 + rec->green * 0x100 + rec->red;
-        MB_SetLights(moby, moby->colorManipulator, 0, 0, 0);
+        SetMobyLights(moby, moby->colorManipulator, 0, 0, 0);
         *(u64 *)&moby->color |= (s64)rec->light;
 
         if (rec->mapObject != -1) {

@@ -5,13 +5,6 @@
 #include "idol/idol_draw.h"
 
 // ---- types
-struct DirectionalLight {
-    struct Vec4 color1;
-    struct Vec4 direction1;
-    struct Vec4 color2;
-    struct Vec4 direction2;
-};
-
 /* an item's entry in the item table at 0x721000 (0x4c bytes an item; only what vendor.cpp reads
    is named, names invented) */
 struct GadgetInfo {

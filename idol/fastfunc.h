@@ -89,7 +89,7 @@ void FastQuaternionVecTransform(undefined8 param_1,undefined8 param_2,undefined8
 void FastQuaternionVecTransformInverse (undefined8 param_1,undefined8 param_2,undefined8 param_3);
 void FastQuaternionVecTransform (undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4, undefined8 param_5,undefined8 param_6,undefined8 param_7);
 void FastQuaternionSlerp (double param_1,undefined4 *param_2,undefined4 *param_3,float *param_4);
-void FastVecMtx4MultBatch4VMX (undefined8 param_1,undefined8 param_2,undefined8 param_3,uint param_4);
+void FastQSTToMtx4(Vec4 *param_1,Vec4 *param_2,Vec4 *param_3,Mtx4 *param_4);
 void FastVecScale(double param_1,float *param_2,float *param_3);
 void FastVecAdd(float *param_1,float *param_2,float *param_3);
 void FastVecMtx4MultLerp(double param_1,float *param_2,float *param_3,float *param_4);

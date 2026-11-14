@@ -138,6 +138,7 @@ extern undefined4 DAT_0071eaa4; /* 0x71eaa4 */
 extern CollJointCacheKey g_CollJointCacheKeys[8]; /* 0xa109c0 */ /* type set in global_types.tsv */
 extern u8 g_CollMobyJointCache[8][0x7fc]; /* 0xa10a00: joint matrices of 8 mobys, for their collision prims */ /* type set in global_types.tsv */
 extern CollMobyVertCacheEntry g_CollMobyVertCache[8]; /* 0x9540c0 */
+extern MobyGridCell g_MobyGrid[4096]; /* 0xa39120 */
 
 // ---- functions
 void SECTION_HEADER_COLL(void);

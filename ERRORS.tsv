@@ -9,7 +9,7 @@ errors	file
 0	game/freeze.cpp
 0	game/global.cpp
 0	game/help.cpp
-1533	game/hero.cpp
+1536	game/hero.cpp
 558	game/hud.cpp
 0	game/initonce.cpp
 0	game/initsky.cpp
@@ -24,7 +24,7 @@ errors	file
 0	game/mesh.cpp
 0	game/mission.cpp
 0	game/mobyfunc.cpp
-480	game/mobyproc.cpp
+328	game/mobyproc.cpp
 557	game/mobyutil.cpp
 0	game/music.cpp
 0	game/pad.cpp
@@ -1025,7 +1025,7 @@ errors	file
 0	game/water.cpp
 23	idol/9Unk.cpp
 3	idol/fUnk.cpp
-135	idol/fastfunc.cpp
+139	idol/fastfunc.cpp
 135	idol/idol.cpp
 434	idol/idol_draw.cpp
 1731	idol/mUnk.cpp
